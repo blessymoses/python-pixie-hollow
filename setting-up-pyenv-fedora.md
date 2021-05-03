@@ -79,6 +79,23 @@ pyenv is a tool for managing multiple Python versions.
     $ python --version
     Python 3.9.0
     ```
-
 ### Additional reading
 - https://realpython.com/intro-to-pyenv/
+
+# Using venv
+
+* venv is a default package shipped with Python 3, which supports creating lightweight virtual environments.
+
+1. To create a new virtual environment:
+    ```sh
+    $ python3 -m venv myenv
+    ```
+2. To activate the virtual environment:
+    ```sh
+    $ source myenv/bin/activate
+    (myenv) $
+    ```
+3. To deactivate the virtual environment:
+    ```sh
+    $ deactivate
+    ```

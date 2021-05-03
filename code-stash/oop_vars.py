@@ -26,7 +26,7 @@ class User:
         return self in self.__class__.active_users
 
 
-me = User("Blessy", "blessy@gmail.com")
+me = User("Blessy", "blessy@example.com")
 me.name = "Blessy Moses"
 print(me.name)
 

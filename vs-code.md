@@ -14,3 +14,8 @@ In settings,
     $ python -c "print('Hello')"
     Hello
     ```
+
+## Online Terminals
+1. https://replit.com/languages/python3
+2. https://www.python.org/shell/
+3. https://www.programiz.com/python-programming/online-compiler/
