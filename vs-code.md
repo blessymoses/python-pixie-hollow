@@ -5,6 +5,12 @@ In settings,
 * Search for `format on save` and check - Format a file on save. 
 * Search for `python formatting provider` and select `black`.
 * Edit and save a python file. Install black when prompted.
+
+## Enable intellisense for Python in VS Code
+* Open `command palette` - <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>
+* Type `Python:Select Interpreter` and select.
+* Re-open VS Code.
+
 ---
 # Python Trivia
 
