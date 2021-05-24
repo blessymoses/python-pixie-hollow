@@ -1,3 +1,7 @@
+"""
+ Run pytests
+ pytest test_gist.py -v -p no:warnings -s
+"""
 import pytest
 
 
@@ -60,5 +64,12 @@ def test_parametrized(company_name: str) -> None:
 def test_parametrized_with_id(company_name: str) -> None:
     print(f"\nTest with {company_name}")
 
-def test_custom_exception() -> None:
+
+def raise_custom_exception() -> None:
     raise ValueError("My custom Exception")
+
+
+def test_raise_custom_exception_pass() -> None:
+    with pytest.raises(ValueError) as e:
+        raise_custom_exception()
+    assert "My custom Exception" == str(e.value)
