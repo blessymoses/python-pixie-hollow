@@ -1,4 +1,4 @@
-# Testing Trivia
+## Testing Trivia
 
 - Unit Test
   - Tets units in isolation
@@ -14,3 +14,8 @@
 - E2E
   - Test the end-to-end flow of the system
   - Test if the entire system works correctly
+
+## Install Django Rest Framework
+```sh
+$ pip3 install djangorestframework
+```
