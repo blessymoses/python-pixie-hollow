@@ -1,19 +1,3 @@
-## Testing Trivia
-
-- Unit Test
-  - Tets units in isolation
-  - Fixed input produces a known fixed output
-  - Any external dependency should be mocked
-  - Can simulate errors
-
-- Integration test
-  - Test multiple components
-  - Tests the contract between them
-  - Test with narrow inputs
-
-- E2E
-  - Test the end-to-end flow of the system
-  - Test if the entire system works correctly
 # Django Rest Framework
 - Install Django Rest Framework
 ```sh
@@ -67,11 +51,55 @@ Password:
 Password (again): 
 Superuser created successfully.
 ```
-## Create the app
+5. Create the app
 + An app is a Web application that does something – e.g., a Weblog system, a database of public records or a small poll app.
 + A project can contain multiple apps. 
 + An app can be in multiple projects.
-1. To create your app, make sure you’re in the same directory as `manage.py` and type this command:
++ To create your app, make sure you’re in the same directory as `manage.py` and type this command:
 ```sh
 python manage.py startapp companies
 ```
+6. Make changes to the model and make migrations
+
+```sh
+$ python manage.py makemigrations companies
+Migrations for 'companies':
+  companies/migrations/0001_initial.py
+    - Create model Company
+```
+7. Apply the migrations
+```sh
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, companies, contenttypes, sessions
+Running migrations:
+  Applying companies.0001_initial... OK
+```
+
+## Migrations
+Migrations are Django’s way of propagating changes you make to your model (adding a field, deleting a model, etc.) into your database schema.
+### Commands:
+1. `migrate`: responsible for applying and unapplying migrations.
+```sh
+$ python manage.py migrate
+```
+2. `makemigrations`: responsible for creating new migrations based on the changes you have made to your models.
+```sh
+$ python manage.py makemigrations <app_name>
+```
+## Testing Trivia
+
+- Unit Test
+  - Tets units in isolation
+  - Fixed input produces a known fixed output
+  - Any external dependency should be mocked
+  - Can simulate errors
+
+- Integration test
+  - Test multiple components
+  - Tests the contract between them
+  - Test with narrow inputs
+
+- E2E
+  - Test the end-to-end flow of the system
+  - Test if the entire system works correctly
