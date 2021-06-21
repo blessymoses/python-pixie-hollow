@@ -11,6 +11,12 @@ In Settings(`File -> Preferences -> Settings` or <kbd>ctrl</kbd> + <kbd>,</kbd>)
 * Type `Python:Select Interpreter` and select.
 * Re-open VS Code.
 
+## Keep the tabs open by default
+VS code opens a file in *Preview mode* by default. 
+To disable preview mode, 
+* Search for `workbench.editor.enablepreview` in Settings, and uncheck.
+* Alternatively, set `workbench.editor.enablePreview: false` in settings.json file.
+
 ---
 # Python Trivia
 
