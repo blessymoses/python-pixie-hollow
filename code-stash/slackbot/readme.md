@@ -21,15 +21,15 @@ yarl==1.6.3
 
 ## Create a Slack APP
 - Create a new slack workspace.<br>
-![Alt text](ss/ss1.png?raw=true "slack workspace")
+![slackWorkspace](ss/ss1.png)
 - Navigate to https://api.slack.com/apps and create an app From scratch.
-![Alt text](ss/ss3.png?raw=true "slack app")
+![slackApp](ss/ss3.png)
 - Create a `Bot User` for the app, to use the Slack App as a bot:
   - Click on `OAuth & Permission` tab in the left sidebar.
   - In `Scopes` section, under `Bot Token Scopes`, click on `Add an OAuth Scope` and add the needed scopes.
-  ![Alt text](ss/ss4.png?raw=true "slack app")
+  ![slackApp](ss/ss4.png)
   - Click on `App Home` tab in the left sidebar to see the bot user and edit the display name.
-  ![Alt text](ss/ss6.png?raw=true "bot user")
+  ![botUser](ss/ss6.png)
 
 
 ## Additional reading
