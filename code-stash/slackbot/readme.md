@@ -20,7 +20,7 @@ yarl==1.6.3
 ```
 
 ## Create a Slack APP
-- Create a new slack workspace.
+- Create a new slack workspace.<br>
 ![Alt text](ss/ss1.png?raw=true "slack workspace")
 - Navigate to https://api.slack.com/apps and create an app From scratch.
 ![Alt text](ss/ss3.png?raw=true "slack app")

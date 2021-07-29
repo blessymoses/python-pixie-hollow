@@ -4,8 +4,6 @@
 ```sh
 $ pip3 install logzero
 ```
-<br>
-
 ## Python logging levels
 - The numeric values of logging levels are given in the following table. 
 - These are primarily of interest if you want to define your own levels, and need them to have specific values relative to the predefined levels. 
@@ -19,8 +17,6 @@ $ pip3 install logzero
 | INFO | 20 |
 | DEBUG | 10 |
 | NOTSET | 0 |
-<br>
-
 ## Default logging using logzero
 Minimum log level in logzero is DEBUG
 ```python
@@ -43,8 +39,6 @@ display_logs()
 ```
 
 ![Alt text](ss/logzero1.png?raw=true "Default log level")
-<br>
-
 ## Setting log level in logzero
 You can set the minimum logging level using `loglevel()`
 ```python
@@ -56,11 +50,10 @@ print(
 display_logs()
 ```
 ![Alt text](ss/logzero2.png?raw=true "Custom set log level")
-<br>
-
 ## Set custom formatter
-Use `LogFormatter` to change the color support, log format and date format.<br>
-The following piece of code sets the formatter to display the method name along with the module name and line number:
+Use `formatter()` to change the log format string, color code for logging levels, and date format.
+<p>The following piece of code sets the formatter to display the method name along with the module name and line number:</p>
+
 ```python
 # Set custom formatter
 formatter = LogFormatter(
@@ -71,9 +64,10 @@ logzero.formatter(formatter)
 display_logs()
 ```
 ![Alt text](ss/logzero3.png?raw=true "Custom formatter")
-<br>
-
 ## Add a custom log level
+Register the new log level using `logging.addLevelName()`
+<p>Here's an example, adding a new log level named <b>APPLOG</b> which has a value of <b>60</b>.</p>
+
 ```python
 APPLOG = 60
 logzero.logging.addLevelName(APPLOG, "APPLOG")
@@ -87,8 +81,7 @@ display_logs()
 logger.applog("my applog")
 ```
 ![Alt text](ss/logzero4.png?raw=true "Custom log level")
-
-## Modify formatting and colors
+## Modify/Set color code of the logging levels
 ```python
 # Add formatting and color to the custom log level
 # also, change the color of existing log level
