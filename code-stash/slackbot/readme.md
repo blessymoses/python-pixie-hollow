@@ -19,7 +19,7 @@ typing-extensions==3.10.0.0
 yarl==1.6.3
 ```
 
-## Create a Slack APP
+## Create a Slack App
 - Create a new slack workspace.<br>
 ![slackWorkspace](ss/ss1.png)
 - Navigate to https://api.slack.com/apps and create an app From scratch.
@@ -31,6 +31,18 @@ yarl==1.6.3
   - Click on `App Home` tab in the left sidebar to see the bot user and edit the display name.
   ![botUser](ss/ss6.png)
 
+## Installing the app to a workspace
+- Select the `Install App` button in the sidebar, `Settings` sections, to install the app in the workspace.
+![InstallApp](ss/ss7.png)
+- Once installed, you will be able to get the Bot User OAuth Token.
+
+## Coding the Slack Bot
+- Export the Bot User OAuth Token as an environment variable.
+```sh
+export SLACK_BOT_TOKEN="your bot user oauth token"
+```
+- 
 
 ## Additional reading
 - https://api.slack.com/bot-users
+- https://api.slack.com/authentication/basics
