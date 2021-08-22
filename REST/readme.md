@@ -112,7 +112,9 @@ paths:
 ```
 
 ## Swagger Tools
-- Swagger Editor: Helps you write OAS files
+- Swagger Editor: 
+  - Helps you write OAS files
+  - https://editor.swagger.io/
 - Swagger CodeGen: Generates code in popular languages for using your API
 - Swagger UI: Generates documentation from OAS files
 - SwaggerHub: Hosted platform for designing and documenting APIs
