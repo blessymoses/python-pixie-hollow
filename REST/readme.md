@@ -30,6 +30,87 @@
 - Should not contain query string parameters
 ### PUT
 - 
+## URL Structure
+- defines the structure of the api's url
+- Should be self explanatory, consistent across the API, predictable
+### Domain name
+- Protocol should be HTTPS
+- For FQDN(fully qualified domain name) - should have `api` in its name
+- https://api.myapp.com
+### The API word
+- If the domain does not include `api`, it comes now
+- https://www.myapp.com/api
+- emphasizes that this URL is for the API, not the website
+### Version
+- If the version strategy is URL, it comes now
+- only natural number - positive, no decimals
+- could be prefixed with `v`
+### Entity
+- REST deals with resources, or entities
+- The next part is the entity we're dealing with
+- Should be one word, no more
+- NEVER a verb, only nouns
+  - HTTP verb provides the verb/action
+### ID Parameter
+- when dealing with a specific entity, next is the entity id
+- The ID is part of the URL
+- /api/v1/order/17
+- Relevant for GET, PUT, DELETE
+### Sub entity
+- Used for accessing entities that are dependant on other entities
+- Example: Get all the items of order no. 17
+- Sub entity should come after the ID parameter
+- /api/v1/order/17/items
+### Query parameters
+- Used to query the entities in GET method
+- Come at the end of the URL, after `?`
+- Concatenated with `&`
+  - /api/v1/orders?fromDate=12/12/2018&toDate=2/2/2019
+
+| | Query parameters | ID parameter |
+| --- | --- | --- |
+| Location | At the end of the URL | End or middle of the URL |
+| Param count | 0..N parameters | 1 parameter |
+| Example| /api/v1/orders/?user=john | /api/v1/order/17 |
+| Return value | may return 0..N entities | must return exactly 1 entity |
+| If not found | That's fine | Error |
+### Singular Vs Plural
+- Best practice: always prefer readability and ease of use
+  - When the API returns a single entity, use singular
+  - When the API returns multiple entities, use plural
+## Response Codes
+- Notify clients about the status of the request
+  - Did it succeed?
+  - Did it fail? why?
+  - What kind of error?
+### Response Code Groups
+- Five groups
+- Each group represent specific response type
+- Each group consists of 3 digits status code
+- Groups
+  - 1xx - Informational response
+  - 2xx - Success
+  - 3xx - redirection
+  - 4xx - Client errors
+  - 5xx - Server errors
+### 200 - OK
+- The default status code
+- The request was successful
+- With GET: returns the entities requested
+- With POST: returns the entities created
+### 201 - Created
+- The request has been fulfilled, a new entity has been created
+- Response might contain `Location` header pointing to the entity
+- This is the expected status code of POST request
+### 202 - Accepted
+- The request has been accepted and is pending processing
+- Processing might not be complete
+- No notification is given when processing completes
+- Usually used for POST, PUT requests
+### 204 - No content
+- Request was fulfilled but no content was sent back
+- Should NOT include body
+- used mainly when updating large entity
 ## API Definition File
 - File that describes all the things you can do with an API
 - Lists every request you can make
@@ -118,12 +199,3 @@ paths:
 - Swagger CodeGen: Generates code in popular languages for using your API
 - Swagger UI: Generates documentation from OAS files
 - SwaggerHub: Hosted platform for designing and documenting APIs
-
-
-
-
-
-
-
-
-
