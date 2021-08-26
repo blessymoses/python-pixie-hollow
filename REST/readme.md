@@ -111,6 +111,36 @@
 - Request was fulfilled but no content was sent back
 - Should NOT include body
 - used mainly when updating large entity
+- The 204 no content Vs 200 OK dilemma
+  - what should be returned when a GET returns no entity?
+  - 200 with no body, or 204?
+  - No agreed upon answer, better to avoid 204 and stick to 200
+### 400 - Bad request
+- The client sent a bad request
+  - Parameters can't be validated (ie negative age)
+  - JSON can't be parsed
+- Used with all verbs
+- Consider using RFC 7807 - Problem details
+  - Standard for returning machine-readable data about the problem
+### 401 - Unauthorized
+- The client is not authorized to access the entity
+- Authorization is required
+- Not to be confused with 403 - Forbidden
+### 403 - Forbidden
+- The client is not authorized to access the entity
+- Authorization failed
+- 401 - I don't know who you are
+- 403 - I know who you are and this action is forbidden for you
+### 404 - Not Found
+- The entity specified in the request was not found
+- used when a specific entity was looked for (with id parameter), not with query parameter
+- Used with all verbs
+### 500 - Internal Server Error
+- Something bad happened while processing the request
+- Client can do nothing about it
+- Used with all verbs
+- 
+
 ## API Definition File
 - File that describes all the things you can do with an API
 - Lists every request you can make
