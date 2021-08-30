@@ -29,7 +29,18 @@
 - Should contain a message body that specifies the resource to be added
 - Should not contain query string parameters
 ### PUT
-- 
+- Used to modify the resource
+- Should contain a message body that specifies the resource to be modified
+- Should not contain query string parameters
+- What happens if the resource to modify does not exist
+  - The spec states a new resource should be created
+  - use your own discretion
+  - PUT is idempotent
+### DELETE
+- Used to delete the resource
+- Never use it to add/update/retrieve resources
+- Almost always combined with parameters
+- Should not include body
 ## URL Structure
 - defines the structure of the api's url
 - Should be self explanatory, consistent across the API, predictable
