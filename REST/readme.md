@@ -18,6 +18,13 @@
   - Add a resource
   - Update a resource
   - Delete a resource
+
+| Verb | Role | Body? | Params In |
+| --- | --- | --- | --- |
+| GET | Retrieve resource(s) | No | URL |
+| POST | Add resource(s) | Yes | Body |
+| PUT | Modify resource(s) | Yes | Body |
+| DELETE | Delete resource(s) | No | URL |
 ### GET
 - Used to retrieve resources
 - Never use it to add/update/delete resources
@@ -41,6 +48,10 @@
 - Never use it to add/update/retrieve resources
 - Almost always combined with parameters
 - Should not include body
+### Additional Verbs
+- `PATCH`: Similar to PUT, but with partial updates
+- `HEAD`: Same as GET, but without the body in the response, can be used as a pre-check to check if an entity exists
+- `OPTIONS`: Describes the available verbs for the URL
 ## URL Structure
 - defines the structure of the api's url
 - Should be self explanatory, consistent across the API, predictable
@@ -94,6 +105,9 @@
   - Did it succeed?
   - Did it fail? why?
   - What kind of error?
+- Return the appropriate status code
+- Use the most common codes:
+  - 200 OK, 201 Created, 204 No content, 400 Bad request, 404 Not Found, 500 Internal Server Error
 ### Response Code Groups
 - Five groups
 - Each group represent specific response type
@@ -150,8 +164,34 @@
 - Something bad happened while processing the request
 - Client can do nothing about it
 - Used with all verbs
-- 
+### Additional codes
+- 207 - Multi-status:
+  - Used for cases where multiple entities are handled, each has its own status
+## Response Codes Cheat Sheet
 
+| Verb | Relevant Codes | Description |
+| --- | --- | --- |
+| GET | 200 OK | Content was found and returned |
+| | 400 Bad Request | There was an error validating the parameters sent |
+| | 401 / 403 | Authorization required / Not authorized |
+| | 404 Not Found | Entity not found |
+| POST | 200 OK | The request was completed successfully |
+| | 201 Created | The entity was added successfully |
+| | 202 Accepted | The request was received and is pending processing |
+| | 204 No Content | The request was completed successfully, but the server has nothing to send back |
+| | 400 Bad Request | There was an error validating the parameters sent |
+| | 401 / 403 | Authorization required / Not authorized |
+| | 404 Not Found | Entity not found. Relevant when adding sub-entity to a specific entity, using the ID Parameter |
+| PUT | 200 OK | The request was completed successfully |
+| | 202 Accepted | The request was received and is pending processing |
+| | 204 No Content | The request was completed successfully, but the server has nothing to send back |
+| | 400 Bad Request | There was an error validating the parameters sent |
+| | 401 / 403 | Authorization required / Not authorized |
+| | 404 Not Found | Entity to update not found. Relevant also when updating subentity of a specific entity, using the ID Parameter |
+| DELETE | 200 OK | Content was found and deleted |
+| | 400 Bad Request | There was an error validating the parameters sent |
+| | 401 / 403 | Authorization required / Not authorized |
+| | 404 Not Found | Entity to delete not found |
 ## API Definition File
 - File that describes all the things you can do with an API
 - Lists every request you can make
@@ -175,6 +215,17 @@
   - Basic Auth: username and password
   - API key: using a valid API key to gain access
   - OAuth
+## API Versioning
+- Set version support policy
+- Include versioning in the API
+- Version can be in the URL, in the header or in a query parameter
+- Keeping the version in the header is the most correct form
+  - adheres to the REST principles
+- URL is the most common and easiest to implement
+## Authentication and Authorization
+- Authentication: who is the user
+- Authorization: what is the user allowed to do
+
 ## Open API Specification
 - The Open API Specification uses structured data for its API definition files.
 - `YAML`:
