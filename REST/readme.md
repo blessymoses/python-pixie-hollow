@@ -225,7 +225,20 @@
 ## Authentication and Authorization
 - Authentication: who is the user
 - Authorization: what is the user allowed to do
+## OAuth2
+### OAuth2 components
+|   |   |
+|---|---|
+| User | The user who wants to access protected resources in the API |
+| Client App | The client application accessing the API |
+| Authorization Server | Authorizes the user for the client application |
+| Resource Server | The API being accessed |
 
+### App Registration
+- Authorization server should be familiar with the Resource Server(API)
+- Resource server must register itself with the Authorization Server
+- Auth server provides the Client ID and Client Secret.
+- Client ID and Client Secret must be passed to the Auth Server while seeking authorization, so that Auth server will know which application is seeking authorization.
 ## Open API Specification
 - The Open API Specification uses structured data for its API definition files.
 - `YAML`:
