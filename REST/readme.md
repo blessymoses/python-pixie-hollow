@@ -239,6 +239,17 @@
 - Resource server must register itself with the Authorization Server
 - Auth server provides the Client ID and Client Secret.
 - Client ID and Client Secret must be passed to the Auth Server while seeking authorization, so that Auth server will know which application is seeking authorization.
+### JWT
+- JSON Web Token
+- Contains the data the server needs in order to authenticate the user
+- Has three sections:
+  - Header: type of token(JWT) and signing algorithm
+  - Payload: data about the user
+  - Signature
+- The three sections are Base64 encoded and concatenated with `.`
+### JWT & REST API
+- JWT should be sent with the <i>Authorization: bearer</i> header
+- JWT can also be sent in body or request parameter - Not recommended
 ## Open API Specification
 - The Open API Specification uses structured data for its API definition files.
 - `YAML`:
@@ -304,3 +315,9 @@ paths:
 - Swagger CodeGen: Generates code in popular languages for using your API
 - Swagger UI: Generates documentation from OAS files
 - SwaggerHub: Hosted platform for designing and documenting APIs
+
+## Study plan
+- https://beyondsoft.udemy.com/course/rest-api-design-the-complete-guide/ - Software Architecture: REST API Design - The Complete Guide - in progress
+- https://beyondsoft.udemy.com/course/learn-swagger-and-the-open-api-specification/ - Learn Swagger and the Open API Specification
+- https://beyondsoft.udemy.com/course/rest-api/ - REST API Specifications using Swagger 2.0
+- https://blog.restcase.com/6-most-significant-changes-in-oas-3-0/
