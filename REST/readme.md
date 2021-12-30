@@ -315,9 +315,3 @@ paths:
 - Swagger CodeGen: Generates code in popular languages for using your API
 - Swagger UI: Generates documentation from OAS files
 - SwaggerHub: Hosted platform for designing and documenting APIs
-
-## Study plan
-- https://beyondsoft.udemy.com/course/rest-api-design-the-complete-guide/ - Software Architecture: REST API Design - The Complete Guide - in progress
-- https://beyondsoft.udemy.com/course/learn-swagger-and-the-open-api-specification/ - Learn Swagger and the Open API Specification
-- https://beyondsoft.udemy.com/course/rest-api/ - REST API Specifications using Swagger 2.0
-- https://blog.restcase.com/6-most-significant-changes-in-oas-3-0/
