@@ -10,7 +10,15 @@
 - Python is a dynamically typed language. To enforce type checking, type hinting can be combined with mypy(static type checker)
 - Pros:
   - improves code readability
-- uncommon hinting styles
+  - helps to catch certain errors
+  - helps to document the code
+  - helps to build and maintain a cleaner architecture
+  - adds lot of value in libraries published to PyPI
+- Cons:
+  - takes time and effort to add
+  - introduces a slight penalty in starting time
+  - adds little value in short throwaway scripts
+#### uncommon hinting styles
   - Use Union when something could be one of a few types
     ```python
     x: List[Union[int, str]] = [3, 5, "test", "fun"]
