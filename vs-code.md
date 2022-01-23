@@ -12,6 +12,9 @@ In Settings(`File -> Preferences -> Settings` or <kbd>ctrl</kbd> + <kbd>,</kbd>)
 "python.formatting.provider": "black",
 ```
 
+## Set up isort
+<!-- TODO -->
+
 ## Enable intellisense for Python in VS Code
 * Open `command palette` - <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>
 * Type `Python:Select Interpreter` and select.
@@ -22,6 +25,12 @@ VS code opens a file in *Preview mode* by default.
 To disable preview mode, 
 * Search for `workbench.editor.enablepreview` in Settings, and uncheck.
 * Alternatively, set `workbench.editor.enablePreview: false` in settings.json file.
+
+## Add more indentation to the VS Code File Explorer
+
+```json
+"workbench.tree.indent": 25
+```
 
 ---
 # Python Trivia
