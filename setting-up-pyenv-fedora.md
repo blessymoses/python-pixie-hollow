@@ -99,3 +99,8 @@ pyenv is a tool for managing multiple Python versions.
     ```sh
     $ deactivate
     ```
+
+* To install python3-venv on Debian/Ubuntu systems:
+    ```sh
+    $ apt install python3.8-venv
+    ```
