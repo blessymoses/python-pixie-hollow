@@ -12,3 +12,14 @@
 
 ## ElementTree
 - Python's built in library, `ElementTree`, has functions to read and manipulate XMLs.
+
+## XPath expressions
+- XPath is a query language used to search through an XML quickly and easily. 
+- XPath stands for XML Path Language and uses, as the name suggests, a "path like" syntax to identify and navigate nodes in an XML document.
+### findall()
+- `findall()` function traverses the immediate children of the referenced element.
+- The function .findall() always begins at the element specified. 
+- This type of function is extremely powerful for a "find and replace". 
+- You can even search on attributes!
+- use '...' inside of XPath to return the parent element of the current element.
+
