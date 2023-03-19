@@ -68,8 +68,13 @@ for url in ['https://api.github.com', 'https://api.github.com/invalid']:
   print(response.json())
 
   ```
+  - The primary performance optimization of sessions comes in the form of persistent connections. When your app makes a connection to a server using a Session, it keeps that connection around in a connection pool. When your app wants to connect to the same server again, it will reuse a connection from the pool rather than establishing a new one.
 - retry limits
+  - When a request fails, you may want your application to retry the same request. However, requests will not do this for you by default. To apply this functionality, you need to implement a custom `Transport Adapter`.
+
 
 
 
 https://realpython.com/python-requests/
+https://towardsdatascience.com/parallel-web-requests-in-python-4d30cc7b8989
+https://stackoverflow.com/questions/49663091/how-to-parallelize-python-api-calls
