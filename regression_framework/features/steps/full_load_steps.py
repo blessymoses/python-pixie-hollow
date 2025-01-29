@@ -22,6 +22,10 @@ def step_impl(context):
 def step_impl(context):
     assert context.source_count == context.target_count, "Record count mismatch!"
 
+@given("the DMS full load is completed")
+def step_impl(context):
+    raise NotImplementedError('Not Implemented')
+
 @when("we fetch the cdc_source_commit_date from the target table")
 def step_impl(context):
     context.commit_dates = aws_client.get_cdc_commit_dates()
