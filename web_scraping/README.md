@@ -33,39 +33,11 @@ Typical columns scraped:
 - `requests`
 - `beautifulsoup4`
 - `pandas`
-- `re` (Python built-in)
 
-Install them using:
-
-```bash
-pip install -r requirements.txt
-```
-
-## 🚀 How to Run
-
-```bash
-python collect_leaderboard.py
-```
-
-The script will generate a file named `llm_leaderboard2.csv` in the current directory.
 
 ## 📌 Notes
 
 - This script targets the actual embedded leaderboard at `https://artificialanalysis.ai/embed/llm-performance-leaderboard` because the Hugging Face Space uses an iframe.
 - Any images found in the table are captured by filename only, not downloaded.
 
-## 📝 Prompt Used
-
-```
-Write a web scraper using Python and BeautifulSoup.
-Target: https://huggingface.co/spaces/ArtificialAnalysis/LLM-Performance-Leaderboard
-Rationale: Scrape the LLM performance details on the target page.
-CSS selectors are as follows:
-Leaderboard table: body > main > div.mb-8 > div > div.container.m-auto.pb-8 > div > div.rounded-md.border.bg-white > div > table
-Output: Save all the data in the leaderboard table in a CSV file
-Additional Instructions: Handle character encoding and remove undesirable symbols in the output CSV.
-```
-
 ---
-
-© 2024. Created for educational and data analysis purposes.
