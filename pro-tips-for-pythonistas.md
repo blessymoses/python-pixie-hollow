@@ -2,7 +2,7 @@
 
 ## Key concepts from the zen of Python
 - Type Hinting
-- PEP-8 style Guideline
+- [PEP-8 style Guideline](https://peps.python.org/pep-0008/)
 - 
 ### Type Hinting
 - indicates the type of a value, PEP 484 standard
