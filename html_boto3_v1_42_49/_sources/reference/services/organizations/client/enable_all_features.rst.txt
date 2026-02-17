@@ -1,0 +1,331 @@
+:doc:`Organizations <../../organizations>` / Client / enable_all_features
+
+*******************
+enable_all_features
+*******************
+
+
+
+.. py:method:: Organizations.Client.enable_all_features()
+
+  
+
+  Enables all features in an organization. This enables the use of organization policies that can restrict the services and actions that can be called in each account. Until you enable all features, you have access only to consolidated billing, and you can't use any of the advanced account administration features that Organizations supports. For more information, see `Enabling all features in your organization <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html>`__ in the *Organizations User Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    This operation is required only for organizations that were created explicitly with only the consolidated billing features enabled. Calling this operation sends a handshake to every invited account in the organization. The feature set change can be finalized and the additional features enabled only after all administrators in the invited accounts approve the change by accepting the handshake.
+
+     
+
+   
+
+  After you enable all features, you can separately enable or disable individual policy types in a root using  EnablePolicyType and  DisablePolicyType. To see the status of policy types in a root, use  ListRoots.
+
+   
+
+  After all invited member accounts accept the handshake, you finalize the feature set change by accepting the handshake that contains ``"Action": "ENABLE_ALL_FEATURES"``. This completes the change.
+
+   
+
+  After you enable all features in your organization, the management account in the organization can apply policies on all member accounts. These policies can restrict what users and even administrators in those accounts can do. The management account can apply policies that prevent accounts from leaving the organization. Ensure that your account administrators are aware of this.
+
+   
+
+  You can only call this operation from the management account.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/EnableAllFeatures>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.enable_all_features()
+    
+    
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Handshake': {
+              'Id': 'string',
+              'Arn': 'string',
+              'Parties': [
+                  {
+                      'Id': 'string',
+                      'Type': 'ACCOUNT'|'ORGANIZATION'|'EMAIL'
+                  },
+              ],
+              'State': 'REQUESTED'|'OPEN'|'CANCELED'|'ACCEPTED'|'DECLINED'|'EXPIRED',
+              'RequestedTimestamp': datetime(2015, 1, 1),
+              'ExpirationTimestamp': datetime(2015, 1, 1),
+              'Action': 'INVITE'|'ENABLE_ALL_FEATURES'|'APPROVE_ALL_FEATURES'|'ADD_ORGANIZATIONS_SERVICE_LINKED_ROLE'|'TRANSFER_RESPONSIBILITY',
+              'Resources': [
+                  {
+                      'Value': 'string',
+                      'Type': 'ACCOUNT'|'ORGANIZATION'|'ORGANIZATION_FEATURE_SET'|'EMAIL'|'MASTER_EMAIL'|'MASTER_NAME'|'NOTES'|'PARENT_HANDSHAKE'|'RESPONSIBILITY_TRANSFER'|'TRANSFER_START_TIMESTAMP'|'TRANSFER_TYPE'|'MANAGEMENT_ACCOUNT'|'MANAGEMENT_EMAIL'|'MANAGEMENT_NAME',
+                      'Resources': {'... recursive ...'}
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Handshake** *(dict) --* 
+
+        A structure that contains details about the handshake created to support this request to enable all features in the organization.
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          ID for the handshake.
+
+           
+
+          The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+          
+        
+
+        - **Arn** *(string) --* 
+
+          Amazon Resource Name (ARN) for the handshake.
+
+           
+
+          For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+          
+        
+
+        - **Parties** *(list) --* 
+
+          An array of ``HandshakeParty`` objects. Contains details for participant in a handshake.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains details for a participant in a handshake.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              ID for the participant: Acccount ID, organization ID, or email address.
+
+               
+
+              The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+              
+            
+
+            - **Type** *(string) --* 
+
+              The type of ID for the participant.
+
+              
+        
+      
+        
+
+        - **State** *(string) --* 
+
+          Current state for the handshake.
+
+           
+
+          
+          * **REQUESTED**: Handshake awaiting a response from the recipient.
+           
+          * **OPEN**: Handshake sent to multiple recipients and all recipients have responded. The sender can now complete the handshake action.
+           
+          * **CANCELED**: Handshake canceled by the sender.
+           
+          * **ACCEPTED**: Handshake accepted by the recipient.
+           
+          * **DECLINED**: Handshake declined by the recipient.
+           
+          * **EXPIRED**: Handshake has expired.
+          
+
+          
+        
+
+        - **RequestedTimestamp** *(datetime) --* 
+
+          Timestamp when the handshake request was made.
+
+          
+        
+
+        - **ExpirationTimestamp** *(datetime) --* 
+
+          Timestamp when the handshake expires.
+
+          
+        
+
+        - **Action** *(string) --* 
+
+          The type of handshake:
+
+           
+
+          
+          * **INVITE**: Handshake sent to a standalone account requesting that it to join the sender's organization.
+           
+          * **ENABLE_ALL_FEATURES**: Handshake sent to invited member accounts to enable all features for the organization.
+           
+          * **APPROVE_ALL_FEATURES**: Handshake sent to the management account when all invited member accounts have approved to enable all features.
+           
+          * **TRANSFER_RESPONSIBILITY**: Handshake sent to another organization's management account requesting that it designate the sender with the specified responsibilities for recipient's organization.
+          
+
+          
+        
+
+        - **Resources** *(list) --* 
+
+          An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains additional details for a handshake.
+
+            
+            
+
+            - **Value** *(string) --* 
+
+              Additional information for the handshake. The format of the value string must match the requirements of the specified type.
+
+              
+            
+
+            - **Type** *(string) --* 
+
+              The type of information being passed, specifying how the value is to be interpreted by the other party:
+
+               
+
+              
+              * **ACCOUNT**: ID for an Amazon Web Services account.
+               
+              * **ORGANIZATION**: ID for an organization.
+               
+              * **EMAIL**: Email address for the recipient.
+               
+              * **OWNER_EMAIL**: Email address for the sender.
+               
+              * **OWNER_NAME**: Name of the sender.
+               
+              * **NOTES**: Additional text included by the sender for the recipient.
+              
+
+              
+            
+
+            - **Resources** *(list) --* 
+
+              An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ConstraintViolationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.HandshakeConstraintViolationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+
+  **Examples**
+
+  This example shows the administrator asking all the invited accounts in the organization to approve enabling all features in the organization. AWS Organizations sends an email to the address that is registered with every invited member account asking the owner to approve the change by accepting the handshake that is sent. After all invited member accounts accept the handshake, the organization administrator can finalize the change to enable all features, and those with appropriate permissions can create policies and apply them to roots, OUs, and accounts:/n/n
+  ::
+
+    response = client.enable_all_features(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Handshake': {
+            'Action': 'ENABLE_ALL_FEATURES',
+            'Arn': 'arn:aws:organizations::111111111111:handshake/o-exampleorgid/enable_all_features/h-examplehandshakeid111',
+            'ExpirationTimestamp': datetime(2017, 2, 28, 9, 35, 40, 1, 59, 0),
+            'Id': 'h-examplehandshakeid111',
+            'Parties': [
+                {
+                    'Id': 'o-exampleorgid',
+                    'Type': 'ORGANIZATION',
+                },
+            ],
+            'RequestedTimestamp': datetime(2017, 2, 13, 9, 35, 40, 0, 44, 0),
+            'Resources': [
+                {
+                    'Type': 'ORGANIZATION',
+                    'Value': 'o-exampleorgid',
+                },
+            ],
+            'State': 'REQUESTED',
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

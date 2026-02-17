@@ -1,0 +1,248 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / enter_standby
+
+*************
+enter_standby
+*************
+
+
+
+.. py:method:: AutoScaling.Client.enter_standby(**kwargs)
+
+  
+
+  Moves the specified instances into the standby state.
+
+   
+
+  If you choose to decrement the desired capacity of the Auto Scaling group, the instances can enter standby as long as the desired capacity of the Auto Scaling group after the instances are placed into standby is equal to or greater than the minimum capacity of the group.
+
+   
+
+  If you choose not to decrement the desired capacity of the Auto Scaling group, the Auto Scaling group launches new instances to replace the instances on standby.
+
+   
+
+  For more information, see `Temporarily removing instances from your Auto Scaling group <https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-enter-exit-standby.html>`__ in the *Amazon EC2 Auto Scaling User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/EnterStandby>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.enter_standby(
+        InstanceIds=[
+            'string',
+        ],
+        AutoScalingGroupName='string',
+        ShouldDecrementDesiredCapacity=True|False
+    )
+    
+  :type InstanceIds: list
+  :param InstanceIds: 
+
+    The IDs of the instances. You can specify up to 20 instances.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: **[REQUIRED]** 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type ShouldDecrementDesiredCapacity: boolean
+  :param ShouldDecrementDesiredCapacity: **[REQUIRED]** 
+
+    Indicates whether to decrement the desired capacity of the Auto Scaling group by the number of instances moved to ``Standby`` mode.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Activities': [
+              {
+                  'ActivityId': 'string',
+                  'AutoScalingGroupName': 'string',
+                  'Description': 'string',
+                  'Cause': 'string',
+                  'StartTime': datetime(2015, 1, 1),
+                  'EndTime': datetime(2015, 1, 1),
+                  'StatusCode': 'PendingSpotBidPlacement'|'WaitingForSpotInstanceRequestId'|'WaitingForSpotInstanceId'|'WaitingForInstanceId'|'PreInService'|'InProgress'|'WaitingForELBConnectionDraining'|'MidLifecycleAction'|'WaitingForInstanceWarmup'|'Successful'|'Failed'|'Cancelled'|'WaitingForConnectionDraining'|'WaitingForInPlaceUpdateToStart'|'WaitingForInPlaceUpdateToFinalize'|'InPlaceUpdateInProgress',
+                  'StatusMessage': 'string',
+                  'Progress': 123,
+                  'Details': 'string',
+                  'AutoScalingGroupState': 'string',
+                  'AutoScalingGroupARN': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Activities** *(list) --* 
+
+        The activities related to moving instances into ``Standby`` mode.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes scaling activity, which is a long-running process that represents a change to your Auto Scaling group, such as changing its size or replacing an instance.
+
+          
+          
+
+          - **ActivityId** *(string) --* 
+
+            The ID of the activity.
+
+            
+          
+
+          - **AutoScalingGroupName** *(string) --* 
+
+            The name of the Auto Scaling group.
+
+            
+          
+
+          - **Description** *(string) --* 
+
+            A friendly, more verbose description of the activity.
+
+            
+          
+
+          - **Cause** *(string) --* 
+
+            The reason the activity began.
+
+            
+          
+
+          - **StartTime** *(datetime) --* 
+
+            The start time of the activity.
+
+            
+          
+
+          - **EndTime** *(datetime) --* 
+
+            The end time of the activity.
+
+            
+          
+
+          - **StatusCode** *(string) --* 
+
+            The current status of the activity.
+
+            
+          
+
+          - **StatusMessage** *(string) --* 
+
+            A friendly, more verbose description of the activity status.
+
+            
+          
+
+          - **Progress** *(integer) --* 
+
+            A value between 0 and 100 that indicates the progress of the activity.
+
+            
+          
+
+          - **Details** *(string) --* 
+
+            The details about the activity.
+
+            
+          
+
+          - **AutoScalingGroupState** *(string) --* 
+
+            The state of the Auto Scaling group, which is either ``InService`` or ``Deleted``.
+
+            
+          
+
+          - **AutoScalingGroupARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Auto Scaling group.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+
+  **Examples**
+
+  This example puts the specified instance into standby mode.
+  ::
+
+    response = client.enter_standby(
+        AutoScalingGroupName='my-auto-scaling-group',
+        InstanceIds=[
+            'i-93633f9b',
+        ],
+        ShouldDecrementDesiredCapacity=True,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Activities': [
+            {
+                'ActivityId': 'ffa056b4-6ed3-41ba-ae7c-249dfae6eba1',
+                'AutoScalingGroupName': 'my-auto-scaling-group',
+                'Cause': 'At 2015-04-12T15:10:23Z instance i-93633f9b was moved to standby in response to a user request, shrinking the capacity from 2 to 1.',
+                'Description': 'Moving EC2 instance to Standby: i-93633f9b',
+                'Details': 'details',
+                'Progress': 50,
+                'StartTime': datetime(2015, 4, 12, 15, 10, 23, 6, 102, 0),
+                'StatusCode': 'InProgress',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

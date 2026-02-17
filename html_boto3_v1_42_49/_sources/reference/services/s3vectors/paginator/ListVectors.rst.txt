@@ -1,0 +1,240 @@
+:doc:`S3Vectors <../../s3vectors>` / Paginator / ListVectors
+
+***********
+ListVectors
+***********
+
+
+
+.. py:class:: S3Vectors.Paginator.ListVectors
+
+  ::
+
+    
+    paginator = client.get_paginator('list_vectors')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`S3Vectors.Client.list_vectors`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3vectors-2025-07-15/ListVectors>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          vectorBucketName='string',
+          indexName='string',
+          indexArn='string',
+          segmentCount=123,
+          segmentIndex=123,
+          returnData=True|False,
+          returnMetadata=True|False,
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type vectorBucketName: string
+    :param vectorBucketName: 
+
+      The name of the vector bucket.
+
+      
+
+    
+    :type indexName: string
+    :param indexName: 
+
+      The name of the vector index.
+
+      
+
+    
+    :type indexArn: string
+    :param indexArn: 
+
+      The Amazon resource Name (ARN) of the vector index.
+
+      
+
+    
+    :type segmentCount: integer
+    :param segmentCount: 
+
+      For a parallel ``ListVectors`` request, ``segmentCount`` represents the total number of vector segments into which the ``ListVectors`` operation will be divided. The value of ``segmentCount`` corresponds to the number of application workers that will perform the parallel ``ListVectors`` operation. For example, if you want to use four application threads to list vectors in a vector index, specify a ``segmentCount`` value of 4.
+
+       
+
+      If you specify a ``segmentCount`` value of 1, the ``ListVectors`` operation will be sequential rather than parallel.
+
+       
+
+      If you specify ``segmentCount``, you must also specify ``segmentIndex``.
+
+      
+
+    
+    :type segmentIndex: integer
+    :param segmentIndex: 
+
+      For a parallel ``ListVectors`` request, ``segmentIndex`` is the index of the segment from which to list vectors in the current request. It identifies an individual segment to be listed by an application worker.
+
+       
+
+      Segment IDs are zero-based, so the first segment is always 0. For example, if you want to use four application threads to list vectors in a vector index, then the first thread specifies a ``segmentIndex`` value of 0, the second thread specifies 1, and so on.
+
+       
+
+      The value of ``segmentIndex`` must be less than the value provided for ``segmentCount``.
+
+       
+
+      If you provide ``segmentIndex``, you must also provide ``segmentCount``.
+
+      
+
+    
+    :type returnData: boolean
+    :param returnData: 
+
+      If true, the vector data of each vector will be included in the response. The default value is ``false``.
+
+      
+
+    
+    :type returnMetadata: boolean
+    :param returnMetadata: 
+
+      If true, the metadata associated with each vector will be included in the response. The default value is ``false``.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'vectors': [
+                {
+                    'key': 'string',
+                    'data': {
+                        'float32': [
+                            ...,
+                        ]
+                    },
+                    'metadata': {...}|[...]|123|123.4|'string'|True|None
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **vectors** *(list) --* 
+
+          Vectors in the current segment.
+
+          
+          
+
+          - *(dict) --* 
+
+            The attributes of a vector returned by the ``ListVectors`` operation.
+
+            
+            
+
+            - **key** *(string) --* 
+
+              The name of the vector.
+
+              
+            
+
+            - **data** *(dict) --* 
+
+              The vector data of the vector.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``float32``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **float32** *(list) --* 
+
+                The vector data as 32-bit floating point numbers. The number of elements in this array must exactly match the dimension of the vector index where the operation is being performed.
+
+                
+                
+
+                - *(float) --* 
+            
+          
+            
+
+            - **metadata** (:ref:`document<document>`) -- 
+
+              Metadata about the vector.
+
+              
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

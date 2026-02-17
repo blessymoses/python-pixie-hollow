@@ -1,0 +1,542 @@
+:doc:`Omics <../../omics>` / Client / create_workflow_version
+
+***********************
+create_workflow_version
+***********************
+
+
+
+.. py:method:: Omics.Client.create_workflow_version(**kwargs)
+
+  
+
+  Creates a new workflow version for the workflow that you specify with the ``workflowId`` parameter.
+
+   
+
+  When you create a new version of a workflow, you need to specify the configuration for the new version. It doesn't inherit any configuration values from the workflow.
+
+   
+
+  Provide a version name that is unique for this workflow. You cannot change the name after HealthOmics creates the version.
+
+   
+
+  .. note::
+
+    
+
+    Don't include any personally identifiable information (PII) in the version name. Version names appear in the workflow version ARN.
+
+    
+
+   
+
+  For more information, see `Workflow versioning in Amazon Web Services HealthOmics <https://docs.aws.amazon.com/omics/latest/dev/workflow-versions.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateWorkflowVersion>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_workflow_version(
+        workflowId='string',
+        versionName='string',
+        definitionZip=b'bytes',
+        definitionUri='string',
+        accelerators='GPU',
+        description='string',
+        engine='WDL'|'NEXTFLOW'|'CWL'|'WDL_LENIENT',
+        main='string',
+        parameterTemplate={
+            'string': {
+                'description': 'string',
+                'optional': True|False
+            }
+        },
+        requestId='string',
+        storageType='STATIC'|'DYNAMIC',
+        storageCapacity=123,
+        tags={
+            'string': 'string'
+        },
+        workflowBucketOwnerId='string',
+        containerRegistryMap={
+            'registryMappings': [
+                {
+                    'upstreamRegistryUrl': 'string',
+                    'ecrRepositoryPrefix': 'string',
+                    'upstreamRepositoryPrefix': 'string',
+                    'ecrAccountId': 'string'
+                },
+            ],
+            'imageMappings': [
+                {
+                    'sourceImage': 'string',
+                    'destinationImage': 'string'
+                },
+            ]
+        },
+        containerRegistryMapUri='string',
+        readmeMarkdown='string',
+        parameterTemplatePath='string',
+        readmePath='string',
+        definitionRepository={
+            'connectionArn': 'string',
+            'fullRepositoryId': 'string',
+            'sourceReference': {
+                'type': 'BRANCH'|'TAG'|'COMMIT',
+                'value': 'string'
+            },
+            'excludeFilePatterns': [
+                'string',
+            ]
+        },
+        readmeUri='string'
+    )
+    
+  :type workflowId: string
+  :param workflowId: **[REQUIRED]** 
+
+    The ID of the workflow where you are creating the new version. The ``workflowId`` is not the UUID.
+
+    
+
+  
+  :type versionName: string
+  :param versionName: **[REQUIRED]** 
+
+    A name for the workflow version. Provide a version name that is unique for this workflow. You cannot change the name after HealthOmics creates the version.
+
+     
+
+    The version name must start with a letter or number and it can include upper-case and lower-case letters, numbers, hyphens, periods and underscores. The maximum length is 64 characters. You can use a simple naming scheme, such as version1, version2, version3. You can also match your workflow versions with your own internal versioning conventions, such as 2.7.0, 2.7.1, 2.7.2.
+
+    
+
+  
+  :type definitionZip: bytes
+  :param definitionZip: 
+
+    A ZIP archive containing the main workflow definition file and dependencies that it imports for this workflow version. You can use a file with a ://fileb prefix instead of the Base64 string. For more information, see Workflow definition requirements in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  :type definitionUri: string
+  :param definitionUri: 
+
+    The S3 URI of a definition for this workflow version. The S3 bucket must be in the same region as this workflow version.
+
+    
+
+  
+  :type accelerators: string
+  :param accelerators: 
+
+    The computational accelerator for this workflow version.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    A description for this workflow version.
+
+    
+
+  
+  :type engine: string
+  :param engine: 
+
+    The workflow engine for this workflow version. This is only required if you have workflow definition files from more than one engine in your zip file. Otherwise, the service can detect the engine automatically from your workflow definition.
+
+    
+
+  
+  :type main: string
+  :param main: 
+
+    The path of the main definition file for this workflow version. This parameter is not required if the ZIP archive contains only one workflow definition file, or if the main definition file is named “main”. An example path is: ``workflow-definition/main-file.wdl``.
+
+    
+
+  
+  :type parameterTemplate: dict
+  :param parameterTemplate: 
+
+    A parameter template for this workflow version. If this field is blank, Amazon Web Services HealthOmics will automatically parse the parameter template values from your workflow definition file. To override these service generated default values, provide a parameter template. To view an example of a parameter template, see `Parameter template files <https://docs.aws.amazon.com/omics/latest/dev/parameter-templates.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(dict) --* 
+
+        A workflow parameter.
+
+        
+
+      
+        - **description** *(string) --* 
+
+          The parameter's description.
+
+          
+
+        
+        - **optional** *(boolean) --* 
+
+          Whether the parameter is optional.
+
+          
+
+        
+      
+
+
+  :type requestId: string
+  :param requestId: **[REQUIRED]** 
+
+    An idempotency token to ensure that duplicate workflows are not created when Amazon Web Services HealthOmics submits retry requests.
+
+    This field is autopopulated if not provided.
+
+  
+  :type storageType: string
+  :param storageType: 
+
+    The default storage type for runs that use this workflow version. The ``storageType`` can be overridden at run time. ``DYNAMIC`` storage dynamically scales the storage up or down, based on file system utilization. STATIC storage allocates a fixed amount of storage. For more information about dynamic and static storage types, see `Run storage types <https://docs.aws.amazon.com/omics/latest/dev/workflows-run-types.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  :type storageCapacity: integer
+  :param storageCapacity: 
+
+    The default static storage capacity (in gibibytes) for runs that use this workflow version. The ``storageCapacity`` can be overwritten at run time. The storage capacity is not required for runs with a ``DYNAMIC`` storage type.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    Tags for this workflow version. You can define up to 50 tags for the workflow. For more information, see `Adding a tag <https://docs.aws.amazon.com/omics/latest/dev/add-a-tag.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type workflowBucketOwnerId: string
+  :param workflowBucketOwnerId: 
+
+    Amazon Web Services Id of the owner of the S3 bucket that contains the workflow definition. You need to specify this parameter if your account is not the bucket owner.
+
+    
+
+  
+  :type containerRegistryMap: dict
+  :param containerRegistryMap: 
+
+    (Optional) Use a container registry map to specify mappings between the ECR private repository and one or more upstream registries. For more information, see `Container images <https://docs.aws.amazon.com/omics/latest/dev/workflows-ecr.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+    - **registryMappings** *(list) --* 
+
+      Mapping that provides the ECR repository path where upstream container images are pulled and synchronized.
+
+      
+
+    
+      - *(dict) --* 
+
+        If you are using the ECR pull through cache feature, the registry mapping maps between the ECR repository and the upstream registry where container images are pulled and synchronized.
+
+        
+
+      
+        - **upstreamRegistryUrl** *(string) --* 
+
+          The URI of the upstream registry.
+
+          
+
+        
+        - **ecrRepositoryPrefix** *(string) --* 
+
+          The repository prefix to use in the ECR private repository.
+
+          
+
+        
+        - **upstreamRepositoryPrefix** *(string) --* 
+
+          The repository prefix of the corresponding repository in the upstream registry.
+
+          
+
+        
+        - **ecrAccountId** *(string) --* 
+
+          Account ID of the account that owns the upstream container image.
+
+          
+
+        
+      
+  
+    - **imageMappings** *(list) --* 
+
+      Image mappings specify path mappings between the ECR private repository and their corresponding external repositories.
+
+      
+
+    
+      - *(dict) --* 
+
+        Specifies image mappings that workflow tasks can use. For example, you can replace all the task references of a public image to use an equivalent image in your private ECR repository. You can use image mappings with upstream registries that don't support pull through cache. You need to manually synchronize the upstream registry with your private repository.
+
+        
+
+      
+        - **sourceImage** *(string) --* 
+
+          Specifies the URI of the source image in the upstream registry.
+
+          
+
+        
+        - **destinationImage** *(string) --* 
+
+          Specifies the URI of the corresponding image in the private ECR registry.
+
+          
+
+        
+      
+  
+  
+  :type containerRegistryMapUri: string
+  :param containerRegistryMapUri: 
+
+    (Optional) URI of the S3 location for the registry mapping file.
+
+    
+
+  
+  :type readmeMarkdown: string
+  :param readmeMarkdown: 
+
+    The markdown content for the workflow version's README file. This provides documentation and usage information for users of this specific workflow version.
+
+    
+
+  
+  :type parameterTemplatePath: string
+  :param parameterTemplatePath: 
+
+    The path to the workflow version parameter template JSON file within the repository. This file defines the input parameters for runs that use this workflow version. If not specified, the workflow version will be created without a parameter template.
+
+    
+
+  
+  :type readmePath: string
+  :param readmePath: 
+
+    The path to the workflow version README markdown file within the repository. This file provides documentation and usage information for the workflow. If not specified, the ``README.md`` file from the root directory of the repository will be used.
+
+    
+
+  
+  :type definitionRepository: dict
+  :param definitionRepository: 
+
+    The repository information for the workflow version definition. This allows you to source your workflow version definition directly from a code repository.
+
+    
+
+  
+    - **connectionArn** *(string) --* **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of the connection to the source code repository.
+
+      
+
+    
+    - **fullRepositoryId** *(string) --* **[REQUIRED]** 
+
+      The full repository identifier, including the repository owner and name. For example, 'repository-owner/repository-name'.
+
+      
+
+    
+    - **sourceReference** *(dict) --* 
+
+      The source reference for the repository, such as a branch name, tag, or commit ID.
+
+      
+
+    
+      - **type** *(string) --* **[REQUIRED]** 
+
+        The type of source reference, such as branch, tag, or commit.
+
+        
+
+      
+      - **value** *(string) --* **[REQUIRED]** 
+
+        The value of the source reference, such as the branch name, tag name, or commit ID.
+
+        
+
+      
+    
+    - **excludeFilePatterns** *(list) --* 
+
+      A list of file patterns to exclude when retrieving the workflow definition from the repository.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type readmeUri: string
+  :param readmeUri: 
+
+    The S3 URI of the README file for the workflow version. This file provides documentation and usage information for the workflow version. Requirements include:
+
+     
+
+    
+    * The S3 URI must begin with ``s3://USER-OWNED-BUCKET/``
+     
+    * The requester must have access to the S3 bucket and object.
+     
+    * The max README content length is 500 KiB.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'arn': 'string',
+          'workflowId': 'string',
+          'versionName': 'string',
+          'status': 'CREATING'|'ACTIVE'|'UPDATING'|'DELETED'|'FAILED'|'INACTIVE',
+          'tags': {
+              'string': 'string'
+          },
+          'uuid': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **arn** *(string) --* 
+
+        ARN of the workflow version.
+
+        
+      
+
+      - **workflowId** *(string) --* 
+
+        The workflow's ID.
+
+        
+      
+
+      - **versionName** *(string) --* 
+
+        The workflow version name.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The workflow version status.
+
+        
+      
+
+      - **tags** *(dict) --* 
+
+        The workflow version's tags.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **uuid** *(string) --* 
+
+        The universally unique identifier (UUID) value for this workflow version.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Omics.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.RequestTimeoutException`
+
+  

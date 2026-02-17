@@ -1,0 +1,197 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / describe_load_balancer_target_groups
+
+************************************
+describe_load_balancer_target_groups
+************************************
+
+
+
+.. py:method:: AutoScaling.Client.describe_load_balancer_target_groups(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This API operation is superseded by `DescribeTrafficSources <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeTrafficSources.html>`__, which can describe multiple traffic sources types. We recommend using ``DetachTrafficSources`` to simplify how you manage traffic sources. However, we continue to support ``DescribeLoadBalancerTargetGroups``. You can use both the original ``DescribeLoadBalancerTargetGroups`` API operation and ``DescribeTrafficSources`` on the same Auto Scaling group.
+
+    
+
+   
+
+  Gets information about the Elastic Load Balancing target groups for the specified Auto Scaling group.
+
+   
+
+  To determine the attachment status of the target group, use the ``State`` element in the response. When you attach a target group to an Auto Scaling group, the initial ``State`` value is ``Adding``. The state transitions to ``Added`` after all Auto Scaling instances are registered with the target group. If Elastic Load Balancing health checks are enabled for the Auto Scaling group, the state transitions to ``InService`` after at least one Auto Scaling instance passes the health check. When the target group is in the ``InService`` state, Amazon EC2 Auto Scaling can terminate and replace any instances that are reported as unhealthy. If no registered instances pass the health checks, the target group doesn't enter the ``InService`` state.
+
+   
+
+  Target groups also have an ``InService`` state if you attach them in the `CreateAutoScalingGroup <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_CreateAutoScalingGroup.html>`__ API call. If your target group state is ``InService``, but it is not working properly, check the scaling activities by calling `DescribeScalingActivities <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeScalingActivities.html>`__ and take any corrective actions necessary.
+
+   
+
+  For help with failed health checks, see `Troubleshooting Amazon EC2 Auto Scaling\: Health checks <https://docs.aws.amazon.com/autoscaling/ec2/userguide/ts-as-healthchecks.html>`__ in the *Amazon EC2 Auto Scaling User Guide*. For more information, see `Use Elastic Load Balancing to distribute traffic across the instances in your Auto Scaling group <https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-load-balancer.html>`__ in the *Amazon EC2 Auto Scaling User Guide*.
+
+   
+
+  .. note::
+
+    
+
+    You can use this operation to describe target groups that were attached by using `AttachLoadBalancerTargetGroups <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_AttachLoadBalancerTargetGroups.html>`__, but not for target groups that were attached by using `AttachTrafficSources <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_AttachTrafficSources.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DescribeLoadBalancerTargetGroups>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_load_balancer_target_groups(
+        AutoScalingGroupName='string',
+        NextToken='string',
+        MaxRecords=123
+    )
+    
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: **[REQUIRED]** 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type MaxRecords: integer
+  :param MaxRecords: 
+
+    The maximum number of items to return with this call. The default value is ``100`` and the maximum value is ``100``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'LoadBalancerTargetGroups': [
+              {
+                  'LoadBalancerTargetGroupARN': 'string',
+                  'State': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **LoadBalancerTargetGroups** *(list) --* 
+
+        Information about the target groups.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes the state of a target group.
+
+          
+          
+
+          - **LoadBalancerTargetGroupARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the target group.
+
+            
+          
+
+          - **State** *(string) --* 
+
+            The state of the target group.
+
+             
+
+            
+            * ``Adding`` - The Auto Scaling instances are being registered with the target group.
+             
+            * ``Added`` - All Auto Scaling instances are registered with the target group.
+             
+            * ``InService`` - At least one Auto Scaling instance passed an ``ELB`` health check.
+             
+            * ``Removing`` - The Auto Scaling instances are being deregistered from the target group. If connection draining is enabled, Elastic Load Balancing waits for in-flight requests to complete before deregistering the instances.
+             
+            * ``Removed`` - All Auto Scaling instances are deregistered from the target group.
+            
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the ``NextToken`` value when requesting the next set of items. This value is null when there are no more items to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+  *   :py:class:`AutoScaling.Client.exceptions.InvalidNextToken`
+
+  
+
+  **Examples**
+
+  This example describes the target groups attached to the specified Auto Scaling group.
+  ::
+
+    response = client.describe_load_balancer_target_groups(
+        AutoScalingGroupName='my-auto-scaling-group',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'LoadBalancerTargetGroups': [
+            {
+                'LoadBalancerTargetGroupARN': 'arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067',
+                'State': 'Added',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

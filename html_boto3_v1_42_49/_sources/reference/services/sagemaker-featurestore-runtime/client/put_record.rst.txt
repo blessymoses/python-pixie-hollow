@@ -1,0 +1,165 @@
+:doc:`SageMakerFeatureStoreRuntime <../../sagemaker-featurestore-runtime>` / Client / put_record
+
+**********
+put_record
+**********
+
+
+
+.. py:method:: SageMakerFeatureStoreRuntime.Client.put_record(**kwargs)
+
+  
+
+  The ``PutRecord`` API is used to ingest a list of ``Records`` into your feature group.
+
+   
+
+  If a new record’s ``EventTime`` is greater, the new record is written to both the ``OnlineStore`` and ``OfflineStore``. Otherwise, the record is a historic record and it is written only to the ``OfflineStore``.
+
+   
+
+  You can specify the ingestion to be applied to the ``OnlineStore``, ``OfflineStore``, or both by using the ``TargetStores`` request parameter.
+
+   
+
+  You can set the ingested record to expire at a given time to live (TTL) duration after the record’s event time, ``ExpiresAt`` = ``EventTime`` + ``TtlDuration``, by specifying the ``TtlDuration`` parameter. A record level ``TtlDuration`` is set when specifying the ``TtlDuration`` parameter using the ``PutRecord`` API call. If the input ``TtlDuration`` is ``null`` or unspecified, ``TtlDuration`` is set to the default feature group level ``TtlDuration``. A record level ``TtlDuration`` supersedes the group level ``TtlDuration``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sagemaker-featurestore-runtime-2020-07-01/PutRecord>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_record(
+        FeatureGroupName='string',
+        Record=[
+            {
+                'FeatureName': 'string',
+                'ValueAsString': 'string',
+                'ValueAsStringList': [
+                    'string',
+                ]
+            },
+        ],
+        TargetStores=[
+            'OnlineStore'|'OfflineStore',
+        ],
+        TtlDuration={
+            'Unit': 'Seconds'|'Minutes'|'Hours'|'Days'|'Weeks',
+            'Value': 123
+        }
+    )
+    
+  :type FeatureGroupName: string
+  :param FeatureGroupName: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of the feature group that you want to insert the record into.
+
+    
+
+  
+  :type Record: list
+  :param Record: **[REQUIRED]** 
+
+    List of FeatureValues to be inserted. This will be a full over-write. If you only want to update few of the feature values, do the following:
+
+     
+
+    
+    * Use ``GetRecord`` to retrieve the latest record.
+     
+    * Update the record returned from ``GetRecord``.
+     
+    * Use ``PutRecord`` to update feature values.
+    
+
+    
+
+  
+    - *(dict) --* 
+
+      The value associated with a feature.
+
+      
+
+    
+      - **FeatureName** *(string) --* **[REQUIRED]** 
+
+        The name of a feature that a feature value corresponds to.
+
+        
+
+      
+      - **ValueAsString** *(string) --* 
+
+        The value in string format associated with a feature. Used when your ``CollectionType`` is ``None``. Note that features types can be ``String``, ``Integral``, or ``Fractional``. This value represents all three types as a string.
+
+        
+
+      
+      - **ValueAsStringList** *(list) --* 
+
+        The list of values in string format associated with a feature. Used when your ``CollectionType`` is a ``List``, ``Set``, or ``Vector``. Note that features types can be ``String``, ``Integral``, or ``Fractional``. These values represents all three types as a string.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type TargetStores: list
+  :param TargetStores: 
+
+    A list of stores to which you're adding the record. By default, Feature Store adds the record to all of the stores that you're using for the ``FeatureGroup``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type TtlDuration: dict
+  :param TtlDuration: 
+
+    Time to live duration, where the record is hard deleted after the expiration time is reached; ``ExpiresAt`` = ``EventTime`` + ``TtlDuration``. For information on HardDelete, see the `DeleteRecord <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_feature_store_DeleteRecord.html>`__ API in the Amazon SageMaker API Reference guide.
+
+    
+
+  
+    - **Unit** *(string) --* **[REQUIRED]** 
+
+      ``TtlDuration`` time unit.
+
+      
+
+    
+    - **Value** *(integer) --* **[REQUIRED]** 
+
+      ``TtlDuration`` time value.
+
+      
+
+    
+  
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`SageMakerFeatureStoreRuntime.Client.exceptions.ValidationError`
+
+  
+  *   :py:class:`SageMakerFeatureStoreRuntime.Client.exceptions.InternalFailure`
+
+  
+  *   :py:class:`SageMakerFeatureStoreRuntime.Client.exceptions.ServiceUnavailable`
+
+  
+  *   :py:class:`SageMakerFeatureStoreRuntime.Client.exceptions.AccessForbidden`
+
+  

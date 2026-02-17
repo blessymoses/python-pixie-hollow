@@ -1,0 +1,291 @@
+:doc:`Transfer <../../transfer>` / Client / list_executions
+
+***************
+list_executions
+***************
+
+
+
+.. py:method:: Transfer.Client.list_executions(**kwargs)
+
+  
+
+  Lists all in-progress executions for the specified workflow.
+
+   
+
+  .. note::
+
+    
+
+    If the specified workflow ID cannot be found, ``ListExecutions`` returns a ``ResourceNotFound`` exception.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/ListExecutions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_executions(
+        MaxResults=123,
+        NextToken='string',
+        WorkflowId='string'
+    )
+    
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    ``ListExecutions`` returns the ``NextToken`` parameter in the output. You can then pass the ``NextToken`` parameter in a subsequent command to continue listing additional executions.
+
+     
+
+    This is useful for pagination, for instance. If you have 100 executions for a workflow, you might only want to list first 10. If so, call the API by specifying the ``max-results``:
+
+     
+
+    ``aws transfer list-executions --max-results 10``
+
+     
+
+    This returns details for the first 10 executions, as well as the pointer ( ``NextToken``) to the eleventh execution. You can now call the API again, supplying the ``NextToken`` value you received:
+
+     
+
+    ``aws transfer list-executions --max-results 10 --next-token $somePointerReturnedFromPreviousListResult``
+
+     
+
+    This call returns the next 10 executions, the 11th through the 20th. You can then repeat the call until the details for all 100 executions have been returned.
+
+    
+
+  
+  :type WorkflowId: string
+  :param WorkflowId: **[REQUIRED]** 
+
+    A unique identifier for the workflow.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'NextToken': 'string',
+          'WorkflowId': 'string',
+          'Executions': [
+              {
+                  'ExecutionId': 'string',
+                  'InitialFileLocation': {
+                      'S3FileLocation': {
+                          'Bucket': 'string',
+                          'Key': 'string',
+                          'VersionId': 'string',
+                          'Etag': 'string'
+                      },
+                      'EfsFileLocation': {
+                          'FileSystemId': 'string',
+                          'Path': 'string'
+                      }
+                  },
+                  'ServiceMetadata': {
+                      'UserDetails': {
+                          'UserName': 'string',
+                          'ServerId': 'string',
+                          'SessionId': 'string'
+                      }
+                  },
+                  'Status': 'IN_PROGRESS'|'COMPLETED'|'EXCEPTION'|'HANDLING_EXCEPTION'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **NextToken** *(string) --* 
+
+        ``ListExecutions`` returns the ``NextToken`` parameter in the output. You can then pass the ``NextToken`` parameter in a subsequent command to continue listing additional executions.
+
+        
+      
+
+      - **WorkflowId** *(string) --* 
+
+        A unique identifier for the workflow.
+
+        
+      
+
+      - **Executions** *(list) --* 
+
+        Returns the details for each execution, in a ``ListedExecution`` array.
+
+        
+        
+
+        - *(dict) --* 
+
+          Returns properties of the execution that is specified.
+
+          
+          
+
+          - **ExecutionId** *(string) --* 
+
+            A unique identifier for the execution of a workflow.
+
+            
+          
+
+          - **InitialFileLocation** *(dict) --* 
+
+            A structure that describes the Amazon S3 or EFS file location. This is the file location when the execution begins: if the file is being copied, this is the initial (as opposed to destination) file location.
+
+            
+            
+
+            - **S3FileLocation** *(dict) --* 
+
+              Specifies the S3 details for the file being used, such as bucket, ETag, and so forth.
+
+              
+              
+
+              - **Bucket** *(string) --* 
+
+                Specifies the S3 bucket that contains the file being used.
+
+                
+              
+
+              - **Key** *(string) --* 
+
+                The name assigned to the file when it was created in Amazon S3. You use the object key to retrieve the object.
+
+                
+              
+
+              - **VersionId** *(string) --* 
+
+                Specifies the file version.
+
+                
+              
+
+              - **Etag** *(string) --* 
+
+                The entity tag is a hash of the object. The ETag reflects changes only to the contents of an object, not its metadata.
+
+                
+          
+            
+
+            - **EfsFileLocation** *(dict) --* 
+
+              Specifies the Amazon EFS identifier and the path for the file being used.
+
+              
+              
+
+              - **FileSystemId** *(string) --* 
+
+                The identifier of the file system, assigned by Amazon EFS.
+
+                
+              
+
+              - **Path** *(string) --* 
+
+                The pathname for the folder being used by a workflow.
+
+                
+          
+        
+          
+
+          - **ServiceMetadata** *(dict) --* 
+
+            A container object for the session details that are associated with a workflow.
+
+            
+            
+
+            - **UserDetails** *(dict) --* 
+
+              The Server ID ( ``ServerId``), Session ID ( ``SessionId``) and user ( ``UserName``) make up the ``UserDetails``.
+
+              
+              
+
+              - **UserName** *(string) --* 
+
+                A unique string that identifies a Transfer Family user associated with a server.
+
+                
+              
+
+              - **ServerId** *(string) --* 
+
+                The system-assigned unique identifier for a Transfer server instance.
+
+                
+              
+
+              - **SessionId** *(string) --* 
+
+                The system-assigned unique identifier for a session that corresponds to the workflow.
+
+                
+          
+        
+          
+
+          - **Status** *(string) --* 
+
+            The status is one of the execution. Can be in progress, completed, exception encountered, or handling the exception.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Transfer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InternalServiceError`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InvalidNextTokenException`
+
+  

@@ -1,0 +1,414 @@
+:doc:`imagebuilder <../../imagebuilder>` / Client / create_image
+
+************
+create_image
+************
+
+
+
+.. py:method:: imagebuilder.Client.create_image(**kwargs)
+
+  
+
+  Creates a new image. This request will create a new image along with all of the configured output resources defined in the distribution configuration. You must specify exactly one recipe for your image, using either a ContainerRecipeArn or an ImageRecipeArn.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateImage>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_image(
+        imageRecipeArn='string',
+        containerRecipeArn='string',
+        distributionConfigurationArn='string',
+        infrastructureConfigurationArn='string',
+        imageTestsConfiguration={
+            'imageTestsEnabled': True|False,
+            'timeoutMinutes': 123
+        },
+        enhancedImageMetadataEnabled=True|False,
+        tags={
+            'string': 'string'
+        },
+        clientToken='string',
+        imageScanningConfiguration={
+            'imageScanningEnabled': True|False,
+            'ecrConfiguration': {
+                'repositoryName': 'string',
+                'containerTags': [
+                    'string',
+                ]
+            }
+        },
+        workflows=[
+            {
+                'workflowArn': 'string',
+                'parameters': [
+                    {
+                        'name': 'string',
+                        'value': [
+                            'string',
+                        ]
+                    },
+                ],
+                'parallelGroup': 'string',
+                'onFailure': 'CONTINUE'|'ABORT'
+            },
+        ],
+        executionRole='string',
+        loggingConfiguration={
+            'logGroupName': 'string'
+        }
+    )
+    
+  :type imageRecipeArn: string
+  :param imageRecipeArn: 
+
+    The Amazon Resource Name (ARN) of the image recipe that defines how images are configured, tested, and assessed.
+
+    
+
+  
+  :type containerRecipeArn: string
+  :param containerRecipeArn: 
+
+    The Amazon Resource Name (ARN) of the container recipe that defines how images are configured and tested.
+
+    
+
+  
+  :type distributionConfigurationArn: string
+  :param distributionConfigurationArn: 
+
+    The Amazon Resource Name (ARN) of the distribution configuration that defines and configures the outputs of your pipeline.
+
+    
+
+  
+  :type infrastructureConfigurationArn: string
+  :param infrastructureConfigurationArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the infrastructure configuration that defines the environment in which your image will be built and tested.
+
+    
+
+  
+  :type imageTestsConfiguration: dict
+  :param imageTestsConfiguration: 
+
+    The image tests configuration of the image.
+
+    
+
+  
+    - **imageTestsEnabled** *(boolean) --* 
+
+      Determines if tests should run after building the image. Image Builder defaults to enable tests to run following the image build, before image distribution.
+
+      
+
+    
+    - **timeoutMinutes** *(integer) --* 
+
+      The maximum time in minutes that tests are permitted to run.
+
+       
+
+      .. note::
+
+        
+
+        The timeout property is not currently active. This value is ignored.
+
+        
+
+      
+
+    
+  
+  :type enhancedImageMetadataEnabled: boolean
+  :param enhancedImageMetadataEnabled: 
+
+    Collects additional information about the image being created, including the operating system (OS) version and package list. This information is used to enhance the overall experience of using EC2 Image Builder. Enabled by default.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    The tags of the image.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type clientToken: string
+  :param clientToken: **[REQUIRED]** 
+
+    Unique, case-sensitive identifier you provide to ensure idempotency of the request. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__ in the *Amazon EC2 API Reference*.
+
+    This field is autopopulated if not provided.
+
+  
+  :type imageScanningConfiguration: dict
+  :param imageScanningConfiguration: 
+
+    Contains settings for vulnerability scans.
+
+    
+
+  
+    - **imageScanningEnabled** *(boolean) --* 
+
+      A setting that indicates whether Image Builder keeps a snapshot of the vulnerability scans that Amazon Inspector runs against the build instance when you create a new image.
+
+      
+
+    
+    - **ecrConfiguration** *(dict) --* 
+
+      Contains Amazon ECR settings for vulnerability scans.
+
+      
+
+    
+      - **repositoryName** *(string) --* 
+
+        The name of the container repository that Amazon Inspector scans to identify findings for your container images. The name includes the path for the repository location. If you don’t provide this information, Image Builder creates a repository in your account named ``image-builder-image-scanning-repository`` for vulnerability scans of your output container images.
+
+        
+
+      
+      - **containerTags** *(list) --* 
+
+        Tags for Image Builder to apply to the output container image that Amazon Inspector scans. Tags can help you identify and manage your scanned images.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+  
+  :type workflows: list
+  :param workflows: 
+
+    Contains an array of workflow configuration objects.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains control settings and configurable inputs for a workflow resource.
+
+      
+
+    
+      - **workflowArn** *(string) --* **[REQUIRED]** 
+
+        The Amazon Resource Name (ARN) of the workflow resource.
+
+        
+
+      
+      - **parameters** *(list) --* 
+
+        Contains parameter values for each of the parameters that the workflow document defined for the workflow resource.
+
+        
+
+      
+        - *(dict) --* 
+
+          Contains a key/value pair that sets the named workflow parameter.
+
+          
+
+        
+          - **name** *(string) --* **[REQUIRED]** 
+
+            The name of the workflow parameter to set.
+
+            
+
+          
+          - **value** *(list) --* **[REQUIRED]** 
+
+            Sets the value for the named workflow parameter.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+    
+      - **parallelGroup** *(string) --* 
+
+        Test workflows are defined within named runtime groups called parallel groups. The parallel group is the named group that contains this test workflow. Test workflows within a parallel group can run at the same time. Image Builder starts up to five test workflows in the group at the same time, and starts additional workflows as others complete, until all workflows in the group have completed. This field only applies for test workflows.
+
+        
+
+      
+      - **onFailure** *(string) --* 
+
+        The action to take if the workflow fails.
+
+        
+
+      
+    
+
+  :type executionRole: string
+  :param executionRole: 
+
+    The name or Amazon Resource Name (ARN) for the IAM role you create that grants Image Builder access to perform workflow actions.
+
+    
+
+  
+  :type loggingConfiguration: dict
+  :param loggingConfiguration: 
+
+    Define logging configuration for the image build process.
+
+    
+
+  
+    - **logGroupName** *(string) --* 
+
+      The log group name that Image Builder uses for image creation. If not specified, the log group name defaults to ``/aws/imagebuilder/image-name``.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'requestId': 'string',
+          'clientToken': 'string',
+          'imageBuildVersionArn': 'string',
+          'latestVersionReferences': {
+              'latestVersionArn': 'string',
+              'latestMajorVersionArn': 'string',
+              'latestMinorVersionArn': 'string',
+              'latestPatchVersionArn': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **requestId** *(string) --* 
+
+        The request ID that uniquely identifies this request.
+
+        
+      
+
+      - **clientToken** *(string) --* 
+
+        The client token that uniquely identifies the request.
+
+        
+      
+
+      - **imageBuildVersionArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the image that the request created.
+
+        
+      
+
+      - **latestVersionReferences** *(dict) --* 
+
+        The resource ARNs with different wildcard variations of semantic versioning.
+
+        
+        
+
+        - **latestVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) of the Image Builder resource.
+
+          
+        
+
+        - **latestMajorVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) with the same ``major`` version of the Image Builder resource.
+
+          
+        
+
+        - **latestMinorVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) with the same ``minor`` version of the Image Builder resource.
+
+          
+        
+
+        - **latestPatchVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) with the same ``patch`` version of the Image Builder resource.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.IdempotentParameterMismatchException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.CallRateLimitExceededException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ServiceQuotaExceededException`
+
+  

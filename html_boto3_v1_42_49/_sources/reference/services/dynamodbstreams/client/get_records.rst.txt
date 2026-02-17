@@ -1,0 +1,1009 @@
+:doc:`DynamoDBStreams <../../dynamodbstreams>` / Client / get_records
+
+***********
+get_records
+***********
+
+
+
+.. py:method:: DynamoDBStreams.Client.get_records(**kwargs)
+
+  
+
+  Retrieves the stream records from a given shard.
+
+   
+
+  Specify a shard iterator using the ``ShardIterator`` parameter. The shard iterator specifies the position in the shard from which you want to start reading stream records sequentially. If there are no stream records available in the portion of the shard that the iterator points to, ``GetRecords`` returns an empty list. Note that it might take multiple calls to get to a portion of the shard that contains stream records.
+
+   
+
+  .. note::
+
+    
+
+    ``GetRecords`` can retrieve a maximum of 1 MB of data or 1000 stream records, whichever comes first.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/streams-dynamodb-2012-08-10/GetRecords>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_records(
+        ShardIterator='string',
+        Limit=123
+    )
+    
+  :type ShardIterator: string
+  :param ShardIterator: **[REQUIRED]** 
+
+    A shard iterator that was retrieved from a previous GetShardIterator operation. This iterator can be used to access the stream records in this shard.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    The maximum number of records to return from the shard. The upper limit is 1000.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Records': [
+              {
+                  'eventID': 'string',
+                  'eventName': 'INSERT'|'MODIFY'|'REMOVE',
+                  'eventVersion': 'string',
+                  'eventSource': 'string',
+                  'awsRegion': 'string',
+                  'dynamodb': {
+                      'ApproximateCreationDateTime': datetime(2015, 1, 1),
+                      'Keys': {
+                          'string': {
+                              'S': 'string',
+                              'N': 'string',
+                              'B': b'bytes',
+                              'SS': [
+                                  'string',
+                              ],
+                              'NS': [
+                                  'string',
+                              ],
+                              'BS': [
+                                  b'bytes',
+                              ],
+                              'M': {
+                                  'string': {'... recursive ...'}
+                              },
+                              'L': [
+                                  {'... recursive ...'},
+                              ],
+                              'NULL': True|False,
+                              'BOOL': True|False
+                          }
+                      },
+                      'NewImage': {
+                          'string': {
+                              'S': 'string',
+                              'N': 'string',
+                              'B': b'bytes',
+                              'SS': [
+                                  'string',
+                              ],
+                              'NS': [
+                                  'string',
+                              ],
+                              'BS': [
+                                  b'bytes',
+                              ],
+                              'M': {
+                                  'string': {'... recursive ...'}
+                              },
+                              'L': [
+                                  {'... recursive ...'},
+                              ],
+                              'NULL': True|False,
+                              'BOOL': True|False
+                          }
+                      },
+                      'OldImage': {
+                          'string': {
+                              'S': 'string',
+                              'N': 'string',
+                              'B': b'bytes',
+                              'SS': [
+                                  'string',
+                              ],
+                              'NS': [
+                                  'string',
+                              ],
+                              'BS': [
+                                  b'bytes',
+                              ],
+                              'M': {
+                                  'string': {'... recursive ...'}
+                              },
+                              'L': [
+                                  {'... recursive ...'},
+                              ],
+                              'NULL': True|False,
+                              'BOOL': True|False
+                          }
+                      },
+                      'SequenceNumber': 'string',
+                      'SizeBytes': 123,
+                      'StreamViewType': 'NEW_IMAGE'|'OLD_IMAGE'|'NEW_AND_OLD_IMAGES'|'KEYS_ONLY'
+                  },
+                  'userIdentity': {
+                      'PrincipalId': 'string',
+                      'Type': 'string'
+                  }
+              },
+          ],
+          'NextShardIterator': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the output of a ``GetRecords`` operation.
+
+      
+      
+
+      - **Records** *(list) --* 
+
+        The stream records from the shard, which were retrieved using the shard iterator.
+
+        
+        
+
+        - *(dict) --* 
+
+          A description of a unique event within a stream.
+
+          
+          
+
+          - **eventID** *(string) --* 
+
+            A globally unique identifier for the event that was recorded in this stream record.
+
+            
+          
+
+          - **eventName** *(string) --* 
+
+            The type of data modification that was performed on the DynamoDB table:
+
+             
+
+            
+            * ``INSERT`` - a new item was added to the table.
+             
+            * ``MODIFY`` - one or more of an existing item's attributes were modified.
+             
+            * ``REMOVE`` - the item was deleted from the table
+            
+
+            
+          
+
+          - **eventVersion** *(string) --* 
+
+            The version number of the stream record format. This number is updated whenever the structure of ``Record`` is modified.
+
+             
+
+            Client applications must not assume that ``eventVersion`` will remain at a particular value, as this number is subject to change at any time. In general, ``eventVersion`` will only increase as the low-level DynamoDB Streams API evolves.
+
+            
+          
+
+          - **eventSource** *(string) --* 
+
+            The Amazon Web Services service from which the stream record originated. For DynamoDB Streams, this is ``aws:dynamodb``.
+
+            
+          
+
+          - **awsRegion** *(string) --* 
+
+            The region in which the ``GetRecords`` request was received.
+
+            
+          
+
+          - **dynamodb** *(dict) --* 
+
+            The main body of the stream record, containing all of the DynamoDB-specific fields.
+
+            
+            
+
+            - **ApproximateCreationDateTime** *(datetime) --* 
+
+              The approximate date and time when the stream record was created, in `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format and rounded down to the closest second.
+
+              
+            
+
+            - **Keys** *(dict) --* 
+
+              The primary key attribute(s) for the DynamoDB item that was modified.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(dict) --* 
+
+                  Represents the data for an attribute.
+
+                   
+
+                  Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                   
+
+                  For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                  
+                  
+
+                  - **S** *(string) --* 
+
+                    An attribute of type String. For example:
+
+                     
+
+                    ``"S": "Hello"``
+
+                    
+                  
+
+                  - **N** *(string) --* 
+
+                    An attribute of type Number. For example:
+
+                     
+
+                    ``"N": "123.45"``
+
+                     
+
+                    Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                    
+                  
+
+                  - **B** *(bytes) --* 
+
+                    An attribute of type Binary. For example:
+
+                     
+
+                    ``"B": "dGhpcyB0ZXh0IGlzIGJhc2U2NC1lbmNvZGVk"``
+
+                    
+                  
+
+                  - **SS** *(list) --* 
+
+                    An attribute of type String Set. For example:
+
+                     
+
+                    ``"SS": ["Giraffe", "Hippo" ,"Zebra"]``
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **NS** *(list) --* 
+
+                    An attribute of type Number Set. For example:
+
+                     
+
+                    ``"NS": ["42.2", "-19", "7.5", "3.14"]``
+
+                     
+
+                    Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **BS** *(list) --* 
+
+                    An attribute of type Binary Set. For example:
+
+                     
+
+                    ``"BS": ["U3Vubnk=", "UmFpbnk=", "U25vd3k="]``
+
+                    
+                    
+
+                    - *(bytes) --* 
+                
+                  
+
+                  - **M** *(dict) --* 
+
+                    An attribute of type Map. For example:
+
+                     
+
+                    ``"M": {"Name": {"S": "Joe"}, "Age": {"N": "35"}}``
+
+                    
+                    
+
+                    - *(string) --* 
+                      
+
+                      - *(dict) --* 
+
+                        Represents the data for an attribute.
+
+                         
+
+                        Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                         
+
+                        For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                        
+                
+              
+                  
+
+                  - **L** *(list) --* 
+
+                    An attribute of type List. For example:
+
+                     
+
+                    ``"L": [ {"S": "Cookies"} , {"S": "Coffee"}, {"N": "3.14159"}]``
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Represents the data for an attribute.
+
+                       
+
+                      Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                       
+
+                      For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                      
+                
+                  
+
+                  - **NULL** *(boolean) --* 
+
+                    An attribute of type Null. For example:
+
+                     
+
+                    ``"NULL": true``
+
+                    
+                  
+
+                  - **BOOL** *(boolean) --* 
+
+                    An attribute of type Boolean. For example:
+
+                     
+
+                    ``"BOOL": true``
+
+                    
+              
+          
+        
+            
+
+            - **NewImage** *(dict) --* 
+
+              The item in the DynamoDB table as it appeared after it was modified.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(dict) --* 
+
+                  Represents the data for an attribute.
+
+                   
+
+                  Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                   
+
+                  For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                  
+                  
+
+                  - **S** *(string) --* 
+
+                    An attribute of type String. For example:
+
+                     
+
+                    ``"S": "Hello"``
+
+                    
+                  
+
+                  - **N** *(string) --* 
+
+                    An attribute of type Number. For example:
+
+                     
+
+                    ``"N": "123.45"``
+
+                     
+
+                    Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                    
+                  
+
+                  - **B** *(bytes) --* 
+
+                    An attribute of type Binary. For example:
+
+                     
+
+                    ``"B": "dGhpcyB0ZXh0IGlzIGJhc2U2NC1lbmNvZGVk"``
+
+                    
+                  
+
+                  - **SS** *(list) --* 
+
+                    An attribute of type String Set. For example:
+
+                     
+
+                    ``"SS": ["Giraffe", "Hippo" ,"Zebra"]``
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **NS** *(list) --* 
+
+                    An attribute of type Number Set. For example:
+
+                     
+
+                    ``"NS": ["42.2", "-19", "7.5", "3.14"]``
+
+                     
+
+                    Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **BS** *(list) --* 
+
+                    An attribute of type Binary Set. For example:
+
+                     
+
+                    ``"BS": ["U3Vubnk=", "UmFpbnk=", "U25vd3k="]``
+
+                    
+                    
+
+                    - *(bytes) --* 
+                
+                  
+
+                  - **M** *(dict) --* 
+
+                    An attribute of type Map. For example:
+
+                     
+
+                    ``"M": {"Name": {"S": "Joe"}, "Age": {"N": "35"}}``
+
+                    
+                    
+
+                    - *(string) --* 
+                      
+
+                      - *(dict) --* 
+
+                        Represents the data for an attribute.
+
+                         
+
+                        Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                         
+
+                        For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                        
+                
+              
+                  
+
+                  - **L** *(list) --* 
+
+                    An attribute of type List. For example:
+
+                     
+
+                    ``"L": [ {"S": "Cookies"} , {"S": "Coffee"}, {"N": "3.14159"}]``
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Represents the data for an attribute.
+
+                       
+
+                      Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                       
+
+                      For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                      
+                
+                  
+
+                  - **NULL** *(boolean) --* 
+
+                    An attribute of type Null. For example:
+
+                     
+
+                    ``"NULL": true``
+
+                    
+                  
+
+                  - **BOOL** *(boolean) --* 
+
+                    An attribute of type Boolean. For example:
+
+                     
+
+                    ``"BOOL": true``
+
+                    
+              
+          
+        
+            
+
+            - **OldImage** *(dict) --* 
+
+              The item in the DynamoDB table as it appeared before it was modified.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(dict) --* 
+
+                  Represents the data for an attribute.
+
+                   
+
+                  Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                   
+
+                  For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                  
+                  
+
+                  - **S** *(string) --* 
+
+                    An attribute of type String. For example:
+
+                     
+
+                    ``"S": "Hello"``
+
+                    
+                  
+
+                  - **N** *(string) --* 
+
+                    An attribute of type Number. For example:
+
+                     
+
+                    ``"N": "123.45"``
+
+                     
+
+                    Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                    
+                  
+
+                  - **B** *(bytes) --* 
+
+                    An attribute of type Binary. For example:
+
+                     
+
+                    ``"B": "dGhpcyB0ZXh0IGlzIGJhc2U2NC1lbmNvZGVk"``
+
+                    
+                  
+
+                  - **SS** *(list) --* 
+
+                    An attribute of type String Set. For example:
+
+                     
+
+                    ``"SS": ["Giraffe", "Hippo" ,"Zebra"]``
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **NS** *(list) --* 
+
+                    An attribute of type Number Set. For example:
+
+                     
+
+                    ``"NS": ["42.2", "-19", "7.5", "3.14"]``
+
+                     
+
+                    Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **BS** *(list) --* 
+
+                    An attribute of type Binary Set. For example:
+
+                     
+
+                    ``"BS": ["U3Vubnk=", "UmFpbnk=", "U25vd3k="]``
+
+                    
+                    
+
+                    - *(bytes) --* 
+                
+                  
+
+                  - **M** *(dict) --* 
+
+                    An attribute of type Map. For example:
+
+                     
+
+                    ``"M": {"Name": {"S": "Joe"}, "Age": {"N": "35"}}``
+
+                    
+                    
+
+                    - *(string) --* 
+                      
+
+                      - *(dict) --* 
+
+                        Represents the data for an attribute.
+
+                         
+
+                        Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                         
+
+                        For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                        
+                
+              
+                  
+
+                  - **L** *(list) --* 
+
+                    An attribute of type List. For example:
+
+                     
+
+                    ``"L": [ {"S": "Cookies"} , {"S": "Coffee"}, {"N": "3.14159"}]``
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Represents the data for an attribute.
+
+                       
+
+                      Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                       
+
+                      For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                      
+                
+                  
+
+                  - **NULL** *(boolean) --* 
+
+                    An attribute of type Null. For example:
+
+                     
+
+                    ``"NULL": true``
+
+                    
+                  
+
+                  - **BOOL** *(boolean) --* 
+
+                    An attribute of type Boolean. For example:
+
+                     
+
+                    ``"BOOL": true``
+
+                    
+              
+          
+        
+            
+
+            - **SequenceNumber** *(string) --* 
+
+              The sequence number of the stream record.
+
+              
+            
+
+            - **SizeBytes** *(integer) --* 
+
+              The size of the stream record, in bytes.
+
+              
+            
+
+            - **StreamViewType** *(string) --* 
+
+              The type of data from the modified DynamoDB item that was captured in this stream record:
+
+               
+
+              
+              * ``KEYS_ONLY`` - only the key attributes of the modified item.
+               
+              * ``NEW_IMAGE`` - the entire item, as it appeared after it was modified.
+               
+              * ``OLD_IMAGE`` - the entire item, as it appeared before it was modified.
+               
+              * ``NEW_AND_OLD_IMAGES`` - both the new and the old item images of the item.
+              
+
+              
+        
+          
+
+          - **userIdentity** *(dict) --* 
+
+            Items that are deleted by the Time to Live process after expiration have the following fields:
+
+             
+
+            
+            * Records[].userIdentity.type "Service"
+             
+            * Records[].userIdentity.principalId "dynamodb.amazonaws.com"
+            
+
+            
+            
+
+            - **PrincipalId** *(string) --* 
+
+              A unique identifier for the entity that made the call. For Time To Live, the principalId is "dynamodb.amazonaws.com".
+
+              
+            
+
+            - **Type** *(string) --* 
+
+              The type of the identity. For Time To Live, the type is "Service".
+
+              
+        
+      
+    
+      
+
+      - **NextShardIterator** *(string) --* 
+
+        The next position in the shard from which to start sequentially reading stream records. If set to ``null``, the shard has been closed and the requested iterator will not return any more data.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.ExpiredIteratorException`
+
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.TrimmedDataAccessException`
+
+  
+
+  **Examples**
+
+  The following example retrieves all the stream records from a shard.
+  ::
+
+    response = client.get_records(
+        ShardIterator='arn:aws:dynamodb:us-west-2:111122223333:table/Forum/stream/2015-05-20T20:51:10.252|1|AAAAAAAAAAEvJp6D+zaQ...  <remaining characters omitted> ...',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'NextShardIterator': 'arn:aws:dynamodb:us-west-2:111122223333:table/Forum/stream/2015-05-20T20:51:10.252|1|AAAAAAAAAAGQBYshYDEe ... <remaining characters omitted> ...',
+        'Records': [
+            {
+                'awsRegion': 'us-west-2',
+                'dynamodb': {
+                    'ApproximateCreationDateTime': datetime(2016, 6, 2, 2, 41, 0, 3, 154, 0),
+                    'Keys': {
+                        'ForumName': {
+                            'S': 'DynamoDB',
+                        },
+                        'Subject': {
+                            'S': 'DynamoDB Thread 3',
+                        },
+                    },
+                    'SequenceNumber': '300000000000000499659',
+                    'SizeBytes': 41,
+                    'StreamViewType': 'KEYS_ONLY',
+                },
+                'eventID': 'e2fd9c34eff2d779b297b26f5fef4206',
+                'eventName': 'INSERT',
+                'eventSource': 'aws:dynamodb',
+                'eventVersion': '1.0',
+            },
+            {
+                'awsRegion': 'us-west-2',
+                'dynamodb': {
+                    'ApproximateCreationDateTime': datetime(2016, 6, 2, 2, 21, 10, 3, 154, 0),
+                    'Keys': {
+                        'ForumName': {
+                            'S': 'DynamoDB',
+                        },
+                        'Subject': {
+                            'S': 'DynamoDB Thread 1',
+                        },
+                    },
+                    'SequenceNumber': '400000000000000499660',
+                    'SizeBytes': 41,
+                    'StreamViewType': 'KEYS_ONLY',
+                },
+                'eventID': '4b25bd0da9a181a155114127e4837252',
+                'eventName': 'MODIFY',
+                'eventSource': 'aws:dynamodb',
+                'eventVersion': '1.0',
+            },
+            {
+                'awsRegion': 'us-west-2',
+                'dynamodb': {
+                    'ApproximateCreationDateTime': datetime(2016, 6, 2, 2, 41, 0, 3, 154, 0),
+                    'Keys': {
+                        'ForumName': {
+                            'S': 'DynamoDB',
+                        },
+                        'Subject': {
+                            'S': 'DynamoDB Thread 2',
+                        },
+                    },
+                    'SequenceNumber': '500000000000000499661',
+                    'SizeBytes': 41,
+                    'StreamViewType': 'KEYS_ONLY',
+                },
+                'eventID': '740280c73a3df7842edab3548a1b08ad',
+                'eventName': 'REMOVE',
+                'eventSource': 'aws:dynamodb',
+                'eventVersion': '1.0',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

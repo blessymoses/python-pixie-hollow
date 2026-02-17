@@ -1,0 +1,191 @@
+:doc:`XRay <../../xray>` / Client / batch_get_traces
+
+****************
+batch_get_traces
+****************
+
+
+
+.. py:method:: XRay.Client.batch_get_traces(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    You cannot find traces through this API if Transaction Search is enabled since trace is not indexed in X-Ray.
+
+    
+
+   
+
+  Retrieves a list of traces specified by ID. Each trace is a collection of segment documents that originates from a single request. Use ``GetTraceSummaries`` to get a list of trace IDs.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/xray-2016-04-12/BatchGetTraces>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_traces(
+        TraceIds=[
+            'string',
+        ],
+        NextToken='string'
+    )
+    
+  :type TraceIds: list
+  :param TraceIds: **[REQUIRED]** 
+
+    Specify the trace IDs of requests for which to retrieve segments.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type NextToken: string
+  :param NextToken: 
+
+    Pagination token.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Traces': [
+              {
+                  'Id': 'string',
+                  'Duration': 123.0,
+                  'LimitExceeded': True|False,
+                  'Segments': [
+                      {
+                          'Id': 'string',
+                          'Document': 'string'
+                      },
+                  ]
+              },
+          ],
+          'UnprocessedTraceIds': [
+              'string',
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Traces** *(list) --* 
+
+        Full traces for the specified requests.
+
+        
+        
+
+        - *(dict) --* 
+
+          A collection of segment documents with matching trace IDs.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The unique identifier for the request that generated the trace's segments and subsegments.
+
+            
+          
+
+          - **Duration** *(float) --* 
+
+            The length of time in seconds between the start time of the earliest segment that started and the end time of the last segment that completed.
+
+            
+          
+
+          - **LimitExceeded** *(boolean) --* 
+
+            LimitExceeded is set to true when the trace has exceeded the ``Trace document size`` limit. For more information about this limit and other X-Ray limits and quotas, see `Amazon Web Services X-Ray endpoints and quotas <https://docs.aws.amazon.com/general/latest/gr/xray.html>`__.
+
+            
+          
+
+          - **Segments** *(list) --* 
+
+            Segment documents for the segments and subsegments that comprise the trace.
+
+            
+            
+
+            - *(dict) --* 
+
+              A segment from a trace that has been ingested by the X-Ray service. The segment can be compiled from documents uploaded with `PutTraceSegments <https://docs.aws.amazon.com/xray/latest/api/API_PutTraceSegments.html>`__, or an ``inferred`` segment for a downstream service, generated from a subsegment sent by the service that called it.
+
+               
+
+              For the full segment document schema, see `Amazon Web Services X-Ray segment documents <https://docs.aws.amazon.com/xray/latest/devguide/aws-xray-interface-api.html#xray-api-segmentdocuments>`__ in the *Amazon Web Services X-Ray Developer Guide*.
+
+              
+              
+
+              - **Id** *(string) --* 
+
+                The segment's ID.
+
+                
+              
+
+              - **Document** *(string) --* 
+
+                The segment document.
+
+                
+          
+        
+      
+    
+      
+
+      - **UnprocessedTraceIds** *(list) --* 
+
+        Trace IDs of requests that haven't been processed.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        Pagination token.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`XRay.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`XRay.Client.exceptions.ThrottledException`
+
+  

@@ -1,0 +1,189 @@
+:doc:`DirectoryService <../../ds>` / Client / start_ad_assessment
+
+*******************
+start_ad_assessment
+*******************
+
+
+
+.. py:method:: DirectoryService.Client.start_ad_assessment(**kwargs)
+
+  
+
+  Initiates a directory assessment to validate your self-managed AD environment for hybrid domain join. The assessment checks compatibility and connectivity of the self-managed AD environment.
+
+   
+
+  A directory assessment is automatically created when you create a hybrid directory. There are two types of assessments: ``CUSTOMER`` and ``SYSTEM``. Your Amazon Web Services account has a limit of 100 ``CUSTOMER`` directory assessments.
+
+   
+
+  The assessment process typically takes 30 minutes or more to complete. The assessment process is asynchronous and you can monitor it with ``DescribeADAssessment``.
+
+   
+
+  The ``InstanceIds`` must have a one-to-one correspondence with ``CustomerDnsIps``, meaning that if the IP address for instance i-10243410 is 10.24.34.100 and the IP address for instance i-10243420 is 10.24.34.200, then the input arrays must maintain the same order relationship, either [10.24.34.100, 10.24.34.200] paired with [i-10243410, i-10243420] or [10.24.34.200, 10.24.34.100] paired with [i-10243420, i-10243410].
+
+   
+
+  Note: You must provide exactly one ``DirectoryId`` or ``AssessmentConfiguration``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/StartADAssessment>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_ad_assessment(
+        AssessmentConfiguration={
+            'CustomerDnsIps': [
+                'string',
+            ],
+            'DnsName': 'string',
+            'VpcSettings': {
+                'VpcId': 'string',
+                'SubnetIds': [
+                    'string',
+                ]
+            },
+            'InstanceIds': [
+                'string',
+            ],
+            'SecurityGroupIds': [
+                'string',
+            ]
+        },
+        DirectoryId='string'
+    )
+    
+  :type AssessmentConfiguration: dict
+  :param AssessmentConfiguration: 
+
+    Configuration parameters for the directory assessment, including DNS server information, domain name, Amazon VPC subnet, and Amazon Web Services System Manager managed node details.
+
+    
+
+  
+    - **CustomerDnsIps** *(list) --* **[REQUIRED]** 
+
+      A list of IP addresses for the DNS servers or domain controllers in your self-managed AD that are tested during the assessment.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **DnsName** *(string) --* **[REQUIRED]** 
+
+      The fully qualified domain name (FQDN) of the self-managed AD domain to assess.
+
+      
+
+    
+    - **VpcSettings** *(dict) --* **[REQUIRED]** 
+
+      Contains VPC information for the  CreateDirectory,  CreateMicrosoftAD, or  CreateHybridAD operation.
+
+      
+
+    
+      - **VpcId** *(string) --* **[REQUIRED]** 
+
+        The identifier of the VPC in which to create the directory.
+
+        
+
+      
+      - **SubnetIds** *(list) --* **[REQUIRED]** 
+
+        The identifiers of the subnets for the directory servers. The two subnets must be in different Availability Zones. Directory Service creates a directory server and a DNS server in each of these subnets.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+    - **InstanceIds** *(list) --* **[REQUIRED]** 
+
+      The identifiers of the self-managed instances with SSM that are used to perform connectivity and validation tests.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **SecurityGroupIds** *(list) --* 
+
+      By default, the service attaches a security group to allow network access to the self-managed nodes in your Amazon VPC. You can optionally supply your own security group that allows network traffic to and from your self-managed domain controllers outside of your Amazon VPC.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type DirectoryId: string
+  :param DirectoryId: 
+
+    The identifier of the directory for which to perform the assessment. This should be an existing directory. If the assessment is not for an existing directory, this parameter should be omitted.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'AssessmentId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **AssessmentId** *(string) --* 
+
+        The unique identifier of the newly started directory assessment. Use this identifier to monitor assessment progress and retrieve results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DirectoryService.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.UnsupportedOperationException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.DirectoryDoesNotExistException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.ADAssessmentLimitExceededException`
+
+  

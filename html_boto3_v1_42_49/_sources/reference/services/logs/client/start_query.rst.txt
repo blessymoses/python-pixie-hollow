@@ -1,0 +1,230 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / start_query
+
+***********
+start_query
+***********
+
+
+
+.. py:method:: CloudWatchLogs.Client.start_query(**kwargs)
+
+  
+
+  Starts a query of one or more log groups or data sources using CloudWatch Logs Insights. You specify the log groups or data sources and time range to query and the query string to use. You can query up to 10 data sources in a single query.
+
+   
+
+  For more information, see `CloudWatch Logs Insights Query Syntax <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html>`__.
+
+   
+
+  After you run a query using ``StartQuery``, the query results are stored by CloudWatch Logs. You can use `GetQueryResults <https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_GetQueryResults.html>`__ to retrieve the results of a query, using the ``queryId`` that ``StartQuery`` returns.
+
+   
+
+  Interactive queries started with ``StartQuery`` share concurrency limits with automated scheduled query executions. Both types of queries count toward the same regional concurrent query quota, so high scheduled query activity may affect the availability of concurrent slots for interactive queries.
+
+   
+
+  .. note::
+
+    
+
+    To specify the log groups to query, a ``StartQuery`` operation must include one of the following:
+
+     
+
+    
+    * Either exactly one of the following parameters: ``logGroupName``, ``logGroupNames``, or ``logGroupIdentifiers``
+     
+    * Or the ``queryString`` must include a ``SOURCE`` command to select log groups for the query. The ``SOURCE`` command can select log groups based on log group name prefix, account ID, and log class, or select data sources using dataSource syntax in LogsQL, PPL, and SQL. For more information about the ``SOURCE`` command, see `SOURCE <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax-Source.html>`__.
+    
+
+    
+
+   
+
+  If you have associated a KMS key with the query results in this account, then `StartQuery <https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_StartQuery.html>`__ uses that key to encrypt the results when it stores them. If no key is associated with query results, the query results are encrypted with the default CloudWatch Logs encryption method.
+
+   
+
+  Queries time out after 60 minutes of runtime. If your queries are timing out, reduce the time range being searched or partition your query into a number of queries.
+
+   
+
+  If you are using CloudWatch cross-account observability, you can use this operation in a monitoring account to start a query in a linked source account. For more information, see `CloudWatch cross-account observability <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Unified-Cross-Account.html>`__. For a cross-account ``StartQuery`` operation, the query definition must be defined in the monitoring account.
+
+   
+
+  You can have up to 30 concurrent CloudWatch Logs insights queries, including queries that have been added to dashboards.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/StartQuery>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_query(
+        queryLanguage='CWLI'|'SQL'|'PPL',
+        logGroupName='string',
+        logGroupNames=[
+            'string',
+        ],
+        logGroupIdentifiers=[
+            'string',
+        ],
+        startTime=123,
+        endTime=123,
+        queryString='string',
+        limit=123
+    )
+    
+  :type queryLanguage: string
+  :param queryLanguage: 
+
+    Specify the query language to use for this query. The options are Logs Insights QL, OpenSearch PPL, and OpenSearch SQL. For more information about the query languages that CloudWatch Logs supports, see `Supported query languages <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_AnalyzeLogData_Languages.html>`__.
+
+    
+
+  
+  :type logGroupName: string
+  :param logGroupName: 
+
+    The log group on which to perform the query.
+
+     
+
+    .. note::
+
+      
+
+      A ``StartQuery`` operation must include exactly one of the following parameters: ``logGroupName``, ``logGroupNames``, or ``logGroupIdentifiers``. The exception is queries using the OpenSearch Service SQL query language, where you specify the log group names inside the ``querystring`` instead of here.
+
+      
+
+    
+
+  
+  :type logGroupNames: list
+  :param logGroupNames: 
+
+    The list of log groups to be queried. You can include up to 50 log groups.
+
+     
+
+    .. note::
+
+      
+
+      A ``StartQuery`` operation must include exactly one of the following parameters: ``logGroupName``, ``logGroupNames``, or ``logGroupIdentifiers``. The exception is queries using the OpenSearch Service SQL query language, where you specify the log group names inside the ``querystring`` instead of here.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type logGroupIdentifiers: list
+  :param logGroupIdentifiers: 
+
+    The list of log groups to query. You can include up to 50 log groups.
+
+     
+
+    You can specify them by the log group name or ARN. If a log group that you're querying is in a source account and you're using a monitoring account, you must specify the ARN of the log group here. The query definition must also be defined in the monitoring account.
+
+     
+
+    If you specify an ARN, use the format arn:aws:logs:*region*:*account-id*:log-group:*log_group_name* Don't include an * at the end.
+
+     
+
+    A ``StartQuery`` operation must include exactly one of the following parameters: ``logGroupName``, ``logGroupNames``, or ``logGroupIdentifiers``. The exception is queries using the OpenSearch Service SQL query language, where you specify the log group names inside the ``querystring`` instead of here.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type startTime: integer
+  :param startTime: **[REQUIRED]** 
+
+    The beginning of the time range to query. The range is inclusive, so the specified start time is included in the query. Specified as epoch time, the number of seconds since ``January 1, 1970, 00:00:00 UTC``.
+
+    
+
+  
+  :type endTime: integer
+  :param endTime: **[REQUIRED]** 
+
+    The end of the time range to query. The range is inclusive, so the specified end time is included in the query. Specified as epoch time, the number of seconds since ``January 1, 1970, 00:00:00 UTC``.
+
+    
+
+  
+  :type queryString: string
+  :param queryString: **[REQUIRED]** 
+
+    The query string to use. For more information, see `CloudWatch Logs Insights Query Syntax <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html>`__.
+
+    
+
+  
+  :type limit: integer
+  :param limit: 
+
+    The maximum number of log events to return in the query. If the query string uses the ``fields`` command, only the specified fields and their values are returned. The default is 10,000.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'queryId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **queryId** *(string) --* 
+
+        The unique ID of the query.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.MalformedQueryException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceUnavailableException`
+
+  

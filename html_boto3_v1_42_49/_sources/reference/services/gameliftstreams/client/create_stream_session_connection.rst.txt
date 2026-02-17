@@ -1,0 +1,161 @@
+:doc:`GameLiftStreams <../../gameliftstreams>` / Client / create_stream_session_connection
+
+********************************
+create_stream_session_connection
+********************************
+
+
+
+.. py:method:: GameLiftStreams.Client.create_stream_session_connection(**kwargs)
+
+  
+
+  Enables clients to reconnect to a stream session while preserving all session state and data in the disconnected session. This reconnection process can be initiated when a stream session is in either ``PENDING_CLIENT_RECONNECTION`` or ``ACTIVE`` status. The process works as follows:
+
+   
+
+   
+  * Initial disconnect: 
+
+    
+    * When a client disconnects or loses connection, the stream session transitions from ``CONNECTED`` to ``PENDING_CLIENT_RECONNECTION``
+    
+
+  
+   
+  * Reconnection time window: 
+
+    
+    * Clients have ``ConnectionTimeoutSeconds`` (defined in `StartStreamSession <https://docs.aws.amazon.com/gameliftstreams/latest/apireference/API_StartStreamSession.html>`__) to reconnect before session termination
+     
+    * Your backend server must call **CreateStreamSessionConnection** to initiate reconnection
+     
+    * Session transitions to ``RECONNECTING`` status
+    
+
+  
+   
+  * Reconnection completion: 
+
+    
+    * On successful **CreateStreamSessionConnection**, session status changes to ``ACTIVE``
+     
+    * Provide the new connection information to the requesting client
+     
+    * Client must establish connection within ``ConnectionTimeoutSeconds``
+     
+    * Session terminates automatically if client fails to connect in time
+    
+
+  
+   
+
+   
+
+  For more information about the stream session lifecycle, see `Stream sessions <https://docs.aws.amazon.com/gameliftstreams/latest/developerguide/stream-sessions.html>`__ in the *Amazon GameLift Streams Developer Guide*.
+
+   
+
+  To begin re-connecting to an existing stream session, specify the stream group ID and stream session ID that you want to reconnect to, and the signal request to use with the stream.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gameliftstreams-2018-05-10/CreateStreamSessionConnection>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_stream_session_connection(
+        ClientToken='string',
+        Identifier='string',
+        StreamSessionIdentifier='string',
+        SignalRequest='string'
+    )
+    
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique identifier that represents a client request. The request is idempotent, which ensures that an API request completes only once. When users send a request, Amazon GameLift Streams automatically populates this field.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Identifier: string
+  :param Identifier: **[REQUIRED]** 
+
+    `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html>`__ or ID that uniquely identifies the stream group resource. Example ARN: ``arn:aws:gameliftstreams:us-west-2:111122223333:streamgroup/sg-1AB2C3De4``. Example ID: ``sg-1AB2C3De4``.
+
+     
+
+    The stream group that you want to run this stream session with. The stream group must be in ``ACTIVE`` status.
+
+    
+
+  
+  :type StreamSessionIdentifier: string
+  :param StreamSessionIdentifier: **[REQUIRED]** 
+
+    `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html>`__ or ID that uniquely identifies the stream session resource. Example ARN: ``arn:aws:gameliftstreams:us-west-2:111122223333:streamsession/sg-1AB2C3De4/ABC123def4567``. Example ID: ``ABC123def4567``.
+
+     
+
+    The stream session must be in ``PENDING_CLIENT_RECONNECTION`` or ``ACTIVE`` status.
+
+    
+
+  
+  :type SignalRequest: string
+  :param SignalRequest: **[REQUIRED]** 
+
+    A WebRTC ICE offer string to use when initializing a WebRTC connection. The offer is a very long JSON string. Provide the string as a text value in quotes. The offer must be newly generated, not the same offer provided to ``StartStreamSession``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'SignalResponse': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **SignalResponse** *(string) --* 
+
+        The WebRTC answer string that the stream server generates in response to the ``SignalRequest``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLiftStreams.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`GameLiftStreams.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`GameLiftStreams.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`GameLiftStreams.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`GameLiftStreams.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`GameLiftStreams.Client.exceptions.ValidationException`
+
+  

@@ -1,0 +1,237 @@
+:doc:`PartnerCentralSellingAPI <../../partnercentral-selling>` / Client / start_engagement_from_opportunity_task
+
+**************************************
+start_engagement_from_opportunity_task
+**************************************
+
+
+
+.. py:method:: PartnerCentralSellingAPI.Client.start_engagement_from_opportunity_task(**kwargs)
+
+  
+
+  Similar to ``StartEngagementByAcceptingInvitationTask``, this action is asynchronous and performs multiple steps before completion. This action orchestrates a comprehensive workflow that combines multiple API operations into a single task to create and initiate an engagement from an existing opportunity. It automatically executes a sequence of operations including ``GetOpportunity``, ``CreateEngagement`` (if it doesn't exist), ``CreateResourceSnapshot``, ``CreateResourceSnapshotJob``, ``CreateEngagementInvitation`` (if not already invited/accepted), and ``SubmitOpportunity``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/partnercentral-selling-2022-07-26/StartEngagementFromOpportunityTask>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_engagement_from_opportunity_task(
+        Catalog='string',
+        ClientToken='string',
+        Identifier='string',
+        AwsSubmission={
+            'InvolvementType': 'For Visibility Only'|'Co-Sell',
+            'Visibility': 'Full'|'Limited'
+        },
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type Catalog: string
+  :param Catalog: **[REQUIRED]** 
+
+    Specifies the catalog in which the engagement is tracked. Acceptable values include ``AWS`` for production and ``Sandbox`` for testing environments.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: **[REQUIRED]** 
+
+    A unique token provided by the client to help ensure the idempotency of the request. It helps prevent the same task from being performed multiple times.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Identifier: string
+  :param Identifier: **[REQUIRED]** 
+
+    The unique identifier of the opportunity from which the engagement task is to be initiated. This helps ensure that the task is applied to the correct opportunity.
+
+    
+
+  
+  :type AwsSubmission: dict
+  :param AwsSubmission: **[REQUIRED]** 
+
+    Indicates the level of AWS involvement in the opportunity. This field helps track AWS participation throughout the engagement, such as providing technical support, deal assistance, and sales support.
+
+    
+
+  
+    - **InvolvementType** *(string) --* **[REQUIRED]** 
+
+      Specifies the type of AWS involvement in the opportunity, such as coselling, deal support, or technical consultation. This helps categorize the nature of AWS participation.
+
+      
+
+    
+    - **Visibility** *(string) --* 
+
+      Determines who can view AWS involvement in the opportunity. Typically, this field is set to ``Full`` for most cases, but it may be restricted based on special program requirements or confidentiality needs.
+
+      
+
+    
+  
+  :type Tags: list
+  :param Tags: 
+
+    A map of the key-value pairs of the tag or tags to assign.
+
+    
+
+  
+    - *(dict) --* 
+
+      The key-value pair assigned to a specified resource.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key in the tag.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value in the tag.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'TaskId': 'string',
+          'TaskArn': 'string',
+          'StartTime': datetime(2015, 1, 1),
+          'TaskStatus': 'IN_PROGRESS'|'COMPLETE'|'FAILED',
+          'Message': 'string',
+          'ReasonCode': 'InvitationAccessDenied'|'InvitationValidationFailed'|'EngagementAccessDenied'|'OpportunityAccessDenied'|'ResourceSnapshotJobAccessDenied'|'ResourceSnapshotJobValidationFailed'|'ResourceSnapshotJobConflict'|'EngagementValidationFailed'|'EngagementConflict'|'OpportunitySubmissionFailed'|'EngagementInvitationConflict'|'InternalError'|'OpportunityValidationFailed'|'OpportunityConflict'|'ResourceSnapshotAccessDenied'|'ResourceSnapshotValidationFailed'|'ResourceSnapshotConflict'|'ServiceQuotaExceeded'|'RequestThrottled'|'ContextNotFound'|'CustomerProjectContextNotPermitted'|'DisqualifiedLeadNotPermitted',
+          'OpportunityId': 'string',
+          'ResourceSnapshotJobId': 'string',
+          'EngagementId': 'string',
+          'EngagementInvitationId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **TaskId** *(string) --* 
+
+        The unique identifier of the task, used to track the task’s progress. This value follows a specific pattern: ``^oit-[0-9a-z]{13}$``.
+
+        
+      
+
+      - **TaskArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the task, used for tracking and managing the task within AWS.
+
+        
+      
+
+      - **StartTime** *(datetime) --* 
+
+        The timestamp indicating when the task was initiated. The format follows RFC 3339 section 5.6.
+
+        
+      
+
+      - **TaskStatus** *(string) --* 
+
+        Indicates the current status of the task. Valid values include ``IN_PROGRESS``, ``COMPLETE``, and ``FAILED``.
+
+        
+      
+
+      - **Message** *(string) --* 
+
+        If the task fails, this field contains a detailed message describing the failure and possible recovery steps.
+
+        
+      
+
+      - **ReasonCode** *(string) --* 
+
+        Indicates the reason for task failure using an enumerated code.
+
+        
+      
+
+      - **OpportunityId** *(string) --* 
+
+        Returns the original opportunity identifier passed in the request, which is the unique identifier for the opportunity created in the partner’s system.
+
+        
+      
+
+      - **ResourceSnapshotJobId** *(string) --* 
+
+        The identifier of the resource snapshot job created to add the opportunity resource snapshot to the Engagement. Only populated if TaskStatus is COMPLETE
+
+        
+      
+
+      - **EngagementId** *(string) --* 
+
+        The identifier of the newly created Engagement. Only populated if TaskStatus is COMPLETE.
+
+        
+      
+
+      - **EngagementInvitationId** *(string) --* 
+
+        The identifier of the new Engagement invitation. Only populated if TaskStatus is COMPLETE.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`PartnerCentralSellingAPI.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`PartnerCentralSellingAPI.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`PartnerCentralSellingAPI.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`PartnerCentralSellingAPI.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`PartnerCentralSellingAPI.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`PartnerCentralSellingAPI.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`PartnerCentralSellingAPI.Client.exceptions.ResourceNotFoundException`
+
+  

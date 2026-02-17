@@ -1,0 +1,1085 @@
+:doc:`ComputeOptimizer <../../compute-optimizer>` / Client / get_rds_database_recommendations
+
+********************************
+get_rds_database_recommendations
+********************************
+
+
+
+.. py:method:: ComputeOptimizer.Client.get_rds_database_recommendations(**kwargs)
+
+  
+
+  Returns Amazon Aurora and RDS database recommendations.
+
+   
+
+  Compute Optimizer generates recommendations for Amazon Aurora and RDS databases that meet a specific set of requirements. For more information, see the `Supported resources and requirements <https://docs.aws.amazon.com/compute-optimizer/latest/ug/requirements.html>`__ in the *Compute Optimizer User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/compute-optimizer-2019-11-01/GetRDSDatabaseRecommendations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_rds_database_recommendations(
+        resourceArns=[
+            'string',
+        ],
+        nextToken='string',
+        maxResults=123,
+        filters=[
+            {
+                'name': 'InstanceFinding'|'InstanceFindingReasonCode'|'StorageFinding'|'StorageFindingReasonCode'|'Idle',
+                'values': [
+                    'string',
+                ]
+            },
+        ],
+        accountIds=[
+            'string',
+        ],
+        recommendationPreferences={
+            'cpuVendorArchitectures': [
+                'AWS_ARM64'|'CURRENT',
+            ]
+        }
+    )
+    
+  :type resourceArns: list
+  :param resourceArns: 
+
+    The ARN that identifies the Amazon Aurora or RDS database.
+
+     
+
+    The following is the format of the ARN:
+
+     
+
+    ``arn:aws:rds:{region}:{accountId}:db:{resourceName}``
+
+     
+
+    The following is the format of a DB Cluster ARN:
+
+     
+
+    ``arn:aws:rds:{region}:{accountId}:cluster:{resourceName}``
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type nextToken: string
+  :param nextToken: 
+
+    The token to advance to the next page of Amazon Aurora and RDS database recommendations.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of Amazon Aurora and RDS database recommendations to return with a single request.
+
+     
+
+    To retrieve the remaining results, make another request with the returned ``nextToken`` value.
+
+    
+
+  
+  :type filters: list
+  :param filters: 
+
+    An array of objects to specify a filter that returns a more specific list of Amazon Aurora and RDS database recommendations.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a filter that returns a more specific list of DB instance recommendations. Use this filter with the  GetECSServiceRecommendations action.
+
+      
+
+    
+      - **name** *(string) --* 
+
+        The name of the filter.
+
+         
+
+        Specify ``Finding`` to return recommendations with a specific finding classification.
+
+         
+
+        You can filter your DB instance recommendations by ``tag:key`` and ``tag-key`` tags.
+
+         
+
+        A ``tag:key`` is a key and value combination of a tag assigned to your DB instance recommendations. Use the tag key in the filter name and the tag value as the filter value. For example, to find all DB instance recommendations that have a tag with the key of ``Owner`` and the value of ``TeamA``, specify ``tag:Owner`` for the filter name and ``TeamA`` for the filter value.
+
+         
+
+        A ``tag-key`` is the key of a tag assigned to your DB instance recommendations. Use this filter to find all of your DB instance recommendations that have a tag with a specific key. This doesn’t consider the tag value. For example, you can find your DB instance recommendations with a tag key value of ``Owner`` or without any tag keys assigned.
+
+        
+
+      
+      - **values** *(list) --* 
+
+        The value of the filter.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type accountIds: list
+  :param accountIds: 
+
+    Return the Amazon Aurora and RDS database recommendations to the specified Amazon Web Services account IDs.
+
+     
+
+    If your account is the management account or the delegated administrator of an organization, use this parameter to return the Amazon Aurora and RDS database recommendations to specific member accounts.
+
+     
+
+    You can only specify one account ID per request.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type recommendationPreferences: dict
+  :param recommendationPreferences: 
+
+    Describes the recommendation preferences to return in the response of a  GetAutoScalingGroupRecommendations,  GetEC2InstanceRecommendations,  GetEC2RecommendationProjectedMetrics,  GetRDSDatabaseRecommendations, and  GetRDSDatabaseRecommendationProjectedMetrics request.
+
+    
+
+  
+    - **cpuVendorArchitectures** *(list) --* 
+
+      Specifies the CPU vendor and architecture for Amazon EC2 instance and Amazon EC2 Auto Scaling group recommendations.
+
+       
+
+      For example, when you specify ``AWS_ARM64`` with:
+
+       
+
+      
+      * A  GetEC2InstanceRecommendations or  GetAutoScalingGroupRecommendations request, Compute Optimizer returns recommendations that consist of Graviton instance types only.
+       
+      * A  GetEC2RecommendationProjectedMetrics request, Compute Optimizer returns projected utilization metrics for Graviton instance type recommendations only.
+       
+      * A  ExportEC2InstanceRecommendations or  ExportAutoScalingGroupRecommendations request, Compute Optimizer exports recommendations that consist of Graviton instance types only.
+      
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'nextToken': 'string',
+          'rdsDBRecommendations': [
+              {
+                  'resourceArn': 'string',
+                  'accountId': 'string',
+                  'engine': 'string',
+                  'engineVersion': 'string',
+                  'promotionTier': 123,
+                  'currentDBInstanceClass': 'string',
+                  'currentStorageConfiguration': {
+                      'storageType': 'string',
+                      'allocatedStorage': 123,
+                      'iops': 123,
+                      'maxAllocatedStorage': 123,
+                      'storageThroughput': 123
+                  },
+                  'dbClusterIdentifier': 'string',
+                  'idle': 'True'|'False',
+                  'instanceFinding': 'Optimized'|'Underprovisioned'|'Overprovisioned',
+                  'storageFinding': 'Optimized'|'Underprovisioned'|'Overprovisioned'|'NotOptimized',
+                  'instanceFindingReasonCodes': [
+                      'CPUOverprovisioned'|'NetworkBandwidthOverprovisioned'|'EBSIOPSOverprovisioned'|'EBSIOPSUnderprovisioned'|'EBSThroughputOverprovisioned'|'CPUUnderprovisioned'|'NetworkBandwidthUnderprovisioned'|'EBSThroughputUnderprovisioned'|'NewGenerationDBInstanceClassAvailable'|'NewEngineVersionAvailable'|'DBClusterWriterUnderprovisioned'|'MemoryUnderprovisioned'|'InstanceStorageReadIOPSUnderprovisioned'|'InstanceStorageWriteIOPSUnderprovisioned',
+                  ],
+                  'currentInstancePerformanceRisk': 'VeryLow'|'Low'|'Medium'|'High',
+                  'currentStorageEstimatedMonthlyVolumeIOPsCostVariation': 'None'|'Low'|'Medium'|'High',
+                  'storageFindingReasonCodes': [
+                      'EBSVolumeAllocatedStorageUnderprovisioned'|'EBSVolumeThroughputUnderprovisioned'|'EBSVolumeIOPSOverprovisioned'|'EBSVolumeThroughputOverprovisioned'|'NewGenerationStorageTypeAvailable'|'DBClusterStorageOptionAvailable'|'DBClusterStorageSavingsAvailable',
+                  ],
+                  'instanceRecommendationOptions': [
+                      {
+                          'dbInstanceClass': 'string',
+                          'projectedUtilizationMetrics': [
+                              {
+                                  'name': 'CPU'|'Memory'|'EBSVolumeStorageSpaceUtilization'|'NetworkReceiveThroughput'|'NetworkTransmitThroughput'|'EBSVolumeReadIOPS'|'EBSVolumeWriteIOPS'|'EBSVolumeReadThroughput'|'EBSVolumeWriteThroughput'|'DatabaseConnections'|'StorageNetworkReceiveThroughput'|'StorageNetworkTransmitThroughput'|'AuroraMemoryHealthState'|'AuroraMemoryNumDeclinedSql'|'AuroraMemoryNumKillConnTotal'|'AuroraMemoryNumKillQueryTotal'|'ReadIOPSEphemeralStorage'|'WriteIOPSEphemeralStorage'|'VolumeReadIOPs'|'VolumeBytesUsed'|'VolumeWriteIOPs',
+                                  'statistic': 'Maximum'|'Minimum'|'Average',
+                                  'value': 123.0
+                              },
+                          ],
+                          'performanceRisk': 123.0,
+                          'rank': 123,
+                          'savingsOpportunity': {
+                              'savingsOpportunityPercentage': 123.0,
+                              'estimatedMonthlySavings': {
+                                  'currency': 'USD'|'CNY',
+                                  'value': 123.0
+                              }
+                          },
+                          'savingsOpportunityAfterDiscounts': {
+                              'savingsOpportunityPercentage': 123.0,
+                              'estimatedMonthlySavings': {
+                                  'currency': 'USD'|'CNY',
+                                  'value': 123.0
+                              }
+                          }
+                      },
+                  ],
+                  'storageRecommendationOptions': [
+                      {
+                          'storageConfiguration': {
+                              'storageType': 'string',
+                              'allocatedStorage': 123,
+                              'iops': 123,
+                              'maxAllocatedStorage': 123,
+                              'storageThroughput': 123
+                          },
+                          'rank': 123,
+                          'savingsOpportunity': {
+                              'savingsOpportunityPercentage': 123.0,
+                              'estimatedMonthlySavings': {
+                                  'currency': 'USD'|'CNY',
+                                  'value': 123.0
+                              }
+                          },
+                          'savingsOpportunityAfterDiscounts': {
+                              'savingsOpportunityPercentage': 123.0,
+                              'estimatedMonthlySavings': {
+                                  'currency': 'USD'|'CNY',
+                                  'value': 123.0
+                              }
+                          },
+                          'estimatedMonthlyVolumeIOPsCostVariation': 'None'|'Low'|'Medium'|'High'
+                      },
+                  ],
+                  'utilizationMetrics': [
+                      {
+                          'name': 'CPU'|'Memory'|'EBSVolumeStorageSpaceUtilization'|'NetworkReceiveThroughput'|'NetworkTransmitThroughput'|'EBSVolumeReadIOPS'|'EBSVolumeWriteIOPS'|'EBSVolumeReadThroughput'|'EBSVolumeWriteThroughput'|'DatabaseConnections'|'StorageNetworkReceiveThroughput'|'StorageNetworkTransmitThroughput'|'AuroraMemoryHealthState'|'AuroraMemoryNumDeclinedSql'|'AuroraMemoryNumKillConnTotal'|'AuroraMemoryNumKillQueryTotal'|'ReadIOPSEphemeralStorage'|'WriteIOPSEphemeralStorage'|'VolumeReadIOPs'|'VolumeBytesUsed'|'VolumeWriteIOPs',
+                          'statistic': 'Maximum'|'Minimum'|'Average',
+                          'value': 123.0
+                      },
+                  ],
+                  'effectiveRecommendationPreferences': {
+                      'cpuVendorArchitectures': [
+                          'AWS_ARM64'|'CURRENT',
+                      ],
+                      'enhancedInfrastructureMetrics': 'Active'|'Inactive',
+                      'lookBackPeriod': 'DAYS_14'|'DAYS_32'|'DAYS_93',
+                      'savingsEstimationMode': {
+                          'source': 'PublicPricing'|'CostExplorerRightsizing'|'CostOptimizationHub'
+                      }
+                  },
+                  'lookbackPeriodInDays': 123.0,
+                  'lastRefreshTimestamp': datetime(2015, 1, 1),
+                  'tags': [
+                      {
+                          'key': 'string',
+                          'value': 'string'
+                      },
+                  ]
+              },
+          ],
+          'errors': [
+              {
+                  'identifier': 'string',
+                  'code': 'string',
+                  'message': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **nextToken** *(string) --* 
+
+        The token to advance to the next page of Amazon Aurora and RDS database recommendations.
+
+        
+      
+
+      - **rdsDBRecommendations** *(list) --* 
+
+        An array of objects that describe the Amazon Aurora and RDS database recommendations.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes an Amazon Aurora and RDS database recommendation.
+
+          
+          
+
+          - **resourceArn** *(string) --* 
+
+            The ARN of the current Amazon Aurora or RDS database.
+
+             
+
+            The following is the format of the ARN:
+
+             
+
+            ``arn:aws:rds:{region}:{accountId}:db:{resourceName}``
+
+            
+          
+
+          - **accountId** *(string) --* 
+
+            The Amazon Web Services account ID of the Amazon Aurora or RDS database.
+
+            
+          
+
+          - **engine** *(string) --* 
+
+            The engine of the DB instance.
+
+            
+          
+
+          - **engineVersion** *(string) --* 
+
+            The database engine version.
+
+            
+          
+
+          - **promotionTier** *(integer) --* 
+
+            The promotion tier for the Aurora instance.
+
+            
+          
+
+          - **currentDBInstanceClass** *(string) --* 
+
+            The DB instance class of the current Aurora or RDS DB instance.
+
+            
+          
+
+          - **currentStorageConfiguration** *(dict) --* 
+
+            The configuration of the current DB storage.
+
+            
+            
+
+            - **storageType** *(string) --* 
+
+              The type of DB storage.
+
+              
+            
+
+            - **allocatedStorage** *(integer) --* 
+
+              The size of the DB storage in gigabytes (GB).
+
+              
+            
+
+            - **iops** *(integer) --* 
+
+              The provisioned IOPs of the DB storage.
+
+              
+            
+
+            - **maxAllocatedStorage** *(integer) --* 
+
+              The maximum limit in gibibytes (GiB) to which Amazon RDS can automatically scale the storage of the DB instance.
+
+              
+            
+
+            - **storageThroughput** *(integer) --* 
+
+              The storage throughput of the DB storage.
+
+              
+        
+          
+
+          - **dbClusterIdentifier** *(string) --* 
+
+            The identifier for DB cluster.
+
+            
+          
+
+          - **idle** *(string) --* 
+
+            This indicates if the DB instance is idle or not.
+
+            
+          
+
+          - **instanceFinding** *(string) --* 
+
+            The finding classification of an Amazon Aurora and RDS DB instance.
+
+             
+
+            For more information about finding classifications, see `Finding classifications for Aurora and RDS databases <https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-rds-recommendations.html#rds-recommendations-findings>`__ in the *Compute Optimizer User Guide*.
+
+            
+          
+
+          - **storageFinding** *(string) --* 
+
+            The finding classification of Amazon RDS DB instance storage.
+
+             
+
+            For more information about finding classifications, see `Finding classifications for Aurora and RDS databases <https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-rds-recommendations.html#rds-recommendations-findings>`__ in the *Compute Optimizer User Guide*.
+
+            
+          
+
+          - **instanceFindingReasonCodes** *(list) --* 
+
+            The reason for the finding classification of a DB instance.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **currentInstancePerformanceRisk** *(string) --* 
+
+            The performance risk for the current DB instance.
+
+            
+          
+
+          - **currentStorageEstimatedMonthlyVolumeIOPsCostVariation** *(string) --* 
+
+            The level of variation in monthly I/O costs for the current DB storage configuration.
+
+            
+          
+
+          - **storageFindingReasonCodes** *(list) --* 
+
+            The reason for the finding classification of RDS DB instance storage.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **instanceRecommendationOptions** *(list) --* 
+
+            An array of objects that describe the recommendation options for the RDS DB instance.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes the recommendation options for a DB instance.
+
+              
+              
+
+              - **dbInstanceClass** *(string) --* 
+
+                Describes the DB instance class recommendation option for your Amazon Aurora or RDS database.
+
+                
+              
+
+              - **projectedUtilizationMetrics** *(list) --* 
+
+                An array of objects that describe the projected utilization metrics of the DB instance recommendation option.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes the utilization metric of an Amazon Aurora and RDS database.
+
+                   
+
+                  To determine the performance difference between your current DB instance and the recommended option, compare the utilization metric data of your service against its projected utilization metric data.
+
+                  
+                  
+
+                  - **name** *(string) --* 
+
+                    The name of the utilization metric.
+
+                    
+                  
+
+                  - **statistic** *(string) --* 
+
+                    The statistic of the utilization metric.
+
+                     
+
+                    The Compute Optimizer API, Command Line Interface (CLI), and SDKs return utilization metrics using only the ``Maximum`` statistic, which is the highest value observed during the specified period.
+
+                     
+
+                    The Compute Optimizer console displays graphs for some utilization metrics using the ``Average`` statistic, which is the value of ``Sum`` / ``SampleCount`` during the specified period. For more information, see `Viewing resource recommendations <https://docs.aws.amazon.com/compute-optimizer/latest/ug/viewing-recommendations.html>`__ in the *Compute Optimizer User Guide*. You can also get averaged utilization metric data for your resources using Amazon CloudWatch. For more information, see the `Amazon CloudWatch User Guide <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html>`__.
+
+                    
+                  
+
+                  - **value** *(float) --* 
+
+                    The value of the utilization metric.
+
+                    
+              
+            
+              
+
+              - **performanceRisk** *(float) --* 
+
+                The performance risk of the DB instance recommendation option.
+
+                
+              
+
+              - **rank** *(integer) --* 
+
+                The rank identifier of the DB instance recommendation option.
+
+                
+              
+
+              - **savingsOpportunity** *(dict) --* 
+
+                Describes the savings opportunity for recommendations of a given resource type or for the recommendation option of an individual resource.
+
+                 
+
+                Savings opportunity represents the estimated monthly savings you can achieve by implementing a given Compute Optimizer recommendation.
+
+                 
+
+                .. warning::
+
+                   
+
+                  Savings opportunity data requires that you opt in to Cost Explorer, as well as activate **Receive Amazon EC2 resource recommendations** in the Cost Explorer preferences page. That creates a connection between Cost Explorer and Compute Optimizer. With this connection, Cost Explorer generates savings estimates considering the price of existing resources, the price of recommended resources, and historical usage data. Estimated monthly savings reflects the projected dollar savings associated with each of the recommendations generated. For more information, see `Enabling Cost Explorer <https://docs.aws.amazon.com/cost-management/latest/userguide/ce-enable.html>`__ and `Optimizing your cost with Rightsizing Recommendations <https://docs.aws.amazon.com/cost-management/latest/userguide/ce-rightsizing.html>`__ in the *Cost Management User Guide*.
+
+                  
+
+                
+                
+
+                - **savingsOpportunityPercentage** *(float) --* 
+
+                  The estimated monthly savings possible as a percentage of monthly cost by adopting Compute Optimizer recommendations for a given resource.
+
+                  
+                
+
+                - **estimatedMonthlySavings** *(dict) --* 
+
+                  An object that describes the estimated monthly savings amount possible by adopting Compute Optimizer recommendations for a given resource. This is based on the On-Demand instance pricing..
+
+                  
+                  
+
+                  - **currency** *(string) --* 
+
+                    The currency of the estimated monthly savings.
+
+                    
+                  
+
+                  - **value** *(float) --* 
+
+                    The value of the estimated monthly savings.
+
+                    
+              
+            
+              
+
+              - **savingsOpportunityAfterDiscounts** *(dict) --* 
+
+                Describes the savings opportunity for Amazon Aurora and RDS database recommendations or for the recommendation option.
+
+                 
+
+                Savings opportunity represents the estimated monthly savings after applying Savings Plans discounts. You can achieve this by implementing a given Compute Optimizer recommendation.
+
+                
+                
+
+                - **savingsOpportunityPercentage** *(float) --* 
+
+                  The estimated monthly savings possible as a percentage of monthly cost by adopting Compute Optimizer’s DB instance recommendations. This includes any applicable Savings Plans discounts.
+
+                  
+                
+
+                - **estimatedMonthlySavings** *(dict) --* 
+
+                  The estimated monthly savings possible by adopting Compute Optimizer’s DB instance recommendations. This includes any applicable Savings Plans discounts.
+
+                  
+                  
+
+                  - **currency** *(string) --* 
+
+                    The currency of the estimated monthly savings.
+
+                    
+                  
+
+                  - **value** *(float) --* 
+
+                    The value of the estimated monthly savings for DB instances.
+
+                    
+              
+            
+          
+        
+          
+
+          - **storageRecommendationOptions** *(list) --* 
+
+            An array of objects that describe the recommendation options for DB instance storage.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes the recommendation options for DB storage.
+
+              
+              
+
+              - **storageConfiguration** *(dict) --* 
+
+                The recommended storage configuration.
+
+                
+                
+
+                - **storageType** *(string) --* 
+
+                  The type of DB storage.
+
+                  
+                
+
+                - **allocatedStorage** *(integer) --* 
+
+                  The size of the DB storage in gigabytes (GB).
+
+                  
+                
+
+                - **iops** *(integer) --* 
+
+                  The provisioned IOPs of the DB storage.
+
+                  
+                
+
+                - **maxAllocatedStorage** *(integer) --* 
+
+                  The maximum limit in gibibytes (GiB) to which Amazon RDS can automatically scale the storage of the DB instance.
+
+                  
+                
+
+                - **storageThroughput** *(integer) --* 
+
+                  The storage throughput of the DB storage.
+
+                  
+            
+              
+
+              - **rank** *(integer) --* 
+
+                The rank identifier of the DB storage recommendation option.
+
+                
+              
+
+              - **savingsOpportunity** *(dict) --* 
+
+                Describes the savings opportunity for recommendations of a given resource type or for the recommendation option of an individual resource.
+
+                 
+
+                Savings opportunity represents the estimated monthly savings you can achieve by implementing a given Compute Optimizer recommendation.
+
+                 
+
+                .. warning::
+
+                   
+
+                  Savings opportunity data requires that you opt in to Cost Explorer, as well as activate **Receive Amazon EC2 resource recommendations** in the Cost Explorer preferences page. That creates a connection between Cost Explorer and Compute Optimizer. With this connection, Cost Explorer generates savings estimates considering the price of existing resources, the price of recommended resources, and historical usage data. Estimated monthly savings reflects the projected dollar savings associated with each of the recommendations generated. For more information, see `Enabling Cost Explorer <https://docs.aws.amazon.com/cost-management/latest/userguide/ce-enable.html>`__ and `Optimizing your cost with Rightsizing Recommendations <https://docs.aws.amazon.com/cost-management/latest/userguide/ce-rightsizing.html>`__ in the *Cost Management User Guide*.
+
+                  
+
+                
+                
+
+                - **savingsOpportunityPercentage** *(float) --* 
+
+                  The estimated monthly savings possible as a percentage of monthly cost by adopting Compute Optimizer recommendations for a given resource.
+
+                  
+                
+
+                - **estimatedMonthlySavings** *(dict) --* 
+
+                  An object that describes the estimated monthly savings amount possible by adopting Compute Optimizer recommendations for a given resource. This is based on the On-Demand instance pricing..
+
+                  
+                  
+
+                  - **currency** *(string) --* 
+
+                    The currency of the estimated monthly savings.
+
+                    
+                  
+
+                  - **value** *(float) --* 
+
+                    The value of the estimated monthly savings.
+
+                    
+              
+            
+              
+
+              - **savingsOpportunityAfterDiscounts** *(dict) --* 
+
+                Describes the savings opportunity for DB storage recommendations or for the recommendation option.
+
+                 
+
+                Savings opportunity represents the estimated monthly savings after applying Savings Plans discounts. You can achieve this by implementing a given Compute Optimizer recommendation.
+
+                
+                
+
+                - **savingsOpportunityPercentage** *(float) --* 
+
+                  The estimated monthly savings possible as a percentage of monthly cost by adopting Compute Optimizer’s DB instance storage recommendations. This includes any applicable Savings Plans discounts.
+
+                  
+                
+
+                - **estimatedMonthlySavings** *(dict) --* 
+
+                  The estimated monthly savings possible by adopting Compute Optimizer’s DB instance storage recommendations. This includes any applicable Savings Plans discounts.
+
+                  
+                  
+
+                  - **currency** *(string) --* 
+
+                    The currency of the estimated monthly savings.
+
+                    
+                  
+
+                  - **value** *(float) --* 
+
+                    The value of the estimated monthly savings for DB instance storage.
+
+                    
+              
+            
+              
+
+              - **estimatedMonthlyVolumeIOPsCostVariation** *(string) --* 
+
+                The projected level of variation in monthly I/O costs for the DB storage recommendation option.
+
+                
+          
+        
+          
+
+          - **utilizationMetrics** *(list) --* 
+
+            An array of objects that describe the utilization metrics of the DB instance.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes the utilization metric of an Amazon Aurora and RDS database.
+
+               
+
+              To determine the performance difference between your current DB instance and the recommended option, compare the utilization metric data of your service against its projected utilization metric data.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the utilization metric.
+
+                
+              
+
+              - **statistic** *(string) --* 
+
+                The statistic of the utilization metric.
+
+                 
+
+                The Compute Optimizer API, Command Line Interface (CLI), and SDKs return utilization metrics using only the ``Maximum`` statistic, which is the highest value observed during the specified period.
+
+                 
+
+                The Compute Optimizer console displays graphs for some utilization metrics using the ``Average`` statistic, which is the value of ``Sum`` / ``SampleCount`` during the specified period. For more information, see `Viewing resource recommendations <https://docs.aws.amazon.com/compute-optimizer/latest/ug/viewing-recommendations.html>`__ in the *Compute Optimizer User Guide*. You can also get averaged utilization metric data for your resources using Amazon CloudWatch. For more information, see the `Amazon CloudWatch User Guide <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html>`__.
+
+                
+              
+
+              - **value** *(float) --* 
+
+                The value of the utilization metric.
+
+                
+          
+        
+          
+
+          - **effectiveRecommendationPreferences** *(dict) --* 
+
+            Describes the effective recommendation preferences for DB instances.
+
+            
+            
+
+            - **cpuVendorArchitectures** *(list) --* 
+
+              Describes the CPU vendor and architecture for DB instance recommendations.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **enhancedInfrastructureMetrics** *(string) --* 
+
+              Describes the activation status of the enhanced infrastructure metrics preference.
+
+               
+
+              A status of ``Active`` confirms that the preference is applied in the latest recommendation refresh, and a status of ``Inactive`` confirms that it's not yet applied to recommendations.
+
+               
+
+              For more information, see `Enhanced infrastructure metrics <https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html>`__ in the *Compute Optimizer User Guide*.
+
+              
+            
+
+            - **lookBackPeriod** *(string) --* 
+
+              The number of days the utilization metrics of the DB instance are analyzed.
+
+              
+            
+
+            - **savingsEstimationMode** *(dict) --* 
+
+              Describes the savings estimation mode preference applied for calculating savings opportunity for DB instances.
+
+              
+              
+
+              - **source** *(string) --* 
+
+                Describes the source for calculating the savings opportunity for DB instances.
+
+                
+          
+        
+          
+
+          - **lookbackPeriodInDays** *(float) --* 
+
+            The number of days the DB instance utilization metrics were analyzed.
+
+            
+          
+
+          - **lastRefreshTimestamp** *(datetime) --* 
+
+            The timestamp of when the DB instance recommendation was last generated.
+
+            
+          
+
+          - **tags** *(list) --* 
+
+            A list of tags assigned to your DB instance recommendations.
+
+            
+            
+
+            - *(dict) --* 
+
+              A list of tag key and value pairs that you define.
+
+              
+              
+
+              - **key** *(string) --* 
+
+                One part of a key-value pair that makes up a tag. A key is a general label that acts like a category for more specific tag values.
+
+                
+              
+
+              - **value** *(string) --* 
+
+                One part of a key-value pair that make up a tag. A value acts as a descriptor within a tag category (key). The value can be empty or null.
+
+                
+          
+        
+      
+    
+      
+
+      - **errors** *(list) --* 
+
+        An array of objects that describe errors of the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes an error experienced when getting recommendations.
+
+           
+
+          For example, an error is returned if you request recommendations for an unsupported Amazon EC2 Auto Scaling group, or if you request recommendations for an instance of an unsupported instance family.
+
+          
+          
+
+          - **identifier** *(string) --* 
+
+            The ID of the error.
+
+            
+          
+
+          - **code** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **message** *(string) --* 
+
+            The message, or reason, for the error.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.OptInRequiredException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.MissingAuthenticationToken`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ThrottlingException`
+
+  

@@ -1,0 +1,251 @@
+:doc:`GameLift <../../gamelift>` / Client / create_player_session
+
+*********************
+create_player_session
+*********************
+
+
+
+.. py:method:: GameLift.Client.create_player_session(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Anywhere, Container
+
+   
+
+  Reserves an open player slot in a game session for a player. New player sessions can be created in any game session with an open slot that is in ``ACTIVE`` status and has a player creation policy of ``ACCEPT_ALL``. You can add a group of players to a game session with `CreatePlayerSessions <https://docs.aws.amazon.com/gamelift/latest/apireference/API_CreatePlayerSessions.html>`__ .
+
+   
+
+  To create a player session, specify a game session ID, player ID, and optionally a set of player data.
+
+   
+
+  If successful, a slot is reserved in the game session for the player and a new ``PlayerSessions`` object is returned with a player session ID. The player references the player session ID when sending a connection request to the game session, and the game server can use it to validate the player reservation with the Amazon GameLift Servers service. Player sessions cannot be updated.
+
+   
+
+  The maximum number of players per game session is 200. It is not adjustable.
+
+   
+
+  **Related actions**
+
+   
+
+  `All APIs by task <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreatePlayerSession>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_player_session(
+        GameSessionId='string',
+        PlayerId='string',
+        PlayerData='string'
+    )
+    
+  :type GameSessionId: string
+  :param GameSessionId: **[REQUIRED]** 
+
+    A unique identifier for the game session to add a player to.
+
+    
+
+  
+  :type PlayerId: string
+  :param PlayerId: **[REQUIRED]** 
+
+    A unique identifier for a player. Player IDs are developer-defined.
+
+    
+
+  
+  :type PlayerData: string
+  :param PlayerData: 
+
+    Developer-defined information related to a player. Amazon GameLift Servers does not use this data, so it can be formatted as needed for use in the game.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'PlayerSession': {
+              'PlayerSessionId': 'string',
+              'PlayerId': 'string',
+              'GameSessionId': 'string',
+              'FleetId': 'string',
+              'FleetArn': 'string',
+              'CreationTime': datetime(2015, 1, 1),
+              'TerminationTime': datetime(2015, 1, 1),
+              'Status': 'RESERVED'|'ACTIVE'|'COMPLETED'|'TIMEDOUT',
+              'IpAddress': 'string',
+              'DnsName': 'string',
+              'Port': 123,
+              'PlayerData': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **PlayerSession** *(dict) --* 
+
+        Object that describes the newly created player session record.
+
+        
+        
+
+        - **PlayerSessionId** *(string) --* 
+
+          A unique identifier for a player session.
+
+          
+        
+
+        - **PlayerId** *(string) --* 
+
+          A unique identifier for a player that is associated with this player session.
+
+          
+        
+
+        - **GameSessionId** *(string) --* 
+
+          A unique identifier for the game session that the player session is connected to.
+
+          
+        
+
+        - **FleetId** *(string) --* 
+
+          A unique identifier for the fleet that the player's game session is running on.
+
+          
+        
+
+        - **FleetArn** *(string) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) associated with the GameLift fleet that the player's game session is running on.
+
+          
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          A time stamp indicating when this data object was created. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **TerminationTime** *(datetime) --* 
+
+          A time stamp indicating when this data object was terminated. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          Current status of the player session.
+
+           
+
+          Possible player session statuses include the following:
+
+           
+
+          
+          * **RESERVED** -- The player session request has been received, but the player has not yet connected to the server process and/or been validated.
+           
+          * **ACTIVE** -- The player has been validated by the server process and is currently connected.
+           
+          * **COMPLETED** -- The player connection has been dropped.
+           
+          * **TIMEDOUT** -- A player session request was received, but the player did not connect and/or was not validated within the timeout limit (60 seconds).
+          
+
+          
+        
+
+        - **IpAddress** *(string) --* 
+
+          The IP address of the game session. To connect to a Amazon GameLift Servers game server, an app needs both the IP address and port number.
+
+          
+        
+
+        - **DnsName** *(string) --* 
+
+          The DNS identifier assigned to the instance that is running the game session. Values have the following format:
+
+           
+
+          
+          * TLS-enabled fleets: ``<unique identifier>.<region identifier>.amazongamelift.com``.
+           
+          * Non-TLS-enabled fleets: ``ec2-<unique identifier>.compute.amazonaws.com``. (See `Amazon EC2 Instance IP Addressing <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses>`__.)
+          
+
+           
+
+          When connecting to a game session that is running on a TLS-enabled fleet, you must use the DNS name, not the IP address.
+
+          
+        
+
+        - **Port** *(integer) --* 
+
+          Port number for the game session. To connect to a Amazon GameLift Servers server process, an app needs both the IP address and port number.
+
+          
+        
+
+        - **PlayerData** *(string) --* 
+
+          Developer-defined information related to a player. Amazon GameLift Servers does not use this data, so it can be formatted as needed for use in the game.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidGameSessionStatusException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.GameSessionFullException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.TerminalRoutingStrategyException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  

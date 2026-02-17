@@ -1,0 +1,264 @@
+:doc:`CloudWatchObservabilityAdminService <../../observabilityadmin>` / Client / create_centralization_rule_for_organization
+
+*******************************************
+create_centralization_rule_for_organization
+*******************************************
+
+
+
+.. py:method:: CloudWatchObservabilityAdminService.Client.create_centralization_rule_for_organization(**kwargs)
+
+  
+
+  Creates a centralization rule that applies across an Amazon Web Services Organization. This operation can only be called by the organization's management account or a delegated administrator account.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/observabilityadmin-2018-05-10/CreateCentralizationRuleForOrganization>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_centralization_rule_for_organization(
+        RuleName='string',
+        Rule={
+            'Source': {
+                'Regions': [
+                    'string',
+                ],
+                'Scope': 'string',
+                'SourceLogsConfiguration': {
+                    'LogGroupSelectionCriteria': 'string',
+                    'EncryptedLogGroupStrategy': 'ALLOW'|'SKIP'
+                }
+            },
+            'Destination': {
+                'Region': 'string',
+                'Account': 'string',
+                'DestinationLogsConfiguration': {
+                    'LogsEncryptionConfiguration': {
+                        'EncryptionStrategy': 'CUSTOMER_MANAGED'|'AWS_OWNED',
+                        'KmsKeyArn': 'string',
+                        'EncryptionConflictResolutionStrategy': 'ALLOW'|'SKIP'
+                    },
+                    'BackupConfiguration': {
+                        'Region': 'string',
+                        'KmsKeyArn': 'string'
+                    }
+                }
+            }
+        },
+        Tags={
+            'string': 'string'
+        }
+    )
+    
+  :type RuleName: string
+  :param RuleName: **[REQUIRED]** 
+
+    A unique name for the organization-wide centralization rule being created.
+
+    
+
+  
+  :type Rule: dict
+  :param Rule: **[REQUIRED]** 
+
+    The configuration details for the organization-wide centralization rule, including the source configuration and the destination configuration to centralize telemetry data across the organization.
+
+    
+
+  
+    - **Source** *(dict) --* **[REQUIRED]** 
+
+      Configuration determining the source of the telemetry data to be centralized.
+
+      
+
+    
+      - **Regions** *(list) --* **[REQUIRED]** 
+
+        The list of source regions from which telemetry data should be centralized.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **Scope** *(string) --* 
+
+        The organizational scope from which telemetry data should be centralized, specified using organization id, accounts or organizational unit ids.
+
+        
+
+      
+      - **SourceLogsConfiguration** *(dict) --* 
+
+        Log specific configuration for centralization source log groups.
+
+        
+
+      
+        - **LogGroupSelectionCriteria** *(string) --* **[REQUIRED]** 
+
+          The selection criteria that specifies which source log groups to centralize. The selection criteria uses the same format as OAM link filters.
+
+          
+
+        
+        - **EncryptedLogGroupStrategy** *(string) --* **[REQUIRED]** 
+
+          A strategy determining whether to centralize source log groups that are encrypted with customer managed KMS keys (CMK). ALLOW will consider CMK encrypted source log groups for centralization while SKIP will skip CMK encrypted source log groups from centralization.
+
+          
+
+        
+      
+    
+    - **Destination** *(dict) --* **[REQUIRED]** 
+
+      Configuration determining where the telemetry data should be centralized, backed up, as well as encryption configuration for the primary and backup destinations.
+
+      
+
+    
+      - **Region** *(string) --* **[REQUIRED]** 
+
+        The primary destination region to which telemetry data should be centralized.
+
+        
+
+      
+      - **Account** *(string) --* 
+
+        The destination account (within the organization) to which the telemetry data should be centralized.
+
+        
+
+      
+      - **DestinationLogsConfiguration** *(dict) --* 
+
+        Log specific configuration for centralization destination log groups.
+
+        
+
+      
+        - **LogsEncryptionConfiguration** *(dict) --* 
+
+          The encryption configuration for centralization destination log groups.
+
+          
+
+        
+          - **EncryptionStrategy** *(string) --* **[REQUIRED]** 
+
+            Configuration that determines the encryption strategy of the destination log groups. CUSTOMER_MANAGED uses the configured KmsKeyArn to encrypt newly created destination log groups.
+
+            
+
+          
+          - **KmsKeyArn** *(string) --* 
+
+            KMS Key ARN belonging to the primary destination account and region, to encrypt newly created central log groups in the primary destination.
+
+            
+
+          
+          - **EncryptionConflictResolutionStrategy** *(string) --* 
+
+            Conflict resolution strategy for centralization if the encryption strategy is set to CUSTOMER_MANAGED and the destination log group is encrypted with an AWS_OWNED KMS Key. ALLOW lets centralization go through while SKIP prevents centralization into the destination log group.
+
+            
+
+          
+        
+        - **BackupConfiguration** *(dict) --* 
+
+          Configuration defining the backup region and an optional KMS key for the backup destination.
+
+          
+
+        
+          - **Region** *(string) --* **[REQUIRED]** 
+
+            Logs specific backup destination region within the primary destination account to which log data should be centralized.
+
+            
+
+          
+          - **KmsKeyArn** *(string) --* 
+
+            KMS Key ARN belonging to the primary destination account and backup region, to encrypt newly created central log groups in the backup destination.
+
+            
+
+          
+        
+      
+    
+  
+  :type Tags: dict
+  :param Tags: 
+
+    The key-value pairs to associate with the organization telemetry rule resource for categorization and management purposes.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RuleArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **RuleArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the created organization centralization rule.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchObservabilityAdminService.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`CloudWatchObservabilityAdminService.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CloudWatchObservabilityAdminService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CloudWatchObservabilityAdminService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CloudWatchObservabilityAdminService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CloudWatchObservabilityAdminService.Client.exceptions.TooManyRequestsException`
+
+  

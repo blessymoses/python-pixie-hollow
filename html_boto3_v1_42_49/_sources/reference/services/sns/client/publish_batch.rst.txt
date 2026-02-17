@@ -1,0 +1,467 @@
+:doc:`SNS <../../sns>` / Client / publish_batch
+
+*************
+publish_batch
+*************
+
+
+
+.. py:method:: SNS.Client.publish_batch(**kwargs)
+
+  
+
+  Publishes up to 10 messages to the specified topic in a single batch. This is a batch version of the ``Publish`` API. If you try to send more than 10 messages in a single batch request, you will receive a ``TooManyEntriesInBatchRequest`` exception.
+
+   
+
+  For FIFO topics, multiple messages within a single batch are published in the order they are sent, and messages are deduplicated within the batch and across batches for five minutes.
+
+   
+
+  The result of publishing each message is reported individually in the response. Because the batch request can result in a combination of successful and unsuccessful actions, you should check for batch errors even when the call returns an HTTP status code of 200.
+
+   
+
+  The maximum allowed individual message size and the maximum total payload size (the sum of the individual lengths of all of the batched messages) are both 256 KB (262,144 bytes).
+
+   
+
+  .. warning::
+
+     
+
+    The ``PublishBatch`` API can send up to 10 messages at a time. If you attempt to send more than 10 messages in one request, you will encounter a ``TooManyEntriesInBatchRequest`` exception. In such cases, split your messages into multiple requests, each containing no more than 10 messages.
+
+     
+
+   
+
+  Some actions take lists of parameters. These lists are specified using the ``param.n`` notation. Values of ``n`` are integers starting from **1**. For example, a parameter list with two elements looks like this:
+
+   
+
+  ``&AttributeName.1=first``
+
+   
+
+  ``&AttributeName.2=second``
+
+   
+
+  If you send a batch message to a topic, Amazon SNS publishes the batch message to each endpoint that is subscribed to the topic. The format of the batch message depends on the notification protocol for each subscribed endpoint.
+
+   
+
+  When a ``messageId`` is returned, the batch message is saved, and Amazon SNS immediately delivers the message to subscribers.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sns-2010-03-31/PublishBatch>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.publish_batch(
+        TopicArn='string',
+        PublishBatchRequestEntries=[
+            {
+                'Id': 'string',
+                'Message': 'string',
+                'Subject': 'string',
+                'MessageStructure': 'string',
+                'MessageAttributes': {
+                    'string': {
+                        'DataType': 'string',
+                        'StringValue': 'string',
+                        'BinaryValue': b'bytes'
+                    }
+                },
+                'MessageDeduplicationId': 'string',
+                'MessageGroupId': 'string'
+            },
+        ]
+    )
+    
+  :type TopicArn: string
+  :param TopicArn: **[REQUIRED]** 
+
+    The Amazon resource name (ARN) of the topic you want to batch publish to.
+
+    
+
+  
+  :type PublishBatchRequestEntries: list
+  :param PublishBatchRequestEntries: **[REQUIRED]** 
+
+    A list of ``PublishBatch`` request entries to be sent to the SNS topic.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains the details of a single Amazon SNS message along with an ``Id`` that identifies a message within the batch.
+
+      
+
+    
+      - **Id** *(string) --* **[REQUIRED]** 
+
+        An identifier for the message in this batch.
+
+         
+
+        .. note::
+
+          
+
+          The ``Ids`` of a batch request must be unique within a request.
+
+           
+
+          This identifier can have up to 80 characters. The following characters are accepted: alphanumeric characters, hyphens(-), and underscores (_).
+
+          
+
+        
+
+      
+      - **Message** *(string) --* **[REQUIRED]** 
+
+        The body of the message.
+
+        
+
+      
+      - **Subject** *(string) --* 
+
+        The subject of the batch message.
+
+        
+
+      
+      - **MessageStructure** *(string) --* 
+
+        Set ``MessageStructure`` to ``json`` if you want to send a different message for each protocol. For example, using one publish action, you can send a short message to your SMS subscribers and a longer message to your email subscribers. If you set ``MessageStructure`` to ``json``, the value of the ``Message`` parameter must:
+
+         
+
+        
+        * be a syntactically valid JSON object; and
+         
+        * contain at least a top-level JSON key of "default" with a value that is a string.
+        
+
+         
+
+        You can define other top-level keys that define the message you want to send to a specific transport protocol (for example, http).
+
+        
+
+      
+      - **MessageAttributes** *(dict) --* 
+
+        Each message attribute consists of a ``Name``, ``Type``, and ``Value``. For more information, see `Amazon SNS message attributes <https://docs.aws.amazon.com/sns/latest/dg/sns-message-attributes.html>`__ in the Amazon SNS Developer Guide.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(dict) --* 
+
+            The user-specified message attribute value. For string data types, the value attribute has the same restrictions on the content as the message body. For more information, see `Publish <https://docs.aws.amazon.com/sns/latest/api/API_Publish.html>`__.
+
+             
+
+            Name, type, and value must not be empty or null. In addition, the message body should not be empty or null. All parts of the message attribute, including name, type, and value, are included in the message size restriction, which is currently 256 KB (262,144 bytes). For more information, see `Amazon SNS message attributes <https://docs.aws.amazon.com/sns/latest/dg/SNSMessageAttributes.html>`__ and `Publishing to a mobile phone <https://docs.aws.amazon.com/sns/latest/dg/sms_publish-to-phone.html>`__ in the *Amazon SNS Developer Guide.*
+
+            
+
+          
+            - **DataType** *(string) --* **[REQUIRED]** 
+
+              Amazon SNS supports the following logical data types: String, String.Array, Number, and Binary. For more information, see `Message Attribute Data Types <https://docs.aws.amazon.com/sns/latest/dg/SNSMessageAttributes.html#SNSMessageAttributes.DataTypes>`__.
+
+              
+
+            
+            - **StringValue** *(string) --* 
+
+              Strings are Unicode with UTF8 binary encoding. For a list of code values, see `ASCII Printable Characters <https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters>`__.
+
+              
+
+            
+            - **BinaryValue** *(bytes) --* 
+
+              Binary type attributes can store any binary data, for example, compressed data, encrypted data, or images.
+
+              
+
+            
+          
+    
+  
+      - **MessageDeduplicationId** *(string) --* 
+
+        This parameter applies only to FIFO (first-in-first-out) topics.
+
+         
+
+        
+        * This parameter applies only to FIFO (first-in-first-out) topics. The ``MessageDeduplicationId`` can contain up to 128 alphanumeric characters ``(a-z, A-Z, 0-9)`` and punctuation ``(!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)``.
+         
+        * Every message must have a unique ``MessageDeduplicationId``, which is a token used for deduplication of sent messages within the 5 minute minimum deduplication interval.
+         
+        * The scope of deduplication depends on the ``FifoThroughputScope`` attribute, when set to ``Topic`` the message deduplication scope is across the entire topic, when set to ``MessageGroup`` the message deduplication scope is within each individual message group.
+         
+        * If a message with a particular ``MessageDeduplicationId`` is sent successfully, subsequent messages within the deduplication scope and interval, with the same ``MessageDeduplicationId``, are accepted successfully but aren't delivered.
+         
+        * Every message must have a unique ``MessageDeduplicationId``. 
+
+          
+          * You may provide a ``MessageDeduplicationId`` explicitly.
+           
+          * If you aren't able to provide a ``MessageDeduplicationId`` and you enable ``ContentBasedDeduplication`` for your topic, Amazon SNS uses a SHA-256 hash to generate the ``MessageDeduplicationId`` using the body of the message (but not the attributes of the message).
+           
+          * If you don't provide a ``MessageDeduplicationId`` and the topic doesn't have ``ContentBasedDeduplication`` set, the action fails with an error.
+           
+          * If the topic has a ``ContentBasedDeduplication`` set, your ``MessageDeduplicationId`` overrides the generated one.
+          
+
+        
+         
+        * When ``ContentBasedDeduplication`` is in effect, messages with identical content sent within the deduplication scope and interval are treated as duplicates and only one copy of the message is delivered.
+         
+        * If you send one message with ``ContentBasedDeduplication`` enabled, and then another message with a ``MessageDeduplicationId`` that is the same as the one generated for the first ``MessageDeduplicationId``, the two messages are treated as duplicates, within the deduplication scope and interval, and only one copy of the message is delivered.
+        
+
+         
+
+        .. note::
+
+          
+
+          The ``MessageDeduplicationId`` is available to the consumer of the message (this can be useful for troubleshooting delivery issues).
+
+           
+
+          If a message is sent successfully but the acknowledgement is lost and the message is resent with the same ``MessageDeduplicationId`` after the deduplication interval, Amazon SNS can't detect duplicate messages.
+
+           
+
+          Amazon SNS continues to keep track of the message deduplication ID even after the message is received and deleted.
+
+          
+
+        
+
+      
+      - **MessageGroupId** *(string) --* 
+
+        FIFO topics: The tag that specifies that a message belongs to a specific message group. Messages that belong to the same message group are processed in a FIFO manner (however, messages in different message groups might be processed out of order). To interleave multiple ordered streams within a single topic, use ``MessageGroupId`` values (for example, session data for multiple users). In this scenario, multiple consumers can process the topic, but the session data of each user is processed in a FIFO fashion. You must associate a non-empty ``MessageGroupId`` with a message. If you do not provide a ``MessageGroupId``, the action fails.
+
+         
+
+        Standard topics: The ``MessageGroupId`` is optional and is forwarded only to Amazon SQS standard subscriptions to activate `fair queues <https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fair-queues.html>`__. The ``MessageGroupId`` is not used for, or sent to, any other endpoint types.
+
+         
+
+        The length of ``MessageGroupId`` is 128 characters.
+
+         
+
+        ``MessageGroupId`` can contain alphanumeric characters ``(a-z, A-Z, 0-9)`` and punctuation ``(!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)``.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Successful': [
+              {
+                  'Id': 'string',
+                  'MessageId': 'string',
+                  'SequenceNumber': 'string'
+              },
+          ],
+          'Failed': [
+              {
+                  'Id': 'string',
+                  'Code': 'string',
+                  'Message': 'string',
+                  'SenderFault': True|False
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Successful** *(list) --* 
+
+        A list of successful ``PublishBatch`` responses.
+
+        
+        
+
+        - *(dict) --* 
+
+          Encloses data related to a successful message in a batch request for topic.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The ``Id`` of an entry in a batch request.
+
+            
+          
+
+          - **MessageId** *(string) --* 
+
+            An identifier for the message.
+
+            
+          
+
+          - **SequenceNumber** *(string) --* 
+
+            This parameter applies only to FIFO (first-in-first-out) topics.
+
+             
+
+            The large, non-consecutive number that Amazon SNS assigns to each message.
+
+             
+
+            The length of ``SequenceNumber`` is 128 bits. ``SequenceNumber`` continues to increase for a particular ``MessageGroupId``.
+
+            
+      
+    
+      
+
+      - **Failed** *(list) --* 
+
+        A list of failed ``PublishBatch`` responses.
+
+        
+        
+
+        - *(dict) --* 
+
+          Gives a detailed description of failed messages in the batch.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The ``Id`` of an entry in a batch request
+
+            
+          
+
+          - **Code** *(string) --* 
+
+            An error code representing why the action failed on this entry.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A message explaining why the action failed on this entry.
+
+            
+          
+
+          - **SenderFault** *(boolean) --* 
+
+            Specifies whether the error happened due to the caller of the batch API action.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SNS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.InternalErrorException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.EndpointDisabledException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.PlatformApplicationDisabledException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.AuthorizationErrorException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.BatchEntryIdsNotDistinctException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.BatchRequestTooLongException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.EmptyBatchRequestException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.InvalidBatchEntryIdException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.TooManyEntriesInBatchRequestException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.KMSDisabledException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.KMSInvalidStateException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.KMSNotFoundException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.KMSOptInRequired`
+
+  
+  *   :py:class:`SNS.Client.exceptions.KMSThrottlingException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.KMSAccessDeniedException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.InvalidSecurityException`
+
+  
+  *   :py:class:`SNS.Client.exceptions.ValidationException`
+
+  

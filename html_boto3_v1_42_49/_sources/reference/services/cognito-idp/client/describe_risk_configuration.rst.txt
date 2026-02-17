@@ -1,0 +1,465 @@
+:doc:`CognitoIdentityProvider <../../cognito-idp>` / Client / describe_risk_configuration
+
+***************************
+describe_risk_configuration
+***************************
+
+
+
+.. py:method:: CognitoIdentityProvider.Client.describe_risk_configuration(**kwargs)
+
+  
+
+  Given an app client or user pool ID where threat protection is configured, describes the risk configuration. This operation returns details about adaptive authentication, compromised credentials, and IP-address allow- and denylists. For more information about threat protection, see `Threat protection <https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-threat-protection.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cognito-idp-2016-04-18/DescribeRiskConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_risk_configuration(
+        UserPoolId='string',
+        ClientId='string'
+    )
+    
+  :type UserPoolId: string
+  :param UserPoolId: **[REQUIRED]** 
+
+    The ID of the user pool with the risk configuration that you want to inspect. You can apply default risk configuration at the user pool level and further customize it from user pool defaults at the app-client level. Specify ``ClientId`` to inspect client-level configuration, or ``UserPoolId`` to inspect pool-level configuration.
+
+    
+
+  
+  :type ClientId: string
+  :param ClientId: 
+
+    The ID of the app client with the risk configuration that you want to inspect. You can apply default risk configuration at the user pool level and further customize it from user pool defaults at the app-client level. Specify ``ClientId`` to inspect client-level configuration, or ``UserPoolId`` to inspect pool-level configuration.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RiskConfiguration': {
+              'UserPoolId': 'string',
+              'ClientId': 'string',
+              'CompromisedCredentialsRiskConfiguration': {
+                  'EventFilter': [
+                      'SIGN_IN'|'PASSWORD_CHANGE'|'SIGN_UP',
+                  ],
+                  'Actions': {
+                      'EventAction': 'BLOCK'|'NO_ACTION'
+                  }
+              },
+              'AccountTakeoverRiskConfiguration': {
+                  'NotifyConfiguration': {
+                      'From': 'string',
+                      'ReplyTo': 'string',
+                      'SourceArn': 'string',
+                      'BlockEmail': {
+                          'Subject': 'string',
+                          'HtmlBody': 'string',
+                          'TextBody': 'string'
+                      },
+                      'NoActionEmail': {
+                          'Subject': 'string',
+                          'HtmlBody': 'string',
+                          'TextBody': 'string'
+                      },
+                      'MfaEmail': {
+                          'Subject': 'string',
+                          'HtmlBody': 'string',
+                          'TextBody': 'string'
+                      }
+                  },
+                  'Actions': {
+                      'LowAction': {
+                          'Notify': True|False,
+                          'EventAction': 'BLOCK'|'MFA_IF_CONFIGURED'|'MFA_REQUIRED'|'NO_ACTION'
+                      },
+                      'MediumAction': {
+                          'Notify': True|False,
+                          'EventAction': 'BLOCK'|'MFA_IF_CONFIGURED'|'MFA_REQUIRED'|'NO_ACTION'
+                      },
+                      'HighAction': {
+                          'Notify': True|False,
+                          'EventAction': 'BLOCK'|'MFA_IF_CONFIGURED'|'MFA_REQUIRED'|'NO_ACTION'
+                      }
+                  }
+              },
+              'RiskExceptionConfiguration': {
+                  'BlockedIPRangeList': [
+                      'string',
+                  ],
+                  'SkippedIPRangeList': [
+                      'string',
+                  ]
+              },
+              'LastModifiedDate': datetime(2015, 1, 1)
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **RiskConfiguration** *(dict) --* 
+
+        The details of the requested risk configuration.
+
+        
+        
+
+        - **UserPoolId** *(string) --* 
+
+          The ID of the user pool that has the risk configuration applied.
+
+          
+        
+
+        - **ClientId** *(string) --* 
+
+          The app client where this configuration is applied. When this parameter isn't present, the risk configuration applies to all user pool app clients that don't have client-level settings.
+
+          
+        
+
+        - **CompromisedCredentialsRiskConfiguration** *(dict) --* 
+
+          Settings for compromised-credentials actions and authentication types with threat protection in full-function ``ENFORCED`` mode.
+
+          
+          
+
+          - **EventFilter** *(list) --* 
+
+            Settings for the sign-in activity where you want to configure compromised-credentials actions. Defaults to all events.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **Actions** *(dict) --* 
+
+            Settings for the actions that you want your user pool to take when Amazon Cognito detects compromised credentials.
+
+            
+            
+
+            - **EventAction** *(string) --* 
+
+              The action that Amazon Cognito takes when it detects compromised credentials.
+
+              
+        
+      
+        
+
+        - **AccountTakeoverRiskConfiguration** *(dict) --* 
+
+          The settings for automated responses and notification templates for adaptive authentication with threat protection.
+
+          
+          
+
+          - **NotifyConfiguration** *(dict) --* 
+
+            The settings for composing and sending an email message when threat protection assesses a risk level with adaptive authentication. When you choose to notify users in ``AccountTakeoverRiskConfiguration``, Amazon Cognito sends an email message using the method and template that you set with this data type.
+
+            
+            
+
+            - **From** *(string) --* 
+
+              The email address that sends the email message. The address must be either individually verified with Amazon Simple Email Service, or from a domain that has been verified with Amazon SES.
+
+              
+            
+
+            - **ReplyTo** *(string) --* 
+
+              The reply-to email address of an email template.
+
+              
+            
+
+            - **SourceArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the identity that is associated with the sending authorization policy. This identity permits Amazon Cognito to send for the email address specified in the ``From`` parameter.
+
+              
+            
+
+            - **BlockEmail** *(dict) --* 
+
+              The template for the email message that your user pool sends when a detected risk event is blocked.
+
+              
+              
+
+              - **Subject** *(string) --* 
+
+                The subject of the threat protection email notification.
+
+                
+              
+
+              - **HtmlBody** *(string) --* 
+
+                The body of an email notification formatted in HTML. Choose an ``HtmlBody`` or a ``TextBody`` to send an HTML-formatted or plaintext message, respectively.
+
+                
+              
+
+              - **TextBody** *(string) --* 
+
+                The body of an email notification formatted in plaintext. Choose an ``HtmlBody`` or a ``TextBody`` to send an HTML-formatted or plaintext message, respectively.
+
+                
+          
+            
+
+            - **NoActionEmail** *(dict) --* 
+
+              The template for the email message that your user pool sends when no action is taken in response to a detected risk.
+
+              
+              
+
+              - **Subject** *(string) --* 
+
+                The subject of the threat protection email notification.
+
+                
+              
+
+              - **HtmlBody** *(string) --* 
+
+                The body of an email notification formatted in HTML. Choose an ``HtmlBody`` or a ``TextBody`` to send an HTML-formatted or plaintext message, respectively.
+
+                
+              
+
+              - **TextBody** *(string) --* 
+
+                The body of an email notification formatted in plaintext. Choose an ``HtmlBody`` or a ``TextBody`` to send an HTML-formatted or plaintext message, respectively.
+
+                
+          
+            
+
+            - **MfaEmail** *(dict) --* 
+
+              The template for the email message that your user pool sends when MFA is challenged in response to a detected risk.
+
+              
+              
+
+              - **Subject** *(string) --* 
+
+                The subject of the threat protection email notification.
+
+                
+              
+
+              - **HtmlBody** *(string) --* 
+
+                The body of an email notification formatted in HTML. Choose an ``HtmlBody`` or a ``TextBody`` to send an HTML-formatted or plaintext message, respectively.
+
+                
+              
+
+              - **TextBody** *(string) --* 
+
+                The body of an email notification formatted in plaintext. Choose an ``HtmlBody`` or a ``TextBody`` to send an HTML-formatted or plaintext message, respectively.
+
+                
+          
+        
+          
+
+          - **Actions** *(dict) --* 
+
+            A list of account-takeover actions for each level of risk that Amazon Cognito might assess with threat protection.
+
+            
+            
+
+            - **LowAction** *(dict) --* 
+
+              The action that you assign to a low-risk assessment by threat protection.
+
+              
+              
+
+              - **Notify** *(boolean) --* 
+
+                Determines whether Amazon Cognito sends a user a notification message when your user pools assesses a user's session at the associated risk level.
+
+                
+              
+
+              - **EventAction** *(string) --* 
+
+                The action to take for the attempted account takeover action for the associated risk level. Valid values are as follows:
+
+                 
+
+                
+                * ``BLOCK``: Block the request.
+                 
+                * ``MFA_IF_CONFIGURED``: Present an MFA challenge if possible. MFA is possible if the user pool has active MFA methods that the user can set up. For example, if the user pool only supports SMS message MFA but the user doesn't have a phone number attribute, MFA setup isn't possible. If MFA setup isn't possible, allow the request.
+                 
+                * ``MFA_REQUIRED``: Present an MFA challenge if possible. Block the request if a user hasn't set up MFA. To sign in with required MFA, users must have an email address or phone number attribute, or a registered TOTP factor.
+                 
+                * ``NO_ACTION``: Take no action. Permit sign-in.
+                
+
+                
+          
+            
+
+            - **MediumAction** *(dict) --* 
+
+              The action that you assign to a medium-risk assessment by threat protection.
+
+              
+              
+
+              - **Notify** *(boolean) --* 
+
+                Determines whether Amazon Cognito sends a user a notification message when your user pools assesses a user's session at the associated risk level.
+
+                
+              
+
+              - **EventAction** *(string) --* 
+
+                The action to take for the attempted account takeover action for the associated risk level. Valid values are as follows:
+
+                 
+
+                
+                * ``BLOCK``: Block the request.
+                 
+                * ``MFA_IF_CONFIGURED``: Present an MFA challenge if possible. MFA is possible if the user pool has active MFA methods that the user can set up. For example, if the user pool only supports SMS message MFA but the user doesn't have a phone number attribute, MFA setup isn't possible. If MFA setup isn't possible, allow the request.
+                 
+                * ``MFA_REQUIRED``: Present an MFA challenge if possible. Block the request if a user hasn't set up MFA. To sign in with required MFA, users must have an email address or phone number attribute, or a registered TOTP factor.
+                 
+                * ``NO_ACTION``: Take no action. Permit sign-in.
+                
+
+                
+          
+            
+
+            - **HighAction** *(dict) --* 
+
+              The action that you assign to a high-risk assessment by threat protection.
+
+              
+              
+
+              - **Notify** *(boolean) --* 
+
+                Determines whether Amazon Cognito sends a user a notification message when your user pools assesses a user's session at the associated risk level.
+
+                
+              
+
+              - **EventAction** *(string) --* 
+
+                The action to take for the attempted account takeover action for the associated risk level. Valid values are as follows:
+
+                 
+
+                
+                * ``BLOCK``: Block the request.
+                 
+                * ``MFA_IF_CONFIGURED``: Present an MFA challenge if possible. MFA is possible if the user pool has active MFA methods that the user can set up. For example, if the user pool only supports SMS message MFA but the user doesn't have a phone number attribute, MFA setup isn't possible. If MFA setup isn't possible, allow the request.
+                 
+                * ``MFA_REQUIRED``: Present an MFA challenge if possible. Block the request if a user hasn't set up MFA. To sign in with required MFA, users must have an email address or phone number attribute, or a registered TOTP factor.
+                 
+                * ``NO_ACTION``: Take no action. Permit sign-in.
+                
+
+                
+          
+        
+      
+        
+
+        - **RiskExceptionConfiguration** *(dict) --* 
+
+          Exceptions to the risk evaluation configuration, including always-allow and always-block IP address ranges.
+
+          
+          
+
+          - **BlockedIPRangeList** *(list) --* 
+
+            An always-block IP address list. Overrides the risk decision and always blocks authentication requests. This parameter is displayed and set in CIDR notation.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **SkippedIPRangeList** *(list) --* 
+
+            An always-allow IP address list. Risk detection isn't performed on the IP addresses in this range list. This parameter is displayed and set in CIDR notation.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+        
+
+        - **LastModifiedDate** *(datetime) --* 
+
+          The date and time when the item was modified. Amazon Cognito returns this timestamp in UNIX epoch time format. Your SDK might render the output in a human-readable format like ISO 8601 or a Java ``Date`` object.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.NotAuthorizedException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.UserPoolAddOnNotEnabledException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InternalErrorException`
+
+  

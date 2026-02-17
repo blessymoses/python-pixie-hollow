@@ -1,0 +1,3048 @@
+:doc:`MediaConnect <../../mediaconnect>` / Client / update_flow
+
+***********
+update_flow
+***********
+
+
+
+.. py:method:: MediaConnect.Client.update_flow(**kwargs)
+
+  
+
+  Updates an existing flow.
+
+   
+
+  .. note::
+
+    
+
+    Because ``UpdateFlowSources`` and ``UpdateFlow`` are separate operations, you can't change both the source type AND the flow size in a single request.
+
+     
+
+    
+    * If you have a ``MEDIUM`` flow and you want to change the flow source to NDI®: 
+
+      
+      * First, use the ``UpdateFlow`` operation to upgrade the flow size to ``LARGE``.
+       
+      * After that, you can then use the ``UpdateFlowSource`` operation to configure the NDI source.
+      
+
+    
+     
+    * If you're switching from an NDI source to a transport stream (TS) source and want to downgrade the flow size: 
+
+      
+      * First, use the ``UpdateFlowSource`` operation to change the flow source type.
+       
+      * After that, you can then use the ``UpdateFlow`` operation to downgrade the flow size to ``MEDIUM``.
+      
+
+    
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateFlow>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_flow(
+        FlowArn='string',
+        SourceFailoverConfig={
+            'FailoverMode': 'MERGE'|'FAILOVER',
+            'RecoveryWindow': 123,
+            'SourcePriority': {
+                'PrimarySource': 'string'
+            },
+            'State': 'ENABLED'|'DISABLED'
+        },
+        Maintenance={
+            'MaintenanceDay': 'Monday'|'Tuesday'|'Wednesday'|'Thursday'|'Friday'|'Saturday'|'Sunday',
+            'MaintenanceScheduledDate': 'string',
+            'MaintenanceStartHour': 'string'
+        },
+        SourceMonitoringConfig={
+            'ThumbnailState': 'ENABLED'|'DISABLED',
+            'AudioMonitoringSettings': [
+                {
+                    'SilentAudio': {
+                        'State': 'ENABLED'|'DISABLED',
+                        'ThresholdSeconds': 123
+                    }
+                },
+            ],
+            'ContentQualityAnalysisState': 'ENABLED'|'DISABLED',
+            'VideoMonitoringSettings': [
+                {
+                    'BlackFrames': {
+                        'State': 'ENABLED'|'DISABLED',
+                        'ThresholdSeconds': 123
+                    },
+                    'FrozenFrames': {
+                        'State': 'ENABLED'|'DISABLED',
+                        'ThresholdSeconds': 123
+                    }
+                },
+            ]
+        },
+        NdiConfig={
+            'NdiState': 'ENABLED'|'DISABLED',
+            'MachineName': 'string',
+            'NdiDiscoveryServers': [
+                {
+                    'DiscoveryServerAddress': 'string',
+                    'DiscoveryServerPort': 123,
+                    'VpcInterfaceAdapter': 'string'
+                },
+            ]
+        },
+        FlowSize='MEDIUM'|'LARGE'|'LARGE_4X',
+        EncodingConfig={
+            'EncodingProfile': 'DISTRIBUTION_H264_DEFAULT'|'CONTRIBUTION_H264_DEFAULT',
+            'VideoMaxBitrate': 123
+        }
+    )
+    
+  :type FlowArn: string
+  :param FlowArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the flow that you want to update.
+
+    
+
+  
+  :type SourceFailoverConfig: dict
+  :param SourceFailoverConfig: 
+
+    The settings for source failover.
+
+    
+
+  
+    - **FailoverMode** *(string) --* 
+
+      The type of failover you choose for this flow. MERGE combines the source streams into a single stream, allowing graceful recovery from any single-source loss. FAILOVER allows switching between different streams.
+
+      
+
+    
+    - **RecoveryWindow** *(integer) --* 
+
+      Recovery window time to look for dash-7 packets.
+
+      
+
+    
+    - **SourcePriority** *(dict) --* 
+
+      The priority you want to assign to a source. You can have a primary stream and a backup stream or two equally prioritized streams.
+
+      
+
+    
+      - **PrimarySource** *(string) --* 
+
+        The name of the source you choose as the primary source for this flow.
+
+        
+
+      
+    
+    - **State** *(string) --* 
+
+      The state of source failover on the flow. If the state is inactive, the flow can have only one source. If the state is active, the flow can have one or two sources.
+
+      
+
+    
+  
+  :type Maintenance: dict
+  :param Maintenance: 
+
+    The maintenance setting of the flow.
+
+    
+
+  
+    - **MaintenanceDay** *(string) --* 
+
+      A day of a week when the maintenance will happen.
+
+      
+
+    
+    - **MaintenanceScheduledDate** *(string) --* 
+
+      A scheduled date in ISO UTC format when the maintenance will happen. Use YYYY-MM-DD format. Example: 2021-01-30.
+
+      
+
+    
+    - **MaintenanceStartHour** *(string) --* 
+
+      UTC time when the maintenance will happen. Use 24-hour HH:MM format. Minutes must be 00. Example: 13:00. The default value is 02:00.
+
+      
+
+    
+  
+  :type SourceMonitoringConfig: dict
+  :param SourceMonitoringConfig: 
+
+    The settings for source monitoring.
+
+    
+
+  
+    - **ThumbnailState** *(string) --* 
+
+      Indicates whether thumbnails are enabled or disabled.
+
+      
+
+    
+    - **AudioMonitoringSettings** *(list) --* 
+
+      Contains the settings for audio stream metrics monitoring.
+
+      
+
+    
+      - *(dict) --* 
+
+        Specifies the configuration for audio stream metrics monitoring.
+
+        
+
+      
+        - **SilentAudio** *(dict) --* 
+
+          Detects periods of silence.
+
+          
+
+        
+          - **State** *(string) --* 
+
+            Indicates whether the ``SilentAudio`` metric is enabled or disabled.
+
+            
+
+          
+          - **ThresholdSeconds** *(integer) --* 
+
+            Specifies the number of consecutive seconds of silence that triggers an event or alert.
+
+            
+
+          
+        
+      
+  
+    - **ContentQualityAnalysisState** *(string) --* 
+
+      Indicates whether content quality analysis is enabled or disabled.
+
+      
+
+    
+    - **VideoMonitoringSettings** *(list) --* 
+
+      Contains the settings for video stream metrics monitoring.
+
+      
+
+    
+      - *(dict) --* 
+
+        Specifies the configuration for video stream metrics monitoring.
+
+        
+
+      
+        - **BlackFrames** *(dict) --* 
+
+          Detects video frames that are black.
+
+          
+
+        
+          - **State** *(string) --* 
+
+            Indicates whether the ``BlackFrames`` metric is enabled or disabled..
+
+            
+
+          
+          - **ThresholdSeconds** *(integer) --* 
+
+            Specifies the number of consecutive seconds of black frames that triggers an event or alert.
+
+            
+
+          
+        
+        - **FrozenFrames** *(dict) --* 
+
+          Detects video frames that have not changed.
+
+          
+
+        
+          - **State** *(string) --* 
+
+            Indicates whether the ``FrozenFrames`` metric is enabled or disabled.
+
+            
+
+          
+          - **ThresholdSeconds** *(integer) --* 
+
+            Specifies the number of consecutive seconds of a static image that triggers an event or alert.
+
+            
+
+          
+        
+      
+  
+  
+  :type NdiConfig: dict
+  :param NdiConfig: 
+
+    Specifies the configuration settings for a flow's NDI source or output. Required when the flow includes an NDI source or output.
+
+    
+
+  
+    - **NdiState** *(string) --* 
+
+      A setting that controls whether NDI® sources or outputs can be used in the flow.
+
+       
+
+      The default value is ``DISABLED``. This value must be set as ``ENABLED`` for your flow to support NDI sources or outputs.
+
+      
+
+    
+    - **MachineName** *(string) --* 
+
+      A prefix for the names of the NDI sources that the flow creates. If a custom name isn't specified, MediaConnect generates a unique 12-character ID as the prefix.
+
+      
+
+    
+    - **NdiDiscoveryServers** *(list) --* 
+
+      A list of up to three NDI discovery server configurations. While not required by the API, this configuration is necessary for NDI functionality to work properly.
+
+      
+
+    
+      - *(dict) --* 
+
+        Specifies the configuration settings for individual NDI® discovery servers. A maximum of 3 servers is allowed.
+
+        
+
+      
+        - **DiscoveryServerAddress** *(string) --* **[REQUIRED]** 
+
+          The unique network address of the NDI discovery server.
+
+          
+
+        
+        - **DiscoveryServerPort** *(integer) --* 
+
+          The port for the NDI discovery server. Defaults to 5959 if a custom port isn't specified.
+
+          
+
+        
+        - **VpcInterfaceAdapter** *(string) --* **[REQUIRED]** 
+
+          The identifier for the Virtual Private Cloud (VPC) network interface used by the flow.
+
+          
+
+        
+      
+  
+  
+  :type FlowSize: string
+  :param FlowSize: 
+
+    Determines the processing capacity and feature set of the flow.
+
+    
+
+  
+  :type EncodingConfig: dict
+  :param EncodingConfig: 
+
+    The encoding configuration to apply to the NDI® source when transcoding it to a transport stream for downstream distribution. You can choose between several predefined encoding profiles based on common use cases.
+
+    
+
+  
+    - **EncodingProfile** *(string) --* 
+
+      The encoding profile to use when transcoding the NDI source content to a transport stream. You can change this value while the flow is running.
+
+      
+
+    
+    - **VideoMaxBitrate** *(integer) --* 
+
+      The maximum video bitrate to use when transcoding the NDI source to a transport stream. This parameter enables you to override the default video bitrate within the encoding profile's supported range.
+
+       
+
+      The supported range is 10,000,000 - 50,000,000 bits per second (bps). If you don't specify a value, MediaConnect uses the default value of 20,000,000 bps.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Flow': {
+              'AvailabilityZone': 'string',
+              'Description': 'string',
+              'EgressIp': 'string',
+              'Entitlements': [
+                  {
+                      'DataTransferSubscriberFeePercent': 123,
+                      'Description': 'string',
+                      'Encryption': {
+                          'Algorithm': 'aes128'|'aes192'|'aes256',
+                          'ConstantInitializationVector': 'string',
+                          'DeviceId': 'string',
+                          'KeyType': 'speke'|'static-key'|'srt-password',
+                          'Region': 'string',
+                          'ResourceId': 'string',
+                          'RoleArn': 'string',
+                          'SecretArn': 'string',
+                          'Url': 'string'
+                      },
+                      'EntitlementArn': 'string',
+                      'EntitlementStatus': 'ENABLED'|'DISABLED',
+                      'Name': 'string',
+                      'Subscribers': [
+                          'string',
+                      ]
+                  },
+              ],
+              'FlowArn': 'string',
+              'MediaStreams': [
+                  {
+                      'Attributes': {
+                          'Fmtp': {
+                              'ChannelOrder': 'string',
+                              'Colorimetry': 'BT601'|'BT709'|'BT2020'|'BT2100'|'ST2065-1'|'ST2065-3'|'XYZ',
+                              'ExactFramerate': 'string',
+                              'Par': 'string',
+                              'Range': 'NARROW'|'FULL'|'FULLPROTECT',
+                              'ScanMode': 'progressive'|'interlace'|'progressive-segmented-frame',
+                              'Tcs': 'SDR'|'PQ'|'HLG'|'LINEAR'|'BT2100LINPQ'|'BT2100LINHLG'|'ST2065-1'|'ST428-1'|'DENSITY'
+                          },
+                          'Lang': 'string'
+                      },
+                      'ClockRate': 123,
+                      'Description': 'string',
+                      'Fmt': 123,
+                      'MediaStreamId': 123,
+                      'MediaStreamName': 'string',
+                      'MediaStreamType': 'video'|'audio'|'ancillary-data',
+                      'VideoFormat': 'string'
+                  },
+              ],
+              'Name': 'string',
+              'Outputs': [
+                  {
+                      'DataTransferSubscriberFeePercent': 123,
+                      'Description': 'string',
+                      'Destination': 'string',
+                      'Encryption': {
+                          'Algorithm': 'aes128'|'aes192'|'aes256',
+                          'ConstantInitializationVector': 'string',
+                          'DeviceId': 'string',
+                          'KeyType': 'speke'|'static-key'|'srt-password',
+                          'Region': 'string',
+                          'ResourceId': 'string',
+                          'RoleArn': 'string',
+                          'SecretArn': 'string',
+                          'Url': 'string'
+                      },
+                      'EntitlementArn': 'string',
+                      'ListenerAddress': 'string',
+                      'MediaLiveInputArn': 'string',
+                      'MediaStreamOutputConfigurations': [
+                          {
+                              'DestinationConfigurations': [
+                                  {
+                                      'DestinationIp': 'string',
+                                      'DestinationPort': 123,
+                                      'Interface': {
+                                          'Name': 'string'
+                                      },
+                                      'OutboundIp': 'string'
+                                  },
+                              ],
+                              'EncodingName': 'jxsv'|'raw'|'smpte291'|'pcm',
+                              'EncodingParameters': {
+                                  'CompressionFactor': 123.0,
+                                  'EncoderProfile': 'main'|'high'
+                              },
+                              'MediaStreamName': 'string'
+                          },
+                      ],
+                      'Name': 'string',
+                      'OutputArn': 'string',
+                      'Port': 123,
+                      'Transport': {
+                          'CidrAllowList': [
+                              'string',
+                          ],
+                          'MaxBitrate': 123,
+                          'MaxLatency': 123,
+                          'MaxSyncBuffer': 123,
+                          'MinLatency': 123,
+                          'Protocol': 'zixi-push'|'rtp-fec'|'rtp'|'zixi-pull'|'rist'|'st2110-jpegxs'|'cdi'|'srt-listener'|'srt-caller'|'fujitsu-qos'|'udp'|'ndi-speed-hq',
+                          'RemoteId': 'string',
+                          'SenderControlPort': 123,
+                          'SenderIpAddress': 'string',
+                          'SmoothingLatency': 123,
+                          'SourceListenerAddress': 'string',
+                          'SourceListenerPort': 123,
+                          'StreamId': 'string',
+                          'NdiSpeedHqQuality': 123,
+                          'NdiProgramName': 'string',
+                          'NdiSourceSettings': {
+                              'SourceName': 'string'
+                          }
+                      },
+                      'VpcInterfaceAttachment': {
+                          'VpcInterfaceName': 'string'
+                      },
+                      'BridgeArn': 'string',
+                      'BridgePorts': [
+                          123,
+                      ],
+                      'OutputStatus': 'ENABLED'|'DISABLED',
+                      'PeerIpAddress': 'string',
+                      'RouterIntegrationState': 'ENABLED'|'DISABLED',
+                      'RouterIntegrationTransitEncryption': {
+                          'EncryptionKeyType': 'SECRETS_MANAGER'|'AUTOMATIC',
+                          'EncryptionKeyConfiguration': {
+                              'SecretsManager': {
+                                  'SecretArn': 'string',
+                                  'RoleArn': 'string'
+                              },
+                              'Automatic': {}
+                          }
+                      },
+                      'ConnectedRouterInputArn': 'string'
+                  },
+              ],
+              'Source': {
+                  'DataTransferSubscriberFeePercent': 123,
+                  'Decryption': {
+                      'Algorithm': 'aes128'|'aes192'|'aes256',
+                      'ConstantInitializationVector': 'string',
+                      'DeviceId': 'string',
+                      'KeyType': 'speke'|'static-key'|'srt-password',
+                      'Region': 'string',
+                      'ResourceId': 'string',
+                      'RoleArn': 'string',
+                      'SecretArn': 'string',
+                      'Url': 'string'
+                  },
+                  'Description': 'string',
+                  'EntitlementArn': 'string',
+                  'IngestIp': 'string',
+                  'IngestPort': 123,
+                  'MediaStreamSourceConfigurations': [
+                      {
+                          'EncodingName': 'jxsv'|'raw'|'smpte291'|'pcm',
+                          'InputConfigurations': [
+                              {
+                                  'InputIp': 'string',
+                                  'InputPort': 123,
+                                  'Interface': {
+                                      'Name': 'string'
+                                  }
+                              },
+                          ],
+                          'MediaStreamName': 'string'
+                      },
+                  ],
+                  'Name': 'string',
+                  'SenderControlPort': 123,
+                  'SenderIpAddress': 'string',
+                  'SourceArn': 'string',
+                  'Transport': {
+                      'CidrAllowList': [
+                          'string',
+                      ],
+                      'MaxBitrate': 123,
+                      'MaxLatency': 123,
+                      'MaxSyncBuffer': 123,
+                      'MinLatency': 123,
+                      'Protocol': 'zixi-push'|'rtp-fec'|'rtp'|'zixi-pull'|'rist'|'st2110-jpegxs'|'cdi'|'srt-listener'|'srt-caller'|'fujitsu-qos'|'udp'|'ndi-speed-hq',
+                      'RemoteId': 'string',
+                      'SenderControlPort': 123,
+                      'SenderIpAddress': 'string',
+                      'SmoothingLatency': 123,
+                      'SourceListenerAddress': 'string',
+                      'SourceListenerPort': 123,
+                      'StreamId': 'string',
+                      'NdiSpeedHqQuality': 123,
+                      'NdiProgramName': 'string',
+                      'NdiSourceSettings': {
+                          'SourceName': 'string'
+                      }
+                  },
+                  'VpcInterfaceName': 'string',
+                  'WhitelistCidr': 'string',
+                  'GatewayBridgeSource': {
+                      'BridgeArn': 'string',
+                      'VpcInterfaceAttachment': {
+                          'VpcInterfaceName': 'string'
+                      }
+                  },
+                  'PeerIpAddress': 'string',
+                  'RouterIntegrationState': 'ENABLED'|'DISABLED',
+                  'RouterIntegrationTransitDecryption': {
+                      'EncryptionKeyType': 'SECRETS_MANAGER'|'AUTOMATIC',
+                      'EncryptionKeyConfiguration': {
+                          'SecretsManager': {
+                              'SecretArn': 'string',
+                              'RoleArn': 'string'
+                          },
+                          'Automatic': {}
+                      }
+                  },
+                  'ConnectedRouterOutputArn': 'string'
+              },
+              'SourceFailoverConfig': {
+                  'FailoverMode': 'MERGE'|'FAILOVER',
+                  'RecoveryWindow': 123,
+                  'SourcePriority': {
+                      'PrimarySource': 'string'
+                  },
+                  'State': 'ENABLED'|'DISABLED'
+              },
+              'Sources': [
+                  {
+                      'DataTransferSubscriberFeePercent': 123,
+                      'Decryption': {
+                          'Algorithm': 'aes128'|'aes192'|'aes256',
+                          'ConstantInitializationVector': 'string',
+                          'DeviceId': 'string',
+                          'KeyType': 'speke'|'static-key'|'srt-password',
+                          'Region': 'string',
+                          'ResourceId': 'string',
+                          'RoleArn': 'string',
+                          'SecretArn': 'string',
+                          'Url': 'string'
+                      },
+                      'Description': 'string',
+                      'EntitlementArn': 'string',
+                      'IngestIp': 'string',
+                      'IngestPort': 123,
+                      'MediaStreamSourceConfigurations': [
+                          {
+                              'EncodingName': 'jxsv'|'raw'|'smpte291'|'pcm',
+                              'InputConfigurations': [
+                                  {
+                                      'InputIp': 'string',
+                                      'InputPort': 123,
+                                      'Interface': {
+                                          'Name': 'string'
+                                      }
+                                  },
+                              ],
+                              'MediaStreamName': 'string'
+                          },
+                      ],
+                      'Name': 'string',
+                      'SenderControlPort': 123,
+                      'SenderIpAddress': 'string',
+                      'SourceArn': 'string',
+                      'Transport': {
+                          'CidrAllowList': [
+                              'string',
+                          ],
+                          'MaxBitrate': 123,
+                          'MaxLatency': 123,
+                          'MaxSyncBuffer': 123,
+                          'MinLatency': 123,
+                          'Protocol': 'zixi-push'|'rtp-fec'|'rtp'|'zixi-pull'|'rist'|'st2110-jpegxs'|'cdi'|'srt-listener'|'srt-caller'|'fujitsu-qos'|'udp'|'ndi-speed-hq',
+                          'RemoteId': 'string',
+                          'SenderControlPort': 123,
+                          'SenderIpAddress': 'string',
+                          'SmoothingLatency': 123,
+                          'SourceListenerAddress': 'string',
+                          'SourceListenerPort': 123,
+                          'StreamId': 'string',
+                          'NdiSpeedHqQuality': 123,
+                          'NdiProgramName': 'string',
+                          'NdiSourceSettings': {
+                              'SourceName': 'string'
+                          }
+                      },
+                      'VpcInterfaceName': 'string',
+                      'WhitelistCidr': 'string',
+                      'GatewayBridgeSource': {
+                          'BridgeArn': 'string',
+                          'VpcInterfaceAttachment': {
+                              'VpcInterfaceName': 'string'
+                          }
+                      },
+                      'PeerIpAddress': 'string',
+                      'RouterIntegrationState': 'ENABLED'|'DISABLED',
+                      'RouterIntegrationTransitDecryption': {
+                          'EncryptionKeyType': 'SECRETS_MANAGER'|'AUTOMATIC',
+                          'EncryptionKeyConfiguration': {
+                              'SecretsManager': {
+                                  'SecretArn': 'string',
+                                  'RoleArn': 'string'
+                              },
+                              'Automatic': {}
+                          }
+                      },
+                      'ConnectedRouterOutputArn': 'string'
+                  },
+              ],
+              'Status': 'STANDBY'|'ACTIVE'|'UPDATING'|'DELETING'|'STARTING'|'STOPPING'|'ERROR',
+              'VpcInterfaces': [
+                  {
+                      'Name': 'string',
+                      'NetworkInterfaceIds': [
+                          'string',
+                      ],
+                      'NetworkInterfaceType': 'ena'|'efa',
+                      'RoleArn': 'string',
+                      'SecurityGroupIds': [
+                          'string',
+                      ],
+                      'SubnetId': 'string'
+                  },
+              ],
+              'Maintenance': {
+                  'MaintenanceDay': 'Monday'|'Tuesday'|'Wednesday'|'Thursday'|'Friday'|'Saturday'|'Sunday',
+                  'MaintenanceDeadline': 'string',
+                  'MaintenanceScheduledDate': 'string',
+                  'MaintenanceStartHour': 'string'
+              },
+              'SourceMonitoringConfig': {
+                  'ThumbnailState': 'ENABLED'|'DISABLED',
+                  'AudioMonitoringSettings': [
+                      {
+                          'SilentAudio': {
+                              'State': 'ENABLED'|'DISABLED',
+                              'ThresholdSeconds': 123
+                          }
+                      },
+                  ],
+                  'ContentQualityAnalysisState': 'ENABLED'|'DISABLED',
+                  'VideoMonitoringSettings': [
+                      {
+                          'BlackFrames': {
+                              'State': 'ENABLED'|'DISABLED',
+                              'ThresholdSeconds': 123
+                          },
+                          'FrozenFrames': {
+                              'State': 'ENABLED'|'DISABLED',
+                              'ThresholdSeconds': 123
+                          }
+                      },
+                  ]
+              },
+              'FlowSize': 'MEDIUM'|'LARGE'|'LARGE_4X',
+              'NdiConfig': {
+                  'NdiState': 'ENABLED'|'DISABLED',
+                  'MachineName': 'string',
+                  'NdiDiscoveryServers': [
+                      {
+                          'DiscoveryServerAddress': 'string',
+                          'DiscoveryServerPort': 123,
+                          'VpcInterfaceAdapter': 'string'
+                      },
+                  ]
+              },
+              'EncodingConfig': {
+                  'EncodingProfile': 'DISTRIBUTION_H264_DEFAULT'|'CONTRIBUTION_H264_DEFAULT',
+                  'VideoMaxBitrate': 123
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Flow** *(dict) --* 
+
+        The updated flow.
+
+        
+        
+
+        - **AvailabilityZone** *(string) --* 
+
+          The Availability Zone that you want to create the flow in. These options are limited to the Availability Zones within the current Amazon Web Services Region.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          A description of the flow. This value is not used or seen outside of the current MediaConnect account.
+
+          
+        
+
+        - **EgressIp** *(string) --* 
+
+          The IP address from which video will be sent to output destinations.
+
+          
+        
+
+        - **Entitlements** *(list) --* 
+
+          The entitlements in this flow.
+
+          
+          
+
+          - *(dict) --* 
+
+            The settings for a flow entitlement.
+
+            
+            
+
+            - **DataTransferSubscriberFeePercent** *(integer) --* 
+
+              Percentage from 0-100 of the data transfer cost to be billed to the subscriber.
+
+              
+            
+
+            - **Description** *(string) --* 
+
+              A description of the entitlement.
+
+              
+            
+
+            - **Encryption** *(dict) --* 
+
+              The type of encryption that will be used on the output that is associated with this entitlement.
+
+              
+              
+
+              - **Algorithm** *(string) --* 
+
+                The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256).
+
+                
+              
+
+              - **ConstantInitializationVector** *(string) --* 
+
+                A 128-bit, 16-byte hex value represented by a 32-character string, to be used with the key for encrypting content. This parameter is not valid for static key encryption.
+
+                
+              
+
+              - **DeviceId** *(string) --* 
+
+                The value of one of the devices that you configured with your digital rights management (DRM) platform key provider. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **KeyType** *(string) --* 
+
+                The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).
+
+                
+              
+
+              - **Region** *(string) --* 
+
+                The Amazon Web Services Region that the API Gateway proxy endpoint was created in. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **ResourceId** *(string) --* 
+
+                An identifier for the content. The service sends this value to the key server to identify the current endpoint. The resource ID is also known as the content ID. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **RoleArn** *(string) --* 
+
+                The ARN of the role that you created during setup (when you set up MediaConnect as a trusted entity).
+
+                
+              
+
+              - **SecretArn** *(string) --* 
+
+                The ARN of the secret that you created in Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption.
+
+                
+              
+
+              - **Url** *(string) --* 
+
+                The URL from the API Gateway proxy that you set up to talk to your key server. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+          
+            
+
+            - **EntitlementArn** *(string) --* 
+
+              The ARN of the entitlement.
+
+              
+            
+
+            - **EntitlementStatus** *(string) --* 
+
+              An indication of whether the entitlement is enabled.
+
+              
+            
+
+            - **Name** *(string) --* 
+
+              The name of the entitlement.
+
+              
+            
+
+            - **Subscribers** *(list) --* 
+
+              The Amazon Web Services account IDs that you want to share your content with. The receiving accounts (subscribers) will be allowed to create their own flow using your content as the source.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **FlowArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the flow.
+
+          
+        
+
+        - **MediaStreams** *(list) --* 
+
+          The media streams that are associated with the flow. After you associate a media stream with a source, you can also associate it with outputs on the flow.
+
+          
+          
+
+          - *(dict) --* 
+
+            A media stream represents one component of your content, such as video, audio, or ancillary data. After you add a media stream to your flow, you can associate it with sources and outputs that use the ST 2110 JPEG XS or CDI protocol.
+
+            
+            
+
+            - **Attributes** *(dict) --* 
+
+              Attributes that are related to the media stream.
+
+              
+              
+
+              - **Fmtp** *(dict) --* 
+
+                The settings that you want to use to define the media stream.
+
+                
+                
+
+                - **ChannelOrder** *(string) --* 
+
+                  The format of the audio channel.
+
+                  
+                
+
+                - **Colorimetry** *(string) --* 
+
+                  The format used for the representation of color.
+
+                  
+                
+
+                - **ExactFramerate** *(string) --* 
+
+                  The frame rate for the video stream, in frames/second. For example: 60000/1001.
+
+                  
+                
+
+                - **Par** *(string) --* 
+
+                  The pixel aspect ratio (PAR) of the video.
+
+                  
+                
+
+                - **Range** *(string) --* 
+
+                  The encoding range of the video.
+
+                  
+                
+
+                - **ScanMode** *(string) --* 
+
+                  The type of compression that was used to smooth the video’s appearance.
+
+                  
+                
+
+                - **Tcs** *(string) --* 
+
+                  The transfer characteristic system (TCS) that is used in the video.
+
+                  
+            
+              
+
+              - **Lang** *(string) --* 
+
+                The audio language, in a format that is recognized by the receiver.
+
+                
+          
+            
+
+            - **ClockRate** *(integer) --* 
+
+              The sample rate for the stream. This value is measured in Hz.
+
+              
+            
+
+            - **Description** *(string) --* 
+
+              A description that can help you quickly identify what your media stream is used for.
+
+              
+            
+
+            - **Fmt** *(integer) --* 
+
+              The format type number (sometimes referred to as RTP payload type) of the media stream. MediaConnect assigns this value to the media stream. For ST 2110 JPEG XS outputs, you need to provide this value to the receiver.
+
+              
+            
+
+            - **MediaStreamId** *(integer) --* 
+
+              A unique identifier for the media stream.
+
+              
+            
+
+            - **MediaStreamName** *(string) --* 
+
+              A name that helps you distinguish one media stream from another.
+
+              
+            
+
+            - **MediaStreamType** *(string) --* 
+
+              The type of media stream.
+
+              
+            
+
+            - **VideoFormat** *(string) --* 
+
+              The resolution of the video.
+
+              
+        
+      
+        
+
+        - **Name** *(string) --* 
+
+          The name of the flow.
+
+          
+        
+
+        - **Outputs** *(list) --* 
+
+          The outputs in this flow.
+
+          
+          
+
+          - *(dict) --* 
+
+            The settings for an output.
+
+            
+            
+
+            - **DataTransferSubscriberFeePercent** *(integer) --* 
+
+              Percentage from 0-100 of the data transfer cost to be billed to the subscriber.
+
+              
+            
+
+            - **Description** *(string) --* 
+
+              A description of the output.
+
+              
+            
+
+            - **Destination** *(string) --* 
+
+              The address where you want to send the output.
+
+              
+            
+
+            - **Encryption** *(dict) --* 
+
+              The type of key used for the encryption. If no keyType is provided, the service will use the default setting (static-key).
+
+              
+              
+
+              - **Algorithm** *(string) --* 
+
+                The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256).
+
+                
+              
+
+              - **ConstantInitializationVector** *(string) --* 
+
+                A 128-bit, 16-byte hex value represented by a 32-character string, to be used with the key for encrypting content. This parameter is not valid for static key encryption.
+
+                
+              
+
+              - **DeviceId** *(string) --* 
+
+                The value of one of the devices that you configured with your digital rights management (DRM) platform key provider. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **KeyType** *(string) --* 
+
+                The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).
+
+                
+              
+
+              - **Region** *(string) --* 
+
+                The Amazon Web Services Region that the API Gateway proxy endpoint was created in. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **ResourceId** *(string) --* 
+
+                An identifier for the content. The service sends this value to the key server to identify the current endpoint. The resource ID is also known as the content ID. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **RoleArn** *(string) --* 
+
+                The ARN of the role that you created during setup (when you set up MediaConnect as a trusted entity).
+
+                
+              
+
+              - **SecretArn** *(string) --* 
+
+                The ARN of the secret that you created in Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption.
+
+                
+              
+
+              - **Url** *(string) --* 
+
+                The URL from the API Gateway proxy that you set up to talk to your key server. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+          
+            
+
+            - **EntitlementArn** *(string) --* 
+
+              The ARN of the entitlement on the originator''s flow. This value is relevant only on entitled flows.
+
+              
+            
+
+            - **ListenerAddress** *(string) --* 
+
+              The IP address that the receiver requires in order to establish a connection with the flow. For public networking, the ListenerAddress is represented by the elastic IP address of the flow. For private networking, the ListenerAddress is represented by the elastic network interface IP address of the VPC. This field applies only to outputs that use the Zixi pull or SRT listener protocol.
+
+              
+            
+
+            - **MediaLiveInputArn** *(string) --* 
+
+              The input ARN of the MediaLive channel. This parameter is relevant only for outputs that were added by creating a MediaLive input.
+
+              
+            
+
+            - **MediaStreamOutputConfigurations** *(list) --* 
+
+              The configuration for each media stream that is associated with the output.
+
+              
+              
+
+              - *(dict) --* 
+
+                The media stream that is associated with the output, and the parameters for that association.
+
+                
+                
+
+                - **DestinationConfigurations** *(list) --* 
+
+                  The transport parameters that are associated with each outbound media stream.
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    The transport parameters that you want to associate with an outbound media stream.
+
+                    
+                    
+
+                    - **DestinationIp** *(string) --* 
+
+                      The IP address where you want MediaConnect to send contents of the media stream.
+
+                      
+                    
+
+                    - **DestinationPort** *(integer) --* 
+
+                      The port that you want MediaConnect to use when it distributes the media stream to the output.
+
+                      
+                    
+
+                    - **Interface** *(dict) --* 
+
+                      The VPC interface that you want to use for the media stream associated with the output.
+
+                      
+                      
+
+                      - **Name** *(string) --* 
+
+                        The name of the VPC interface.
+
+                        
+                  
+                    
+
+                    - **OutboundIp** *(string) --* 
+
+                      The IP address that the receiver requires in order to establish a connection with the flow. This value is represented by the elastic network interface IP address of the VPC. This field applies only to outputs that use the CDI or ST 2110 JPEG XS or protocol.
+
+                      
+                
+              
+                
+
+                - **EncodingName** *(string) --* 
+
+                  The format that was used to encode the data. For ancillary data streams, set the encoding name to smpte291. For audio streams, set the encoding name to pcm. For video, 2110 streams, set the encoding name to raw. For video, JPEG XS streams, set the encoding name to jxsv.
+
+                  
+                
+
+                - **EncodingParameters** *(dict) --* 
+
+                  A collection of parameters that determine how MediaConnect will convert the content. These fields only apply to outputs on flows that have a CDI source.
+
+                  
+                  
+
+                  - **CompressionFactor** *(float) --* 
+
+                    A value that is used to calculate compression for an output. The bitrate of the output is calculated as follows: Output bitrate = (1 / compressionFactor) * (source bitrate) This property only applies to outputs that use the ST 2110 JPEG XS protocol, with a flow source that uses the CDI protocol. Valid values are floating point numbers in the range of 3.0 to 10.0, inclusive.
+
+                    
+                  
+
+                  - **EncoderProfile** *(string) --* 
+
+                    A setting on the encoder that drives compression settings. This property only applies to video media streams associated with outputs that use the ST 2110 JPEG XS protocol, with a flow source that uses the CDI protocol.
+
+                    
+              
+                
+
+                - **MediaStreamName** *(string) --* 
+
+                  The name of the media stream.
+
+                  
+            
+          
+            
+
+            - **Name** *(string) --* 
+
+              The name of the output. This value must be unique within the current flow.
+
+              
+            
+
+            - **OutputArn** *(string) --* 
+
+              The ARN of the output.
+
+              
+            
+
+            - **Port** *(integer) --* 
+
+              The port to use when content is distributed to this output.
+
+              
+            
+
+            - **Transport** *(dict) --* 
+
+              Attributes related to the transport stream that are used in the output.
+
+              
+              
+
+              - **CidrAllowList** *(list) --* 
+
+                The range of IP addresses that should be allowed to initiate output requests to this flow. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **MaxBitrate** *(integer) --* 
+
+                The smoothing max bitrate (in bps) for RIST, RTP, and RTP-FEC streams.
+
+                
+              
+
+              - **MaxLatency** *(integer) --* 
+
+                The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams.
+
+                
+              
+
+              - **MaxSyncBuffer** *(integer) --* 
+
+                The size of the buffer (in milliseconds) to use to sync incoming source data.
+
+                
+              
+
+              - **MinLatency** *(integer) --* 
+
+                The minimum latency in milliseconds for SRT-based streams. In streams that use the SRT protocol, this value that you set on your MediaConnect source or output represents the minimal potential latency of that connection. The latency of the stream is set to the highest number between the sender’s minimum latency and the receiver’s minimum latency.
+
+                
+              
+
+              - **Protocol** *(string) --* 
+
+                The protocol that is used by the source or output.
+
+                 
+
+                .. note::
+
+                  
+
+                  Elemental MediaConnect no longer supports the Fujitsu QoS protocol. This reference is maintained for legacy purposes only.
+
+                  
+
+                
+              
+
+              - **RemoteId** *(string) --* 
+
+                The remote ID for the Zixi-pull stream.
+
+                
+              
+
+              - **SenderControlPort** *(integer) --* 
+
+                The port that the flow uses to send outbound requests to initiate connection with the sender.
+
+                
+              
+
+              - **SenderIpAddress** *(string) --* 
+
+                The IP address that the flow communicates with to initiate connection with the sender.
+
+                
+              
+
+              - **SmoothingLatency** *(integer) --* 
+
+                The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.
+
+                
+              
+
+              - **SourceListenerAddress** *(string) --* 
+
+                Source IP or domain name for SRT-caller protocol.
+
+                
+              
+
+              - **SourceListenerPort** *(integer) --* 
+
+                Source port for SRT-caller protocol.
+
+                
+              
+
+              - **StreamId** *(string) --* 
+
+                The stream ID that you want to use for this transport. This parameter applies only to Zixi and SRT caller-based streams.
+
+                
+              
+
+              - **NdiSpeedHqQuality** *(integer) --* 
+
+                A quality setting for the NDI Speed HQ encoder.
+
+                
+              
+
+              - **NdiProgramName** *(string) --* 
+
+                A suffix for the name of the NDI® sender that the flow creates. If a custom name isn't specified, MediaConnect uses the output name.
+
+                
+              
+
+              - **NdiSourceSettings** *(dict) --* 
+
+                The settings for the NDI source. This includes the exact name of the upstream NDI sender that you want to connect to your source.
+
+                
+                
+
+                - **SourceName** *(string) --* 
+
+                  The exact name of an existing NDI sender that's registered with your discovery server. If included, the format of this name must be ``MACHINENAME (ProgramName)``.
+
+                  
+            
+          
+            
+
+            - **VpcInterfaceAttachment** *(dict) --* 
+
+              The name of the VPC interface attachment to use for this output.
+
+              
+              
+
+              - **VpcInterfaceName** *(string) --* 
+
+                The name of the VPC interface to use for this resource.
+
+                
+          
+            
+
+            - **BridgeArn** *(string) --* 
+
+              The ARN of the bridge added to this output.
+
+              
+            
+
+            - **BridgePorts** *(list) --* 
+
+              The bridge output ports currently in use.
+
+              
+              
+
+              - *(integer) --* 
+          
+            
+
+            - **OutputStatus** *(string) --* 
+
+              An indication of whether the output is transmitting data or not.
+
+              
+            
+
+            - **PeerIpAddress** *(string) --* 
+
+              The IP address of the device that is currently receiving content from this output.
+
+               
+
+              .. note::
+
+                
+
+                
+                * For outputs that use protocols where you specify the destination (such as SRT Caller or Zixi Push), this value matches the configured destination address.
+                 
+                * For outputs that use listener protocols (such as SRT Listener), this value shows the address of the connected receiver.
+                 
+                * Peer IP addresses aren't available for entitlements, managed MediaLive outputs, NDI® sources and outputs, and CDI/ST2110 outputs.
+                 
+                * The peer IP address might not be visible for flows that haven't been started yet, or flows that were started before May 2025. In these cases, restart your flow to see the peer IP address.
+                
+
+                
+
+              
+            
+
+            - **RouterIntegrationState** *(string) --* 
+
+              Indicates if router integration is enabled or disabled on the flow output.
+
+              
+            
+
+            - **RouterIntegrationTransitEncryption** *(dict) --* 
+
+              The encryption configuration for the output when router integration is enabled.
+
+              
+              
+
+              - **EncryptionKeyType** *(string) --* 
+
+                The type of encryption key to use for flow transit encryption.
+
+                
+              
+
+              - **EncryptionKeyConfiguration** *(dict) --* 
+
+                The configuration details for the encryption key.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``SecretsManager``, ``Automatic``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+              
+                
+
+                - **SecretsManager** *(dict) --* 
+
+                  The configuration settings for transit encryption using Secrets Manager, including the secret ARN and role ARN.
+
+                  
+                  
+
+                  - **SecretArn** *(string) --* 
+
+                    The ARN of the Secrets Manager secret used for transit encryption.
+
+                    
+                  
+
+                  - **RoleArn** *(string) --* 
+
+                    The ARN of the IAM role assumed by MediaConnect to access the Secrets Manager secret.
+
+                    
+              
+                
+
+                - **Automatic** *(dict) --* 
+
+                  Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.
+
+                  
+              
+            
+          
+            
+
+            - **ConnectedRouterInputArn** *(string) --* 
+
+              The ARN of the router input that's connected to this flow output.
+
+              
+        
+      
+        
+
+        - **Source** *(dict) --* 
+
+          The source for the flow.
+
+          
+          
+
+          - **DataTransferSubscriberFeePercent** *(integer) --* 
+
+            Percentage from 0-100 of the data transfer cost to be billed to the subscriber.
+
+            
+          
+
+          - **Decryption** *(dict) --* 
+
+            The type of encryption that is used on the content ingested from this source.
+
+            
+            
+
+            - **Algorithm** *(string) --* 
+
+              The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256).
+
+              
+            
+
+            - **ConstantInitializationVector** *(string) --* 
+
+              A 128-bit, 16-byte hex value represented by a 32-character string, to be used with the key for encrypting content. This parameter is not valid for static key encryption.
+
+              
+            
+
+            - **DeviceId** *(string) --* 
+
+              The value of one of the devices that you configured with your digital rights management (DRM) platform key provider. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+              
+            
+
+            - **KeyType** *(string) --* 
+
+              The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).
+
+              
+            
+
+            - **Region** *(string) --* 
+
+              The Amazon Web Services Region that the API Gateway proxy endpoint was created in. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+              
+            
+
+            - **ResourceId** *(string) --* 
+
+              An identifier for the content. The service sends this value to the key server to identify the current endpoint. The resource ID is also known as the content ID. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+              
+            
+
+            - **RoleArn** *(string) --* 
+
+              The ARN of the role that you created during setup (when you set up MediaConnect as a trusted entity).
+
+              
+            
+
+            - **SecretArn** *(string) --* 
+
+              The ARN of the secret that you created in Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption.
+
+              
+            
+
+            - **Url** *(string) --* 
+
+              The URL from the API Gateway proxy that you set up to talk to your key server. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+              
+        
+          
+
+          - **Description** *(string) --* 
+
+            A description for the source. This value is not used or seen outside of the current MediaConnect account.
+
+            
+          
+
+          - **EntitlementArn** *(string) --* 
+
+            The ARN of the entitlement that allows you to subscribe to content that comes from another Amazon Web Services account. The entitlement is set by the content originator and the ARN is generated as part of the originator's flow.
+
+            
+          
+
+          - **IngestIp** *(string) --* 
+
+            The IP address that the flow will be listening on for incoming content.
+
+            
+          
+
+          - **IngestPort** *(integer) --* 
+
+            The port that the flow will be listening on for incoming content.
+
+            
+          
+
+          - **MediaStreamSourceConfigurations** *(list) --* 
+
+            The media streams that are associated with the source, and the parameters for those associations.
+
+            
+            
+
+            - *(dict) --* 
+
+              The media stream that is associated with the source, and the parameters for that association.
+
+              
+              
+
+              - **EncodingName** *(string) --* 
+
+                The format that was used to encode the data. For ancillary data streams, set the encoding name to smpte291. For audio streams, set the encoding name to pcm. For video, 2110 streams, set the encoding name to raw. For video, JPEG XS streams, set the encoding name to jxsv.
+
+                
+              
+
+              - **InputConfigurations** *(list) --* 
+
+                The media streams that you want to associate with the source.
+
+                
+                
+
+                - *(dict) --* 
+
+                  The transport parameters that are associated with an incoming media stream.
+
+                  
+                  
+
+                  - **InputIp** *(string) --* 
+
+                    The IP address that the flow listens on for incoming content for a media stream.
+
+                    
+                  
+
+                  - **InputPort** *(integer) --* 
+
+                    The port that the flow listens on for an incoming media stream.
+
+                    
+                  
+
+                  - **Interface** *(dict) --* 
+
+                    The VPC interface where the media stream comes in from.
+
+                    
+                    
+
+                    - **Name** *(string) --* 
+
+                      The name of the VPC interface.
+
+                      
+                
+              
+            
+              
+
+              - **MediaStreamName** *(string) --* 
+
+                A name that helps you distinguish one media stream from another.
+
+                
+          
+        
+          
+
+          - **Name** *(string) --* 
+
+            The name of the source.
+
+            
+          
+
+          - **SenderControlPort** *(integer) --* 
+
+            The IP address that the flow communicates with to initiate connection with the sender.
+
+            
+          
+
+          - **SenderIpAddress** *(string) --* 
+
+            The port that the flow uses to send outbound requests to initiate connection with the sender.
+
+            
+          
+
+          - **SourceArn** *(string) --* 
+
+            The ARN of the source.
+
+            
+          
+
+          - **Transport** *(dict) --* 
+
+            Attributes related to the transport stream that are used in the source.
+
+            
+            
+
+            - **CidrAllowList** *(list) --* 
+
+              The range of IP addresses that should be allowed to initiate output requests to this flow. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **MaxBitrate** *(integer) --* 
+
+              The smoothing max bitrate (in bps) for RIST, RTP, and RTP-FEC streams.
+
+              
+            
+
+            - **MaxLatency** *(integer) --* 
+
+              The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams.
+
+              
+            
+
+            - **MaxSyncBuffer** *(integer) --* 
+
+              The size of the buffer (in milliseconds) to use to sync incoming source data.
+
+              
+            
+
+            - **MinLatency** *(integer) --* 
+
+              The minimum latency in milliseconds for SRT-based streams. In streams that use the SRT protocol, this value that you set on your MediaConnect source or output represents the minimal potential latency of that connection. The latency of the stream is set to the highest number between the sender’s minimum latency and the receiver’s minimum latency.
+
+              
+            
+
+            - **Protocol** *(string) --* 
+
+              The protocol that is used by the source or output.
+
+               
+
+              .. note::
+
+                
+
+                Elemental MediaConnect no longer supports the Fujitsu QoS protocol. This reference is maintained for legacy purposes only.
+
+                
+
+              
+            
+
+            - **RemoteId** *(string) --* 
+
+              The remote ID for the Zixi-pull stream.
+
+              
+            
+
+            - **SenderControlPort** *(integer) --* 
+
+              The port that the flow uses to send outbound requests to initiate connection with the sender.
+
+              
+            
+
+            - **SenderIpAddress** *(string) --* 
+
+              The IP address that the flow communicates with to initiate connection with the sender.
+
+              
+            
+
+            - **SmoothingLatency** *(integer) --* 
+
+              The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.
+
+              
+            
+
+            - **SourceListenerAddress** *(string) --* 
+
+              Source IP or domain name for SRT-caller protocol.
+
+              
+            
+
+            - **SourceListenerPort** *(integer) --* 
+
+              Source port for SRT-caller protocol.
+
+              
+            
+
+            - **StreamId** *(string) --* 
+
+              The stream ID that you want to use for this transport. This parameter applies only to Zixi and SRT caller-based streams.
+
+              
+            
+
+            - **NdiSpeedHqQuality** *(integer) --* 
+
+              A quality setting for the NDI Speed HQ encoder.
+
+              
+            
+
+            - **NdiProgramName** *(string) --* 
+
+              A suffix for the name of the NDI® sender that the flow creates. If a custom name isn't specified, MediaConnect uses the output name.
+
+              
+            
+
+            - **NdiSourceSettings** *(dict) --* 
+
+              The settings for the NDI source. This includes the exact name of the upstream NDI sender that you want to connect to your source.
+
+              
+              
+
+              - **SourceName** *(string) --* 
+
+                The exact name of an existing NDI sender that's registered with your discovery server. If included, the format of this name must be ``MACHINENAME (ProgramName)``.
+
+                
+          
+        
+          
+
+          - **VpcInterfaceName** *(string) --* 
+
+            The name of the VPC interface that is used for this source.
+
+            
+          
+
+          - **WhitelistCidr** *(string) --* 
+
+            The range of IP addresses that should be allowed to contribute content to your source. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.
+
+            
+          
+
+          - **GatewayBridgeSource** *(dict) --* 
+
+            The source configuration for cloud flows receiving a stream from a bridge.
+
+            
+            
+
+            - **BridgeArn** *(string) --* 
+
+              The ARN of the bridge feeding this flow.
+
+              
+            
+
+            - **VpcInterfaceAttachment** *(dict) --* 
+
+              The name of the VPC interface attachment to use for this bridge source.
+
+              
+              
+
+              - **VpcInterfaceName** *(string) --* 
+
+                The name of the VPC interface to use for this resource.
+
+                
+          
+        
+          
+
+          - **PeerIpAddress** *(string) --* 
+
+            The IP address of the device that is currently sending content to this source.
+
+             
+
+            .. note::
+
+              
+
+              
+              * For sources that use protocols where you specify the origin (such as SRT Caller), this value matches the configured origin address.
+               
+              * For sources that use listener protocols (such as SRT Listener or RTP), this value shows the address of the connected sender.
+               
+              * Peer IP addresses aren't available for entitlements and CDI/ST2110 sources.
+               
+              * The peer IP address might not be visible for flows that haven't been started yet, or flows that were started before May 2025. In these cases, restart your flow to see the peer IP address.
+              
+
+              
+
+            
+          
+
+          - **RouterIntegrationState** *(string) --* 
+
+            Indicates if router integration is enabled or disabled on the flow source.
+
+            
+          
+
+          - **RouterIntegrationTransitDecryption** *(dict) --* 
+
+            The decryption configuration for the flow source when router integration is enabled.
+
+            
+            
+
+            - **EncryptionKeyType** *(string) --* 
+
+              The type of encryption key to use for flow transit encryption.
+
+              
+            
+
+            - **EncryptionKeyConfiguration** *(dict) --* 
+
+              The configuration details for the encryption key.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``SecretsManager``, ``Automatic``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **SecretsManager** *(dict) --* 
+
+                The configuration settings for transit encryption using Secrets Manager, including the secret ARN and role ARN.
+
+                
+                
+
+                - **SecretArn** *(string) --* 
+
+                  The ARN of the Secrets Manager secret used for transit encryption.
+
+                  
+                
+
+                - **RoleArn** *(string) --* 
+
+                  The ARN of the IAM role assumed by MediaConnect to access the Secrets Manager secret.
+
+                  
+            
+              
+
+              - **Automatic** *(dict) --* 
+
+                Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.
+
+                
+            
+          
+        
+          
+
+          - **ConnectedRouterOutputArn** *(string) --* 
+
+            The ARN of the router output that's currently connected to this source.
+
+            
+      
+        
+
+        - **SourceFailoverConfig** *(dict) --* 
+
+          The settings for the source failover.
+
+          
+          
+
+          - **FailoverMode** *(string) --* 
+
+            The type of failover you choose for this flow. MERGE combines the source streams into a single stream, allowing graceful recovery from any single-source loss. FAILOVER allows switching between different streams.
+
+            
+          
+
+          - **RecoveryWindow** *(integer) --* 
+
+            Search window time to look for dash-7 packets.
+
+            
+          
+
+          - **SourcePriority** *(dict) --* 
+
+            The priority you want to assign to a source. You can have a primary stream and a backup stream or two equally prioritized streams.
+
+            
+            
+
+            - **PrimarySource** *(string) --* 
+
+              The name of the source you choose as the primary source for this flow.
+
+              
+        
+          
+
+          - **State** *(string) --* 
+
+            The state of source failover on the flow. If the state is inactive, the flow can have only one source. If the state is active, the flow can have one or two sources.
+
+            
+      
+        
+
+        - **Sources** *(list) --* 
+
+          The settings for the sources that are assigned to the flow.
+
+          
+          
+
+          - *(dict) --* 
+
+            The settings for the source of the flow.
+
+            
+            
+
+            - **DataTransferSubscriberFeePercent** *(integer) --* 
+
+              Percentage from 0-100 of the data transfer cost to be billed to the subscriber.
+
+              
+            
+
+            - **Decryption** *(dict) --* 
+
+              The type of encryption that is used on the content ingested from this source.
+
+              
+              
+
+              - **Algorithm** *(string) --* 
+
+                The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256).
+
+                
+              
+
+              - **ConstantInitializationVector** *(string) --* 
+
+                A 128-bit, 16-byte hex value represented by a 32-character string, to be used with the key for encrypting content. This parameter is not valid for static key encryption.
+
+                
+              
+
+              - **DeviceId** *(string) --* 
+
+                The value of one of the devices that you configured with your digital rights management (DRM) platform key provider. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **KeyType** *(string) --* 
+
+                The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).
+
+                
+              
+
+              - **Region** *(string) --* 
+
+                The Amazon Web Services Region that the API Gateway proxy endpoint was created in. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **ResourceId** *(string) --* 
+
+                An identifier for the content. The service sends this value to the key server to identify the current endpoint. The resource ID is also known as the content ID. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+              
+
+              - **RoleArn** *(string) --* 
+
+                The ARN of the role that you created during setup (when you set up MediaConnect as a trusted entity).
+
+                
+              
+
+              - **SecretArn** *(string) --* 
+
+                The ARN of the secret that you created in Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption.
+
+                
+              
+
+              - **Url** *(string) --* 
+
+                The URL from the API Gateway proxy that you set up to talk to your key server. This parameter is required for SPEKE encryption and is not valid for static key encryption.
+
+                
+          
+            
+
+            - **Description** *(string) --* 
+
+              A description for the source. This value is not used or seen outside of the current MediaConnect account.
+
+              
+            
+
+            - **EntitlementArn** *(string) --* 
+
+              The ARN of the entitlement that allows you to subscribe to content that comes from another Amazon Web Services account. The entitlement is set by the content originator and the ARN is generated as part of the originator's flow.
+
+              
+            
+
+            - **IngestIp** *(string) --* 
+
+              The IP address that the flow will be listening on for incoming content.
+
+              
+            
+
+            - **IngestPort** *(integer) --* 
+
+              The port that the flow will be listening on for incoming content.
+
+              
+            
+
+            - **MediaStreamSourceConfigurations** *(list) --* 
+
+              The media streams that are associated with the source, and the parameters for those associations.
+
+              
+              
+
+              - *(dict) --* 
+
+                The media stream that is associated with the source, and the parameters for that association.
+
+                
+                
+
+                - **EncodingName** *(string) --* 
+
+                  The format that was used to encode the data. For ancillary data streams, set the encoding name to smpte291. For audio streams, set the encoding name to pcm. For video, 2110 streams, set the encoding name to raw. For video, JPEG XS streams, set the encoding name to jxsv.
+
+                  
+                
+
+                - **InputConfigurations** *(list) --* 
+
+                  The media streams that you want to associate with the source.
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    The transport parameters that are associated with an incoming media stream.
+
+                    
+                    
+
+                    - **InputIp** *(string) --* 
+
+                      The IP address that the flow listens on for incoming content for a media stream.
+
+                      
+                    
+
+                    - **InputPort** *(integer) --* 
+
+                      The port that the flow listens on for an incoming media stream.
+
+                      
+                    
+
+                    - **Interface** *(dict) --* 
+
+                      The VPC interface where the media stream comes in from.
+
+                      
+                      
+
+                      - **Name** *(string) --* 
+
+                        The name of the VPC interface.
+
+                        
+                  
+                
+              
+                
+
+                - **MediaStreamName** *(string) --* 
+
+                  A name that helps you distinguish one media stream from another.
+
+                  
+            
+          
+            
+
+            - **Name** *(string) --* 
+
+              The name of the source.
+
+              
+            
+
+            - **SenderControlPort** *(integer) --* 
+
+              The IP address that the flow communicates with to initiate connection with the sender.
+
+              
+            
+
+            - **SenderIpAddress** *(string) --* 
+
+              The port that the flow uses to send outbound requests to initiate connection with the sender.
+
+              
+            
+
+            - **SourceArn** *(string) --* 
+
+              The ARN of the source.
+
+              
+            
+
+            - **Transport** *(dict) --* 
+
+              Attributes related to the transport stream that are used in the source.
+
+              
+              
+
+              - **CidrAllowList** *(list) --* 
+
+                The range of IP addresses that should be allowed to initiate output requests to this flow. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **MaxBitrate** *(integer) --* 
+
+                The smoothing max bitrate (in bps) for RIST, RTP, and RTP-FEC streams.
+
+                
+              
+
+              - **MaxLatency** *(integer) --* 
+
+                The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams.
+
+                
+              
+
+              - **MaxSyncBuffer** *(integer) --* 
+
+                The size of the buffer (in milliseconds) to use to sync incoming source data.
+
+                
+              
+
+              - **MinLatency** *(integer) --* 
+
+                The minimum latency in milliseconds for SRT-based streams. In streams that use the SRT protocol, this value that you set on your MediaConnect source or output represents the minimal potential latency of that connection. The latency of the stream is set to the highest number between the sender’s minimum latency and the receiver’s minimum latency.
+
+                
+              
+
+              - **Protocol** *(string) --* 
+
+                The protocol that is used by the source or output.
+
+                 
+
+                .. note::
+
+                  
+
+                  Elemental MediaConnect no longer supports the Fujitsu QoS protocol. This reference is maintained for legacy purposes only.
+
+                  
+
+                
+              
+
+              - **RemoteId** *(string) --* 
+
+                The remote ID for the Zixi-pull stream.
+
+                
+              
+
+              - **SenderControlPort** *(integer) --* 
+
+                The port that the flow uses to send outbound requests to initiate connection with the sender.
+
+                
+              
+
+              - **SenderIpAddress** *(string) --* 
+
+                The IP address that the flow communicates with to initiate connection with the sender.
+
+                
+              
+
+              - **SmoothingLatency** *(integer) --* 
+
+                The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.
+
+                
+              
+
+              - **SourceListenerAddress** *(string) --* 
+
+                Source IP or domain name for SRT-caller protocol.
+
+                
+              
+
+              - **SourceListenerPort** *(integer) --* 
+
+                Source port for SRT-caller protocol.
+
+                
+              
+
+              - **StreamId** *(string) --* 
+
+                The stream ID that you want to use for this transport. This parameter applies only to Zixi and SRT caller-based streams.
+
+                
+              
+
+              - **NdiSpeedHqQuality** *(integer) --* 
+
+                A quality setting for the NDI Speed HQ encoder.
+
+                
+              
+
+              - **NdiProgramName** *(string) --* 
+
+                A suffix for the name of the NDI® sender that the flow creates. If a custom name isn't specified, MediaConnect uses the output name.
+
+                
+              
+
+              - **NdiSourceSettings** *(dict) --* 
+
+                The settings for the NDI source. This includes the exact name of the upstream NDI sender that you want to connect to your source.
+
+                
+                
+
+                - **SourceName** *(string) --* 
+
+                  The exact name of an existing NDI sender that's registered with your discovery server. If included, the format of this name must be ``MACHINENAME (ProgramName)``.
+
+                  
+            
+          
+            
+
+            - **VpcInterfaceName** *(string) --* 
+
+              The name of the VPC interface that is used for this source.
+
+              
+            
+
+            - **WhitelistCidr** *(string) --* 
+
+              The range of IP addresses that should be allowed to contribute content to your source. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.
+
+              
+            
+
+            - **GatewayBridgeSource** *(dict) --* 
+
+              The source configuration for cloud flows receiving a stream from a bridge.
+
+              
+              
+
+              - **BridgeArn** *(string) --* 
+
+                The ARN of the bridge feeding this flow.
+
+                
+              
+
+              - **VpcInterfaceAttachment** *(dict) --* 
+
+                The name of the VPC interface attachment to use for this bridge source.
+
+                
+                
+
+                - **VpcInterfaceName** *(string) --* 
+
+                  The name of the VPC interface to use for this resource.
+
+                  
+            
+          
+            
+
+            - **PeerIpAddress** *(string) --* 
+
+              The IP address of the device that is currently sending content to this source.
+
+               
+
+              .. note::
+
+                
+
+                
+                * For sources that use protocols where you specify the origin (such as SRT Caller), this value matches the configured origin address.
+                 
+                * For sources that use listener protocols (such as SRT Listener or RTP), this value shows the address of the connected sender.
+                 
+                * Peer IP addresses aren't available for entitlements and CDI/ST2110 sources.
+                 
+                * The peer IP address might not be visible for flows that haven't been started yet, or flows that were started before May 2025. In these cases, restart your flow to see the peer IP address.
+                
+
+                
+
+              
+            
+
+            - **RouterIntegrationState** *(string) --* 
+
+              Indicates if router integration is enabled or disabled on the flow source.
+
+              
+            
+
+            - **RouterIntegrationTransitDecryption** *(dict) --* 
+
+              The decryption configuration for the flow source when router integration is enabled.
+
+              
+              
+
+              - **EncryptionKeyType** *(string) --* 
+
+                The type of encryption key to use for flow transit encryption.
+
+                
+              
+
+              - **EncryptionKeyConfiguration** *(dict) --* 
+
+                The configuration details for the encryption key.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``SecretsManager``, ``Automatic``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+              
+                
+
+                - **SecretsManager** *(dict) --* 
+
+                  The configuration settings for transit encryption using Secrets Manager, including the secret ARN and role ARN.
+
+                  
+                  
+
+                  - **SecretArn** *(string) --* 
+
+                    The ARN of the Secrets Manager secret used for transit encryption.
+
+                    
+                  
+
+                  - **RoleArn** *(string) --* 
+
+                    The ARN of the IAM role assumed by MediaConnect to access the Secrets Manager secret.
+
+                    
+              
+                
+
+                - **Automatic** *(dict) --* 
+
+                  Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.
+
+                  
+              
+            
+          
+            
+
+            - **ConnectedRouterOutputArn** *(string) --* 
+
+              The ARN of the router output that's currently connected to this source.
+
+              
+        
+      
+        
+
+        - **Status** *(string) --* 
+
+          The current status of the flow.
+
+          
+        
+
+        - **VpcInterfaces** *(list) --* 
+
+          The VPC Interfaces for this flow.
+
+          
+          
+
+          - *(dict) --* 
+
+            The settings for a VPC source.
+
+            
+            
+
+            - **Name** *(string) --* 
+
+              Immutable and has to be a unique against other VpcInterfaces in this Flow.
+
+              
+            
+
+            - **NetworkInterfaceIds** *(list) --* 
+
+              IDs of the network interfaces created in customer's account by MediaConnect.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **NetworkInterfaceType** *(string) --* 
+
+              The type of network interface.
+
+              
+            
+
+            - **RoleArn** *(string) --* 
+
+              A role Arn MediaConnect can assume to create ENIs in your account.
+
+              
+            
+
+            - **SecurityGroupIds** *(list) --* 
+
+              Security Group IDs to be used on ENI.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **SubnetId** *(string) --* 
+
+              Subnet must be in the AZ of the Flow.
+
+              
+        
+      
+        
+
+        - **Maintenance** *(dict) --* 
+
+          The maintenance settings for the flow.
+
+          
+          
+
+          - **MaintenanceDay** *(string) --* 
+
+            A day of a week when the maintenance will happen. Use Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday.
+
+            
+          
+
+          - **MaintenanceDeadline** *(string) --* 
+
+            The Maintenance has to be performed before this deadline in ISO UTC format. Example: 2021-01-30T08:30:00Z.
+
+            
+          
+
+          - **MaintenanceScheduledDate** *(string) --* 
+
+            A scheduled date in ISO UTC format when the maintenance will happen. Use YYYY-MM-DD format. Example: 2021-01-30.
+
+            
+          
+
+          - **MaintenanceStartHour** *(string) --* 
+
+            UTC time when the maintenance will happen. Use 24-hour HH:MM format. Minutes must be 00. Example: 13:00. The default value is 02:00.
+
+            
+      
+        
+
+        - **SourceMonitoringConfig** *(dict) --* 
+
+          The settings for source monitoring.
+
+          
+          
+
+          - **ThumbnailState** *(string) --* 
+
+            Indicates whether thumbnails are enabled or disabled.
+
+            
+          
+
+          - **AudioMonitoringSettings** *(list) --* 
+
+            Contains the settings for audio stream metrics monitoring.
+
+            
+            
+
+            - *(dict) --* 
+
+              Specifies the configuration for audio stream metrics monitoring.
+
+              
+              
+
+              - **SilentAudio** *(dict) --* 
+
+                Detects periods of silence.
+
+                
+                
+
+                - **State** *(string) --* 
+
+                  Indicates whether the ``SilentAudio`` metric is enabled or disabled.
+
+                  
+                
+
+                - **ThresholdSeconds** *(integer) --* 
+
+                  Specifies the number of consecutive seconds of silence that triggers an event or alert.
+
+                  
+            
+          
+        
+          
+
+          - **ContentQualityAnalysisState** *(string) --* 
+
+            Indicates whether content quality analysis is enabled or disabled.
+
+            
+          
+
+          - **VideoMonitoringSettings** *(list) --* 
+
+            Contains the settings for video stream metrics monitoring.
+
+            
+            
+
+            - *(dict) --* 
+
+              Specifies the configuration for video stream metrics monitoring.
+
+              
+              
+
+              - **BlackFrames** *(dict) --* 
+
+                Detects video frames that are black.
+
+                
+                
+
+                - **State** *(string) --* 
+
+                  Indicates whether the ``BlackFrames`` metric is enabled or disabled..
+
+                  
+                
+
+                - **ThresholdSeconds** *(integer) --* 
+
+                  Specifies the number of consecutive seconds of black frames that triggers an event or alert.
+
+                  
+            
+              
+
+              - **FrozenFrames** *(dict) --* 
+
+                Detects video frames that have not changed.
+
+                
+                
+
+                - **State** *(string) --* 
+
+                  Indicates whether the ``FrozenFrames`` metric is enabled or disabled.
+
+                  
+                
+
+                - **ThresholdSeconds** *(integer) --* 
+
+                  Specifies the number of consecutive seconds of a static image that triggers an event or alert.
+
+                  
+            
+          
+        
+      
+        
+
+        - **FlowSize** *(string) --* 
+
+          Determines the processing capacity and feature set of the flow.
+
+          
+        
+
+        - **NdiConfig** *(dict) --* 
+
+          Specifies the configuration settings for a flow's NDI source or output. Required when the flow includes an NDI source or output.
+
+          
+          
+
+          - **NdiState** *(string) --* 
+
+            A setting that controls whether NDI® sources or outputs can be used in the flow.
+
+             
+
+            The default value is ``DISABLED``. This value must be set as ``ENABLED`` for your flow to support NDI sources or outputs.
+
+            
+          
+
+          - **MachineName** *(string) --* 
+
+            A prefix for the names of the NDI sources that the flow creates. If a custom name isn't specified, MediaConnect generates a unique 12-character ID as the prefix.
+
+            
+          
+
+          - **NdiDiscoveryServers** *(list) --* 
+
+            A list of up to three NDI discovery server configurations. While not required by the API, this configuration is necessary for NDI functionality to work properly.
+
+            
+            
+
+            - *(dict) --* 
+
+              Specifies the configuration settings for individual NDI® discovery servers. A maximum of 3 servers is allowed.
+
+              
+              
+
+              - **DiscoveryServerAddress** *(string) --* 
+
+                The unique network address of the NDI discovery server.
+
+                
+              
+
+              - **DiscoveryServerPort** *(integer) --* 
+
+                The port for the NDI discovery server. Defaults to 5959 if a custom port isn't specified.
+
+                
+              
+
+              - **VpcInterfaceAdapter** *(string) --* 
+
+                The identifier for the Virtual Private Cloud (VPC) network interface used by the flow.
+
+                
+          
+        
+      
+        
+
+        - **EncodingConfig** *(dict) --* 
+
+          The encoding configuration to apply to the NDI® source when transcoding it to a transport stream for downstream distribution.
+
+          
+          
+
+          - **EncodingProfile** *(string) --* 
+
+            The encoding profile to use when transcoding the NDI source content to a transport stream. You can change this value while the flow is running.
+
+            
+          
+
+          - **VideoMaxBitrate** *(integer) --* 
+
+            The maximum video bitrate to use when transcoding the NDI source to a transport stream. This parameter enables you to override the default video bitrate within the encoding profile's supported range.
+
+             
+
+            The supported range is 10,000,000 - 50,000,000 bits per second (bps). If you don't specify a value, MediaConnect uses the default value of 20,000,000 bps.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`MediaConnect.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`MediaConnect.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`MediaConnect.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`MediaConnect.Client.exceptions.InternalServerErrorException`
+
+  
+  *   :py:class:`MediaConnect.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`MediaConnect.Client.exceptions.ServiceUnavailableException`
+
+  

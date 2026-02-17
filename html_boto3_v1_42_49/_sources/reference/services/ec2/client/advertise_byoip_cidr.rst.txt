@@ -1,0 +1,281 @@
+:doc:`EC2 <../../ec2>` / Client / advertise_byoip_cidr
+
+********************
+advertise_byoip_cidr
+********************
+
+
+
+.. py:method:: EC2.Client.advertise_byoip_cidr(**kwargs)
+
+  
+
+  Advertises an IPv4 or IPv6 address range that is provisioned for use with your Amazon Web Services resources through bring your own IP addresses (BYOIP).
+
+   
+
+  You can perform this operation at most once every 10 seconds, even if you specify different address ranges each time.
+
+   
+
+  We recommend that you stop advertising the BYOIP CIDR from other locations when you advertise it from Amazon Web Services. To minimize down time, you can configure your Amazon Web Services resources to use an address from a BYOIP CIDR before it is advertised, and then simultaneously stop advertising it from the current location and start advertising it through Amazon Web Services.
+
+   
+
+  It can take a few minutes before traffic to the specified addresses starts routing to Amazon Web Services because of BGP propagation delays.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/AdvertiseByoipCidr>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.advertise_byoip_cidr(
+        Cidr='string',
+        Asn='string',
+        DryRun=True|False,
+        NetworkBorderGroup='string'
+    )
+    
+  :type Cidr: string
+  :param Cidr: **[REQUIRED]** 
+
+    The address range, in CIDR notation. This must be the exact range that you provisioned. You can't advertise only a portion of the provisioned range.
+
+    
+
+  
+  :type Asn: string
+  :param Asn: 
+
+    The public 2-byte or 4-byte ASN that you want to advertise.
+
+    
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type NetworkBorderGroup: string
+  :param NetworkBorderGroup: 
+
+    If you have `Local Zones <https://docs.aws.amazon.com/local-zones/latest/ug/how-local-zones-work.html>`__ enabled, you can choose a network border group for Local Zones when you provision and advertise a BYOIPv4 CIDR. Choose the network border group carefully as the EIP and the Amazon Web Services resource it is associated with must reside in the same network border group.
+
+     
+
+    You can provision BYOIP address ranges to and advertise them in the following Local Zone network border groups:
+
+     
+
+    
+    * us-east-1-dfw-2
+     
+    * us-west-2-lax-1
+     
+    * us-west-2-phx-2
+    
+
+     
+
+    .. note::
+
+      
+
+      You cannot provision or advertise BYOIPv6 address ranges in Local Zones at this time.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ByoipCidr': {
+              'Cidr': 'string',
+              'Description': 'string',
+              'AsnAssociations': [
+                  {
+                      'Asn': 'string',
+                      'Cidr': 'string',
+                      'StatusMessage': 'string',
+                      'State': 'disassociated'|'failed-disassociation'|'failed-association'|'pending-disassociation'|'pending-association'|'associated'
+                  },
+              ],
+              'StatusMessage': 'string',
+              'State': 'advertised'|'deprovisioned'|'failed-deprovision'|'failed-provision'|'pending-advertising'|'pending-deprovision'|'pending-provision'|'pending-withdrawal'|'provisioned'|'provisioned-not-publicly-advertisable',
+              'NetworkBorderGroup': 'string',
+              'AdvertisementType': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ByoipCidr** *(dict) --* 
+
+        Information about the address range.
+
+        
+        
+
+        - **Cidr** *(string) --* 
+
+          The address range, in CIDR notation.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          The description of the address range.
+
+          
+        
+
+        - **AsnAssociations** *(list) --* 
+
+          The BYOIP CIDR associations with ASNs.
+
+          
+          
+
+          - *(dict) --* 
+
+            An Autonomous System Number (ASN) and BYOIP CIDR association.
+
+            
+            
+
+            - **Asn** *(string) --* 
+
+              The association's ASN.
+
+              
+            
+
+            - **Cidr** *(string) --* 
+
+              The association's CIDR.
+
+              
+            
+
+            - **StatusMessage** *(string) --* 
+
+              The association's status message.
+
+              
+            
+
+            - **State** *(string) --* 
+
+              The association's state.
+
+              
+        
+      
+        
+
+        - **StatusMessage** *(string) --* 
+
+          Upon success, contains the ID of the address pool. Otherwise, contains an error message.
+
+          
+        
+
+        - **State** *(string) --* 
+
+          The state of the address range.
+
+           
+
+          
+          * ``advertised``: The address range is being advertised to the internet by Amazon Web Services.
+           
+          * ``deprovisioned``: The address range is deprovisioned.
+           
+          * ``failed-deprovision``: The request to deprovision the address range was unsuccessful. Ensure that all EIPs from the range have been deallocated and try again.
+           
+          * ``failed-provision``: The request to provision the address range was unsuccessful.
+           
+          * ``pending-deprovision``: You’ve submitted a request to deprovision an address range and it's pending.
+           
+          * ``pending-provision``: You’ve submitted a request to provision an address range and it's pending.
+           
+          * ``provisioned``: The address range is provisioned and can be advertised. The range is not currently advertised.
+           
+          * ``provisioned-not-publicly-advertisable``: The address range is provisioned and cannot be advertised.
+          
+
+          
+        
+
+        - **NetworkBorderGroup** *(string) --* 
+
+          If you have `Local Zones <https://docs.aws.amazon.com/local-zones/latest/ug/how-local-zones-work.html>`__ enabled, you can choose a network border group for Local Zones when you provision and advertise a BYOIPv4 CIDR. Choose the network border group carefully as the EIP and the Amazon Web Services resource it is associated with must reside in the same network border group.
+
+           
+
+          You can provision BYOIP address ranges to and advertise them in the following Local Zone network border groups:
+
+           
+
+          
+          * us-east-1-dfw-2
+           
+          * us-west-2-lax-1
+           
+          * us-west-2-phx-2
+          
+
+           
+
+          .. note::
+
+            
+
+            You cannot provision or advertise BYOIPv6 address ranges in Local Zones at this time.
+
+            
+
+          
+        
+
+        - **AdvertisementType** *(string) --* 
+
+          Specifies the advertisement method for the BYOIP CIDR. Valid values are:
+
+           
+
+          
+          * ``unicast``: IP is advertised from a single location (regional services like EC2)
+           
+          * ``anycast``: IP is advertised from multiple global locations simultaneously (global services like CloudFront)
+          
+
+           
+
+          For more information, see `Bring your own IP to CloudFront using IPAM <https://docs.aws.amazon.com/vpc/latest/ipam/tutorials-byoip-cloudfront.html>`__ in the *Amazon VPC IPAM User Guide*.
+
+          
+    
+  

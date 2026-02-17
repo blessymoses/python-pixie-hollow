@@ -1,0 +1,300 @@
+:doc:`ElasticBeanstalk <../../elasticbeanstalk>` / Client / update_application_version
+
+**************************
+update_application_version
+**************************
+
+
+
+.. py:method:: ElasticBeanstalk.Client.update_application_version(**kwargs)
+
+  
+
+  Updates the specified application version to have the specified properties.
+
+   
+
+  .. note::
+
+    
+
+    If a property (for example, ``description``) is not provided, the value remains unchanged. To clear properties, specify an empty string.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticbeanstalk-2010-12-01/UpdateApplicationVersion>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_application_version(
+        ApplicationName='string',
+        VersionLabel='string',
+        Description='string'
+    )
+    
+  :type ApplicationName: string
+  :param ApplicationName: **[REQUIRED]** 
+
+    The name of the application associated with this version.
+
+     
+
+    If no application is found with this name, ``UpdateApplication`` returns an ``InvalidParameterValue`` error.
+
+    
+
+  
+  :type VersionLabel: string
+  :param VersionLabel: **[REQUIRED]** 
+
+    The name of the version to update.
+
+     
+
+    If no application version is found with this label, ``UpdateApplication`` returns an ``InvalidParameterValue`` error.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A new description for this version.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ApplicationVersion': {
+              'ApplicationVersionArn': 'string',
+              'ApplicationName': 'string',
+              'Description': 'string',
+              'VersionLabel': 'string',
+              'SourceBuildInformation': {
+                  'SourceType': 'Git'|'Zip',
+                  'SourceRepository': 'CodeCommit'|'S3',
+                  'SourceLocation': 'string'
+              },
+              'BuildArn': 'string',
+              'SourceBundle': {
+                  'S3Bucket': 'string',
+                  'S3Key': 'string'
+              },
+              'DateCreated': datetime(2015, 1, 1),
+              'DateUpdated': datetime(2015, 1, 1),
+              'Status': 'Processed'|'Unprocessed'|'Failed'|'Processing'|'Building'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Result message wrapping a single description of an application version.
+
+      
+      
+
+      - **ApplicationVersion** *(dict) --* 
+
+        The  ApplicationVersionDescription of the application version.
+
+        
+        
+
+        - **ApplicationVersionArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the application version.
+
+          
+        
+
+        - **ApplicationName** *(string) --* 
+
+          The name of the application to which the application version belongs.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          The description of the application version.
+
+          
+        
+
+        - **VersionLabel** *(string) --* 
+
+          A unique identifier for the application version.
+
+          
+        
+
+        - **SourceBuildInformation** *(dict) --* 
+
+          If the version's source code was retrieved from AWS CodeCommit, the location of the source code for the application version.
+
+          
+          
+
+          - **SourceType** *(string) --* 
+
+            The type of repository.
+
+             
+
+            
+            * ``Git``
+             
+            * ``Zip``
+            
+
+            
+          
+
+          - **SourceRepository** *(string) --* 
+
+            Location where the repository is stored.
+
+             
+
+            
+            * ``CodeCommit``
+             
+            * ``S3``
+            
+
+            
+          
+
+          - **SourceLocation** *(string) --* 
+
+            The location of the source code, as a formatted string, depending on the value of ``SourceRepository``
+
+             
+
+            
+            * For ``CodeCommit``, the format is the repository name and commit ID, separated by a forward slash. For example, ``my-git-repo/265cfa0cf6af46153527f55d6503ec030551f57a``.
+             
+            * For ``S3``, the format is the S3 bucket name and object key, separated by a forward slash. For example, ``my-s3-bucket/Folders/my-source-file``.
+            
+
+            
+      
+        
+
+        - **BuildArn** *(string) --* 
+
+          Reference to the artifact from the AWS CodeBuild build.
+
+          
+        
+
+        - **SourceBundle** *(dict) --* 
+
+          The storage location of the application version's source bundle in Amazon S3.
+
+          
+          
+
+          - **S3Bucket** *(string) --* 
+
+            The Amazon S3 bucket where the data is located.
+
+            
+          
+
+          - **S3Key** *(string) --* 
+
+            The Amazon S3 key where the data is located.
+
+            
+      
+        
+
+        - **DateCreated** *(datetime) --* 
+
+          The creation date of the application version.
+
+          
+        
+
+        - **DateUpdated** *(datetime) --* 
+
+          The last modified date of the application version.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The processing status of the application version. Reflects the state of the application version during its creation. Many of the values are only applicable if you specified ``True`` for the ``Process`` parameter of the ``CreateApplicationVersion`` action. The following list describes the possible values.
+
+           
+
+          
+          * ``Unprocessed`` – Application version wasn't pre-processed or validated. Elastic Beanstalk will validate configuration files during deployment of the application version to an environment.
+           
+          * ``Processing`` – Elastic Beanstalk is currently processing the application version.
+           
+          * ``Building`` – Application version is currently undergoing an AWS CodeBuild build.
+           
+          * ``Processed`` – Elastic Beanstalk was successfully pre-processed and validated.
+           
+          * ``Failed`` – Either the AWS CodeBuild build failed or configuration files didn't pass validation. This application version isn't usable.
+          
+
+          
+    
+  
+
+  **Examples**
+
+  The following operation updates the description of an application version named 22a0-stage-150819_185942:
+  ::
+
+    response = client.update_application_version(
+        ApplicationName='my-app',
+        Description='new description',
+        VersionLabel='22a0-stage-150819_185942',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ApplicationVersion': {
+            'ApplicationName': 'my-app',
+            'DateCreated': datetime(2015, 8, 19, 18, 59, 17, 2, 231, 0),
+            'DateUpdated': datetime(2015, 8, 20, 22, 53, 28, 3, 232, 0),
+            'Description': 'new description',
+            'SourceBundle': {
+                'S3Bucket': 'elasticbeanstalk-us-west-2-0123456789012',
+                'S3Key': 'my-app/22a0-stage-150819_185942.war',
+            },
+            'VersionLabel': '22a0-stage-150819_185942',
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,283 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / list_stack_set_operation_results
+
+********************************
+list_stack_set_operation_results
+********************************
+
+
+
+.. py:method:: CloudFormation.Client.list_stack_set_operation_results(**kwargs)
+
+  
+
+  Returns summary information about the results of a StackSet operation.
+
+   
+
+  .. note::
+
+    
+
+    This API provides *eventually consistent* reads meaning it may take some time but will eventually return the most up-to-date data.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/ListStackSetOperationResults>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_stack_set_operation_results(
+        StackSetName='string',
+        OperationId='string',
+        NextToken='string',
+        MaxResults=123,
+        CallAs='SELF'|'DELEGATED_ADMIN',
+        Filters=[
+            {
+                'Name': 'OPERATION_RESULT_STATUS',
+                'Values': 'string'
+            },
+        ]
+    )
+    
+  :type StackSetName: string
+  :param StackSetName: **[REQUIRED]** 
+
+    The name or unique ID of the StackSet that you want to get operation results for.
+
+    
+
+  
+  :type OperationId: string
+  :param OperationId: **[REQUIRED]** 
+
+    The ID of the StackSet operation.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of results to be returned with a single call. If the number of available results exceeds this maximum, the response includes a ``NextToken`` value that you can assign to the ``NextToken`` request parameter to get the next set of results.
+
+    
+
+  
+  :type CallAs: string
+  :param CallAs: 
+
+    [Service-managed permissions] Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account.
+
+     
+
+    By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+     
+
+    
+    * If you are signed in to the management account, specify ``SELF``.
+     
+    * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+    
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    The filter to apply to operation results.
+
+    
+
+  
+    - *(dict) --* 
+
+      The status that operation results are filtered by.
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The type of filter to apply.
+
+        
+
+      
+      - **Values** *(string) --* 
+
+        The value to filter by.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Summaries': [
+              {
+                  'Account': 'string',
+                  'Region': 'string',
+                  'Status': 'PENDING'|'RUNNING'|'SUCCEEDED'|'FAILED'|'CANCELLED',
+                  'StatusReason': 'string',
+                  'AccountGateResult': {
+                      'Status': 'SUCCEEDED'|'FAILED'|'SKIPPED',
+                      'StatusReason': 'string'
+                  },
+                  'OrganizationalUnitId': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Summaries** *(list) --* 
+
+        A list of ``StackSetOperationResultSummary`` structures that contain information about the specified operation results, for accounts and Amazon Web Services Regions that are included in the operation.
+
+        
+        
+
+        - *(dict) --* 
+
+          The structure that contains information about a specified operation's results for a given account in a given Region.
+
+          
+          
+
+          - **Account** *(string) --* 
+
+            [Self-managed permissions] The name of the Amazon Web Services account for this operation result.
+
+            
+          
+
+          - **Region** *(string) --* 
+
+            The name of the Amazon Web Services Region for this operation result.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The result status of the StackSet operation for the given account in the given Region.
+
+             
+
+            
+            * ``CANCELLED``: The operation in the specified account and Region has been canceled. This is either because a user has stopped the StackSet operation, or because the failure tolerance of the StackSet operation has been exceeded.
+             
+            * ``FAILED``: The operation in the specified account and Region failed. If the StackSet operation fails in enough accounts within a Region, the failure tolerance for the StackSet operation as a whole might be exceeded.
+             
+            * ``RUNNING``: The operation in the specified account and Region is currently in progress.
+             
+            * ``PENDING``: The operation in the specified account and Region has yet to start.
+             
+            * ``SUCCEEDED``: The operation in the specified account and Region completed successfully.
+            
+
+            
+          
+
+          - **StatusReason** *(string) --* 
+
+            The reason for the assigned result status.
+
+            
+          
+
+          - **AccountGateResult** *(dict) --* 
+
+            The results of the account gate function CloudFormation invokes, if present, before proceeding with StackSet operations in an account.
+
+            
+            
+
+            - **Status** *(string) --* 
+
+              The status of the account gate function.
+
+               
+
+              
+              * ``SUCCEEDED``: The account gate function has determined that the account and Region passes any requirements for a StackSet operation to occur. CloudFormation proceeds with the stack operation in that account and Region.
+               
+              * ``FAILED``: The account gate function has determined that the account and Region doesn't meet the requirements for a StackSet operation to occur. CloudFormation cancels the StackSet operation in that account and Region, and sets the StackSet operation result status for that account and Region to ``FAILED``.
+               
+              * ``SKIPPED``: CloudFormation has skipped calling the account gate function for this account and Region, for one of the following reasons: 
+
+                
+                * An account gate function hasn't been specified for the account and Region. CloudFormation proceeds with the StackSet operation in this account and Region.
+                 
+                * The ``AWSCloudFormationStackSetExecutionRole`` of the administration account lacks permissions to invoke the function. CloudFormation proceeds with the StackSet operation in this account and Region.
+                 
+                * Either no action is necessary, or no action is possible, on the stack. CloudFormation skips the StackSet operation in this account and Region.
+                
+
+              
+              
+
+              
+            
+
+            - **StatusReason** *(string) --* 
+
+              The reason for the account gate status assigned to this account and Region for the StackSet operation.
+
+              
+        
+          
+
+          - **OrganizationalUnitId** *(string) --* 
+
+            [Service-managed permissions] The organization root ID or organizational unit (OU) IDs that you specified for `DeploymentTargets <https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DeploymentTargets.html>`__.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If the request doesn't return all results, ``NextToken`` is set to a token. To retrieve the next set of results, call ``ListOperationResults`` again and assign that token to the request object's ``NextToken`` parameter. If there are no remaining results, ``NextToken`` is set to ``null``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackSetNotFoundException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationNotFoundException`
+
+  

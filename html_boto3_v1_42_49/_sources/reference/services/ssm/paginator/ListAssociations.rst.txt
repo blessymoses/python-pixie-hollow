@@ -1,0 +1,466 @@
+:doc:`SSM <../../ssm>` / Paginator / ListAssociations
+
+****************
+ListAssociations
+****************
+
+
+
+.. py:class:: SSM.Paginator.ListAssociations
+
+  ::
+
+    
+    paginator = client.get_paginator('list_associations')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`SSM.Client.list_associations`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/ListAssociations>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          AssociationFilterList=[
+              {
+                  'key': 'InstanceId'|'Name'|'AssociationId'|'AssociationStatusName'|'LastExecutedBefore'|'LastExecutedAfter'|'AssociationName'|'ResourceGroupName',
+                  'value': 'string'
+              },
+          ],
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type AssociationFilterList: list
+    :param AssociationFilterList: 
+
+      One or more filters. Use a filter to return a more specific list of results.
+
+       
+
+      .. note::
+
+        
+
+        Filtering associations using the ``InstanceID`` attribute only returns legacy associations created using the ``InstanceID`` attribute. Associations targeting the managed node that are part of the Target Attributes ``ResourceGroup`` or ``Tags`` aren't returned.
+
+        
+
+      
+
+    
+      - *(dict) --* 
+
+        Describes a filter.
+
+        
+
+      
+        - **key** *(string) --* **[REQUIRED]** 
+
+          The name of the filter.
+
+           
+
+          .. note::
+
+            
+
+            ``InstanceId`` has been deprecated.
+
+            
+
+          
+
+        
+        - **value** *(string) --* **[REQUIRED]** 
+
+          The filter value.
+
+          
+
+        
+      
+  
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'Associations': [
+                {
+                    'Name': 'string',
+                    'InstanceId': 'string',
+                    'AssociationId': 'string',
+                    'AssociationVersion': 'string',
+                    'DocumentVersion': 'string',
+                    'Targets': [
+                        {
+                            'Key': 'string',
+                            'Values': [
+                                'string',
+                            ]
+                        },
+                    ],
+                    'LastExecutionDate': datetime(2015, 1, 1),
+                    'Overview': {
+                        'Status': 'string',
+                        'DetailedStatus': 'string',
+                        'AssociationStatusAggregatedCount': {
+                            'string': 123
+                        }
+                    },
+                    'ScheduleExpression': 'string',
+                    'AssociationName': 'string',
+                    'ScheduleOffset': 123,
+                    'Duration': 123,
+                    'TargetMaps': [
+                        {
+                            'string': [
+                                'string',
+                            ]
+                        },
+                    ]
+                },
+            ],
+            
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **Associations** *(list) --* 
+
+          The associations.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes an association of a Amazon Web Services Systems Manager document (SSM document) and a managed node.
+
+            
+            
+
+            - **Name** *(string) --* 
+
+              The name of the SSM document.
+
+              
+            
+
+            - **InstanceId** *(string) --* 
+
+              The managed node ID.
+
+              
+            
+
+            - **AssociationId** *(string) --* 
+
+              The ID created by the system when you create an association. An association is a binding between a document and a set of targets with a schedule.
+
+              
+            
+
+            - **AssociationVersion** *(string) --* 
+
+              The association version.
+
+              
+            
+
+            - **DocumentVersion** *(string) --* 
+
+              The version of the document used in the association. If you change a document version for a State Manager association, Systems Manager immediately runs the association unless you previously specifed the ``apply-only-at-cron-interval`` parameter.
+
+               
+
+              .. warning::
+
+                 
+
+                State Manager doesn't support running associations that use a new version of a document if that document is shared from another account. State Manager always runs the ``default`` version of a document if shared from another account, even though the Systems Manager console shows that a new version was processed. If you want to run an association using a new version of a document shared form another account, you must set the document version to ``default``.
+
+                
+
+              
+            
+
+            - **Targets** *(list) --* 
+
+              The managed nodes targeted by the request to create an association. You can target all managed nodes in an Amazon Web Services account by specifying the ``InstanceIds`` key with a value of ``*``.
+
+              
+              
+
+              - *(dict) --* 
+
+                An array of search criteria that targets managed nodes using a key-value pair that you specify.
+
+                 
+
+                .. note::
+
+                  
+
+                  One or more targets must be specified for maintenance window Run Command-type tasks. Depending on the task, targets are optional for other maintenance window task types (Automation, Lambda, and Step Functions). For more information about running tasks that don't specify targets, see `Registering maintenance window tasks without targets <https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+                  
+
+                 
+
+                Supported formats include the following.
+
+                 
+
+                **For all Systems Manager tools:**
+
+                 
+
+                
+                * ``Key=tag-key,Values=tag-value-1,tag-value-2``
+                
+
+                 
+
+                **For Automation and Change Manager:**
+
+                 
+
+                
+                * ``Key=tag:tag-key,Values=tag-value``
+                 
+                * ``Key=ResourceGroup,Values=resource-group-name``
+                 
+                * ``Key=ParameterValues,Values=value-1,value-2,value-3``
+                 
+                * To target all instances in the Amazon Web Services Region: 
+
+                  
+                  * ``Key=AWS::EC2::Instance,Values=*``
+                   
+                  * ``Key=InstanceIds,Values=*``
+                  
+
+                
+                
+
+                 
+
+                **For Run Command and Maintenance Windows:**
+
+                 
+
+                
+                * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+                 
+                * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+                 
+                * ``Key=resource-groups:Name,Values=resource-group-name``
+                 
+                * Additionally, Maintenance Windows support targeting resource types: 
+
+                  
+                  * ``Key=resource-groups:ResourceTypeFilters,Values=resource-type-1,resource-type-2``
+                  
+
+                
+                
+
+                 
+
+                **For State Manager:**
+
+                 
+
+                
+                * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+                 
+                * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+                 
+                * To target all instances in the Amazon Web Services Region: 
+
+                  
+                  * ``Key=InstanceIds,Values=*``
+                  
+
+                
+                
+
+                 
+
+                For more information about how to send commands that target managed nodes using ``Key,Value`` parameters, see `Targeting multiple managed nodes <https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-multiple.html#send-commands-targeting>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+                
+                
+
+                - **Key** *(string) --* 
+
+                  User-defined criteria for sending commands that target managed nodes that meet the criteria.
+
+                  
+                
+
+                - **Values** *(list) --* 
+
+                  User-defined criteria that maps to ``Key``. For example, if you specified ``tag:ServerRole``, you could specify ``value:WebServer`` to run a command on instances that include EC2 tags of ``ServerRole,WebServer``.
+
+                   
+
+                  Depending on the type of target, the maximum number of values for a key might be lower than the global maximum of 50.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **LastExecutionDate** *(datetime) --* 
+
+              The date on which the association was last run.
+
+              
+            
+
+            - **Overview** *(dict) --* 
+
+              Information about the association.
+
+              
+              
+
+              - **Status** *(string) --* 
+
+                The status of the association. Status can be: Pending, Success, or Failed.
+
+                
+              
+
+              - **DetailedStatus** *(string) --* 
+
+                A detailed status of the association.
+
+                
+              
+
+              - **AssociationStatusAggregatedCount** *(dict) --* 
+
+                Returns the number of targets for the association status. For example, if you created an association with two managed nodes, and one of them was successful, this would return the count of managed nodes by status.
+
+                
+                
+
+                - *(string) --* 
+                  
+
+                  - *(integer) --* 
+            
+          
+          
+            
+
+            - **ScheduleExpression** *(string) --* 
+
+              A cron expression that specifies a schedule when the association runs. The schedule runs in Coordinated Universal Time (UTC).
+
+              
+            
+
+            - **AssociationName** *(string) --* 
+
+              The association name.
+
+              
+            
+
+            - **ScheduleOffset** *(integer) --* 
+
+              Number of days to wait after the scheduled day to run an association.
+
+              
+            
+
+            - **Duration** *(integer) --* 
+
+              The number of hours that an association can run on specified targets. After the resulting cutoff time passes, associations that are currently running are cancelled, and no pending executions are started on remaining targets.
+
+              
+            
+
+            - **TargetMaps** *(list) --* 
+
+              A key-value mapping of document parameters to target resources. Both Targets and TargetMaps can't be specified together.
+
+              
+              
+
+              - *(dict) --* 
+                
+
+                - *(string) --* 
+                  
+
+                  - *(list) --* 
+                    
+
+                    - *(string) --* 
+                
+            
+          
+          
+        
+      
+    

@@ -1,0 +1,195 @@
+:doc:`Backup <../../backup>` / Client / start_copy_job
+
+**************
+start_copy_job
+**************
+
+
+
+.. py:method:: Backup.Client.start_copy_job(**kwargs)
+
+  
+
+  Starts a job to create a one-time copy of the specified resource.
+
+   
+
+  Does not support continuous backups.
+
+   
+
+  See `Copy job retry <https://docs.aws.amazon.com/aws-backup/latest/devguide/recov-point-create-a-copy.html#backup-copy-retry>`__ for information on how Backup retries copy job operations.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/StartCopyJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_copy_job(
+        RecoveryPointArn='string',
+        SourceBackupVaultName='string',
+        DestinationBackupVaultArn='string',
+        IamRoleArn='string',
+        IdempotencyToken='string',
+        Lifecycle={
+            'MoveToColdStorageAfterDays': 123,
+            'DeleteAfterDays': 123,
+            'OptInToArchiveForSupportedResources': True|False,
+            'DeleteAfterEvent': 'DELETE_AFTER_COPY'
+        }
+    )
+    
+  :type RecoveryPointArn: string
+  :param RecoveryPointArn: **[REQUIRED]** 
+
+    An ARN that uniquely identifies a recovery point to use for the copy job; for example, arn:aws:backup:us-east-1:123456789012:recovery-point:1EB3B5E7-9EB0-435A-A80B-108B488B0D45.
+
+    
+
+  
+  :type SourceBackupVaultName: string
+  :param SourceBackupVaultName: **[REQUIRED]** 
+
+    The name of a logical source container where backups are stored. Backup vaults are identified by names that are unique to the account used to create them and the Amazon Web Services Region where they are created.
+
+    
+
+  
+  :type DestinationBackupVaultArn: string
+  :param DestinationBackupVaultArn: **[REQUIRED]** 
+
+    An Amazon Resource Name (ARN) that uniquely identifies a destination backup vault to copy to; for example, ``arn:aws:backup:us-east-1:123456789012:backup-vault:aBackupVault``.
+
+    
+
+  
+  :type IamRoleArn: string
+  :param IamRoleArn: **[REQUIRED]** 
+
+    Specifies the IAM role ARN used to copy the target recovery point; for example, ``arn:aws:iam::123456789012:role/S3Access``.
+
+    
+
+  
+  :type IdempotencyToken: string
+  :param IdempotencyToken: 
+
+    A customer-chosen string that you can use to distinguish between otherwise identical calls to ``StartCopyJob``. Retrying a successful request with the same idempotency token results in a success message with no action taken.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Lifecycle: dict
+  :param Lifecycle: 
+
+    Specifies the time period, in days, before a recovery point transitions to cold storage or is deleted.
+
+     
+
+    Backups transitioned to cold storage must be stored in cold storage for a minimum of 90 days. Therefore, on the console, the retention setting must be 90 days greater than the transition to cold after days setting. The transition to cold after days setting can't be changed after a backup has been transitioned to cold.
+
+     
+
+    Resource types that can transition to cold storage are listed in the `Feature availability by resource <https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-feature-availability.html#features-by-resource>`__ table. Backup ignores this expression for other resource types.
+
+     
+
+    To remove the existing lifecycle and retention periods and keep your recovery points indefinitely, specify -1 for ``MoveToColdStorageAfterDays`` and ``DeleteAfterDays``.
+
+    
+
+  
+    - **MoveToColdStorageAfterDays** *(integer) --* 
+
+      The number of days after creation that a recovery point is moved to cold storage.
+
+      
+
+    
+    - **DeleteAfterDays** *(integer) --* 
+
+      The number of days after creation that a recovery point is deleted. This value must be at least 90 days after the number of days specified in ``MoveToColdStorageAfterDays``.
+
+      
+
+    
+    - **OptInToArchiveForSupportedResources** *(boolean) --* 
+
+      If the value is true, your backup plan transitions supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+
+      
+
+    
+    - **DeleteAfterEvent** *(string) --* 
+
+      The event after which a recovery point is deleted. A recovery point with both ``DeleteAfterDays`` and ``DeleteAfterEvent`` will delete after whichever condition is satisfied first. Not valid as an input.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CopyJobId': 'string',
+          'CreationDate': datetime(2015, 1, 1),
+          'IsParent': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **CopyJobId** *(string) --* 
+
+        Uniquely identifies a copy job.
+
+        
+      
+
+      - **CreationDate** *(datetime) --* 
+
+        The date and time that a copy job is created, in Unix format and Coordinated Universal Time (UTC). The value of ``CreationDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **IsParent** *(boolean) --* 
+
+        This is a returned boolean value indicating this is a parent (composite) copy job.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Backup.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.MissingParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.InvalidRequestException`
+
+  

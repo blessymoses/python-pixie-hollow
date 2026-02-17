@@ -1,0 +1,243 @@
+:doc:`ElasticLoadBalancing <../../elb>` / Client / configure_health_check
+
+**********************
+configure_health_check
+**********************
+
+
+
+.. py:method:: ElasticLoadBalancing.Client.configure_health_check(**kwargs)
+
+  
+
+  Specifies the health check settings to use when evaluating the health state of your EC2 instances.
+
+   
+
+  For more information, see `Configure Health Checks for Your Load Balancer <https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-healthchecks.html>`__ in the *Classic Load Balancers Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticloadbalancing-2012-06-01/ConfigureHealthCheck>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.configure_health_check(
+        LoadBalancerName='string',
+        HealthCheck={
+            'Target': 'string',
+            'Interval': 123,
+            'Timeout': 123,
+            'UnhealthyThreshold': 123,
+            'HealthyThreshold': 123
+        }
+    )
+    
+  :type LoadBalancerName: string
+  :param LoadBalancerName: **[REQUIRED]** 
+
+    The name of the load balancer.
+
+    
+
+  
+  :type HealthCheck: dict
+  :param HealthCheck: **[REQUIRED]** 
+
+    The configuration information.
+
+    
+
+  
+    - **Target** *(string) --* **[REQUIRED]** 
+
+      The instance being checked. The protocol is either TCP, HTTP, HTTPS, or SSL. The range of valid ports is one (1) through 65535.
+
+       
+
+      TCP is the default, specified as a TCP: port pair, for example "TCP:5000". In this case, a health check simply attempts to open a TCP connection to the instance on the specified port. Failure to connect within the configured timeout is considered unhealthy.
+
+       
+
+      SSL is also specified as SSL: port pair, for example, SSL:5000.
+
+       
+
+      For HTTP/HTTPS, you must include a ping path in the string. HTTP is specified as a HTTP:port;/;PathToPing; grouping, for example "HTTP:80/weather/us/wa/seattle". In this case, a HTTP GET request is issued to the instance on the given port and path. Any answer other than "200 OK" within the timeout period is considered unhealthy.
+
+       
+
+      The total length of the HTTP ping target must be 1024 16-bit Unicode characters or less.
+
+      
+
+    
+    - **Interval** *(integer) --* **[REQUIRED]** 
+
+      The approximate interval, in seconds, between health checks of an individual instance.
+
+      
+
+    
+    - **Timeout** *(integer) --* **[REQUIRED]** 
+
+      The amount of time, in seconds, during which no response means a failed health check.
+
+       
+
+      This value must be less than the ``Interval`` value.
+
+      
+
+    
+    - **UnhealthyThreshold** *(integer) --* **[REQUIRED]** 
+
+      The number of consecutive health check failures required before moving the instance to the ``Unhealthy`` state.
+
+      
+
+    
+    - **HealthyThreshold** *(integer) --* **[REQUIRED]** 
+
+      The number of consecutive health checks successes required before moving the instance to the ``Healthy`` state.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'HealthCheck': {
+              'Target': 'string',
+              'Interval': 123,
+              'Timeout': 123,
+              'UnhealthyThreshold': 123,
+              'HealthyThreshold': 123
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains the output of ConfigureHealthCheck.
+
+      
+      
+
+      - **HealthCheck** *(dict) --* 
+
+        The updated health check.
+
+        
+        
+
+        - **Target** *(string) --* 
+
+          The instance being checked. The protocol is either TCP, HTTP, HTTPS, or SSL. The range of valid ports is one (1) through 65535.
+
+           
+
+          TCP is the default, specified as a TCP: port pair, for example "TCP:5000". In this case, a health check simply attempts to open a TCP connection to the instance on the specified port. Failure to connect within the configured timeout is considered unhealthy.
+
+           
+
+          SSL is also specified as SSL: port pair, for example, SSL:5000.
+
+           
+
+          For HTTP/HTTPS, you must include a ping path in the string. HTTP is specified as a HTTP:port;/;PathToPing; grouping, for example "HTTP:80/weather/us/wa/seattle". In this case, a HTTP GET request is issued to the instance on the given port and path. Any answer other than "200 OK" within the timeout period is considered unhealthy.
+
+           
+
+          The total length of the HTTP ping target must be 1024 16-bit Unicode characters or less.
+
+          
+        
+
+        - **Interval** *(integer) --* 
+
+          The approximate interval, in seconds, between health checks of an individual instance.
+
+          
+        
+
+        - **Timeout** *(integer) --* 
+
+          The amount of time, in seconds, during which no response means a failed health check.
+
+           
+
+          This value must be less than the ``Interval`` value.
+
+          
+        
+
+        - **UnhealthyThreshold** *(integer) --* 
+
+          The number of consecutive health check failures required before moving the instance to the ``Unhealthy`` state.
+
+          
+        
+
+        - **HealthyThreshold** *(integer) --* 
+
+          The number of consecutive health checks successes required before moving the instance to the ``Healthy`` state.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.AccessPointNotFoundException`
+
+  
+
+  **Examples**
+
+  This example specifies the health check settings used to evaluate the health of your backend EC2 instances.
+  ::
+
+    response = client.configure_health_check(
+        HealthCheck={
+            'HealthyThreshold': 2,
+            'Interval': 30,
+            'Target': 'HTTP:80/png',
+            'Timeout': 3,
+            'UnhealthyThreshold': 2,
+        },
+        LoadBalancerName='my-load-balancer',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'HealthCheck': {
+            'HealthyThreshold': 2,
+            'Interval': 30,
+            'Target': 'HTTP:80/png',
+            'Timeout': 3,
+            'UnhealthyThreshold': 2,
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

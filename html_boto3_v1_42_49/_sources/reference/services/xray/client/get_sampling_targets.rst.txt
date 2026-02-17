@@ -1,0 +1,371 @@
+:doc:`XRay <../../xray>` / Client / get_sampling_targets
+
+********************
+get_sampling_targets
+********************
+
+
+
+.. py:method:: XRay.Client.get_sampling_targets(**kwargs)
+
+  
+
+  Requests a sampling quota for rules that the service is using to sample requests.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/xray-2016-04-12/GetSamplingTargets>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_sampling_targets(
+        SamplingStatisticsDocuments=[
+            {
+                'RuleName': 'string',
+                'ClientID': 'string',
+                'Timestamp': datetime(2015, 1, 1),
+                'RequestCount': 123,
+                'SampledCount': 123,
+                'BorrowCount': 123
+            },
+        ],
+        SamplingBoostStatisticsDocuments=[
+            {
+                'RuleName': 'string',
+                'ServiceName': 'string',
+                'Timestamp': datetime(2015, 1, 1),
+                'AnomalyCount': 123,
+                'TotalCount': 123,
+                'SampledAnomalyCount': 123
+            },
+        ]
+    )
+    
+  :type SamplingStatisticsDocuments: list
+  :param SamplingStatisticsDocuments: **[REQUIRED]** 
+
+    Information about rules that the service is using to sample requests.
+
+    
+
+  
+    - *(dict) --* 
+
+      Request sampling results for a single rule from a service. Results are for the last 10 seconds unless the service has been assigned a longer reporting interval after a previous call to `GetSamplingTargets <https://docs.aws.amazon.com/xray/latest/api/API_GetSamplingTargets.html>`__.
+
+      
+
+    
+      - **RuleName** *(string) --* **[REQUIRED]** 
+
+        The name of the sampling rule.
+
+        
+
+      
+      - **ClientID** *(string) --* **[REQUIRED]** 
+
+        A unique identifier for the service in hexadecimal.
+
+        
+
+      
+      - **Timestamp** *(datetime) --* **[REQUIRED]** 
+
+        The current time.
+
+        
+
+      
+      - **RequestCount** *(integer) --* **[REQUIRED]** 
+
+        The number of requests that matched the rule.
+
+        
+
+      
+      - **SampledCount** *(integer) --* **[REQUIRED]** 
+
+        The number of requests recorded.
+
+        
+
+      
+      - **BorrowCount** *(integer) --* 
+
+        The number of requests recorded with borrowed reservoir quota.
+
+        
+
+      
+    
+
+  :type SamplingBoostStatisticsDocuments: list
+  :param SamplingBoostStatisticsDocuments: 
+
+    Information about rules that the service is using to boost sampling rate.
+
+    
+
+  
+    - *(dict) --* 
+
+      Request anomaly stats for a single rule from a service. Results are for the last 10 seconds unless the service has been assigned a longer reporting interval after a previous call to `GetSamplingTargets <https://docs.aws.amazon.com/xray/latest/api/API_GetSamplingTargets.html>`__.
+
+      
+
+    
+      - **RuleName** *(string) --* **[REQUIRED]** 
+
+        The name of the sampling rule.
+
+        
+
+      
+      - **ServiceName** *(string) --* **[REQUIRED]** 
+
+        Matches the ``name`` that the service uses to identify itself in segments.
+
+        
+
+      
+      - **Timestamp** *(datetime) --* **[REQUIRED]** 
+
+        The current time.
+
+        
+
+      
+      - **AnomalyCount** *(integer) --* **[REQUIRED]** 
+
+        The number of requests with anomaly.
+
+        
+
+      
+      - **TotalCount** *(integer) --* **[REQUIRED]** 
+
+        The number of requests that associated to the rule.
+
+        
+
+      
+      - **SampledAnomalyCount** *(integer) --* **[REQUIRED]** 
+
+        The number of requests with anomaly recorded.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'SamplingTargetDocuments': [
+              {
+                  'RuleName': 'string',
+                  'FixedRate': 123.0,
+                  'ReservoirQuota': 123,
+                  'ReservoirQuotaTTL': datetime(2015, 1, 1),
+                  'Interval': 123,
+                  'SamplingBoost': {
+                      'BoostRate': 123.0,
+                      'BoostRateTTL': datetime(2015, 1, 1)
+                  }
+              },
+          ],
+          'LastRuleModification': datetime(2015, 1, 1),
+          'UnprocessedStatistics': [
+              {
+                  'RuleName': 'string',
+                  'ErrorCode': 'string',
+                  'Message': 'string'
+              },
+          ],
+          'UnprocessedBoostStatistics': [
+              {
+                  'RuleName': 'string',
+                  'ErrorCode': 'string',
+                  'Message': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **SamplingTargetDocuments** *(list) --* 
+
+        Updated rules that the service should use to sample requests.
+
+        
+        
+
+        - *(dict) --* 
+
+          Temporary changes to a sampling rule configuration. To meet the global sampling target for a rule, X-Ray calculates a new reservoir for each service based on the recent sampling results of all services that called `GetSamplingTargets <https://docs.aws.amazon.com/xray/latest/api/API_GetSamplingTargets.html>`__.
+
+          
+          
+
+          - **RuleName** *(string) --* 
+
+            The name of the sampling rule.
+
+            
+          
+
+          - **FixedRate** *(float) --* 
+
+            The percentage of matching requests to instrument, after the reservoir is exhausted.
+
+            
+          
+
+          - **ReservoirQuota** *(integer) --* 
+
+            The number of requests per second that X-Ray allocated for this service.
+
+            
+          
+
+          - **ReservoirQuotaTTL** *(datetime) --* 
+
+            When the reservoir quota expires.
+
+            
+          
+
+          - **Interval** *(integer) --* 
+
+            The number of seconds for the service to wait before getting sampling targets again.
+
+            
+          
+
+          - **SamplingBoost** *(dict) --* 
+
+            The sampling boost that X-Ray allocated for this service.
+
+            
+            
+
+            - **BoostRate** *(float) --* 
+
+              The calculated sampling boost rate for this service
+
+              
+            
+
+            - **BoostRateTTL** *(datetime) --* 
+
+              When the sampling boost expires.
+
+              
+        
+      
+    
+      
+
+      - **LastRuleModification** *(datetime) --* 
+
+        The last time a user changed the sampling rule configuration. If the sampling rule configuration changed since the service last retrieved it, the service should call `GetSamplingRules <https://docs.aws.amazon.com/xray/latest/api/API_GetSamplingRules.html>`__ to get the latest version.
+
+        
+      
+
+      - **UnprocessedStatistics** *(list) --* 
+
+        Information about `SamplingStatisticsDocument <https://docs.aws.amazon.com/xray/latest/api/API_SamplingStatisticsDocument.html>`__ that X-Ray could not process.
+
+        
+        
+
+        - *(dict) --* 
+
+          Sampling statistics from a call to `GetSamplingTargets <https://docs.aws.amazon.com/xray/latest/api/API_GetSamplingTargets.html>`__ that X-Ray could not process.
+
+          
+          
+
+          - **RuleName** *(string) --* 
+
+            The name of the sampling rule.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            The error message.
+
+            
+      
+    
+      
+
+      - **UnprocessedBoostStatistics** *(list) --* 
+
+        Information about `SamplingBoostStatisticsDocument <https://docs.aws.amazon.com/xray/latest/api/API_SamplingBoostStatisticsDocument.html>`__ that X-Ray could not process.
+
+        
+        
+
+        - *(dict) --* 
+
+          Sampling statistics from a call to `GetSamplingTargets <https://docs.aws.amazon.com/xray/latest/api/API_GetSamplingTargets.html>`__ that X-Ray could not process.
+
+          
+          
+
+          - **RuleName** *(string) --* 
+
+            The name of the sampling rule.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            The error message.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`XRay.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`XRay.Client.exceptions.ThrottledException`
+
+  

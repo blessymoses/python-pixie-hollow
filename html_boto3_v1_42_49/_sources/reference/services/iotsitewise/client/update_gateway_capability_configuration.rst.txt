@@ -1,0 +1,154 @@
+:doc:`IoTSiteWise <../../iotsitewise>` / Client / update_gateway_capability_configuration
+
+***************************************
+update_gateway_capability_configuration
+***************************************
+
+
+
+.. py:method:: IoTSiteWise.Client.update_gateway_capability_configuration(**kwargs)
+
+  
+
+  Updates a gateway capability configuration or defines a new capability configuration. Each gateway capability defines data sources for a gateway.
+
+   
+
+  Important workflow notes:
+
+   
+
+  Each gateway capability defines data sources for a gateway. This is the namespace of the gateway capability.
+
+   
+
+  . The namespace follows the format ``service:capability:version``, where:
+
+   
+
+  
+  * ``service`` - The service providing the capability, or ``iotsitewise``.
+   
+  * ``capability`` - The specific capability type. Options include: ``opcuacollector`` for the OPC UA data source collector, or ``publisher`` for data publisher capability.
+   
+  * ``version`` - The version number of the capability. Option include ``2`` for Classic streams, V2 gateways, and ``3`` for MQTT-enabled, V3 gateways.
+  
+
+   
+
+  After updating a capability configuration, the sync status becomes ``OUT_OF_SYNC`` until the gateway processes the configuration.Use ``DescribeGatewayCapabilityConfiguration`` to check the sync status and verify the configuration was applied.
+
+   
+
+  A gateway can have multiple capability configurations with different namespaces.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotsitewise-2019-12-02/UpdateGatewayCapabilityConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_gateway_capability_configuration(
+        gatewayId='string',
+        capabilityNamespace='string',
+        capabilityConfiguration='string'
+    )
+    
+  :type gatewayId: string
+  :param gatewayId: **[REQUIRED]** 
+
+    The ID of the gateway to be updated.
+
+    
+
+  
+  :type capabilityNamespace: string
+  :param capabilityNamespace: **[REQUIRED]** 
+
+    The namespace of the gateway capability configuration to be updated. For example, if you configure OPC UA sources for an MQTT-enabled gateway, your OPC-UA capability configuration has the namespace ``iotsitewise:opcuacollector:3``.
+
+    
+
+  
+  :type capabilityConfiguration: string
+  :param capabilityConfiguration: **[REQUIRED]** 
+
+    The JSON document that defines the configuration for the gateway capability. For more information, see `Configuring data sources (CLI) <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/configure-sources.html#configure-source-cli>`__ in the *IoT SiteWise User Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'capabilityNamespace': 'string',
+          'capabilitySyncStatus': 'IN_SYNC'|'OUT_OF_SYNC'|'SYNC_FAILED'|'UNKNOWN'|'NOT_APPLICABLE'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **capabilityNamespace** *(string) --* 
+
+        The namespace of the gateway capability.
+
+        
+      
+
+      - **capabilitySyncStatus** *(string) --* 
+
+        The synchronization status of the gateway capability configuration. The sync status can be one of the following:
+
+         
+
+        
+        * ``IN_SYNC`` - The gateway is running with the latest configuration.
+         
+        * ``OUT_OF_SYNC`` - The gateway hasn't received the latest configuration.
+         
+        * ``SYNC_FAILED`` - The gateway rejected the latest configuration.
+         
+        * ``UNKNOWN`` - The gateway hasn't reported its sync status.
+         
+        * ``NOT_APPLICABLE`` - The gateway doesn't support this capability. This is most common when integrating partner data sources, because the data integration is handled externally by the partner.
+        
+
+         
+
+        After you update a capability configuration, its sync status is ``OUT_OF_SYNC`` until the gateway receives and applies or rejects the updated configuration.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ConflictingOperationException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.LimitExceededException`
+
+  

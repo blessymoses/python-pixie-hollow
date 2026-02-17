@@ -1,0 +1,427 @@
+:doc:`Lightsail <../../lightsail>` / Client / put_alarm
+
+*********
+put_alarm
+*********
+
+
+
+.. py:method:: Lightsail.Client.put_alarm(**kwargs)
+
+  
+
+  Creates or updates an alarm, and associates it with the specified metric.
+
+   
+
+  An alarm is used to monitor a single metric for one of your resources. When a metric condition is met, the alarm can notify you by email, SMS text message, and a banner displayed on the Amazon Lightsail console. For more information, see `Alarms in Amazon Lightsail <https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-alarms>`__.
+
+   
+
+  When this action creates an alarm, the alarm state is immediately set to ``INSUFFICIENT_DATA``. The alarm is then evaluated and its state is set appropriately. Any actions associated with the new state are then executed.
+
+   
+
+  When you update an existing alarm, its state is left unchanged, but the update completely overwrites the previous configuration of the alarm. The alarm is then evaluated with the updated configuration.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/PutAlarm>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_alarm(
+        alarmName='string',
+        metricName='CPUUtilization'|'NetworkIn'|'NetworkOut'|'StatusCheckFailed'|'StatusCheckFailed_Instance'|'StatusCheckFailed_System'|'ClientTLSNegotiationErrorCount'|'HealthyHostCount'|'UnhealthyHostCount'|'HTTPCode_LB_4XX_Count'|'HTTPCode_LB_5XX_Count'|'HTTPCode_Instance_2XX_Count'|'HTTPCode_Instance_3XX_Count'|'HTTPCode_Instance_4XX_Count'|'HTTPCode_Instance_5XX_Count'|'InstanceResponseTime'|'RejectedConnectionCount'|'RequestCount'|'DatabaseConnections'|'DiskQueueDepth'|'FreeStorageSpace'|'NetworkReceiveThroughput'|'NetworkTransmitThroughput'|'BurstCapacityTime'|'BurstCapacityPercentage',
+        monitoredResourceName='string',
+        comparisonOperator='GreaterThanOrEqualToThreshold'|'GreaterThanThreshold'|'LessThanThreshold'|'LessThanOrEqualToThreshold',
+        threshold=123.0,
+        evaluationPeriods=123,
+        datapointsToAlarm=123,
+        treatMissingData='breaching'|'notBreaching'|'ignore'|'missing',
+        contactProtocols=[
+            'Email'|'SMS',
+        ],
+        notificationTriggers=[
+            'OK'|'ALARM'|'INSUFFICIENT_DATA',
+        ],
+        notificationEnabled=True|False
+    )
+    
+  :type alarmName: string
+  :param alarmName: **[REQUIRED]** 
+
+    The name for the alarm. Specify the name of an existing alarm to update, and overwrite the previous configuration of the alarm.
+
+    
+
+  
+  :type metricName: string
+  :param metricName: **[REQUIRED]** 
+
+    The name of the metric to associate with the alarm.
+
+     
+
+    You can configure up to two alarms per metric.
+
+     
+
+    The following metrics are available for each resource type:
+
+     
+
+    
+    * **Instances**: ``BurstCapacityPercentage``, ``BurstCapacityTime``, ``CPUUtilization``, ``NetworkIn``, ``NetworkOut``, ``StatusCheckFailed``, ``StatusCheckFailed_Instance``, and ``StatusCheckFailed_System``.
+     
+    * **Load balancers**: ``ClientTLSNegotiationErrorCount``, ``HealthyHostCount``, ``UnhealthyHostCount``, ``HTTPCode_LB_4XX_Count``, ``HTTPCode_LB_5XX_Count``, ``HTTPCode_Instance_2XX_Count``, ``HTTPCode_Instance_3XX_Count``, ``HTTPCode_Instance_4XX_Count``, ``HTTPCode_Instance_5XX_Count``, ``InstanceResponseTime``, ``RejectedConnectionCount``, and ``RequestCount``.
+     
+    * **Relational databases**: ``CPUUtilization``, ``DatabaseConnections``, ``DiskQueueDepth``, ``FreeStorageSpace``, ``NetworkReceiveThroughput``, and ``NetworkTransmitThroughput``.
+    
+
+     
+
+    For more information about these metrics, see `Metrics available in Lightsail <https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-resource-health-metrics#available-metrics>`__.
+
+    
+
+  
+  :type monitoredResourceName: string
+  :param monitoredResourceName: **[REQUIRED]** 
+
+    The name of the Lightsail resource that will be monitored.
+
+     
+
+    Instances, load balancers, and relational databases are the only Lightsail resources that can currently be monitored by alarms.
+
+    
+
+  
+  :type comparisonOperator: string
+  :param comparisonOperator: **[REQUIRED]** 
+
+    The arithmetic operation to use when comparing the specified statistic to the threshold. The specified statistic value is used as the first operand.
+
+    
+
+  
+  :type threshold: float
+  :param threshold: **[REQUIRED]** 
+
+    The value against which the specified statistic is compared.
+
+    
+
+  
+  :type evaluationPeriods: integer
+  :param evaluationPeriods: **[REQUIRED]** 
+
+    The number of most recent periods over which data is compared to the specified threshold. If you are setting an "M out of N" alarm, this value ( ``evaluationPeriods``) is the N.
+
+     
+
+    If you are setting an alarm that requires that a number of consecutive data points be breaching to trigger the alarm, this value specifies the rolling period of time in which data points are evaluated.
+
+     
+
+    Each evaluation period is five minutes long. For example, specify an evaluation period of 24 to evaluate a metric over a rolling period of two hours.
+
+     
+
+    You can specify a minimum valuation period of 1 (5 minutes), and a maximum evaluation period of 288 (24 hours).
+
+    
+
+  
+  :type datapointsToAlarm: integer
+  :param datapointsToAlarm: 
+
+    The number of data points that must be not within the specified threshold to trigger the alarm. If you are setting an "M out of N" alarm, this value ( ``datapointsToAlarm``) is the M.
+
+    
+
+  
+  :type treatMissingData: string
+  :param treatMissingData: 
+
+    Sets how this alarm will handle missing data points.
+
+     
+
+    An alarm can treat missing data in the following ways:
+
+     
+
+    
+    * ``breaching`` - Assume the missing data is not within the threshold. Missing data counts towards the number of times the metric is not within the threshold.
+     
+    * ``notBreaching`` - Assume the missing data is within the threshold. Missing data does not count towards the number of times the metric is not within the threshold.
+     
+    * ``ignore`` - Ignore the missing data. Maintains the current alarm state.
+     
+    * ``missing`` - Missing data is treated as missing.
+    
+
+     
+
+    If ``treatMissingData`` is not specified, the default behavior of ``missing`` is used.
+
+    
+
+  
+  :type contactProtocols: list
+  :param contactProtocols: 
+
+    The contact protocols to use for the alarm, such as ``Email``, ``SMS`` (text messaging), or both.
+
+     
+
+    A notification is sent via the specified contact protocol if notifications are enabled for the alarm, and when the alarm is triggered.
+
+     
+
+    A notification is not sent if a contact protocol is not specified, if the specified contact protocol is not configured in the Amazon Web Services Region, or if notifications are not enabled for the alarm using the ``notificationEnabled`` paramater.
+
+     
+
+    Use the ``CreateContactMethod`` action to configure a contact protocol in an Amazon Web Services Region.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type notificationTriggers: list
+  :param notificationTriggers: 
+
+    The alarm states that trigger a notification.
+
+     
+
+    An alarm has the following possible states:
+
+     
+
+    
+    * ``ALARM`` - The metric is outside of the defined threshold.
+     
+    * ``INSUFFICIENT_DATA`` - The alarm has just started, the metric is not available, or not enough data is available for the metric to determine the alarm state.
+     
+    * ``OK`` - The metric is within the defined threshold.
+    
+
+     
+
+    When you specify a notification trigger, the ``ALARM`` state must be specified. The ``INSUFFICIENT_DATA`` and ``OK`` states can be specified in addition to the ``ALARM`` state.
+
+     
+
+    
+    * If you specify ``OK`` as an alarm trigger, a notification is sent when the alarm switches from an ``ALARM`` or ``INSUFFICIENT_DATA`` alarm state to an ``OK`` state. This can be thought of as an *all clear* alarm notification.
+     
+    * If you specify ``INSUFFICIENT_DATA`` as the alarm trigger, a notification is sent when the alarm switches from an ``OK`` or ``ALARM`` alarm state to an ``INSUFFICIENT_DATA`` state.
+    
+
+     
+
+    The notification trigger defaults to ``ALARM`` if you don't specify this parameter.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type notificationEnabled: boolean
+  :param notificationEnabled: 
+
+    Indicates whether the alarm is enabled.
+
+     
+
+    Notifications are enabled by default if you don't specify this parameter.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'operations': [
+              {
+                  'id': 'string',
+                  'resourceName': 'string',
+                  'resourceType': 'ContainerService'|'Instance'|'StaticIp'|'KeyPair'|'InstanceSnapshot'|'Domain'|'PeeredVpc'|'LoadBalancer'|'LoadBalancerTlsCertificate'|'Disk'|'DiskSnapshot'|'RelationalDatabase'|'RelationalDatabaseSnapshot'|'ExportSnapshotRecord'|'CloudFormationStackRecord'|'Alarm'|'ContactMethod'|'Distribution'|'Certificate'|'Bucket',
+                  'createdAt': datetime(2015, 1, 1),
+                  'location': {
+                      'availabilityZone': 'string',
+                      'regionName': 'us-east-1'|'us-east-2'|'us-west-1'|'us-west-2'|'eu-west-1'|'eu-west-2'|'eu-west-3'|'eu-central-1'|'ca-central-1'|'ap-south-1'|'ap-southeast-1'|'ap-southeast-2'|'ap-northeast-1'|'ap-northeast-2'|'eu-north-1'|'ap-southeast-3'
+                  },
+                  'isTerminal': True|False,
+                  'operationDetails': 'string',
+                  'operationType': 'DeleteKnownHostKeys'|'DeleteInstance'|'CreateInstance'|'StopInstance'|'StartInstance'|'RebootInstance'|'OpenInstancePublicPorts'|'PutInstancePublicPorts'|'CloseInstancePublicPorts'|'AllocateStaticIp'|'ReleaseStaticIp'|'AttachStaticIp'|'DetachStaticIp'|'UpdateDomainEntry'|'DeleteDomainEntry'|'CreateDomain'|'DeleteDomain'|'CreateInstanceSnapshot'|'DeleteInstanceSnapshot'|'CreateInstancesFromSnapshot'|'CreateLoadBalancer'|'DeleteLoadBalancer'|'AttachInstancesToLoadBalancer'|'DetachInstancesFromLoadBalancer'|'UpdateLoadBalancerAttribute'|'CreateLoadBalancerTlsCertificate'|'DeleteLoadBalancerTlsCertificate'|'AttachLoadBalancerTlsCertificate'|'CreateDisk'|'DeleteDisk'|'AttachDisk'|'DetachDisk'|'CreateDiskSnapshot'|'DeleteDiskSnapshot'|'CreateDiskFromSnapshot'|'CreateRelationalDatabase'|'UpdateRelationalDatabase'|'DeleteRelationalDatabase'|'CreateRelationalDatabaseFromSnapshot'|'CreateRelationalDatabaseSnapshot'|'DeleteRelationalDatabaseSnapshot'|'UpdateRelationalDatabaseParameters'|'StartRelationalDatabase'|'RebootRelationalDatabase'|'StopRelationalDatabase'|'EnableAddOn'|'DisableAddOn'|'PutAlarm'|'GetAlarms'|'DeleteAlarm'|'TestAlarm'|'CreateContactMethod'|'GetContactMethods'|'SendContactMethodVerification'|'DeleteContactMethod'|'CreateDistribution'|'UpdateDistribution'|'DeleteDistribution'|'ResetDistributionCache'|'AttachCertificateToDistribution'|'DetachCertificateFromDistribution'|'UpdateDistributionBundle'|'SetIpAddressType'|'CreateCertificate'|'DeleteCertificate'|'CreateContainerService'|'UpdateContainerService'|'DeleteContainerService'|'CreateContainerServiceDeployment'|'CreateContainerServiceRegistryLogin'|'RegisterContainerImage'|'DeleteContainerImage'|'CreateBucket'|'DeleteBucket'|'CreateBucketAccessKey'|'DeleteBucketAccessKey'|'UpdateBucketBundle'|'UpdateBucket'|'SetResourceAccessForBucket'|'UpdateInstanceMetadataOptions'|'StartGUISession'|'StopGUISession'|'SetupInstanceHttps',
+                  'status': 'NotStarted'|'Started'|'Failed'|'Completed'|'Succeeded',
+                  'statusChangedAt': datetime(2015, 1, 1),
+                  'errorCode': 'string',
+                  'errorDetails': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **operations** *(list) --* 
+
+        An array of objects that describe the result of the action, such as the status of the request, the timestamp of the request, and the resources affected by the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes the API operation.
+
+          
+          
+
+          - **id** *(string) --* 
+
+            The ID of the operation.
+
+            
+          
+
+          - **resourceName** *(string) --* 
+
+            The resource name.
+
+            
+          
+
+          - **resourceType** *(string) --* 
+
+            The resource type.
+
+            
+          
+
+          - **createdAt** *(datetime) --* 
+
+            The timestamp when the operation was initialized ( ``1479816991.349``).
+
+            
+          
+
+          - **location** *(dict) --* 
+
+            The Amazon Web Services Region and Availability Zone.
+
+            
+            
+
+            - **availabilityZone** *(string) --* 
+
+              The Availability Zone. Follows the format ``us-east-2a`` (case-sensitive).
+
+              
+            
+
+            - **regionName** *(string) --* 
+
+              The Amazon Web Services Region name.
+
+              
+        
+          
+
+          - **isTerminal** *(boolean) --* 
+
+            A Boolean value indicating whether the operation is terminal.
+
+            
+          
+
+          - **operationDetails** *(string) --* 
+
+            Details about the operation ( ``Debian-1GB-Ohio-1``).
+
+            
+          
+
+          - **operationType** *(string) --* 
+
+            The type of operation.
+
+            
+          
+
+          - **status** *(string) --* 
+
+            The status of the operation.
+
+            
+          
+
+          - **statusChangedAt** *(datetime) --* 
+
+            The timestamp when the status was changed ( ``1479816991.349``).
+
+            
+          
+
+          - **errorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **errorDetails** *(string) --* 
+
+            The error details.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Lightsail.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.OperationFailureException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.UnauthenticatedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.RegionSetupInProgressException`
+
+  

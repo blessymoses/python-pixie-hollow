@@ -1,0 +1,195 @@
+:doc:`CloudFront <../../cloudfront>` / Client / list_conflicting_aliases
+
+************************
+list_conflicting_aliases
+************************
+
+
+
+.. py:method:: CloudFront.Client.list_conflicting_aliases(**kwargs)
+
+  
+
+  
+
+  .. note::
+
+    
+
+    The ``ListConflictingAliases`` API operation only supports standard distributions. To list domain conflicts for both standard distributions and distribution tenants, we recommend that you use the `ListDomainConflicts <https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListDomainConflicts.html>`__ API operation instead.
+
+    
+
+   
+
+  Gets a list of aliases that conflict or overlap with the provided alias, and the associated CloudFront standard distribution and Amazon Web Services accounts for each conflicting alias. An alias is commonly known as a custom domain or vanity domain. It can also be called a CNAME or alternate domain name.
+
+   
+
+  In the returned list, the standard distribution and account IDs are partially hidden, which allows you to identify the standard distribution and accounts that you own, and helps to protect the information of ones that you don't own.
+
+   
+
+  Use this operation to find aliases that are in use in CloudFront that conflict or overlap with the provided alias. For example, if you provide ``www.example.com`` as input, the returned list can include ``www.example.com`` and the overlapping wildcard alternate domain name ( ``.example.com``), if they exist. If you provide ``.example.com`` as input, the returned list can include ``*.example.com`` and any alternate domain names covered by that wildcard (for example, ``www.example.com``, ``test.example.com``, ``dev.example.com``, and so on), if they exist.
+
+   
+
+  To list conflicting aliases, specify the alias to search and the ID of a standard distribution in your account that has an attached TLS certificate that includes the provided alias. For more information, including how to set up the standard distribution and certificate, see `Moving an alternate domain name to a different standard distribution or distribution tenant <https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move>`__ in the *Amazon CloudFront Developer Guide*.
+
+   
+
+  You can optionally specify the maximum number of items to receive in the response. If the total number of items in the list exceeds the maximum that you specify, or the default maximum, the response is paginated. To get the next page of items, send a subsequent request that specifies the ``NextMarker`` value from the current response as the ``Marker`` value in the subsequent request.
+
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListConflictingAliases>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_conflicting_aliases(
+        DistributionId='string',
+        Alias='string',
+        Marker='string',
+        MaxItems=123
+    )
+    
+  :type DistributionId: string
+  :param DistributionId: **[REQUIRED]** 
+
+    The ID of a standard distribution in your account that has an attached TLS certificate that includes the provided alias.
+
+    
+
+  
+  :type Alias: string
+  :param Alias: **[REQUIRED]** 
+
+    The alias (also called a CNAME) to search for conflicting aliases.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    Use this field when paginating results to indicate where to begin in the list of conflicting aliases. The response includes conflicting aliases in the list that occur after the marker. To get the next page of the list, set this field's value to the value of ``NextMarker`` from the current page's response.
+
+    
+
+  
+  :type MaxItems: integer
+  :param MaxItems: 
+
+    The maximum number of conflicting aliases that you want in the response.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ConflictingAliasesList': {
+              'NextMarker': 'string',
+              'MaxItems': 123,
+              'Quantity': 123,
+              'Items': [
+                  {
+                      'Alias': 'string',
+                      'DistributionId': 'string',
+                      'AccountId': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ConflictingAliasesList** *(dict) --* 
+
+        A list of conflicting aliases.
+
+        
+        
+
+        - **NextMarker** *(string) --* 
+
+          If there are more items in the list than are in this response, this element is present. It contains the value that you should use in the ``Marker`` field of a subsequent request to continue listing conflicting aliases where you left off.
+
+          
+        
+
+        - **MaxItems** *(integer) --* 
+
+          The maximum number of conflicting aliases requested.
+
+          
+        
+
+        - **Quantity** *(integer) --* 
+
+          The number of conflicting aliases returned in the response.
+
+          
+        
+
+        - **Items** *(list) --* 
+
+          Contains the conflicting aliases in the list.
+
+          
+          
+
+          - *(dict) --* 
+
+            An alias (also called a CNAME) and the CloudFront standard distribution and Amazon Web Services account ID that it's associated with. The standard distribution and account IDs are partially hidden, which allows you to identify the standard distributions and accounts that you own, and helps to protect the information of ones that you don't own.
+
+            
+            
+
+            - **Alias** *(string) --* 
+
+              An alias (also called a CNAME).
+
+              
+            
+
+            - **DistributionId** *(string) --* 
+
+              The (partially hidden) ID of the CloudFront standard distribution associated with the alias.
+
+              
+            
+
+            - **AccountId** *(string) --* 
+
+              The (partially hidden) ID of the Amazon Web Services account that owns the standard distribution that's associated with the alias.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFront.Client.exceptions.NoSuchDistribution`
+
+  
+  *   :py:class:`CloudFront.Client.exceptions.InvalidArgument`
+
+  

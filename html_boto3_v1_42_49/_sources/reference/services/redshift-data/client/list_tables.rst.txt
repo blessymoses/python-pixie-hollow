@@ -1,0 +1,224 @@
+:doc:`RedshiftDataAPIService <../../redshift-data>` / Client / list_tables
+
+***********
+list_tables
+***********
+
+
+
+.. py:method:: RedshiftDataAPIService.Client.list_tables(**kwargs)
+
+  
+
+  List the tables in a database. If neither ``SchemaPattern`` nor ``TablePattern`` are specified, then all tables in the database are returned. A token is returned to page through the table list. Depending on the authorization method, use one of the following combinations of request parameters:
+
+   
+
+  
+  * Secrets Manager - when connecting to a cluster, provide the ``secret-arn`` of a secret stored in Secrets Manager which has ``username`` and ``password``. The specified secret contains credentials to connect to the ``database`` you specify. When you are connecting to a cluster, you also supply the database name, If you provide a cluster identifier ( ``dbClusterIdentifier``), it must match the cluster identifier stored in the secret. When you are connecting to a serverless workgroup, you also supply the database name.
+   
+  * Temporary credentials - when connecting to your data warehouse, choose one of the following options: 
+
+    
+    * When connecting to a serverless workgroup, specify the workgroup name and database name. The database user name is derived from the IAM identity. For example, ``arn:iam::123456789012:user:foo`` has the database user name ``IAM:foo``. Also, permission to call the ``redshift-serverless:GetCredentials`` operation is required.
+     
+    * When connecting to a cluster as an IAM identity, specify the cluster identifier and the database name. The database user name is derived from the IAM identity. For example, ``arn:iam::123456789012:user:foo`` has the database user name ``IAM:foo``. Also, permission to call the ``redshift:GetClusterCredentialsWithIAM`` operation is required.
+     
+    * When connecting to a cluster as a database user, specify the cluster identifier, the database name, and the database user name. Also, permission to call the ``redshift:GetClusterCredentials`` operation is required.
+    
+
+  
+  
+
+   
+
+  For more information about the Amazon Redshift Data API and CLI usage examples, see `Using the Amazon Redshift Data API <https://docs.aws.amazon.com/redshift/latest/mgmt/data-api.html>`__ in the *Amazon Redshift Management Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/redshift-data-2019-12-20/ListTables>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_tables(
+        ClusterIdentifier='string',
+        SecretArn='string',
+        DbUser='string',
+        Database='string',
+        ConnectedDatabase='string',
+        SchemaPattern='string',
+        TablePattern='string',
+        NextToken='string',
+        MaxResults=123,
+        WorkgroupName='string'
+    )
+    
+  :type ClusterIdentifier: string
+  :param ClusterIdentifier: 
+
+    The cluster identifier. This parameter is required when connecting to a cluster and authenticating using either Secrets Manager or temporary credentials.
+
+    
+
+  
+  :type SecretArn: string
+  :param SecretArn: 
+
+    The name or ARN of the secret that enables access to the database. This parameter is required when authenticating using Secrets Manager.
+
+    
+
+  
+  :type DbUser: string
+  :param DbUser: 
+
+    The database user name. This parameter is required when connecting to a cluster as a database user and authenticating using temporary credentials.
+
+    
+
+  
+  :type Database: string
+  :param Database: **[REQUIRED]** 
+
+    The name of the database that contains the tables to list. If ``ConnectedDatabase`` is not specified, this is also the database to connect to with your authentication credentials.
+
+    
+
+  
+  :type ConnectedDatabase: string
+  :param ConnectedDatabase: 
+
+    A database name. The connected database is specified when you connect with your authentication credentials.
+
+    
+
+  
+  :type SchemaPattern: string
+  :param SchemaPattern: 
+
+    A pattern to filter results by schema name. Within a schema pattern, "%" means match any substring of 0 or more characters and "_" means match any one character. Only schema name entries matching the search pattern are returned. If ``SchemaPattern`` is not specified, then all tables that match ``TablePattern`` are returned. If neither ``SchemaPattern`` or ``TablePattern`` are specified, then all tables are returned.
+
+    
+
+  
+  :type TablePattern: string
+  :param TablePattern: 
+
+    A pattern to filter results by table name. Within a table pattern, "%" means match any substring of 0 or more characters and "_" means match any one character. Only table name entries matching the search pattern are returned. If ``TablePattern`` is not specified, then all tables that match ``SchemaPattern``are returned. If neither ``SchemaPattern`` or ``TablePattern`` are specified, then all tables are returned.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A value that indicates the starting point for the next set of response records in a subsequent request. If a value is returned in a response, you can retrieve the next set of records by providing this returned NextToken value in the next NextToken parameter and retrying the command. If the NextToken field is empty, all response records have been retrieved for the request.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of tables to return in the response. If more tables exist than fit in one response, then ``NextToken`` is returned to page through the results.
+
+    
+
+  
+  :type WorkgroupName: string
+  :param WorkgroupName: 
+
+    The serverless workgroup name or Amazon Resource Name (ARN). This parameter is required when connecting to a serverless workgroup and authenticating using either Secrets Manager or temporary credentials.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Tables': [
+              {
+                  'name': 'string',
+                  'type': 'string',
+                  'schema': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Tables** *(list) --* 
+
+        The tables that match the request pattern.
+
+        
+        
+
+        - *(dict) --* 
+
+          The properties of a table.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the table.
+
+            
+          
+
+          - **type** *(string) --* 
+
+            The type of the table. Possible values include TABLE, VIEW, SYSTEM TABLE, GLOBAL TEMPORARY, LOCAL TEMPORARY, ALIAS, and SYNONYM.
+
+            
+          
+
+          - **schema** *(string) --* 
+
+            The schema containing the table.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A value that indicates the starting point for the next set of response records in a subsequent request. If a value is returned in a response, you can retrieve the next set of records by providing this returned NextToken value in the next NextToken parameter and retrying the command. If the NextToken field is empty, all response records have been retrieved for the request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.QueryTimeoutException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.DatabaseConnectionException`
+
+  

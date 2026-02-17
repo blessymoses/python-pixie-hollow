@@ -1,0 +1,821 @@
+:doc:`Connect <../../connect>` / Client / get_current_metric_data
+
+***********************
+get_current_metric_data
+***********************
+
+
+
+.. py:method:: Connect.Client.get_current_metric_data(**kwargs)
+
+  
+
+  Gets the real-time metric data from the specified Amazon Connect instance.
+
+   
+
+  For a description of each metric, see `Metrics definitions <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html>`__ in the *Amazon Connect Administrator Guide*.
+
+   
+
+  .. note::
+
+    
+
+    When you make a successful API request, you can expect the following metric values in the response:
+
+     
+
+    
+    * **Metric value is null**: The calculation cannot be performed due to divide by zero or insufficient data
+     
+    * **Metric value is a number (including 0) of defined type**: The number provided is the calculation result
+     
+    * **MetricResult list is empty**: The request cannot find any data in the system
+    
+
+     
+
+    The following guidelines can help you work with the API:
+
+     
+
+    
+    * Each dimension in the metric response must contain a value
+     
+    * Each item in MetricResult must include all requested metrics
+     
+    * If the response is slow due to large result sets, try these approaches: 
+
+      
+      * Add filters to reduce the amount of data returned
+      
+
+    
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connect-2017-08-08/GetCurrentMetricData>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_current_metric_data(
+        InstanceId='string',
+        Filters={
+            'Queues': [
+                'string',
+            ],
+            'Channels': [
+                'VOICE'|'CHAT'|'TASK'|'EMAIL',
+            ],
+            'RoutingProfiles': [
+                'string',
+            ],
+            'RoutingStepExpressions': [
+                'string',
+            ],
+            'AgentStatuses': [
+                'string',
+            ],
+            'Subtypes': [
+                'string',
+            ],
+            'ValidationTestTypes': [
+                'string',
+            ]
+        },
+        Groupings=[
+            'QUEUE'|'CHANNEL'|'ROUTING_PROFILE'|'ROUTING_STEP_EXPRESSION'|'AGENT_STATUS'|'SUBTYPE'|'VALIDATION_TEST_TYPE',
+        ],
+        CurrentMetrics=[
+            {
+                'Name': 'AGENTS_ONLINE'|'AGENTS_AVAILABLE'|'AGENTS_ON_CALL'|'AGENTS_NON_PRODUCTIVE'|'AGENTS_AFTER_CONTACT_WORK'|'AGENTS_ERROR'|'AGENTS_STAFFED'|'CONTACTS_IN_QUEUE'|'OLDEST_CONTACT_AGE'|'CONTACTS_SCHEDULED'|'AGENTS_ON_CONTACT'|'SLOTS_ACTIVE'|'SLOTS_AVAILABLE'|'ESTIMATED_WAIT_TIME',
+                'MetricId': 'string',
+                'Unit': 'SECONDS'|'COUNT'|'PERCENT'
+            },
+        ],
+        NextToken='string',
+        MaxResults=123,
+        SortCriteria=[
+            {
+                'SortByMetric': 'AGENTS_ONLINE'|'AGENTS_AVAILABLE'|'AGENTS_ON_CALL'|'AGENTS_NON_PRODUCTIVE'|'AGENTS_AFTER_CONTACT_WORK'|'AGENTS_ERROR'|'AGENTS_STAFFED'|'CONTACTS_IN_QUEUE'|'OLDEST_CONTACT_AGE'|'CONTACTS_SCHEDULED'|'AGENTS_ON_CONTACT'|'SLOTS_ACTIVE'|'SLOTS_AVAILABLE'|'ESTIMATED_WAIT_TIME',
+                'SortOrder': 'ASCENDING'|'DESCENDING'
+            },
+        ]
+    )
+    
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The identifier of the Amazon Connect instance. You can `find the instance ID <https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html>`__ in the Amazon Resource Name (ARN) of the instance.
+
+    
+
+  
+  :type Filters: dict
+  :param Filters: **[REQUIRED]** 
+
+    The filters to apply to returned metrics. You can filter up to the following limits:
+
+     
+
+    
+    * Queues: 100
+     
+    * Routing profiles: 100
+     
+    * Channels: 3 (VOICE, CHAT, and TASK channels are supported.)
+     
+    * RoutingStepExpressions: 50
+     
+    * AgentStatuses: 50
+     
+    * Subtypes: 10
+     
+    * ValidationTestTypes: 10
+    
+
+     
+
+    Metric data is retrieved only for the resources associated with the queues or routing profiles, and by any channels included in the filter. (You cannot filter by both queue AND routing profile.) You can include both resource IDs and resource ARNs in the same request.
+
+     
+
+    When using ``AgentStatuses`` as filter make sure Queues is added as primary filter.
+
+     
+
+    When using ``Subtypes`` as filter make sure Queues is added as primary filter.
+
+     
+
+    When using ``ValidationTestTypes`` as filter make sure Queues is added as primary filter.
+
+     
+
+    When using the ``RoutingStepExpression`` filter, you need to pass exactly one ``QueueId``. The filter is also case sensitive so when using the ``RoutingStepExpression`` filter, grouping by ``ROUTING_STEP_EXPRESSION`` is required.
+
+     
+
+    Currently tagging is only supported on the resources that are passed in the filter.
+
+    
+
+  
+    - **Queues** *(list) --* 
+
+      The queues to use to filter the metrics. You should specify at least one queue, and can specify up to 100 queues per request. The ``GetCurrentMetricsData`` API in particular requires a queue when you include a ``Filter`` in your request.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **Channels** *(list) --* 
+
+      The channel to use to filter the metrics.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **RoutingProfiles** *(list) --* 
+
+      A list of up to 100 routing profile IDs or ARNs.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **RoutingStepExpressions** *(list) --* 
+
+      A list of expressions as a filter, in which an expression is an object of a step in a routing criteria.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AgentStatuses** *(list) --* 
+
+      A list of up to 50 agent status IDs or ARNs.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **Subtypes** *(list) --* 
+
+      A list of up to 10 subtypes can be provided.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **ValidationTestTypes** *(list) --* 
+
+      A list of up to 10 validationTestTypes can be provided.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type Groupings: list
+  :param Groupings: 
+
+    Defines the level of aggregation for metrics data by a dimension(s). Its similar to sorting items into buckets based on a common characteristic, then counting or calculating something for each bucket. For example, when grouped by ``QUEUE``, the metrics returned apply to each queue rather than aggregated for all queues.
+
+     
+
+    The grouping list is an ordered list, with the first item in the list defined as the primary grouping. If no grouping is included in the request, the aggregation happens at the instance-level.
+
+     
+
+    
+    * If you group by ``CHANNEL``, you should include a Channels filter. VOICE, CHAT, and TASK channels are supported.
+     
+    * If you group by ``AGENT_STATUS``, you must include the ``QUEUE`` as the primary grouping and use queue filter. When you group by ``AGENT_STATUS``, the only metric available is the ``AGENTS_ONLINE`` metric.
+     
+    * If you group by ``SUBTYPE`` or ``VALIDATION_TEST_TYPE`` as secondary grouping then you must include ``QUEUE`` as primary grouping and use Queue as filter
+     
+    * If you group by ``ROUTING_PROFILE``, you must include either a queue or routing profile filter. In addition, a routing profile filter is required for metrics ``CONTACTS_SCHEDULED``, ``CONTACTS_IN_QUEUE``, and ``OLDEST_CONTACT_AGE``.
+     
+    * When using the ``RoutingStepExpression`` filter, group by ``ROUTING_STEP_EXPRESSION`` is required.
+    
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type CurrentMetrics: list
+  :param CurrentMetrics: **[REQUIRED]** 
+
+    The metrics to retrieve. Specify the name or metricId, and unit for each metric. The following metrics are available. For a description of all the metrics, see `Metrics definitions <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html>`__ in the *Amazon Connect Administrator Guide*.
+
+     
+
+    .. note::
+
+      
+
+      MetricId should be used to reference custom metrics or out of the box metrics as Arn. If using MetricId, the limit is 10 MetricId per request.
+
+      
+
+      AGENTS_AFTER_CONTACT_WORK  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `ACW <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#aftercallwork-real-time>`__
+
+      AGENTS_AVAILABLE  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `Available <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#available-real-time>`__
+
+      AGENTS_ERROR  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `Error <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#error-real-time>`__
+
+      AGENTS_NON_PRODUCTIVE  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `NPT (Non-Productive Time) <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#non-productive-time-real-time>`__
+
+      AGENTS_ON_CALL  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `On contact <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#on-call-real-time>`__
+
+      AGENTS_ON_CONTACT  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `On contact <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#on-call-real-time>`__
+
+      AGENTS_ONLINE  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `Online <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#online-real-time>`__
+
+      AGENTS_STAFFED  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `Staffed <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#staffed-real-time>`__
+
+      CONTACTS_IN_QUEUE  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `In queue <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#in-queue-real-time>`__
+
+      CONTACTS_SCHEDULED  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `Scheduled <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#scheduled-real-time>`__
+
+      ESTIMATED_WAIT_TIME  
+
+    Unit: SECONDS
+
+     
+
+    This metric supports filter and grouping combination only used for core routing purpose. Valid filter and grouping use cases:
+
+     
+
+    
+    * Filter by a list of [Queues] and a list of [Channels], group by [“QUEUE”, “CHANNEL”]
+     
+    * Filter by a singleton list of [Queue], a singleton list of [Channel], a list of [RoutingStepExpression], group by [“ROUTING_STEP_EXPRESSION”].
+    
+
+      OLDEST_CONTACT_AGE  
+
+    Unit: SECONDS
+
+     
+
+    When you use groupings, Unit says SECONDS and the Value is returned in SECONDS.
+
+     
+
+    When you do not use groupings, Unit says SECONDS but the Value is returned in MILLISECONDS. For example, if you get a response like this:
+
+     
+
+    ``{ "Metric": { "Name": "OLDEST_CONTACT_AGE", "Unit": "SECONDS" }, "Value": 24113.0 ``}
+
+     
+
+    The actual OLDEST_CONTACT_AGE is 24 seconds.
+
+     
+
+    When the filter ``RoutingStepExpression`` is used, this metric is still calculated from enqueue time. For example, if a contact that has been queued under ``<Expression 1>`` for 10 seconds has expired and ``<Expression 2>`` becomes active, then ``OLDEST_CONTACT_AGE`` for this queue will be counted starting from 10, not 0.
+
+     
+
+    Name in real-time metrics report: `Oldest <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#oldest-real-time>`__
+
+      SLOTS_ACTIVE  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `Active <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#active-real-time>`__
+
+      SLOTS_AVAILABLE  
+
+    Unit: COUNT
+
+     
+
+    Name in real-time metrics report: `Availability <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html#availability-real-time>`__
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains information about a real-time metric. For a description of each metric, see `Metrics definitions <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html>`__ in the *Amazon Connect Administrator Guide*.
+
+       
+
+      .. warning::
+
+         
+
+        Only one of either the Name or MetricId is required.
+
+        
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The name of the metric.
+
+        
+
+      
+      - **MetricId** *(string) --* 
+
+        Out of the box current metrics or custom metrics can be referenced via this field. This field is a valid AWS Connect Arn or a UUID.
+
+        
+
+      
+      - **Unit** *(string) --* 
+
+        .. note::
+
+          
+
+          The Unit parameter is not supported for custom metrics.
+
+          
+
+         
+
+        The unit for the metric.
+
+        
+
+      
+    
+
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of results. Use the value returned in the previous response in the next request to retrieve the next set of results.
+
+     
+
+    The token expires after 5 minutes from the time it is created. Subsequent requests that use the token must use the same request parameters as the request that generated the token.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of results to return per page.
+
+    
+
+  
+  :type SortCriteria: list
+  :param SortCriteria: 
+
+    The way to sort the resulting response based on metrics. You can enter one sort criteria. By default resources are sorted based on ``AGENTS_ONLINE``, ``DESCENDING``. The metric collection is sorted based on the input metrics.
+
+     
+
+    Note the following:
+
+     
+
+    
+    * Sorting on ``SLOTS_ACTIVE`` and ``SLOTS_AVAILABLE`` is not supported.
+    
+
+    
+
+  
+    - *(dict) --* 
+
+      The way to sort the resulting response based on metrics. By default resources are sorted based on ``AGENTS_ONLINE``, ``DESCENDING``. The metric collection is sorted based on the input metrics.
+
+      
+
+    
+      - **SortByMetric** *(string) --* 
+
+        The current metric names.
+
+        
+
+      
+      - **SortOrder** *(string) --* 
+
+        The way to sort.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'NextToken': 'string',
+          'MetricResults': [
+              {
+                  'Dimensions': {
+                      'Queue': {
+                          'Id': 'string',
+                          'Arn': 'string'
+                      },
+                      'Channel': 'VOICE'|'CHAT'|'TASK'|'EMAIL',
+                      'RoutingProfile': {
+                          'Id': 'string',
+                          'Arn': 'string'
+                      },
+                      'RoutingStepExpression': 'string',
+                      'AgentStatus': {
+                          'Arn': 'string',
+                          'Id': 'string'
+                      },
+                      'Subtype': 'string',
+                      'ValidationTestType': 'string'
+                  },
+                  'Collections': [
+                      {
+                          'Metric': {
+                              'Name': 'AGENTS_ONLINE'|'AGENTS_AVAILABLE'|'AGENTS_ON_CALL'|'AGENTS_NON_PRODUCTIVE'|'AGENTS_AFTER_CONTACT_WORK'|'AGENTS_ERROR'|'AGENTS_STAFFED'|'CONTACTS_IN_QUEUE'|'OLDEST_CONTACT_AGE'|'CONTACTS_SCHEDULED'|'AGENTS_ON_CONTACT'|'SLOTS_ACTIVE'|'SLOTS_AVAILABLE'|'ESTIMATED_WAIT_TIME',
+                              'MetricId': 'string',
+                              'Unit': 'SECONDS'|'COUNT'|'PERCENT'
+                          },
+                          'Value': 123.0
+                      },
+                  ]
+              },
+          ],
+          'DataSnapshotTime': datetime(2015, 1, 1),
+          'ApproximateTotalCount': 123
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **NextToken** *(string) --* 
+
+        If there are additional results, this is the token for the next set of results.
+
+         
+
+        The token expires after 5 minutes from the time it is created. Subsequent requests that use the token must use the same request parameters as the request that generated the token.
+
+        
+      
+
+      - **MetricResults** *(list) --* 
+
+        Information about the real-time metrics.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about a set of real-time metrics.
+
+          
+          
+
+          - **Dimensions** *(dict) --* 
+
+            The dimensions for the metrics.
+
+            
+            
+
+            - **Queue** *(dict) --* 
+
+              Information about the queue for which metrics are returned.
+
+              
+              
+
+              - **Id** *(string) --* 
+
+                The identifier of the queue.
+
+                
+              
+
+              - **Arn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the queue.
+
+                
+          
+            
+
+            - **Channel** *(string) --* 
+
+              The channel used for grouping and filters.
+
+              
+            
+
+            - **RoutingProfile** *(dict) --* 
+
+              Information about the routing profile assigned to the user.
+
+              
+              
+
+              - **Id** *(string) --* 
+
+                The identifier of the routing profile.
+
+                
+              
+
+              - **Arn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the routing profile.
+
+                
+          
+            
+
+            - **RoutingStepExpression** *(string) --* 
+
+              The expression of a step in a routing criteria.
+
+              
+            
+
+            - **AgentStatus** *(dict) --* 
+
+              Information about the agent status assigned to the user.
+
+              
+              
+
+              - **Arn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the agent status.
+
+                
+              
+
+              - **Id** *(string) --* 
+
+                The identifier of the agent status.
+
+                
+          
+            
+
+            - **Subtype** *(string) --* 
+
+              The subtype of the channel used for the contact.
+
+              
+            
+
+            - **ValidationTestType** *(string) --* 
+
+              The testing and simulation type
+
+              
+        
+          
+
+          - **Collections** *(list) --* 
+
+            The set of metrics.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains the data for a real-time metric.
+
+              
+              
+
+              - **Metric** *(dict) --* 
+
+                Information about the metric.
+
+                
+                
+
+                - **Name** *(string) --* 
+
+                  The name of the metric.
+
+                  
+                
+
+                - **MetricId** *(string) --* 
+
+                  Out of the box current metrics or custom metrics can be referenced via this field. This field is a valid AWS Connect Arn or a UUID.
+
+                  
+                
+
+                - **Unit** *(string) --* 
+
+                  .. note::
+
+                    
+
+                    The Unit parameter is not supported for custom metrics.
+
+                    
+
+                   
+
+                  The unit for the metric.
+
+                  
+            
+              
+
+              - **Value** *(float) --* 
+
+                The value of the metric.
+
+                
+          
+        
+      
+    
+      
+
+      - **DataSnapshotTime** *(datetime) --* 
+
+        The time at which the metrics were retrieved and cached for pagination.
+
+        
+      
+
+      - **ApproximateTotalCount** *(integer) --* 
+
+        The total count of the result, regardless of the current page size.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ResourceNotFoundException`
+
+  

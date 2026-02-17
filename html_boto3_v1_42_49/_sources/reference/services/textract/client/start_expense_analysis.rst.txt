@@ -1,0 +1,227 @@
+:doc:`Textract <../../textract>` / Client / start_expense_analysis
+
+**********************
+start_expense_analysis
+**********************
+
+
+
+.. py:method:: Textract.Client.start_expense_analysis(**kwargs)
+
+  
+
+  Starts the asynchronous analysis of invoices or receipts for data like contact information, items purchased, and vendor names.
+
+   
+
+  ``StartExpenseAnalysis`` can analyze text in documents that are in JPEG, PNG, and PDF format. The documents must be stored in an Amazon S3 bucket. Use the  DocumentLocation parameter to specify the name of your S3 bucket and the name of the document in that bucket.
+
+   
+
+  ``StartExpenseAnalysis`` returns a job identifier ( ``JobId``) that you will provide to ``GetExpenseAnalysis`` to retrieve the results of the operation. When the analysis of the input invoices/receipts is finished, Amazon Textract publishes a completion status to the Amazon Simple Notification Service (Amazon SNS) topic that you provide to the ``NotificationChannel``. To obtain the results of the invoice and receipt analysis operation, ensure that the status value published to the Amazon SNS topic is ``SUCCEEDED``. If so, call  GetExpenseAnalysis, and pass the job identifier ( ``JobId``) that was returned by your call to ``StartExpenseAnalysis``.
+
+   
+
+  For more information, see `Analyzing Invoices and Receipts <https://docs.aws.amazon.com/textract/latest/dg/invoice-receipts.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/textract-2018-06-27/StartExpenseAnalysis>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_expense_analysis(
+        DocumentLocation={
+            'S3Object': {
+                'Bucket': 'string',
+                'Name': 'string',
+                'Version': 'string'
+            }
+        },
+        ClientRequestToken='string',
+        JobTag='string',
+        NotificationChannel={
+            'SNSTopicArn': 'string',
+            'RoleArn': 'string'
+        },
+        OutputConfig={
+            'S3Bucket': 'string',
+            'S3Prefix': 'string'
+        },
+        KMSKeyId='string'
+    )
+    
+  :type DocumentLocation: dict
+  :param DocumentLocation: **[REQUIRED]** 
+
+    The location of the document to be processed.
+
+    
+
+  
+    - **S3Object** *(dict) --* 
+
+      The Amazon S3 bucket that contains the input document.
+
+      
+
+    
+      - **Bucket** *(string) --* 
+
+        The name of the S3 bucket. Note that the # character is not valid in the file name.
+
+        
+
+      
+      - **Name** *(string) --* 
+
+        The file name of the input document. Image files may be in PDF, TIFF, JPEG, or PNG format.
+
+        
+
+      
+      - **Version** *(string) --* 
+
+        If the bucket has versioning enabled, you can specify the object version.
+
+        
+
+      
+    
+  
+  :type ClientRequestToken: string
+  :param ClientRequestToken: 
+
+    The idempotent token that's used to identify the start request. If you use the same token with multiple ``StartDocumentTextDetection`` requests, the same ``JobId`` is returned. Use ``ClientRequestToken`` to prevent the same job from being accidentally started more than once. For more information, see `Calling Amazon Textract Asynchronous Operations <https://docs.aws.amazon.com/textract/latest/dg/api-async.html>`__
+
+    
+
+  
+  :type JobTag: string
+  :param JobTag: 
+
+    An identifier you specify that's included in the completion notification published to the Amazon SNS topic. For example, you can use ``JobTag`` to identify the type of document that the completion notification corresponds to (such as a tax form or a receipt).
+
+    
+
+  
+  :type NotificationChannel: dict
+  :param NotificationChannel: 
+
+    The Amazon SNS topic ARN that you want Amazon Textract to publish the completion status of the operation to.
+
+    
+
+  
+    - **SNSTopicArn** *(string) --* **[REQUIRED]** 
+
+      The Amazon SNS topic that Amazon Textract posts the completion status to.
+
+      
+
+    
+    - **RoleArn** *(string) --* **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of an IAM role that gives Amazon Textract publishing permissions to the Amazon SNS topic.
+
+      
+
+    
+  
+  :type OutputConfig: dict
+  :param OutputConfig: 
+
+    Sets if the output will go to a customer defined bucket. By default, Amazon Textract will save the results internally to be accessed by the ``GetExpenseAnalysis`` operation.
+
+    
+
+  
+    - **S3Bucket** *(string) --* **[REQUIRED]** 
+
+      The name of the bucket your output will go to.
+
+      
+
+    
+    - **S3Prefix** *(string) --* 
+
+      The prefix of the object key that the output will be saved to. When not enabled, the prefix will be “textract_output".
+
+      
+
+    
+  
+  :type KMSKeyId: string
+  :param KMSKeyId: 
+
+    The KMS key used to encrypt the inference results. This can be in either Key ID or Key Alias format. When a KMS key is provided, the KMS key will be used for server-side encryption of the objects in the customer bucket. When this parameter is not enabled, the result will be encrypted server side,using SSE-S3.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'JobId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **JobId** *(string) --* 
+
+        A unique identifier for the text detection job. The ``JobId`` is returned from ``StartExpenseAnalysis``. A ``JobId`` value is only valid for 7 days.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Textract.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.InvalidS3ObjectException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.InvalidKMSKeyException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.UnsupportedDocumentException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.DocumentTooLargeException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.BadDocumentException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.ProvisionedThroughputExceededException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`Textract.Client.exceptions.IdempotentParameterMismatchException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Textract.Client.exceptions.LimitExceededException`
+
+  

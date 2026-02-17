@@ -1,0 +1,118 @@
+:doc:`IoT <../../iot>` / Client / delete_job
+
+**********
+delete_job
+**********
+
+
+
+.. py:method:: IoT.Client.delete_job(**kwargs)
+
+  
+
+  Deletes a job and its related job executions.
+
+   
+
+  Deleting a job may take time, depending on the number of job executions created for the job and various other factors. While the job is being deleted, the status of the job will be shown as "DELETION_IN_PROGRESS". Attempting to delete or cancel a job whose status is already "DELETION_IN_PROGRESS" will result in an error.
+
+   
+
+  Only 10 jobs may have status "DELETION_IN_PROGRESS" at the same time, or a LimitExceededException will occur.
+
+   
+
+  Requires permission to access the `DeleteJob <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions>`__ action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iot-2015-05-28/DeleteJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.delete_job(
+        jobId='string',
+        force=True|False,
+        namespaceId='string'
+    )
+    
+  :type jobId: string
+  :param jobId: **[REQUIRED]** 
+
+    The ID of the job to be deleted.
+
+     
+
+    After a job deletion is completed, you may reuse this jobId when you create a new job. However, this is not recommended, and you must ensure that your devices are not using the jobId to refer to the deleted job.
+
+    
+
+  
+  :type force: boolean
+  :param force: 
+
+    (Optional) When true, you can delete a job which is "IN_PROGRESS". Otherwise, you can only delete a job which is in a terminal state ("COMPLETED" or "CANCELED") or an exception will occur. The default is false.
+
+     
+
+    .. note::
+
+      
+
+      Deleting a job which is "IN_PROGRESS", will cause a device which is executing the job to be unable to access job information or update the job execution status. Use caution and ensure that each device executing a job which is deleted is able to recover to a valid state.
+
+      
+
+    
+
+  
+  :type namespaceId: string
+  :param namespaceId: 
+
+    The namespace used to indicate that a job is a customer-managed job.
+
+     
+
+    When you specify a value for this parameter, Amazon Web Services IoT Core sends jobs notifications to MQTT topics that contain the value in the following format.
+
+     
+
+    ``$aws/things/THING_NAME/jobs/JOB_ID/notify-namespace-NAMESPACE_ID/``
+
+     
+
+    .. note::
+
+      
+
+      The ``namespaceId`` feature is only supported by IoT Greengrass at this time. For more information, see `Setting up IoT Greengrass core devices. <https://docs.aws.amazon.com/greengrass/v2/developerguide/setting-up.html>`__
+
+      
+
+    
+
+  
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`IoT.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.InvalidStateTransitionException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ServiceUnavailableException`
+
+  

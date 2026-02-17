@@ -1,0 +1,376 @@
+:doc:`BillingandCostManagementPricingCalculator <../../bcm-pricing-calculator>` / Client / create_bill_estimate
+
+********************
+create_bill_estimate
+********************
+
+
+
+.. py:method:: BillingandCostManagementPricingCalculator.Client.create_bill_estimate(**kwargs)
+
+  
+
+  Create a Bill estimate from a Bill scenario. In the Bill scenario you can model usage addition, usage changes, and usage removal. You can also model commitment addition and commitment removal. After all changes in a Bill scenario is made satisfactorily, you can call this API with a Bill scenario ID to generate the Bill estimate. Bill estimate calculates the pre-tax cost for your consolidated billing family, incorporating all modeled usage and commitments alongside existing usage and commitments from your most recent completed anniversary bill, with any applicable discounts applied.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bcm-pricing-calculator-2024-06-19/CreateBillEstimate>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_bill_estimate(
+        billScenarioId='string',
+        name='string',
+        clientToken='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type billScenarioId: string
+  :param billScenarioId: **[REQUIRED]** 
+
+    The ID of the Bill Scenario for which you want to create a Bill estimate.
+
+    
+
+  
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the Bill estimate that will be created. Names must be unique for an account.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request.
+
+    This field is autopopulated if not provided.
+
+  
+  :type tags: dict
+  :param tags: 
+
+    An optional list of tags to associate with the specified BillEstimate. You can use resource tags to control access to your BillEstimate using IAM policies. Each tag consists of a key and a value, and each key must be unique for the resource. The following restrictions apply to resource tags:
+
+     
+
+    
+    * Although the maximum number of array members is 200, you can assign a maximum of 50 user-tags to one resource. The remaining are reserved for Amazon Web Services.
+     
+    * The maximum length of a key is 128 characters.
+     
+    * The maximum length of a value is 256 characters.
+     
+    * Keys and values can only contain alphanumeric characters, spaces, and any of the following: ``_.:/=+@-``.
+     
+    * Keys and values are case sensitive.
+     
+    * Keys and values are trimmed for any leading or trailing whitespaces.
+     
+    * Don't use ``aws:`` as a prefix for your keys. This prefix is reserved for Amazon Web Services.
+    
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'id': 'string',
+          'name': 'string',
+          'status': 'IN_PROGRESS'|'COMPLETE'|'FAILED',
+          'failureMessage': 'string',
+          'billInterval': {
+              'start': datetime(2015, 1, 1),
+              'end': datetime(2015, 1, 1)
+          },
+          'costSummary': {
+              'totalCostDifference': {
+                  'historicalCost': {
+                      'amount': 123.0,
+                      'currency': 'USD'
+                  },
+                  'estimatedCost': {
+                      'amount': 123.0,
+                      'currency': 'USD'
+                  }
+              },
+              'serviceCostDifferences': {
+                  'string': {
+                      'historicalCost': {
+                          'amount': 123.0,
+                          'currency': 'USD'
+                      },
+                      'estimatedCost': {
+                          'amount': 123.0,
+                          'currency': 'USD'
+                      }
+                  }
+              }
+          },
+          'createdAt': datetime(2015, 1, 1),
+          'expiresAt': datetime(2015, 1, 1),
+          'groupSharingPreference': 'OPEN'|'PRIORITIZED'|'RESTRICTED',
+          'costCategoryGroupSharingPreferenceArn': 'string',
+          'costCategoryGroupSharingPreferenceEffectiveDate': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **id** *(string) --* 
+
+        The unique identifier of your newly created Bill estimate.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The name of your newly created Bill estimate.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The status of your newly created Bill estimate. Bill estimate creation can take anywhere between 8 to 12 hours. The status will allow you to identify when the Bill estimate is complete or has failed.
+
+        
+      
+
+      - **failureMessage** *(string) --* 
+
+        This attribute provides the reason if a Bill estimate result generation fails.
+
+        
+      
+
+      - **billInterval** *(dict) --* 
+
+        The bill month start and end timestamp that was used to create the Bill estimate. This is set to the last complete anniversary bill month start and end timestamp.
+
+        
+        
+
+        - **start** *(datetime) --* 
+
+          The start date and time of the interval.
+
+          
+        
+
+        - **end** *(datetime) --* 
+
+          The end date and time of the interval.
+
+          
+    
+      
+
+      - **costSummary** *(dict) --* 
+
+        Returns summary-level cost information once a Bill estimate is successfully generated. This summary includes: 1) the total cost difference, showing the pre-tax cost change for the consolidated billing family between the completed anniversary bill and the estimated bill, and 2) total cost differences per service, detailing the pre-tax cost of each service, comparing the completed anniversary bill to the estimated bill on a per-service basis.
+
+        
+        
+
+        - **totalCostDifference** *(dict) --* 
+
+          The total difference in cost between the estimated and historical costs.
+
+          
+          
+
+          - **historicalCost** *(dict) --* 
+
+            The historical cost amount.
+
+            
+            
+
+            - **amount** *(float) --* 
+
+              The numeric value of the cost.
+
+              
+            
+
+            - **currency** *(string) --* 
+
+              The currency code for the cost amount.
+
+              
+        
+          
+
+          - **estimatedCost** *(dict) --* 
+
+            The estimated cost amount.
+
+            
+            
+
+            - **amount** *(float) --* 
+
+              The numeric value of the cost.
+
+              
+            
+
+            - **currency** *(string) --* 
+
+              The currency code for the cost amount.
+
+              
+        
+      
+        
+
+        - **serviceCostDifferences** *(dict) --* 
+
+          A breakdown of cost differences by Amazon Web Services service.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(dict) --* 
+
+              Represents the difference between historical and estimated costs.
+
+              
+              
+
+              - **historicalCost** *(dict) --* 
+
+                The historical cost amount.
+
+                
+                
+
+                - **amount** *(float) --* 
+
+                  The numeric value of the cost.
+
+                  
+                
+
+                - **currency** *(string) --* 
+
+                  The currency code for the cost amount.
+
+                  
+            
+              
+
+              - **estimatedCost** *(dict) --* 
+
+                The estimated cost amount.
+
+                
+                
+
+                - **amount** *(float) --* 
+
+                  The numeric value of the cost.
+
+                  
+                
+
+                - **currency** *(string) --* 
+
+                  The currency code for the cost amount.
+
+                  
+            
+          
+      
+    
+    
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The timestamp of when the Bill estimate create process was started (not when it successfully completed or failed).
+
+        
+      
+
+      - **expiresAt** *(datetime) --* 
+
+        The timestamp of when the Bill estimate will expire. A Bill estimate becomes inaccessible after expiration.
+
+        
+      
+
+      - **groupSharingPreference** *(string) --* 
+
+        The setting for the reserved instance and savings plan group sharing used in this estimate.
+
+        
+      
+
+      - **costCategoryGroupSharingPreferenceArn** *(string) --* 
+
+        The arn of the cost category used in the reserved and prioritized group sharing.
+
+        
+      
+
+      - **costCategoryGroupSharingPreferenceEffectiveDate** *(datetime) --* 
+
+        Timestamp of the effective date of the cost category used in the group sharing settings.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`BillingandCostManagementPricingCalculator.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`BillingandCostManagementPricingCalculator.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BillingandCostManagementPricingCalculator.Client.exceptions.DataUnavailableException`
+
+  
+  *   :py:class:`BillingandCostManagementPricingCalculator.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`BillingandCostManagementPricingCalculator.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BillingandCostManagementPricingCalculator.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BillingandCostManagementPricingCalculator.Client.exceptions.ThrottlingException`
+
+  

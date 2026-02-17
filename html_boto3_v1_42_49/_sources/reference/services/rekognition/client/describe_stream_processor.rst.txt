@@ -1,0 +1,436 @@
+:doc:`Rekognition <../../rekognition>` / Client / describe_stream_processor
+
+*************************
+describe_stream_processor
+*************************
+
+
+
+.. py:method:: Rekognition.Client.describe_stream_processor(**kwargs)
+
+  
+
+  Provides information about a stream processor created by  CreateStreamProcessor. You can get information about the input and output streams, the input parameters for the face recognition being performed, and the current status of the stream processor.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rekognition-2016-06-27/DescribeStreamProcessor>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_stream_processor(
+        Name='string'
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    Name of the stream processor for which you want information.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Name': 'string',
+          'StreamProcessorArn': 'string',
+          'Status': 'STOPPED'|'STARTING'|'RUNNING'|'FAILED'|'STOPPING'|'UPDATING',
+          'StatusMessage': 'string',
+          'CreationTimestamp': datetime(2015, 1, 1),
+          'LastUpdateTimestamp': datetime(2015, 1, 1),
+          'Input': {
+              'KinesisVideoStream': {
+                  'Arn': 'string'
+              }
+          },
+          'Output': {
+              'KinesisDataStream': {
+                  'Arn': 'string'
+              },
+              'S3Destination': {
+                  'Bucket': 'string',
+                  'KeyPrefix': 'string'
+              }
+          },
+          'RoleArn': 'string',
+          'Settings': {
+              'FaceSearch': {
+                  'CollectionId': 'string',
+                  'FaceMatchThreshold': ...
+              },
+              'ConnectedHome': {
+                  'Labels': [
+                      'string',
+                  ],
+                  'MinConfidence': ...
+              }
+          },
+          'NotificationChannel': {
+              'SNSTopicArn': 'string'
+          },
+          'KmsKeyId': 'string',
+          'RegionsOfInterest': [
+              {
+                  'BoundingBox': {
+                      'Width': ...,
+                      'Height': ...,
+                      'Left': ...,
+                      'Top': ...
+                  },
+                  'Polygon': [
+                      {
+                          'X': ...,
+                          'Y': ...
+                      },
+                  ]
+              },
+          ],
+          'DataSharingPreference': {
+              'OptIn': True|False
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Name** *(string) --* 
+
+        Name of the stream processor.
+
+        
+      
+
+      - **StreamProcessorArn** *(string) --* 
+
+        ARN of the stream processor.
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        Current status of the stream processor.
+
+        
+      
+
+      - **StatusMessage** *(string) --* 
+
+        Detailed status message about the stream processor.
+
+        
+      
+
+      - **CreationTimestamp** *(datetime) --* 
+
+        Date and time the stream processor was created
+
+        
+      
+
+      - **LastUpdateTimestamp** *(datetime) --* 
+
+        The time, in Unix format, the stream processor was last updated. For example, when the stream processor moves from a running state to a failed state, or when the user starts or stops the stream processor.
+
+        
+      
+
+      - **Input** *(dict) --* 
+
+        Kinesis video stream that provides the source streaming video.
+
+        
+        
+
+        - **KinesisVideoStream** *(dict) --* 
+
+          The Kinesis video stream input stream for the source streaming video.
+
+          
+          
+
+          - **Arn** *(string) --* 
+
+            ARN of the Kinesis video stream stream that streams the source video.
+
+            
+      
+    
+      
+
+      - **Output** *(dict) --* 
+
+        Kinesis data stream to which Amazon Rekognition Video puts the analysis results.
+
+        
+        
+
+        - **KinesisDataStream** *(dict) --* 
+
+          The Amazon Kinesis Data Streams stream to which the Amazon Rekognition stream processor streams the analysis results.
+
+          
+          
+
+          - **Arn** *(string) --* 
+
+            ARN of the output Amazon Kinesis Data Streams stream.
+
+            
+      
+        
+
+        - **S3Destination** *(dict) --* 
+
+          The Amazon S3 bucket location to which Amazon Rekognition publishes the detailed inference results of a video analysis operation.
+
+          
+          
+
+          - **Bucket** *(string) --* 
+
+            The name of the Amazon S3 bucket you want to associate with the streaming video project. You must be the owner of the Amazon S3 bucket.
+
+            
+          
+
+          - **KeyPrefix** *(string) --* 
+
+            The prefix value of the location within the bucket that you want the information to be published to. For more information, see `Using prefixes <https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html>`__.
+
+            
+      
+    
+      
+
+      - **RoleArn** *(string) --* 
+
+        ARN of the IAM role that allows access to the stream processor.
+
+        
+      
+
+      - **Settings** *(dict) --* 
+
+        Input parameters used in a streaming video analyzed by a stream processor. You can use ``FaceSearch`` to recognize faces in a streaming video, or you can use ``ConnectedHome`` to detect labels.
+
+        
+        
+
+        - **FaceSearch** *(dict) --* 
+
+          Face search settings to use on a streaming video.
+
+          
+          
+
+          - **CollectionId** *(string) --* 
+
+            The ID of a collection that contains faces that you want to search for.
+
+            
+          
+
+          - **FaceMatchThreshold** *(float) --* 
+
+            Minimum face match confidence score that must be met to return a result for a recognized face. The default is 80. 0 is the lowest confidence. 100 is the highest confidence. Values between 0 and 100 are accepted, and values lower than 80 are set to 80.
+
+            
+      
+        
+
+        - **ConnectedHome** *(dict) --* 
+
+          Label detection settings to use on a streaming video. Defining the settings is required in the request parameter for  CreateStreamProcessor. Including this setting in the ``CreateStreamProcessor`` request enables you to use the stream processor for label detection. You can then select what you want the stream processor to detect, such as people or pets. When the stream processor has started, one notification is sent for each object class specified. For example, if packages and pets are selected, one SNS notification is published the first time a package is detected and one SNS notification is published the first time a pet is detected, as well as an end-of-session summary.
+
+          
+          
+
+          - **Labels** *(list) --* 
+
+            Specifies what you want to detect in the video, such as people, packages, or pets. The current valid labels you can include in this list are: "PERSON", "PET", "PACKAGE", and "ALL".
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **MinConfidence** *(float) --* 
+
+            The minimum confidence required to label an object in the video.
+
+            
+      
+    
+      
+
+      - **NotificationChannel** *(dict) --* 
+
+        The Amazon Simple Notification Service topic to which Amazon Rekognition publishes the object detection results and completion status of a video analysis operation.
+
+         
+
+        Amazon Rekognition publishes a notification the first time an object of interest or a person is detected in the video stream. For example, if Amazon Rekognition detects a person at second 2, a pet at second 4, and a person again at second 5, Amazon Rekognition sends 2 object class detected notifications, one for a person at second 2 and one for a pet at second 4.
+
+         
+
+        Amazon Rekognition also publishes an an end-of-session notification with a summary when the stream processing session is complete.
+
+        
+        
+
+        - **SNSTopicArn** *(string) --* 
+
+          The Amazon Resource Number (ARN) of the Amazon Amazon Simple Notification Service topic to which Amazon Rekognition posts the completion status.
+
+          
+    
+      
+
+      - **KmsKeyId** *(string) --* 
+
+        The identifier for your AWS Key Management Service key (AWS KMS key). This is an optional parameter for label detection stream processors.
+
+        
+      
+
+      - **RegionsOfInterest** *(list) --* 
+
+        Specifies locations in the frames where Amazon Rekognition checks for objects or people. This is an optional parameter for label detection stream processors.
+
+        
+        
+
+        - *(dict) --* 
+
+          Specifies a location within the frame that Rekognition checks for objects of interest such as text, labels, or faces. It uses a ``BoundingBox`` or ``Polygon`` to set a region of the screen.
+
+           
+
+          A word, face, or label is included in the region if it is more than half in that region. If there is more than one region, the word, face, or label is compared with all regions of the screen. Any object of interest that is more than half in a region is kept in the results.
+
+          
+          
+
+          - **BoundingBox** *(dict) --* 
+
+            The box representing a region of interest on screen.
+
+            
+            
+
+            - **Width** *(float) --* 
+
+              Width of the bounding box as a ratio of the overall image width.
+
+              
+            
+
+            - **Height** *(float) --* 
+
+              Height of the bounding box as a ratio of the overall image height.
+
+              
+            
+
+            - **Left** *(float) --* 
+
+              Left coordinate of the bounding box as a ratio of overall image width.
+
+              
+            
+
+            - **Top** *(float) --* 
+
+              Top coordinate of the bounding box as a ratio of overall image height.
+
+              
+        
+          
+
+          - **Polygon** *(list) --* 
+
+            Specifies a shape made up of up to 10 ``Point`` objects to define a region of interest.
+
+            
+            
+
+            - *(dict) --* 
+
+              The X and Y coordinates of a point on an image or video frame. The X and Y values are ratios of the overall image size or video resolution. For example, if an input image is 700x200 and the values are X=0.5 and Y=0.25, then the point is at the (350,50) pixel coordinate on the image.
+
+               
+
+              An array of ``Point`` objects makes up a ``Polygon``. A ``Polygon`` is returned by  DetectText and by  DetectCustomLabels ``Polygon`` represents a fine-grained polygon around a detected item. For more information, see Geometry in the Amazon Rekognition Developer Guide.
+
+              
+              
+
+              - **X** *(float) --* 
+
+                The value of the X coordinate for a point on a ``Polygon``.
+
+                
+              
+
+              - **Y** *(float) --* 
+
+                The value of the Y coordinate for a point on a ``Polygon``.
+
+                
+          
+        
+      
+    
+      
+
+      - **DataSharingPreference** *(dict) --* 
+
+        Shows whether you are sharing data with Rekognition to improve model performance. You can choose this option at the account level or on a per-stream basis. Note that if you opt out at the account level this setting is ignored on individual streams.
+
+        
+        
+
+        - **OptIn** *(boolean) --* 
+
+          If this option is set to true, you choose to share data with Rekognition to improve model performance.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Rekognition.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ProvisionedThroughputExceededException`
+
+  

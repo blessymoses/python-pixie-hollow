@@ -1,0 +1,372 @@
+:doc:`IoTSiteWise <../../iotsitewise>` / Client / batch_put_asset_property_value
+
+******************************
+batch_put_asset_property_value
+******************************
+
+
+
+.. py:method:: IoTSiteWise.Client.batch_put_asset_property_value(**kwargs)
+
+  
+
+  Sends a list of asset property values to IoT SiteWise. Each value is a timestamp-quality-value (TQV) data point. For more information, see `Ingesting data using the API <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/ingest-api.html>`__ in the *IoT SiteWise User Guide*.
+
+   
+
+  To identify an asset property, you must specify one of the following:
+
+   
+
+  
+  * The ``assetId`` and ``propertyId`` of an asset property.
+   
+  * A ``propertyAlias``, which is a data stream alias (for example, ``/company/windfarm/3/turbine/7/temperature``). To define an asset property's alias, see `UpdateAssetProperty <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_UpdateAssetProperty.html>`__.
+  
+
+   
+
+  .. warning::
+
+     
+
+    With respect to Unix epoch time, IoT SiteWise accepts only TQVs that have a timestamp of no more than 7 days in the past and no more than 10 minutes in the future. IoT SiteWise rejects timestamps outside of the inclusive range of [-7 days, +10 minutes] and returns a ``TimestampOutOfRangeException`` error.
+
+     
+
+    For each asset property, IoT SiteWise overwrites TQVs with duplicate timestamps unless the newer TQV has a different quality. For example, if you store a TQV ``{T1, GOOD, V1}``, then storing ``{T1, GOOD, V2}`` replaces the existing TQV.
+
+     
+
+   
+
+  IoT SiteWise authorizes access to each ``BatchPutAssetPropertyValue`` entry individually. For more information, see `BatchPutAssetPropertyValue authorization <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/security_iam_service-with-iam.html#security_iam_service-with-iam-id-based-policies-batchputassetpropertyvalue-action>`__ in the *IoT SiteWise User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotsitewise-2019-12-02/BatchPutAssetPropertyValue>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_put_asset_property_value(
+        enablePartialEntryProcessing=True|False,
+        entries=[
+            {
+                'entryId': 'string',
+                'assetId': 'string',
+                'propertyId': 'string',
+                'propertyAlias': 'string',
+                'propertyValues': [
+                    {
+                        'value': {
+                            'stringValue': 'string',
+                            'integerValue': 123,
+                            'doubleValue': 123.0,
+                            'booleanValue': True|False,
+                            'nullValue': {
+                                'valueType': 'D'|'B'|'S'|'I'|'U'
+                            }
+                        },
+                        'timestamp': {
+                            'timeInSeconds': 123,
+                            'offsetInNanos': 123
+                        },
+                        'quality': 'GOOD'|'BAD'|'UNCERTAIN'
+                    },
+                ]
+            },
+        ]
+    )
+    
+  :type enablePartialEntryProcessing: boolean
+  :param enablePartialEntryProcessing: 
+
+    This setting enables partial ingestion at entry-level. If set to ``true``, we ingest all TQVs not resulting in an error. If set to ``false``, an invalid TQV fails ingestion of the entire entry that contains it.
+
+    
+
+  
+  :type entries: list
+  :param entries: **[REQUIRED]** 
+
+    The list of asset property value entries for the batch put request. You can specify up to 10 entries per request.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains a list of value updates for an asset property in the list of asset entries consumed by the `BatchPutAssetPropertyValue <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchPutAssetPropertyValue.html>`__ API operation.
+
+      
+
+    
+      - **entryId** *(string) --* **[REQUIRED]** 
+
+        The user specified ID for the entry. You can use this ID to identify which entries failed.
+
+        
+
+      
+      - **assetId** *(string) --* 
+
+        The ID of the asset to update.
+
+        
+
+      
+      - **propertyId** *(string) --* 
+
+        The ID of the asset property for this entry.
+
+        
+
+      
+      - **propertyAlias** *(string) --* 
+
+        The alias that identifies the property, such as an OPC-UA server data stream path (for example, ``/company/windfarm/3/turbine/7/temperature``). For more information, see `Mapping industrial data streams to asset properties <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/connect-data-streams.html>`__ in the *IoT SiteWise User Guide*.
+
+        
+
+      
+      - **propertyValues** *(list) --* **[REQUIRED]** 
+
+        The list of property values to upload. You can specify up to 10 ``propertyValues`` array elements.
+
+        
+
+      
+        - *(dict) --* 
+
+          Contains asset property value information.
+
+          
+
+        
+          - **value** *(dict) --* **[REQUIRED]** 
+
+            The value of the asset property (see ``Variant``).
+
+            
+
+          
+            - **stringValue** *(string) --* 
+
+              Asset property data of type string (sequence of characters). The allowed pattern: "^$|[^\u0000-\u001F\u007F]+". The max length is 1024.
+
+              
+
+            
+            - **integerValue** *(integer) --* 
+
+              Asset property data of type integer (whole number).
+
+              
+
+            
+            - **doubleValue** *(float) --* 
+
+              Asset property data of type double (floating point number). The min value is -10^10. The max value is 10^10. Double.NaN is allowed.
+
+              
+
+            
+            - **booleanValue** *(boolean) --* 
+
+              Asset property data of type Boolean (true or false).
+
+              
+
+            
+            - **nullValue** *(dict) --* 
+
+              The type of null asset property data with BAD and UNCERTAIN qualities.
+
+              
+
+            
+              - **valueType** *(string) --* **[REQUIRED]** 
+
+                The type of null asset property data.
+
+                
+
+              
+            
+          
+          - **timestamp** *(dict) --* **[REQUIRED]** 
+
+            The timestamp of the asset property value.
+
+            
+
+          
+            - **timeInSeconds** *(integer) --* **[REQUIRED]** 
+
+              The timestamp date, in seconds, in the Unix epoch format. Fractional nanosecond data is provided by ``offsetInNanos``.
+
+              
+
+            
+            - **offsetInNanos** *(integer) --* 
+
+              The nanosecond offset from ``timeInSeconds``.
+
+              
+
+            
+          
+          - **quality** *(string) --* 
+
+            The quality of the asset property value.
+
+            
+
+          
+        
+    
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'errorEntries': [
+              {
+                  'entryId': 'string',
+                  'errors': [
+                      {
+                          'errorCode': 'ResourceNotFoundException'|'InvalidRequestException'|'InternalFailureException'|'ServiceUnavailableException'|'ThrottlingException'|'LimitExceededException'|'ConflictingOperationException'|'TimestampOutOfRangeException'|'AccessDeniedException',
+                          'errorMessage': 'string',
+                          'timestamps': [
+                              {
+                                  'timeInSeconds': 123,
+                                  'offsetInNanos': 123
+                              },
+                          ]
+                      },
+                  ]
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **errorEntries** *(list) --* 
+
+        A list of the errors (if any) associated with the batch put request. Each error entry contains the ``entryId`` of the entry that failed.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains error information for asset property value entries that are associated with the `BatchPutAssetPropertyValue <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchPutAssetPropertyValue.html>`__ API.
+
+          
+          
+
+          - **entryId** *(string) --* 
+
+            The ID of the failed entry.
+
+            
+          
+
+          - **errors** *(list) --* 
+
+            The list of update property value errors.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains error information from updating a batch of asset property values.
+
+              
+              
+
+              - **errorCode** *(string) --* 
+
+                The error code.
+
+                
+              
+
+              - **errorMessage** *(string) --* 
+
+                The associated error message.
+
+                
+              
+
+              - **timestamps** *(list) --* 
+
+                A list of timestamps for each error, if any.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Contains a timestamp with optional nanosecond granularity.
+
+                  
+                  
+
+                  - **timeInSeconds** *(integer) --* 
+
+                    The timestamp date, in seconds, in the Unix epoch format. Fractional nanosecond data is provided by ``offsetInNanos``.
+
+                    
+                  
+
+                  - **offsetInNanos** *(integer) --* 
+
+                    The nanosecond offset from ``timeInSeconds``.
+
+                    
+              
+            
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ConflictingOperationException`
+
+  

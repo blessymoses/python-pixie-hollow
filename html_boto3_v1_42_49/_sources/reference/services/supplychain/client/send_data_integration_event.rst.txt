@@ -1,0 +1,199 @@
+:doc:`SupplyChain <../../supplychain>` / Client / send_data_integration_event
+
+***************************
+send_data_integration_event
+***************************
+
+
+
+.. py:method:: SupplyChain.Client.send_data_integration_event(**kwargs)
+
+  
+
+  Send the data payload for the event with real-time data for analysis or monitoring. The real-time data events are stored in an Amazon Web Services service before being processed and stored in data lake.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/SendDataIntegrationEvent>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.send_data_integration_event(
+        instanceId='string',
+        eventType='scn.data.forecast'|'scn.data.inventorylevel'|'scn.data.inboundorder'|'scn.data.inboundorderline'|'scn.data.inboundorderlineschedule'|'scn.data.outboundorderline'|'scn.data.outboundshipment'|'scn.data.processheader'|'scn.data.processoperation'|'scn.data.processproduct'|'scn.data.reservation'|'scn.data.shipment'|'scn.data.shipmentstop'|'scn.data.shipmentstoporder'|'scn.data.supplyplan'|'scn.data.dataset',
+        data='string',
+        eventGroupId='string',
+        eventTimestamp=datetime(2015, 1, 1),
+        clientToken='string',
+        datasetTarget={
+            'datasetIdentifier': 'string',
+            'operationType': 'APPEND'|'UPSERT'|'DELETE'
+        }
+    )
+    
+  :type instanceId: string
+  :param instanceId: **[REQUIRED]** 
+
+    The AWS Supply Chain instance identifier.
+
+    
+
+  
+  :type eventType: string
+  :param eventType: **[REQUIRED]** 
+
+    The data event type.
+
+     
+
+    
+    * **scn.data.dataset** - Send data directly to any specified dataset.
+     
+    * **scn.data.supplyplan** - Send data to `supply_plan <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/supply-plan-entity.html>`__ dataset.
+     
+    * **scn.data.shipmentstoporder** - Send data to `shipment_stop_order <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-shipment-stop-order-entity.html>`__ dataset.
+     
+    * **scn.data.shipmentstop** - Send data to `shipment_stop <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-shipment-stop-entity.html>`__ dataset.
+     
+    * **scn.data.shipment** - Send data to `shipment <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-shipment-entity.html>`__ dataset.
+     
+    * **scn.data.reservation** - Send data to `reservation <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/planning-reservation-entity.html>`__ dataset.
+     
+    * **scn.data.processproduct** - Send data to `process_product <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/operation-process-product-entity.html>`__ dataset.
+     
+    * **scn.data.processoperation** - Send data to `process_operation <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/operation-process-operation-entity.html>`__ dataset.
+     
+    * **scn.data.processheader** - Send data to `process_header <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/operation-process-header-entity.html>`__ dataset.
+     
+    * **scn.data.forecast** - Send data to `forecast <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/forecast-forecast-entity.html>`__ dataset.
+     
+    * **scn.data.inventorylevel** - Send data to `inv_level <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/inventory_mgmnt-inv-level-entity.html>`__ dataset.
+     
+    * **scn.data.inboundorder** - Send data to `inbound_order <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-inbound-order-entity.html>`__ dataset.
+     
+    * **scn.data.inboundorderline** - Send data to `inbound_order_line <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-inbound-order-line-entity.html>`__ dataset.
+     
+    * **scn.data.inboundorderlineschedule** - Send data to `inbound_order_line_schedule <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/replenishment-inbound-order-line-schedule-entity.html>`__ dataset.
+     
+    * **scn.data.outboundorderline** - Send data to `outbound_order_line <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/outbound-fulfillment-order-line-entity.html>`__ dataset.
+     
+    * **scn.data.outboundshipment** - Send data to `outbound_shipment <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/outbound-fulfillment-shipment-entity.html>`__ dataset.
+    
+
+    
+
+  
+  :type data: string
+  :param data: **[REQUIRED]** 
+
+    The data payload of the event, should follow the data schema of the target dataset, or see `Data entities supported in AWS Supply Chain <https://docs.aws.amazon.com/aws-supply-chain/latest/userguide/data-model-asc.html>`__. To send single data record, use JsonObject format; to send multiple data records, use JsonArray format.
+
+     
+
+    Note that for AWS Supply Chain dataset under **asc** namespace, it has a connection_id internal field that is not allowed to be provided by client directly, they will be auto populated.
+
+    
+
+  
+  :type eventGroupId: string
+  :param eventGroupId: **[REQUIRED]** 
+
+    Event identifier (for example, orderId for InboundOrder) used for data sharding or partitioning. Noted under one eventGroupId of same eventType and instanceId, events are processed sequentially in the order they are received by the server.
+
+    
+
+  
+  :type eventTimestamp: datetime
+  :param eventTimestamp: 
+
+    The timestamp (in epoch seconds) associated with the event. If not provided, it will be assigned with current timestamp.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    The idempotent client token. The token is active for 8 hours, and within its lifetime, it ensures the request completes only once upon retry with same client token. If omitted, the AWS SDK generates a unique value so that AWS SDK can safely retry the request upon network errors.
+
+    This field is autopopulated if not provided.
+
+  
+  :type datasetTarget: dict
+  :param datasetTarget: 
+
+    The target dataset configuration for **scn.data.dataset** event type.
+
+    
+
+  
+    - **datasetIdentifier** *(string) --* **[REQUIRED]** 
+
+      The datalake dataset ARN identifier.
+
+      
+
+    
+    - **operationType** *(string) --* **[REQUIRED]** 
+
+      The target dataset load operation type.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'eventId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The response parameters for SendDataIntegrationEvent.
+
+      
+      
+
+      - **eventId** *(string) --* 
+
+        The unique event identifier.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SupplyChain.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`SupplyChain.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SupplyChain.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`SupplyChain.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`SupplyChain.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`SupplyChain.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SupplyChain.Client.exceptions.ConflictException`
+
+  

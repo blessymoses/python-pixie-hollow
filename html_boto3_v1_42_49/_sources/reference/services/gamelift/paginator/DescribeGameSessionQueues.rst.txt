@@ -1,0 +1,308 @@
+:doc:`GameLift <../../gamelift>` / Paginator / DescribeGameSessionQueues
+
+*************************
+DescribeGameSessionQueues
+*************************
+
+
+
+.. py:class:: GameLift.Paginator.DescribeGameSessionQueues
+
+  ::
+
+    
+    paginator = client.get_paginator('describe_game_session_queues')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`GameLift.Client.describe_game_session_queues`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeGameSessionQueues>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          Names=[
+              'string',
+          ],
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type Names: list
+    :param Names: 
+
+      A list of queue names to retrieve information for. You can use either the queue ID or ARN value. To request settings for all queues, leave this parameter empty.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'GameSessionQueues': [
+                {
+                    'Name': 'string',
+                    'GameSessionQueueArn': 'string',
+                    'TimeoutInSeconds': 123,
+                    'PlayerLatencyPolicies': [
+                        {
+                            'MaximumIndividualPlayerLatencyMilliseconds': 123,
+                            'PolicyDurationSeconds': 123
+                        },
+                    ],
+                    'Destinations': [
+                        {
+                            'DestinationArn': 'string'
+                        },
+                    ],
+                    'FilterConfiguration': {
+                        'AllowedLocations': [
+                            'string',
+                        ]
+                    },
+                    'PriorityConfiguration': {
+                        'PriorityOrder': [
+                            'LATENCY'|'COST'|'DESTINATION'|'LOCATION',
+                        ],
+                        'LocationOrder': [
+                            'string',
+                        ]
+                    },
+                    'CustomEventData': 'string',
+                    'NotificationTarget': 'string'
+                },
+            ],
+            
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **GameSessionQueues** *(list) --* 
+
+          A collection of objects that describe the requested game session queues.
+
+          
+          
+
+          - *(dict) --* 
+
+            Configuration for a game session placement mechanism that processes requests for new game sessions. A queue can be used on its own or as part of a matchmaking solution.
+
+            
+            
+
+            - **Name** *(string) --* 
+
+              A descriptive label that is associated with game session queue. Queue names must be unique within each Region.
+
+              
+            
+
+            - **GameSessionQueueArn** *(string) --* 
+
+              The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers game session queue resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::gamesessionqueue/<queue name>``. In a Amazon GameLift Servers game session queue ARN, the resource ID matches the *Name* value.
+
+              
+            
+
+            - **TimeoutInSeconds** *(integer) --* 
+
+              The maximum time, in seconds, that a new game session placement request remains in the queue. When a request exceeds this time, the game session placement changes to a ``TIMED_OUT`` status.
+
+               
+
+              .. note::
+
+                
+
+                The minimum value is 10 and the maximum value is 600.
+
+                
+
+              
+            
+
+            - **PlayerLatencyPolicies** *(list) --* 
+
+              A set of policies that enforce a sliding cap on player latency when processing game sessions placement requests. Use multiple policies to gradually relax the cap over time if Amazon GameLift Servers can't make a placement. Policies are evaluated in order starting with the lowest maximum latency value.
+
+              
+              
+
+              - *(dict) --* 
+
+                Sets a latency cap for individual players when placing a game session. With a latency policy in force, a game session cannot be placed in a fleet location where a player reports latency higher than the cap. Latency policies are used only with placement request that provide player latency information. Player latency policies can be stacked to gradually relax latency requirements over time.
+
+                
+                
+
+                - **MaximumIndividualPlayerLatencyMilliseconds** *(integer) --* 
+
+                  The maximum latency value that is allowed for any player, in milliseconds. All policies must have a value set for this property.
+
+                  
+                
+
+                - **PolicyDurationSeconds** *(integer) --* 
+
+                  The length of time, in seconds, that the policy is enforced while placing a new game session. A null value for this property means that the policy is enforced until the queue times out.
+
+                  
+            
+          
+            
+
+            - **Destinations** *(list) --* 
+
+              A list of fleets and/or fleet aliases that can be used to fulfill game session placement requests in the queue. Destinations are identified by either a fleet ARN or a fleet alias ARN, and are listed in order of placement preference.
+
+              
+              
+
+              - *(dict) --* 
+
+                A fleet or alias designated in a game session queue. Queues fulfill requests for new game sessions by placing a new game session on any of the queue's destinations.
+
+                
+                
+
+                - **DestinationArn** *(string) --* 
+
+                  The Amazon Resource Name (ARN) that is assigned to fleet or fleet alias. ARNs, which include a fleet ID or alias ID and a Region name, provide a unique identifier across all Regions.
+
+                  
+            
+          
+            
+
+            - **FilterConfiguration** *(dict) --* 
+
+              A list of locations where a queue is allowed to place new game sessions. Locations are specified in the form of Amazon Web Services Region codes, such as ``us-west-2``. If this parameter is not set, game sessions can be placed in any queue location.
+
+              
+              
+
+              - **AllowedLocations** *(list) --* 
+
+                A list of locations to allow game session placement in, in the form of Amazon Web Services Region codes such as ``us-west-2``.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+            
+
+            - **PriorityConfiguration** *(dict) --* 
+
+              Custom settings to use when prioritizing destinations and locations for game session placements. This configuration replaces the FleetIQ default prioritization process. Priority types that are not explicitly named will be automatically applied at the end of the prioritization process.
+
+              
+              
+
+              - **PriorityOrder** *(list) --* 
+
+                A custom sequence to use when prioritizing where to place new game sessions. Each priority type is listed once.
+
+                 
+
+                
+                * ``LATENCY`` -- Amazon GameLift Servers prioritizes locations where the average player latency is lowest. Player latency data is provided in each game session placement request.
+                 
+                * ``COST`` -- Amazon GameLift Servers prioritizes queue destinations with the lowest current hosting costs. Cost is evaluated based on the destination's location, instance type, and fleet type (Spot or On-Demand).
+                 
+                * ``DESTINATION`` -- Amazon GameLift Servers prioritizes based on the list order of destinations in the queue configuration.
+                 
+                * ``LOCATION`` -- Amazon GameLift Servers prioritizes based on the provided order of locations, as defined in ``LocationOrder``.
+                
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **LocationOrder** *(list) --* 
+
+                The prioritization order to use for fleet locations, when the ``PriorityOrder`` property includes ``LOCATION``. Locations can include Amazon Web Services Region codes (such as ``us-west-2``), local zones, and custom locations (for Anywhere fleets). Each location must be listed only once. For details, see `Amazon GameLift Servers service locations. <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-regions.html>`__
+
+                
+                
+
+                - *(string) --* 
+            
+          
+            
+
+            - **CustomEventData** *(string) --* 
+
+              Information that is added to all events that are related to this game session queue.
+
+              
+            
+
+            - **NotificationTarget** *(string) --* 
+
+              An SNS topic ARN that is set up to receive game session placement notifications. See `Setting up notifications for game session placement <https://docs.aws.amazon.com/gamelift/latest/developerguide/queue-notification.html>`__.
+
+              
+        
+      
+    

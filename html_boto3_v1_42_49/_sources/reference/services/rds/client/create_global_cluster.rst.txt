@@ -1,0 +1,542 @@
+:doc:`RDS <../../rds>` / Client / create_global_cluster
+
+*********************
+create_global_cluster
+*********************
+
+
+
+.. py:method:: RDS.Client.create_global_cluster(**kwargs)
+
+  
+
+  Creates an Aurora global database spread across multiple Amazon Web Services Regions. The global database contains a single primary cluster with read-write capability, and a read-only secondary cluster that receives data from the primary cluster through high-speed replication performed by the Aurora storage subsystem.
+
+   
+
+  You can create a global database that is initially empty, and then create the primary and secondary DB clusters in the global database. Or you can specify an existing Aurora cluster during the create operation, and this cluster becomes the primary cluster of the global database.
+
+   
+
+  .. note::
+
+    
+
+    This operation applies only to Aurora DB clusters.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rds-2014-10-31/CreateGlobalCluster>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_global_cluster(
+        GlobalClusterIdentifier='string',
+        SourceDBClusterIdentifier='string',
+        Engine='string',
+        EngineVersion='string',
+        EngineLifecycleSupport='string',
+        DeletionProtection=True|False,
+        DatabaseName='string',
+        StorageEncrypted=True|False,
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type GlobalClusterIdentifier: string
+  :param GlobalClusterIdentifier: **[REQUIRED]** 
+
+    The cluster identifier for this global database cluster. This parameter is stored as a lowercase string.
+
+    
+
+  
+  :type SourceDBClusterIdentifier: string
+  :param SourceDBClusterIdentifier: 
+
+    The Amazon Resource Name (ARN) to use as the primary cluster of the global database.
+
+     
+
+    If you provide a value for this parameter, don't specify values for the following settings because Amazon Aurora uses the values from the specified source DB cluster:
+
+     
+
+    
+    * ``DatabaseName``
+     
+    * ``Engine``
+     
+    * ``EngineVersion``
+     
+    * ``StorageEncrypted``
+    
+
+    
+
+  
+  :type Engine: string
+  :param Engine: 
+
+    The database engine to use for this global database cluster.
+
+     
+
+    Valid Values: ``aurora-mysql | aurora-postgresql``
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Can't be specified if ``SourceDBClusterIdentifier`` is specified. In this case, Amazon Aurora uses the engine of the source DB cluster.
+    
+
+    
+
+  
+  :type EngineVersion: string
+  :param EngineVersion: 
+
+    The engine version to use for this global database cluster.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Can't be specified if ``SourceDBClusterIdentifier`` is specified. In this case, Amazon Aurora uses the engine version of the source DB cluster.
+    
+
+    
+
+  
+  :type EngineLifecycleSupport: string
+  :param EngineLifecycleSupport: 
+
+    The life cycle type for this global database cluster.
+
+     
+
+    .. note::
+
+      
+
+      By default, this value is set to ``open-source-rds-extended-support``, which enrolls your global cluster into Amazon RDS Extended Support. At the end of standard support, you can avoid charges for Extended Support by setting the value to ``open-source-rds-extended-support-disabled``. In this case, creating the global cluster will fail if the DB major version is past its end of standard support date.
+
+      
+
+     
+
+    This setting only applies to Aurora PostgreSQL-based global databases.
+
+     
+
+    You can use this setting to enroll your global cluster into Amazon RDS Extended Support. With RDS Extended Support, you can run the selected major engine version on your global cluster past the end of standard support for that engine version. For more information, see `Amazon RDS Extended Support with Amazon Aurora <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/extended-support.html>`__ in the *Amazon Aurora User Guide*.
+
+     
+
+    Valid Values: ``open-source-rds-extended-support | open-source-rds-extended-support-disabled``
+
+     
+
+    Default: ``open-source-rds-extended-support``
+
+    
+
+  
+  :type DeletionProtection: boolean
+  :param DeletionProtection: 
+
+    Specifies whether to enable deletion protection for the new global database cluster. The global database can't be deleted when deletion protection is enabled.
+
+    
+
+  
+  :type DatabaseName: string
+  :param DatabaseName: 
+
+    The name for your database of up to 64 alphanumeric characters. If you don't specify a name, Amazon Aurora doesn't create a database in the global database cluster.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Can't be specified if ``SourceDBClusterIdentifier`` is specified. In this case, Amazon Aurora uses the database name from the source DB cluster.
+    
+
+    
+
+  
+  :type StorageEncrypted: boolean
+  :param StorageEncrypted: 
+
+    Specifies whether to enable storage encryption for the new global database cluster.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Can't be specified if ``SourceDBClusterIdentifier`` is specified. In this case, Amazon Aurora uses the setting from the source DB cluster.
+    
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    Tags to assign to the global cluster.
+
+    
+
+  
+    - *(dict) --* 
+
+      Metadata assigned to an Amazon RDS resource consisting of a key-value pair.
+
+       
+
+      For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        A key is the required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        A value is the optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GlobalCluster': {
+              'GlobalClusterIdentifier': 'string',
+              'GlobalClusterResourceId': 'string',
+              'GlobalClusterArn': 'string',
+              'Status': 'string',
+              'Engine': 'string',
+              'EngineVersion': 'string',
+              'EngineLifecycleSupport': 'string',
+              'DatabaseName': 'string',
+              'StorageEncrypted': True|False,
+              'DeletionProtection': True|False,
+              'GlobalClusterMembers': [
+                  {
+                      'DBClusterArn': 'string',
+                      'Readers': [
+                          'string',
+                      ],
+                      'IsWriter': True|False,
+                      'GlobalWriteForwardingStatus': 'enabled'|'disabled'|'enabling'|'disabling'|'unknown',
+                      'SynchronizationStatus': 'connected'|'pending-resync'
+                  },
+              ],
+              'Endpoint': 'string',
+              'FailoverState': {
+                  'Status': 'pending'|'failing-over'|'cancelling',
+                  'FromDbClusterArn': 'string',
+                  'ToDbClusterArn': 'string',
+                  'IsDataLossAllowed': True|False
+              },
+              'TagList': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GlobalCluster** *(dict) --* 
+
+        A data type representing an Aurora global database.
+
+        
+        
+
+        - **GlobalClusterIdentifier** *(string) --* 
+
+          Contains a user-supplied global database cluster identifier. This identifier is the unique key that identifies a global database cluster.
+
+          
+        
+
+        - **GlobalClusterResourceId** *(string) --* 
+
+          The Amazon Web Services `partition <https://docs.aws.amazon.com/glossary/latest/reference/glos-chap.html?id=docs_gateway#partition>`__-unique, immutable identifier for the global database cluster. This identifier is found in Amazon Web Services CloudTrail log entries whenever the Amazon Web Services KMS key for the DB cluster is accessed.
+
+          
+        
+
+        - **GlobalClusterArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) for the global database cluster.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          Specifies the current state of this global database cluster.
+
+          
+        
+
+        - **Engine** *(string) --* 
+
+          The Aurora database engine used by the global database cluster.
+
+          
+        
+
+        - **EngineVersion** *(string) --* 
+
+          Indicates the database engine version.
+
+          
+        
+
+        - **EngineLifecycleSupport** *(string) --* 
+
+          The lifecycle type for the global cluster.
+
+           
+
+          For more information, see CreateGlobalCluster.
+
+          
+        
+
+        - **DatabaseName** *(string) --* 
+
+          The default database name within the new global database cluster.
+
+          
+        
+
+        - **StorageEncrypted** *(boolean) --* 
+
+          The storage encryption setting for the global database cluster.
+
+          
+        
+
+        - **DeletionProtection** *(boolean) --* 
+
+          The deletion protection setting for the new global database cluster.
+
+          
+        
+
+        - **GlobalClusterMembers** *(list) --* 
+
+          The list of primary and secondary clusters within the global database cluster.
+
+          
+          
+
+          - *(dict) --* 
+
+            A data structure with information about any primary and secondary clusters associated with a global cluster (Aurora global database).
+
+            
+            
+
+            - **DBClusterArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) for each Aurora DB cluster in the global cluster.
+
+              
+            
+
+            - **Readers** *(list) --* 
+
+              The Amazon Resource Name (ARN) for each read-only secondary cluster associated with the global cluster.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **IsWriter** *(boolean) --* 
+
+              Indicates whether the Aurora DB cluster is the primary cluster (that is, has read-write capability) for the global cluster with which it is associated.
+
+              
+            
+
+            - **GlobalWriteForwardingStatus** *(string) --* 
+
+              The status of write forwarding for a secondary cluster in the global cluster.
+
+              
+            
+
+            - **SynchronizationStatus** *(string) --* 
+
+              The status of synchronization of each Aurora DB cluster in the global cluster.
+
+              
+        
+      
+        
+
+        - **Endpoint** *(string) --* 
+
+          The writer endpoint for the new global database cluster. This endpoint always points to the writer DB instance in the current primary cluster.
+
+          
+        
+
+        - **FailoverState** *(dict) --* 
+
+          A data object containing all properties for the current state of an in-process or pending switchover or failover process for this global cluster (Aurora global database). This object is empty unless the ``SwitchoverGlobalCluster`` or ``FailoverGlobalCluster`` operation was called on this global cluster.
+
+          
+          
+
+          - **Status** *(string) --* 
+
+            The current status of the global cluster. Possible values are as follows:
+
+             
+
+            
+            * pending – The service received a request to switch over or fail over the global cluster. The global cluster's primary DB cluster and the specified secondary DB cluster are being verified before the operation starts.
+             
+            * failing-over – Aurora is promoting the chosen secondary Aurora DB cluster to become the new primary DB cluster to fail over the global cluster.
+             
+            * cancelling – The request to switch over or fail over the global cluster was cancelled and the primary Aurora DB cluster and the selected secondary Aurora DB cluster are returning to their previous states.
+             
+            * switching-over – This status covers the range of Aurora internal operations that take place during the switchover process, such as demoting the primary Aurora DB cluster, promoting the secondary Aurora DB cluster, and synchronizing replicas.
+            
+
+            
+          
+
+          - **FromDbClusterArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Aurora DB cluster that is currently being demoted, and which is associated with this state.
+
+            
+          
+
+          - **ToDbClusterArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Aurora DB cluster that is currently being promoted, and which is associated with this state.
+
+            
+          
+
+          - **IsDataLossAllowed** *(boolean) --* 
+
+            Indicates whether the operation is a global switchover or a global failover. If data loss is allowed, then the operation is a global failover. Otherwise, it's a switchover.
+
+            
+      
+        
+
+        - **TagList** *(list) --* 
+
+          A list of tags.
+
+           
+
+          For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+          
+          
+
+          - *(dict) --* 
+
+            Metadata assigned to an Amazon RDS resource consisting of a key-value pair.
+
+             
+
+            For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              A key is the required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              A value is the optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`RDS.Client.exceptions.ResourceNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.GlobalClusterQuotaExceededFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidDBClusterStateFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidDBShardGroupStateFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.GlobalClusterAlreadyExistsFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBClusterNotFoundFault`
+
+  

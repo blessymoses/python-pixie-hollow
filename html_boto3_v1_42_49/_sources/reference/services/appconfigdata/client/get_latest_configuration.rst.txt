@@ -1,0 +1,144 @@
+:doc:`AppConfigData <../../appconfigdata>` / Client / get_latest_configuration
+
+************************
+get_latest_configuration
+************************
+
+
+
+.. py:method:: AppConfigData.Client.get_latest_configuration(**kwargs)
+
+  
+
+  Retrieves the latest deployed configuration. This API may return empty configuration data if the client already has the latest version. For more information about this API action and to view example CLI commands that show how to use it with the  StartConfigurationSession API action, see `Retrieving the configuration <http://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-retrieving-the-configuration>`__ in the *AppConfig User Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    Note the following important information.
+
+     
+
+    
+    * Each configuration token is only valid for one call to ``GetLatestConfiguration``. The ``GetLatestConfiguration`` response includes a ``NextPollConfigurationToken`` that should always replace the token used for the just-completed call in preparation for the next one.
+     
+    * ``GetLatestConfiguration`` is a priced call. For more information, see `Pricing <https://aws.amazon.com/systems-manager/pricing/>`__.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/appconfigdata-2021-11-11/GetLatestConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_latest_configuration(
+        ConfigurationToken='string'
+    )
+    
+  :type ConfigurationToken: string
+  :param ConfigurationToken: **[REQUIRED]** 
+
+    Token describing the current state of the configuration session. To obtain a token, first call the  StartConfigurationSession API. Note that every call to ``GetLatestConfiguration`` will return a new ``ConfigurationToken`` ( ``NextPollConfigurationToken`` in the response) and *must* be provided to subsequent ``GetLatestConfiguration`` API calls.
+
+     
+
+    .. warning::
+
+       
+
+      This token should only be used once. To support long poll use cases, the token is valid for up to 24 hours. If a ``GetLatestConfiguration`` call uses an expired token, the system returns ``BadRequestException``.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'NextPollConfigurationToken': 'string',
+          'NextPollIntervalInSeconds': 123,
+          'ContentType': 'string',
+          'Configuration': StreamingBody(),
+          'VersionLabel': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **NextPollConfigurationToken** *(string) --* 
+
+        The latest token describing the current state of the configuration session. This *must* be provided to the next call to ``GetLatestConfiguration.``
+
+         
+
+        .. warning::
+
+           
+
+          This token should only be used once. To support long poll use cases, the token is valid for up to 24 hours. If a ``GetLatestConfiguration`` call uses an expired token, the system returns ``BadRequestException``.
+
+          
+
+        
+      
+
+      - **NextPollIntervalInSeconds** *(integer) --* 
+
+        The amount of time the client should wait before polling for configuration updates again. Use ``RequiredMinimumPollIntervalInSeconds`` to set the desired poll interval.
+
+        
+      
+
+      - **ContentType** *(string) --* 
+
+        A standard MIME type describing the format of the configuration content.
+
+        
+      
+
+      - **Configuration** (:class:`.StreamingBody`) -- 
+
+        The data of the configuration. This may be empty if the client already has the latest version of configuration.
+
+        
+      
+
+      - **VersionLabel** *(string) --* 
+
+        The user-defined label for the AppConfig hosted configuration version. This attribute doesn't apply if the configuration is not from an AppConfig hosted configuration version. If the client already has the latest version of the configuration data, this value is empty.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AppConfigData.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AppConfigData.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AppConfigData.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`AppConfigData.Client.exceptions.InternalServerException`
+
+  

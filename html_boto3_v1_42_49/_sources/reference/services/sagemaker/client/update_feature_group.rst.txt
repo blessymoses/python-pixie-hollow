@@ -1,0 +1,249 @@
+:doc:`SageMaker <../../sagemaker>` / Client / update_feature_group
+
+********************
+update_feature_group
+********************
+
+
+
+.. py:method:: SageMaker.Client.update_feature_group(**kwargs)
+
+  
+
+  Updates the feature group by either adding features or updating the online store configuration. Use one of the following request parameters at a time while using the ``UpdateFeatureGroup`` API.
+
+   
+
+  You can add features for your feature group using the ``FeatureAdditions`` request parameter. Features cannot be removed from a feature group.
+
+   
+
+  You can update the online store configuration by using the ``OnlineStoreConfig`` request parameter. If a ``TtlDuration`` is specified, the default ``TtlDuration`` applies for all records added to the feature group *after the feature group is updated*. If a record level ``TtlDuration`` exists from using the ``PutRecord`` API, the record level ``TtlDuration`` applies to that record instead of the default ``TtlDuration``. To remove the default ``TtlDuration`` from an existing feature group, use the ``UpdateFeatureGroup`` API and set the ``TtlDuration`` ``Unit`` and ``Value`` to ``null``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateFeatureGroup>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_feature_group(
+        FeatureGroupName='string',
+        FeatureAdditions=[
+            {
+                'FeatureName': 'string',
+                'FeatureType': 'Integral'|'Fractional'|'String',
+                'CollectionType': 'List'|'Set'|'Vector',
+                'CollectionConfig': {
+                    'VectorConfig': {
+                        'Dimension': 123
+                    }
+                }
+            },
+        ],
+        OnlineStoreConfig={
+            'TtlDuration': {
+                'Unit': 'Seconds'|'Minutes'|'Hours'|'Days'|'Weeks',
+                'Value': 123
+            }
+        },
+        ThroughputConfig={
+            'ThroughputMode': 'OnDemand'|'Provisioned',
+            'ProvisionedReadCapacityUnits': 123,
+            'ProvisionedWriteCapacityUnits': 123
+        }
+    )
+    
+  :type FeatureGroupName: string
+  :param FeatureGroupName: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of the feature group that you're updating.
+
+    
+
+  
+  :type FeatureAdditions: list
+  :param FeatureAdditions: 
+
+    Updates the feature group. Updating a feature group is an asynchronous operation. When you get an HTTP 200 response, you've made a valid request. It takes some time after you've made a valid request for Feature Store to update the feature group.
+
+    
+
+  
+    - *(dict) --* 
+
+      A list of features. You must include ``FeatureName`` and ``FeatureType``. Valid feature ``FeatureType``s are ``Integral``, ``Fractional`` and ``String``.
+
+      
+
+    
+      - **FeatureName** *(string) --* **[REQUIRED]** 
+
+        The name of a feature. The type must be a string. ``FeatureName`` cannot be any of the following: ``is_deleted``, ``write_time``, ``api_invocation_time``.
+
+         
+
+        The name:
+
+         
+
+        
+        * Must start with an alphanumeric character.
+         
+        * Can only include alphanumeric characters, underscores, and hyphens. Spaces are not allowed.
+        
+
+        
+
+      
+      - **FeatureType** *(string) --* **[REQUIRED]** 
+
+        The value type of a feature. Valid values are Integral, Fractional, or String.
+
+        
+
+      
+      - **CollectionType** *(string) --* 
+
+        A grouping of elements where each element within the collection must have the same feature type ( ``String``, ``Integral``, or ``Fractional``).
+
+         
+
+        
+        * ``List``: An ordered collection of elements.
+         
+        * ``Set``: An unordered collection of unique elements.
+         
+        * ``Vector``: A specialized list that represents a fixed-size array of elements. The vector dimension is determined by you. Must have elements with fractional feature types.
+        
+
+        
+
+      
+      - **CollectionConfig** *(dict) --* 
+
+        Configuration for your collection.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``VectorConfig``. 
+
+      
+        - **VectorConfig** *(dict) --* 
+
+          Configuration for your vector collection type.
+
+           
+
+          
+          * ``Dimension``: The number of elements in your vector.
+          
+
+          
+
+        
+          - **Dimension** *(integer) --* **[REQUIRED]** 
+
+            The number of elements in your vector.
+
+            
+
+          
+        
+      
+    
+
+  :type OnlineStoreConfig: dict
+  :param OnlineStoreConfig: 
+
+    Updates the feature group online store configuration.
+
+    
+
+  
+    - **TtlDuration** *(dict) --* 
+
+      Time to live duration, where the record is hard deleted after the expiration time is reached; ``ExpiresAt`` = ``EventTime`` + ``TtlDuration``. For information on HardDelete, see the `DeleteRecord <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_feature_store_DeleteRecord.html>`__ API in the Amazon SageMaker API Reference guide.
+
+      
+
+    
+      - **Unit** *(string) --* 
+
+        ``TtlDuration`` time unit.
+
+        
+
+      
+      - **Value** *(integer) --* 
+
+        ``TtlDuration`` time value.
+
+        
+
+      
+    
+  
+  :type ThroughputConfig: dict
+  :param ThroughputConfig: 
+
+    The new throughput configuration for the feature group. You can switch between on-demand and provisioned modes or update the read / write capacity of provisioned feature groups. You can switch a feature group to on-demand only once in a 24 hour period.
+
+    
+
+  
+    - **ThroughputMode** *(string) --* 
+
+      Target throughput mode of the feature group. Throughput update is an asynchronous operation, and the outcome should be monitored by polling ``LastUpdateStatus`` field in ``DescribeFeatureGroup`` response. You cannot update a feature group's throughput while another update is in progress.
+
+      
+
+    
+    - **ProvisionedReadCapacityUnits** *(integer) --* 
+
+      For provisioned feature groups with online store enabled, this indicates the read throughput you are billed for and can consume without throttling.
+
+      
+
+    
+    - **ProvisionedWriteCapacityUnits** *(integer) --* 
+
+      For provisioned feature groups, this indicates the write throughput you are billed for and can consume without throttling.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FeatureGroupArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FeatureGroupArn** *(string) --* 
+
+        The Amazon Resource Number (ARN) of the feature group that you're updating.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SageMaker.Client.exceptions.ResourceNotFound`
+
+  
+  *   :py:class:`SageMaker.Client.exceptions.ResourceLimitExceeded`
+
+  

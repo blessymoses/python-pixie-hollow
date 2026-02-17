@@ -1,0 +1,264 @@
+:doc:`SignInService <../../signin>` / Client / create_o_auth2_token
+
+********************
+create_o_auth2_token
+********************
+
+
+
+.. py:method:: SignInService.Client.create_o_auth2_token(**kwargs)
+
+  
+
+  CreateOAuth2Token API
+
+   
+
+  Path: /v1/token Request Method: POST Content-Type: application/json or application/x-www-form-urlencoded
+
+   
+
+  This API implements OAuth 2.0 flows for AWS Sign-In CLI clients, supporting both:
+
+   
+
+   
+  * Authorization code redemption (grant_type=authorization_code) - NOT idempotent
+   
+  * Token refresh (grant_type=refresh_token) - Idempotent within token validity window
+   
+
+   
+
+  The operation behavior is determined by the grant_type parameter in the request body:
+
+   
+
+  Authorization Code Flow (NOT Idempotent):
+
+   
+
+  
+  * JSON or form-encoded body with client_id, grant_type=authorization_code, code, redirect_uri, code_verifier
+   
+  * Returns access_token, token_type, expires_in, refresh_token, and id_token
+   
+  * Each authorization code can only be used ONCE for security (prevents replay attacks)
+  
+
+   
+
+  Token Refresh Flow (Idempotent):
+
+   
+
+  
+  * JSON or form-encoded body with client_id, grant_type=refresh_token, refresh_token
+   
+  * Returns access_token, token_type, expires_in, and refresh_token (no id_token)
+   
+  * Multiple calls with same refresh_token return consistent results within validity window
+  
+
+   
+
+  Authentication and authorization:
+
+   
+
+  
+  * Confidential clients: sigv4 signing required with signin:ExchangeToken permissions
+   
+  * CLI clients (public): authn/authz skipped based on client_id & grant_type
+  
+
+   
+
+  Note: This operation cannot be marked as @idempotent because it handles both idempotent (token refresh) and non-idempotent (auth code redemption) flows in a single endpoint.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/signin-2023-01-01/CreateOAuth2Token>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_o_auth2_token(
+        tokenInput={
+            'clientId': 'string',
+            'grantType': 'string',
+            'code': 'string',
+            'redirectUri': 'string',
+            'codeVerifier': 'string',
+            'refreshToken': 'string'
+        }
+    )
+    
+  :type tokenInput: dict
+  :param tokenInput: **[REQUIRED]** 
+
+    Flattened token operation inputs The specific operation is determined by grant_type in the request body
+
+    
+
+  
+    - **clientId** *(string) --* **[REQUIRED]** 
+
+      The client identifier (ARN) used during Sign-In onboarding Required for both authorization code and refresh token flows
+
+      
+
+    
+    - **grantType** *(string) --* **[REQUIRED]** 
+
+      OAuth 2.0 grant type - determines which flow is used Must be "authorization_code" or "refresh_token"
+
+      
+
+    
+    - **code** *(string) --* 
+
+      The authorization code received from /v1/authorize Required only when grant_type=authorization_code
+
+      
+
+    
+    - **redirectUri** *(string) --* 
+
+      The redirect URI that must match the original authorization request Required only when grant_type=authorization_code
+
+      
+
+    
+    - **codeVerifier** *(string) --* 
+
+      PKCE code verifier to prove possession of the original code challenge Required only when grant_type=authorization_code
+
+      
+
+    
+    - **refreshToken** *(string) --* 
+
+      The refresh token returned from auth_code redemption Required only when grant_type=refresh_token
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'tokenOutput': {
+              'accessToken': {
+                  'accessKeyId': 'string',
+                  'secretAccessKey': 'string',
+                  'sessionToken': 'string'
+              },
+              'tokenType': 'string',
+              'expiresIn': 123,
+              'refreshToken': 'string',
+              'idToken': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Output structure for CreateOAuth2Token operation
+
+       
+
+      Contains flattened token operation outputs for both authorization code and refresh token flows. The response content depends on the grant_type from the original request.
+
+      
+      
+
+      - **tokenOutput** *(dict) --* 
+
+        Flattened token operation outputs The specific response fields depend on the grant_type used in the request
+
+        
+        
+
+        - **accessToken** *(dict) --* 
+
+          Scoped-down AWS credentials (15 minute duration) Present for both authorization code redemption and token refresh
+
+          
+          
+
+          - **accessKeyId** *(string) --* 
+
+            AWS access key ID for temporary credentials
+
+            
+          
+
+          - **secretAccessKey** *(string) --* 
+
+            AWS secret access key for temporary credentials
+
+            
+          
+
+          - **sessionToken** *(string) --* 
+
+            AWS session token for temporary credentials
+
+            
+      
+        
+
+        - **tokenType** *(string) --* 
+
+          Token type indicating this is AWS SigV4 credentials Value is "aws_sigv4" for both flows
+
+          
+        
+
+        - **expiresIn** *(integer) --* 
+
+          Time to expiry in seconds (maximum 900) Present for both authorization code redemption and token refresh
+
+          
+        
+
+        - **refreshToken** *(string) --* 
+
+          Encrypted refresh token with cnf.jkt (SHA-256 thumbprint of presented jwk) Always present in responses (required for both flows)
+
+          
+        
+
+        - **idToken** *(string) --* 
+
+          ID token containing user identity information Present only in authorization code redemption response (grant_type=authorization_code) Not included in token refresh responses
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SignInService.Client.exceptions.TooManyRequestsError`
+
+  
+  *   :py:class:`SignInService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SignInService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`SignInService.Client.exceptions.AccessDeniedException`
+
+  

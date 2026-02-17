@@ -1,0 +1,340 @@
+:doc:`CloudControlApi <../../cloudcontrol>` / Client / update_resource
+
+***************
+update_resource
+***************
+
+
+
+.. py:method:: CloudControlApi.Client.update_resource(**kwargs)
+
+  
+
+  Updates the specified property values in the resource.
+
+   
+
+  You specify your resource property updates as a list of patch operations contained in a JSON patch document that adheres to the `RFC 6902 - JavaScript Object Notation (JSON) Patch <https://datatracker.ietf.org/doc/html/rfc6902>`__ standard.
+
+   
+
+  For details on how Cloud Control API performs resource update operations, see `Updating a resource <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations-update.html>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+   
+
+  After you have initiated a resource update request, you can monitor the progress of your request by calling `GetResourceRequestStatus <https://docs.aws.amazon.com/cloudcontrolapi/latest/APIReference/API_GetResourceRequestStatus.html>`__ using the ``RequestToken`` of the ``ProgressEvent`` returned by ``UpdateResource``.
+
+   
+
+  For more information about the properties of a specific resource, refer to the related topic for the resource in the `Resource and property types reference <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html>`__ in the *CloudFormation Users Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudcontrol-2021-09-30/UpdateResource>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_resource(
+        TypeName='string',
+        TypeVersionId='string',
+        RoleArn='string',
+        ClientToken='string',
+        Identifier='string',
+        PatchDocument='string'
+    )
+    
+  :type TypeName: string
+  :param TypeName: **[REQUIRED]** 
+
+    The name of the resource type.
+
+    
+
+  
+  :type TypeVersionId: string
+  :param TypeVersionId: 
+
+    For private resource types, the type version to use in this resource operation. If you do not specify a resource version, CloudFormation uses the default version.
+
+    
+
+  
+  :type RoleArn: string
+  :param RoleArn: 
+
+    The Amazon Resource Name (ARN) of the Identity and Access Management (IAM) role for Cloud Control API to use when performing this resource operation. The role specified must have the permissions required for this operation. The necessary permissions for each event handler are defined in the ``handlers`` section of the `resource type definition schema <https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-type-schema.html>`__.
+
+     
+
+    If you do not specify a role, Cloud Control API uses a temporary session created using your Amazon Web Services user credentials.
+
+     
+
+    For more information, see `Specifying credentials <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations.html#resource-operations-permissions>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique identifier to ensure the idempotency of the resource request. As a best practice, specify this token to ensure idempotency, so that Amazon Web Services Cloud Control API can accurately distinguish between request retries and new resource requests. You might retry a resource request to ensure that it was successfully received.
+
+     
+
+    A client token is valid for 36 hours once used. After that, a resource request with the same client token is treated as a new request.
+
+     
+
+    If you do not specify a client token, one is generated for inclusion in the request.
+
+     
+
+    For more information, see `Ensuring resource operation requests are unique <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations.html#resource-operations-idempotency>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Identifier: string
+  :param Identifier: **[REQUIRED]** 
+
+    The identifier for the resource.
+
+     
+
+    You can specify the primary identifier, or any secondary identifier defined for the resource type in its resource schema. You can only specify one identifier. Primary identifiers can be specified as a string or JSON; secondary identifiers must be specified as JSON.
+
+     
+
+    For compound primary identifiers (that is, one that consists of multiple resource properties strung together), to specify the primary identifier as a string, list the property values *in the order they are specified* in the primary identifier definition, separated by ``|``.
+
+     
+
+    For more information, see `Identifying resources <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-identifier.html>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+    
+
+  
+  :type PatchDocument: string
+  :param PatchDocument: **[REQUIRED]** 
+
+    A JavaScript Object Notation (JSON) document listing the patch operations that represent the updates to apply to the current resource properties. For details, see `Composing the patch document <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations-update.html#resource-operations-update-patch>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ProgressEvent': {
+              'TypeName': 'string',
+              'Identifier': 'string',
+              'RequestToken': 'string',
+              'HooksRequestToken': 'string',
+              'Operation': 'CREATE'|'DELETE'|'UPDATE',
+              'OperationStatus': 'PENDING'|'IN_PROGRESS'|'SUCCESS'|'FAILED'|'CANCEL_IN_PROGRESS'|'CANCEL_COMPLETE',
+              'EventTime': datetime(2015, 1, 1),
+              'ResourceModel': 'string',
+              'StatusMessage': 'string',
+              'ErrorCode': 'NotUpdatable'|'InvalidRequest'|'AccessDenied'|'UnauthorizedTaggingOperation'|'InvalidCredentials'|'AlreadyExists'|'NotFound'|'ResourceConflict'|'Throttling'|'ServiceLimitExceeded'|'NotStabilized'|'GeneralServiceException'|'ServiceInternalError'|'ServiceTimeout'|'NetworkFailure'|'InternalFailure',
+              'RetryAfter': datetime(2015, 1, 1)
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ProgressEvent** *(dict) --* 
+
+        Represents the current status of the resource update request.
+
+         
+
+        Use the ``RequestToken`` of the ``ProgressEvent`` with `GetResourceRequestStatus <https://docs.aws.amazon.com/cloudcontrolapi/latest/APIReference/API_GetResourceRequestStatus.html>`__ to return the current status of a resource operation request.
+
+        
+        
+
+        - **TypeName** *(string) --* 
+
+          The name of the resource type used in the operation.
+
+          
+        
+
+        - **Identifier** *(string) --* 
+
+          The primary identifier for the resource.
+
+           
+
+          .. note::
+
+            
+
+            In some cases, the resource identifier may be available before the resource operation has reached a status of ``SUCCESS``.
+
+            
+
+          
+        
+
+        - **RequestToken** *(string) --* 
+
+          The unique token representing this resource operation request.
+
+           
+
+          Use the ``RequestToken`` with `GetResourceRequestStatus <https://docs.aws.amazon.com/cloudcontrolapi/latest/APIReference/API_GetResourceRequestStatus.html>`__ to return the current status of a resource operation request.
+
+          
+        
+
+        - **HooksRequestToken** *(string) --* 
+
+          The unique token representing the Hooks operation for the request.
+
+          
+        
+
+        - **Operation** *(string) --* 
+
+          The resource operation type.
+
+          
+        
+
+        - **OperationStatus** *(string) --* 
+
+          The current status of the resource operation request.
+
+           
+
+          
+          * ``PENDING``: The resource operation hasn't yet started.
+           
+          * ``IN_PROGRESS``: The resource operation is currently in progress.
+           
+          * ``SUCCESS``: The resource operation has successfully completed.
+           
+          * ``FAILED``: The resource operation has failed. Refer to the error code and status message for more information.
+           
+          * ``CANCEL_IN_PROGRESS``: The resource operation is in the process of being canceled.
+           
+          * ``CANCEL_COMPLETE``: The resource operation has been canceled.
+          
+
+          
+        
+
+        - **EventTime** *(datetime) --* 
+
+          When the resource operation request was initiated.
+
+          
+        
+
+        - **ResourceModel** *(string) --* 
+
+          A JSON string containing the resource model, consisting of each resource property and its current value.
+
+          
+        
+
+        - **StatusMessage** *(string) --* 
+
+          Any message explaining the current status.
+
+          
+        
+
+        - **ErrorCode** *(string) --* 
+
+          For requests with a status of ``FAILED``, the associated error code.
+
+           
+
+          For error code definitions, see `Handler error codes <https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-type-test-contract-errors.html>`__ in the *CloudFormation Command Line Interface User Guide for Extension Development*.
+
+          
+        
+
+        - **RetryAfter** *(datetime) --* 
+
+          When to next request the status of this resource operation request.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.AlreadyExistsException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.HandlerInternalFailureException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.GeneralServiceException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.NotUpdatableException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.TypeNotFoundException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ConcurrentOperationException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.PrivateTypeException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.NetworkFailureException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.UnsupportedActionException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.NotStabilizedException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ServiceInternalErrorException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.HandlerFailureException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ServiceLimitExceededException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.InvalidCredentialsException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ResourceConflictException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ClientTokenConflictException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ThrottlingException`
+
+  

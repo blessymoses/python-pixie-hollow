@@ -1,0 +1,445 @@
+:doc:`EKS <../../eks>` / Client / describe_capability
+
+*******************
+describe_capability
+*******************
+
+
+
+.. py:method:: EKS.Client.describe_capability(**kwargs)
+
+  
+
+  Returns detailed information about a specific managed capability in your Amazon EKS cluster, including its current status, configuration, health information, and any issues that may be affecting its operation.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/DescribeCapability>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_capability(
+        clusterName='string',
+        capabilityName='string'
+    )
+    
+  :type clusterName: string
+  :param clusterName: **[REQUIRED]** 
+
+    The name of the Amazon EKS cluster that contains the capability you want to describe.
+
+    
+
+  
+  :type capabilityName: string
+  :param capabilityName: **[REQUIRED]** 
+
+    The name of the capability to describe.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'capability': {
+              'capabilityName': 'string',
+              'arn': 'string',
+              'clusterName': 'string',
+              'type': 'ACK'|'KRO'|'ARGOCD',
+              'roleArn': 'string',
+              'status': 'CREATING'|'CREATE_FAILED'|'UPDATING'|'DELETING'|'DELETE_FAILED'|'ACTIVE'|'DEGRADED',
+              'version': 'string',
+              'configuration': {
+                  'argoCd': {
+                      'namespace': 'string',
+                      'awsIdc': {
+                          'idcInstanceArn': 'string',
+                          'idcRegion': 'string',
+                          'idcManagedApplicationArn': 'string'
+                      },
+                      'rbacRoleMappings': [
+                          {
+                              'role': 'ADMIN'|'EDITOR'|'VIEWER',
+                              'identities': [
+                                  {
+                                      'id': 'string',
+                                      'type': 'SSO_USER'|'SSO_GROUP'
+                                  },
+                              ]
+                          },
+                      ],
+                      'networkAccess': {
+                          'vpceIds': [
+                              'string',
+                          ]
+                      },
+                      'serverUrl': 'string'
+                  }
+              },
+              'tags': {
+                  'string': 'string'
+              },
+              'health': {
+                  'issues': [
+                      {
+                          'code': 'AccessDenied'|'ClusterUnreachable',
+                          'message': 'string'
+                      },
+                  ]
+              },
+              'createdAt': datetime(2015, 1, 1),
+              'modifiedAt': datetime(2015, 1, 1),
+              'deletePropagationPolicy': 'RETAIN'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **capability** *(dict) --* 
+
+        An object containing detailed information about the capability, including its name, ARN, type, status, version, configuration, health status, and timestamps for when it was created and last modified.
+
+        
+        
+
+        - **capabilityName** *(string) --* 
+
+          The unique name of the capability within the cluster.
+
+          
+        
+
+        - **arn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the capability.
+
+          
+        
+
+        - **clusterName** *(string) --* 
+
+          The name of the Amazon EKS cluster that contains this capability.
+
+          
+        
+
+        - **type** *(string) --* 
+
+          The type of capability. Valid values are ``ACK``, ``ARGOCD``, or ``KRO``.
+
+          
+        
+
+        - **roleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the IAM role that the capability uses to interact with Amazon Web Services services.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The current status of the capability. Valid values include:
+
+           
+
+          
+          * ``CREATING`` – The capability is being created.
+           
+          * ``ACTIVE`` – The capability is running and available.
+           
+          * ``UPDATING`` – The capability is being updated.
+           
+          * ``DELETING`` – The capability is being deleted.
+           
+          * ``CREATE_FAILED`` – The capability creation failed.
+           
+          * ``UPDATE_FAILED`` – The capability update failed.
+           
+          * ``DELETE_FAILED`` – The capability deletion failed.
+          
+
+          
+        
+
+        - **version** *(string) --* 
+
+          The version of the capability software that is currently running.
+
+          
+        
+
+        - **configuration** *(dict) --* 
+
+          The configuration settings for the capability. The structure varies depending on the capability type.
+
+          
+          
+
+          - **argoCd** *(dict) --* 
+
+            Configuration settings for an Argo CD capability, including the server URL and other Argo CD-specific settings.
+
+            
+            
+
+            - **namespace** *(string) --* 
+
+              The Kubernetes namespace where Argo CD resources are monitored by your Argo CD Capability.
+
+              
+            
+
+            - **awsIdc** *(dict) --* 
+
+              The IAM Identity CenterIAM; Identity Center integration configuration.
+
+              
+              
+
+              - **idcInstanceArn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the IAM Identity CenterIAM; Identity Center instance used for authentication.
+
+                
+              
+
+              - **idcRegion** *(string) --* 
+
+                The Region where the IAM Identity CenterIAM; Identity Center instance is located.
+
+                
+              
+
+              - **idcManagedApplicationArn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the managed application created in IAM Identity CenterIAM; Identity Center for this Argo CD capability. This application is automatically created and managed by Amazon EKS.
+
+                
+          
+            
+
+            - **rbacRoleMappings** *(list) --* 
+
+              The list of role mappings that define which IAM Identity CenterIAM; Identity Center users or groups have which Argo CD roles.
+
+              
+              
+
+              - *(dict) --* 
+
+                A mapping between an Argo CD role and IAM Identity CenterIAM; Identity Center identities. This defines which users or groups have specific permissions in Argo CD.
+
+                
+                
+
+                - **role** *(string) --* 
+
+                  The Argo CD role to assign. Valid values are:
+
+                   
+
+                  
+                  * ``ADMIN`` – Full administrative access to Argo CD.
+                   
+                  * ``EDITOR`` – Edit access to Argo CD resources.
+                   
+                  * ``VIEWER`` – Read-only access to Argo CD resources.
+                  
+
+                  
+                
+
+                - **identities** *(list) --* 
+
+                  A list of IAM Identity CenterIAM; Identity Center identities (users or groups) that should be assigned this Argo CD role.
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    An IAM Identity CenterIAM; Identity Center identity (user or group) that can be assigned permissions in a capability.
+
+                    
+                    
+
+                    - **id** *(string) --* 
+
+                      The unique identifier of the IAM Identity CenterIAM; Identity Center user or group.
+
+                      
+                    
+
+                    - **type** *(string) --* 
+
+                      The type of identity. Valid values are ``SSO_USER`` or ``SSO_GROUP``.
+
+                      
+                
+              
+            
+          
+            
+
+            - **networkAccess** *(dict) --* 
+
+              The network access configuration for the Argo CD capability's managed API server endpoint. If VPC endpoint IDs are specified, public access is blocked and the Argo CD server is only accessible through the specified VPC endpoints.
+
+              
+              
+
+              - **vpceIds** *(list) --* 
+
+                The list of VPC endpoint IDs associated with the managed Argo CD API server endpoint. Each VPC endpoint provides private connectivity from a specific VPC to the Argo CD server.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+            
+
+            - **serverUrl** *(string) --* 
+
+              The URL of the Argo CD server. Use this URL to access the Argo CD web interface and API.
+
+              
+        
+      
+        
+
+        - **tags** *(dict) --* 
+
+          The metadata that you apply to a resource to help you categorize and organize them. Each tag consists of a key and an optional value. You define them.
+
+           
+
+          The following basic restrictions apply to tags:
+
+           
+
+          
+          * Maximum number of tags per resource – 50
+           
+          * For each resource, each tag key must be unique, and each tag key can have only one value.
+           
+          * Maximum key length – 128 Unicode characters in UTF-8
+           
+          * Maximum value length – 256 Unicode characters in UTF-8
+           
+          * If your tagging schema is used across multiple services and resources, remember that other services may have restrictions on allowed characters. Generally allowed characters are: letters, numbers, and spaces representable in UTF-8, and the following characters: + - = . _ : / @.
+           
+          * Tag keys and values are case-sensitive.
+           
+          * Do not use ``aws:``, ``AWS:``, or any upper or lowercase combination of such as a prefix for either keys or values as it is reserved for Amazon Web Services use. You cannot edit or delete tag keys or values with this prefix. Tags with this prefix do not count against your tags per resource limit.
+          
+
+          
+          
+
+          - *(string) --* 
+
+            One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+            
+            
+
+            - *(string) --* 
+
+              The optional part of a key-value pair that make up a tag. A ``value`` acts as a descriptor within a tag category (key).
+
+              
+      
+    
+        
+
+        - **health** *(dict) --* 
+
+          Health information for the capability, including any issues that may be affecting its operation.
+
+          
+          
+
+          - **issues** *(list) --* 
+
+            A list of issues affecting the capability. If this list is empty, the capability is healthy.
+
+            
+            
+
+            - *(dict) --* 
+
+              An issue affecting a capability's health or operation.
+
+              
+              
+
+              - **code** *(string) --* 
+
+                A code identifying the type of issue. This can be used to programmatically handle specific issue types.
+
+                
+              
+
+              - **message** *(string) --* 
+
+                A human-readable message describing the issue and potential remediation steps.
+
+                
+          
+        
+      
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The Unix epoch timestamp in seconds for when the capability was created.
+
+          
+        
+
+        - **modifiedAt** *(datetime) --* 
+
+          The Unix epoch timestamp in seconds for when the capability was last modified.
+
+          
+        
+
+        - **deletePropagationPolicy** *(string) --* 
+
+          The delete propagation policy for the capability. Currently, the only supported value is ``RETAIN``, which keeps all resources managed by the capability when the capability is deleted.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ServerException`
+
+  

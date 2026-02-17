@@ -1,0 +1,171 @@
+:doc:`SecretsManager <../../secretsmanager>` / Client / validate_resource_policy
+
+************************
+validate_resource_policy
+************************
+
+
+
+.. py:method:: SecretsManager.Client.validate_resource_policy(**kwargs)
+
+  
+
+  Validates that a resource policy does not grant a wide range of principals access to your secret. A resource-based policy is optional for secrets.
+
+   
+
+  The API performs three checks when validating the policy:
+
+   
+
+  
+  * Sends a call to `Zelkova <https://aws.amazon.com/blogs/security/protect-sensitive-data-in-the-cloud-with-automated-reasoning-zelkova/>`__, an automated reasoning engine, to ensure your resource policy does not allow broad access to your secret, for example policies that use a wildcard for the principal.
+   
+  * Checks for correct syntax in a policy.
+   
+  * Verifies the policy does not lock out a caller.
+  
+
+   
+
+  Secrets Manager generates a CloudTrail log entry when you call this action. Do not include sensitive information in request parameters because it might be logged. For more information, see `Logging Secrets Manager events with CloudTrail <https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieve-ct-entries.html>`__.
+
+   
+
+  **Required permissions:** ``secretsmanager:ValidateResourcePolicy`` and ``secretsmanager:PutResourcePolicy``. For more information, see `IAM policy actions for Secrets Manager <https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_iam-permissions.html#reference_iam-permissions_actions>`__ and `Authentication and access control in Secrets Manager <https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/secretsmanager-2017-10-17/ValidateResourcePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.validate_resource_policy(
+        SecretId='string',
+        ResourcePolicy='string'
+    )
+    
+  :type SecretId: string
+  :param SecretId: 
+
+    The ARN or name of the secret with the resource-based policy you want to validate.
+
+    
+
+  
+  :type ResourcePolicy: string
+  :param ResourcePolicy: **[REQUIRED]** 
+
+    A JSON-formatted string that contains an Amazon Web Services resource-based policy. The policy in the string identifies who can access or manage this secret and its versions. For example policies, see `Permissions policy examples <https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_examples.html>`__.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'PolicyValidationPassed': True|False,
+          'ValidationErrors': [
+              {
+                  'CheckName': 'string',
+                  'ErrorMessage': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **PolicyValidationPassed** *(boolean) --* 
+
+        True if your policy passes validation, otherwise false.
+
+        
+      
+
+      - **ValidationErrors** *(list) --* 
+
+        Validation errors if your policy didn't pass validation.
+
+        
+        
+
+        - *(dict) --* 
+
+          Displays errors that occurred during validation of the resource policy.
+
+          
+          
+
+          - **CheckName** *(string) --* 
+
+            Checks the name of the policy.
+
+            
+          
+
+          - **ErrorMessage** *(string) --* 
+
+            Displays error messages if validation encounters problems during validation of the resource policy.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SecretsManager.Client.exceptions.MalformedPolicyDocumentException`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.InternalServiceError`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.InvalidRequestException`
+
+  
+
+  **Examples**
+
+  The following example shows how to validate a resource-based policy to a secret.
+  ::
+
+    response = client.validate_resource_policy(
+        ResourcePolicy='{\n"Version":"2012-10-17",\n"Statement":[{\n"Effect":"Allow",\n"Principal":{\n"AWS":"arn:aws:iam::123456789012:root"\n},\n"Action":"secretsmanager:GetSecretValue",\n"Resource":"*"\n}]\n}',
+        SecretId='MyTestDatabaseSecret',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'PolicyValidationPassed': True,
+        'ValidationErrors': [
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

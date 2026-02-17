@@ -1,0 +1,323 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / list_stack_instances
+
+********************
+list_stack_instances
+********************
+
+
+
+.. py:method:: CloudFormation.Client.list_stack_instances(**kwargs)
+
+  
+
+  Returns summary information about stack instances that are associated with the specified StackSet. You can filter for stack instances that are associated with a specific Amazon Web Services account name or Region, or that have a specific status.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/ListStackInstances>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_stack_instances(
+        StackSetName='string',
+        NextToken='string',
+        MaxResults=123,
+        Filters=[
+            {
+                'Name': 'DETAILED_STATUS'|'LAST_OPERATION_ID'|'DRIFT_STATUS',
+                'Values': 'string'
+            },
+        ],
+        StackInstanceAccount='string',
+        StackInstanceRegion='string',
+        CallAs='SELF'|'DELEGATED_ADMIN'
+    )
+    
+  :type StackSetName: string
+  :param StackSetName: **[REQUIRED]** 
+
+    The name or unique ID of the StackSet that you want to list stack instances for.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of results to be returned with a single call. If the number of available results exceeds this maximum, the response includes a ``NextToken`` value that you can assign to the ``NextToken`` request parameter to get the next set of results.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    The filter to apply to stack instances
+
+    
+
+  
+    - *(dict) --* 
+
+      The filter to apply to stack instances
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The type of filter to apply.
+
+        
+
+      
+      - **Values** *(string) --* 
+
+        The status to filter by.
+
+        
+
+      
+    
+
+  :type StackInstanceAccount: string
+  :param StackInstanceAccount: 
+
+    The name of the Amazon Web Services account that you want to list stack instances for.
+
+    
+
+  
+  :type StackInstanceRegion: string
+  :param StackInstanceRegion: 
+
+    The name of the Region where you want to list stack instances.
+
+    
+
+  
+  :type CallAs: string
+  :param CallAs: 
+
+    [Service-managed permissions] Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account.
+
+     
+
+    By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+     
+
+    
+    * If you are signed in to the management account, specify ``SELF``.
+     
+    * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Summaries': [
+              {
+                  'StackSetId': 'string',
+                  'Region': 'string',
+                  'Account': 'string',
+                  'StackId': 'string',
+                  'Status': 'CURRENT'|'OUTDATED'|'INOPERABLE',
+                  'StatusReason': 'string',
+                  'StackInstanceStatus': {
+                      'DetailedStatus': 'PENDING'|'RUNNING'|'SUCCEEDED'|'FAILED'|'CANCELLED'|'INOPERABLE'|'SKIPPED_SUSPENDED_ACCOUNT'|'FAILED_IMPORT'
+                  },
+                  'OrganizationalUnitId': 'string',
+                  'DriftStatus': 'DRIFTED'|'IN_SYNC'|'UNKNOWN'|'NOT_CHECKED',
+                  'LastDriftCheckTimestamp': datetime(2015, 1, 1),
+                  'LastOperationId': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Summaries** *(list) --* 
+
+        A list of ``StackInstanceSummary`` structures that contain information about the specified stack instances.
+
+        
+        
+
+        - *(dict) --* 
+
+          The structure that contains summary information about a stack instance.
+
+          
+          
+
+          - **StackSetId** *(string) --* 
+
+            The name or unique ID of the StackSet that the stack instance is associated with.
+
+            
+          
+
+          - **Region** *(string) --* 
+
+            The name of the Amazon Web Services Region that the stack instance is associated with.
+
+            
+          
+
+          - **Account** *(string) --* 
+
+            [Self-managed permissions] The name of the Amazon Web Services account that the stack instance is associated with.
+
+            
+          
+
+          - **StackId** *(string) --* 
+
+            The ID of the stack instance.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the stack instance, in terms of its synchronization with its associated stack set.
+
+             
+
+            
+            * ``INOPERABLE``: A ``DeleteStackInstances`` operation has failed and left the stack in an unstable state. Stacks in this state are excluded from further ``UpdateStackSet`` operations. You might need to perform a ``DeleteStackInstances`` operation, with ``RetainStacks`` set to ``true``, to delete the stack instance, and then delete the stack manually. ``INOPERABLE`` can be returned here when the cause is a failed import. If it's due to a failed import, the operation can be retried once the failures are fixed. To see if this is due to a failed import, call the  DescribeStackInstance API operation, look at the ``DetailedStatus`` member returned in the ``StackInstanceSummary`` member.
+             
+            * ``OUTDATED``: The stack isn't currently up to date with the StackSet because: 
+
+              
+              * The associated stack failed during a ``CreateStackSet`` or ``UpdateStackSet`` operation.
+               
+              * The stack was part of a ``CreateStackSet`` or ``UpdateStackSet`` operation that failed or was stopped before the stack was created or updated.
+              
+
+            
+             
+            * ``CURRENT``: The stack is currently up to date with the StackSet.
+            
+
+            
+          
+
+          - **StatusReason** *(string) --* 
+
+            The explanation for the specific status code assigned to this stack instance.
+
+            
+          
+
+          - **StackInstanceStatus** *(dict) --* 
+
+            The detailed status of the stack instance.
+
+            
+            
+
+            - **DetailedStatus** *(string) --* 
+
+              
+              * ``CANCELLED``: The operation in the specified account and Region has been canceled. This is either because a user has stopped the StackSet operation, or because the failure tolerance of the StackSet operation has been exceeded.
+               
+              * ``FAILED``: The operation in the specified account and Region failed. If the StackSet operation fails in enough accounts within a Region, the failure tolerance for the StackSet operation as a whole might be exceeded.
+               
+              * ``FAILED_IMPORT``: The import of the stack instance in the specified account and Region failed and left the stack in an unstable state. Once the issues causing the failure are fixed, the import operation can be retried. If enough StackSet operations fail in enough accounts within a Region, the failure tolerance for the StackSet operation as a whole might be exceeded.
+               
+              * ``INOPERABLE``: A ``DeleteStackInstances`` operation has failed and left the stack in an unstable state. Stacks in this state are excluded from further ``UpdateStackSet`` operations. You might need to perform a ``DeleteStackInstances`` operation, with ``RetainStacks`` set to ``true``, to delete the stack instance, and then delete the stack manually.
+               
+              * ``PENDING``: The operation in the specified account and Region has yet to start.
+               
+              * ``RUNNING``: The operation in the specified account and Region is currently in progress.
+               
+              * ``SKIPPED_SUSPENDED_ACCOUNT``: The operation in the specified account and Region has been skipped because the account was suspended at the time of the operation.
+               
+              * ``SUCCEEDED``: The operation in the specified account and Region completed successfully.
+              
+
+              
+        
+          
+
+          - **OrganizationalUnitId** *(string) --* 
+
+            [Service-managed permissions] The organization root ID or organizational unit (OU) IDs that you specified for `DeploymentTargets <https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DeploymentTargets.html>`__.
+
+            
+          
+
+          - **DriftStatus** *(string) --* 
+
+            Status of the stack instance's actual configuration compared to the expected template and parameter configuration of the StackSet it belongs to.
+
+             
+
+            
+            * ``DRIFTED``: The stack differs from the expected template and parameter configuration of the StackSet it belongs to. A stack instance is considered to have drifted if one or more of the resources in the associated stack have drifted.
+             
+            * ``NOT_CHECKED``: CloudFormation hasn't checked if the stack instance differs from its expected StackSet configuration.
+             
+            * ``IN_SYNC``: The stack instance's actual configuration matches its expected StackSet configuration.
+             
+            * ``UNKNOWN``: This value is reserved for future use.
+            
+
+            
+          
+
+          - **LastDriftCheckTimestamp** *(datetime) --* 
+
+            Most recent time when CloudFormation performed a drift detection operation on the stack instance. This value will be ``NULL`` for any stack instance that drift detection hasn't yet been performed on.
+
+            
+          
+
+          - **LastOperationId** *(string) --* 
+
+            The last unique ID of a StackSet operation performed on a stack instance.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If the request doesn't return all the remaining results, ``NextToken`` is set to a token. To retrieve the next set of results, call ``ListStackInstances`` again and assign that token to the request object's ``NextToken`` parameter. If the request returns all results, ``NextToken`` is set to ``null``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackSetNotFoundException`
+
+  

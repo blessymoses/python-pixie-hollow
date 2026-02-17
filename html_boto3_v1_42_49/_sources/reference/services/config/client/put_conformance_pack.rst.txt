@@ -1,0 +1,310 @@
+:doc:`ConfigService <../../config>` / Client / put_conformance_pack
+
+********************
+put_conformance_pack
+********************
+
+
+
+.. py:method:: ConfigService.Client.put_conformance_pack(**kwargs)
+
+  
+
+  Creates or updates a conformance pack. A conformance pack is a collection of Config rules that can be easily deployed in an account and a region and across an organization. For information on how many conformance packs you can have per account, see `**Service Limits** <https://docs.aws.amazon.com/config/latest/developerguide/configlimits.html>`__ in the *Config Developer Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    When you use ``PutConformancePack`` to deploy conformance packs in your account, the operation can create Config rules and remediation actions without requiring ``config:PutConfigRule`` or ``config:PutRemediationConfigurations`` permissions in your account IAM policies.
+
+     
+
+    This API uses the ``AWSServiceRoleForConfigConforms`` service-linked role in your account to create conformance pack resources. This service-linked role includes the permissions to create Config rules and remediation configurations, even if your account IAM policies explicitly deny these actions.
+
+     
+
+   
+
+  This API creates a service-linked role ``AWSServiceRoleForConfigConforms`` in your account. The service-linked role is created only when the role does not exist in your account.
+
+   
+
+  .. note::
+
+    
+
+    You must specify only one of the follow parameters: ``TemplateS3Uri``, ``TemplateBody`` or ``TemplateSSMDocumentDetails``.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    **Tags are added at creation and cannot be updated with this operation**
+
+     
+
+    ``PutConformancePack`` is an idempotent API. Subsequent requests won't create a duplicate resource if one was already created. If a following request has different ``tags`` values, Config will ignore these differences and treat it as an idempotent request of the previous. In this case, ``tags`` will not be updated, even if they are different.
+
+     
+
+    Use `TagResource <https://docs.aws.amazon.com/config/latest/APIReference/API_TagResource.html>`__ and `UntagResource <https://docs.aws.amazon.com/config/latest/APIReference/API_UntagResource.html>`__ to update tags after creation.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/config-2014-11-12/PutConformancePack>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_conformance_pack(
+        ConformancePackName='string',
+        TemplateS3Uri='string',
+        TemplateBody='string',
+        DeliveryS3Bucket='string',
+        DeliveryS3KeyPrefix='string',
+        ConformancePackInputParameters=[
+            {
+                'ParameterName': 'string',
+                'ParameterValue': 'string'
+            },
+        ],
+        TemplateSSMDocumentDetails={
+            'DocumentName': 'string',
+            'DocumentVersion': 'string'
+        },
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type ConformancePackName: string
+  :param ConformancePackName: **[REQUIRED]** 
+
+    The unique name of the conformance pack you want to deploy.
+
+    
+
+  
+  :type TemplateS3Uri: string
+  :param TemplateS3Uri: 
+
+    The location of the file containing the template body ( ``s3://bucketname/prefix``). The uri must point to a conformance pack template (max size: 300 KB) that is located in an Amazon S3 bucket in the same Region as the conformance pack.
+
+     
+
+    .. note::
+
+      
+
+      You must have access to read Amazon S3 bucket. In addition, in order to ensure a successful deployment, the template object must not be in an `archived storage class <https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html>`__ if this parameter is passed.
+
+      
+
+    
+
+  
+  :type TemplateBody: string
+  :param TemplateBody: 
+
+    A string that contains the full conformance pack template body. The structure containing the template body has a minimum length of 1 byte and a maximum length of 51,200 bytes.
+
+     
+
+    .. note::
+
+      
+
+      You can use a YAML template with two resource types: Config rule ( ``AWS::Config::ConfigRule``) and remediation action ( ``AWS::Config::RemediationConfiguration``).
+
+      
+
+    
+
+  
+  :type DeliveryS3Bucket: string
+  :param DeliveryS3Bucket: 
+
+    The name of the Amazon S3 bucket where Config stores conformance pack templates.
+
+     
+
+    .. note::
+
+      
+
+      This field is optional.
+
+      
+
+    
+
+  
+  :type DeliveryS3KeyPrefix: string
+  :param DeliveryS3KeyPrefix: 
+
+    The prefix for the Amazon S3 bucket.
+
+     
+
+    .. note::
+
+      
+
+      This field is optional.
+
+      
+
+    
+
+  
+  :type ConformancePackInputParameters: list
+  :param ConformancePackInputParameters: 
+
+    A list of ``ConformancePackInputParameter`` objects.
+
+    
+
+  
+    - *(dict) --* 
+
+      Input parameters in the form of key-value pairs for the conformance pack, both of which you define. Keys can have a maximum character length of 255 characters, and values can have a maximum length of 4096 characters.
+
+      
+
+    
+      - **ParameterName** *(string) --* **[REQUIRED]** 
+
+        One part of a key-value pair.
+
+        
+
+      
+      - **ParameterValue** *(string) --* **[REQUIRED]** 
+
+        Another part of the key-value pair.
+
+        
+
+      
+    
+
+  :type TemplateSSMDocumentDetails: dict
+  :param TemplateSSMDocumentDetails: 
+
+    An object of type ``TemplateSSMDocumentDetails``, which contains the name or the Amazon Resource Name (ARN) of the Amazon Web Services Systems Manager document (SSM document) and the version of the SSM document that is used to create a conformance pack.
+
+    
+
+  
+    - **DocumentName** *(string) --* **[REQUIRED]** 
+
+      The name or Amazon Resource Name (ARN) of the SSM document to use to create a conformance pack. If you use the document name, Config checks only your account and Amazon Web Services Region for the SSM document.
+
+      
+
+    
+    - **DocumentVersion** *(string) --* 
+
+      The version of the SSM document to use to create a conformance pack. By default, Config uses the latest version.
+
+       
+
+      .. note::
+
+        
+
+        This field is optional.
+
+        
+
+      
+
+    
+  
+  :type Tags: list
+  :param Tags: 
+
+    The tags for the conformance pack. Each tag consists of a key and an optional value, both of which you define.
+
+    
+
+  
+    - *(dict) --* 
+
+      The tags for the resource. The metadata that you apply to a resource to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define. Tag keys can have a maximum character length of 128 characters, and tag values can have a maximum length of 256 characters.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        One part of a key-value pair that make up a tag. A key is a general label that acts like a category for more specific tag values.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The optional part of a key-value pair that make up a tag. A value acts as a descriptor within a tag category (key).
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ConformancePackArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ConformancePackArn** *(string) --* 
+
+        ARN of the conformance pack.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ConfigService.Client.exceptions.InsufficientPermissionsException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.ConformancePackTemplateValidationException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.MaxNumberOfConformancePacksExceededException`
+
+  

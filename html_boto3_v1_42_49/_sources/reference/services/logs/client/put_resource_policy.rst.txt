@@ -1,0 +1,202 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / put_resource_policy
+
+*******************
+put_resource_policy
+*******************
+
+
+
+.. py:method:: CloudWatchLogs.Client.put_resource_policy(**kwargs)
+
+  
+
+  Creates or updates a resource policy allowing other Amazon Web Services services to put log events to this account, such as Amazon Route 53. This API has the following restrictions:
+
+   
+
+  
+  * **Supported actions** - Policy only supports ``logs:PutLogEvents`` and ``logs:CreateLogStream`` actions
+   
+  * **Supported principals** - Policy only applies when operations are invoked by Amazon Web Services service principals (not IAM users, roles, or cross-account principals
+   
+  * **Policy limits** - An account can have a maximum of 10 policies without resourceARN and one per LogGroup resourceARN
+  
+
+   
+
+  .. warning::
+
+     
+
+    Resource policies with actions invoked by non-Amazon Web Services service principals (such as IAM users, roles, or other Amazon Web Services accounts) will not be enforced. For access control involving these principals, use the IAM policies.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/PutResourcePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_resource_policy(
+        policyName='string',
+        policyDocument='string',
+        resourceArn='string',
+        expectedRevisionId='string'
+    )
+    
+  :type policyName: string
+  :param policyName: 
+
+    Name of the new policy. This parameter is required.
+
+    
+
+  
+  :type policyDocument: string
+  :param policyDocument: 
+
+    Details of the new policy, including the identity of the principal that is enabled to put logs to this account. This is formatted as a JSON string. This parameter is required.
+
+     
+
+    The following example creates a resource policy enabling the Route 53 service to put DNS query logs in to the specified log group. Replace ``"logArn"`` with the ARN of your CloudWatch Logs resource, such as a log group or log stream.
+
+     
+
+    CloudWatch Logs also supports `aws\:SourceArn <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-sourcearn>`__ and `aws\:SourceAccount <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-sourceaccount>`__ condition context keys.
+
+     
+
+    In the example resource policy, you would replace the value of ``SourceArn`` with the resource making the call from Route 53 to CloudWatch Logs. You would also replace the value of ``SourceAccount`` with the Amazon Web Services account ID making that call.
+
+     
+
+    
+
+     
+
+    ``{ "Version": "2012-10-17", "Statement": [ { "Sid": "Route53LogsToCloudWatchLogs", "Effect": "Allow", "Principal": { "Service": [ "route53.amazonaws.com" ] }, "Action": "logs:PutLogEvents", "Resource": "logArn", "Condition": { "ArnLike": { "aws:SourceArn": "myRoute53ResourceArn" }, "StringEquals": { "aws:SourceAccount": "myAwsAccountId" } } } ] }``
+
+    
+
+  
+  :type resourceArn: string
+  :param resourceArn: 
+
+    The ARN of the CloudWatch Logs resource to which the resource policy needs to be added or attached. Currently only supports LogGroup ARN.
+
+    
+
+  
+  :type expectedRevisionId: string
+  :param expectedRevisionId: 
+
+    The expected revision ID of the resource policy. Required when ``resourceArn`` is provided to prevent concurrent modifications. Use ``null`` when creating a resource policy for the first time.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'resourcePolicy': {
+              'policyName': 'string',
+              'policyDocument': 'string',
+              'lastUpdatedTime': 123,
+              'policyScope': 'ACCOUNT'|'RESOURCE',
+              'resourceArn': 'string',
+              'revisionId': 'string'
+          },
+          'revisionId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **resourcePolicy** *(dict) --* 
+
+        The new policy.
+
+        
+        
+
+        - **policyName** *(string) --* 
+
+          The name of the resource policy.
+
+          
+        
+
+        - **policyDocument** *(string) --* 
+
+          The details of the policy.
+
+          
+        
+
+        - **lastUpdatedTime** *(integer) --* 
+
+          Timestamp showing when this policy was last updated, expressed as the number of milliseconds after ``Jan 1, 1970 00:00:00 UTC``.
+
+          
+        
+
+        - **policyScope** *(string) --* 
+
+          Specifies scope of the resource policy. Valid values are ACCOUNT or RESOURCE.
+
+          
+        
+
+        - **resourceArn** *(string) --* 
+
+          The ARN of the CloudWatch Logs resource to which the resource policy is attached. Only populated for resource-scoped policies.
+
+          
+        
+
+        - **revisionId** *(string) --* 
+
+          The revision ID of the resource policy. Only populated for resource-scoped policies.
+
+          
+    
+      
+
+      - **revisionId** *(string) --* 
+
+        The revision ID of the created or updated resource policy. Only returned for resource-scoped policies.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.OperationAbortedException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceUnavailableException`
+
+  

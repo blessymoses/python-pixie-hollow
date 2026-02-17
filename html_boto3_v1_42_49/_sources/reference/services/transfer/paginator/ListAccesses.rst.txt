@@ -1,0 +1,189 @@
+:doc:`Transfer <../../transfer>` / Paginator / ListAccesses
+
+************
+ListAccesses
+************
+
+
+
+.. py:class:: Transfer.Paginator.ListAccesses
+
+  ::
+
+    
+    paginator = client.get_paginator('list_accesses')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`Transfer.Client.list_accesses`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/ListAccesses>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          ServerId='string',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type ServerId: string
+    :param ServerId: **[REQUIRED]** 
+
+      A system-assigned unique identifier for a server that has users assigned to it.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'ServerId': 'string',
+            'Accesses': [
+                {
+                    'HomeDirectory': 'string',
+                    'HomeDirectoryType': 'PATH'|'LOGICAL',
+                    'Role': 'string',
+                    'ExternalId': 'string'
+                },
+            ]
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **ServerId** *(string) --* 
+
+          A system-assigned unique identifier for a server that has users assigned to it.
+
+          
+        
+
+        - **Accesses** *(list) --* 
+
+          Returns the accesses and their properties for the ``ServerId`` value that you specify.
+
+          
+          
+
+          - *(dict) --* 
+
+            Lists the properties for one or more specified associated accesses.
+
+            
+            
+
+            - **HomeDirectory** *(string) --* 
+
+              The landing directory (folder) for a user when they log in to the server using the client.
+
+               
+
+              A ``HomeDirectory`` example is ``/bucket_name/home/mydirectory``.
+
+               
+
+              .. note::
+
+                
+
+                You can use the ``HomeDirectory`` parameter for ``HomeDirectoryType`` when it is set to either ``PATH`` or ``LOGICAL``.
+
+                
+
+              
+            
+
+            - **HomeDirectoryType** *(string) --* 
+
+              The type of landing directory (folder) that you want your users' home directory to be when they log in to the server. If you set it to ``PATH``, the user will see the absolute Amazon S3 bucket or Amazon EFS path as is in their file transfer protocol clients. If you set it to ``LOGICAL``, you need to provide mappings in the ``HomeDirectoryMappings`` for how you want to make Amazon S3 or Amazon EFS paths visible to your users.
+
+               
+
+              .. note::
+
+                
+
+                If ``HomeDirectoryType`` is ``LOGICAL``, you must provide mappings, using the ``HomeDirectoryMappings`` parameter. If, on the other hand, ``HomeDirectoryType`` is ``PATH``, you provide an absolute path using the ``HomeDirectory`` parameter. You cannot have both ``HomeDirectory`` and ``HomeDirectoryMappings`` in your template.
+
+                
+
+              
+            
+
+            - **Role** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the Identity and Access Management (IAM) role that controls your users' access to your Amazon S3 bucket or Amazon EFS file system. The policies attached to this role determine the level of access that you want to provide your users when transferring files into and out of your Amazon S3 bucket or Amazon EFS file system. The IAM role should also contain a trust relationship that allows the server to access your resources when servicing your users' transfer requests.
+
+              
+            
+
+            - **ExternalId** *(string) --* 
+
+              A unique identifier that is required to identify specific groups within your directory. The users of the group that you associate have access to your Amazon S3 or Amazon EFS resources over the enabled protocols using Transfer Family. If you know the group name, you can view the SID values by running the following command using Windows PowerShell.
+
+               
+
+              ``Get-ADGroup -Filter {samAccountName -like "YourGroupName*"} -Properties * | Select SamAccountName,ObjectSid``
+
+               
+
+              In that command, replace *YourGroupName* with the name of your Active Directory group.
+
+               
+
+              The regular expression used to validate this parameter is a string of characters consisting of uppercase and lowercase alphanumeric characters with no spaces. You can also include underscores or any of the following characters: =,.@:/-
+
+              
+        
+      
+    

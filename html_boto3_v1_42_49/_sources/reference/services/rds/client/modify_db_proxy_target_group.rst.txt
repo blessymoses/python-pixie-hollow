@@ -1,0 +1,350 @@
+:doc:`RDS <../../rds>` / Client / modify_db_proxy_target_group
+
+****************************
+modify_db_proxy_target_group
+****************************
+
+
+
+.. py:method:: RDS.Client.modify_db_proxy_target_group(**kwargs)
+
+  
+
+  Modifies the properties of a ``DBProxyTargetGroup``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rds-2014-10-31/ModifyDBProxyTargetGroup>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.modify_db_proxy_target_group(
+        TargetGroupName='string',
+        DBProxyName='string',
+        ConnectionPoolConfig={
+            'MaxConnectionsPercent': 123,
+            'MaxIdleConnectionsPercent': 123,
+            'ConnectionBorrowTimeout': 123,
+            'SessionPinningFilters': [
+                'string',
+            ],
+            'InitQuery': 'string'
+        },
+        NewName='string'
+    )
+    
+  :type TargetGroupName: string
+  :param TargetGroupName: **[REQUIRED]** 
+
+    The name of the target group to modify.
+
+    
+
+  
+  :type DBProxyName: string
+  :param DBProxyName: **[REQUIRED]** 
+
+    The name of the proxy.
+
+    
+
+  
+  :type ConnectionPoolConfig: dict
+  :param ConnectionPoolConfig: 
+
+    The settings that determine the size and behavior of the connection pool for the target group.
+
+    
+
+  
+    - **MaxConnectionsPercent** *(integer) --* 
+
+      The maximum size of the connection pool for each target in a target group. The value is expressed as a percentage of the ``max_connections`` setting for the RDS DB instance or Aurora DB cluster used by the target group.
+
+       
+
+      If you specify ``MaxIdleConnectionsPercent``, then you must also include a value for this parameter.
+
+       
+
+      Default: ``10`` for RDS for Microsoft SQL Server, and ``100`` for all other engines
+
+       
+
+      Constraints:
+
+       
+
+      
+      * Must be between 1 and 100.
+      
+
+      
+
+    
+    - **MaxIdleConnectionsPercent** *(integer) --* 
+
+      A value that controls how actively the proxy closes idle database connections in the connection pool. The value is expressed as a percentage of the ``max_connections`` setting for the RDS DB instance or Aurora DB cluster used by the target group. With a high value, the proxy leaves a high percentage of idle database connections open. A low value causes the proxy to close more idle connections and return them to the database.
+
+       
+
+      If you specify this parameter, then you must also include a value for ``MaxConnectionsPercent``.
+
+       
+
+      Default: The default value is half of the value of ``MaxConnectionsPercent``. For example, if ``MaxConnectionsPercent`` is 80, then the default value of ``MaxIdleConnectionsPercent`` is 40. If the value of ``MaxConnectionsPercent`` isn't specified, then for SQL Server, ``MaxIdleConnectionsPercent`` is ``5``, and for all other engines, the default is ``50``.
+
+       
+
+      Constraints:
+
+       
+
+      
+      * Must be between 0 and the value of ``MaxConnectionsPercent``.
+      
+
+      
+
+    
+    - **ConnectionBorrowTimeout** *(integer) --* 
+
+      The number of seconds for a proxy to wait for a connection to become available in the connection pool. This setting only applies when the proxy has opened its maximum number of connections and all connections are busy with client sessions.
+
+       
+
+      Default: ``120``
+
+       
+
+      Constraints:
+
+       
+
+      
+      * Must be between 0 and 300.
+      
+
+      
+
+    
+    - **SessionPinningFilters** *(list) --* 
+
+      Each item in the list represents a class of SQL operations that normally cause all later statements in a session using a proxy to be pinned to the same underlying database connection. Including an item in the list exempts that class of SQL operations from the pinning behavior.
+
+       
+
+      Default: no session pinning filters
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **InitQuery** *(string) --* 
+
+      Add an initialization query, or modify the current one. You can specify one or more SQL statements for the proxy to run when opening each new database connection. The setting is typically used with ``SET`` statements to make sure that each connection has identical settings. Make sure the query added here is valid. This is an optional field, so you can choose to leave it empty. For including multiple variables in a single SET statement, use a comma separator.
+
+       
+
+      For example: ``SET variable1=value1, variable2=value2``
+
+       
+
+      Default: no initialization query
+
+       
+
+      .. warning::
+
+         
+
+        Since you can access initialization query as part of target group configuration, it is not protected by authentication or cryptographic methods. Anyone with access to view or manage your proxy target group configuration can view the initialization query. You should not add sensitive data, such as passwords or long-lived encryption keys, to this option.
+
+        
+
+      
+
+    
+  
+  :type NewName: string
+  :param NewName: 
+
+    The new name for the modified ``DBProxyTarget``. An identifier must begin with a letter and must contain only ASCII letters, digits, and hyphens; it can't end with a hyphen or contain two consecutive hyphens.
+
+     
+
+    You can't rename the ``default`` target group.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DBProxyTargetGroup': {
+              'DBProxyName': 'string',
+              'TargetGroupName': 'string',
+              'TargetGroupArn': 'string',
+              'IsDefault': True|False,
+              'Status': 'string',
+              'ConnectionPoolConfig': {
+                  'MaxConnectionsPercent': 123,
+                  'MaxIdleConnectionsPercent': 123,
+                  'ConnectionBorrowTimeout': 123,
+                  'SessionPinningFilters': [
+                      'string',
+                  ],
+                  'InitQuery': 'string'
+              },
+              'CreatedDate': datetime(2015, 1, 1),
+              'UpdatedDate': datetime(2015, 1, 1)
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DBProxyTargetGroup** *(dict) --* 
+
+        The settings of the modified ``DBProxyTarget``.
+
+        
+        
+
+        - **DBProxyName** *(string) --* 
+
+          The identifier for the RDS proxy associated with this target group.
+
+          
+        
+
+        - **TargetGroupName** *(string) --* 
+
+          The identifier for the target group. This name must be unique for all target groups owned by your Amazon Web Services account in the specified Amazon Web Services Region.
+
+          
+        
+
+        - **TargetGroupArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) representing the target group.
+
+          
+        
+
+        - **IsDefault** *(boolean) --* 
+
+          Indicates whether this target group is the first one used for connection requests by the associated proxy. Because each proxy is currently associated with a single target group, currently this setting is always ``true``.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The current status of this target group. A status of ``available`` means the target group is correctly associated with a database. Other values indicate that you must wait for the target group to be ready, or take some action to resolve an issue.
+
+          
+        
+
+        - **ConnectionPoolConfig** *(dict) --* 
+
+          The settings that determine the size and behavior of the connection pool for the target group.
+
+          
+          
+
+          - **MaxConnectionsPercent** *(integer) --* 
+
+            The maximum size of the connection pool for each target in a target group. The value is expressed as a percentage of the ``max_connections`` setting for the RDS DB instance or Aurora DB cluster used by the target group.
+
+            
+          
+
+          - **MaxIdleConnectionsPercent** *(integer) --* 
+
+            Controls how actively the proxy closes idle database connections in the connection pool. The value is expressed as a percentage of the ``max_connections`` setting for the RDS DB instance or Aurora DB cluster used by the target group. With a high value, the proxy leaves a high percentage of idle database connections open. A low value causes the proxy to close more idle connections and return them to the database.
+
+            
+          
+
+          - **ConnectionBorrowTimeout** *(integer) --* 
+
+            The number of seconds for a proxy to wait for a connection to become available in the connection pool. Only applies when the proxy has opened its maximum number of connections and all connections are busy with client sessions.
+
+            
+          
+
+          - **SessionPinningFilters** *(list) --* 
+
+            Each item in the list represents a class of SQL operations that normally cause all later statements in a session using a proxy to be pinned to the same underlying database connection. Including an item in the list exempts that class of SQL operations from the pinning behavior. This setting is only supported for MySQL engine family databases. Currently, the only allowed value is ``EXCLUDE_VARIABLE_SETS``.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **InitQuery** *(string) --* 
+
+            One or more SQL statements for the proxy to run when opening each new database connection. The setting is typically used with ``SET`` statements to make sure that each connection has identical settings. The query added here must be valid. For including multiple variables in a single SET statement, use a comma separator. This is an optional field.
+
+             
+
+            For example: ``SET variable1=value1, variable2=value2``
+
+             
+
+            .. warning::
+
+               
+
+              Since you can access initialization query as part of target group configuration, it is not protected by authentication or cryptographic methods. Anyone with access to view or manage your proxy target group configuration can view the initialization query. You should not add sensitive data, such as passwords or long-lived encryption keys, to this option.
+
+              
+
+            
+      
+        
+
+        - **CreatedDate** *(datetime) --* 
+
+          The date and time when the target group was first created.
+
+          
+        
+
+        - **UpdatedDate** *(datetime) --* 
+
+          The date and time when the target group was last updated.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`RDS.Client.exceptions.DBProxyNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBProxyTargetGroupNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidDBProxyStateFault`
+
+  

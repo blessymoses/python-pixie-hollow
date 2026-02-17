@@ -1,0 +1,276 @@
+:doc:`Redshift <../../redshift>` / Client / describe_usage_limits
+
+*********************
+describe_usage_limits
+*********************
+
+
+
+.. py:method:: Redshift.Client.describe_usage_limits(**kwargs)
+
+  
+
+  Shows usage limits on a cluster. Results are filtered based on the combination of input usage limit identifier, cluster identifier, and feature type parameters:
+
+   
+
+  
+  * If usage limit identifier, cluster identifier, and feature type are not provided, then all usage limit objects for the current account in the current region are returned.
+   
+  * If usage limit identifier is provided, then the corresponding usage limit object is returned.
+   
+  * If cluster identifier is provided, then all usage limit objects for the specified cluster are returned.
+   
+  * If cluster identifier and feature type are provided, then all usage limit objects for the combination of cluster and feature are returned.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/DescribeUsageLimits>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_usage_limits(
+        UsageLimitId='string',
+        ClusterIdentifier='string',
+        FeatureType='spectrum'|'concurrency-scaling'|'cross-region-datasharing'|'extra-compute-for-automatic-optimization',
+        MaxRecords=123,
+        Marker='string',
+        TagKeys=[
+            'string',
+        ],
+        TagValues=[
+            'string',
+        ]
+    )
+    
+  :type UsageLimitId: string
+  :param UsageLimitId: 
+
+    The identifier of the usage limit to describe.
+
+    
+
+  
+  :type ClusterIdentifier: string
+  :param ClusterIdentifier: 
+
+    The identifier of the cluster for which you want to describe usage limits.
+
+    
+
+  
+  :type FeatureType: string
+  :param FeatureType: 
+
+    The feature type for which you want to describe usage limits.
+
+    
+
+  
+  :type MaxRecords: integer
+  :param MaxRecords: 
+
+    The maximum number of response records to return in each call. If the number of remaining response records exceeds the specified ``MaxRecords`` value, a value is returned in a ``marker`` field of the response. You can retrieve the next set of records by retrying the command with the returned marker value.
+
+     
+
+    Default: ``100``
+
+     
+
+    Constraints: minimum 20, maximum 100.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    An optional parameter that specifies the starting point to return a set of response records. When the results of a  DescribeUsageLimits request exceed the value specified in ``MaxRecords``, Amazon Web Services returns a value in the ``Marker`` field of the response. You can retrieve the next set of response records by providing the returned marker value in the ``Marker`` parameter and retrying the request.
+
+    
+
+  
+  :type TagKeys: list
+  :param TagKeys: 
+
+    A tag key or keys for which you want to return all matching usage limit objects that are associated with the specified key or keys. For example, suppose that you have parameter groups that are tagged with keys called ``owner`` and ``environment``. If you specify both of these tag keys in the request, Amazon Redshift returns a response with the usage limit objects have either or both of these tag keys associated with them.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type TagValues: list
+  :param TagValues: 
+
+    A tag value or values for which you want to return all matching usage limit objects that are associated with the specified tag value or values. For example, suppose that you have parameter groups that are tagged with values called ``admin`` and ``test``. If you specify both of these tag values in the request, Amazon Redshift returns a response with the usage limit objects that have either or both of these tag values associated with them.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'UsageLimits': [
+              {
+                  'UsageLimitId': 'string',
+                  'ClusterIdentifier': 'string',
+                  'FeatureType': 'spectrum'|'concurrency-scaling'|'cross-region-datasharing'|'extra-compute-for-automatic-optimization',
+                  'LimitType': 'time'|'data-scanned',
+                  'Amount': 123,
+                  'Period': 'daily'|'weekly'|'monthly',
+                  'BreachAction': 'log'|'emit-metric'|'disable',
+                  'Tags': [
+                      {
+                          'Key': 'string',
+                          'Value': 'string'
+                      },
+                  ]
+              },
+          ],
+          'Marker': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **UsageLimits** *(list) --* 
+
+        Contains the output from the  DescribeUsageLimits action.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a usage limit object for a cluster.
+
+          
+          
+
+          - **UsageLimitId** *(string) --* 
+
+            The identifier of the usage limit.
+
+            
+          
+
+          - **ClusterIdentifier** *(string) --* 
+
+            The identifier of the cluster with a usage limit.
+
+            
+          
+
+          - **FeatureType** *(string) --* 
+
+            The Amazon Redshift feature to which the limit applies.
+
+            
+          
+
+          - **LimitType** *(string) --* 
+
+            The type of limit. Depending on the feature type, this can be based on a time duration or data size.
+
+            
+          
+
+          - **Amount** *(integer) --* 
+
+            The limit amount. If time-based, this amount is in minutes. If data-based, this amount is in terabytes (TB).
+
+            
+          
+
+          - **Period** *(string) --* 
+
+            The time period that the amount applies to. A ``weekly`` period begins on Sunday. The default is ``monthly``.
+
+            
+          
+
+          - **BreachAction** *(string) --* 
+
+            The action that Amazon Redshift takes when the limit is reached. Possible values are:
+
+             
+
+            
+            * **log** - To log an event in a system table. The default is log.
+             
+            * **emit-metric** - To emit CloudWatch metrics.
+             
+            * **disable** - To disable the feature until the next usage period begins.
+            
+
+            
+          
+
+          - **Tags** *(list) --* 
+
+            A list of tag instances.
+
+            
+            
+
+            - *(dict) --* 
+
+              A tag consisting of a name/value pair for a resource.
+
+              
+              
+
+              - **Key** *(string) --* 
+
+                The key, or name, for the resource tag.
+
+                
+              
+
+              - **Value** *(string) --* 
+
+                The value for the resource tag.
+
+                
+          
+        
+      
+    
+      
+
+      - **Marker** *(string) --* 
+
+        A value that indicates the starting point for the next set of response records in a subsequent request. If a value is returned in a response, you can retrieve the next set of records by providing this returned marker value in the ``Marker`` parameter and retrying the command. If the ``Marker`` field is empty, all response records have been retrieved for the request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Redshift.Client.exceptions.ClusterNotFoundFault`
+
+  
+  *   :py:class:`Redshift.Client.exceptions.UnsupportedOperationFault`
+
+  

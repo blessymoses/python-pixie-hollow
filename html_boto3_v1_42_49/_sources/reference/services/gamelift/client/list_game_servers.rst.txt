@@ -1,0 +1,230 @@
+:doc:`GameLift <../../gamelift>` / Client / list_game_servers
+
+*****************
+list_game_servers
+*****************
+
+
+
+.. py:method:: GameLift.Client.list_game_servers(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2 (FleetIQ)
+
+   
+
+  Retrieves information on all game servers that are currently active in a specified game server group. You can opt to sort the list by game server age. Use the pagination parameters to retrieve results in a set of sequential segments.
+
+   
+
+  **Learn more**
+
+   
+
+  `Amazon GameLift Servers FleetIQ Guide <https://docs.aws.amazon.com/gamelift/latest/fleetiqguide/gsg-intro.html>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/ListGameServers>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_game_servers(
+        GameServerGroupName='string',
+        SortOrder='ASCENDING'|'DESCENDING',
+        Limit=123,
+        NextToken='string'
+    )
+    
+  :type GameServerGroupName: string
+  :param GameServerGroupName: **[REQUIRED]** 
+
+    An identifier for the game server group to retrieve a list of game servers from. Use either the name or ARN value.
+
+    
+
+  
+  :type SortOrder: string
+  :param SortOrder: 
+
+    Indicates how to sort the returned data based on game server registration timestamp. Use ``ASCENDING`` to retrieve oldest game servers first, or use ``DESCENDING`` to retrieve newest game servers first. If this parameter is left empty, game servers are returned in no particular order.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    The maximum number of results to return. Use this parameter with ``NextToken`` to get results as a set of sequential pages.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A token that indicates the start of the next sequential page of results. Use the token that is returned with a previous call to this operation. To start at the beginning of the result set, do not specify a value.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GameServers': [
+              {
+                  'GameServerGroupName': 'string',
+                  'GameServerGroupArn': 'string',
+                  'GameServerId': 'string',
+                  'InstanceId': 'string',
+                  'ConnectionInfo': 'string',
+                  'GameServerData': 'string',
+                  'ClaimStatus': 'CLAIMED',
+                  'UtilizationStatus': 'AVAILABLE'|'UTILIZED',
+                  'RegistrationTime': datetime(2015, 1, 1),
+                  'LastClaimTime': datetime(2015, 1, 1),
+                  'LastHealthCheckTime': datetime(2015, 1, 1)
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GameServers** *(list) --* 
+
+        A collection of game server objects that match the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Properties describing a game server that is running on an instance in a game server group.
+
+           
+
+          A game server is created by a successful call to ``RegisterGameServer`` and deleted by calling ``DeregisterGameServer``. A game server is claimed to host a game session by calling ``ClaimGameServer``.
+
+          
+          
+
+          - **GameServerGroupName** *(string) --* 
+
+            A unique identifier for the game server group where the game server is running.
+
+            
+          
+
+          - **GameServerGroupArn** *(string) --* 
+
+            The ARN identifier for the game server group where the game server is located.
+
+            
+          
+
+          - **GameServerId** *(string) --* 
+
+            A custom string that uniquely identifies the game server. Game server IDs are developer-defined and are unique across all game server groups in an Amazon Web Services account.
+
+            
+          
+
+          - **InstanceId** *(string) --* 
+
+            The unique identifier for the instance where the game server is running. This ID is available in the instance metadata. EC2 instance IDs use a 17-character format, for example: ``i-1234567890abcdef0``.
+
+            
+          
+
+          - **ConnectionInfo** *(string) --* 
+
+            The port and IP address that must be used to establish a client connection to the game server.
+
+            
+          
+
+          - **GameServerData** *(string) --* 
+
+            A set of custom game server properties, formatted as a single string value. This data is passed to a game client or service when it requests information on game servers.
+
+            
+          
+
+          - **ClaimStatus** *(string) --* 
+
+            Indicates when an available game server has been reserved for gameplay but has not yet started hosting a game. Once it is claimed, the game server remains in ``CLAIMED`` status for a maximum of one minute. During this time, game clients connect to the game server to start the game and trigger the game server to update its utilization status. After one minute, the game server claim status reverts to null.
+
+            
+          
+
+          - **UtilizationStatus** *(string) --* 
+
+            Indicates whether the game server is currently available for new games or is busy. Possible statuses include:
+
+             
+
+            
+            * ``AVAILABLE`` - The game server is available to be claimed. A game server that has been claimed remains in this status until it reports game hosting activity.
+             
+            * ``UTILIZED`` - The game server is currently hosting a game session with players.
+            
+
+            
+          
+
+          - **RegistrationTime** *(datetime) --* 
+
+            Timestamp that indicates when the game server registered. The format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+            
+          
+
+          - **LastClaimTime** *(datetime) --* 
+
+            Timestamp that indicates the last time the game server was claimed. The format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``). This value is used to calculate when a claimed game server's status should revert to null.
+
+            
+          
+
+          - **LastHealthCheckTime** *(datetime) --* 
+
+            Timestamp that indicates the last time the game server was updated with health status. The format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``). After game server registration, this property is only changed when a game server update specifies a health check value.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A token that indicates where to resume retrieving results on the next call to this operation. If no token is returned, these results represent the end of the list.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  

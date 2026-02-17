@@ -1,0 +1,431 @@
+:doc:`AppConfig <../../appconfig>` / Client / create_extension
+
+****************
+create_extension
+****************
+
+
+
+.. py:method:: AppConfig.Client.create_extension(**kwargs)
+
+  
+
+  Creates an AppConfig extension. An extension augments your ability to inject logic or behavior at different points during the AppConfig workflow of creating or deploying a configuration.
+
+   
+
+  You can create your own extensions or use the Amazon Web Services authored extensions provided by AppConfig. For an AppConfig extension that uses Lambda, you must create a Lambda function to perform any computation and processing defined in the extension. If you plan to create custom versions of the Amazon Web Services authored notification extensions, you only need to specify an Amazon Resource Name (ARN) in the ``Uri`` field for the new extension version.
+
+   
+
+  
+  * For a custom EventBridge notification extension, enter the ARN of the EventBridge default events in the ``Uri`` field.
+   
+  * For a custom Amazon SNS notification extension, enter the ARN of an Amazon SNS topic in the ``Uri`` field.
+   
+  * For a custom Amazon SQS notification extension, enter the ARN of an Amazon SQS message queue in the ``Uri`` field.
+  
+
+   
+
+  For more information about extensions, see `Extending workflows <https://docs.aws.amazon.com/appconfig/latest/userguide/working-with-appconfig-extensions.html>`__ in the *AppConfig User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/appconfig-2019-10-09/CreateExtension>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_extension(
+        Name='string',
+        Description='string',
+        Actions={
+            'string': [
+                {
+                    'Name': 'string',
+                    'Description': 'string',
+                    'Uri': 'string',
+                    'RoleArn': 'string'
+                },
+            ]
+        },
+        Parameters={
+            'string': {
+                'Description': 'string',
+                'Required': True|False,
+                'Dynamic': True|False
+            }
+        },
+        Tags={
+            'string': 'string'
+        },
+        LatestVersionNumber=123
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A name for the extension. Each extension name in your account must be unique. Extension versions use the same name.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    Information about the extension.
+
+    
+
+  
+  :type Actions: dict
+  :param Actions: **[REQUIRED]** 
+
+    The actions defined in the extension.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(list) --* 
+
+      
+        - *(dict) --* 
+
+          An action defines the tasks that the extension performs during the AppConfig workflow. Each action includes an action point, as shown in the following list:
+
+           
+
+          
+          * ``PRE_CREATE_HOSTED_CONFIGURATION_VERSION``
+           
+          * ``PRE_START_DEPLOYMENT``
+           
+          * ``AT_DEPLOYMENT_TICK``
+           
+          * ``ON_DEPLOYMENT_START``
+           
+          * ``ON_DEPLOYMENT_STEP``
+           
+          * ``ON_DEPLOYMENT_BAKING``
+           
+          * ``ON_DEPLOYMENT_COMPLETE``
+           
+          * ``ON_DEPLOYMENT_ROLLED_BACK``
+          
+
+           
+
+          Each action also includes a name, a URI to an Lambda function, and an Amazon Resource Name (ARN) for an Identity and Access Management assume role. You specify the name, URI, and ARN for each *action point* defined in the extension.
+
+          
+
+        
+          - **Name** *(string) --* 
+
+            The action name.
+
+            
+
+          
+          - **Description** *(string) --* 
+
+            Information about the action.
+
+            
+
+          
+          - **Uri** *(string) --* 
+
+            The extension URI associated to the action point in the extension definition. The URI can be an Amazon Resource Name (ARN) for one of the following: an Lambda function, an Amazon Simple Queue Service queue, an Amazon Simple Notification Service topic, or the Amazon EventBridge default event bus.
+
+            
+
+          
+          - **RoleArn** *(string) --* 
+
+            An Amazon Resource Name (ARN) for an Identity and Access Management assume role.
+
+            
+
+          
+        
+    
+
+
+  :type Parameters: dict
+  :param Parameters: 
+
+    The parameters accepted by the extension. You specify parameter values when you associate the extension to an AppConfig resource by using the ``CreateExtensionAssociation`` API action. For Lambda extension actions, these parameters are included in the Lambda request object.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(dict) --* 
+
+        A value such as an Amazon Resource Name (ARN) or an Amazon Simple Notification Service topic entered in an extension when invoked. Parameter values are specified in an extension association. For more information about extensions, see `Extending workflows <https://docs.aws.amazon.com/appconfig/latest/userguide/working-with-appconfig-extensions.html>`__ in the *AppConfig User Guide*.
+
+        
+
+      
+        - **Description** *(string) --* 
+
+          Information about the parameter.
+
+          
+
+        
+        - **Required** *(boolean) --* 
+
+          A parameter value must be specified in the extension association.
+
+          
+
+        
+        - **Dynamic** *(boolean) --* 
+
+          Indicates whether this parameter's value can be supplied at the extension's action point instead of during extension association. Dynamic parameters can't be marked ``Required``.
+
+          
+
+        
+      
+
+
+  :type Tags: dict
+  :param Tags: 
+
+    Adds one or more tags for the specified extension. Tags are metadata that help you categorize resources in different ways, for example, by purpose, owner, or environment. Each tag consists of a key and an optional value, both of which you define.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type LatestVersionNumber: integer
+  :param LatestVersionNumber: 
+
+    You can omit this field when you create an extension. When you create a new version, specify the most recent current version number. For example, you create version 3, enter 2 for this field.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Id': 'string',
+          'Name': 'string',
+          'VersionNumber': 123,
+          'Arn': 'string',
+          'Description': 'string',
+          'Actions': {
+              'string': [
+                  {
+                      'Name': 'string',
+                      'Description': 'string',
+                      'Uri': 'string',
+                      'RoleArn': 'string'
+                  },
+              ]
+          },
+          'Parameters': {
+              'string': {
+                  'Description': 'string',
+                  'Required': True|False,
+                  'Dynamic': True|False
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Id** *(string) --* 
+
+        The system-generated ID of the extension.
+
+        
+      
+
+      - **Name** *(string) --* 
+
+        The extension name.
+
+        
+      
+
+      - **VersionNumber** *(integer) --* 
+
+        The extension version number.
+
+        
+      
+
+      - **Arn** *(string) --* 
+
+        The system-generated Amazon Resource Name (ARN) for the extension.
+
+        
+      
+
+      - **Description** *(string) --* 
+
+        Information about the extension.
+
+        
+      
+
+      - **Actions** *(dict) --* 
+
+        The actions defined in the extension.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(list) --* 
+            
+
+            - *(dict) --* 
+
+              An action defines the tasks that the extension performs during the AppConfig workflow. Each action includes an action point, as shown in the following list:
+
+               
+
+              
+              * ``PRE_CREATE_HOSTED_CONFIGURATION_VERSION``
+               
+              * ``PRE_START_DEPLOYMENT``
+               
+              * ``AT_DEPLOYMENT_TICK``
+               
+              * ``ON_DEPLOYMENT_START``
+               
+              * ``ON_DEPLOYMENT_STEP``
+               
+              * ``ON_DEPLOYMENT_BAKING``
+               
+              * ``ON_DEPLOYMENT_COMPLETE``
+               
+              * ``ON_DEPLOYMENT_ROLLED_BACK``
+              
+
+               
+
+              Each action also includes a name, a URI to an Lambda function, and an Amazon Resource Name (ARN) for an Identity and Access Management assume role. You specify the name, URI, and ARN for each *action point* defined in the extension.
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The action name.
+
+                
+              
+
+              - **Description** *(string) --* 
+
+                Information about the action.
+
+                
+              
+
+              - **Uri** *(string) --* 
+
+                The extension URI associated to the action point in the extension definition. The URI can be an Amazon Resource Name (ARN) for one of the following: an Lambda function, an Amazon Simple Queue Service queue, an Amazon Simple Notification Service topic, or the Amazon EventBridge default event bus.
+
+                
+              
+
+              - **RoleArn** *(string) --* 
+
+                An Amazon Resource Name (ARN) for an Identity and Access Management assume role.
+
+                
+          
+        
+    
+  
+      
+
+      - **Parameters** *(dict) --* 
+
+        The parameters accepted by the extension. You specify parameter values when you associate the extension to an AppConfig resource by using the ``CreateExtensionAssociation`` API action. For Lambda extension actions, these parameters are included in the Lambda request object.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(dict) --* 
+
+            A value such as an Amazon Resource Name (ARN) or an Amazon Simple Notification Service topic entered in an extension when invoked. Parameter values are specified in an extension association. For more information about extensions, see `Extending workflows <https://docs.aws.amazon.com/appconfig/latest/userguide/working-with-appconfig-extensions.html>`__ in the *AppConfig User Guide*.
+
+            
+            
+
+            - **Description** *(string) --* 
+
+              Information about the parameter.
+
+              
+            
+
+            - **Required** *(boolean) --* 
+
+              A parameter value must be specified in the extension association.
+
+              
+            
+
+            - **Dynamic** *(boolean) --* 
+
+              Indicates whether this parameter's value can be supplied at the extension's action point instead of during extension association. Dynamic parameters can't be marked ``Required``.
+
+              
+        
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`AppConfig.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`AppConfig.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`AppConfig.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`AppConfig.Client.exceptions.InternalServerException`
+
+  

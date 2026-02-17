@@ -1,0 +1,173 @@
+:doc:`GuardDuty <../../guardduty>` / Client / create_members
+
+**************
+create_members
+**************
+
+
+
+.. py:method:: GuardDuty.Client.create_members(**kwargs)
+
+  
+
+  Creates member accounts of the current Amazon Web Services account by specifying a list of Amazon Web Services account IDs. This step is a prerequisite for managing the associated member accounts either by invitation or through an organization.
+
+   
+
+  As a delegated administrator, using ``CreateMembers`` will enable GuardDuty in the added member accounts, with the exception of the organization delegated administrator account. A delegated administrator must enable GuardDuty prior to being added as a member.
+
+   
+
+  When you use CreateMembers as an Organizations delegated administrator, GuardDuty applies your organization's auto-enable settings to the member accounts in this request, irrespective of the accounts being new or existing members. For more information about the existing auto-enable settings for your organization, see `DescribeOrganizationConfiguration <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_DescribeOrganizationConfiguration.html>`__.
+
+   
+
+  If you disassociate a member account that was added by invitation, the member account details obtained from this API, including the associated email addresses, will be retained. This is done so that the delegated administrator can invoke the `InviteMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_InviteMembers.html>`__ API without the need to invoke the CreateMembers API again. To remove the details associated with a member account, the delegated administrator must invoke the `DeleteMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_DeleteMembers.html>`__ API.
+
+   
+
+  When the member accounts added through Organizations are later disassociated, you (administrator) can't invite them by calling the InviteMembers API. You can create an association with these member accounts again only by calling the CreateMembers API.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/CreateMembers>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_members(
+        DetectorId='string',
+        AccountDetails=[
+            {
+                'AccountId': 'string',
+                'Email': 'string'
+            },
+        ]
+    )
+    
+  :type DetectorId: string
+  :param DetectorId: **[REQUIRED]** 
+
+    The unique ID of the detector of the GuardDuty account for which you want to associate member accounts.
+
+     
+
+    To find the ``detectorId`` in the current Region, see the Settings page in the GuardDuty console, or run the `ListDetectors <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html>`__ API.
+
+    
+
+  
+  :type AccountDetails: list
+  :param AccountDetails: **[REQUIRED]** 
+
+    A list of account ID and email address pairs of the accounts that you want to associate with the GuardDuty administrator account.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains information about the account.
+
+      
+
+    
+      - **AccountId** *(string) --* **[REQUIRED]** 
+
+        The member account ID.
+
+        
+
+      
+      - **Email** *(string) --* **[REQUIRED]** 
+
+        The email address of the member account. The following list includes the rules for a valid email address:
+
+         
+
+        
+        * The email address must be a minimum of 6 and a maximum of 64 characters long.
+         
+        * All characters must be 7-bit ASCII characters.
+         
+        * There must be one and only one @ symbol, which separates the local name from the domain name.
+         
+        * The local name can't contain any of the following characters: whitespace, " ' ( ) < > [ ] : ' , \ | % &
+         
+        * The local name can't begin with a dot (.).
+         
+        * The domain name can consist of only the characters [a-z], [A-Z], [0-9], hyphen (-), or dot (.).
+         
+        * The domain name can't begin or end with a dot (.) or hyphen (-).
+         
+        * The domain name must contain at least one dot.
+        
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'UnprocessedAccounts': [
+              {
+                  'AccountId': 'string',
+                  'Result': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **UnprocessedAccounts** *(list) --* 
+
+        A list of objects that include the ``accountIds`` of the unprocessed accounts and a result string that explains why each was unprocessed.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about the accounts that weren't processed.
+
+          
+          
+
+          - **AccountId** *(string) --* 
+
+            The Amazon Web Services account ID.
+
+            
+          
+
+          - **Result** *(string) --* 
+
+            A reason why the account hasn't been processed.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GuardDuty.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`GuardDuty.Client.exceptions.InternalServerErrorException`
+
+  

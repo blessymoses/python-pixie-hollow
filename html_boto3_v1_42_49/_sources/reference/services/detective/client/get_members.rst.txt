@@ -1,0 +1,361 @@
+:doc:`Detective <../../detective>` / Client / get_members
+
+***********
+get_members
+***********
+
+
+
+.. py:method:: Detective.Client.get_members(**kwargs)
+
+  
+
+  Returns the membership details for specified member accounts for a behavior graph.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/detective-2018-10-26/GetMembers>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_members(
+        GraphArn='string',
+        AccountIds=[
+            'string',
+        ]
+    )
+    
+  :type GraphArn: string
+  :param GraphArn: **[REQUIRED]** 
+
+    The ARN of the behavior graph for which to request the member details.
+
+    
+
+  
+  :type AccountIds: list
+  :param AccountIds: **[REQUIRED]** 
+
+    The list of Amazon Web Services account identifiers for the member account for which to return member details. You can request details for up to 50 member accounts at a time.
+
+     
+
+    You cannot use ``GetMembers`` to retrieve information about member accounts that were removed from the behavior graph.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'MemberDetails': [
+              {
+                  'AccountId': 'string',
+                  'EmailAddress': 'string',
+                  'GraphArn': 'string',
+                  'MasterId': 'string',
+                  'AdministratorId': 'string',
+                  'Status': 'INVITED'|'VERIFICATION_IN_PROGRESS'|'VERIFICATION_FAILED'|'ENABLED'|'ACCEPTED_BUT_DISABLED',
+                  'DisabledReason': 'VOLUME_TOO_HIGH'|'VOLUME_UNKNOWN',
+                  'InvitedTime': datetime(2015, 1, 1),
+                  'UpdatedTime': datetime(2015, 1, 1),
+                  'VolumeUsageInBytes': 123,
+                  'VolumeUsageUpdatedTime': datetime(2015, 1, 1),
+                  'PercentOfGraphUtilization': 123.0,
+                  'PercentOfGraphUtilizationUpdatedTime': datetime(2015, 1, 1),
+                  'InvitationType': 'INVITATION'|'ORGANIZATION',
+                  'VolumeUsageByDatasourcePackage': {
+                      'string': {
+                          'VolumeUsageInBytes': 123,
+                          'VolumeUsageUpdateTime': datetime(2015, 1, 1)
+                      }
+                  },
+                  'DatasourcePackageIngestStates': {
+                      'string': 'STARTED'|'STOPPED'|'DISABLED'
+                  }
+              },
+          ],
+          'UnprocessedAccounts': [
+              {
+                  'AccountId': 'string',
+                  'Reason': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **MemberDetails** *(list) --* 
+
+        The member account details that Detective is returning in response to the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Details about a member account in a behavior graph.
+
+          
+          
+
+          - **AccountId** *(string) --* 
+
+            The Amazon Web Services account identifier for the member account.
+
+            
+          
+
+          - **EmailAddress** *(string) --* 
+
+            The Amazon Web Services account root user email address for the member account.
+
+            
+          
+
+          - **GraphArn** *(string) --* 
+
+            The ARN of the behavior graph.
+
+            
+          
+
+          - **MasterId** *(string) --* 
+
+            The Amazon Web Services account identifier of the administrator account for the behavior graph.
+
+            
+          
+
+          - **AdministratorId** *(string) --* 
+
+            The Amazon Web Services account identifier of the administrator account for the behavior graph.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The current membership status of the member account. The status can have one of the following values:
+
+             
+
+            
+            * ``INVITED`` - For invited accounts only. Indicates that the member was sent an invitation but has not yet responded.
+             
+            * ``VERIFICATION_IN_PROGRESS`` - For invited accounts only, indicates that Detective is verifying that the account identifier and email address provided for the member account match. If they do match, then Detective sends the invitation. If the email address and account identifier don't match, then the member cannot be added to the behavior graph. For organization accounts in the organization behavior graph, indicates that Detective is verifying that the account belongs to the organization.
+             
+            * ``VERIFICATION_FAILED`` - For invited accounts only. Indicates that the account and email address provided for the member account do not match, and Detective did not send an invitation to the account.
+             
+            * ``ENABLED`` - Indicates that the member account currently contributes data to the behavior graph. For invited accounts, the member account accepted the invitation. For organization accounts in the organization behavior graph, the Detective administrator account enabled the organization account as a member account.
+             
+            * ``ACCEPTED_BUT_DISABLED`` - The account accepted the invitation, or was enabled by the Detective administrator account, but is prevented from contributing data to the behavior graph. ``DisabledReason`` provides the reason why the member account is not enabled.
+            
+
+             
+
+            Invited accounts that declined an invitation or that were removed from the behavior graph are not included. In the organization behavior graph, organization accounts that the Detective administrator account did not enable are not included.
+
+            
+          
+
+          - **DisabledReason** *(string) --* 
+
+            For member accounts with a status of ``ACCEPTED_BUT_DISABLED``, the reason that the member account is not enabled.
+
+             
+
+            The reason can have one of the following values:
+
+             
+
+            
+            * ``VOLUME_TOO_HIGH`` - Indicates that adding the member account would cause the data volume for the behavior graph to be too high.
+             
+            * ``VOLUME_UNKNOWN`` - Indicates that Detective is unable to verify the data volume for the member account. This is usually because the member account is not enrolled in Amazon GuardDuty.
+            
+
+            
+          
+
+          - **InvitedTime** *(datetime) --* 
+
+            For invited accounts, the date and time that Detective sent the invitation to the account. The value is an ISO8601 formatted string. For example, ``2021-08-18T16:35:56.284Z``.
+
+            
+          
+
+          - **UpdatedTime** *(datetime) --* 
+
+            The date and time that the member account was last updated. The value is an ISO8601 formatted string. For example, ``2021-08-18T16:35:56.284Z``.
+
+            
+          
+
+          - **VolumeUsageInBytes** *(integer) --* 
+
+            The data volume in bytes per day for the member account.
+
+            
+          
+
+          - **VolumeUsageUpdatedTime** *(datetime) --* 
+
+            The data and time when the member account data volume was last updated. The value is an ISO8601 formatted string. For example, ``2021-08-18T16:35:56.284Z``.
+
+            
+          
+
+          - **PercentOfGraphUtilization** *(float) --* 
+
+            The member account data volume as a percentage of the maximum allowed data volume. 0 indicates 0 percent, and 100 indicates 100 percent.
+
+             
+
+            Note that this is not the percentage of the behavior graph data volume.
+
+             
+
+            For example, the data volume for the behavior graph is 80 GB per day. The maximum data volume is 160 GB per day. If the data volume for the member account is 40 GB per day, then ``PercentOfGraphUtilization`` is 25. It represents 25% of the maximum allowed data volume.
+
+            
+          
+
+          - **PercentOfGraphUtilizationUpdatedTime** *(datetime) --* 
+
+            The date and time when the graph utilization percentage was last updated. The value is an ISO8601 formatted string. For example, ``2021-08-18T16:35:56.284Z``.
+
+            
+          
+
+          - **InvitationType** *(string) --* 
+
+            The type of behavior graph membership.
+
+             
+
+            For an organization account in the organization behavior graph, the type is ``ORGANIZATION``.
+
+             
+
+            For an account that was invited to a behavior graph, the type is ``INVITATION``.
+
+            
+          
+
+          - **VolumeUsageByDatasourcePackage** *(dict) --* 
+
+            Details on the volume of usage for each data source package in a behavior graph.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(dict) --* 
+
+                Information on the usage of a data source package in the behavior graph.
+
+                
+                
+
+                - **VolumeUsageInBytes** *(integer) --* 
+
+                  Total volume of data in bytes per day ingested for a given data source package.
+
+                  
+                
+
+                - **VolumeUsageUpdateTime** *(datetime) --* 
+
+                  The data and time when the member account data volume was last updated. The value is an ISO8601 formatted string. For example, ``2021-08-18T16:35:56.284Z``.
+
+                  
+            
+        
+      
+          
+
+          - **DatasourcePackageIngestStates** *(dict) --* 
+
+            The state of a data source package for the behavior graph.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+      
+
+      - **UnprocessedAccounts** *(list) --* 
+
+        The requested member accounts for which Detective was unable to return member details.
+
+         
+
+        For each account, provides the reason why the request could not be processed.
+
+        
+        
+
+        - *(dict) --* 
+
+          A member account that was included in a request but for which the request could not be processed.
+
+          
+          
+
+          - **AccountId** *(string) --* 
+
+            The Amazon Web Services account identifier of the member account that was not processed.
+
+            
+          
+
+          - **Reason** *(string) --* 
+
+            The reason that the member account request could not be processed.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Detective.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Detective.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Detective.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Detective.Client.exceptions.ValidationException`
+
+  

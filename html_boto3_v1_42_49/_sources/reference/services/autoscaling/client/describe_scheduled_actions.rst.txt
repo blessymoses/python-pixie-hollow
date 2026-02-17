@@ -1,0 +1,275 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / describe_scheduled_actions
+
+**************************
+describe_scheduled_actions
+**************************
+
+
+
+.. py:method:: AutoScaling.Client.describe_scheduled_actions(**kwargs)
+
+  
+
+  Gets information about the scheduled actions that haven't run or that have not reached their end time.
+
+   
+
+  To describe the scaling activities for scheduled actions that have already run, call the `DescribeScalingActivities <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeScalingActivities.html>`__ API.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DescribeScheduledActions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_scheduled_actions(
+        AutoScalingGroupName='string',
+        ScheduledActionNames=[
+            'string',
+        ],
+        StartTime=datetime(2015, 1, 1),
+        EndTime=datetime(2015, 1, 1),
+        NextToken='string',
+        MaxRecords=123
+    )
+    
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type ScheduledActionNames: list
+  :param ScheduledActionNames: 
+
+    The names of one or more scheduled actions. If you omit this property, all scheduled actions are described. If you specify an unknown scheduled action, it is ignored with no error.
+
+     
+
+    Array Members: Maximum number of 50 actions.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type StartTime: datetime
+  :param StartTime: 
+
+    The earliest scheduled start time to return. If scheduled action names are provided, this property is ignored.
+
+    
+
+  
+  :type EndTime: datetime
+  :param EndTime: 
+
+    The latest scheduled start time to return. If scheduled action names are provided, this property is ignored.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type MaxRecords: integer
+  :param MaxRecords: 
+
+    The maximum number of items to return with this call. The default value is ``50`` and the maximum value is ``100``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ScheduledUpdateGroupActions': [
+              {
+                  'AutoScalingGroupName': 'string',
+                  'ScheduledActionName': 'string',
+                  'ScheduledActionARN': 'string',
+                  'Time': datetime(2015, 1, 1),
+                  'StartTime': datetime(2015, 1, 1),
+                  'EndTime': datetime(2015, 1, 1),
+                  'Recurrence': 'string',
+                  'MinSize': 123,
+                  'MaxSize': 123,
+                  'DesiredCapacity': 123,
+                  'TimeZone': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ScheduledUpdateGroupActions** *(list) --* 
+
+        The scheduled actions.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a scheduled scaling action.
+
+          
+          
+
+          - **AutoScalingGroupName** *(string) --* 
+
+            The name of the Auto Scaling group.
+
+            
+          
+
+          - **ScheduledActionName** *(string) --* 
+
+            The name of the scheduled action.
+
+            
+          
+
+          - **ScheduledActionARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the scheduled action.
+
+            
+          
+
+          - **Time** *(datetime) --* 
+
+            This property is no longer used.
+
+            
+          
+
+          - **StartTime** *(datetime) --* 
+
+            The date and time in UTC for this action to start. For example, ``"2019-06-01T00:00:00Z"``.
+
+            
+          
+
+          - **EndTime** *(datetime) --* 
+
+            The date and time in UTC for the recurring schedule to end. For example, ``"2019-06-01T00:00:00Z"``.
+
+            
+          
+
+          - **Recurrence** *(string) --* 
+
+            The recurring schedule for the action, in Unix cron syntax format.
+
+             
+
+            When ``StartTime`` and ``EndTime`` are specified with ``Recurrence``, they form the boundaries of when the recurring action starts and stops.
+
+            
+          
+
+          - **MinSize** *(integer) --* 
+
+            The minimum size of the Auto Scaling group.
+
+            
+          
+
+          - **MaxSize** *(integer) --* 
+
+            The maximum size of the Auto Scaling group.
+
+            
+          
+
+          - **DesiredCapacity** *(integer) --* 
+
+            The desired capacity is the initial capacity of the Auto Scaling group after the scheduled action runs and the capacity it attempts to maintain.
+
+            
+          
+
+          - **TimeZone** *(string) --* 
+
+            The time zone for the cron expression.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the ``NextToken`` value when requesting the next set of items. This value is null when there are no more items to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.InvalidNextToken`
+
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+
+  **Examples**
+
+  This example describes the scheduled actions for the specified Auto Scaling group.
+  ::
+
+    response = client.describe_scheduled_actions(
+        AutoScalingGroupName='my-auto-scaling-group',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ScheduledUpdateGroupActions': [
+            {
+                'AutoScalingGroupName': 'my-auto-scaling-group',
+                'DesiredCapacity': 4,
+                'MaxSize': 6,
+                'MinSize': 2,
+                'Recurrence': '30 0 1 12 0',
+                'ScheduledActionARN': 'arn:aws:autoscaling:us-west-2:123456789012:scheduledUpdateGroupAction:8e86b655-b2e6-4410-8f29-b4f094d6871c:autoScalingGroupName/my-auto-scaling-group:scheduledActionName/my-scheduled-action',
+                'ScheduledActionName': 'my-scheduled-action',
+                'StartTime': datetime(2016, 12, 1, 0, 30, 0, 3, 336, 0),
+                'Time': datetime(2016, 12, 1, 0, 30, 0, 3, 336, 0),
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

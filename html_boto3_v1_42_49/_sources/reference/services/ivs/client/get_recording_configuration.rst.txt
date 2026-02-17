@@ -1,0 +1,234 @@
+:doc:`IVS <../../ivs>` / Client / get_recording_configuration
+
+***************************
+get_recording_configuration
+***************************
+
+
+
+.. py:method:: IVS.Client.get_recording_configuration(**kwargs)
+
+  
+
+  Gets the recording configuration for the specified ARN.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ivs-2020-07-14/GetRecordingConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_recording_configuration(
+        arn='string'
+    )
+    
+  :type arn: string
+  :param arn: **[REQUIRED]** 
+
+    ARN of the recording configuration to be retrieved.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'recordingConfiguration': {
+              'arn': 'string',
+              'destinationConfiguration': {
+                  's3': {
+                      'bucketName': 'string'
+                  }
+              },
+              'name': 'string',
+              'recordingReconnectWindowSeconds': 123,
+              'renditionConfiguration': {
+                  'renditionSelection': 'ALL'|'NONE'|'CUSTOM',
+                  'renditions': [
+                      'SD'|'HD'|'FULL_HD'|'LOWEST_RESOLUTION',
+                  ]
+              },
+              'state': 'CREATING'|'CREATE_FAILED'|'ACTIVE',
+              'tags': {
+                  'string': 'string'
+              },
+              'thumbnailConfiguration': {
+                  'recordingMode': 'DISABLED'|'INTERVAL',
+                  'resolution': 'SD'|'HD'|'FULL_HD'|'LOWEST_RESOLUTION',
+                  'storage': [
+                      'SEQUENTIAL'|'LATEST',
+                  ],
+                  'targetIntervalSeconds': 123
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **recordingConfiguration** *(dict) --* 
+        
+
+        - **arn** *(string) --* 
+
+          Recording-configuration ARN.
+
+          
+        
+
+        - **destinationConfiguration** *(dict) --* 
+
+          A complex type that contains information about where recorded video will be stored.
+
+          
+          
+
+          - **s3** *(dict) --* 
+
+            An S3 destination configuration where recorded videos will be stored.
+
+            
+            
+
+            - **bucketName** *(string) --* 
+
+              Location (S3 bucket name) where recorded videos will be stored.
+
+              
+        
+      
+        
+
+        - **name** *(string) --* 
+
+          Recording-configuration name. The value does not need to be unique.
+
+          
+        
+
+        - **recordingReconnectWindowSeconds** *(integer) --* 
+
+          If a broadcast disconnects and then reconnects within the specified interval, the multiple streams will be considered a single broadcast and merged together. Default: 0.
+
+          
+        
+
+        - **renditionConfiguration** *(dict) --* 
+
+          Object that describes which renditions should be recorded for a stream.
+
+          
+          
+
+          - **renditionSelection** *(string) --* 
+
+            Indicates which set of renditions are recorded for a stream. For ``BASIC`` channels, the ``CUSTOM`` value has no effect. If ``CUSTOM`` is specified, a set of renditions must be specified in the ``renditions`` field. Default: ``ALL``.
+
+            
+          
+
+          - **renditions** *(list) --* 
+
+            Indicates which renditions are recorded for a stream, if ``renditionSelection`` is ``CUSTOM``; otherwise, this field is irrelevant. The selected renditions are recorded if they are available during the stream. If a selected rendition is unavailable, the best available rendition is recorded. For details on the resolution dimensions of each rendition, see `Auto-Record to Amazon S3 <https://docs.aws.amazon.com/ivs/latest/userguide/record-to-s3.html>`__.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+        
+
+        - **state** *(string) --* 
+
+          Indicates the current state of the recording configuration. When the state is ``ACTIVE``, the configuration is ready for recording a channel stream.
+
+          
+        
+
+        - **tags** *(dict) --* 
+
+          Tags attached to the resource. Array of 1-50 maps, each of the form ``string:string (key:value)``. See `Best practices and strategies <https://docs.aws.amazon.com/tag-editor/latest/userguide/best-practices-and-strats.html>`__ in *Tagging Amazon Web Services Resources and Tag Editor* for details, including restrictions that apply to tags and "Tag naming limits and requirements"; Amazon IVS has no service-specific constraints beyond what is documented there.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **thumbnailConfiguration** *(dict) --* 
+
+          A complex type that allows you to enable/disable the recording of thumbnails for a live session and modify the interval at which thumbnails are generated for the live session.
+
+          
+          
+
+          - **recordingMode** *(string) --* 
+
+            Thumbnail recording mode. Default: ``INTERVAL``.
+
+            
+          
+
+          - **resolution** *(string) --* 
+
+            Indicates the desired resolution of recorded thumbnails. Thumbnails are recorded at the selected resolution if the corresponding rendition is available during the stream; otherwise, they are recorded at source resolution. For more information about resolution values and their corresponding height and width dimensions, see `Auto-Record to Amazon S3 <https://docs.aws.amazon.com/ivs/latest/userguide/record-to-s3.html>`__. Default: Null (source resolution is returned).
+
+            
+          
+
+          - **storage** *(list) --* 
+
+            Indicates the format in which thumbnails are recorded. ``SEQUENTIAL`` records all generated thumbnails in a serial manner, to the media/thumbnails directory. ``LATEST`` saves the latest thumbnail in media/latest_thumbnail/thumb.jpg and overwrites it at the interval specified by ``targetIntervalSeconds``. You can enable both ``SEQUENTIAL`` and ``LATEST``. Default: ``SEQUENTIAL``.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **targetIntervalSeconds** *(integer) --* 
+
+            The targeted thumbnail-generation interval in seconds. This is configurable (and required) only if ``recordingMode`` is ``INTERVAL``. Default: 60.
+
+             
+
+            **Important:** For the ``BASIC`` channel type, or the ``STANDARD`` channel type with multitrack input, setting a value for ``targetIntervalSeconds`` does not guarantee that thumbnails are generated at the specified interval. For thumbnails to be generated at the ``targetIntervalSeconds`` interval, the ``IDR/Keyframe`` value for the input video must be less than the ``targetIntervalSeconds`` value. See `Amazon IVS Streaming Configuration <https://docs.aws.amazon.com/ivs/latest/userguide/streaming-config.html>`__ for information on setting ``IDR/Keyframe`` to the recommended value in video-encoder settings.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`IVS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IVS.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`IVS.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`IVS.Client.exceptions.ValidationException`
+
+  

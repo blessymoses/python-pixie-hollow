@@ -1,0 +1,236 @@
+:doc:`SSOAdmin <../../sso-admin>` / Client / put_application_grant
+
+*********************
+put_application_grant
+*********************
+
+
+
+.. py:method:: SSOAdmin.Client.put_application_grant(**kwargs)
+
+  
+
+  Creates a configuration for an application to use grants. Conceptually grants are authorization to request actions related to tokens. This configuration will be used when parties are requesting and receiving tokens during the trusted identity propagation process. For more information on the IAM Identity Center supported grant workflows, see `SAML 2.0 and OAuth 2.0 <https://docs.aws.amazon.com/singlesignon/latest/userguide/customermanagedapps-saml2-oauth2.html>`__.
+
+   
+
+  A grant is created between your applications and Identity Center instance which enables an application to use specified mechanisms to obtain tokens. These tokens are used by your applications to gain access to Amazon Web Services resources on behalf of users. The following elements are within these exchanges:
+
+   
+
+  
+  * **Requester** - The application requesting access to Amazon Web Services resources.
+   
+  * **Subject** - Typically the user that is requesting access to Amazon Web Services resources.
+   
+  * **Grant** - Conceptually, a grant is authorization to access Amazon Web Services resources. These grants authorize token generation for authenticating access to the requester and for the request to make requests on behalf of the subjects. There are four types of grants: 
+
+    
+    * **AuthorizationCode** - Allows an application to request authorization through a series of user-agent redirects.
+     
+    * **JWT bearer** - Authorizes an application to exchange a JSON Web Token that came from an external identity provider. To learn more, see `RFC 6479 <https://datatracker.ietf.org/doc/html/rfc6749>`__.
+     
+    * **Refresh token** - Enables application to request new access tokens to replace expiring or expired access tokens.
+     
+    * **Exchange token** - A grant that requests tokens from the authorization server by providing a ‘subject’ token with access scope authorizing trusted identity propagation to this application. To learn more, see `RFC 8693 <https://datatracker.ietf.org/doc/html/rfc8693>`__.
+    
+
+  
+   
+  * **Authorization server** - IAM Identity Center requests tokens.
+  
+
+   
+
+  User credentials are never shared directly within these exchanges. Instead, applications use grants to request access tokens from IAM Identity Center. For more information, see `RFC 6479 <https://datatracker.ietf.org/doc/html/rfc6749>`__.
+
+   
+
+  **Use cases**
+
+   
+
+  
+  * Connecting to custom applications.
+   
+  * Configuring an Amazon Web Services service to make calls to another Amazon Web Services services using JWT tokens.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sso-admin-2020-07-20/PutApplicationGrant>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_application_grant(
+        ApplicationArn='string',
+        GrantType='authorization_code'|'refresh_token'|'urn:ietf:params:oauth:grant-type:jwt-bearer'|'urn:ietf:params:oauth:grant-type:token-exchange',
+        Grant={
+            'AuthorizationCode': {
+                'RedirectUris': [
+                    'string',
+                ]
+            },
+            'JwtBearer': {
+                'AuthorizedTokenIssuers': [
+                    {
+                        'TrustedTokenIssuerArn': 'string',
+                        'AuthorizedAudiences': [
+                            'string',
+                        ]
+                    },
+                ]
+            },
+            'RefreshToken': {}
+            ,
+            'TokenExchange': {}
+            
+        }
+    )
+    
+  :type ApplicationArn: string
+  :param ApplicationArn: **[REQUIRED]** 
+
+    Specifies the ARN of the application to update.
+
+    
+
+  
+  :type GrantType: string
+  :param GrantType: **[REQUIRED]** 
+
+    Specifies the type of grant to update.
+
+    
+
+  
+  :type Grant: dict
+  :param Grant: **[REQUIRED]** 
+
+    Specifies a structure that describes the grant to update.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``AuthorizationCode``, ``JwtBearer``, ``RefreshToken``, ``TokenExchange``. 
+
+  
+    - **AuthorizationCode** *(dict) --* 
+
+      Configuration options for the ``authorization_code`` grant type.
+
+      
+
+    
+      - **RedirectUris** *(list) --* 
+
+        A list of URIs that are valid locations to redirect a user's browser after the user is authorized.
+
+         
+
+        .. note::
+
+          
+
+          RedirectUris is required when the grant type is ``authorization_code``.
+
+          
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+    - **JwtBearer** *(dict) --* 
+
+      Configuration options for the ``urn:ietf:params:oauth:grant-type:jwt-bearer`` grant type.
+
+      
+
+    
+      - **AuthorizedTokenIssuers** *(list) --* 
+
+        A list of allowed token issuers trusted by the Identity Center instances for this application.
+
+         
+
+        .. note::
+
+          
+
+          ``AuthorizedTokenIssuers`` is required when the grant type is ``JwtBearerGrant``.
+
+          
+
+        
+
+      
+        - *(dict) --* 
+
+          A structure that describes a trusted token issuer and associates it with a set of authorized audiences.
+
+          
+
+        
+          - **TrustedTokenIssuerArn** *(string) --* 
+
+            The ARN of the trusted token issuer.
+
+            
+
+          
+          - **AuthorizedAudiences** *(list) --* 
+
+            An array list of authorized audiences, or applications, that can consume the tokens generated by the associated trusted token issuer.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+    
+    
+    - **RefreshToken** *(dict) --* 
+
+      Configuration options for the ``refresh_token`` grant type.
+
+      
+
+    
+    
+    - **TokenExchange** *(dict) --* 
+
+      Configuration options for the ``urn:ietf:params:oauth:grant-type:token-exchange`` grant type.
+
+      
+
+    
+    
+  
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`SSOAdmin.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`SSOAdmin.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SSOAdmin.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SSOAdmin.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`SSOAdmin.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`SSOAdmin.Client.exceptions.ConflictException`
+
+  

@@ -1,0 +1,176 @@
+:doc:`DirectoryService <../../ds>` / Client / update_hybrid_ad
+
+****************
+update_hybrid_ad
+****************
+
+
+
+.. py:method:: DirectoryService.Client.update_hybrid_ad(**kwargs)
+
+  
+
+  Updates the configuration of an existing hybrid directory. You can recover hybrid directory administrator account or modify self-managed instance settings.
+
+   
+
+  Updates are applied asynchronously. Use  DescribeHybridADUpdate to monitor the progress of configuration changes.
+
+   
+
+  The ``InstanceIds`` must have a one-to-one correspondence with ``CustomerDnsIps``, meaning that if the IP address for instance i-10243410 is 10.24.34.100 and the IP address for instance i-10243420 is 10.24.34.200, then the input arrays must maintain the same order relationship, either [10.24.34.100, 10.24.34.200] paired with [i-10243410, i-10243420] or [10.24.34.200, 10.24.34.100] paired with [i-10243420, i-10243410].
+
+   
+
+  .. note::
+
+    
+
+    You must provide at least one update to  UpdateHybridADRequest$HybridAdministratorAccountUpdate or  UpdateHybridADRequest$SelfManagedInstancesSettings.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/UpdateHybridAD>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_hybrid_ad(
+        DirectoryId='string',
+        HybridAdministratorAccountUpdate={
+            'SecretArn': 'string'
+        },
+        SelfManagedInstancesSettings={
+            'CustomerDnsIps': [
+                'string',
+            ],
+            'InstanceIds': [
+                'string',
+            ]
+        }
+    )
+    
+  :type DirectoryId: string
+  :param DirectoryId: **[REQUIRED]** 
+
+    The identifier of the hybrid directory to update.
+
+    
+
+  
+  :type HybridAdministratorAccountUpdate: dict
+  :param HybridAdministratorAccountUpdate: 
+
+    We create a hybrid directory administrator account when we create a hybrid directory. Use ``HybridAdministratorAccountUpdate`` to recover the hybrid directory administrator account if you have deleted it.
+
+     
+
+    To recover your hybrid directory administrator account, we need temporary access to a user in your self-managed AD with administrator permissions in the form of a secret from Amazon Web Services Secrets Manager. We use these credentials once during recovery and don't store them.
+
+     
+
+    If your hybrid directory administrator account exists, then you don’t need to use ``HybridAdministratorAccountUpdate``, even if you have updated your self-managed AD administrator user.
+
+    
+
+  
+    - **SecretArn** *(string) --* **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of the Amazon Web Services Secrets Manager secret that contains the credentials for the AD administrator user, and enables hybrid domain controllers to join the managed AD domain. For example:
+
+       
+
+      ``{"customerAdAdminDomainUsername":"carlos_salazar","customerAdAdminDomainPassword":"ExamplePassword123!"}.``
+
+      
+
+    
+  
+  :type SelfManagedInstancesSettings: dict
+  :param SelfManagedInstancesSettings: 
+
+    Updates to the self-managed AD configuration, including DNS server IP addresses and Amazon Web Services System Manager managed node identifiers.
+
+    
+
+  
+    - **CustomerDnsIps** *(list) --* **[REQUIRED]** 
+
+      The IP addresses of the DNS servers or domain controllers in your self-managed AD environment.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **InstanceIds** *(list) --* **[REQUIRED]** 
+
+      The identifiers of the self-managed instances with SSM used in hybrid directory.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DirectoryId': 'string',
+          'AssessmentId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DirectoryId** *(string) --* 
+
+        The identifier of the updated hybrid directory.
+
+        
+      
+
+      - **AssessmentId** *(string) --* 
+
+        The identifier of the assessment performed to validate the update configuration. This assessment ensures the updated settings are compatible with your environment.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DirectoryService.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.UnsupportedOperationException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.DirectoryDoesNotExistException`
+
+  
+  *   :py:class:`DirectoryService.Client.exceptions.ADAssessmentLimitExceededException`
+
+  

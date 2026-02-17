@@ -1,0 +1,209 @@
+:doc:`S3Control <../../s3control>` / Client / get_data_access
+
+***************
+get_data_access
+***************
+
+
+
+.. py:method:: S3Control.Client.get_data_access(**kwargs)
+
+  
+
+  Returns a temporary access credential from S3 Access Grants to the grantee or client application. The `temporary credential <https://docs.aws.amazon.com/STS/latest/APIReference/API_Credentials.html>`__ is an Amazon Web Services STS token that grants them access to the S3 data.
+
+    Permissions  
+
+  You must have the ``s3:GetDataAccess`` permission to use this operation.
+
+    Additional Permissions  
+
+  The IAM role that S3 Access Grants assumes must have the following permissions specified in the trust policy when registering the location: ``sts:AssumeRole``, for directory users or groups ``sts:SetContext``, and for IAM users or roles ``sts:SetSourceIdentity``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/GetDataAccess>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_data_access(
+        AccountId='string',
+        Target='string',
+        Permission='READ'|'WRITE'|'READWRITE',
+        DurationSeconds=123,
+        Privilege='Minimal'|'Default',
+        TargetType='Object'
+    )
+    
+  :type AccountId: string
+  :param AccountId: **[REQUIRED]** 
+
+    The Amazon Web Services account ID of the S3 Access Grants instance.
+
+    
+
+  
+  :type Target: string
+  :param Target: **[REQUIRED]** 
+
+    The S3 URI path of the data to which you are requesting temporary access credentials. If the requesting account has an access grant for this data, S3 Access Grants vends temporary access credentials in the response.
+
+    
+
+  
+  :type Permission: string
+  :param Permission: **[REQUIRED]** 
+
+    The type of permission granted to your S3 data, which can be set to one of the following values:
+
+     
+
+    
+    * ``READ`` – Grant read-only access to the S3 data.
+     
+    * ``WRITE`` – Grant write-only access to the S3 data.
+     
+    * ``READWRITE`` – Grant both read and write access to the S3 data.
+    
+
+    
+
+  
+  :type DurationSeconds: integer
+  :param DurationSeconds: 
+
+    The session duration, in seconds, of the temporary access credential that S3 Access Grants vends to the grantee or client application. The default value is 1 hour, but the grantee can specify a range from 900 seconds (15 minutes) up to 43200 seconds (12 hours). If the grantee requests a value higher than this maximum, the operation fails.
+
+    
+
+  
+  :type Privilege: string
+  :param Privilege: 
+
+    The scope of the temporary access credential that S3 Access Grants vends to the grantee or client application.
+
+     
+
+    
+    * ``Default`` – The scope of the returned temporary access token is the scope of the grant that is closest to the target scope.
+     
+    * ``Minimal`` – The scope of the returned temporary access token is the same as the requested target scope as long as the requested scope is the same as or a subset of the grant scope.
+    
+
+    
+
+  
+  :type TargetType: string
+  :param TargetType: 
+
+    The type of ``Target``. The only possible value is ``Object``. Pass this value if the target data that you would like to access is a path to an object. Do not pass this value if the target data is a bucket or a bucket and a prefix.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Credentials': {
+              'AccessKeyId': 'string',
+              'SecretAccessKey': 'string',
+              'SessionToken': 'string',
+              'Expiration': datetime(2015, 1, 1)
+          },
+          'MatchedGrantTarget': 'string',
+          'Grantee': {
+              'GranteeType': 'DIRECTORY_USER'|'DIRECTORY_GROUP'|'IAM',
+              'GranteeIdentifier': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Credentials** *(dict) --* 
+
+        The temporary credential token that S3 Access Grants vends.
+
+        
+        
+
+        - **AccessKeyId** *(string) --* 
+
+          The unique access key ID of the Amazon Web Services STS temporary credential that S3 Access Grants vends to grantees and client applications.
+
+          
+        
+
+        - **SecretAccessKey** *(string) --* 
+
+          The secret access key of the Amazon Web Services STS temporary credential that S3 Access Grants vends to grantees and client applications.
+
+          
+        
+
+        - **SessionToken** *(string) --* 
+
+          The Amazon Web Services STS temporary credential that S3 Access Grants vends to grantees and client applications.
+
+          
+        
+
+        - **Expiration** *(datetime) --* 
+
+          The expiration date and time of the temporary credential that S3 Access Grants vends to grantees and client applications.
+
+          
+    
+      
+
+      - **MatchedGrantTarget** *(string) --* 
+
+        The S3 URI path of the data to which you are being granted temporary access credentials.
+
+        
+      
+
+      - **Grantee** *(dict) --* 
+
+        The user, group, or role that was granted access to the S3 location scope. For directory identities, this API also returns the grants of the IAM role used for the identity-aware request. For more information on identity-aware sessions, see `Granting permissions to use identity-aware console sessions <https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_sts-setcontext.html>`__.
+
+        
+        
+
+        - **GranteeType** *(string) --* 
+
+          The type of the grantee to which access has been granted. It can be one of the following values:
+
+           
+
+          
+          * ``IAM`` - An IAM user or role.
+           
+          * ``DIRECTORY_USER`` - Your corporate directory user. You can use this option if you have added your corporate identity directory to IAM Identity Center and associated the IAM Identity Center instance with your S3 Access Grants instance.
+           
+          * ``DIRECTORY_GROUP`` - Your corporate directory group. You can use this option if you have added your corporate identity directory to IAM Identity Center and associated the IAM Identity Center instance with your S3 Access Grants instance.
+          
+
+          
+        
+
+        - **GranteeIdentifier** *(string) --* 
+
+          The unique identifier of the ``Grantee``. If the grantee type is ``IAM``, the identifier is the IAM Amazon Resource Name (ARN) of the user or role. If the grantee type is a directory user or group, the identifier is 128-bit universally unique identifier (UUID) in the format ``a1b2c3d4-5678-90ab-cdef-EXAMPLE11111``. You can obtain this UUID from your Amazon Web Services IAM Identity Center instance.
+
+          
+    
+  

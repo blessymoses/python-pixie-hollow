@@ -1,0 +1,257 @@
+:doc:`MarketplaceMetering <../../meteringmarketplace>` / Client / meter_usage
+
+***********
+meter_usage
+***********
+
+
+
+.. py:method:: MarketplaceMetering.Client.meter_usage(**kwargs)
+
+  
+
+  As a seller, your software hosted in the buyer's Amazon Web Services account uses this API action to emit metering records directly to Amazon Web Services Marketplace. You must use the following buyer Amazon Web Services account credentials to sign the API request.
+
+   
+
+  
+  * For **Amazon EC2** deployments, your software must use the `IAM role for Amazon EC2 <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html>`__ to sign the API call for ``MeterUsage`` API operation.
+   
+  * For **Amazon EKS** deployments, your software must use `IAM roles for service accounts (IRSA) <https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html>`__ to sign the API call for the ``MeterUsage`` API operation. Using `EKS Pod Identity <https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html>`__, the node role, or long-term access keys is not supported.
+   
+  * For **Amazon ECS** deployments, your software must use `Amazon ECS task IAM <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html>`__ role to sign the API call for the ``MeterUsage`` API operation. Using the node role or long-term access keys are not supported.
+   
+  * For **Amazon Bedrock AgentCore Runtime** deployments, your software must use the `AgentCore Runtime execution role <https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html#runtime-permissions-execution>`__ to sign the API call for the ``MeterUsage`` API operation. Long-term access keys are not supported.
+  
+
+   
+
+  The handling of ``MeterUsage`` requests varies between Amazon Bedrock AgentCore Runtime and non-Amazon Bedrock AgentCore deployments.
+
+   
+
+  
+  * For **non-Amazon Bedrock AgentCore Runtime** deployments, you can only report usage once per hour for each dimension. For AMI-based products, this is per dimension and per EC2 instance. For container products, this is per dimension and per ECS task or EKS pod. You can't modify values after they're recorded. If you report usage before a current hour ends, you will be unable to report additional usage until the next hour begins. The ``Timestamp`` request parameter is rounded down to the hour and used to enforce this once-per-hour rule for idempotency. For requests that are identical after the ``Timestamp`` is rounded down, the API is idempotent and returns the metering record ID.
+   
+  * For **Amazon Bedrock AgentCore Runtime** deployments, you can report usage multiple times per hour for the same dimension. You do not need to aggregate metering records by the hour. You must include an idempotency token in the ``ClientToken`` request parameter. If using an Amazon SDK or the Amazon Web Services CLI, you must use the latest version which automatically includes an idempotency token in the ``ClientToken`` request parameter so that the request is processed successfully. The ``Timestamp`` request parameter is not rounded down to the hour and is not used for duplicate validation. Requests with duplicate ``Timestamps`` are aggregated as long as the ``ClientToken`` is unique.
+  
+
+   
+
+  If you submit records more than six hours after events occur, the records won't be accepted. The timestamp in your request determines when an event is recorded.
+
+   
+
+  You can optionally include multiple usage allocations, to provide customers with usage data split into buckets by tags that you define or allow the customer to define.
+
+   
+
+  For Amazon Web Services Regions that support ``MeterUsage``, see `MeterUsage Region support for Amazon EC2 <https://docs.aws.amazon.com/marketplace/latest/APIReference/metering-regions.html#meterusage-region-support-ec2>`__ and `MeterUsage Region support for Amazon ECS and Amazon EKS <https://docs.aws.amazon.com/marketplace/latest/APIReference/metering-regions.html#meterusage-region-support-ecs-eks>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/meteringmarketplace-2016-01-14/MeterUsage>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.meter_usage(
+        ProductCode='string',
+        Timestamp=datetime(2015, 1, 1),
+        UsageDimension='string',
+        UsageQuantity=123,
+        DryRun=True|False,
+        UsageAllocations=[
+            {
+                'AllocatedUsageQuantity': 123,
+                'Tags': [
+                    {
+                        'Key': 'string',
+                        'Value': 'string'
+                    },
+                ]
+            },
+        ],
+        ClientToken='string'
+    )
+    
+  :type ProductCode: string
+  :param ProductCode: **[REQUIRED]** 
+
+    Product code is used to uniquely identify a product in Amazon Web Services Marketplace. The product code should be the same as the one used during the publishing of a new product.
+
+    
+
+  
+  :type Timestamp: datetime
+  :param Timestamp: **[REQUIRED]** 
+
+    Timestamp, in UTC, for which the usage is being reported. Your application can meter usage for up to six hours in the past. Make sure the ``timestamp`` value is not before the start of the software usage.
+
+    
+
+  
+  :type UsageDimension: string
+  :param UsageDimension: **[REQUIRED]** 
+
+    It will be one of the fcp dimension name provided during the publishing of the product.
+
+    
+
+  
+  :type UsageQuantity: integer
+  :param UsageQuantity: 
+
+    Consumption value for the hour. Defaults to ``0`` if not specified.
+
+    
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the permissions required for the action, but does not make the request. If you have the permissions, the request returns ``DryRunOperation``; otherwise, it returns ``UnauthorizedException``. Defaults to ``false`` if not specified.
+
+    
+
+  
+  :type UsageAllocations: list
+  :param UsageAllocations: 
+
+    The set of ``UsageAllocations`` to submit.
+
+     
+
+    The sum of all ``UsageAllocation`` quantities must equal the ``UsageQuantity`` of the ``MeterUsage`` request, and each ``UsageAllocation`` must have a unique set of tags (include no tags).
+
+    
+
+  
+    - *(dict) --* 
+
+      Usage allocations allow you to split usage into buckets by tags.
+
+       
+
+      Each ``UsageAllocation`` indicates the usage quantity for a specific set of tags.
+
+      
+
+    
+      - **AllocatedUsageQuantity** *(integer) --* **[REQUIRED]** 
+
+        The total quantity allocated to this bucket of usage.
+
+        
+
+      
+      - **Tags** *(list) --* 
+
+        The set of tags that define the bucket of usage. For the bucket of items with no tags, this parameter can be left out.
+
+        
+
+      
+        - *(dict) --* 
+
+          Metadata assigned to an allocation. Each tag is made up of a ``key`` and a ``value``.
+
+          
+
+        
+          - **Key** *(string) --* **[REQUIRED]** 
+
+            One part of a key-value pair that makes up a ``tag``. A ``key`` is a label that acts like a category for the specific tag values.
+
+            
+
+          
+          - **Value** *(string) --* **[REQUIRED]** 
+
+            One part of a key-value pair that makes up a ``tag``. A ``value`` acts as a descriptor within a tag category (key). The value can be empty or null.
+
+            
+
+          
+        
+    
+    
+
+  :type ClientToken: string
+  :param ClientToken: 
+
+    Specifies a unique, case-sensitive identifier that you provide to ensure the idempotency of the request. This lets you safely retry the request without accidentally performing the same operation a second time. Passing the same value to a later call to an operation requires that you also pass the same value for all other parameters. We recommend that you use a `UUID type of value <https://wikipedia.org/wiki/Universally_unique_identifier>`__.
+
+     
+
+    If you don't provide this value, then Amazon Web Services generates a random one for you.
+
+     
+
+    If you retry the operation with the same ``ClientToken``, but with different parameters, the retry fails with an ``IdempotencyConflictException`` error.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'MeteringRecordId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **MeteringRecordId** *(string) --* 
+
+        Metering record id.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.InternalServiceErrorException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.InvalidProductCodeException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.InvalidUsageDimensionException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.InvalidTagException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.InvalidUsageAllocationsException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.InvalidEndpointRegionException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.TimestampOutOfBoundsException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.DuplicateRequestException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.IdempotencyConflictException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`MarketplaceMetering.Client.exceptions.CustomerNotEntitledException`
+
+  

@@ -1,0 +1,487 @@
+:doc:`Backup <../../backup>` / Client / describe_backup_job
+
+*******************
+describe_backup_job
+*******************
+
+
+
+.. py:method:: Backup.Client.describe_backup_job(**kwargs)
+
+  
+
+  Returns backup job details for the specified ``BackupJobId``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DescribeBackupJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_backup_job(
+        BackupJobId='string'
+    )
+    
+  :type BackupJobId: string
+  :param BackupJobId: **[REQUIRED]** 
+
+    Uniquely identifies a request to Backup to back up a resource.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'AccountId': 'string',
+          'BackupJobId': 'string',
+          'BackupVaultName': 'string',
+          'RecoveryPointLifecycle': {
+              'MoveToColdStorageAfterDays': 123,
+              'DeleteAfterDays': 123,
+              'OptInToArchiveForSupportedResources': True|False,
+              'DeleteAfterEvent': 'DELETE_AFTER_COPY'
+          },
+          'BackupVaultArn': 'string',
+          'VaultType': 'string',
+          'VaultLockState': 'string',
+          'RecoveryPointArn': 'string',
+          'EncryptionKeyArn': 'string',
+          'IsEncrypted': True|False,
+          'ResourceArn': 'string',
+          'CreationDate': datetime(2015, 1, 1),
+          'CompletionDate': datetime(2015, 1, 1),
+          'State': 'CREATED'|'PENDING'|'RUNNING'|'ABORTING'|'ABORTED'|'COMPLETED'|'FAILED'|'EXPIRED'|'PARTIAL',
+          'StatusMessage': 'string',
+          'PercentDone': 'string',
+          'BackupSizeInBytes': 123,
+          'IamRoleArn': 'string',
+          'CreatedBy': {
+              'BackupPlanId': 'string',
+              'BackupPlanArn': 'string',
+              'BackupPlanName': 'string',
+              'BackupPlanVersion': 'string',
+              'BackupRuleId': 'string',
+              'BackupRuleName': 'string',
+              'BackupRuleCron': 'string',
+              'BackupRuleTimezone': 'string'
+          },
+          'ResourceType': 'string',
+          'BytesTransferred': 123,
+          'ExpectedCompletionDate': datetime(2015, 1, 1),
+          'StartBy': datetime(2015, 1, 1),
+          'BackupOptions': {
+              'string': 'string'
+          },
+          'BackupType': 'string',
+          'ParentJobId': 'string',
+          'IsParent': True|False,
+          'NumberOfChildJobs': 123,
+          'ChildJobsInState': {
+              'string': 123
+          },
+          'ResourceName': 'string',
+          'InitiationDate': datetime(2015, 1, 1),
+          'MessageCategory': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **AccountId** *(string) --* 
+
+        Returns the account ID that owns the backup job.
+
+        
+      
+
+      - **BackupJobId** *(string) --* 
+
+        Uniquely identifies a request to Backup to back up a resource.
+
+        
+      
+
+      - **BackupVaultName** *(string) --* 
+
+        The name of a logical container where backups are stored. Backup vaults are identified by names that are unique to the account used to create them and the Amazon Web Services Region where they are created.
+
+        
+      
+
+      - **RecoveryPointLifecycle** *(dict) --* 
+
+        Specifies the time period, in days, before a recovery point transitions to cold storage or is deleted.
+
+         
+
+        Backups transitioned to cold storage must be stored in cold storage for a minimum of 90 days. Therefore, on the console, the retention setting must be 90 days greater than the transition to cold after days setting. The transition to cold after days setting can't be changed after a backup has been transitioned to cold.
+
+         
+
+        Resource types that can transition to cold storage are listed in the `Feature availability by resource <https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-feature-availability.html#features-by-resource>`__ table. Backup ignores this expression for other resource types.
+
+         
+
+        To remove the existing lifecycle and retention periods and keep your recovery points indefinitely, specify -1 for ``MoveToColdStorageAfterDays`` and ``DeleteAfterDays``.
+
+        
+        
+
+        - **MoveToColdStorageAfterDays** *(integer) --* 
+
+          The number of days after creation that a recovery point is moved to cold storage.
+
+          
+        
+
+        - **DeleteAfterDays** *(integer) --* 
+
+          The number of days after creation that a recovery point is deleted. This value must be at least 90 days after the number of days specified in ``MoveToColdStorageAfterDays``.
+
+          
+        
+
+        - **OptInToArchiveForSupportedResources** *(boolean) --* 
+
+          If the value is true, your backup plan transitions supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+
+          
+        
+
+        - **DeleteAfterEvent** *(string) --* 
+
+          The event after which a recovery point is deleted. A recovery point with both ``DeleteAfterDays`` and ``DeleteAfterEvent`` will delete after whichever condition is satisfied first. Not valid as an input.
+
+          
+    
+      
+
+      - **BackupVaultArn** *(string) --* 
+
+        An Amazon Resource Name (ARN) that uniquely identifies a backup vault; for example, ``arn:aws:backup:us-east-1:123456789012:backup-vault:aBackupVault``.
+
+        
+      
+
+      - **VaultType** *(string) --* 
+
+        The type of backup vault where the recovery point is stored. Valid values are ``BACKUP_VAULT`` for standard backup vaults and ``LOGICALLY_AIR_GAPPED_BACKUP_VAULT`` for logically air-gapped vaults.
+
+        
+      
+
+      - **VaultLockState** *(string) --* 
+
+        The lock state of the backup vault. For logically air-gapped vaults, this indicates whether the vault is locked in compliance mode. Valid values include ``LOCKED`` and ``UNLOCKED``.
+
+        
+      
+
+      - **RecoveryPointArn** *(string) --* 
+
+        An ARN that uniquely identifies a recovery point; for example, ``arn:aws:backup:us-east-1:123456789012:recovery-point:1EB3B5E7-9EB0-435A-A80B-108B488B0D45``.
+
+        
+      
+
+      - **EncryptionKeyArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the KMS key used to encrypt the backup. This can be a customer-managed key or an Amazon Web Services managed key, depending on the vault configuration.
+
+        
+      
+
+      - **IsEncrypted** *(boolean) --* 
+
+        A boolean value indicating whether the backup is encrypted. All backups in Backup are encrypted, but this field indicates the encryption status for transparency.
+
+        
+      
+
+      - **ResourceArn** *(string) --* 
+
+        An ARN that uniquely identifies a saved resource. The format of the ARN depends on the resource type.
+
+        
+      
+
+      - **CreationDate** *(datetime) --* 
+
+        The date and time that a backup job is created, in Unix format and Coordinated Universal Time (UTC). The value of ``CreationDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **CompletionDate** *(datetime) --* 
+
+        The date and time that a job to create a backup job is completed, in Unix format and Coordinated Universal Time (UTC). The value of ``CompletionDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **State** *(string) --* 
+
+        The current state of a backup job.
+
+        
+      
+
+      - **StatusMessage** *(string) --* 
+
+        A detailed message explaining the status of the job to back up a resource.
+
+        
+      
+
+      - **PercentDone** *(string) --* 
+
+        Contains an estimated percentage that is complete of a job at the time the job status was queried.
+
+        
+      
+
+      - **BackupSizeInBytes** *(integer) --* 
+
+        The size, in bytes, of a backup (recovery point).
+
+         
+
+        This value can render differently depending on the resource type as Backup pulls in data information from other Amazon Web Services services. For example, the value returned may show a value of ``0``, which may differ from the anticipated value.
+
+         
+
+        The expected behavior for values by resource type are described as follows:
+
+         
+
+        
+        * Amazon Aurora, Amazon DocumentDB, and Amazon Neptune do not have this value populate from the operation ``GetBackupJobStatus``.
+         
+        * For Amazon DynamoDB with advanced features, this value refers to the size of the recovery point (backup).
+         
+        * Amazon EC2 and Amazon EBS show volume size (provisioned storage) returned as part of this value. Amazon EBS does not return backup size information; snapshot size will have the same value as the original resource that was backed up.
+         
+        * For Amazon EFS, this value refers to the delta bytes transferred during a backup.
+         
+        * Amazon FSx does not populate this value from the operation ``GetBackupJobStatus`` for FSx file systems.
+         
+        * An Amazon RDS instance will show as ``0``.
+         
+        * For virtual machines running VMware, this value is passed to Backup through an asynchronous workflow, which can mean this displayed value can under-represent the actual backup size.
+        
+
+        
+      
+
+      - **IamRoleArn** *(string) --* 
+
+        Specifies the IAM role ARN used to create the target recovery point; for example, ``arn:aws:iam::123456789012:role/S3Access``.
+
+        
+      
+
+      - **CreatedBy** *(dict) --* 
+
+        Contains identifying information about the creation of a backup job, including the ``BackupPlanArn``, ``BackupPlanId``, ``BackupPlanVersion``, and ``BackupRuleId`` of the backup plan that is used to create it.
+
+        
+        
+
+        - **BackupPlanId** *(string) --* 
+
+          Uniquely identifies a backup plan.
+
+          
+        
+
+        - **BackupPlanArn** *(string) --* 
+
+          An Amazon Resource Name (ARN) that uniquely identifies a backup plan; for example, ``arn:aws:backup:us-east-1:123456789012:plan:8F81F553-3A74-4A3F-B93D-B3360DC80C50``.
+
+          
+        
+
+        - **BackupPlanName** *(string) --* 
+
+          The name of the backup plan that created this recovery point. This provides human-readable context about which backup plan was responsible for the backup job.
+
+          
+        
+
+        - **BackupPlanVersion** *(string) --* 
+
+          Version IDs are unique, randomly generated, Unicode, UTF-8 encoded strings that are at most 1,024 bytes long. They cannot be edited.
+
+          
+        
+
+        - **BackupRuleId** *(string) --* 
+
+          Uniquely identifies a rule used to schedule the backup of a selection of resources.
+
+          
+        
+
+        - **BackupRuleName** *(string) --* 
+
+          The name of the backup rule within the backup plan that created this recovery point. This helps identify which specific rule triggered the backup job.
+
+          
+        
+
+        - **BackupRuleCron** *(string) --* 
+
+          The cron expression that defines the schedule for the backup rule. This shows the frequency and timing of when backups are automatically triggered.
+
+          
+        
+
+        - **BackupRuleTimezone** *(string) --* 
+
+          The timezone used for the backup rule schedule. This provides context for when backups are scheduled to run in the specified timezone.
+
+          
+    
+      
+
+      - **ResourceType** *(string) --* 
+
+        The type of Amazon Web Services resource to be backed up; for example, an Amazon Elastic Block Store (Amazon EBS) volume or an Amazon Relational Database Service (Amazon RDS) database.
+
+        
+      
+
+      - **BytesTransferred** *(integer) --* 
+
+        The size in bytes transferred to a backup vault at the time that the job status was queried.
+
+        
+      
+
+      - **ExpectedCompletionDate** *(datetime) --* 
+
+        The date and time that a job to back up resources is expected to be completed, in Unix format and Coordinated Universal Time (UTC). The value of ``ExpectedCompletionDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **StartBy** *(datetime) --* 
+
+        Specifies the time in Unix format and Coordinated Universal Time (UTC) when a backup job must be started before it is canceled. The value is calculated by adding the start window to the scheduled time. So if the scheduled time were 6:00 PM and the start window is 2 hours, the ``StartBy`` time would be 8:00 PM on the date specified. The value of ``StartBy`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **BackupOptions** *(dict) --* 
+
+        Represents the options specified as part of backup plan or on-demand backup job.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **BackupType** *(string) --* 
+
+        Represents the actual backup type selected for a backup job. For example, if a successful Windows Volume Shadow Copy Service (VSS) backup was taken, ``BackupType`` returns ``"WindowsVSS"``. If ``BackupType`` is empty, then the backup type was a regular backup.
+
+        
+      
+
+      - **ParentJobId** *(string) --* 
+
+        This returns the parent (composite) resource backup job ID.
+
+        
+      
+
+      - **IsParent** *(boolean) --* 
+
+        This returns the boolean value that a backup job is a parent (composite) job.
+
+        
+      
+
+      - **NumberOfChildJobs** *(integer) --* 
+
+        This returns the number of child (nested) backup jobs.
+
+        
+      
+
+      - **ChildJobsInState** *(dict) --* 
+
+        This returns the statistics of the included child (nested) backup jobs.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(integer) --* 
+    
+  
+      
+
+      - **ResourceName** *(string) --* 
+
+        The non-unique name of the resource that belongs to the specified backup.
+
+        
+      
+
+      - **InitiationDate** *(datetime) --* 
+
+        The date a backup job was initiated.
+
+        
+      
+
+      - **MessageCategory** *(string) --* 
+
+        The job count for the specified message category.
+
+         
+
+        Example strings may include ``AccessDenied``, ``SUCCESS``, ``AGGREGATE_ALL``, and ``INVALIDPARAMETERS``. View `Monitoring <https://docs.aws.amazon.com/aws-backup/latest/devguide/monitoring.html>`__ for a list of accepted MessageCategory strings.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Backup.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.MissingParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.DependencyFailureException`
+
+  

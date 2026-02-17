@@ -1,0 +1,371 @@
+:doc:`imagebuilder <../../imagebuilder>` / Paginator / ListComponents
+
+**************
+ListComponents
+**************
+
+
+
+.. py:class:: imagebuilder.Paginator.ListComponents
+
+  ::
+
+    
+    paginator = client.get_paginator('list_components')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`imagebuilder.Client.list_components`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/ListComponents>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          owner='Self'|'Shared'|'Amazon'|'ThirdParty'|'AWSMarketplace',
+          filters=[
+              {
+                  'name': 'string',
+                  'values': [
+                      'string',
+                  ]
+              },
+          ],
+          byName=True|False,
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type owner: string
+    :param owner: 
+
+      Filters results based on the type of owner for the component. By default, this request returns a list of components that your account owns. To see results for other types of owners, you can specify components that Amazon manages, third party components, or components that other accounts have shared with you.
+
+      
+
+    
+    :type filters: list
+    :param filters: 
+
+      Use the following filters to streamline results:
+
+       
+
+      
+      * ``description``
+       
+      * ``name``
+       
+      * ``platform``
+       
+      * ``supportedOsVersion``
+       
+      * ``type``
+       
+      * ``version``
+      
+
+      
+
+    
+      - *(dict) --* 
+
+        A filter name and value pair that is used to return a more specific list of results from a list operation. Filters can be used to match a set of resources by specific criteria, such as tags, attributes, or IDs.
+
+        
+
+      
+        - **name** *(string) --* 
+
+          The name of the filter. Filter names are case-sensitive.
+
+          
+
+        
+        - **values** *(list) --* 
+
+          The filter values. Filter values are case-sensitive.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+  
+    :type byName: boolean
+    :param byName: 
+
+      Returns the list of components for the specified name.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'requestId': 'string',
+            'componentVersionList': [
+                {
+                    'arn': 'string',
+                    'name': 'string',
+                    'version': 'string',
+                    'description': 'string',
+                    'platform': 'Windows'|'Linux'|'macOS',
+                    'supportedOsVersions': [
+                        'string',
+                    ],
+                    'type': 'BUILD'|'TEST',
+                    'owner': 'string',
+                    'dateCreated': 'string',
+                    'status': 'DEPRECATED'|'DISABLED'|'ACTIVE',
+                    'productCodes': [
+                        {
+                            'productCodeId': 'string',
+                            'productCodeType': 'marketplace'
+                        },
+                    ]
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **requestId** *(string) --* 
+
+          The request ID that uniquely identifies this request.
+
+          
+        
+
+        - **componentVersionList** *(list) --* 
+
+          The list of component semantic versions.
+
+           
+
+          .. note::
+
+            
+
+            The semantic version has four nodes: <major>.<minor>.<patch>/<build>. You can assign values for the first three, and can filter on all of them.
+
+            
+
+          
+          
+
+          - *(dict) --* 
+
+            The defining characteristics of a specific version of an Amazon Web Services TOE component.
+
+            
+            
+
+            - **arn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the component.
+
+               
+
+              .. note::
+
+                
+
+                Semantic versioning is included in each object's Amazon Resource Name (ARN), at the level that applies to that object as follows:
+
+                 
+
+                
+                * Versionless ARNs and Name ARNs do not include specific values in any of the nodes. The nodes are either left off entirely, or they are specified as wildcards, for example: x.x.x.
+                 
+                * Version ARNs have only the first three nodes: <major>.<minor>.<patch>
+                 
+                * Build version ARNs have all four nodes, and point to a specific build for a specific version of an object.
+                
+
+                
+
+              
+            
+
+            - **name** *(string) --* 
+
+              The name of the component.
+
+              
+            
+
+            - **version** *(string) --* 
+
+              The semantic version of the component.
+
+               
+
+              .. note::
+
+                
+
+                The semantic version has four nodes: <major>.<minor>.<patch>/<build>. You can assign values for the first three, and can filter on all of them.
+
+                 
+
+                **Assignment:** For the first three nodes you can assign any positive integer value, including zero, with an upper limit of 2^30-1, or 1073741823 for each node. Image Builder automatically assigns the build number to the fourth node.
+
+                 
+
+                **Patterns:** You can use any numeric pattern that adheres to the assignment requirements for the nodes that you can assign. For example, you might choose a software version pattern, such as 1.0.0, or a date, such as 2021.01.01.
+
+                 
+
+                **Filtering:** With semantic versioning, you have the flexibility to use wildcards (x) to specify the most recent versions or nodes when selecting the base image or components for your recipe. When you use a wildcard in any node, all nodes to the right of the first wildcard must also be wildcards.
+
+                
+
+              
+            
+
+            - **description** *(string) --* 
+
+              The description of the component.
+
+              
+            
+
+            - **platform** *(string) --* 
+
+              The platform of the component.
+
+              
+            
+
+            - **supportedOsVersions** *(list) --* 
+
+              he operating system (OS) version supported by the component. If the OS information is available, a prefix match is performed against the base image OS version during image recipe creation.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **type** *(string) --* 
+
+              The type of the component denotes whether the component is used to build the image or only to test it.
+
+              
+            
+
+            - **owner** *(string) --* 
+
+              The owner of the component.
+
+              
+            
+
+            - **dateCreated** *(string) --* 
+
+              The date that the component was created.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              Describes the current status of the component version.
+
+              
+            
+
+            - **productCodes** *(list) --* 
+
+              Contains product codes that are used for billing purposes for Amazon Web Services Marketplace components.
+
+              
+              
+
+              - *(dict) --* 
+
+                Information about a single product code.
+
+                
+                
+
+                - **productCodeId** *(string) --* 
+
+                  For Amazon Web Services Marketplace components, this contains the product code ID that can be stamped onto an EC2 AMI to ensure that components are billed correctly. If this property is empty, it might mean that the component is not published.
+
+                  
+                
+
+                - **productCodeType** *(string) --* 
+
+                  The owner of the product code that's billed. If this property is empty, it might mean that the component is not published.
+
+                  
+            
+          
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

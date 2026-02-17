@@ -1,0 +1,294 @@
+:doc:`SESV2 <../../sesv2>` / Client / batch_get_metric_data
+
+*********************
+batch_get_metric_data
+*********************
+
+
+
+.. py:method:: SESV2.Client.batch_get_metric_data(**kwargs)
+
+  
+
+  Retrieves batches of metric data collected based on your sending activity.
+
+   
+
+  You can execute this operation no more than 16 times per second, and with at most 160 queries from the batches per second (cumulative).
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/BatchGetMetricData>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_metric_data(
+        Queries=[
+            {
+                'Id': 'string',
+                'Namespace': 'VDM',
+                'Metric': 'SEND'|'COMPLAINT'|'PERMANENT_BOUNCE'|'TRANSIENT_BOUNCE'|'OPEN'|'CLICK'|'DELIVERY'|'DELIVERY_OPEN'|'DELIVERY_CLICK'|'DELIVERY_COMPLAINT',
+                'Dimensions': {
+                    'string': 'string'
+                },
+                'StartDate': datetime(2015, 1, 1),
+                'EndDate': datetime(2015, 1, 1)
+            },
+        ]
+    )
+    
+  :type Queries: list
+  :param Queries: **[REQUIRED]** 
+
+    A list of queries for metrics to be retrieved.
+
+    
+
+  
+    - *(dict) --* 
+
+      Represents a single metric data query to include in a batch.
+
+      
+
+    
+      - **Id** *(string) --* **[REQUIRED]** 
+
+        The query identifier.
+
+        
+
+      
+      - **Namespace** *(string) --* **[REQUIRED]** 
+
+        The query namespace - e.g. ``VDM``
+
+        
+
+      
+      - **Metric** *(string) --* **[REQUIRED]** 
+
+        The queried metric. This can be one of the following:
+
+         
+
+        
+        * ``SEND`` – Emails sent eligible for tracking in the VDM dashboard. This excludes emails sent to the mailbox simulator and emails addressed to more than one recipient.
+         
+        * ``COMPLAINT`` – Complaints received for your account. This excludes complaints from the mailbox simulator, those originating from your account-level suppression list (if enabled), and those for emails addressed to more than one recipient
+         
+        * ``PERMANENT_BOUNCE`` – Permanent bounces - i.e. feedback received for emails sent to non-existent mailboxes. Excludes bounces from the mailbox simulator, those originating from your account-level suppression list (if enabled), and those for emails addressed to more than one recipient.
+         
+        * ``TRANSIENT_BOUNCE`` – Transient bounces - i.e. feedback received for delivery failures excluding issues with non-existent mailboxes. Excludes bounces from the mailbox simulator, and those for emails addressed to more than one recipient.
+         
+        * ``OPEN`` – Unique open events for emails including open trackers. Excludes opens for emails addressed to more than one recipient.
+         
+        * ``CLICK`` – Unique click events for emails including wrapped links. Excludes clicks for emails addressed to more than one recipient.
+         
+        * ``DELIVERY`` – Successful deliveries for email sending attempts. Excludes deliveries to the mailbox simulator and for emails addressed to more than one recipient.
+         
+        * ``DELIVERY_OPEN`` – Successful deliveries for email sending attempts. Excludes deliveries to the mailbox simulator, for emails addressed to more than one recipient, and emails without open trackers.
+         
+        * ``DELIVERY_CLICK`` – Successful deliveries for email sending attempts. Excludes deliveries to the mailbox simulator, for emails addressed to more than one recipient, and emails without click trackers.
+         
+        * ``DELIVERY_COMPLAINT`` – Successful deliveries for email sending attempts. Excludes deliveries to the mailbox simulator, for emails addressed to more than one recipient, and emails addressed to recipients hosted by ISPs with which Amazon SES does not have a feedback loop agreement.
+        
+
+        
+
+      
+      - **Dimensions** *(dict) --* 
+
+        An object that contains mapping between ``MetricDimensionName`` and ``MetricDimensionValue`` to filter metrics by.
+
+        
+
+      
+        - *(string) --* 
+
+          The ``BatchGetMetricDataQuery`` dimension name. This can be one of the following:
+
+           
+
+          
+          * ``EMAIL_IDENTITY`` – The email identity used when sending messages.
+           
+          * ``CONFIGURATION_SET`` – The configuration set used when sending messages (if one was used).
+           
+          * ``ISP`` – The recipient ISP (e.g. ``Gmail``, ``Yahoo``, etc.).
+          
+
+          
+
+        
+          - *(string) --* 
+
+            A list of values associated with the ``MetricDimensionName`` to filter metrics by. Can either be ``*`` as a wildcard for all values or a list of up to 10 specific values. If one ``Dimension`` has the ``*`` value, other dimensions can only contain one value.
+
+            
+
+          
+    
+  
+      - **StartDate** *(datetime) --* **[REQUIRED]** 
+
+        Represents the start date for the query interval.
+
+        
+
+      
+      - **EndDate** *(datetime) --* **[REQUIRED]** 
+
+        Represents the end date for the query interval.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Results': [
+              {
+                  'Id': 'string',
+                  'Timestamps': [
+                      datetime(2015, 1, 1),
+                  ],
+                  'Values': [
+                      123,
+                  ]
+              },
+          ],
+          'Errors': [
+              {
+                  'Id': 'string',
+                  'Code': 'INTERNAL_FAILURE'|'ACCESS_DENIED',
+                  'Message': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the result of processing your metric data batch request
+
+      
+      
+
+      - **Results** *(list) --* 
+
+        A list of successfully retrieved ``MetricDataResult``.
+
+        
+        
+
+        - *(dict) --* 
+
+          The result of a single metric data query.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The query identifier.
+
+            
+          
+
+          - **Timestamps** *(list) --* 
+
+            A list of timestamps for the metric data results.
+
+            
+            
+
+            - *(datetime) --* 
+        
+          
+
+          - **Values** *(list) --* 
+
+            A list of values (cumulative / sum) for the metric data results.
+
+            
+            
+
+            - *(integer) --* 
+        
+      
+    
+      
+
+      - **Errors** *(list) --* 
+
+        A list of ``MetricDataError`` encountered while processing your metric data batch request.
+
+        
+        
+
+        - *(dict) --* 
+
+          An error corresponding to the unsuccessful processing of a single metric data query.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The query identifier.
+
+            
+          
+
+          - **Code** *(string) --* 
+
+            The query error code. Can be one of:
+
+             
+
+            
+            * ``INTERNAL_FAILURE`` – Amazon SES has failed to process one of the queries.
+             
+            * ``ACCESS_DENIED`` – You have insufficient access to retrieve metrics based on the given query.
+            
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            The error message associated with the current query error.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SESV2.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`SESV2.Client.exceptions.InternalServiceErrorException`
+
+  
+  *   :py:class:`SESV2.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`SESV2.Client.exceptions.NotFoundException`
+
+  

@@ -1,0 +1,245 @@
+:doc:`kendra <../../kendra>` / Client / update_access_control_configuration
+
+***********************************
+update_access_control_configuration
+***********************************
+
+
+
+.. py:method:: kendra.Client.update_access_control_configuration(**kwargs)
+
+  
+
+  Updates an access control configuration for your documents in an index. This includes user and group access information for your documents. This is useful for user context filtering, where search results are filtered based on the user or their group access to documents.
+
+   
+
+  You can update an access control configuration you created without indexing all of your documents again. For example, your index contains top-secret company documents that only certain employees or users should access. You created an 'allow' access control configuration for one user who recently joined the 'top-secret' team, switching from a team with 'deny' access to top-secret documents. However, the user suddenly returns to their previous team and should no longer have access to top secret documents. You can update the access control configuration to re-configure access control for your documents as circumstances change.
+
+   
+
+  You call the `BatchPutDocument <https://docs.aws.amazon.com/kendra/latest/dg/API_BatchPutDocument.html>`__ API to apply the updated access control configuration, with the ``AccessControlConfigurationId`` included in the `Document <https://docs.aws.amazon.com/kendra/latest/dg/API_Document.html>`__ object. If you use an S3 bucket as a data source, you synchronize your data source to apply the ``AccessControlConfigurationId`` in the ``.metadata.json`` file. Amazon Kendra currently only supports access control configuration for S3 data sources and documents indexed using the ``BatchPutDocument`` API.
+
+   
+
+  .. warning::
+
+     
+
+    You can't configure access control using ``CreateAccessControlConfiguration`` for an Amazon Kendra Gen AI Enterprise Edition index. Amazon Kendra will return a ``ValidationException`` error for a ``Gen_AI_ENTERPRISE_EDITION`` index.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kendra-2019-02-03/UpdateAccessControlConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_access_control_configuration(
+        IndexId='string',
+        Id='string',
+        Name='string',
+        Description='string',
+        AccessControlList=[
+            {
+                'Name': 'string',
+                'Type': 'USER'|'GROUP',
+                'Access': 'ALLOW'|'DENY',
+                'DataSourceId': 'string'
+            },
+        ],
+        HierarchicalAccessControlList=[
+            {
+                'PrincipalList': [
+                    {
+                        'Name': 'string',
+                        'Type': 'USER'|'GROUP',
+                        'Access': 'ALLOW'|'DENY',
+                        'DataSourceId': 'string'
+                    },
+                ]
+            },
+        ]
+    )
+    
+  :type IndexId: string
+  :param IndexId: **[REQUIRED]** 
+
+    The identifier of the index for an access control configuration.
+
+    
+
+  
+  :type Id: string
+  :param Id: **[REQUIRED]** 
+
+    The identifier of the access control configuration you want to update.
+
+    
+
+  
+  :type Name: string
+  :param Name: 
+
+    A new name for the access control configuration.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A new description for the access control configuration.
+
+    
+
+  
+  :type AccessControlList: list
+  :param AccessControlList: 
+
+    Information you want to update on principals (users and/or groups) and which documents they should have access to. This is useful for user context filtering, where search results are filtered based on the user or their group access to documents.
+
+    
+
+  
+    - *(dict) --* 
+
+      Provides user and group information for `user context filtering <https://docs.aws.amazon.com/kendra/latest/dg/user-context-filter.html>`__.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The name of the user or group.
+
+        
+
+      
+      - **Type** *(string) --* **[REQUIRED]** 
+
+        The type of principal.
+
+        
+
+      
+      - **Access** *(string) --* **[REQUIRED]** 
+
+        Whether to allow or deny document access to the principal.
+
+        
+
+      
+      - **DataSourceId** *(string) --* 
+
+        The identifier of the data source the principal should access documents from.
+
+        
+
+      
+    
+
+  :type HierarchicalAccessControlList: list
+  :param HierarchicalAccessControlList: 
+
+    The updated list of `principal <https://docs.aws.amazon.com/kendra/latest/dg/API_Principal.html>`__ lists that define the hierarchy for which documents users should have access to.
+
+    
+
+  
+    - *(dict) --* 
+
+      Information to define the hierarchy for which documents users should have access to.
+
+      
+
+    
+      - **PrincipalList** *(list) --* **[REQUIRED]** 
+
+        A list of `principal <https://docs.aws.amazon.com/kendra/latest/dg/API_Principal.html>`__ lists that define the hierarchy for which documents users should have access to. Each hierarchical list specifies which user or group has allow or deny access for each document.
+
+        
+
+      
+        - *(dict) --* 
+
+          Provides user and group information for `user context filtering <https://docs.aws.amazon.com/kendra/latest/dg/user-context-filter.html>`__.
+
+          
+
+        
+          - **Name** *(string) --* **[REQUIRED]** 
+
+            The name of the user or group.
+
+            
+
+          
+          - **Type** *(string) --* **[REQUIRED]** 
+
+            The type of principal.
+
+            
+
+          
+          - **Access** *(string) --* **[REQUIRED]** 
+
+            Whether to allow or deny document access to the principal.
+
+            
+
+          
+          - **DataSourceId** *(string) --* 
+
+            The identifier of the data source the principal should access documents from.
+
+            
+
+          
+        
+    
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`kendra.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.InternalServerException`
+
+  

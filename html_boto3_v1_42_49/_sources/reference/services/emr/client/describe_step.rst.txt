@@ -1,0 +1,313 @@
+:doc:`EMR <../../emr>` / Client / describe_step
+
+*************
+describe_step
+*************
+
+
+
+.. py:method:: EMR.Client.describe_step(**kwargs)
+
+  
+
+  Provides more detail about the cluster step.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticmapreduce-2009-03-31/DescribeStep>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_step(
+        ClusterId='string',
+        StepId='string'
+    )
+    
+  :type ClusterId: string
+  :param ClusterId: **[REQUIRED]** 
+
+    The identifier of the cluster with steps to describe.
+
+    
+
+  
+  :type StepId: string
+  :param StepId: **[REQUIRED]** 
+
+    The identifier of the step to describe.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Step': {
+              'Id': 'string',
+              'Name': 'string',
+              'Config': {
+                  'Jar': 'string',
+                  'Properties': {
+                      'string': 'string'
+                  },
+                  'MainClass': 'string',
+                  'Args': [
+                      'string',
+                  ]
+              },
+              'ActionOnFailure': 'TERMINATE_JOB_FLOW'|'TERMINATE_CLUSTER'|'CANCEL_AND_WAIT'|'CONTINUE',
+              'Status': {
+                  'State': 'PENDING'|'CANCEL_PENDING'|'RUNNING'|'COMPLETED'|'CANCELLED'|'FAILED'|'INTERRUPTED',
+                  'StateChangeReason': {
+                      'Code': 'NONE',
+                      'Message': 'string'
+                  },
+                  'FailureDetails': {
+                      'Reason': 'string',
+                      'Message': 'string',
+                      'LogFile': 'string'
+                  },
+                  'Timeline': {
+                      'CreationDateTime': datetime(2015, 1, 1),
+                      'StartDateTime': datetime(2015, 1, 1),
+                      'EndDateTime': datetime(2015, 1, 1)
+                  }
+              },
+              'ExecutionRoleArn': 'string',
+              'LogUri': 'string',
+              'EncryptionKeyArn': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      This output contains the description of the cluster step.
+
+      
+      
+
+      - **Step** *(dict) --* 
+
+        The step details for the requested step identifier.
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          The identifier of the cluster step.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          The name of the cluster step.
+
+          
+        
+
+        - **Config** *(dict) --* 
+
+          The Hadoop job configuration of the cluster step.
+
+          
+          
+
+          - **Jar** *(string) --* 
+
+            The path to the JAR file that runs during the step.
+
+            
+          
+
+          - **Properties** *(dict) --* 
+
+            The list of Java properties that are set when the step runs. You can use these properties to pass key-value pairs to your main function.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+          
+
+          - **MainClass** *(string) --* 
+
+            The name of the main class in the specified Java file. If not specified, the JAR file should specify a main class in its manifest file.
+
+            
+          
+
+          - **Args** *(list) --* 
+
+            The list of command line arguments to pass to the JAR file's main function for execution.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+        
+
+        - **ActionOnFailure** *(string) --* 
+
+          The action to take when the cluster step fails. Possible values are ``TERMINATE_CLUSTER``, ``CANCEL_AND_WAIT``, and ``CONTINUE``. ``TERMINATE_JOB_FLOW`` is provided for backward compatibility. We recommend using ``TERMINATE_CLUSTER`` instead.
+
+           
+
+          If a cluster's ``StepConcurrencyLevel`` is greater than ``1``, do not use ``AddJobFlowSteps`` to submit a step with this parameter set to ``CANCEL_AND_WAIT`` or ``TERMINATE_CLUSTER``. The step is not submitted and the action fails with a message that the ``ActionOnFailure`` setting is not valid.
+
+           
+
+          If you change a cluster's ``StepConcurrencyLevel`` to be greater than 1 while a step is running, the ``ActionOnFailure`` parameter may not behave as you expect. In this case, for a step that fails with this parameter set to ``CANCEL_AND_WAIT``, pending steps and the running step are not canceled; for a step that fails with this parameter set to ``TERMINATE_CLUSTER``, the cluster does not terminate.
+
+          
+        
+
+        - **Status** *(dict) --* 
+
+          The current execution status details of the cluster step.
+
+          
+          
+
+          - **State** *(string) --* 
+
+            The execution state of the cluster step.
+
+            
+          
+
+          - **StateChangeReason** *(dict) --* 
+
+            The reason for the step execution status change.
+
+            
+            
+
+            - **Code** *(string) --* 
+
+              The programmable code for the state change reason. Note: Currently, the service provides no code for the state change.
+
+              
+            
+
+            - **Message** *(string) --* 
+
+              The descriptive message for the state change reason.
+
+              
+        
+          
+
+          - **FailureDetails** *(dict) --* 
+
+            The details for the step failure including reason, message, and log file path where the root cause was identified.
+
+            
+            
+
+            - **Reason** *(string) --* 
+
+              The reason for the step failure. In the case where the service cannot successfully determine the root cause of the failure, it returns "Unknown Error" as a reason.
+
+              
+            
+
+            - **Message** *(string) --* 
+
+              The descriptive message including the error the Amazon EMR service has identified as the cause of step failure. This is text from an error log that describes the root cause of the failure.
+
+              
+            
+
+            - **LogFile** *(string) --* 
+
+              The path to the log file where the step failure root cause was originally recorded.
+
+              
+        
+          
+
+          - **Timeline** *(dict) --* 
+
+            The timeline of the cluster step status over time.
+
+            
+            
+
+            - **CreationDateTime** *(datetime) --* 
+
+              The date and time when the cluster step was created.
+
+              
+            
+
+            - **StartDateTime** *(datetime) --* 
+
+              The date and time when the cluster step execution started.
+
+              
+            
+
+            - **EndDateTime** *(datetime) --* 
+
+              The date and time when the cluster step execution completed or failed.
+
+              
+        
+      
+        
+
+        - **ExecutionRoleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the runtime role for a step on the cluster. The runtime role can be a cross-account IAM role. The runtime role ARN is a combination of account ID, role name, and role type using the following format: ``arn:partition:service:region:account:resource``.
+
+           
+
+          For example, ``arn:aws:IAM::1234567890:role/ReadOnly`` is a correctly formatted runtime role ARN.
+
+          
+        
+
+        - **LogUri** *(string) --* 
+
+          The Amazon S3 destination URI for log publishing.
+
+          
+        
+
+        - **EncryptionKeyArn** *(string) --* 
+
+          The KMS key ARN to encrypt the logs published to the given Amazon S3 destination.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EMR.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`EMR.Client.exceptions.InvalidRequestException`
+
+  

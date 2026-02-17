@@ -1,0 +1,210 @@
+:doc:`CloudTrailDataService <../../cloudtrail-data>` / Client / put_audit_events
+
+****************
+put_audit_events
+****************
+
+
+
+.. py:method:: CloudTrailDataService.Client.put_audit_events(**kwargs)
+
+  
+
+  Ingests your application events into CloudTrail Lake. A required parameter, ``auditEvents``, accepts the JSON records (also called *payload*) of events that you want CloudTrail to ingest. You can add up to 100 of these events (or up to 1 MB) per ``PutAuditEvents`` request.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudtrail-data-2021-08-11/PutAuditEvents>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_audit_events(
+        auditEvents=[
+            {
+                'eventData': 'string',
+                'eventDataChecksum': 'string',
+                'id': 'string'
+            },
+        ],
+        channelArn='string',
+        externalId='string'
+    )
+    
+  :type auditEvents: list
+  :param auditEvents: **[REQUIRED]** 
+
+    The JSON payload of events that you want to ingest. You can also point to the JSON event payload in a file.
+
+    
+
+  
+    - *(dict) --* 
+
+      An event from a source outside of Amazon Web Services that you want CloudTrail to log.
+
+      
+
+    
+      - **eventData** *(string) --* **[REQUIRED]** 
+
+        The content of an audit event that comes from the event, such as ``userIdentity``, ``userAgent``, and ``eventSource``.
+
+        
+
+      
+      - **eventDataChecksum** *(string) --* 
+
+        A checksum is a base64-SHA256 algorithm that helps you verify that CloudTrail receives the event that matches with the checksum. Calculate the checksum by running a command like the following:
+
+         
+
+        ``printf %s $eventdata | openssl dgst -binary -sha256 | base64``
+
+        
+
+      
+      - **id** *(string) --* **[REQUIRED]** 
+
+        The original event ID from the source event.
+
+        
+
+      
+    
+
+  :type channelArn: string
+  :param channelArn: **[REQUIRED]** 
+
+    The ARN or ID (the ARN suffix) of a channel.
+
+    
+
+  
+  :type externalId: string
+  :param externalId: 
+
+    A unique identifier that is conditionally required when the channel's resource policy includes an external ID. This value can be any string, such as a passphrase or account number.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'failed': [
+              {
+                  'errorCode': 'string',
+                  'errorMessage': 'string',
+                  'id': 'string'
+              },
+          ],
+          'successful': [
+              {
+                  'eventID': 'string',
+                  'id': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **failed** *(list) --* 
+
+        Lists events in the provided event payload that could not be ingested into CloudTrail, and includes the error code and error message returned for events that could not be ingested.
+
+        
+        
+
+        - *(dict) --* 
+
+          Includes the error code and error message for events that could not be ingested by CloudTrail.
+
+          
+          
+
+          - **errorCode** *(string) --* 
+
+            The error code for events that could not be ingested by CloudTrail. Possible error codes include: ``FieldTooLong``, ``FieldNotFound``, ``InvalidChecksum``, ``InvalidData``, ``InvalidRecipient``, ``InvalidEventSource``, ``AccountNotSubscribed``, ``Throttling``, and ``InternalFailure``.
+
+            
+          
+
+          - **errorMessage** *(string) --* 
+
+            The message that describes the error for events that could not be ingested by CloudTrail.
+
+            
+          
+
+          - **id** *(string) --* 
+
+            The original event ID from the source event that could not be ingested by CloudTrail.
+
+            
+      
+    
+      
+
+      - **successful** *(list) --* 
+
+        Lists events in the provided event payload that were successfully ingested into CloudTrail.
+
+        
+        
+
+        - *(dict) --* 
+
+          A response that includes successful and failed event results.
+
+          
+          
+
+          - **eventID** *(string) --* 
+
+            The event ID assigned by CloudTrail.
+
+            
+          
+
+          - **id** *(string) --* 
+
+            The original event ID from the source event.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudTrailDataService.Client.exceptions.ChannelInsufficientPermission`
+
+  
+  *   :py:class:`CloudTrailDataService.Client.exceptions.ChannelNotFound`
+
+  
+  *   :py:class:`CloudTrailDataService.Client.exceptions.InvalidChannelARN`
+
+  
+  *   :py:class:`CloudTrailDataService.Client.exceptions.ChannelUnsupportedSchema`
+
+  
+  *   :py:class:`CloudTrailDataService.Client.exceptions.DuplicatedAuditEventId`
+
+  
+  *   :py:class:`CloudTrailDataService.Client.exceptions.UnsupportedOperationException`
+
+  

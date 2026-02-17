@@ -1,0 +1,205 @@
+:doc:`DynamoDBStreams <../../dynamodbstreams>` / Client / list_streams
+
+************
+list_streams
+************
+
+
+
+.. py:method:: DynamoDBStreams.Client.list_streams(**kwargs)
+
+  
+
+  Returns an array of stream ARNs associated with the current account and endpoint. If the ``TableName`` parameter is present, then ``ListStreams`` will return only the streams ARNs for that table.
+
+   
+
+  .. note::
+
+    
+
+    You can call ``ListStreams`` at a maximum rate of 5 times per second.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/streams-dynamodb-2012-08-10/ListStreams>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_streams(
+        TableName='string',
+        Limit=123,
+        ExclusiveStartStreamArn='string'
+    )
+    
+  :type TableName: string
+  :param TableName: 
+
+    If this parameter is provided, then only the streams associated with this table name are returned.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    The maximum number of streams to return. The upper limit is 100.
+
+    
+
+  
+  :type ExclusiveStartStreamArn: string
+  :param ExclusiveStartStreamArn: 
+
+    The ARN (Amazon Resource Name) of the first item that this operation will evaluate. Use the value that was returned for ``LastEvaluatedStreamArn`` in the previous operation.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Streams': [
+              {
+                  'StreamArn': 'string',
+                  'TableName': 'string',
+                  'StreamLabel': 'string'
+              },
+          ],
+          'LastEvaluatedStreamArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the output of a ``ListStreams`` operation.
+
+      
+      
+
+      - **Streams** *(list) --* 
+
+        A list of stream descriptors associated with the current account and endpoint.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents all of the data describing a particular stream.
+
+          
+          
+
+          - **StreamArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) for the stream.
+
+            
+          
+
+          - **TableName** *(string) --* 
+
+            The DynamoDB table with which the stream is associated.
+
+            
+          
+
+          - **StreamLabel** *(string) --* 
+
+            A timestamp, in ISO 8601 format, for this stream.
+
+             
+
+            Note that ``LatestStreamLabel`` is not a unique identifier for the stream, because it is possible that a stream from another table might have the same timestamp. However, the combination of the following three elements is guaranteed to be unique:
+
+             
+
+            
+            * the Amazon Web Services customer ID.
+             
+            * the table name
+             
+            * the ``StreamLabel``
+            
+
+            
+      
+    
+      
+
+      - **LastEvaluatedStreamArn** *(string) --* 
+
+        The stream ARN of the item where the operation stopped, inclusive of the previous result set. Use this value to start a new operation, excluding this value in the new request.
+
+         
+
+        If ``LastEvaluatedStreamArn`` is empty, then the "last page" of results has been processed and there is no more data to be retrieved.
+
+         
+
+        If ``LastEvaluatedStreamArn`` is not empty, it does not necessarily mean that there is more data in the result set. The only way to know when you have reached the end of the result set is when ``LastEvaluatedStreamArn`` is empty.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.InternalServerError`
+
+  
+
+  **Examples**
+
+  The following example lists all of the stream ARNs.
+  ::
+
+    response = client.list_streams(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Streams': [
+            {
+                'StreamArn': 'arn:aws:dynamodb:us-wesst-2:111122223333:table/Forum/stream/2015-05-20T20:51:10.252',
+                'StreamLabel': '2015-05-20T20:51:10.252',
+                'TableName': 'Forum',
+            },
+            {
+                'StreamArn': 'arn:aws:dynamodb:us-west-2:111122223333:table/Forum/stream/2015-05-20T20:50:02.714',
+                'StreamLabel': '2015-05-20T20:50:02.714',
+                'TableName': 'Forum',
+            },
+            {
+                'StreamArn': 'arn:aws:dynamodb:us-west-2:111122223333:table/Forum/stream/2015-05-19T23:03:50.641',
+                'StreamLabel': '2015-05-19T23:03:50.641',
+                'TableName': 'Forum',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

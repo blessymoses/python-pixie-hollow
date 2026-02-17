@@ -1,0 +1,312 @@
+:doc:`SSMContacts <../../ssm-contacts>` / Client / create_contact
+
+**************
+create_contact
+**************
+
+
+
+.. py:method:: SSMContacts.Client.create_contact(**kwargs)
+
+  
+
+  Contacts are either the contacts that Incident Manager engages during an incident or the escalation plans that Incident Manager uses to engage contacts in phases during an incident.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-contacts-2021-05-03/CreateContact>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_contact(
+        Alias='string',
+        DisplayName='string',
+        Type='PERSONAL'|'ESCALATION'|'ONCALL_SCHEDULE',
+        Plan={
+            'Stages': [
+                {
+                    'DurationInMinutes': 123,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'string',
+                                'RetryIntervalInMinutes': 123
+                            },
+                            'ContactTargetInfo': {
+                                'ContactId': 'string',
+                                'IsEssential': True|False
+                            }
+                        },
+                    ]
+                },
+            ],
+            'RotationIds': [
+                'string',
+            ]
+        },
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        IdempotencyToken='string'
+    )
+    
+  :type Alias: string
+  :param Alias: **[REQUIRED]** 
+
+    The short name to quickly identify a contact or escalation plan. The contact alias must be unique and identifiable.
+
+    
+
+  
+  :type DisplayName: string
+  :param DisplayName: 
+
+    The full name of the contact or escalation plan.
+
+    
+
+  
+  :type Type: string
+  :param Type: **[REQUIRED]** 
+
+    The type of contact to create.
+
+     
+
+    
+    * ``PERSONAL``: A single, individual contact.
+     
+    * ``ESCALATION``: An escalation plan.
+     
+    * ``ONCALL_SCHEDULE``: An on-call schedule.
+    
+
+    
+
+  
+  :type Plan: dict
+  :param Plan: **[REQUIRED]** 
+
+    A list of stages. A contact has an engagement plan with stages that contact specified contact channels. An escalation plan uses stages that contact specified contacts.
+
+    
+
+  
+    - **Stages** *(list) --* 
+
+      A list of stages that the escalation plan or engagement plan uses to engage contacts and contact methods.
+
+      
+
+    
+      - *(dict) --* 
+
+        A set amount of time that an escalation plan or engagement plan engages the specified contacts or contact methods.
+
+        
+
+      
+        - **DurationInMinutes** *(integer) --* **[REQUIRED]** 
+
+          The time to wait until beginning the next stage. The duration can only be set to 0 if a target is specified.
+
+          
+
+        
+        - **Targets** *(list) --* **[REQUIRED]** 
+
+          The contacts or contact methods that the escalation plan or engagement plan is engaging.
+
+          
+
+        
+          - *(dict) --* 
+
+            The contact or contact channel that's being engaged.
+
+            
+
+          
+            - **ChannelTargetInfo** *(dict) --* 
+
+              Information about the contact channel that Incident Manager engages.
+
+              
+
+            
+              - **ContactChannelId** *(string) --* **[REQUIRED]** 
+
+                The Amazon Resource Name (ARN) of the contact channel.
+
+                
+
+              
+              - **RetryIntervalInMinutes** *(integer) --* 
+
+                The number of minutes to wait before retrying to send engagement if the engagement initially failed.
+
+                
+
+              
+            
+            - **ContactTargetInfo** *(dict) --* 
+
+              Information about the contact that Incident Manager engages.
+
+              
+
+            
+              - **ContactId** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the contact.
+
+                
+
+              
+              - **IsEssential** *(boolean) --* **[REQUIRED]** 
+
+                A Boolean value determining if the contact's acknowledgement stops the progress of stages in the plan.
+
+                
+
+              
+            
+          
+      
+      
+  
+    - **RotationIds** *(list) --* 
+
+      The Amazon Resource Names (ARNs) of the on-call rotations associated with the plan.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type Tags: list
+  :param Tags: 
+
+    Adds a tag to the target. You can only tag resources created in the first Region of your replication set.
+
+    
+
+  
+    - *(dict) --* 
+
+      A container of a key-value name pair.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        Name of the object key.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        Value of the tag.
+
+        
+
+      
+    
+
+  :type IdempotencyToken: string
+  :param IdempotencyToken: 
+
+    A token ensuring that the operation is called only once with the specified details.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ContactArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ContactArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the created contact or escalation plan.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSMContacts.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.DataEncryptionException`
+
+  
+
+  **Examples**
+
+  The following create-contact example creates a contact in your environment with a blank plan. The plan can be updated after creating contact channels. Use the create-contact-channel operation with the output ARN of this command. After you have created contact channels for this contact use update-contact to update the plan.
+  ::
+
+    response = client.create_contact(
+        Alias='akuam',
+        DisplayName='Akua Mansa',
+        Plan={
+            'Stages': [
+            ],
+        },
+        Type='PERSONAL',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ContactArn': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact/akuam',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

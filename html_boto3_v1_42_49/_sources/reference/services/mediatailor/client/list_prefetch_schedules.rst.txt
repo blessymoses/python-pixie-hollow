@@ -1,0 +1,522 @@
+:doc:`MediaTailor <../../mediatailor>` / Client / list_prefetch_schedules
+
+***********************
+list_prefetch_schedules
+***********************
+
+
+
+.. py:method:: MediaTailor.Client.list_prefetch_schedules(**kwargs)
+
+  
+
+  Lists the prefetch schedules for a playback configuration.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/mediatailor-2018-04-23/ListPrefetchSchedules>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_prefetch_schedules(
+        MaxResults=123,
+        NextToken='string',
+        PlaybackConfigurationName='string',
+        ScheduleType='SINGLE'|'RECURRING'|'ALL',
+        StreamId='string'
+    )
+    
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of prefetch schedules that you want MediaTailor to return in response to the current request. If there are more than ``MaxResults`` prefetch schedules, use the value of ``NextToken`` in the response to get the next page of results.
+
+     
+
+    The default value is 100. MediaTailor uses DynamoDB-based pagination, which means that a response might contain fewer than ``MaxResults`` items, including 0 items, even when more results are available. To retrieve all results, you must continue making requests using the ``NextToken`` value from each response until the response no longer includes a ``NextToken`` value.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    Pagination token returned by the list request when results exceed the maximum allowed. Use the token to fetch the next page of results.
+
+     
+
+    For the first ``ListPrefetchSchedules`` request, omit this value. For subsequent requests, get the value of ``NextToken`` from the previous response and specify that value for ``NextToken`` in the request. Continue making requests until the response no longer includes a ``NextToken`` value, which indicates that all results have been retrieved.
+
+    
+
+  
+  :type PlaybackConfigurationName: string
+  :param PlaybackConfigurationName: **[REQUIRED]** 
+
+    Retrieves the prefetch schedule(s) for a specific playback configuration.
+
+    
+
+  
+  :type ScheduleType: string
+  :param ScheduleType: 
+
+    The type of prefetch schedules that you want to list. ``SINGLE`` indicates that you want to list the configured single prefetch schedules. ``RECURRING`` indicates that you want to list the configured recurring prefetch schedules. ``ALL`` indicates that you want to list all configured prefetch schedules.
+
+    
+
+  
+  :type StreamId: string
+  :param StreamId: 
+
+    An optional filtering parameter whereby MediaTailor filters the prefetch schedules to include only specific streams.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Items': [
+              {
+                  'Arn': 'string',
+                  'Consumption': {
+                      'AvailMatchingCriteria': [
+                          {
+                              'DynamicVariable': 'string',
+                              'Operator': 'EQUALS'
+                          },
+                      ],
+                      'EndTime': datetime(2015, 1, 1),
+                      'StartTime': datetime(2015, 1, 1)
+                  },
+                  'Name': 'string',
+                  'PlaybackConfigurationName': 'string',
+                  'Retrieval': {
+                      'DynamicVariables': {
+                          'string': 'string'
+                      },
+                      'EndTime': datetime(2015, 1, 1),
+                      'StartTime': datetime(2015, 1, 1),
+                      'TrafficShapingType': 'RETRIEVAL_WINDOW'|'TPS',
+                      'TrafficShapingRetrievalWindow': {
+                          'RetrievalWindowDurationSeconds': 123
+                      },
+                      'TrafficShapingTpsConfiguration': {
+                          'PeakTps': 123,
+                          'PeakConcurrentUsers': 123
+                      }
+                  },
+                  'ScheduleType': 'SINGLE'|'RECURRING',
+                  'RecurringPrefetchConfiguration': {
+                      'StartTime': datetime(2015, 1, 1),
+                      'EndTime': datetime(2015, 1, 1),
+                      'RecurringConsumption': {
+                          'RetrievedAdExpirationSeconds': 123,
+                          'AvailMatchingCriteria': [
+                              {
+                                  'DynamicVariable': 'string',
+                                  'Operator': 'EQUALS'
+                              },
+                          ]
+                      },
+                      'RecurringRetrieval': {
+                          'DynamicVariables': {
+                              'string': 'string'
+                          },
+                          'DelayAfterAvailEndSeconds': 123,
+                          'TrafficShapingType': 'RETRIEVAL_WINDOW'|'TPS',
+                          'TrafficShapingRetrievalWindow': {
+                              'RetrievalWindowDurationSeconds': 123
+                          },
+                          'TrafficShapingTpsConfiguration': {
+                              'PeakTps': 123,
+                              'PeakConcurrentUsers': 123
+                          }
+                      }
+                  },
+                  'StreamId': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Items** *(list) --* 
+
+        Lists the prefetch schedules. An empty ``Items`` list doesn't mean there aren't more items to fetch, just that that page was empty.
+
+        
+        
+
+        - *(dict) --* 
+
+          A prefetch schedule allows you to tell MediaTailor to fetch and prepare certain ads before an ad break happens. For more information about ad prefetching, see `Using ad prefetching <https://docs.aws.amazon.com/mediatailor/latest/ug/prefetching-ads.html>`__ in the *MediaTailor User Guide*.
+
+          
+          
+
+          - **Arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the prefetch schedule.
+
+            
+          
+
+          - **Consumption** *(dict) --* 
+
+            Consumption settings determine how, and when, MediaTailor places the prefetched ads into ad breaks for single prefetch schedules. Ad consumption occurs within a span of time that you define, called a *consumption window*. You can designate which ad breaks that MediaTailor fills with prefetch ads by setting avail matching criteria.
+
+            
+            
+
+            - **AvailMatchingCriteria** *(list) --* 
+
+              If you only want MediaTailor to insert prefetched ads into avails (ad breaks) that match specific dynamic variables, such as ``scte.event_id``, set the avail matching criteria.
+
+              
+              
+
+              - *(dict) --* 
+
+                MediaTailor only places (consumes) prefetched ads if the ad break meets the criteria defined by the dynamic variables. This gives you granular control over which ad break to place the prefetched ads into.
+
+                 
+
+                As an example, let's say that you set ``DynamicVariable`` to ``scte.event_id`` and ``Operator`` to ``EQUALS``, and your playback configuration has an ADS URL of ``https://my.ads.server.com/path?&podId=[scte.avail_num]&event=[scte.event_id]&duration=[session.avail_duration_secs]``. And the prefetch request to the ADS contains these values ``https://my.ads.server.com/path?&podId=3&event=my-awesome-event&duration=30``. MediaTailor will only insert the prefetched ads into the ad break if has a SCTE marker with an event id of ``my-awesome-event``, since it must match the event id that MediaTailor uses to query the ADS.
+
+                 
+
+                You can specify up to five ``AvailMatchingCriteria``. If you specify multiple ``AvailMatchingCriteria``, MediaTailor combines them to match using a logical ``AND``. You can model logical ``OR`` combinations by creating multiple prefetch schedules.
+
+                
+                
+
+                - **DynamicVariable** *(string) --* 
+
+                  The dynamic variable(s) that MediaTailor should use as avail matching criteria. MediaTailor only places the prefetched ads into the avail if the avail matches the criteria defined by the dynamic variable. For information about dynamic variables, see `Using dynamic ad variables <https://docs.aws.amazon.com/mediatailor/latest/ug/variables.html>`__ in the *MediaTailor User Guide*.
+
+                   
+
+                  You can include up to 100 dynamic variables.
+
+                  
+                
+
+                - **Operator** *(string) --* 
+
+                  For the ``DynamicVariable`` specified in ``AvailMatchingCriteria``, the Operator that is used for the comparison.
+
+                  
+            
+          
+            
+
+            - **EndTime** *(datetime) --* 
+
+              The time when MediaTailor no longer considers the prefetched ads for use in an ad break. MediaTailor automatically deletes prefetch schedules no less than seven days after the end time. If you'd like to manually delete the prefetch schedule, you can call ``DeletePrefetchSchedule``.
+
+              
+            
+
+            - **StartTime** *(datetime) --* 
+
+              The time when prefetched ads are considered for use in an ad break. If you don't specify ``StartTime``, the prefetched ads are available after MediaTailor retrieves them from the ad decision server.
+
+              
+        
+          
+
+          - **Name** *(string) --* 
+
+            The name of the prefetch schedule. The name must be unique among all prefetch schedules that are associated with the specified playback configuration.
+
+            
+          
+
+          - **PlaybackConfigurationName** *(string) --* 
+
+            The name of the playback configuration to create the prefetch schedule for.
+
+            
+          
+
+          - **Retrieval** *(dict) --* 
+
+            A complex type that contains settings for prefetch retrieval from the ad decision server (ADS).
+
+            
+            
+
+            - **DynamicVariables** *(dict) --* 
+
+              The dynamic variables to use for substitution during prefetch requests to the ad decision server (ADS).
+
+               
+
+              You initially configure `dynamic variables <https://docs.aws.amazon.com/mediatailor/latest/ug/variables.html>`__ for the ADS URL when you set up your playback configuration. When you specify ``DynamicVariables`` for prefetch retrieval, MediaTailor includes the dynamic variables in the request to the ADS.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **EndTime** *(datetime) --* 
+
+              The time when prefetch retrieval ends for the ad break. Prefetching will be attempted for manifest requests that occur at or before this time.
+
+              
+            
+
+            - **StartTime** *(datetime) --* 
+
+              The time when prefetch retrievals can start for this break. Ad prefetching will be attempted for manifest requests that occur at or after this time. Defaults to the current time. If not specified, the prefetch retrieval starts as soon as possible.
+
+              
+            
+
+            - **TrafficShapingType** *(string) --* 
+
+              Indicates the type of traffic shaping used to limit the number of requests to the ADS at one time.
+
+              
+            
+
+            - **TrafficShapingRetrievalWindow** *(dict) --* 
+
+              The configuration that tells Elemental MediaTailor how many seconds to spread out requests to the ad decision server (ADS). Instead of sending ADS requests for all sessions at the same time, MediaTailor spreads the requests across the amount of time specified in the retrieval window.
+
+              
+              
+
+              - **RetrievalWindowDurationSeconds** *(integer) --* 
+
+                The amount of time, in seconds, that MediaTailor spreads prefetch requests to the ADS.
+
+                
+          
+            
+
+            - **TrafficShapingTpsConfiguration** *(dict) --* 
+
+              The configuration for TPS-based traffic shaping. This approach limits requests to the ad decision server (ADS) based on transactions per second and concurrent users.
+
+              
+              
+
+              - **PeakTps** *(integer) --* 
+
+                The maximum number of transactions per second (TPS) that your ad decision server (ADS) can handle. MediaTailor uses this value along with concurrent users and headroom multiplier to calculate optimal traffic distribution and prevent ADS overload.
+
+                
+              
+
+              - **PeakConcurrentUsers** *(integer) --* 
+
+                The expected peak number of concurrent viewers for your content. MediaTailor uses this value along with peak TPS to determine how to distribute prefetch requests across the available capacity without exceeding your ADS limits.
+
+                
+          
+        
+          
+
+          - **ScheduleType** *(string) --* 
+
+            The frequency that MediaTailor creates prefetch schedules. ``SINGLE`` indicates that this schedule applies to one ad break. ``RECURRING`` indicates that MediaTailor automatically creates a schedule for each ad avail in a live event.
+
+             
+
+            For more information about the prefetch types and when you might use each, see `Prefetching ads in Elemental MediaTailor. <https://docs.aws.amazon.com/mediatailor/latest/ug/prefetching-ads.html>`__
+
+            
+          
+
+          - **RecurringPrefetchConfiguration** *(dict) --* 
+
+            The settings that determine how and when MediaTailor prefetches ads and inserts them into ad breaks.
+
+            
+            
+
+            - **StartTime** *(datetime) --* 
+
+              The start time for the window that MediaTailor prefetches and inserts ads in a live event.
+
+              
+            
+
+            - **EndTime** *(datetime) --* 
+
+              The end time for the window that MediaTailor prefetches and inserts ads in a live event.
+
+              
+            
+
+            - **RecurringConsumption** *(dict) --* 
+
+              The settings that determine how and when MediaTailor places prefetched ads into upcoming ad breaks for recurring prefetch scedules.
+
+              
+              
+
+              - **RetrievedAdExpirationSeconds** *(integer) --* 
+
+                The number of seconds that an ad is available for insertion after it was prefetched.
+
+                
+              
+
+              - **AvailMatchingCriteria** *(list) --* 
+
+                The configuration for the dynamic variables that determine which ad breaks that MediaTailor inserts prefetched ads in.
+
+                
+                
+
+                - *(dict) --* 
+
+                  MediaTailor only places (consumes) prefetched ads if the ad break meets the criteria defined by the dynamic variables. This gives you granular control over which ad break to place the prefetched ads into.
+
+                   
+
+                  As an example, let's say that you set ``DynamicVariable`` to ``scte.event_id`` and ``Operator`` to ``EQUALS``, and your playback configuration has an ADS URL of ``https://my.ads.server.com/path?&podId=[scte.avail_num]&event=[scte.event_id]&duration=[session.avail_duration_secs]``. And the prefetch request to the ADS contains these values ``https://my.ads.server.com/path?&podId=3&event=my-awesome-event&duration=30``. MediaTailor will only insert the prefetched ads into the ad break if has a SCTE marker with an event id of ``my-awesome-event``, since it must match the event id that MediaTailor uses to query the ADS.
+
+                   
+
+                  You can specify up to five ``AvailMatchingCriteria``. If you specify multiple ``AvailMatchingCriteria``, MediaTailor combines them to match using a logical ``AND``. You can model logical ``OR`` combinations by creating multiple prefetch schedules.
+
+                  
+                  
+
+                  - **DynamicVariable** *(string) --* 
+
+                    The dynamic variable(s) that MediaTailor should use as avail matching criteria. MediaTailor only places the prefetched ads into the avail if the avail matches the criteria defined by the dynamic variable. For information about dynamic variables, see `Using dynamic ad variables <https://docs.aws.amazon.com/mediatailor/latest/ug/variables.html>`__ in the *MediaTailor User Guide*.
+
+                     
+
+                    You can include up to 100 dynamic variables.
+
+                    
+                  
+
+                  - **Operator** *(string) --* 
+
+                    For the ``DynamicVariable`` specified in ``AvailMatchingCriteria``, the Operator that is used for the comparison.
+
+                    
+              
+            
+          
+            
+
+            - **RecurringRetrieval** *(dict) --* 
+
+              The configuration for prefetch ad retrieval from the ADS.
+
+              
+              
+
+              - **DynamicVariables** *(dict) --* 
+
+                The dynamic variables to use for substitution during prefetch requests to the ADS.
+
+                
+                
+
+                - *(string) --* 
+                  
+
+                  - *(string) --* 
+            
+          
+              
+
+              - **DelayAfterAvailEndSeconds** *(integer) --* 
+
+                The number of seconds that MediaTailor waits after an ad avail before prefetching ads for the next avail. If not set, the default is 0 (no delay).
+
+                
+              
+
+              - **TrafficShapingType** *(string) --* 
+
+                Indicates the type of traffic shaping used to limit the number of requests to the ADS at one time.
+
+                
+              
+
+              - **TrafficShapingRetrievalWindow** *(dict) --* 
+
+                The configuration that tells Elemental MediaTailor how many seconds to spread out requests to the ad decision server (ADS). Instead of sending ADS requests for all sessions at the same time, MediaTailor spreads the requests across the amount of time specified in the retrieval window.
+
+                
+                
+
+                - **RetrievalWindowDurationSeconds** *(integer) --* 
+
+                  The amount of time, in seconds, that MediaTailor spreads prefetch requests to the ADS.
+
+                  
+            
+              
+
+              - **TrafficShapingTpsConfiguration** *(dict) --* 
+
+                The configuration for TPS-based traffic shaping. This approach limits requests to the ad decision server (ADS) based on transactions per second and concurrent users.
+
+                
+                
+
+                - **PeakTps** *(integer) --* 
+
+                  The maximum number of transactions per second (TPS) that your ad decision server (ADS) can handle. MediaTailor uses this value along with concurrent users and headroom multiplier to calculate optimal traffic distribution and prevent ADS overload.
+
+                  
+                
+
+                - **PeakConcurrentUsers** *(integer) --* 
+
+                  The expected peak number of concurrent viewers for your content. MediaTailor uses this value along with peak TPS to determine how to distribute prefetch requests across the available capacity without exceeding your ADS limits.
+
+                  
+            
+          
+        
+          
+
+          - **StreamId** *(string) --* 
+
+            An optional stream identifier that you can specify in order to prefetch for multiple streams that use the same playback configuration.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        Pagination token returned by the list request when results exceed the maximum allowed. Use the token to fetch the next page of results.
+
+        
+  

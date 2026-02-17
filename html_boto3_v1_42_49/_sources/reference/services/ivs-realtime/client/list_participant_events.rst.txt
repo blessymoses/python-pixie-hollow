@@ -1,0 +1,336 @@
+:doc:`ivsrealtime <../../ivs-realtime>` / Client / list_participant_events
+
+***********************
+list_participant_events
+***********************
+
+
+
+.. py:method:: ivsrealtime.Client.list_participant_events(**kwargs)
+
+  
+
+  Lists events for a specified participant that occurred during a specified stage session.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/ListParticipantEvents>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_participant_events(
+        stageArn='string',
+        sessionId='string',
+        participantId='string',
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type stageArn: string
+  :param stageArn: **[REQUIRED]** 
+
+    Stage ARN.
+
+    
+
+  
+  :type sessionId: string
+  :param sessionId: **[REQUIRED]** 
+
+    ID of a session within the stage.
+
+    
+
+  
+  :type participantId: string
+  :param participantId: **[REQUIRED]** 
+
+    Unique identifier for this participant. This is assigned by IVS and returned by  CreateParticipantToken.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The first participant event to retrieve. This is used for pagination; see the ``nextToken`` response field.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    Maximum number of results to return. Default: 50.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'events': [
+              {
+                  'name': 'JOINED'|'LEFT'|'PUBLISH_STARTED'|'PUBLISH_STOPPED'|'SUBSCRIBE_STARTED'|'SUBSCRIBE_STOPPED'|'PUBLISH_ERROR'|'SUBSCRIBE_ERROR'|'JOIN_ERROR'|'REPLICATION_STARTED'|'REPLICATION_STOPPED'|'TOKEN_EXCHANGED',
+                  'participantId': 'string',
+                  'eventTime': datetime(2015, 1, 1),
+                  'remoteParticipantId': 'string',
+                  'errorCode': 'INSUFFICIENT_CAPABILITIES'|'QUOTA_EXCEEDED'|'PUBLISHER_NOT_FOUND'|'BITRATE_EXCEEDED'|'RESOLUTION_EXCEEDED'|'STREAM_DURATION_EXCEEDED'|'INVALID_AUDIO_CODEC'|'INVALID_VIDEO_CODEC'|'INVALID_PROTOCOL'|'INVALID_STREAM_KEY'|'REUSE_OF_STREAM_KEY'|'B_FRAME_PRESENT'|'INVALID_INPUT'|'INTERNAL_SERVER_EXCEPTION',
+                  'destinationStageArn': 'string',
+                  'destinationSessionId': 'string',
+                  'replica': True|False,
+                  'previousToken': {
+                      'capabilities': [
+                          'PUBLISH'|'SUBSCRIBE',
+                      ],
+                      'attributes': {
+                          'string': 'string'
+                      },
+                      'userId': 'string',
+                      'expirationTime': datetime(2015, 1, 1)
+                  },
+                  'newToken': {
+                      'capabilities': [
+                          'PUBLISH'|'SUBSCRIBE',
+                      ],
+                      'attributes': {
+                          'string': 'string'
+                      },
+                      'userId': 'string',
+                      'expirationTime': datetime(2015, 1, 1)
+                  }
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **events** *(list) --* 
+
+        List of the matching events.
+
+        
+        
+
+        - *(dict) --* 
+
+          An occurrence during a stage session.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the event.
+
+            
+          
+
+          - **participantId** *(string) --* 
+
+            Unique identifier for the participant who triggered the event. This is assigned by IVS.
+
+            
+          
+
+          - **eventTime** *(datetime) --* 
+
+            ISO 8601 timestamp (returned as a string) for when the event occurred.
+
+            
+          
+
+          - **remoteParticipantId** *(string) --* 
+
+            Unique identifier for the remote participant. For a subscribe event, this is the publisher. For a publish or join event, this is null. This is assigned by IVS.
+
+            
+          
+
+          - **errorCode** *(string) --* 
+
+            If the event is an error event, the error code is provided to give insight into the specific error that occurred. If the event is not an error event, this field is null.
+
+             
+
+            
+            * ``B_FRAME_PRESENT`` — The participant's stream includes B-frames. For details, see `IVS RTMP Publishing <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/rt-rtmp-publishing.html>`__.
+             
+            * ``BITRATE_EXCEEDED`` — The participant exceeded the maximum supported bitrate. For details, see `Service Quotas <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/service-quotas.html>`__.
+             
+            * ``INSUFFICIENT_CAPABILITIES`` — The participant tried to take an action that the participant’s token is not allowed to do. For details on participant capabilities, see the ``capabilities`` field in  CreateParticipantToken.
+             
+            * ``INTERNAL_SERVER_EXCEPTION`` — The participant failed to publish to the stage due to an internal server error.
+             
+            * ``INVALID_AUDIO_CODEC`` — The participant is using an invalid audio codec. For details, see `Stream Ingest <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/rt-stream-ingest.html>`__.
+             
+            * ``INVALID_INPUT`` — The participant is using an invalid input stream.
+             
+            * ``INVALID_PROTOCOL`` — The participant's IngestConfiguration resource is configured for RTMPS but they tried streaming with RTMP. For details, see `IVS RTMP Publishing <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/rt-rtmp-publishing.html>`__.
+             
+            * ``INVALID_STREAM_KEY`` — The participant is using an invalid stream key. For details, see `IVS RTMP Publishing <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/rt-rtmp-publishing.html>`__.
+             
+            * ``INVALID_VIDEO_CODEC`` — The participant is using an invalid video codec. For details, see `Stream Ingest <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/rt-stream-ingest.html>`__.
+             
+            * ``PUBLISHER_NOT_FOUND`` — The participant tried to subscribe to a publisher that doesn’t exist.
+             
+            * ``QUOTA_EXCEEDED`` — The number of participants who want to publish/subscribe to a stage exceeds the quota. For details, see `Service Quotas <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/service-quotas.html>`__.
+             
+            * ``RESOLUTION_EXCEEDED`` — The participant exceeded the maximum supported resolution. For details, see `Service Quotas <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/service-quotas.html>`__.
+             
+            * ``REUSE_OF_STREAM_KEY`` — The participant tried to use a stream key that is associated with another active stage session.
+             
+            * ``STREAM_DURATION_EXCEEDED`` — The participant exceeded the maximum allowed stream duration. For details, see `Service Quotas <https://docs.aws.amazon.com/ivs/latest/RealTimeUserGuide/service-quotas.html>`__.
+            
+
+            
+          
+
+          - **destinationStageArn** *(string) --* 
+
+            ARN of the stage where the participant is replicated. Applicable only if the event name is ``REPLICATION_STARTED`` or ``REPLICATION_STOPPED``.
+
+            
+          
+
+          - **destinationSessionId** *(string) --* 
+
+            ID of the session within the destination stage. Applicable only if the event name is ``REPLICATION_STARTED`` or ``REPLICATION_STOPPED``.
+
+            
+          
+
+          - **replica** *(boolean) --* 
+
+            If true, this indicates the ``participantId`` is a replicated participant. If this is a subscribe event, then this flag refers to ``remoteParticipantId``. Default: ``false``.
+
+            
+          
+
+          - **previousToken** *(dict) --* 
+
+            Source participant token for ``TOKEN_EXCHANGED`` event.
+
+            
+            
+
+            - **capabilities** *(list) --* 
+
+              Set of capabilities that the user is allowed to perform in the stage.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **attributes** *(dict) --* 
+
+              Application-provided attributes to encode into the token and attach to a stage. Map keys and values can contain UTF-8 encoded text. The maximum length of this field is 1 KB total. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **userId** *(string) --* 
+
+              Customer-assigned name to help identify the token; this can be used to link a participant to a user in the customer’s own systems. This can be any UTF-8 encoded text. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+              
+            
+
+            - **expirationTime** *(datetime) --* 
+
+              ISO 8601 timestamp (returned as a string) for when this token expires.
+
+              
+        
+          
+
+          - **newToken** *(dict) --* 
+
+            Participant token created during ``TOKEN_EXCHANGED`` event.
+
+            
+            
+
+            - **capabilities** *(list) --* 
+
+              Set of capabilities that the user is allowed to perform in the stage.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **attributes** *(dict) --* 
+
+              Application-provided attributes to encode into the token and attach to a stage. Map keys and values can contain UTF-8 encoded text. The maximum length of this field is 1 KB total. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **userId** *(string) --* 
+
+              Customer-assigned name to help identify the token; this can be used to link a participant to a user in the customer’s own systems. This can be any UTF-8 encoded text. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+              
+            
+
+            - **expirationTime** *(datetime) --* 
+
+              ISO 8601 timestamp (returned as a string) for when this token expires.
+
+              
+        
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        If there are more events than ``maxResults``, use ``nextToken`` in the request to get the next set.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ivsrealtime.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`ivsrealtime.Client.exceptions.AccessDeniedException`
+
+  

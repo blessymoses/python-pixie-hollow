@@ -1,0 +1,268 @@
+:doc:`CloudWatch <../../cloudwatch>` / Client / list_metrics
+
+************
+list_metrics
+************
+
+
+
+.. py:method:: CloudWatch.Client.list_metrics(**kwargs)
+
+  
+
+  List the specified metrics. You can use the returned metrics with `GetMetricData <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricData.html>`__ or `GetMetricStatistics <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html>`__ to get statistical data.
+
+   
+
+  Up to 500 results are returned for any one call. To retrieve additional results, use the returned token with subsequent calls.
+
+   
+
+  After you create a metric, allow up to 15 minutes for the metric to appear. To see metric statistics sooner, use `GetMetricData <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricData.html>`__ or `GetMetricStatistics <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html>`__.
+
+   
+
+  If you are using CloudWatch cross-account observability, you can use this operation in a monitoring account and view metrics from the linked source accounts. For more information, see `CloudWatch cross-account observability <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Unified-Cross-Account.html>`__.
+
+   
+
+  ``ListMetrics`` doesn't return information about metrics if those metrics haven't reported data in the past two weeks. To retrieve those metrics, use `GetMetricData <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricData.html>`__ or `GetMetricStatistics <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/ListMetrics>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_metrics(
+        Namespace='string',
+        MetricName='string',
+        Dimensions=[
+            {
+                'Name': 'string',
+                'Value': 'string'
+            },
+        ],
+        NextToken='string',
+        RecentlyActive='PT3H',
+        IncludeLinkedAccounts=True|False,
+        OwningAccount='string'
+    )
+    
+  :type Namespace: string
+  :param Namespace: 
+
+    The metric namespace to filter against. Only the namespace that matches exactly will be returned.
+
+    
+
+  
+  :type MetricName: string
+  :param MetricName: 
+
+    The name of the metric to filter against. Only the metrics with names that match exactly will be returned.
+
+    
+
+  
+  :type Dimensions: list
+  :param Dimensions: 
+
+    The dimensions to filter against. Only the dimension with names that match exactly will be returned. If you specify one dimension name and a metric has that dimension and also other dimensions, it will be returned.
+
+    
+
+  
+    - *(dict) --* 
+
+      Represents filters for a dimension.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The dimension name to be matched.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The value of the dimension to be matched.
+
+        
+
+      
+    
+
+  :type NextToken: string
+  :param NextToken: 
+
+    The token returned by a previous call to indicate that there is more data available.
+
+    
+
+  
+  :type RecentlyActive: string
+  :param RecentlyActive: 
+
+    To filter the results to show only metrics that have had data points published in the past three hours, specify this parameter with a value of ``PT3H``. This is the only valid value for this parameter.
+
+     
+
+    The results that are returned are an approximation of the value you specify. There is a low probability that the returned results include metrics with last published data as much as 50 minutes more than the specified time interval.
+
+    
+
+  
+  :type IncludeLinkedAccounts: boolean
+  :param IncludeLinkedAccounts: 
+
+    If you are using this operation in a monitoring account, specify ``true`` to include metrics from source accounts in the returned data.
+
+     
+
+    The default is ``false``.
+
+    
+
+  
+  :type OwningAccount: string
+  :param OwningAccount: 
+
+    When you use this operation in a monitoring account, use this field to return metrics only from one source account. To do so, specify that source account ID in this field, and also specify ``true`` for ``IncludeLinkedAccounts``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Metrics': [
+              {
+                  'Namespace': 'string',
+                  'MetricName': 'string',
+                  'Dimensions': [
+                      {
+                          'Name': 'string',
+                          'Value': 'string'
+                      },
+                  ]
+              },
+          ],
+          'NextToken': 'string',
+          'OwningAccounts': [
+              'string',
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Metrics** *(list) --* 
+
+        The metrics that match your request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents a specific metric.
+
+          
+          
+
+          - **Namespace** *(string) --* 
+
+            The namespace of the metric.
+
+            
+          
+
+          - **MetricName** *(string) --* 
+
+            The name of the metric. This is a required field.
+
+            
+          
+
+          - **Dimensions** *(list) --* 
+
+            The dimensions for the metric.
+
+            
+            
+
+            - *(dict) --* 
+
+              A dimension is a name/value pair that is part of the identity of a metric. Because dimensions are part of the unique identifier for a metric, whenever you add a unique name/value pair to one of your metrics, you are creating a new variation of that metric. For example, many Amazon EC2 metrics publish ``InstanceId`` as a dimension name, and the actual instance ID as the value for that dimension.
+
+               
+
+              You can assign up to 30 dimensions to a metric.
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The name of the dimension. Dimension names must contain only ASCII characters, must include at least one non-whitespace character, and cannot start with a colon ( ``:``). ASCII control characters are not supported as part of dimension names.
+
+                
+              
+
+              - **Value** *(string) --* 
+
+                The value of the dimension. Dimension values must contain only ASCII characters and must include at least one non-whitespace character. ASCII control characters are not supported as part of dimension values.
+
+                
+          
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token that marks the start of the next batch of returned results.
+
+        
+      
+
+      - **OwningAccounts** *(list) --* 
+
+        If you are using this operation in a monitoring account, this array contains the account IDs of the source accounts where the metrics in the returned data are from.
+
+         
+
+        This field is a 1:1 mapping between each metric that is returned and the ID of the owning account.
+
+        
+        
+
+        - *(string) --* 
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatch.Client.exceptions.InternalServiceFault`
+
+  
+  *   :py:class:`CloudWatch.Client.exceptions.InvalidParameterValueException`
+
+  

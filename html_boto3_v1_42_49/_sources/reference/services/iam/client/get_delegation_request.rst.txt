@@ -1,0 +1,381 @@
+:doc:`IAM <../../iam>` / Client / get_delegation_request
+
+**********************
+get_delegation_request
+**********************
+
+
+
+.. py:method:: IAM.Client.get_delegation_request(**kwargs)
+
+  
+
+  Retrieves information about a specific delegation request.
+
+   
+
+  If a delegation request has no owner or owner account, ``GetDelegationRequest`` for that delegation request can be called by any account. If the owner account is assigned but there is no owner id, only identities within that owner account can call ``GetDelegationRequest`` for the delegation request. Once the delegation request is fully owned, the owner of the request gets a default permission to get that delegation request. For more details, see `Managing Permissions for Delegation Requests <https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies-temporary-delegation.html#temporary-delegation-managing-permissions>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/GetDelegationRequest>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_delegation_request(
+        DelegationRequestId='string',
+        DelegationPermissionCheck=True|False
+    )
+    
+  :type DelegationRequestId: string
+  :param DelegationRequestId: **[REQUIRED]** 
+
+    The unique identifier of the delegation request to retrieve.
+
+    
+
+  
+  :type DelegationPermissionCheck: boolean
+  :param DelegationPermissionCheck: 
+
+    Specifies whether to perform a permission check for the delegation request.
+
+     
+
+    If set to true, the ``GetDelegationRequest`` API call will start a permission check process. This process calculates whether the caller has sufficient permissions to cover the asks from this delegation request.
+
+     
+
+    Setting this parameter to true does not guarantee an answer in the response. See the ``PermissionCheckStatus`` and the ``PermissionCheckResult`` response attributes for further details.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DelegationRequest': {
+              'DelegationRequestId': 'string',
+              'OwnerAccountId': 'string',
+              'Description': 'string',
+              'RequestMessage': 'string',
+              'Permissions': {
+                  'PolicyTemplateArn': 'string',
+                  'Parameters': [
+                      {
+                          'Name': 'string',
+                          'Values': [
+                              'string',
+                          ],
+                          'Type': 'string'|'stringList'
+                      },
+                  ]
+              },
+              'PermissionPolicy': 'string',
+              'RolePermissionRestrictionArns': [
+                  'string',
+              ],
+              'OwnerId': 'string',
+              'ApproverId': 'string',
+              'State': 'UNASSIGNED'|'ASSIGNED'|'PENDING_APPROVAL'|'FINALIZED'|'ACCEPTED'|'REJECTED'|'EXPIRED',
+              'ExpirationTime': datetime(2015, 1, 1),
+              'RequestorId': 'string',
+              'RequestorName': 'string',
+              'CreateDate': datetime(2015, 1, 1),
+              'SessionDuration': 123,
+              'RedirectUrl': 'string',
+              'Notes': 'string',
+              'RejectionReason': 'string',
+              'OnlySendByOwner': True|False,
+              'UpdatedTime': datetime(2015, 1, 1)
+          },
+          'PermissionCheckStatus': 'COMPLETE'|'IN_PROGRESS'|'FAILED',
+          'PermissionCheckResult': 'ALLOWED'|'DENIED'|'UNSURE'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DelegationRequest** *(dict) --* 
+
+        The delegation request object containing all details about the request.
+
+        
+        
+
+        - **DelegationRequestId** *(string) --* 
+
+          The unique identifier for the delegation request.
+
+          
+        
+
+        - **OwnerAccountId** *(string) --* 
+
+          Amazon Web Services account ID of the owner of the delegation request.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          Description of the delegation request. This is a message that is provided by the Amazon Web Services partner that filed the delegation request.
+
+          
+        
+
+        - **RequestMessage** *(string) --* 
+
+          A custom message that is added to the delegation request by the partner.
+
+           
+
+          This element is different from the ``Description`` element such that this is a request specific message injected by the partner. The ``Description`` is typically a generic explanation of what the delegation request is targeted to do.
+
+          
+        
+
+        - **Permissions** *(dict) --* 
+
+          Contains information about the permissions being delegated in a delegation request.
+
+          
+          
+
+          - **PolicyTemplateArn** *(string) --* 
+
+            This ARN maps to a pre-registered policy content for this partner. See the `partner onboarding documentation to understand how to create a delegation template.
+
+            
+          
+
+          - **Parameters** *(list) --* 
+
+            A list of policy parameters that define the scope and constraints of the delegated permissions.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains information about a policy parameter used to customize delegated permissions.
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The name of the policy parameter.
+
+                
+              
+
+              - **Values** *(list) --* 
+
+                The allowed values for the policy parameter.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **Type** *(string) --* 
+
+                The data type of the policy parameter value.
+
+                
+          
+        
+      
+        
+
+        - **PermissionPolicy** *(string) --* 
+
+          JSON content of the associated permission policy of this delegation request.
+
+          
+        
+
+        - **RolePermissionRestrictionArns** *(list) --* 
+
+          If the ``PermissionPolicy`` includes role creation permissions, this element will include the list of permissions boundary policies associated with the role creation. See `Permissions boundaries for IAM entities <IAM/latest/UserGuide/access_policies_boundaries.html>`__ for more details about IAM permission boundaries.
+
+          
+          
+
+          - *(string) --* 
+
+            The Amazon Resource Name (ARN). ARNs are unique identifiers for Amazon Web Services resources.
+
+             
+
+            For more information about ARNs, go to `Amazon Resource Names (ARNs) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ in the *Amazon Web Services General Reference*.
+
+            
+      
+        
+
+        - **OwnerId** *(string) --* 
+
+          ARN of the owner of this delegation request.
+
+          
+        
+
+        - **ApproverId** *(string) --* 
+
+          The Amazon Resource Name (ARN). ARNs are unique identifiers for Amazon Web Services resources.
+
+           
+
+          For more information about ARNs, go to `Amazon Resource Names (ARNs) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ in the *Amazon Web Services General Reference*.
+
+          
+        
+
+        - **State** *(string) --* 
+
+          The state of this delegation request.
+
+           
+
+          See the `Understanding the Request Lifecycle <IAM/latest/UserGuide/temporary-delegation-building-integration.html#temporary-delegation-request-lifecycle>`__ for an explanation of how these states are transitioned.
+
+          
+        
+
+        - **ExpirationTime** *(datetime) --* 
+
+          The expiry time of this delegation request
+
+           
+
+          See the `Understanding the Request Lifecycle <IAM/latest/UserGuide/temporary-delegation-building-integration.html#temporary-delegation-request-lifecycle>`__ for details on the life time of a delegation request at each state.
+
+          
+        
+
+        - **RequestorId** *(string) --* 
+
+          Identity of the requestor of this delegation request. This will be an Amazon Web Services account ID.
+
+          
+        
+
+        - **RequestorName** *(string) --* 
+
+          A friendly name of the requestor.
+
+          
+        
+
+        - **CreateDate** *(datetime) --* 
+
+          Creation date (timestamp) of this delegation request.
+
+          
+        
+
+        - **SessionDuration** *(integer) --* 
+
+          The life-time of the requested session credential.
+
+          
+        
+
+        - **RedirectUrl** *(string) --* 
+
+          A URL to be redirected to once the delegation request is approved. Partners provide this URL when creating the delegation request.
+
+          
+        
+
+        - **Notes** *(string) --* 
+
+          Notes added to this delegation request, if this request was updated via the `UpdateDelegationRequest <https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateDelegationRequest.html>`__ API.
+
+          
+        
+
+        - **RejectionReason** *(string) --* 
+
+          Reasons for rejecting this delegation request, if this request was rejected. See also `RejectDelegationRequest <https://docs.aws.amazon.com/IAM/latest/APIReference/API_RejectDelegationRequest.html>`__ API documentation.
+
+          
+        
+
+        - **OnlySendByOwner** *(boolean) --* 
+
+          A flag indicating whether the `SendDelegationToken <https://docs.aws.amazon.com/IAM/latest/APIReference/API_SendDelegationToken.html>`__ must be called by the owner of this delegation request. This is set by the requesting partner.
+
+          
+        
+
+        - **UpdatedTime** *(datetime) --* 
+
+          Last updated timestamp of the request.
+
+          
+    
+      
+
+      - **PermissionCheckStatus** *(string) --* 
+
+        The status of the permission check for the delegation request.
+
+         
+
+        This value indicates the status of the process to check whether the caller has sufficient permissions to cover the requested actions in the delegation request. Since this is an asynchronous process, there are three potential values:
+
+         
+
+        
+        * ``IN_PROGRESS`` : The permission check process has started.
+         
+        * ``COMPLETED`` : The permission check process has completed. The ``PermissionCheckResult`` will include the result.
+         
+        * ``FAILED`` : The permission check process has failed.
+        
+
+        
+      
+
+      - **PermissionCheckResult** *(string) --* 
+
+        The result of the permission check, indicating whether the caller has sufficient permissions to cover the requested permissions. This is an approximate result.
+
+         
+
+        
+        * ``ALLOWED`` : The caller has sufficient permissions cover all the requested permissions.
+         
+        * ``DENIED`` : The caller does not have sufficient permissions to cover all the requested permissions.
+         
+        * ``UNSURE`` : It is not possible to determine whether the caller has all the permissions needed. This output is most likely for cases when the caller has permissions with conditions.
+        
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IAM.Client.exceptions.NoSuchEntityException`
+
+  
+  *   :py:class:`IAM.Client.exceptions.ServiceFailureException`
+
+  

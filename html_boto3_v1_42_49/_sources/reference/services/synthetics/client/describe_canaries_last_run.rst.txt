@@ -1,0 +1,305 @@
+:doc:`Synthetics <../../synthetics>` / Client / describe_canaries_last_run
+
+**************************
+describe_canaries_last_run
+**************************
+
+
+
+.. py:method:: Synthetics.Client.describe_canaries_last_run(**kwargs)
+
+  
+
+  Use this operation to see information from the most recent run of each canary that you have created.
+
+   
+
+  This operation supports resource-level authorization using an IAM policy and the ``Names`` parameter. If you specify the ``Names`` parameter, the operation is successful only if you have authorization to view all the canaries that you specify in your request. If you do not have permission to view any of the canaries, the request fails with a 403 response.
+
+   
+
+  You are required to use the ``Names`` parameter if you are logged on to a user or role that has an IAM policy that restricts which canaries that you are allowed to view. For more information, see `Limiting a user to viewing specific canaries <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Restricted.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/DescribeCanariesLastRun>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_canaries_last_run(
+        NextToken='string',
+        MaxResults=123,
+        Names=[
+            'string',
+        ],
+        BrowserType='CHROME'|'FIREFOX'
+    )
+    
+  :type NextToken: string
+  :param NextToken: 
+
+    A token that indicates that there is more data available. You can use this token in a subsequent ``DescribeCanariesLastRun`` operation to retrieve the next set of results.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    Specify this parameter to limit how many runs are returned each time you use the ``DescribeLastRun`` operation. If you omit this parameter, the default of 100 is used.
+
+    
+
+  
+  :type Names: list
+  :param Names: 
+
+    Use this parameter to return only canaries that match the names that you specify here. You can specify as many as five canary names.
+
+     
+
+    If you specify this parameter, the operation is successful only if you have authorization to view all the canaries that you specify in your request. If you do not have permission to view any of the canaries, the request fails with a 403 response.
+
+     
+
+    You are required to use the ``Names`` parameter if you are logged on to a user or role that has an IAM policy that restricts which canaries that you are allowed to view. For more information, see `Limiting a user to viewing specific canaries <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Restricted.html>`__.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type BrowserType: string
+  :param BrowserType: 
+
+    The type of browser to use for the canary run.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CanariesLastRun': [
+              {
+                  'CanaryName': 'string',
+                  'LastRun': {
+                      'Id': 'string',
+                      'ScheduledRunId': 'string',
+                      'RetryAttempt': 123,
+                      'Name': 'string',
+                      'Status': {
+                          'State': 'RUNNING'|'PASSED'|'FAILED',
+                          'StateReason': 'string',
+                          'StateReasonCode': 'CANARY_FAILURE'|'EXECUTION_FAILURE',
+                          'TestResult': 'PASSED'|'FAILED'|'UNKNOWN'
+                      },
+                      'Timeline': {
+                          'Started': datetime(2015, 1, 1),
+                          'Completed': datetime(2015, 1, 1),
+                          'MetricTimestampForRunAndRetries': datetime(2015, 1, 1)
+                      },
+                      'ArtifactS3Location': 'string',
+                      'DryRunConfig': {
+                          'DryRunId': 'string'
+                      },
+                      'BrowserType': 'CHROME'|'FIREFOX'
+                  }
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **CanariesLastRun** *(list) --* 
+
+        An array that contains the information from the most recent run of each canary.
+
+        
+        
+
+        - *(dict) --* 
+
+          This structure contains information about the most recent run of a single canary.
+
+          
+          
+
+          - **CanaryName** *(string) --* 
+
+            The name of the canary.
+
+            
+          
+
+          - **LastRun** *(dict) --* 
+
+            The results from this canary's most recent run.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              A unique ID that identifies this canary run.
+
+              
+            
+
+            - **ScheduledRunId** *(string) --* 
+
+              The ID of the scheduled canary run.
+
+              
+            
+
+            - **RetryAttempt** *(integer) --* 
+
+              The count in number of the retry attempt.
+
+              
+            
+
+            - **Name** *(string) --* 
+
+              The name of the canary.
+
+              
+            
+
+            - **Status** *(dict) --* 
+
+              The status of this run.
+
+              
+              
+
+              - **State** *(string) --* 
+
+                The current state of the run.
+
+                
+              
+
+              - **StateReason** *(string) --* 
+
+                If run of the canary failed, this field contains the reason for the error.
+
+                
+              
+
+              - **StateReasonCode** *(string) --* 
+
+                If this value is ``CANARY_FAILURE``, either the canary script failed or Synthetics ran into a fatal error when running the canary. For example, a canary timeout misconfiguration setting can cause the canary to timeout before Synthetics can evaluate its status.
+
+                 
+
+                If this value is ``EXECUTION_FAILURE``, a non-critical failure occurred such as failing to save generated debug artifacts (for example, screenshots or har files).
+
+                 
+
+                If both types of failures occurred, the ``CANARY_FAILURE`` takes precedence. To understand the exact error, use the `StateReason <https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_CanaryRunStatus.html>`__ API.
+
+                
+              
+
+              - **TestResult** *(string) --* 
+
+                Specifies the status of canary script for this run. When Synthetics tries to determine the status but fails, the result is marked as ``UNKNOWN``. For the overall status of canary run, see `State <https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_CanaryRunStatus.html>`__.
+
+                
+          
+            
+
+            - **Timeline** *(dict) --* 
+
+              A structure that contains the start and end times of this run.
+
+              
+              
+
+              - **Started** *(datetime) --* 
+
+                The start time of the run.
+
+                
+              
+
+              - **Completed** *(datetime) --* 
+
+                The end time of the run.
+
+                
+              
+
+              - **MetricTimestampForRunAndRetries** *(datetime) --* 
+
+                The time at which the metrics will be generated for this run or retries.
+
+                
+          
+            
+
+            - **ArtifactS3Location** *(string) --* 
+
+              The location where the canary stored artifacts from the run. Artifacts include the log file, screenshots, and HAR files.
+
+              
+            
+
+            - **DryRunConfig** *(dict) --* 
+
+              Returns the dry run configurations for a canary.
+
+              
+              
+
+              - **DryRunId** *(string) --* 
+
+                The DryRunId associated with an existing canary’s dry run. You can use this DryRunId to retrieve information about the dry run.
+
+                
+          
+            
+
+            - **BrowserType** *(string) --* 
+
+              The browser type associated with this canary run.
+
+              
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A token that indicates that there is more data available. You can use this token in a subsequent ``DescribeCanariesLastRun`` operation to retrieve the next set of results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Synthetics.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Synthetics.Client.exceptions.ValidationException`
+
+  

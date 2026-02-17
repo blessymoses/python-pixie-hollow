@@ -1,0 +1,565 @@
+:doc:`ivsrealtime <../../ivs-realtime>` / Client / create_stage
+
+************
+create_stage
+************
+
+
+
+.. py:method:: ivsrealtime.Client.create_stage(**kwargs)
+
+  
+
+  Creates a new stage (and optionally participant tokens).
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ivs-realtime-2020-07-14/CreateStage>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_stage(
+        name='string',
+        participantTokenConfigurations=[
+            {
+                'duration': 123,
+                'userId': 'string',
+                'attributes': {
+                    'string': 'string'
+                },
+                'capabilities': [
+                    'PUBLISH'|'SUBSCRIBE',
+                ]
+            },
+        ],
+        tags={
+            'string': 'string'
+        },
+        autoParticipantRecordingConfiguration={
+            'storageConfigurationArn': 'string',
+            'mediaTypes': [
+                'AUDIO_VIDEO'|'AUDIO_ONLY'|'NONE',
+            ],
+            'thumbnailConfiguration': {
+                'targetIntervalSeconds': 123,
+                'storage': [
+                    'SEQUENTIAL'|'LATEST',
+                ],
+                'recordingMode': 'INTERVAL'|'DISABLED'
+            },
+            'recordingReconnectWindowSeconds': 123,
+            'hlsConfiguration': {
+                'targetSegmentDurationSeconds': 123
+            },
+            'recordParticipantReplicas': True|False
+        }
+    )
+    
+  :type name: string
+  :param name: 
+
+    Optional name that can be specified for the stage being created.
+
+    
+
+  
+  :type participantTokenConfigurations: list
+  :param participantTokenConfigurations: 
+
+    Array of participant token configuration objects to attach to the new stage.
+
+    
+
+  
+    - *(dict) --* 
+
+      Object specifying a participant token configuration in a stage.
+
+      
+
+    
+      - **duration** *(integer) --* 
+
+        Duration (in minutes), after which the corresponding participant token expires. Default: 720 (12 hours).
+
+        
+
+      
+      - **userId** *(string) --* 
+
+        Customer-assigned name to help identify the token; this can be used to link a participant to a user in the customer’s own systems. This can be any UTF-8 encoded text. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+        
+
+      
+      - **attributes** *(dict) --* 
+
+        Application-provided attributes to encode into the corresponding participant token and attach to a stage. Map keys and values can contain UTF-8 encoded text. The maximum length of this field is 1 KB total. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+      - **capabilities** *(list) --* 
+
+        Set of capabilities that the user is allowed to perform in the stage.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type tags: dict
+  :param tags: 
+
+    Tags attached to the resource. Array of maps, each of the form ``string:string (key:value)``. See `Best practices and strategies <https://docs.aws.amazon.com/tag-editor/latest/userguide/best-practices-and-strats.html>`__ in *Tagging AWS Resources and Tag Editor* for details, including restrictions that apply to tags and "Tag naming limits and requirements"; Amazon IVS has no constraints on tags beyond what is documented there.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type autoParticipantRecordingConfiguration: dict
+  :param autoParticipantRecordingConfiguration: 
+
+    Configuration object for individual participant recording, to attach to the new stage.
+
+    
+
+  
+    - **storageConfigurationArn** *(string) --* **[REQUIRED]** 
+
+      ARN of the  StorageConfiguration resource to use for individual participant recording. Default: ``""`` (empty string, no storage configuration is specified). Individual participant recording cannot be started unless a storage configuration is specified, when a  Stage is created or updated. To disable individual participant recording, set this to ``""``; other fields in this object will get reset to their defaults when sending ``""``.
+
+      
+
+    
+    - **mediaTypes** *(list) --* 
+
+      Types of media to be recorded. Default: ``AUDIO_VIDEO``.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **thumbnailConfiguration** *(dict) --* 
+
+      A complex type that allows you to enable/disable the recording of thumbnails for individual participant recording and modify the interval at which thumbnails are generated for the live session.
+
+      
+
+    
+      - **targetIntervalSeconds** *(integer) --* 
+
+        The targeted thumbnail-generation interval in seconds. This is configurable only if ``recordingMode`` is ``INTERVAL``. Default: 60.
+
+        
+
+      
+      - **storage** *(list) --* 
+
+        Indicates the format in which thumbnails are recorded. ``SEQUENTIAL`` records all generated thumbnails in a serial manner, to the media/thumbnails/high directory. ``LATEST`` saves the latest thumbnail in media/latest_thumbnail/high/thumb.jpg and overwrites it at the interval specified by ``targetIntervalSeconds``. You can enable both ``SEQUENTIAL`` and ``LATEST``. Default: ``SEQUENTIAL``.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **recordingMode** *(string) --* 
+
+        Thumbnail recording mode. Default: ``DISABLED``.
+
+        
+
+      
+    
+    - **recordingReconnectWindowSeconds** *(integer) --* 
+
+      If a stage publisher disconnects and then reconnects within the specified interval, the multiple recordings will be considered a single recording and merged together.
+
+       
+
+      The default value is 0, which disables merging.
+
+      
+
+    
+    - **hlsConfiguration** *(dict) --* 
+
+      HLS configuration object for individual participant recording.
+
+      
+
+    
+      - **targetSegmentDurationSeconds** *(integer) --* 
+
+        Defines the target duration for recorded segments generated when recording a stage participant. Segments may have durations longer than the specified value when needed to ensure each segment begins with a keyframe. Default: 6.
+
+        
+
+      
+    
+    - **recordParticipantReplicas** *(boolean) --* 
+
+      Optional field to disable replica participant recording. If this is set to ``false`` when a participant is a replica, replica participants are not recorded. Default: ``true``.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'stage': {
+              'arn': 'string',
+              'name': 'string',
+              'activeSessionId': 'string',
+              'tags': {
+                  'string': 'string'
+              },
+              'autoParticipantRecordingConfiguration': {
+                  'storageConfigurationArn': 'string',
+                  'mediaTypes': [
+                      'AUDIO_VIDEO'|'AUDIO_ONLY'|'NONE',
+                  ],
+                  'thumbnailConfiguration': {
+                      'targetIntervalSeconds': 123,
+                      'storage': [
+                          'SEQUENTIAL'|'LATEST',
+                      ],
+                      'recordingMode': 'INTERVAL'|'DISABLED'
+                  },
+                  'recordingReconnectWindowSeconds': 123,
+                  'hlsConfiguration': {
+                      'targetSegmentDurationSeconds': 123
+                  },
+                  'recordParticipantReplicas': True|False
+              },
+              'endpoints': {
+                  'events': 'string',
+                  'whip': 'string',
+                  'rtmp': 'string',
+                  'rtmps': 'string'
+              }
+          },
+          'participantTokens': [
+              {
+                  'participantId': 'string',
+                  'token': 'string',
+                  'userId': 'string',
+                  'attributes': {
+                      'string': 'string'
+                  },
+                  'duration': 123,
+                  'capabilities': [
+                      'PUBLISH'|'SUBSCRIBE',
+                  ],
+                  'expirationTime': datetime(2015, 1, 1)
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **stage** *(dict) --* 
+
+        The stage that was created.
+
+        
+        
+
+        - **arn** *(string) --* 
+
+          Stage ARN.
+
+          
+        
+
+        - **name** *(string) --* 
+
+          Stage name.
+
+          
+        
+
+        - **activeSessionId** *(string) --* 
+
+          ID of the active session within the stage.
+
+          
+        
+
+        - **tags** *(dict) --* 
+
+          Tags attached to the resource. Array of maps, each of the form ``string:string (key:value)``. See `Best practices and strategies <https://docs.aws.amazon.com/tag-editor/latest/userguide/best-practices-and-strats.html>`__ in *Tagging AWS Resources and Tag Editor* for details, including restrictions that apply to tags and "Tag naming limits and requirements"; Amazon IVS has no constraints on tags beyond what is documented there.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **autoParticipantRecordingConfiguration** *(dict) --* 
+
+          Configuration object for individual participant recording, attached to the stage.
+
+          
+          
+
+          - **storageConfigurationArn** *(string) --* 
+
+            ARN of the  StorageConfiguration resource to use for individual participant recording. Default: ``""`` (empty string, no storage configuration is specified). Individual participant recording cannot be started unless a storage configuration is specified, when a  Stage is created or updated. To disable individual participant recording, set this to ``""``; other fields in this object will get reset to their defaults when sending ``""``.
+
+            
+          
+
+          - **mediaTypes** *(list) --* 
+
+            Types of media to be recorded. Default: ``AUDIO_VIDEO``.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **thumbnailConfiguration** *(dict) --* 
+
+            A complex type that allows you to enable/disable the recording of thumbnails for individual participant recording and modify the interval at which thumbnails are generated for the live session.
+
+            
+            
+
+            - **targetIntervalSeconds** *(integer) --* 
+
+              The targeted thumbnail-generation interval in seconds. This is configurable only if ``recordingMode`` is ``INTERVAL``. Default: 60.
+
+              
+            
+
+            - **storage** *(list) --* 
+
+              Indicates the format in which thumbnails are recorded. ``SEQUENTIAL`` records all generated thumbnails in a serial manner, to the media/thumbnails/high directory. ``LATEST`` saves the latest thumbnail in media/latest_thumbnail/high/thumb.jpg and overwrites it at the interval specified by ``targetIntervalSeconds``. You can enable both ``SEQUENTIAL`` and ``LATEST``. Default: ``SEQUENTIAL``.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **recordingMode** *(string) --* 
+
+              Thumbnail recording mode. Default: ``DISABLED``.
+
+              
+        
+          
+
+          - **recordingReconnectWindowSeconds** *(integer) --* 
+
+            If a stage publisher disconnects and then reconnects within the specified interval, the multiple recordings will be considered a single recording and merged together.
+
+             
+
+            The default value is 0, which disables merging.
+
+            
+          
+
+          - **hlsConfiguration** *(dict) --* 
+
+            HLS configuration object for individual participant recording.
+
+            
+            
+
+            - **targetSegmentDurationSeconds** *(integer) --* 
+
+              Defines the target duration for recorded segments generated when recording a stage participant. Segments may have durations longer than the specified value when needed to ensure each segment begins with a keyframe. Default: 6.
+
+              
+        
+          
+
+          - **recordParticipantReplicas** *(boolean) --* 
+
+            Optional field to disable replica participant recording. If this is set to ``false`` when a participant is a replica, replica participants are not recorded. Default: ``true``.
+
+            
+      
+        
+
+        - **endpoints** *(dict) --* 
+
+          Summary information about various endpoints for a stage.
+
+          
+          
+
+          - **events** *(string) --* 
+
+            Events endpoint.
+
+            
+          
+
+          - **whip** *(string) --* 
+
+            The endpoint to be used for IVS real-time streaming using the WHIP protocol.
+
+            
+          
+
+          - **rtmp** *(string) --* 
+
+            The endpoint to be used for IVS real-time streaming using the RTMP protocol.
+
+            
+          
+
+          - **rtmps** *(string) --* 
+
+            The endpoint to be used for IVS real-time streaming using the RTMPS protocol.
+
+            
+      
+    
+      
+
+      - **participantTokens** *(list) --* 
+
+        Participant tokens attached to the stage. These correspond to the ``participants`` in the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Object specifying a participant token in a stage.
+
+           
+
+          **Important**: Treat tokens as opaque; i.e., do not build functionality based on token contents. The format of tokens could change in the future.
+
+          
+          
+
+          - **participantId** *(string) --* 
+
+            Unique identifier for this participant token, assigned by IVS.
+
+            
+          
+
+          - **token** *(string) --* 
+
+            The issued client token, encrypted.
+
+            
+          
+
+          - **userId** *(string) --* 
+
+            Customer-assigned name to help identify the token; this can be used to link a participant to a user in the customer’s own systems. This can be any UTF-8 encoded text. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+            
+          
+
+          - **attributes** *(dict) --* 
+
+            Application-provided attributes to encode into the token and attach to a stage. Map keys and values can contain UTF-8 encoded text. The maximum length of this field is 1 KB total. *This field is exposed to all stage participants and should not be used for personally identifying, confidential, or sensitive information.*
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+          
+
+          - **duration** *(integer) --* 
+
+            Duration (in minutes), after which the participant token expires. Default: 720 (12 hours).
+
+            
+          
+
+          - **capabilities** *(list) --* 
+
+            Set of capabilities that the user is allowed to perform in the stage.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **expirationTime** *(datetime) --* 
+
+            ISO 8601 timestamp (returned as a string) for when this token expires.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ivsrealtime.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`ivsrealtime.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ivsrealtime.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`ivsrealtime.Client.exceptions.PendingVerification`
+
+  

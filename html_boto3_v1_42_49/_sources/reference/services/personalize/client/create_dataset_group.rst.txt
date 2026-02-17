@@ -1,0 +1,222 @@
+:doc:`Personalize <../../personalize>` / Client / create_dataset_group
+
+********************
+create_dataset_group
+********************
+
+
+
+.. py:method:: Personalize.Client.create_dataset_group(**kwargs)
+
+  
+
+  Creates an empty dataset group. A dataset group is a container for Amazon Personalize resources. A dataset group can contain at most three datasets, one for each type of dataset:
+
+   
+
+  
+  * Item interactions
+   
+  * Items
+   
+  * Users
+   
+  * Actions
+   
+  * Action interactions
+  
+
+   
+
+  A dataset group can be a Domain dataset group, where you specify a domain and use pre-configured resources like recommenders, or a Custom dataset group, where you use custom resources, such as a solution with a solution version, that you deploy with a campaign. If you start with a Domain dataset group, you can still add custom resources such as solutions and solution versions trained with recipes for custom use cases and deployed with campaigns.
+
+   
+
+  A dataset group can be in one of the following states:
+
+   
+
+  
+  * CREATE PENDING > CREATE IN_PROGRESS > ACTIVE -or- CREATE FAILED
+   
+  * DELETE PENDING
+  
+
+   
+
+  To get the status of the dataset group, call `DescribeDatasetGroup <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeDatasetGroup.html>`__. If the status shows as CREATE FAILED, the response includes a ``failureReason`` key, which describes why the creation failed.
+
+   
+
+  .. note::
+
+    
+
+    You must wait until the ``status`` of the dataset group is ``ACTIVE`` before adding a dataset to the group.
+
+    
+
+   
+
+  You can specify an Key Management Service (KMS) key to encrypt the datasets in the group. If you specify a KMS key, you must also include an Identity and Access Management (IAM) role that has permission to access the key.
+
+   
+
+  **APIs that require a dataset group ARN in the request**
+
+   
+
+  
+  * `CreateDataset <https://docs.aws.amazon.com/personalize/latest/dg/API_CreateDataset.html>`__
+   
+  * `CreateEventTracker <https://docs.aws.amazon.com/personalize/latest/dg/API_CreateEventTracker.html>`__
+   
+  * `CreateSolution <https://docs.aws.amazon.com/personalize/latest/dg/API_CreateSolution.html>`__
+  
+
+   
+
+  **Related APIs**
+
+   
+
+  
+  * `ListDatasetGroups <https://docs.aws.amazon.com/personalize/latest/dg/API_ListDatasetGroups.html>`__
+   
+  * `DescribeDatasetGroup <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeDatasetGroup.html>`__
+   
+  * `DeleteDatasetGroup <https://docs.aws.amazon.com/personalize/latest/dg/API_DeleteDatasetGroup.html>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/personalize-2018-05-22/CreateDatasetGroup>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_dataset_group(
+        name='string',
+        roleArn='string',
+        kmsKeyArn='string',
+        domain='ECOMMERCE'|'VIDEO_ON_DEMAND',
+        tags=[
+            {
+                'tagKey': 'string',
+                'tagValue': 'string'
+            },
+        ]
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name for the new dataset group.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: 
+
+    The ARN of the Identity and Access Management (IAM) role that has permissions to access the Key Management Service (KMS) key. Supplying an IAM role is only valid when also specifying a KMS key.
+
+    
+
+  
+  :type kmsKeyArn: string
+  :param kmsKeyArn: 
+
+    The Amazon Resource Name (ARN) of a Key Management Service (KMS) key used to encrypt the datasets.
+
+    
+
+  
+  :type domain: string
+  :param domain: 
+
+    The domain of the dataset group. Specify a domain to create a Domain dataset group. The domain you specify determines the default schemas for datasets and the use cases available for recommenders. If you don't specify a domain, you create a Custom dataset group with solution versions that you deploy with a campaign.
+
+    
+
+  
+  :type tags: list
+  :param tags: 
+
+    A list of `tags <https://docs.aws.amazon.com/personalize/latest/dg/tagging-resources.html>`__ to apply to the dataset group.
+
+    
+
+  
+    - *(dict) --* 
+
+      The optional metadata that you apply to resources to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define. For more information see `Tagging Amazon Personalize resources <https://docs.aws.amazon.com/personalize/latest/dg/tagging-resources.html>`__.
+
+      
+
+    
+      - **tagKey** *(string) --* **[REQUIRED]** 
+
+        One part of a key-value pair that makes up a tag. A key is a general label that acts like a category for more specific tag values.
+
+        
+
+      
+      - **tagValue** *(string) --* **[REQUIRED]** 
+
+        The optional part of a key-value pair that makes up a tag. A value acts as a descriptor within a tag category (key).
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'datasetGroupArn': 'string',
+          'domain': 'ECOMMERCE'|'VIDEO_ON_DEMAND'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **datasetGroupArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the new dataset group.
+
+        
+      
+
+      - **domain** *(string) --* 
+
+        The domain for the new Domain dataset group.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.TooManyTagsException`
+
+  

@@ -1,0 +1,134 @@
+:doc:`Transfer <../../transfer>` / Client / start_directory_listing
+
+***********************
+start_directory_listing
+***********************
+
+
+
+.. py:method:: Transfer.Client.start_directory_listing(**kwargs)
+
+  
+
+  Retrieves a list of the contents of a directory from a remote SFTP server. You specify the connector ID, the output path, and the remote directory path. You can also specify the optional ``MaxItems`` value to control the maximum number of items that are listed from the remote directory. This API returns a list of all files and directories in the remote directory (up to the maximum value), but does not return files or folders in sub-directories. That is, it only returns a list of files and directories one-level deep.
+
+   
+
+  After you receive the listing file, you can provide the files that you want to transfer to the ``RetrieveFilePaths`` parameter of the ``StartFileTransfer`` API call.
+
+   
+
+  The naming convention for the output file is ``connector-ID-listing-ID.json``. The output file contains the following information:
+
+   
+
+  
+  * ``filePath``: the complete path of a remote file, relative to the directory of the listing request for your SFTP connector on the remote server.
+   
+  * ``modifiedTimestamp``: the last time the file was modified, in UTC time format. This field is optional. If the remote file attributes don't contain a timestamp, it is omitted from the file listing.
+   
+  * ``size``: the size of the file, in bytes. This field is optional. If the remote file attributes don't contain a file size, it is omitted from the file listing.
+   
+  * ``path``: the complete path of a remote directory, relative to the directory of the listing request for your SFTP connector on the remote server.
+   
+  * ``truncated``: a flag indicating whether the list output contains all of the items contained in the remote directory or not. If your ``Truncated`` output value is true, you can increase the value provided in the optional ``max-items`` input attribute to be able to list more items (up to the maximum allowed list size of 10,000 items).
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/StartDirectoryListing>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_directory_listing(
+        ConnectorId='string',
+        RemoteDirectoryPath='string',
+        MaxItems=123,
+        OutputDirectoryPath='string'
+    )
+    
+  :type ConnectorId: string
+  :param ConnectorId: **[REQUIRED]** 
+
+    The unique identifier for the connector.
+
+    
+
+  
+  :type RemoteDirectoryPath: string
+  :param RemoteDirectoryPath: **[REQUIRED]** 
+
+    Specifies the directory on the remote SFTP server for which you want to list its contents.
+
+    
+
+  
+  :type MaxItems: integer
+  :param MaxItems: 
+
+    An optional parameter where you can specify the maximum number of file/directory names to retrieve. The default value is 1,000.
+
+    
+
+  
+  :type OutputDirectoryPath: string
+  :param OutputDirectoryPath: **[REQUIRED]** 
+
+    Specifies the path (bucket and prefix) in Amazon S3 storage to store the results of the directory listing.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ListingId': 'string',
+          'OutputFileName': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ListingId** *(string) --* 
+
+        Returns a unique identifier for the directory listing call.
+
+        
+      
+
+      - **OutputFileName** *(string) --* 
+
+        Returns the file name where the results are stored. This is a combination of the connector ID and the listing ID: ``<connector-id>-<listing-id>.json``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Transfer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InternalServiceError`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.ServiceUnavailableException`
+
+  

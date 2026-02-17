@@ -1,0 +1,332 @@
+:doc:`Organizations <../../organizations>` / Paginator / ListHandshakesForAccount
+
+************************
+ListHandshakesForAccount
+************************
+
+
+
+.. py:class:: Organizations.Paginator.ListHandshakesForAccount
+
+  ::
+
+    
+    paginator = client.get_paginator('list_handshakes_for_account')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`Organizations.Client.list_handshakes_for_account`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/ListHandshakesForAccount>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          Filter={
+              'ActionType': 'INVITE'|'ENABLE_ALL_FEATURES'|'APPROVE_ALL_FEATURES'|'ADD_ORGANIZATIONS_SERVICE_LINKED_ROLE'|'TRANSFER_RESPONSIBILITY',
+              'ParentHandshakeId': 'string'
+          },
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type Filter: dict
+    :param Filter: 
+
+      A ``HandshakeFilter`` object. Contains the filer used to select the handshakes for an operation.
+
+      
+
+    
+      - **ActionType** *(string) --* 
+
+        The type of handshake.
+
+         
+
+        If you specify ``ActionType``, you cannot also specify ``ParentHandshakeId``.
+
+        
+
+      
+      - **ParentHandshakeId** *(string) --* 
+
+        The parent handshake. Only used for handshake types that are a child of another type.
+
+         
+
+        If you specify ``ParentHandshakeId``, you cannot also specify ``ActionType``.
+
+         
+
+        The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+        
+
+      
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'Handshakes': [
+                {
+                    'Id': 'string',
+                    'Arn': 'string',
+                    'Parties': [
+                        {
+                            'Id': 'string',
+                            'Type': 'ACCOUNT'|'ORGANIZATION'|'EMAIL'
+                        },
+                    ],
+                    'State': 'REQUESTED'|'OPEN'|'CANCELED'|'ACCEPTED'|'DECLINED'|'EXPIRED',
+                    'RequestedTimestamp': datetime(2015, 1, 1),
+                    'ExpirationTimestamp': datetime(2015, 1, 1),
+                    'Action': 'INVITE'|'ENABLE_ALL_FEATURES'|'APPROVE_ALL_FEATURES'|'ADD_ORGANIZATIONS_SERVICE_LINKED_ROLE'|'TRANSFER_RESPONSIBILITY',
+                    'Resources': [
+                        {
+                            'Value': 'string',
+                            'Type': 'ACCOUNT'|'ORGANIZATION'|'ORGANIZATION_FEATURE_SET'|'EMAIL'|'MASTER_EMAIL'|'MASTER_NAME'|'NOTES'|'PARENT_HANDSHAKE'|'RESPONSIBILITY_TRANSFER'|'TRANSFER_START_TIMESTAMP'|'TRANSFER_TYPE'|'MANAGEMENT_ACCOUNT'|'MANAGEMENT_EMAIL'|'MANAGEMENT_NAME',
+                            'Resources': {'... recursive ...'}
+                        },
+                    ]
+                },
+            ],
+            
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **Handshakes** *(list) --* 
+
+          An array of ``Handshake``objects. Contains details for a handshake.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains details for a handshake. A handshake is the secure exchange of information between two Amazon Web Services accounts: a sender and a recipient.
+
+             
+
+            **Note:** Handshakes that are ``CANCELED``, ``ACCEPTED``, ``DECLINED``, or ``EXPIRED`` show up in lists for only 30 days after entering that state After that they are deleted.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              ID for the handshake.
+
+               
+
+              The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+              
+            
+
+            - **Arn** *(string) --* 
+
+              Amazon Resource Name (ARN) for the handshake.
+
+               
+
+              For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+              
+            
+
+            - **Parties** *(list) --* 
+
+              An array of ``HandshakeParty`` objects. Contains details for participant in a handshake.
+
+              
+              
+
+              - *(dict) --* 
+
+                Contains details for a participant in a handshake.
+
+                
+                
+
+                - **Id** *(string) --* 
+
+                  ID for the participant: Acccount ID, organization ID, or email address.
+
+                   
+
+                  The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+                  
+                
+
+                - **Type** *(string) --* 
+
+                  The type of ID for the participant.
+
+                  
+            
+          
+            
+
+            - **State** *(string) --* 
+
+              Current state for the handshake.
+
+               
+
+              
+              * **REQUESTED**: Handshake awaiting a response from the recipient.
+               
+              * **OPEN**: Handshake sent to multiple recipients and all recipients have responded. The sender can now complete the handshake action.
+               
+              * **CANCELED**: Handshake canceled by the sender.
+               
+              * **ACCEPTED**: Handshake accepted by the recipient.
+               
+              * **DECLINED**: Handshake declined by the recipient.
+               
+              * **EXPIRED**: Handshake has expired.
+              
+
+              
+            
+
+            - **RequestedTimestamp** *(datetime) --* 
+
+              Timestamp when the handshake request was made.
+
+              
+            
+
+            - **ExpirationTimestamp** *(datetime) --* 
+
+              Timestamp when the handshake expires.
+
+              
+            
+
+            - **Action** *(string) --* 
+
+              The type of handshake:
+
+               
+
+              
+              * **INVITE**: Handshake sent to a standalone account requesting that it to join the sender's organization.
+               
+              * **ENABLE_ALL_FEATURES**: Handshake sent to invited member accounts to enable all features for the organization.
+               
+              * **APPROVE_ALL_FEATURES**: Handshake sent to the management account when all invited member accounts have approved to enable all features.
+               
+              * **TRANSFER_RESPONSIBILITY**: Handshake sent to another organization's management account requesting that it designate the sender with the specified responsibilities for recipient's organization.
+              
+
+              
+            
+
+            - **Resources** *(list) --* 
+
+              An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+              
+              
+
+              - *(dict) --* 
+
+                Contains additional details for a handshake.
+
+                
+                
+
+                - **Value** *(string) --* 
+
+                  Additional information for the handshake. The format of the value string must match the requirements of the specified type.
+
+                  
+                
+
+                - **Type** *(string) --* 
+
+                  The type of information being passed, specifying how the value is to be interpreted by the other party:
+
+                   
+
+                  
+                  * **ACCOUNT**: ID for an Amazon Web Services account.
+                   
+                  * **ORGANIZATION**: ID for an organization.
+                   
+                  * **EMAIL**: Email address for the recipient.
+                   
+                  * **OWNER_EMAIL**: Email address for the sender.
+                   
+                  * **OWNER_NAME**: Name of the sender.
+                   
+                  * **NOTES**: Additional text included by the sender for the recipient.
+                  
+
+                  
+                
+
+                - **Resources** *(list) --* 
+
+                  An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+                  
+            
+          
+        
+      
+    

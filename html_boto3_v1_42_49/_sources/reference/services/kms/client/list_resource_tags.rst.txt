@@ -1,0 +1,265 @@
+:doc:`KMS <../../kms>` / Client / list_resource_tags
+
+******************
+list_resource_tags
+******************
+
+
+
+.. py:method:: KMS.Client.list_resource_tags(**kwargs)
+
+  
+
+  Returns all tags on the specified KMS key.
+
+   
+
+  For general information about tags, including the format and syntax, see `Tagging Amazon Web Services resources <https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html>`__ in the *Amazon Web Services General Reference*. For information about using tags in KMS, see `Tags in KMS <https://docs.aws.amazon.com/kms/latest/developerguide/tagging-keys.html>`__.
+
+   
+
+  **Cross-account use**: No. You cannot perform this operation on a KMS key in a different Amazon Web Services account.
+
+   
+
+  **Required permissions**: `kms\:ListResourceTags <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (key policy)
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  CreateKey
+   
+  *  ReplicateKey
+   
+  *  TagResource
+   
+  *  UntagResource
+  
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ListResourceTags>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_resource_tags(
+        KeyId='string',
+        Limit=123,
+        Marker='string'
+    )
+    
+  :type KeyId: string
+  :param KeyId: **[REQUIRED]** 
+
+    Gets tags on the specified KMS key.
+
+     
+
+    Specify the key ID or key ARN of the KMS key.
+
+     
+
+    For example:
+
+     
+
+    
+    * Key ID: ``1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Key ARN: ``arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``
+    
+
+     
+
+    To get the key ID and key ARN for a KMS key, use  ListKeys or  DescribeKey.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not return more than the specified number of items, but it might return fewer.
+
+     
+
+    This value is optional. If you include a value, it must be between 1 and 50, inclusive. If you do not include a value, it defaults to 50.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    Use this parameter in a subsequent request after you receive a response with truncated results. Set it to the value of ``NextMarker`` from the truncated response you just received.
+
+     
+
+    Do not attempt to construct this value. Use only the value of ``NextMarker`` from the truncated response you just received.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Tags': [
+              {
+                  'TagKey': 'string',
+                  'TagValue': 'string'
+              },
+          ],
+          'NextMarker': 'string',
+          'Truncated': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Tags** *(list) --* 
+
+        A list of tags. Each tag consists of a tag key and a tag value.
+
+         
+
+        .. note::
+
+          
+
+          Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see `ABAC for KMS <https://docs.aws.amazon.com/kms/latest/developerguide/abac.html>`__ in the *Key Management Service Developer Guide*.
+
+          
+
+        
+        
+
+        - *(dict) --* 
+
+          A key-value pair. A tag consists of a tag key and a tag value. Tag keys and tag values are both required, but tag values can be empty (null) strings.
+
+           
+
+          .. warning::
+
+             
+
+            Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in CloudTrail logs and other output.
+
+             
+
+           
+
+          For information about the rules that apply to tag keys and tag values, see `User-Defined Tag Restrictions <https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/allocation-tag-restrictions.html>`__ in the *Amazon Web Services Billing and Cost Management User Guide*.
+
+          
+          
+
+          - **TagKey** *(string) --* 
+
+            The key of the tag.
+
+            
+          
+
+          - **TagValue** *(string) --* 
+
+            The value of the tag.
+
+            
+      
+    
+      
+
+      - **NextMarker** *(string) --* 
+
+        When ``Truncated`` is true, this element is present and contains the value to use for the ``Marker`` parameter in a subsequent request.
+
+         
+
+        Do not assume or infer any information from this value.
+
+        
+      
+
+      - **Truncated** *(boolean) --* 
+
+        A flag that indicates whether there are more items in the list. When this value is true, the list in this response is truncated. To get more items, pass the value of the ``NextMarker`` element in this response to the ``Marker`` parameter in a subsequent request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidArnException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidMarkerException`
+
+  
+
+  **Examples**
+
+  The following example lists tags for a KMS key.
+  ::
+
+    response = client.list_resource_tags(
+        # The identifier of the KMS key whose tags you are listing. You can use the key ID or the Amazon Resource Name (ARN) of the KMS key.
+        KeyId='1234abcd-12ab-34cd-56ef-1234567890ab',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        # A list of tags.
+        'Tags': [
+            {
+                'TagKey': 'CostCenter',
+                'TagValue': '87654',
+            },
+            {
+                'TagKey': 'CreatedBy',
+                'TagValue': 'ExampleUser',
+            },
+            {
+                'TagKey': 'Purpose',
+                'TagValue': 'Test',
+            },
+        ],
+        # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
+        'Truncated': False,
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

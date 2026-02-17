@@ -1,0 +1,598 @@
+:doc:`EntityResolution <../../entityresolution>` / Client / create_id_namespace
+
+*******************
+create_id_namespace
+*******************
+
+
+
+.. py:method:: EntityResolution.Client.create_id_namespace(**kwargs)
+
+  
+
+  Creates an ID namespace object which will help customers provide metadata explaining their dataset and how to use it. Each ID namespace must have a unique name. To modify an existing ID namespace, use the UpdateIdNamespace API.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/entityresolution-2018-05-10/CreateIdNamespace>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_id_namespace(
+        idNamespaceName='string',
+        description='string',
+        inputSourceConfig=[
+            {
+                'inputSourceARN': 'string',
+                'schemaName': 'string'
+            },
+        ],
+        idMappingWorkflowProperties=[
+            {
+                'idMappingType': 'PROVIDER'|'RULE_BASED',
+                'ruleBasedProperties': {
+                    'rules': [
+                        {
+                            'ruleName': 'string',
+                            'matchingKeys': [
+                                'string',
+                            ]
+                        },
+                    ],
+                    'ruleDefinitionTypes': [
+                        'SOURCE'|'TARGET',
+                    ],
+                    'attributeMatchingModel': 'ONE_TO_ONE'|'MANY_TO_MANY',
+                    'recordMatchingModels': [
+                        'ONE_SOURCE_TO_ONE_TARGET'|'MANY_SOURCE_TO_ONE_TARGET',
+                    ]
+                },
+                'providerProperties': {
+                    'providerServiceArn': 'string',
+                    'providerConfiguration': {...}|[...]|123|123.4|'string'|True|None
+                }
+            },
+        ],
+        type='SOURCE'|'TARGET',
+        roleArn='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type idNamespaceName: string
+  :param idNamespaceName: **[REQUIRED]** 
+
+    The name of the ID namespace.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    The description of the ID namespace.
+
+    
+
+  
+  :type inputSourceConfig: list
+  :param inputSourceConfig: 
+
+    A list of ``InputSource`` objects, which have the fields ``InputSourceARN`` and ``SchemaName``.
+
+    
+
+  
+    - *(dict) --* 
+
+      An object containing ``inputSourceARN`` and ``schemaName``.
+
+      
+
+    
+      - **inputSourceARN** *(string) --* **[REQUIRED]** 
+
+        An Glue table Amazon Resource Name (ARN) or a matching workflow ARN for the input source table.
+
+        
+
+      
+      - **schemaName** *(string) --* 
+
+        The name of the schema.
+
+        
+
+      
+    
+
+  :type idMappingWorkflowProperties: list
+  :param idMappingWorkflowProperties: 
+
+    Determines the properties of ``IdMappingWorflow`` where this ``IdNamespace`` can be used as a ``Source`` or a ``Target``.
+
+    
+
+  
+    - *(dict) --* 
+
+      An object containing ``idMappingType``, ``providerProperties``, and ``ruleBasedProperties``.
+
+      
+
+    
+      - **idMappingType** *(string) --* **[REQUIRED]** 
+
+        The type of ID mapping.
+
+        
+
+      
+      - **ruleBasedProperties** *(dict) --* 
+
+        An object which defines any additional configurations required by rule-based matching.
+
+        
+
+      
+        - **rules** *(list) --* 
+
+          The rules for the ID namespace.
+
+          
+
+        
+          - *(dict) --* 
+
+            An object containing the ``ruleName`` and ``matchingKeys``.
+
+            
+
+          
+            - **ruleName** *(string) --* **[REQUIRED]** 
+
+              A name for the matching rule.
+
+              
+
+            
+            - **matchingKeys** *(list) --* **[REQUIRED]** 
+
+              A list of ``MatchingKeys``. The ``MatchingKeys`` must have been defined in the ``SchemaMapping``. Two records are considered to match according to this rule if all of the ``MatchingKeys`` match.
+
+              
+
+            
+              - *(string) --* 
+
+              
+          
+          
+      
+        - **ruleDefinitionTypes** *(list) --* 
+
+          The sets of rules you can use in an ID mapping workflow. The limitations specified for the source and target must be compatible.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+        - **attributeMatchingModel** *(string) --* 
+
+          The comparison type. You can either choose ``ONE_TO_ONE`` or ``MANY_TO_MANY`` as the ``attributeMatchingModel``.
+
+           
+
+          If you choose ``ONE_TO_ONE``, the system can only match attributes if the sub-types are an exact match. For example, for the ``Email`` attribute type, the system will only consider it a match if the value of the ``Email`` field of Profile A matches the value of the ``Email`` field of Profile B.
+
+           
+
+          If you choose ``MANY_TO_MANY``, the system can match attributes across the sub-types of an attribute type. For example, if the value of the ``Email`` field of Profile A matches the value of ``BusinessEmail`` field of Profile B, the two profiles are matched on the ``Email`` attribute type.
+
+          
+
+        
+        - **recordMatchingModels** *(list) --* 
+
+          The type of matching record that is allowed to be used in an ID mapping workflow.
+
+           
+
+          If the value is set to ``ONE_SOURCE_TO_ONE_TARGET``, only one record in the source is matched to one record in the target.
+
+           
+
+          If the value is set to ``MANY_SOURCE_TO_ONE_TARGET``, all matching records in the source are matched to one record in the target.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+      - **providerProperties** *(dict) --* 
+
+        An object which defines any additional configurations required by the provider service.
+
+        
+
+      
+        - **providerServiceArn** *(string) --* **[REQUIRED]** 
+
+          The Amazon Resource Name (ARN) of the provider service.
+
+          
+
+        
+        - **providerConfiguration** (:ref:`document<document>`) -- 
+
+          An object which defines any additional configurations required by the provider service.
+
+          
+
+        
+      
+    
+
+  :type type: string
+  :param type: **[REQUIRED]** 
+
+    The type of ID namespace. There are two types: ``SOURCE`` and ``TARGET``.
+
+     
+
+    The ``SOURCE`` contains configurations for ``sourceId`` data that will be processed in an ID mapping workflow.
+
+     
+
+    The ``TARGET`` contains a configuration of ``targetId`` to which all ``sourceIds`` will resolve to.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: 
+
+    The Amazon Resource Name (ARN) of the IAM role. Entity Resolution assumes this role to access the resources defined in this ``IdNamespace`` on your behalf as part of the workflow run.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    The tags used to organize, track, or control access for this resource.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'idNamespaceName': 'string',
+          'idNamespaceArn': 'string',
+          'description': 'string',
+          'inputSourceConfig': [
+              {
+                  'inputSourceARN': 'string',
+                  'schemaName': 'string'
+              },
+          ],
+          'idMappingWorkflowProperties': [
+              {
+                  'idMappingType': 'PROVIDER'|'RULE_BASED',
+                  'ruleBasedProperties': {
+                      'rules': [
+                          {
+                              'ruleName': 'string',
+                              'matchingKeys': [
+                                  'string',
+                              ]
+                          },
+                      ],
+                      'ruleDefinitionTypes': [
+                          'SOURCE'|'TARGET',
+                      ],
+                      'attributeMatchingModel': 'ONE_TO_ONE'|'MANY_TO_MANY',
+                      'recordMatchingModels': [
+                          'ONE_SOURCE_TO_ONE_TARGET'|'MANY_SOURCE_TO_ONE_TARGET',
+                      ]
+                  },
+                  'providerProperties': {
+                      'providerServiceArn': 'string',
+                      'providerConfiguration': {...}|[...]|123|123.4|'string'|True|None
+                  }
+              },
+          ],
+          'type': 'SOURCE'|'TARGET',
+          'roleArn': 'string',
+          'createdAt': datetime(2015, 1, 1),
+          'updatedAt': datetime(2015, 1, 1),
+          'tags': {
+              'string': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **idNamespaceName** *(string) --* 
+
+        The name of the ID namespace.
+
+        
+      
+
+      - **idNamespaceArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the ID namespace.
+
+        
+      
+
+      - **description** *(string) --* 
+
+        The description of the ID namespace.
+
+        
+      
+
+      - **inputSourceConfig** *(list) --* 
+
+        A list of ``InputSource`` objects, which have the fields ``InputSourceARN`` and ``SchemaName``.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object containing ``inputSourceARN`` and ``schemaName``.
+
+          
+          
+
+          - **inputSourceARN** *(string) --* 
+
+            An Glue table Amazon Resource Name (ARN) or a matching workflow ARN for the input source table.
+
+            
+          
+
+          - **schemaName** *(string) --* 
+
+            The name of the schema.
+
+            
+      
+    
+      
+
+      - **idMappingWorkflowProperties** *(list) --* 
+
+        Determines the properties of ``IdMappingWorkflow`` where this ``IdNamespace`` can be used as a ``Source`` or a ``Target``.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object containing ``idMappingType``, ``providerProperties``, and ``ruleBasedProperties``.
+
+          
+          
+
+          - **idMappingType** *(string) --* 
+
+            The type of ID mapping.
+
+            
+          
+
+          - **ruleBasedProperties** *(dict) --* 
+
+            An object which defines any additional configurations required by rule-based matching.
+
+            
+            
+
+            - **rules** *(list) --* 
+
+              The rules for the ID namespace.
+
+              
+              
+
+              - *(dict) --* 
+
+                An object containing the ``ruleName`` and ``matchingKeys``.
+
+                
+                
+
+                - **ruleName** *(string) --* 
+
+                  A name for the matching rule.
+
+                  
+                
+
+                - **matchingKeys** *(list) --* 
+
+                  A list of ``MatchingKeys``. The ``MatchingKeys`` must have been defined in the ``SchemaMapping``. Two records are considered to match according to this rule if all of the ``MatchingKeys`` match.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **ruleDefinitionTypes** *(list) --* 
+
+              The sets of rules you can use in an ID mapping workflow. The limitations specified for the source and target must be compatible.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **attributeMatchingModel** *(string) --* 
+
+              The comparison type. You can either choose ``ONE_TO_ONE`` or ``MANY_TO_MANY`` as the ``attributeMatchingModel``.
+
+               
+
+              If you choose ``ONE_TO_ONE``, the system can only match attributes if the sub-types are an exact match. For example, for the ``Email`` attribute type, the system will only consider it a match if the value of the ``Email`` field of Profile A matches the value of the ``Email`` field of Profile B.
+
+               
+
+              If you choose ``MANY_TO_MANY``, the system can match attributes across the sub-types of an attribute type. For example, if the value of the ``Email`` field of Profile A matches the value of ``BusinessEmail`` field of Profile B, the two profiles are matched on the ``Email`` attribute type.
+
+              
+            
+
+            - **recordMatchingModels** *(list) --* 
+
+              The type of matching record that is allowed to be used in an ID mapping workflow.
+
+               
+
+              If the value is set to ``ONE_SOURCE_TO_ONE_TARGET``, only one record in the source is matched to one record in the target.
+
+               
+
+              If the value is set to ``MANY_SOURCE_TO_ONE_TARGET``, all matching records in the source are matched to one record in the target.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **providerProperties** *(dict) --* 
+
+            An object which defines any additional configurations required by the provider service.
+
+            
+            
+
+            - **providerServiceArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the provider service.
+
+              
+            
+
+            - **providerConfiguration** (:ref:`document<document>`) -- 
+
+              An object which defines any additional configurations required by the provider service.
+
+              
+        
+      
+    
+      
+
+      - **type** *(string) --* 
+
+        The type of ID namespace. There are two types: ``SOURCE`` and ``TARGET``.
+
+         
+
+        The ``SOURCE`` contains configurations for ``sourceId`` data that will be processed in an ID mapping workflow.
+
+         
+
+        The ``TARGET`` contains a configuration of ``targetId`` to which all ``sourceIds`` will resolve to.
+
+        
+      
+
+      - **roleArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the IAM role. Entity Resolution assumes this role to access the resources defined in ``inputSourceConfig`` on your behalf as part of the workflow run.
+
+        
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The timestamp of when the ID namespace was created.
+
+        
+      
+
+      - **updatedAt** *(datetime) --* 
+
+        The timestamp of when the ID namespace was last updated.
+
+        
+      
+
+      - **tags** *(dict) --* 
+
+        The tags used to organize, track, or control access for this resource.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`EntityResolution.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.ExceedsLimitException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.ValidationException`
+
+  

@@ -1,0 +1,324 @@
+:doc:`EC2 <../../ec2>` / Client / create_route_server
+
+*******************
+create_route_server
+*******************
+
+
+
+.. py:method:: EC2.Client.create_route_server(**kwargs)
+
+  
+
+  Creates a new route server to manage dynamic routing in a VPC.
+
+   
+
+  Amazon VPC Route Server simplifies routing for traffic between workloads that are deployed within a VPC and its internet gateways. With this feature, VPC Route Server dynamically updates VPC and internet gateway route tables with your preferred IPv4 or IPv6 routes to achieve routing fault tolerance for those workloads. This enables you to automatically reroute traffic within a VPC, which increases the manageability of VPC routing and interoperability with third-party workloads.
+
+   
+
+  Route server supports the follow route table types:
+
+   
+
+  
+  * VPC route tables not associated with subnets
+   
+  * Subnet route tables
+   
+  * Internet gateway route tables
+  
+
+   
+
+  Route server does not support route tables associated with virtual private gateways. To propagate routes into a transit gateway route table, use `Transit Gateway Connect <https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html>`__.
+
+   
+
+  For more information see `Dynamic routing in your VPC with VPC Route Server <https://docs.aws.amazon.com/vpc/latest/userguide/dynamic-routing-route-server.html>`__ in the *Amazon VPC User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/CreateRouteServer>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_route_server(
+        AmazonSideAsn=123,
+        ClientToken='string',
+        DryRun=True|False,
+        PersistRoutes='enable'|'disable'|'reset',
+        PersistRoutesDuration=123,
+        SnsNotificationsEnabled=True|False,
+        TagSpecifications=[
+            {
+                'ResourceType': 'capacity-reservation'|'client-vpn-endpoint'|'customer-gateway'|'carrier-gateway'|'coip-pool'|'declarative-policies-report'|'dedicated-host'|'dhcp-options'|'egress-only-internet-gateway'|'elastic-ip'|'elastic-gpu'|'export-image-task'|'export-instance-task'|'fleet'|'fpga-image'|'host-reservation'|'image'|'image-usage-report'|'import-image-task'|'import-snapshot-task'|'instance'|'instance-event-window'|'internet-gateway'|'ipam'|'ipam-pool'|'ipam-scope'|'ipv4pool-ec2'|'ipv6pool-ec2'|'key-pair'|'launch-template'|'local-gateway'|'local-gateway-route-table'|'local-gateway-virtual-interface'|'local-gateway-virtual-interface-group'|'local-gateway-route-table-vpc-association'|'local-gateway-route-table-virtual-interface-group-association'|'natgateway'|'network-acl'|'network-interface'|'network-insights-analysis'|'network-insights-path'|'network-insights-access-scope'|'network-insights-access-scope-analysis'|'outpost-lag'|'placement-group'|'prefix-list'|'replace-root-volume-task'|'reserved-instances'|'route-table'|'security-group'|'security-group-rule'|'service-link-virtual-interface'|'snapshot'|'spot-fleet-request'|'spot-instances-request'|'subnet'|'subnet-cidr-reservation'|'traffic-mirror-filter'|'traffic-mirror-session'|'traffic-mirror-target'|'transit-gateway'|'transit-gateway-attachment'|'transit-gateway-connect-peer'|'transit-gateway-multicast-domain'|'transit-gateway-policy-table'|'transit-gateway-metering-policy'|'transit-gateway-route-table'|'transit-gateway-route-table-announcement'|'volume'|'vpc'|'vpc-endpoint'|'vpc-endpoint-connection'|'vpc-endpoint-service'|'vpc-endpoint-service-permission'|'vpc-peering-connection'|'vpn-connection'|'vpn-gateway'|'vpc-flow-log'|'capacity-reservation-fleet'|'traffic-mirror-filter-rule'|'vpc-endpoint-connection-device-type'|'verified-access-instance'|'verified-access-group'|'verified-access-endpoint'|'verified-access-policy'|'verified-access-trust-provider'|'vpn-connection-device-type'|'vpc-block-public-access-exclusion'|'vpc-encryption-control'|'route-server'|'route-server-endpoint'|'route-server-peer'|'ipam-resource-discovery'|'ipam-resource-discovery-association'|'instance-connect-endpoint'|'verified-access-endpoint-target'|'ipam-external-resource-verification-token'|'capacity-block'|'mac-modification-task'|'ipam-prefix-list-resolver'|'ipam-policy'|'ipam-prefix-list-resolver-target'|'secondary-interface'|'secondary-network'|'secondary-subnet'|'capacity-manager-data-export'|'vpn-concentrator',
+                'Tags': [
+                    {
+                        'Key': 'string',
+                        'Value': 'string'
+                    },
+                ]
+            },
+        ]
+    )
+    
+  :type AmazonSideAsn: integer
+  :param AmazonSideAsn: **[REQUIRED]** 
+
+    The private Autonomous System Number (ASN) for the Amazon side of the BGP session. Valid values are from 1 to 4294967295. We recommend using a private ASN in the 64512–65534 (16-bit ASN) or 4200000000–4294967294 (32-bit ASN) range.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    Unique, case-sensitive identifier to ensure idempotency of the request.
+
+    This field is autopopulated if not provided.
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    A check for whether you have the required permissions for the action without actually making the request and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type PersistRoutes: string
+  :param PersistRoutes: 
+
+    Indicates whether routes should be persisted after all BGP sessions are terminated.
+
+    
+
+  
+  :type PersistRoutesDuration: integer
+  :param PersistRoutesDuration: 
+
+    The number of minutes a route server will wait after BGP is re-established to unpersist the routes in the FIB and RIB. Value must be in the range of 1-5. Required if PersistRoutes is ``enabled``.
+
+     
+
+    If you set the duration to 1 minute, then when your network appliance re-establishes BGP with route server, it has 1 minute to relearn it's adjacent network and advertise those routes to route server before route server resumes normal functionality. In most cases, 1 minute is probably sufficient. If, however, you have concerns that your BGP network may not be capable of fully re-establishing and re-learning everything in 1 minute, you can increase the duration up to 5 minutes.
+
+    
+
+  
+  :type SnsNotificationsEnabled: boolean
+  :param SnsNotificationsEnabled: 
+
+    Indicates whether SNS notifications should be enabled for route server events. Enabling SNS notifications persists BGP status changes to an SNS topic provisioned by Amazon Web Services.
+
+    
+
+  
+  :type TagSpecifications: list
+  :param TagSpecifications: 
+
+    The tags to apply to the route server during creation.
+
+    
+
+  
+    - *(dict) --* 
+
+      The tags to apply to a resource when the resource is being created. When you specify a tag, you must specify the resource type to tag, otherwise the request will fail.
+
+       
+
+      .. note::
+
+        
+
+        The ``Valid Values`` lists all the resource types that can be tagged. However, the action you're using might not support tagging all of these resource types. If you try to tag a resource type that is unsupported for the action you're using, you'll get an error.
+
+        
+
+      
+
+    
+      - **ResourceType** *(string) --* 
+
+        The type of resource to tag on creation.
+
+        
+
+      
+      - **Tags** *(list) --* 
+
+        The tags to apply to the resource.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes a tag.
+
+          
+
+        
+          - **Key** *(string) --* 
+
+            The key of the tag.
+
+             
+
+            Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+            
+
+          
+          - **Value** *(string) --* 
+
+            The value of the tag.
+
+             
+
+            Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+            
+
+          
+        
+    
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RouteServer': {
+              'RouteServerId': 'string',
+              'AmazonSideAsn': 123,
+              'State': 'pending'|'available'|'modifying'|'deleting'|'deleted',
+              'Tags': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'PersistRoutesState': 'enabling'|'enabled'|'resetting'|'disabling'|'disabled'|'modifying',
+              'PersistRoutesDuration': 123,
+              'SnsNotificationsEnabled': True|False,
+              'SnsTopicArn': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **RouteServer** *(dict) --* 
+
+        Information about the created route server.
+
+        
+        
+
+        - **RouteServerId** *(string) --* 
+
+          The unique identifier of the route server.
+
+          
+        
+
+        - **AmazonSideAsn** *(integer) --* 
+
+          The Border Gateway Protocol (BGP) Autonomous System Number (ASN) for the appliance. Valid values are from 1 to 4294967295. We recommend using a private ASN in the 64512–65534 (16-bit ASN) or 4200000000–4294967294 (32-bit ASN) range.
+
+          
+        
+
+        - **State** *(string) --* 
+
+          The current state of the route server.
+
+          
+        
+
+        - **Tags** *(list) --* 
+
+          Any tags assigned to the route server.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes a tag.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The key of the tag.
+
+               
+
+              Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The value of the tag.
+
+               
+
+              Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+              
+        
+      
+        
+
+        - **PersistRoutesState** *(string) --* 
+
+          The current state of route persistence for the route server.
+
+          
+        
+
+        - **PersistRoutesDuration** *(integer) --* 
+
+          The number of minutes a route server will wait after BGP is re-established to unpersist the routes in the FIB and RIB. Value must be in the range of 1-5. The default value is 1. Only valid if ``persistRoutesState`` is 'enabled'.
+
+           
+
+          If you set the duration to 1 minute, then when your network appliance re-establishes BGP with route server, it has 1 minute to relearn it's adjacent network and advertise those routes to route server before route server resumes normal functionality. In most cases, 1 minute is probably sufficient. If, however, you have concerns that your BGP network may not be capable of fully re-establishing and re-learning everything in 1 minute, you can increase the duration up to 5 minutes.
+
+          
+        
+
+        - **SnsNotificationsEnabled** *(boolean) --* 
+
+          Indicates whether SNS notifications are enabled for the route server. Enabling SNS notifications persists BGP status changes to an SNS topic provisioned by Amazon Web Services.
+
+          
+        
+
+        - **SnsTopicArn** *(string) --* 
+
+          The ARN of the SNS topic where notifications are published.
+
+          
+    
+  

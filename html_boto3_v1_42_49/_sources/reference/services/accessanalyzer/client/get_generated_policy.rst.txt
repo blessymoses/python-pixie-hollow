@@ -1,0 +1,300 @@
+:doc:`AccessAnalyzer <../../accessanalyzer>` / Client / get_generated_policy
+
+********************
+get_generated_policy
+********************
+
+
+
+.. py:method:: AccessAnalyzer.Client.get_generated_policy(**kwargs)
+
+  
+
+  Retrieves the policy that was generated using ``StartPolicyGeneration``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/GetGeneratedPolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_generated_policy(
+        jobId='string',
+        includeResourcePlaceholders=True|False,
+        includeServiceLevelTemplate=True|False
+    )
+    
+  :type jobId: string
+  :param jobId: **[REQUIRED]** 
+
+    The ``JobId`` that is returned by the ``StartPolicyGeneration`` operation. The ``JobId`` can be used with ``GetGeneratedPolicy`` to retrieve the generated policies or used with ``CancelPolicyGeneration`` to cancel the policy generation request.
+
+    
+
+  
+  :type includeResourcePlaceholders: boolean
+  :param includeResourcePlaceholders: 
+
+    The level of detail that you want to generate. You can specify whether to generate policies with placeholders for resource ARNs for actions that support resource level granularity in policies.
+
+     
+
+    For example, in the resource section of a policy, you can receive a placeholder such as ``"Resource":"arn:aws:s3:::${BucketName}"`` instead of ``"*"``.
+
+    
+
+  
+  :type includeServiceLevelTemplate: boolean
+  :param includeServiceLevelTemplate: 
+
+    The level of detail that you want to generate. You can specify whether to generate service-level policies.
+
+     
+
+    IAM Access Analyzer uses ``iam:servicelastaccessed`` to identify services that have been used recently to create this service-level template.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobDetails': {
+              'jobId': 'string',
+              'status': 'IN_PROGRESS'|'SUCCEEDED'|'FAILED'|'CANCELED',
+              'startedOn': datetime(2015, 1, 1),
+              'completedOn': datetime(2015, 1, 1),
+              'jobError': {
+                  'code': 'AUTHORIZATION_ERROR'|'RESOURCE_NOT_FOUND_ERROR'|'SERVICE_QUOTA_EXCEEDED_ERROR'|'SERVICE_ERROR',
+                  'message': 'string'
+              }
+          },
+          'generatedPolicyResult': {
+              'properties': {
+                  'isComplete': True|False,
+                  'principalArn': 'string',
+                  'cloudTrailProperties': {
+                      'trailProperties': [
+                          {
+                              'cloudTrailArn': 'string',
+                              'regions': [
+                                  'string',
+                              ],
+                              'allRegions': True|False
+                          },
+                      ],
+                      'startTime': datetime(2015, 1, 1),
+                      'endTime': datetime(2015, 1, 1)
+                  }
+              },
+              'generatedPolicies': [
+                  {
+                      'policy': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobDetails** *(dict) --* 
+
+        A ``GeneratedPolicyDetails`` object that contains details about the generated policy.
+
+        
+        
+
+        - **jobId** *(string) --* 
+
+          The ``JobId`` that is returned by the ``StartPolicyGeneration`` operation. The ``JobId`` can be used with ``GetGeneratedPolicy`` to retrieve the generated policies or used with ``CancelPolicyGeneration`` to cancel the policy generation request.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The status of the job request.
+
+          
+        
+
+        - **startedOn** *(datetime) --* 
+
+          A timestamp of when the job was started.
+
+          
+        
+
+        - **completedOn** *(datetime) --* 
+
+          A timestamp of when the job was completed.
+
+          
+        
+
+        - **jobError** *(dict) --* 
+
+          The job error for the policy generation request.
+
+          
+          
+
+          - **code** *(string) --* 
+
+            The job error code.
+
+            
+          
+
+          - **message** *(string) --* 
+
+            Specific information about the error. For example, which service quota was exceeded or which resource was not found.
+
+            
+      
+    
+      
+
+      - **generatedPolicyResult** *(dict) --* 
+
+        A ``GeneratedPolicyResult`` object that contains the generated policies and associated details.
+
+        
+        
+
+        - **properties** *(dict) --* 
+
+          A ``GeneratedPolicyProperties`` object that contains properties of the generated policy.
+
+          
+          
+
+          - **isComplete** *(boolean) --* 
+
+            This value is set to ``true`` if the generated policy contains all possible actions for a service that IAM Access Analyzer identified from the CloudTrail trail that you specified, and ``false`` otherwise.
+
+            
+          
+
+          - **principalArn** *(string) --* 
+
+            The ARN of the IAM entity (user or role) for which you are generating a policy.
+
+            
+          
+
+          - **cloudTrailProperties** *(dict) --* 
+
+            Lists details about the ``Trail`` used to generated policy.
+
+            
+            
+
+            - **trailProperties** *(list) --* 
+
+              A ``TrailProperties`` object that contains settings for trail properties.
+
+              
+              
+
+              - *(dict) --* 
+
+                Contains details about the CloudTrail trail being analyzed to generate a policy.
+
+                
+                
+
+                - **cloudTrailArn** *(string) --* 
+
+                  Specifies the ARN of the trail. The format of a trail ARN is ``arn:aws:cloudtrail:us-east-2:123456789012:trail/MyTrail``.
+
+                  
+                
+
+                - **regions** *(list) --* 
+
+                  A list of regions to get CloudTrail data from and analyze to generate a policy.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **allRegions** *(boolean) --* 
+
+                  Possible values are ``true`` or ``false``. If set to ``true``, IAM Access Analyzer retrieves CloudTrail data from all regions to analyze and generate a policy.
+
+                  
+            
+          
+            
+
+            - **startTime** *(datetime) --* 
+
+              The start of the time range for which IAM Access Analyzer reviews your CloudTrail events. Events with a timestamp before this time are not considered to generate a policy.
+
+              
+            
+
+            - **endTime** *(datetime) --* 
+
+              The end of the time range for which IAM Access Analyzer reviews your CloudTrail events. Events with a timestamp after this time are not considered to generate a policy. If this is not included in the request, the default value is the current time.
+
+              
+        
+      
+        
+
+        - **generatedPolicies** *(list) --* 
+
+          The text to use as the content for the new policy. The policy is created using the `CreatePolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html>`__ action.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains the text for the generated policy.
+
+            
+            
+
+            - **policy** *(string) --* 
+
+              The text to use as the content for the new policy. The policy is created using the `CreatePolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html>`__ action.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.AccessDeniedException`
+
+  

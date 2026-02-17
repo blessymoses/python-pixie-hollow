@@ -1,0 +1,359 @@
+:doc:`ManagedBlockchainQuery <../../managedblockchain-query>` / Client / list_transaction_events
+
+***********************
+list_transaction_events
+***********************
+
+
+
+.. py:method:: ManagedBlockchainQuery.Client.list_transaction_events(**kwargs)
+
+  
+
+  Lists all the transaction events for a transaction
+
+   
+
+  .. note::
+
+    
+
+    This action will return transaction details for all transactions that are *confirmed* on the blockchain, even if they have not reached `finality <https://docs.aws.amazon.com/managed-blockchain/latest/ambq-dg/key-concepts.html#finality>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/managedblockchain-query-2023-05-04/ListTransactionEvents>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_transaction_events(
+        transactionHash='string',
+        transactionId='string',
+        network='ETHEREUM_MAINNET'|'ETHEREUM_SEPOLIA_TESTNET'|'BITCOIN_MAINNET'|'BITCOIN_TESTNET',
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type transactionHash: string
+  :param transactionHash: 
+
+    The hash of a transaction. It is generated when a transaction is created.
+
+    
+
+  
+  :type transactionId: string
+  :param transactionId: 
+
+    The identifier of a Bitcoin transaction. It is generated when a transaction is created.
+
+     
+
+    .. note::
+
+      
+
+      ``transactionId`` is only supported on the Bitcoin networks.
+
+      
+
+    
+
+  
+  :type network: string
+  :param network: **[REQUIRED]** 
+
+    The blockchain network where the transaction events occurred.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The pagination token that indicates the next set of results to retrieve.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of transaction events to list.
+
+     
+
+    Default: ``100``
+
+     
+
+    .. note::
+
+      
+
+      Even if additional results can be retrieved, the request can return less results than ``maxResults`` or an empty array of results.
+
+       
+
+      To retrieve the next set of results, make another request with the returned ``nextToken`` value. The value of ``nextToken`` is ``null`` when there are no more results to return
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'events': [
+              {
+                  'network': 'ETHEREUM_MAINNET'|'ETHEREUM_SEPOLIA_TESTNET'|'BITCOIN_MAINNET'|'BITCOIN_TESTNET',
+                  'transactionHash': 'string',
+                  'eventType': 'ERC20_TRANSFER'|'ERC20_MINT'|'ERC20_BURN'|'ERC20_DEPOSIT'|'ERC20_WITHDRAWAL'|'ERC721_TRANSFER'|'ERC1155_TRANSFER'|'BITCOIN_VIN'|'BITCOIN_VOUT'|'INTERNAL_ETH_TRANSFER'|'ETH_TRANSFER',
+                  'from': 'string',
+                  'to': 'string',
+                  'value': 'string',
+                  'contractAddress': 'string',
+                  'tokenId': 'string',
+                  'transactionId': 'string',
+                  'voutIndex': 123,
+                  'voutSpent': True|False,
+                  'spentVoutTransactionId': 'string',
+                  'spentVoutTransactionHash': 'string',
+                  'spentVoutIndex': 123,
+                  'blockchainInstant': {
+                      'time': datetime(2015, 1, 1)
+                  },
+                  'confirmationStatus': 'FINAL'|'NONFINAL'
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **events** *(list) --* 
+
+        An array of ``TransactionEvent`` objects. Each object contains details about the transaction events.
+
+        
+        
+
+        - *(dict) --* 
+
+          The container for the properties of a transaction event.
+
+          
+          
+
+          - **network** *(string) --* 
+
+            The blockchain network where the transaction occurred.
+
+            
+          
+
+          - **transactionHash** *(string) --* 
+
+            The hash of a transaction. It is generated when a transaction is created.
+
+            
+          
+
+          - **eventType** *(string) --* 
+
+            The type of transaction event.
+
+            
+          
+
+          - **from** *(string) --* 
+
+            The wallet address initiating the transaction. It can either be a public key or a contract.
+
+            
+          
+
+          - **to** *(string) --* 
+
+            The wallet address receiving the transaction. It can either be a public key or a contract.
+
+            
+          
+
+          - **value** *(string) --* 
+
+            The value that was transacted.
+
+            
+          
+
+          - **contractAddress** *(string) --* 
+
+            The blockchain address for the contract
+
+            
+          
+
+          - **tokenId** *(string) --* 
+
+            The unique identifier for the token involved in the transaction.
+
+            
+          
+
+          - **transactionId** *(string) --* 
+
+            The identifier of a Bitcoin transaction. It is generated when a transaction is created.
+
+            
+          
+
+          - **voutIndex** *(integer) --* 
+
+            The position of the transaction output in the transaction output list.
+
+            
+          
+
+          - **voutSpent** *(boolean) --* 
+
+            Specifies if the transaction output is spent or unspent. This is only returned for BITCOIN_VOUT event types.
+
+             
+
+            .. note::
+
+              
+
+              This is only returned for ``BITCOIN_VOUT`` event types.
+
+              
+
+            
+          
+
+          - **spentVoutTransactionId** *(string) --* 
+
+            The transactionId that *created* the spent transaction output.
+
+             
+
+            .. note::
+
+              
+
+              This is only returned for ``BITCOIN_VIN`` event types.
+
+              
+
+            
+          
+
+          - **spentVoutTransactionHash** *(string) --* 
+
+            The transactionHash that *created* the spent transaction output.
+
+             
+
+            .. note::
+
+              
+
+              This is only returned for ``BITCOIN_VIN`` event types.
+
+              
+
+            
+          
+
+          - **spentVoutIndex** *(integer) --* 
+
+            The position of the spent transaction output in the output list of the *creating transaction*.
+
+             
+
+            .. note::
+
+              
+
+              This is only returned for ``BITCOIN_VIN`` event types.
+
+              
+
+            
+          
+
+          - **blockchainInstant** *(dict) --* 
+
+            The container for time.
+
+            
+            
+
+            - **time** *(datetime) --* 
+
+              The container of the ``Timestamp`` of the blockchain instant.
+
+               
+
+              .. note::
+
+                
+
+                This ``timestamp`` will only be recorded up to the second.
+
+                
+
+              
+        
+          
+
+          - **confirmationStatus** *(string) --* 
+
+            This container specifies whether the transaction has reached Finality.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The pagination token that indicates the next set of results to retrieve.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ManagedBlockchainQuery.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ManagedBlockchainQuery.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`ManagedBlockchainQuery.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ManagedBlockchainQuery.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ManagedBlockchainQuery.Client.exceptions.ServiceQuotaExceededException`
+
+  

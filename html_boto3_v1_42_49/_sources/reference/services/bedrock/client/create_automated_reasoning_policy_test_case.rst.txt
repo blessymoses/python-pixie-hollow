@@ -1,0 +1,154 @@
+:doc:`Bedrock <../../bedrock>` / Client / create_automated_reasoning_policy_test_case
+
+*******************************************
+create_automated_reasoning_policy_test_case
+*******************************************
+
+
+
+.. py:method:: Bedrock.Client.create_automated_reasoning_policy_test_case(**kwargs)
+
+  
+
+  Creates a test for an Automated Reasoning policy. Tests validate that your policy works as expected by providing sample inputs and expected outcomes. Use tests to verify policy behavior before deploying to production.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-2023-04-20/CreateAutomatedReasoningPolicyTestCase>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_automated_reasoning_policy_test_case(
+        policyArn='string',
+        guardContent='string',
+        queryContent='string',
+        expectedAggregatedFindingsResult='VALID'|'INVALID'|'SATISFIABLE'|'IMPOSSIBLE'|'TRANSLATION_AMBIGUOUS'|'TOO_COMPLEX'|'NO_TRANSLATION',
+        clientRequestToken='string',
+        confidenceThreshold=123.0
+    )
+    
+  :type policyArn: string
+  :param policyArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the Automated Reasoning policy for which to create the test.
+
+    
+
+  
+  :type guardContent: string
+  :param guardContent: **[REQUIRED]** 
+
+    The output content that's validated by the Automated Reasoning policy. This represents the foundation model response that will be checked for accuracy.
+
+    
+
+  
+  :type queryContent: string
+  :param queryContent: 
+
+    The input query or prompt that generated the content. This provides context for the validation.
+
+    
+
+  
+  :type expectedAggregatedFindingsResult: string
+  :param expectedAggregatedFindingsResult: **[REQUIRED]** 
+
+    The expected result of the Automated Reasoning check. Valid values include: , TOO_COMPLEX, and NO_TRANSLATIONS.
+
+     
+
+    
+    * ``VALID`` - The claims are true. The claims are implied by the premises and the Automated Reasoning policy. Given the Automated Reasoning policy and premises, it is not possible for these claims to be false. In other words, there are no alternative answers that are true that contradict the claims.
+     
+    * ``INVALID`` - The claims are false. The claims are not implied by the premises and Automated Reasoning policy. Furthermore, there exists different claims that are consistent with the premises and Automated Reasoning policy.
+     
+    * ``SATISFIABLE`` - The claims can be true or false. It depends on what assumptions are made for the claim to be implied from the premises and Automated Reasoning policy rules. In this situation, different assumptions can make input claims false and alternative claims true.
+     
+    * ``IMPOSSIBLE`` - Automated Reasoning can’t make a statement about the claims. This can happen if the premises are logically incorrect, or if there is a conflict within the Automated Reasoning policy itself.
+     
+    * ``TRANSLATION_AMBIGUOUS`` - Detected an ambiguity in the translation meant it would be unsound to continue with validity checking. Additional context or follow-up questions might be needed to get translation to succeed.
+     
+    * ``TOO_COMPLEX`` - The input contains too much information for Automated Reasoning to process within its latency limits.
+     
+    * ``NO_TRANSLATIONS`` - Identifies that some or all of the input prompt wasn't translated into logic. This can happen if the input isn't relevant to the Automated Reasoning policy, or if the policy doesn't have variables to model relevant input. If Automated Reasoning can't translate anything, you get a single ``NO_TRANSLATIONS`` finding. You might also see a ``NO_TRANSLATIONS`` (along with other findings) if some part of the validation isn't translated.
+    
+
+    
+
+  
+  :type clientRequestToken: string
+  :param clientRequestToken: 
+
+    A unique, case-sensitive identifier to ensure that the operation completes no more than one time. If this token matches a previous request, Amazon Bedrock ignores the request, but does not return an error.
+
+    This field is autopopulated if not provided.
+
+  
+  :type confidenceThreshold: float
+  :param confidenceThreshold: 
+
+    The minimum confidence level for logic validation. Content that meets the threshold is considered a high-confidence finding that can be validated.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'policyArn': 'string',
+          'testCaseId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **policyArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the policy for which the test was created.
+
+        
+      
+
+      - **testCaseId** *(string) --* 
+
+        The unique identifier of the created test.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Bedrock.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ThrottlingException`
+
+  

@@ -1,0 +1,256 @@
+:doc:`Greengrass <../../greengrass>` / Client / create_function_definition
+
+**************************
+create_function_definition
+**************************
+
+
+
+.. py:method:: Greengrass.Client.create_function_definition(**kwargs)
+
+  Creates a Lambda function definition which contains a list of Lambda functions and their configurations to be used in a group. You can create an initial version of the definition by providing a list of Lambda functions and their configurations now, or use ''CreateFunctionDefinitionVersion'' later.
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/greengrass-2017-06-07/CreateFunctionDefinition>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_function_definition(
+        AmznClientToken='string',
+        InitialVersion={
+            'DefaultConfig': {
+                'Execution': {
+                    'IsolationMode': 'GreengrassContainer'|'NoContainer',
+                    'RunAs': {
+                        'Gid': 123,
+                        'Uid': 123
+                    }
+                }
+            },
+            'Functions': [
+                {
+                    'FunctionArn': 'string',
+                    'FunctionConfiguration': {
+                        'EncodingType': 'binary'|'json',
+                        'Environment': {
+                            'AccessSysfs': True|False,
+                            'Execution': {
+                                'IsolationMode': 'GreengrassContainer'|'NoContainer',
+                                'RunAs': {
+                                    'Gid': 123,
+                                    'Uid': 123
+                                }
+                            },
+                            'ResourceAccessPolicies': [
+                                {
+                                    'Permission': 'ro'|'rw',
+                                    'ResourceId': 'string'
+                                },
+                            ],
+                            'Variables': {
+                                'string': 'string'
+                            }
+                        },
+                        'ExecArgs': 'string',
+                        'Executable': 'string',
+                        'MemorySize': 123,
+                        'Pinned': True|False,
+                        'Timeout': 123,
+                        'FunctionRuntimeOverride': 'string'
+                    },
+                    'Id': 'string'
+                },
+            ]
+        },
+        Name='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type AmznClientToken: string
+  :param AmznClientToken: A client token used to correlate requests and responses.
+
+  
+  :type InitialVersion: dict
+  :param InitialVersion: Information about the initial version of the function definition.
+
+  
+    - **DefaultConfig** *(dict) --* The default configuration that applies to all Lambda functions in this function definition version. Individual Lambda functions can override these settings.
+
+    
+      - **Execution** *(dict) --* Configuration information that specifies how a Lambda function runs.
+
+      
+        - **IsolationMode** *(string) --* Specifies whether the Lambda function runs in a Greengrass container (default) or without containerization. Unless your scenario requires that you run without containerization, we recommend that you run in a Greengrass container. Omit this value to run the Lambda function with the default containerization for the group.
+
+        
+        - **RunAs** *(dict) --* Specifies the user and group whose permissions are used when running the Lambda function. You can specify one or both values to override the default values. We recommend that you avoid running as root unless absolutely necessary to minimize the risk of unintended changes or malicious attacks. To run as root, you must set ''IsolationMode'' to ''NoContainer'' and update config.json in ''greengrass-root/config'' to set ''allowFunctionsToRunAsRoot'' to ''yes''.
+
+        
+          - **Gid** *(integer) --* The group ID whose permissions are used to run a Lambda function.
+
+          
+          - **Uid** *(integer) --* The user ID whose permissions are used to run a Lambda function.
+
+          
+        
+      
+    
+    - **Functions** *(list) --* A list of Lambda functions in this function definition version.
+
+    
+      - *(dict) --* Information about a Lambda function.
+
+      
+        - **FunctionArn** *(string) --* The ARN of the Lambda function.
+
+        
+        - **FunctionConfiguration** *(dict) --* The configuration of the Lambda function.
+
+        
+          - **EncodingType** *(string) --* The expected encoding type of the input payload for the function. The default is ''json''.
+
+          
+          - **Environment** *(dict) --* The environment configuration of the function.
+
+          
+            - **AccessSysfs** *(boolean) --* If true, the Lambda function is allowed to access the host's /sys folder. Use this when the Lambda function needs to read device information from /sys. This setting applies only when you run the Lambda function in a Greengrass container.
+
+            
+            - **Execution** *(dict) --* Configuration related to executing the Lambda function
+
+            
+              - **IsolationMode** *(string) --* Specifies whether the Lambda function runs in a Greengrass container (default) or without containerization. Unless your scenario requires that you run without containerization, we recommend that you run in a Greengrass container. Omit this value to run the Lambda function with the default containerization for the group.
+
+              
+              - **RunAs** *(dict) --* Specifies the user and group whose permissions are used when running the Lambda function. You can specify one or both values to override the default values. We recommend that you avoid running as root unless absolutely necessary to minimize the risk of unintended changes or malicious attacks. To run as root, you must set ''IsolationMode'' to ''NoContainer'' and update config.json in ''greengrass-root/config'' to set ''allowFunctionsToRunAsRoot'' to ''yes''.
+
+              
+                - **Gid** *(integer) --* The group ID whose permissions are used to run a Lambda function.
+
+                
+                - **Uid** *(integer) --* The user ID whose permissions are used to run a Lambda function.
+
+                
+              
+            
+            - **ResourceAccessPolicies** *(list) --* A list of the resources, with their permissions, to which the Lambda function will be granted access. A Lambda function can have at most 10 resources. ResourceAccessPolicies apply only when you run the Lambda function in a Greengrass container.
+
+            
+              - *(dict) --* A policy used by the function to access a resource.
+
+              
+                - **Permission** *(string) --* The permissions that the Lambda function has to the resource. Can be one of ''rw'' (read/write) or ''ro'' (read-only).
+
+                
+                - **ResourceId** *(string) --* **[REQUIRED]** The ID of the resource. (This ID is assigned to the resource when you create the resource definiton.)
+
+                
+              
+          
+            - **Variables** *(dict) --* Environment variables for the Lambda function's configuration.
+
+            
+              - *(string) --* 
+
+              
+                - *(string) --* 
+
+                
+          
+        
+          
+          - **ExecArgs** *(string) --* The execution arguments.
+
+          
+          - **Executable** *(string) --* The name of the function executable.
+
+          
+          - **MemorySize** *(integer) --* The memory size, in KB, which the function requires. This setting is not applicable and should be cleared when you run the Lambda function without containerization.
+
+          
+          - **Pinned** *(boolean) --* True if the function is pinned. Pinned means the function is long-lived and starts when the core starts.
+
+          
+          - **Timeout** *(integer) --* The allowed function execution time, after which Lambda should terminate the function. This timeout still applies to pinned Lambda functions for each request.
+
+          
+          - **FunctionRuntimeOverride** *(string) --* The Lambda runtime supported by Greengrass which is to be used instead of the one specified in the Lambda function.
+
+          
+        
+        - **Id** *(string) --* **[REQUIRED]** A descriptive or arbitrary ID for the function. This value must be unique within the function definition version. Max length is 128 characters with pattern ''[a-zA-Z0-9:_-]+''.
+
+        
+      
+  
+  
+  :type Name: string
+  :param Name: The name of the function definition.
+
+  
+  :type tags: dict
+  :param tags: Tag(s) to add to the new resource.
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Arn': 'string',
+          'CreationTimestamp': 'string',
+          'Id': 'string',
+          'LastUpdatedTimestamp': 'string',
+          'LatestVersion': 'string',
+          'LatestVersionArn': 'string',
+          'Name': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Arn** *(string) --* The ARN of the definition.
+      
+
+      - **CreationTimestamp** *(string) --* The time, in milliseconds since the epoch, when the definition was created.
+      
+
+      - **Id** *(string) --* The ID of the definition.
+      
+
+      - **LastUpdatedTimestamp** *(string) --* The time, in milliseconds since the epoch, when the definition was last updated.
+      
+
+      - **LatestVersion** *(string) --* The ID of the latest version associated with the definition.
+      
+
+      - **LatestVersionArn** *(string) --* The ARN of the latest version associated with the definition.
+      
+
+      - **Name** *(string) --* The name of the definition.
+  
+  **Exceptions**
+  
+  *   :py:class:`Greengrass.Client.exceptions.BadRequestException`
+
+  

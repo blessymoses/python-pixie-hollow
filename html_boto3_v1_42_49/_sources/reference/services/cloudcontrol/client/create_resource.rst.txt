@@ -1,0 +1,337 @@
+:doc:`CloudControlApi <../../cloudcontrol>` / Client / create_resource
+
+***************
+create_resource
+***************
+
+
+
+.. py:method:: CloudControlApi.Client.create_resource(**kwargs)
+
+  
+
+  Creates the specified resource. For more information, see `Creating a resource <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations-create.html>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+   
+
+  After you have initiated a resource creation request, you can monitor the progress of your request by calling `GetResourceRequestStatus <https://docs.aws.amazon.com/cloudcontrolapi/latest/APIReference/API_GetResourceRequestStatus.html>`__ using the ``RequestToken`` of the ``ProgressEvent`` type returned by ``CreateResource``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudcontrol-2021-09-30/CreateResource>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_resource(
+        TypeName='string',
+        TypeVersionId='string',
+        RoleArn='string',
+        ClientToken='string',
+        DesiredState='string'
+    )
+    
+  :type TypeName: string
+  :param TypeName: **[REQUIRED]** 
+
+    The name of the resource type.
+
+    
+
+  
+  :type TypeVersionId: string
+  :param TypeVersionId: 
+
+    For private resource types, the type version to use in this resource operation. If you do not specify a resource version, CloudFormation uses the default version.
+
+    
+
+  
+  :type RoleArn: string
+  :param RoleArn: 
+
+    The Amazon Resource Name (ARN) of the Identity and Access Management (IAM) role for Cloud Control API to use when performing this resource operation. The role specified must have the permissions required for this operation. The necessary permissions for each event handler are defined in the ``handlers`` section of the `resource type definition schema <https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-type-schema.html>`__.
+
+     
+
+    If you do not specify a role, Cloud Control API uses a temporary session created using your Amazon Web Services user credentials.
+
+     
+
+    For more information, see `Specifying credentials <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations.html#resource-operations-permissions>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique identifier to ensure the idempotency of the resource request. As a best practice, specify this token to ensure idempotency, so that Amazon Web Services Cloud Control API can accurately distinguish between request retries and new resource requests. You might retry a resource request to ensure that it was successfully received.
+
+     
+
+    A client token is valid for 36 hours once used. After that, a resource request with the same client token is treated as a new request.
+
+     
+
+    If you do not specify a client token, one is generated for inclusion in the request.
+
+     
+
+    For more information, see `Ensuring resource operation requests are unique <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations.html#resource-operations-idempotency>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+    This field is autopopulated if not provided.
+
+  
+  :type DesiredState: string
+  :param DesiredState: **[REQUIRED]** 
+
+    Structured data format representing the desired state of the resource, consisting of that resource's properties and their desired values.
+
+     
+
+    .. note::
+
+      
+
+      Cloud Control API currently supports JSON as a structured data format.
+
+      
+
+     
+
+    Specify the desired state as one of the following:
+
+     
+
+    
+    * A JSON blob
+     
+    * A local path containing the desired state in JSON data format
+    
+
+     
+
+    For more information, see `Composing the desired state of the resource <https://docs.aws.amazon.com/cloudcontrolapi/latest/userguide/resource-operations-create.html#resource-operations-create-desiredstate>`__ in the *Amazon Web Services Cloud Control API User Guide*.
+
+     
+
+    For more information about the properties of a specific resource, refer to the related topic for the resource in the `Resource and property types reference <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html>`__ in the *CloudFormation Users Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ProgressEvent': {
+              'TypeName': 'string',
+              'Identifier': 'string',
+              'RequestToken': 'string',
+              'HooksRequestToken': 'string',
+              'Operation': 'CREATE'|'DELETE'|'UPDATE',
+              'OperationStatus': 'PENDING'|'IN_PROGRESS'|'SUCCESS'|'FAILED'|'CANCEL_IN_PROGRESS'|'CANCEL_COMPLETE',
+              'EventTime': datetime(2015, 1, 1),
+              'ResourceModel': 'string',
+              'StatusMessage': 'string',
+              'ErrorCode': 'NotUpdatable'|'InvalidRequest'|'AccessDenied'|'UnauthorizedTaggingOperation'|'InvalidCredentials'|'AlreadyExists'|'NotFound'|'ResourceConflict'|'Throttling'|'ServiceLimitExceeded'|'NotStabilized'|'GeneralServiceException'|'ServiceInternalError'|'ServiceTimeout'|'NetworkFailure'|'InternalFailure',
+              'RetryAfter': datetime(2015, 1, 1)
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ProgressEvent** *(dict) --* 
+
+        Represents the current status of the resource creation request.
+
+         
+
+        After you have initiated a resource creation request, you can monitor the progress of your request by calling `GetResourceRequestStatus <https://docs.aws.amazon.com/cloudcontrolapi/latest/APIReference/API_GetResourceRequestStatus.html>`__ using the ``RequestToken`` of the ``ProgressEvent`` returned by ``CreateResource``.
+
+        
+        
+
+        - **TypeName** *(string) --* 
+
+          The name of the resource type used in the operation.
+
+          
+        
+
+        - **Identifier** *(string) --* 
+
+          The primary identifier for the resource.
+
+           
+
+          .. note::
+
+            
+
+            In some cases, the resource identifier may be available before the resource operation has reached a status of ``SUCCESS``.
+
+            
+
+          
+        
+
+        - **RequestToken** *(string) --* 
+
+          The unique token representing this resource operation request.
+
+           
+
+          Use the ``RequestToken`` with `GetResourceRequestStatus <https://docs.aws.amazon.com/cloudcontrolapi/latest/APIReference/API_GetResourceRequestStatus.html>`__ to return the current status of a resource operation request.
+
+          
+        
+
+        - **HooksRequestToken** *(string) --* 
+
+          The unique token representing the Hooks operation for the request.
+
+          
+        
+
+        - **Operation** *(string) --* 
+
+          The resource operation type.
+
+          
+        
+
+        - **OperationStatus** *(string) --* 
+
+          The current status of the resource operation request.
+
+           
+
+          
+          * ``PENDING``: The resource operation hasn't yet started.
+           
+          * ``IN_PROGRESS``: The resource operation is currently in progress.
+           
+          * ``SUCCESS``: The resource operation has successfully completed.
+           
+          * ``FAILED``: The resource operation has failed. Refer to the error code and status message for more information.
+           
+          * ``CANCEL_IN_PROGRESS``: The resource operation is in the process of being canceled.
+           
+          * ``CANCEL_COMPLETE``: The resource operation has been canceled.
+          
+
+          
+        
+
+        - **EventTime** *(datetime) --* 
+
+          When the resource operation request was initiated.
+
+          
+        
+
+        - **ResourceModel** *(string) --* 
+
+          A JSON string containing the resource model, consisting of each resource property and its current value.
+
+          
+        
+
+        - **StatusMessage** *(string) --* 
+
+          Any message explaining the current status.
+
+          
+        
+
+        - **ErrorCode** *(string) --* 
+
+          For requests with a status of ``FAILED``, the associated error code.
+
+           
+
+          For error code definitions, see `Handler error codes <https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-type-test-contract-errors.html>`__ in the *CloudFormation Command Line Interface User Guide for Extension Development*.
+
+          
+        
+
+        - **RetryAfter** *(datetime) --* 
+
+          When to next request the status of this resource operation request.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.AlreadyExistsException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.HandlerInternalFailureException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.GeneralServiceException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.NotUpdatableException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.TypeNotFoundException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ConcurrentOperationException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.PrivateTypeException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.NetworkFailureException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.UnsupportedActionException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.NotStabilizedException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ServiceInternalErrorException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.HandlerFailureException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ServiceLimitExceededException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.InvalidCredentialsException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ResourceConflictException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ClientTokenConflictException`
+
+  
+  *   :py:class:`CloudControlApi.Client.exceptions.ThrottlingException`
+
+  

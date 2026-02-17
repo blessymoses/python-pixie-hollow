@@ -1,0 +1,253 @@
+:doc:`StorageGateway <../../storagegateway>` / Client / create_stored_iscsi_volume
+
+**************************
+create_stored_iscsi_volume
+**************************
+
+
+
+.. py:method:: StorageGateway.Client.create_stored_iscsi_volume(**kwargs)
+
+  
+
+  Creates a volume on a specified gateway. This operation is only supported in the stored volume gateway type.
+
+   
+
+  The size of the volume to create is inferred from the disk size. You can choose to preserve existing data on the disk, create volume from an existing snapshot, or create an empty volume. If you choose to create an empty gateway volume, then any existing data on the disk is erased.
+
+   
+
+  In the request, you must specify the gateway and the disk information on which you are creating the volume. In response, the gateway creates the volume and returns volume information such as the volume Amazon Resource Name (ARN), its size, and the iSCSI target ARN that initiators can use to connect to the volume target.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/CreateStorediSCSIVolume>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_stored_iscsi_volume(
+        GatewayARN='string',
+        DiskId='string',
+        SnapshotId='string',
+        PreserveExistingData=True|False,
+        TargetName='string',
+        NetworkInterfaceId='string',
+        KMSEncrypted=True|False,
+        KMSKey='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type GatewayARN: string
+  :param GatewayARN: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the gateway. Use the  ListGateways operation to return a list of gateways for your account and Amazon Web Services Region.
+
+    
+
+  
+  :type DiskId: string
+  :param DiskId: **[REQUIRED]** 
+
+    The unique identifier for the gateway local disk that is configured as a stored volume. Use `ListLocalDisks <https://docs.aws.amazon.com/storagegateway/latest/userguide/API_ListLocalDisks.html>`__ to list disk IDs for a gateway.
+
+    
+
+  
+  :type SnapshotId: string
+  :param SnapshotId: 
+
+    The snapshot ID (e.g., "snap-1122aabb") of the snapshot to restore as the new stored volume. Specify this field if you want to create the iSCSI storage volume from a snapshot; otherwise, do not include this field. To list snapshots for your account use `DescribeSnapshots <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSnapshots.html>`__ in the *Amazon Elastic Compute Cloud API Reference*.
+
+    
+
+  
+  :type PreserveExistingData: boolean
+  :param PreserveExistingData: **[REQUIRED]** 
+
+    Set to ``true`` if you want to preserve the data on the local disk. Otherwise, set to ``false`` to create an empty volume.
+
+     
+
+    Valid Values: ``true`` | ``false``
+
+    
+
+  
+  :type TargetName: string
+  :param TargetName: **[REQUIRED]** 
+
+    The name of the iSCSI target used by an initiator to connect to a volume and used as a suffix for the target ARN. For example, specifying ``TargetName`` as *myvolume* results in the target ARN of ``arn:aws:storagegateway:us-east-2:111122223333:gateway/sgw-12A3456B/target/iqn.1997-05.com.amazon:myvolume``. The target name must be unique across all volumes on a gateway.
+
+     
+
+    If you don't specify a value, Storage Gateway uses the value that was previously used for this volume as the new target name.
+
+    
+
+  
+  :type NetworkInterfaceId: string
+  :param NetworkInterfaceId: **[REQUIRED]** 
+
+    The network interface of the gateway on which to expose the iSCSI target. Accepts IPv4 and IPv6 addresses. Use  DescribeGatewayInformation to get a list of the network interfaces available on a gateway.
+
+     
+
+    Valid Values: A valid IP address.
+
+    
+
+  
+  :type KMSEncrypted: boolean
+  :param KMSEncrypted: 
+
+    Set to ``true`` to use Amazon S3 server-side encryption with your own KMS key, or ``false`` to use a key managed by Amazon S3. Optional.
+
+     
+
+    Valid Values: ``true`` | ``false``
+
+    
+
+  
+  :type KMSKey: string
+  :param KMSKey: 
+
+    The Amazon Resource Name (ARN) of a symmetric customer master key (CMK) used for Amazon S3 server-side encryption. Storage Gateway does not support asymmetric CMKs. This value can only be set when ``KMSEncrypted`` is ``true``. Optional.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of up to 50 tags that can be assigned to a stored volume. Each tag is a key-value pair.
+
+     
+
+    .. note::
+
+      
+
+      Valid characters for key and value are letters, spaces, and numbers representable in UTF-8 format, and the following special characters: + - = . _ : / @. The maximum length of a tag's key is 128 characters, and the maximum length for a tag's value is 256.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      A key-value pair that helps you manage, filter, and search for your resource. Allowed characters: letters, white space, and numbers, representable in UTF-8, and the following characters: + - = . _ : /.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        Tag key. The key can't start with aws:.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        Value of the tag key.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'VolumeARN': 'string',
+          'VolumeSizeInBytes': 123,
+          'TargetARN': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      A JSON object containing the following fields:
+
+      
+      
+
+      - **VolumeARN** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the configured volume.
+
+        
+      
+
+      - **VolumeSizeInBytes** *(integer) --* 
+
+        The size of the volume in bytes.
+
+        
+      
+
+      - **TargetARN** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the volume target, which includes the iSCSI name that initiators can use to connect to the target.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InvalidGatewayRequestException`
+
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InternalServerError`
+
+  
+
+  **Examples**
+
+  Creates a stored volume on a specified stored gateway.
+  ::
+
+    response = client.create_stored_iscsi_volume(
+        DiskId='pci-0000:03:00.0-scsi-0:0:0:0',
+        GatewayARN='arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B',
+        NetworkInterfaceId='10.1.1.1',
+        PreserveExistingData=True,
+        SnapshotId='snap-f47b7b94',
+        TargetName='my-volume',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'TargetARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B/target/iqn.1997-05.com.amazon:myvolume',
+        'VolumeARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B/volume/vol-1122AABB',
+        'VolumeSizeInBytes': 1099511627776,
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,853 @@
+:doc:`EKS <../../eks>` / Client / update_cluster_config
+
+*********************
+update_cluster_config
+*********************
+
+
+
+.. py:method:: EKS.Client.update_cluster_config(**kwargs)
+
+  
+
+  Updates an Amazon EKS cluster configuration. Your cluster continues to function during the update. The response output includes an update ID that you can use to track the status of your cluster update with ``DescribeUpdate``.
+
+   
+
+  You can use this operation to do the following actions:
+
+   
+
+  
+  * You can use this API operation to enable or disable exporting the Kubernetes control plane logs for your cluster to CloudWatch Logs. By default, cluster control plane logs aren't exported to CloudWatch Logs. For more information, see `Amazon EKS Cluster control plane logs <https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html>`__ in the *Amazon EKS User Guide* . 
+
+  .. note::
+
+    CloudWatch Logs ingestion, archive storage, and data scanning rates apply to exported control plane logs. For more information, see `CloudWatch Pricing <http://aws.amazon.com/cloudwatch/pricing/>`__.
+
+  
+   
+  * You can also use this API operation to enable or disable public and private access to your cluster's Kubernetes API server endpoint. By default, public access is enabled, and private access is disabled. For more information, see `Cluster API server endpoint <https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html>`__ in the *Amazon EKS User Guide* .
+   
+  * You can also use this API operation to choose different subnets and security groups for the cluster. You must specify at least two subnets that are in different Availability Zones. You can't change which VPC the subnets are from, the subnets must be in the same VPC as the subnets that the cluster was created with. For more information about the VPC requirements, see `https\://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html <https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html>`__ in the *Amazon EKS User Guide* .
+   
+  * You can also use this API operation to enable or disable ARC zonal shift. If zonal shift is enabled, Amazon Web Services configures zonal autoshift for the cluster.
+   
+  * You can also use this API operation to add, change, or remove the configuration in the cluster for EKS Hybrid Nodes. To remove the configuration, use the ``remoteNetworkConfig`` key with an object containing both subkeys with empty arrays for each. Here is an inline example: ``"remoteNetworkConfig": { "remoteNodeNetworks": [], "remotePodNetworks": [] }``.
+  
+
+   
+
+  Cluster updates are asynchronous, and they should finish within a few minutes. During an update, the cluster status moves to ``UPDATING`` (this status transition is eventually consistent). When the update is complete (either ``Failed`` or ``Successful``), the cluster status moves to ``Active``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateClusterConfig>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_cluster_config(
+        name='string',
+        resourcesVpcConfig={
+            'subnetIds': [
+                'string',
+            ],
+            'securityGroupIds': [
+                'string',
+            ],
+            'endpointPublicAccess': True|False,
+            'endpointPrivateAccess': True|False,
+            'publicAccessCidrs': [
+                'string',
+            ]
+        },
+        logging={
+            'clusterLogging': [
+                {
+                    'types': [
+                        'api'|'audit'|'authenticator'|'controllerManager'|'scheduler',
+                    ],
+                    'enabled': True|False
+                },
+            ]
+        },
+        clientRequestToken='string',
+        accessConfig={
+            'authenticationMode': 'API'|'API_AND_CONFIG_MAP'|'CONFIG_MAP'
+        },
+        upgradePolicy={
+            'supportType': 'STANDARD'|'EXTENDED'
+        },
+        zonalShiftConfig={
+            'enabled': True|False
+        },
+        computeConfig={
+            'enabled': True|False,
+            'nodePools': [
+                'string',
+            ],
+            'nodeRoleArn': 'string'
+        },
+        kubernetesNetworkConfig={
+            'serviceIpv4Cidr': 'string',
+            'ipFamily': 'ipv4'|'ipv6',
+            'elasticLoadBalancing': {
+                'enabled': True|False
+            }
+        },
+        storageConfig={
+            'blockStorage': {
+                'enabled': True|False
+            }
+        },
+        remoteNetworkConfig={
+            'remoteNodeNetworks': [
+                {
+                    'cidrs': [
+                        'string',
+                    ]
+                },
+            ],
+            'remotePodNetworks': [
+                {
+                    'cidrs': [
+                        'string',
+                    ]
+                },
+            ]
+        },
+        deletionProtection=True|False,
+        controlPlaneScalingConfig={
+            'tier': 'standard'|'tier-xl'|'tier-2xl'|'tier-4xl'
+        }
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the Amazon EKS cluster to update.
+
+    
+
+  
+  :type resourcesVpcConfig: dict
+  :param resourcesVpcConfig: 
+
+    An object representing the VPC configuration to use for an Amazon EKS cluster.
+
+    
+
+  
+    - **subnetIds** *(list) --* 
+
+      Specify subnets for your Amazon EKS nodes. Amazon EKS creates cross-account elastic network interfaces in these subnets to allow communication between your nodes and the Kubernetes control plane.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **securityGroupIds** *(list) --* 
+
+      Specify one or more security groups for the cross-account elastic network interfaces that Amazon EKS creates to use that allow communication between your nodes and the Kubernetes control plane. If you don't specify any security groups, then familiarize yourself with the difference between Amazon EKS defaults for clusters deployed with Kubernetes. For more information, see `Amazon EKS security group considerations <https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html>`__ in the *Amazon EKS User Guide* .
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **endpointPublicAccess** *(boolean) --* 
+
+      Set this value to ``false`` to disable public access to your cluster's Kubernetes API server endpoint. If you disable public access, your cluster's Kubernetes API server can only receive requests from within the cluster VPC. The default value for this parameter is ``true``, which enables public access for your Kubernetes API server. The endpoint domain name and IP address family depends on the value of the ``ipFamily`` for the cluster. For more information, see `Cluster API server endpoint <https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html>`__ in the *Amazon EKS User Guide* .
+
+      
+
+    
+    - **endpointPrivateAccess** *(boolean) --* 
+
+      Set this value to ``true`` to enable private access for your cluster's Kubernetes API server endpoint. If you enable private access, Kubernetes API requests from within your cluster's VPC use the private VPC endpoint. The default value for this parameter is ``false``, which disables private access for your Kubernetes API server. If you disable private access and you have nodes or Fargate pods in the cluster, then ensure that ``publicAccessCidrs`` includes the necessary CIDR blocks for communication with the nodes or Fargate pods. For more information, see `Cluster API server endpoint <https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html>`__ in the *Amazon EKS User Guide* .
+
+      
+
+    
+    - **publicAccessCidrs** *(list) --* 
+
+      The CIDR blocks that are allowed access to your cluster's public Kubernetes API server endpoint. Communication to the endpoint from addresses outside of the CIDR blocks that you specify is denied. The default value is ``0.0.0.0/0`` and additionally ``::/0`` for dual-stack `IPv6` clusters. If you've disabled private endpoint access, make sure that you specify the necessary CIDR blocks for every node and Fargate ``Pod`` in the cluster. For more information, see `Cluster API server endpoint <https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html>`__ in the *Amazon EKS User Guide* .
+
+       
+
+      Note that the public endpoints are dual-stack for only ``IPv6`` clusters that are made after October 2024. You can't add ``IPv6`` CIDR blocks to ``IPv4`` clusters or ``IPv6`` clusters that were made before October 2024.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type logging: dict
+  :param logging: 
+
+    Enable or disable exporting the Kubernetes control plane logs for your cluster to CloudWatch Logs . By default, cluster control plane logs aren't exported to CloudWatch Logs . For more information, see `Amazon EKS cluster control plane logs <https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html>`__ in the *Amazon EKS User Guide* .
+
+     
+
+    .. note::
+
+      
+
+      CloudWatch Logs ingestion, archive storage, and data scanning rates apply to exported control plane logs. For more information, see `CloudWatch Pricing <http://aws.amazon.com/cloudwatch/pricing/>`__.
+
+      
+
+    
+
+  
+    - **clusterLogging** *(list) --* 
+
+      The cluster control plane logging configuration for your cluster.
+
+      
+
+    
+      - *(dict) --* 
+
+        An object representing the enabled or disabled Kubernetes control plane logs for your cluster.
+
+        
+
+      
+        - **types** *(list) --* 
+
+          The available cluster control plane log types.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+        - **enabled** *(boolean) --* 
+
+          If a log type is enabled, that log type exports its control plane logs to CloudWatch Logs . If a log type isn't enabled, that log type doesn't export its control plane logs. Each individual log type can be enabled or disabled independently.
+
+          
+
+        
+      
+  
+  
+  :type clientRequestToken: string
+  :param clientRequestToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request.
+
+    This field is autopopulated if not provided.
+
+  
+  :type accessConfig: dict
+  :param accessConfig: 
+
+    The access configuration for the cluster.
+
+    
+
+  
+    - **authenticationMode** *(string) --* 
+
+      The desired authentication mode for the cluster.
+
+      
+
+    
+  
+  :type upgradePolicy: dict
+  :param upgradePolicy: 
+
+    You can enable or disable extended support for clusters currently on standard support. You cannot disable extended support once it starts. You must enable extended support before your cluster exits standard support.
+
+    
+
+  
+    - **supportType** *(string) --* 
+
+      If the cluster is set to ``EXTENDED``, it will enter extended support at the end of standard support. If the cluster is set to ``STANDARD``, it will be automatically upgraded at the end of standard support.
+
+       
+
+      `Learn more about EKS Extended Support in the Amazon EKS User Guide. <https://docs.aws.amazon.com/eks/latest/userguide/extended-support-control.html>`__
+
+      
+
+    
+  
+  :type zonalShiftConfig: dict
+  :param zonalShiftConfig: 
+
+    Enable or disable ARC zonal shift for the cluster. If zonal shift is enabled, Amazon Web Services configures zonal autoshift for the cluster.
+
+     
+
+    Zonal shift is a feature of Amazon Application Recovery Controller (ARC). ARC zonal shift is designed to be a temporary measure that allows you to move traffic for a resource away from an impaired AZ until the zonal shift expires or you cancel it. You can extend the zonal shift if necessary.
+
+     
+
+    You can start a zonal shift for an EKS cluster, or you can allow Amazon Web Services to do it for you by enabling *zonal autoshift*. This shift updates the flow of east-to-west network traffic in your cluster to only consider network endpoints for Pods running on worker nodes in healthy AZs. Additionally, any ALB or NLB handling ingress traffic for applications in your EKS cluster will automatically route traffic to targets in the healthy AZs. For more information about zonal shift in EKS, see `Learn about Amazon Application Recovery Controller (ARC) Zonal Shift in Amazon EKS <https://docs.aws.amazon.com/eks/latest/userguide/zone-shift.html>`__ in the *Amazon EKS User Guide* .
+
+    
+
+  
+    - **enabled** *(boolean) --* 
+
+      If zonal shift is enabled, Amazon Web Services configures zonal autoshift for the cluster.
+
+      
+
+    
+  
+  :type computeConfig: dict
+  :param computeConfig: 
+
+    Update the configuration of the compute capability of your EKS Auto Mode cluster. For example, enable the capability.
+
+    
+
+  
+    - **enabled** *(boolean) --* 
+
+      Request to enable or disable the compute capability on your EKS Auto Mode cluster. If the compute capability is enabled, EKS Auto Mode will create and delete EC2 Managed Instances in your Amazon Web Services account.
+
+      
+
+    
+    - **nodePools** *(list) --* 
+
+      Configuration for node pools that defines the compute resources for your EKS Auto Mode cluster. For more information, see EKS Auto Mode Node Pools in the *Amazon EKS User Guide*.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **nodeRoleArn** *(string) --* 
+
+      The ARN of the IAM Role EKS will assign to EC2 Managed Instances in your EKS Auto Mode cluster. This value cannot be changed after the compute capability of EKS Auto Mode is enabled. For more information, see the IAM Reference in the *Amazon EKS User Guide*.
+
+      
+
+    
+  
+  :type kubernetesNetworkConfig: dict
+  :param kubernetesNetworkConfig: 
+
+    The Kubernetes network configuration for the cluster.
+
+    
+
+  
+    - **serviceIpv4Cidr** *(string) --* 
+
+      Don't specify a value if you select ``ipv6`` for **ipFamily**. The CIDR block to assign Kubernetes service IP addresses from. If you don't specify a block, Kubernetes assigns addresses from either the ``10.100.0.0/16`` or ``172.20.0.0/16`` CIDR blocks. We recommend that you specify a block that does not overlap with resources in other networks that are peered or connected to your VPC. The block must meet the following requirements:
+
+       
+
+      
+      * Within one of the following private IP address blocks: ``10.0.0.0/8``, ``172.16.0.0/12``, or ``192.168.0.0/16``.
+       
+      * Doesn't overlap with any CIDR block assigned to the VPC that you selected for VPC.
+       
+      * Between ``/24`` and ``/12``.
+      
+
+       
+
+      .. warning::
+
+         
+
+        You can only specify a custom CIDR block when you create a cluster. You can't change this value after the cluster is created.
+
+        
+
+      
+
+    
+    - **ipFamily** *(string) --* 
+
+      Specify which IP family is used to assign Kubernetes pod and service IP addresses. If you don't specify a value, ``ipv4`` is used by default. You can only specify an IP family when you create a cluster and can't change this value once the cluster is created. If you specify ``ipv6``, the VPC and subnets that you specify for cluster creation must have both ``IPv4`` and ``IPv6`` CIDR blocks assigned to them. You can't specify ``ipv6`` for clusters in China Regions.
+
+       
+
+      You can only specify ``ipv6`` for ``1.21`` and later clusters that use version ``1.10.1`` or later of the Amazon VPC CNI add-on. If you specify ``ipv6``, then ensure that your VPC meets the requirements listed in the considerations listed in `Assigning IPv6 addresses to pods and services <https://docs.aws.amazon.com/eks/latest/userguide/cni-ipv6.html>`__ in the *Amazon EKS User Guide*. Kubernetes assigns services ``IPv6`` addresses from the unique local address range ``(fc00::/7)``. You can't specify a custom ``IPv6`` CIDR block. Pod addresses are assigned from the subnet's ``IPv6`` CIDR.
+
+      
+
+    
+    - **elasticLoadBalancing** *(dict) --* 
+
+      Request to enable or disable the load balancing capability on your EKS Auto Mode cluster. For more information, see EKS Auto Mode load balancing capability in the *Amazon EKS User Guide*.
+
+      
+
+    
+      - **enabled** *(boolean) --* 
+
+        Indicates if the load balancing capability is enabled on your EKS Auto Mode cluster. If the load balancing capability is enabled, EKS Auto Mode will create and delete load balancers in your Amazon Web Services account.
+
+        
+
+      
+    
+  
+  :type storageConfig: dict
+  :param storageConfig: 
+
+    Update the configuration of the block storage capability of your EKS Auto Mode cluster. For example, enable the capability.
+
+    
+
+  
+    - **blockStorage** *(dict) --* 
+
+      Request to configure EBS Block Storage settings for your EKS Auto Mode cluster.
+
+      
+
+    
+      - **enabled** *(boolean) --* 
+
+        Indicates if the block storage capability is enabled on your EKS Auto Mode cluster. If the block storage capability is enabled, EKS Auto Mode will create and delete EBS volumes in your Amazon Web Services account.
+
+        
+
+      
+    
+  
+  :type remoteNetworkConfig: dict
+  :param remoteNetworkConfig: 
+
+    The configuration in the cluster for EKS Hybrid Nodes. You can add, change, or remove this configuration after the cluster is created.
+
+    
+
+  
+    - **remoteNodeNetworks** *(list) --* 
+
+      The list of network CIDRs that can contain hybrid nodes.
+
+       
+
+      These CIDR blocks define the expected IP address range of the hybrid nodes that join the cluster. These blocks are typically determined by your network administrator.
+
+       
+
+      Enter one or more IPv4 CIDR blocks in decimal dotted-quad notation (for example, ``10.2.0.0/16``).
+
+       
+
+      It must satisfy the following requirements:
+
+       
+
+      
+      * Each block must be within an ``IPv4`` RFC-1918 network range. Minimum allowed size is /32, maximum allowed size is /8. Publicly-routable addresses aren't supported.
+       
+      * Each block cannot overlap with the range of the VPC CIDR blocks for your EKS resources, or the block of the Kubernetes service IP range.
+       
+      * Each block must have a route to the VPC that uses the VPC CIDR blocks, not public IPs or Elastic IPs. There are many options including Transit Gateway, Site-to-Site VPN, or Direct Connect.
+       
+      * Each host must allow outbound connection to the EKS cluster control plane on TCP ports ``443`` and ``10250``.
+       
+      * Each host must allow inbound connection from the EKS cluster control plane on TCP port 10250 for logs, exec and port-forward operations.
+       
+      * Each host must allow TCP and UDP network connectivity to and from other hosts that are running ``CoreDNS`` on UDP port ``53`` for service and pod DNS names.
+      
+
+      
+
+    
+      - *(dict) --* 
+
+        A network CIDR that can contain hybrid nodes.
+
+         
+
+        These CIDR blocks define the expected IP address range of the hybrid nodes that join the cluster. These blocks are typically determined by your network administrator.
+
+         
+
+        Enter one or more IPv4 CIDR blocks in decimal dotted-quad notation (for example, ``10.2.0.0/16``).
+
+         
+
+        It must satisfy the following requirements:
+
+         
+
+        
+        * Each block must be within an ``IPv4`` RFC-1918 network range. Minimum allowed size is /32, maximum allowed size is /8. Publicly-routable addresses aren't supported.
+         
+        * Each block cannot overlap with the range of the VPC CIDR blocks for your EKS resources, or the block of the Kubernetes service IP range.
+         
+        * Each block must have a route to the VPC that uses the VPC CIDR blocks, not public IPs or Elastic IPs. There are many options including Transit Gateway, Site-to-Site VPN, or Direct Connect.
+         
+        * Each host must allow outbound connection to the EKS cluster control plane on TCP ports ``443`` and ``10250``.
+         
+        * Each host must allow inbound connection from the EKS cluster control plane on TCP port 10250 for logs, exec and port-forward operations.
+         
+        * Each host must allow TCP and UDP network connectivity to and from other hosts that are running ``CoreDNS`` on UDP port ``53`` for service and pod DNS names.
+        
+
+        
+
+      
+        - **cidrs** *(list) --* 
+
+          A network CIDR that can contain hybrid nodes.
+
+           
+
+          These CIDR blocks define the expected IP address range of the hybrid nodes that join the cluster. These blocks are typically determined by your network administrator.
+
+           
+
+          Enter one or more IPv4 CIDR blocks in decimal dotted-quad notation (for example, ``10.2.0.0/16``).
+
+           
+
+          It must satisfy the following requirements:
+
+           
+
+          
+          * Each block must be within an ``IPv4`` RFC-1918 network range. Minimum allowed size is /32, maximum allowed size is /8. Publicly-routable addresses aren't supported.
+           
+          * Each block cannot overlap with the range of the VPC CIDR blocks for your EKS resources, or the block of the Kubernetes service IP range.
+           
+          * Each block must have a route to the VPC that uses the VPC CIDR blocks, not public IPs or Elastic IPs. There are many options including Transit Gateway, Site-to-Site VPN, or Direct Connect.
+           
+          * Each host must allow outbound connection to the EKS cluster control plane on TCP ports ``443`` and ``10250``.
+           
+          * Each host must allow inbound connection from the EKS cluster control plane on TCP port 10250 for logs, exec and port-forward operations.
+           
+          * Each host must allow TCP and UDP network connectivity to and from other hosts that are running ``CoreDNS`` on UDP port ``53`` for service and pod DNS names.
+          
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+  
+    - **remotePodNetworks** *(list) --* 
+
+      The list of network CIDRs that can contain pods that run Kubernetes webhooks on hybrid nodes.
+
+       
+
+      These CIDR blocks are determined by configuring your Container Network Interface (CNI) plugin. We recommend the Calico CNI or Cilium CNI. Note that the Amazon VPC CNI plugin for Kubernetes isn't available for on-premises and edge locations.
+
+       
+
+      Enter one or more IPv4 CIDR blocks in decimal dotted-quad notation (for example, ``10.2.0.0/16``).
+
+       
+
+      It must satisfy the following requirements:
+
+       
+
+      
+      * Each block must be within an ``IPv4`` RFC-1918 network range. Minimum allowed size is /32, maximum allowed size is /8. Publicly-routable addresses aren't supported.
+       
+      * Each block cannot overlap with the range of the VPC CIDR blocks for your EKS resources, or the block of the Kubernetes service IP range.
+      
+
+      
+
+    
+      - *(dict) --* 
+
+        A network CIDR that can contain pods that run Kubernetes webhooks on hybrid nodes.
+
+         
+
+        These CIDR blocks are determined by configuring your Container Network Interface (CNI) plugin. We recommend the Calico CNI or Cilium CNI. Note that the Amazon VPC CNI plugin for Kubernetes isn't available for on-premises and edge locations.
+
+         
+
+        Enter one or more IPv4 CIDR blocks in decimal dotted-quad notation (for example, ``10.2.0.0/16``).
+
+         
+
+        It must satisfy the following requirements:
+
+         
+
+        
+        * Each block must be within an ``IPv4`` RFC-1918 network range. Minimum allowed size is /32, maximum allowed size is /8. Publicly-routable addresses aren't supported.
+         
+        * Each block cannot overlap with the range of the VPC CIDR blocks for your EKS resources, or the block of the Kubernetes service IP range.
+        
+
+        
+
+      
+        - **cidrs** *(list) --* 
+
+          A network CIDR that can contain pods that run Kubernetes webhooks on hybrid nodes.
+
+           
+
+          These CIDR blocks are determined by configuring your Container Network Interface (CNI) plugin. We recommend the Calico CNI or Cilium CNI. Note that the Amazon VPC CNI plugin for Kubernetes isn't available for on-premises and edge locations.
+
+           
+
+          Enter one or more IPv4 CIDR blocks in decimal dotted-quad notation (for example, ``10.2.0.0/16``).
+
+           
+
+          It must satisfy the following requirements:
+
+           
+
+          
+          * Each block must be within an ``IPv4`` RFC-1918 network range. Minimum allowed size is /32, maximum allowed size is /8. Publicly-routable addresses aren't supported.
+           
+          * Each block cannot overlap with the range of the VPC CIDR blocks for your EKS resources, or the block of the Kubernetes service IP range.
+          
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+  
+  
+  :type deletionProtection: boolean
+  :param deletionProtection: 
+
+    Specifies whether to enable or disable deletion protection for the cluster. When enabled ( ``true``), the cluster cannot be deleted until deletion protection is explicitly disabled. When disabled ( ``false``), the cluster can be deleted normally.
+
+    
+
+  
+  :type controlPlaneScalingConfig: dict
+  :param controlPlaneScalingConfig: 
+
+    The control plane scaling tier configuration. For more information, see EKS Provisioned Control Plane in the Amazon EKS User Guide.
+
+    
+
+  
+    - **tier** *(string) --* 
+
+      The control plane scaling tier configuration. Available options are ``standard``, ``tier-xl``, ``tier-2xl``, or ``tier-4xl``. For more information, see EKS Provisioned Control Plane in the Amazon EKS User Guide.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'update': {
+              'id': 'string',
+              'status': 'InProgress'|'Failed'|'Cancelled'|'Successful',
+              'type': 'VersionUpdate'|'EndpointAccessUpdate'|'LoggingUpdate'|'ConfigUpdate'|'AssociateIdentityProviderConfig'|'DisassociateIdentityProviderConfig'|'AssociateEncryptionConfig'|'AddonUpdate'|'VpcConfigUpdate'|'AccessConfigUpdate'|'UpgradePolicyUpdate'|'ZonalShiftConfigUpdate'|'AutoModeUpdate'|'RemoteNetworkConfigUpdate'|'DeletionProtectionUpdate'|'ControlPlaneScalingConfigUpdate'|'VendedLogsUpdate',
+              'params': [
+                  {
+                      'type': 'Version'|'PlatformVersion'|'EndpointPrivateAccess'|'EndpointPublicAccess'|'ClusterLogging'|'DesiredSize'|'LabelsToAdd'|'LabelsToRemove'|'TaintsToAdd'|'TaintsToRemove'|'MaxSize'|'MinSize'|'ReleaseVersion'|'PublicAccessCidrs'|'LaunchTemplateName'|'LaunchTemplateVersion'|'IdentityProviderConfig'|'EncryptionConfig'|'AddonVersion'|'ServiceAccountRoleArn'|'ResolveConflicts'|'MaxUnavailable'|'MaxUnavailablePercentage'|'NodeRepairEnabled'|'UpdateStrategy'|'ConfigurationValues'|'SecurityGroups'|'Subnets'|'AuthenticationMode'|'PodIdentityAssociations'|'UpgradePolicy'|'ZonalShiftConfig'|'ComputeConfig'|'StorageConfig'|'KubernetesNetworkConfig'|'RemoteNetworkConfig'|'DeletionProtection'|'NodeRepairConfig'|'UpdatedTier'|'PreviousTier',
+                      'value': 'string'
+                  },
+              ],
+              'createdAt': datetime(2015, 1, 1),
+              'errors': [
+                  {
+                      'errorCode': 'SubnetNotFound'|'SecurityGroupNotFound'|'EniLimitReached'|'IpNotAvailable'|'AccessDenied'|'OperationNotPermitted'|'VpcIdNotFound'|'Unknown'|'NodeCreationFailure'|'PodEvictionFailure'|'InsufficientFreeAddresses'|'ClusterUnreachable'|'InsufficientNumberOfReplicas'|'ConfigurationConflict'|'AdmissionRequestDenied'|'UnsupportedAddonModification'|'K8sResourceNotFound',
+                      'errorMessage': 'string',
+                      'resourceIds': [
+                          'string',
+                      ]
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **update** *(dict) --* 
+
+        An object representing an asynchronous update.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          A UUID that is used to track the update.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The current status of the update.
+
+          
+        
+
+        - **type** *(string) --* 
+
+          The type of the update.
+
+          
+        
+
+        - **params** *(list) --* 
+
+          A key-value map that contains the parameters associated with the update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing the details of an update request.
+
+            
+            
+
+            - **type** *(string) --* 
+
+              The keys associated with an update request.
+
+              
+            
+
+            - **value** *(string) --* 
+
+              The value of the keys submitted as part of an update request.
+
+              
+        
+      
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The Unix epoch timestamp at object creation.
+
+          
+        
+
+        - **errors** *(list) --* 
+
+          Any errors associated with a ``Failed`` update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing an error when an asynchronous operation fails.
+
+            
+            
+
+            - **errorCode** *(string) --* 
+
+              A brief description of the error.
+
+               
+
+              
+              * **SubnetNotFound**: We couldn't find one of the subnets associated with the cluster.
+               
+              * **SecurityGroupNotFound**: We couldn't find one of the security groups associated with the cluster.
+               
+              * **EniLimitReached**: You have reached the elastic network interface limit for your account.
+               
+              * **IpNotAvailable**: A subnet associated with the cluster doesn't have any available IP addresses.
+               
+              * **AccessDenied**: You don't have permissions to perform the specified operation.
+               
+              * **OperationNotPermitted**: The service role associated with the cluster doesn't have the required access permissions for Amazon EKS.
+               
+              * **VpcIdNotFound**: We couldn't find the VPC associated with the cluster.
+              
+
+              
+            
+
+            - **errorMessage** *(string) --* 
+
+              A more complete description of the error.
+
+              
+            
+
+            - **resourceIds** *(list) --* 
+
+              An optional field that contains the resource IDs associated with the error.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ThrottlingException`
+
+  

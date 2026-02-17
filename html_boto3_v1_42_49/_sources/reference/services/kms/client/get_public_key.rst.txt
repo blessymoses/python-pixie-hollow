@@ -1,0 +1,316 @@
+:doc:`KMS <../../kms>` / Client / get_public_key
+
+**************
+get_public_key
+**************
+
+
+
+.. py:method:: KMS.Client.get_public_key(**kwargs)
+
+  
+
+  Returns the public key of an asymmetric KMS key. Unlike the private key of a asymmetric KMS key, which never leaves KMS unencrypted, callers with ``kms:GetPublicKey`` permission can download the public key of an asymmetric KMS key. You can share the public key to allow others to encrypt messages and verify signatures outside of KMS. For information about asymmetric KMS keys, see `Asymmetric KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  You do not need to download the public key. Instead, you can use the public key within KMS by calling the  Encrypt,  ReEncrypt, or  Verify operations with the identifier of an asymmetric KMS key. When you use the public key within KMS, you benefit from the authentication, authorization, and logging that are part of every KMS operation. You also reduce of risk of encrypting data that cannot be decrypted. These features are not effective outside of KMS.
+
+   
+
+  To help you use the public key safely outside of KMS, ``GetPublicKey`` returns important information about the public key in the response, including:
+
+   
+
+  
+  * `KeySpec <https://docs.aws.amazon.com/kms/latest/APIReference/API_GetPublicKey.html#KMS-GetPublicKey-response-KeySpec>`__: The type of key material in the public key, such as ``RSA_4096`` or ``ECC_NIST_P521``.
+   
+  * `KeyUsage <https://docs.aws.amazon.com/kms/latest/APIReference/API_GetPublicKey.html#KMS-GetPublicKey-response-KeyUsage>`__: Whether the key is used for encryption, signing, or deriving a shared secret.
+   
+  * `EncryptionAlgorithms <https://docs.aws.amazon.com/kms/latest/APIReference/API_GetPublicKey.html#KMS-GetPublicKey-response-EncryptionAlgorithms>`__, `KeyAgreementAlgorithms <https://docs.aws.amazon.com/kms/latest/APIReference/API_GetPublicKey.html#KMS-GetPublicKey-response-KeyAgreementAlgorithms>`__, or `SigningAlgorithms <https://docs.aws.amazon.com/kms/latest/APIReference/API_GetPublicKey.html#KMS-GetPublicKey-response-SigningAlgorithms>`__: A list of the encryption algorithms, key agreement algorithms, or signing algorithms for the key.
+  
+
+   
+
+  Although KMS cannot enforce these restrictions on external operations, it is crucial that you use this information to prevent the public key from being used improperly. For example, you can prevent a public signing key from being used encrypt data, or prevent a public key from being used with an encryption algorithm that is not supported by KMS. You can also avoid errors, such as using the wrong signing algorithm in a verification operation.
+
+   
+
+  To verify a signature outside of KMS with an SM2 public key (China Regions only), you must specify the distinguishing ID. By default, KMS uses ``1234567812345678`` as the distinguishing ID. For more information, see `Offline verification with SM2 key pairs <https://docs.aws.amazon.com/kms/latest/developerguide/offline-operations.html#key-spec-sm-offline-verification>`__.
+
+   
+
+  The KMS key that you use for this operation must be in a compatible key state. For details, see `Key states of KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Cross-account use**: Yes. To perform this operation with a KMS key in a different Amazon Web Services account, specify the key ARN or alias ARN in the value of the ``KeyId`` parameter.
+
+   
+
+  **Required permissions**: `kms\:GetPublicKey <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (key policy)
+
+   
+
+  **Related operations**:  CreateKey
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GetPublicKey>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_public_key(
+        KeyId='string',
+        GrantTokens=[
+            'string',
+        ]
+    )
+    
+  :type KeyId: string
+  :param KeyId: **[REQUIRED]** 
+
+    Identifies the asymmetric KMS key that includes the public key.
+
+     
+
+    To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with ``"alias/"``. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN or alias ARN.
+
+     
+
+    For example:
+
+     
+
+    
+    * Key ID: ``1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Key ARN: ``arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Alias name: ``alias/ExampleAlias``
+     
+    * Alias ARN: ``arn:aws:kms:us-east-2:111122223333:alias/ExampleAlias``
+    
+
+     
+
+    To get the key ID and key ARN for a KMS key, use  ListKeys or  DescribeKey. To get the alias name and alias ARN, use  ListAliases.
+
+    
+
+  
+  :type GrantTokens: list
+  :param GrantTokens: 
+
+    A list of grant tokens.
+
+     
+
+    Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved *eventual consistency*. For more information, see `Grant token <https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token>`__ and `Using a grant token <https://docs.aws.amazon.com/kms/latest/developerguide/using-grant-token.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'KeyId': 'string',
+          'PublicKey': b'bytes',
+          'CustomerMasterKeySpec': 'RSA_2048'|'RSA_3072'|'RSA_4096'|'ECC_NIST_P256'|'ECC_NIST_P384'|'ECC_NIST_P521'|'ECC_SECG_P256K1'|'SYMMETRIC_DEFAULT'|'HMAC_224'|'HMAC_256'|'HMAC_384'|'HMAC_512'|'SM2',
+          'KeySpec': 'RSA_2048'|'RSA_3072'|'RSA_4096'|'ECC_NIST_P256'|'ECC_NIST_P384'|'ECC_NIST_P521'|'ECC_SECG_P256K1'|'SYMMETRIC_DEFAULT'|'HMAC_224'|'HMAC_256'|'HMAC_384'|'HMAC_512'|'SM2'|'ML_DSA_44'|'ML_DSA_65'|'ML_DSA_87'|'ECC_NIST_EDWARDS25519',
+          'KeyUsage': 'SIGN_VERIFY'|'ENCRYPT_DECRYPT'|'GENERATE_VERIFY_MAC'|'KEY_AGREEMENT',
+          'EncryptionAlgorithms': [
+              'SYMMETRIC_DEFAULT'|'RSAES_OAEP_SHA_1'|'RSAES_OAEP_SHA_256'|'SM2PKE',
+          ],
+          'SigningAlgorithms': [
+              'RSASSA_PSS_SHA_256'|'RSASSA_PSS_SHA_384'|'RSASSA_PSS_SHA_512'|'RSASSA_PKCS1_V1_5_SHA_256'|'RSASSA_PKCS1_V1_5_SHA_384'|'RSASSA_PKCS1_V1_5_SHA_512'|'ECDSA_SHA_256'|'ECDSA_SHA_384'|'ECDSA_SHA_512'|'SM2DSA'|'ML_DSA_SHAKE_256'|'ED25519_SHA_512'|'ED25519_PH_SHA_512',
+          ],
+          'KeyAgreementAlgorithms': [
+              'ECDH',
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **KeyId** *(string) --* 
+
+        The Amazon Resource Name ( `key ARN <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN>`__) of the asymmetric KMS key from which the public key was downloaded.
+
+        
+      
+
+      - **PublicKey** *(bytes) --* 
+
+        The exported public key.
+
+         
+
+        The value is a DER-encoded X.509 public key, also known as ``SubjectPublicKeyInfo`` (SPKI), as defined in `RFC 5280 <https://tools.ietf.org/html/rfc5280>`__. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded. Otherwise, it is not Base64-encoded.
+
+        
+      
+
+      - **CustomerMasterKeySpec** *(string) --* 
+
+        Instead, use the ``KeySpec`` field in the ``GetPublicKey`` response.
+
+         
+
+        The ``KeySpec`` and ``CustomerMasterKeySpec`` fields have the same value. We recommend that you use the ``KeySpec`` field in your code. However, to avoid breaking changes, KMS supports both fields.
+
+        
+      
+
+      - **KeySpec** *(string) --* 
+
+        The type of the of the public key that was downloaded.
+
+        
+      
+
+      - **KeyUsage** *(string) --* 
+
+        The permitted use of the public key. Valid values for asymmetric key pairs are ``ENCRYPT_DECRYPT``, ``SIGN_VERIFY``, and ``KEY_AGREEMENT``.
+
+         
+
+        This information is critical. For example, if a public key with ``SIGN_VERIFY`` key usage encrypts data outside of KMS, the ciphertext cannot be decrypted.
+
+        
+      
+
+      - **EncryptionAlgorithms** *(list) --* 
+
+        The encryption algorithms that KMS supports for this key.
+
+         
+
+        This information is critical. If a public key encrypts data outside of KMS by using an unsupported encryption algorithm, the ciphertext cannot be decrypted.
+
+         
+
+        This field appears in the response only when the ``KeyUsage`` of the public key is ``ENCRYPT_DECRYPT``.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **SigningAlgorithms** *(list) --* 
+
+        The signing algorithms that KMS supports for this key.
+
+         
+
+        This field appears in the response only when the ``KeyUsage`` of the public key is ``SIGN_VERIFY``.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **KeyAgreementAlgorithms** *(list) --* 
+
+        The key agreement algorithm used to derive a shared secret. This field is present only when the KMS key has a ``KeyUsage`` value of ``KEY_AGREEMENT``.
+
+        
+        
+
+        - *(string) --* 
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DisabledException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KeyUnavailableException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DependencyTimeoutException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.UnsupportedOperationException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidArnException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidGrantTokenException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidKeyUsageException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInvalidStateException`
+
+  
+
+  **Examples**
+
+  This example gets the public key of an asymmetric RSA KMS key used for encryption and decryption. The operation returns the key spec, key usage, and encryption or signing algorithms to help you use the public key correctly outside of AWS KMS.
+  ::
+
+    response = client.get_public_key(
+        # The key ARN of the asymmetric KMS key.
+        KeyId='arn:aws:kms:us-west-2:111122223333:key/0987dcba-09fe-87dc-65ba-ab0987654321',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        # The key spec of the asymmetric KMS key from which the public key was downloaded.
+        'CustomerMasterKeySpec': 'RSA_4096',
+        # The encryption algorithms supported by the asymmetric KMS key that was downloaded.
+        'EncryptionAlgorithms': [
+            'RSAES_OAEP_SHA_1',
+            'RSAES_OAEP_SHA_256',
+        ],
+        # The key ARN of the asymmetric KMS key from which the public key was downloaded.
+        'KeyId': 'arn:aws:kms:us-west-2:111122223333:key/0987dcba-09fe-87dc-65ba-ab0987654321',
+        # The key usage of the asymmetric KMS key from which the public key was downloaded.
+        'KeyUsage': 'ENCRYPT_DECRYPT',
+        # The public key (plaintext) of the asymmetric KMS key.
+        'PublicKey': '<binary data>',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

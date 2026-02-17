@@ -1,0 +1,465 @@
+:doc:`S3Tables <../../s3tables>` / Client / create_table
+
+************
+create_table
+************
+
+
+
+.. py:method:: S3Tables.Client.create_table(**kwargs)
+
+  
+
+  Creates a new table associated with the given namespace in a table bucket. For more information, see `Creating an Amazon S3 table <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-create.html>`__ in the *Amazon Simple Storage Service User Guide*.
+
+    Permissions  
+
+  
+  * You must have the ``s3tables:CreateTable`` permission to use this operation.
+   
+  * If you use this operation with the optional ``metadata`` request parameter you must have the ``s3tables:PutTableData`` permission.
+   
+  * If you use this operation with the optional ``encryptionConfiguration`` request parameter you must have the ``s3tables:PutTableEncryption`` permission.
+   
+  * If you use this operation with the ``storageClassConfiguration`` request parameter, you must have the ``s3tables:PutTableStorageClass`` permission.
+   
+  * To create a table with tags, you must have the ``s3tables:TagResource`` permission in addition to ``s3tables:CreateTable`` permission.
+  
+
+   
+
+  .. note::
+
+    
+
+    Additionally, If you choose SSE-KMS encryption you must grant the S3 Tables maintenance principal access to your KMS key. For more information, see `Permissions requirements for S3 Tables SSE-KMS encryption <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-kms-permissions.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3tables-2018-05-10/CreateTable>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_table(
+        tableBucketARN='string',
+        namespace='string',
+        name='string',
+        format='ICEBERG',
+        metadata={
+            'iceberg': {
+                'schema': {
+                    'fields': [
+                        {
+                            'id': 123,
+                            'name': 'string',
+                            'type': 'string',
+                            'required': True|False
+                        },
+                    ]
+                },
+                'partitionSpec': {
+                    'fields': [
+                        {
+                            'sourceId': 123,
+                            'transform': 'string',
+                            'name': 'string',
+                            'fieldId': 123
+                        },
+                    ],
+                    'specId': 123
+                },
+                'writeOrder': {
+                    'orderId': 123,
+                    'fields': [
+                        {
+                            'sourceId': 123,
+                            'transform': 'string',
+                            'direction': 'asc'|'desc',
+                            'nullOrder': 'nulls-first'|'nulls-last'
+                        },
+                    ]
+                },
+                'properties': {
+                    'string': 'string'
+                }
+            }
+        },
+        encryptionConfiguration={
+            'sseAlgorithm': 'AES256'|'aws:kms',
+            'kmsKeyArn': 'string'
+        },
+        storageClassConfiguration={
+            'storageClass': 'STANDARD'|'INTELLIGENT_TIERING'
+        },
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type tableBucketARN: string
+  :param tableBucketARN: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the table bucket to create the table in.
+
+    
+
+  
+  :type namespace: string
+  :param namespace: **[REQUIRED]** 
+
+    The namespace to associated with the table.
+
+    
+
+  
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name for the table.
+
+    
+
+  
+  :type format: string
+  :param format: **[REQUIRED]** 
+
+    The format for the table.
+
+    
+
+  
+  :type metadata: dict
+  :param metadata: 
+
+    The metadata for the table.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``iceberg``. 
+
+  
+    - **iceberg** *(dict) --* 
+
+      Contains details about the metadata of an Iceberg table.
+
+      
+
+    
+      - **schema** *(dict) --* **[REQUIRED]** 
+
+        The schema for an Iceberg table.
+
+        
+
+      
+        - **fields** *(list) --* **[REQUIRED]** 
+
+          The schema fields for the table
+
+          
+
+        
+          - *(dict) --* 
+
+            Contains details about a schema field.
+
+            
+
+          
+            - **id** *(integer) --* 
+
+              An optional unique identifier for the schema field. Field IDs are used by Apache Iceberg to track schema evolution and maintain compatibility across schema changes. If not specified, S3 Tables automatically assigns field IDs.
+
+              
+
+            
+            - **name** *(string) --* **[REQUIRED]** 
+
+              The name of the field.
+
+              
+
+            
+            - **type** *(string) --* **[REQUIRED]** 
+
+              The field type. S3 Tables supports all Apache Iceberg primitive types. For more information, see the `Apache Iceberg documentation <https://iceberg.apache.org/spec/#primitive-types>`__.
+
+              
+
+            
+            - **required** *(boolean) --* 
+
+              A Boolean value that specifies whether values are required for each row in this field. By default, this is ``false`` and null values are allowed in the field. If this is ``true`` the field does not allow null values.
+
+              
+
+            
+          
+      
+      
+      - **partitionSpec** *(dict) --* 
+
+        The partition specification for the Iceberg table. Partitioning organizes data into separate files based on the values of one or more fields, which can improve query performance by reducing the amount of data scanned. Each partition field applies a transform (such as identity, year, month, or bucket) to a single field.
+
+        
+
+      
+        - **fields** *(list) --* **[REQUIRED]** 
+
+          The list of partition fields that define how the table data is partitioned. Each field specifies a source field and a transform to apply. This field is required if ``partitionSpec`` is provided.
+
+          
+
+        
+          - *(dict) --* 
+
+            Defines a single partition field in an Iceberg partition specification.
+
+            
+
+          
+            - **sourceId** *(integer) --* **[REQUIRED]** 
+
+              The ID of the source schema field to partition by. This must reference a valid field ID from the table schema.
+
+              
+
+            
+            - **transform** *(string) --* **[REQUIRED]** 
+
+              The partition transform to apply to the source field. Supported transforms include ``identity``, ``year``, ``month``, ``day``, ``hour``, ``bucket``, and ``truncate``. For more information, see the `Apache Iceberg partition transforms documentation <https://iceberg.apache.org/spec/#partition-transforms>`__.
+
+              
+
+            
+            - **name** *(string) --* **[REQUIRED]** 
+
+              The name for this partition field. This name is used in the partitioned file paths.
+
+              
+
+            
+            - **fieldId** *(integer) --* 
+
+              An optional unique identifier for this partition field. If not specified, S3 Tables automatically assigns a field ID.
+
+              
+
+            
+          
+      
+        - **specId** *(integer) --* 
+
+          The unique identifier for this partition specification. If not specified, defaults to ``0``.
+
+          
+
+        
+      
+      - **writeOrder** *(dict) --* 
+
+        The sort order for the Iceberg table. Sort order defines how data is sorted within data files, which can improve query performance by enabling more efficient data skipping and filtering.
+
+        
+
+      
+        - **orderId** *(integer) --* **[REQUIRED]** 
+
+          The unique identifier for this sort order. If not specified, defaults to ``1``. The order ID is used by Apache Iceberg to track sort order evolution.
+
+          
+
+        
+        - **fields** *(list) --* **[REQUIRED]** 
+
+          The list of sort fields that define how data is sorted within files. Each field specifies a source field, sort direction, and null ordering. This field is required if ``writeOrder`` is provided.
+
+          
+
+        
+          - *(dict) --* 
+
+            Defines a single sort field in an Iceberg sort order specification.
+
+            
+
+          
+            - **sourceId** *(integer) --* **[REQUIRED]** 
+
+              The ID of the source schema field to sort by. This must reference a valid field ID from the table schema.
+
+              
+
+            
+            - **transform** *(string) --* **[REQUIRED]** 
+
+              The transform to apply to the source field before sorting. Use ``identity`` to sort by the field value directly, or specify other transforms as needed.
+
+              
+
+            
+            - **direction** *(string) --* **[REQUIRED]** 
+
+              The sort direction. Valid values are ``asc`` for ascending order or ``desc`` for descending order.
+
+              
+
+            
+            - **nullOrder** *(string) --* **[REQUIRED]** 
+
+              Specifies how null values are ordered. Valid values are ``nulls-first`` to place nulls before non-null values, or ``nulls-last`` to place nulls after non-null values.
+
+              
+
+            
+          
+      
+      
+      - **properties** *(dict) --* 
+
+        A map of custom configuration properties for the Iceberg table.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+  
+  :type encryptionConfiguration: dict
+  :param encryptionConfiguration: 
+
+    The encryption configuration to use for the table. This configuration specifies the encryption algorithm and, if using SSE-KMS, the KMS key to use for encrypting the table.
+
+     
+
+    .. note::
+
+      
+
+      If you choose SSE-KMS encryption you must grant the S3 Tables maintenance principal access to your KMS key. For more information, see `Permissions requirements for S3 Tables SSE-KMS encryption <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-kms-permissions.html>`__.
+
+      
+
+    
+
+  
+    - **sseAlgorithm** *(string) --* **[REQUIRED]** 
+
+      The server-side encryption algorithm to use. Valid values are ``AES256`` for S3-managed encryption keys, or ``aws:kms`` for Amazon Web Services KMS-managed encryption keys. If you choose SSE-KMS encryption you must grant the S3 Tables maintenance principal access to your KMS key. For more information, see `Permissions requirements for S3 Tables SSE-KMS encryption <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-kms-permissions.html>`__.
+
+      
+
+    
+    - **kmsKeyArn** *(string) --* 
+
+      The Amazon Resource Name (ARN) of the KMS key to use for encryption. This field is required only when ``sseAlgorithm`` is set to ``aws:kms``.
+
+      
+
+    
+  
+  :type storageClassConfiguration: dict
+  :param storageClassConfiguration: 
+
+    The storage class configuration for the table. If not specified, the table inherits the storage class configuration from its table bucket. Specify this parameter to override the bucket's default storage class for this table.
+
+    
+
+  
+    - **storageClass** *(string) --* **[REQUIRED]** 
+
+      The storage class for the table or table bucket. Valid values include storage classes optimized for different access patterns and cost profiles.
+
+      
+
+    
+  
+  :type tags: dict
+  :param tags: 
+
+    A map of user-defined tags that you would like to apply to the table that you are creating. A tag is a key-value pair that you apply to your resources. Tags can help you organize, track costs for, and control access to resources. For more information, see `Tagging for cost allocation or attribute-based access control (ABAC) <https://docs.aws.amazon.com/AmazonS3/latest/userguide/tagging.html>`__.
+
+     
+
+    .. note::
+
+      
+
+      You must have the ``s3tables:TagResource`` permission in addition to ``s3tables:CreateTable`` permission to create a table with tags.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'tableARN': 'string',
+          'versionToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **tableARN** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the table.
+
+        
+      
+
+      - **versionToken** *(string) --* 
+
+        The version token of the table.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`S3Tables.Client.exceptions.InternalServerErrorException`
+
+  
+  *   :py:class:`S3Tables.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`S3Tables.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`S3Tables.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`S3Tables.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`S3Tables.Client.exceptions.BadRequestException`
+
+  

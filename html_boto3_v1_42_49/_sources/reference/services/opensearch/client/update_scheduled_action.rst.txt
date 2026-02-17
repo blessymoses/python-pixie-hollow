@@ -1,0 +1,203 @@
+:doc:`OpenSearchService <../../opensearch>` / Client / update_scheduled_action
+
+***********************
+update_scheduled_action
+***********************
+
+
+
+.. py:method:: OpenSearchService.Client.update_scheduled_action(**kwargs)
+
+  
+
+  Reschedules a planned domain configuration change for a later time. This change can be a scheduled `service software update <https://docs.aws.amazon.com/opensearch-service/latest/developerguide/service-software.html>`__ or a `blue/green Auto-Tune enhancement <https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html#auto-tune-types>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/opensearch-2021-01-01/UpdateScheduledAction>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_scheduled_action(
+        DomainName='string',
+        ActionID='string',
+        ActionType='SERVICE_SOFTWARE_UPDATE'|'JVM_HEAP_SIZE_TUNING'|'JVM_YOUNG_GEN_TUNING',
+        ScheduleAt='NOW'|'TIMESTAMP'|'OFF_PEAK_WINDOW',
+        DesiredStartTime=123
+    )
+    
+  :type DomainName: string
+  :param DomainName: **[REQUIRED]** 
+
+    The name of the domain to reschedule an action for.
+
+    
+
+  
+  :type ActionID: string
+  :param ActionID: **[REQUIRED]** 
+
+    The unique identifier of the action to reschedule. To retrieve this ID, send a `ListScheduledActions <https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_ListScheduledActions.html>`__ request.
+
+    
+
+  
+  :type ActionType: string
+  :param ActionType: **[REQUIRED]** 
+
+    The type of action to reschedule. Can be one of ``SERVICE_SOFTWARE_UPDATE``, ``JVM_HEAP_SIZE_TUNING``, or ``JVM_YOUNG_GEN_TUNING``. To retrieve this value, send a `ListScheduledActions <https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_ListScheduledActions.html>`__ request.
+
+    
+
+  
+  :type ScheduleAt: string
+  :param ScheduleAt: **[REQUIRED]** 
+
+    When to schedule the action.
+
+     
+
+    
+    * ``NOW`` - Immediately schedules the update to happen in the current hour if there's capacity available.
+     
+    * ``TIMESTAMP`` - Lets you specify a custom date and time to apply the update. If you specify this value, you must also provide a value for ``DesiredStartTime``.
+     
+    * ``OFF_PEAK_WINDOW`` - Marks the action to be picked up during an upcoming off-peak window. There's no guarantee that the change will be implemented during the next immediate window. Depending on capacity, it might happen in subsequent days.
+    
+
+    
+
+  
+  :type DesiredStartTime: integer
+  :param DesiredStartTime: 
+
+    The time to implement the change, in Coordinated Universal Time (UTC). Only specify this parameter if you set ``ScheduleAt`` to ``TIMESTAMP``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ScheduledAction': {
+              'Id': 'string',
+              'Type': 'SERVICE_SOFTWARE_UPDATE'|'JVM_HEAP_SIZE_TUNING'|'JVM_YOUNG_GEN_TUNING',
+              'Severity': 'HIGH'|'MEDIUM'|'LOW',
+              'ScheduledTime': 123,
+              'Description': 'string',
+              'ScheduledBy': 'CUSTOMER'|'SYSTEM',
+              'Status': 'PENDING_UPDATE'|'IN_PROGRESS'|'FAILED'|'COMPLETED'|'NOT_ELIGIBLE'|'ELIGIBLE',
+              'Mandatory': True|False,
+              'Cancellable': True|False
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ScheduledAction** *(dict) --* 
+
+        Information about the rescheduled action.
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          The unique identifier of the scheduled action.
+
+          
+        
+
+        - **Type** *(string) --* 
+
+          The type of action that will be taken on the domain.
+
+          
+        
+
+        - **Severity** *(string) --* 
+
+          The severity of the action.
+
+          
+        
+
+        - **ScheduledTime** *(integer) --* 
+
+          The time when the change is scheduled to happen.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          A description of the action to be taken.
+
+          
+        
+
+        - **ScheduledBy** *(string) --* 
+
+          Whether the action was scheduled manually ( ``CUSTOMER``, or by OpenSearch Service automatically ( ``SYSTEM``).
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The current status of the scheduled action.
+
+          
+        
+
+        - **Mandatory** *(boolean) --* 
+
+          Whether the action is required or optional.
+
+          
+        
+
+        - **Cancellable** *(boolean) --* 
+
+          Whether or not the scheduled action is cancellable.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`OpenSearchService.Client.exceptions.BaseException`
+
+  
+  *   :py:class:`OpenSearchService.Client.exceptions.InternalException`
+
+  
+  *   :py:class:`OpenSearchService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`OpenSearchService.Client.exceptions.SlotNotAvailableException`
+
+  
+  *   :py:class:`OpenSearchService.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`OpenSearchService.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`OpenSearchService.Client.exceptions.ValidationException`
+
+  

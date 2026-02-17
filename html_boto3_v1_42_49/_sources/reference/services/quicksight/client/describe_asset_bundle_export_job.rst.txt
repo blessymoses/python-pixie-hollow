@@ -1,0 +1,692 @@
+:doc:`QuickSight <../../quicksight>` / Client / describe_asset_bundle_export_job
+
+********************************
+describe_asset_bundle_export_job
+********************************
+
+
+
+.. py:method:: QuickSight.Client.describe_asset_bundle_export_job(**kwargs)
+
+  
+
+  Describes an existing export job.
+
+   
+
+  Poll job descriptions after a job starts to know the status of the job. When a job succeeds, a URL is provided to download the exported assets' data from. Download URLs are valid for five minutes after they are generated. You can call the ``DescribeAssetBundleExportJob`` API for a new download URL as needed.
+
+   
+
+  Job descriptions are available for 14 days after the job starts.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/quicksight-2018-04-01/DescribeAssetBundleExportJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_asset_bundle_export_job(
+        AwsAccountId='string',
+        AssetBundleExportJobId='string'
+    )
+    
+  :type AwsAccountId: string
+  :param AwsAccountId: **[REQUIRED]** 
+
+    The ID of the Amazon Web Services account the export job is executed in.
+
+    
+
+  
+  :type AssetBundleExportJobId: string
+  :param AssetBundleExportJobId: **[REQUIRED]** 
+
+    The ID of the job that you want described. The job ID is set when you start a new job with a ``StartAssetBundleExportJob`` API call.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'JobStatus': 'QUEUED_FOR_IMMEDIATE_EXECUTION'|'IN_PROGRESS'|'SUCCESSFUL'|'FAILED',
+          'DownloadUrl': 'string',
+          'Errors': [
+              {
+                  'Arn': 'string',
+                  'Type': 'string',
+                  'Message': 'string'
+              },
+          ],
+          'Arn': 'string',
+          'CreatedTime': datetime(2015, 1, 1),
+          'AssetBundleExportJobId': 'string',
+          'AwsAccountId': 'string',
+          'ResourceArns': [
+              'string',
+          ],
+          'IncludeAllDependencies': True|False,
+          'ExportFormat': 'CLOUDFORMATION_JSON'|'QUICKSIGHT_JSON',
+          'CloudFormationOverridePropertyConfiguration': {
+              'ResourceIdOverrideConfiguration': {
+                  'PrefixForAllResources': True|False
+              },
+              'VPCConnections': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'Name'|'DnsResolvers'|'RoleArn',
+                      ]
+                  },
+              ],
+              'RefreshSchedules': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'StartAfterDateTime',
+                      ]
+                  },
+              ],
+              'DataSources': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'Name'|'DisableSsl'|'SecretArn'|'Username'|'Password'|'Domain'|'WorkGroup'|'Host'|'Port'|'Database'|'DataSetName'|'Catalog'|'InstanceId'|'ClusterId'|'ManifestFileLocation'|'Warehouse'|'RoleArn'|'ProductType',
+                      ]
+                  },
+              ],
+              'DataSets': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'Name'|'RefreshFailureEmailAlertStatus',
+                      ]
+                  },
+              ],
+              'Themes': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'Name',
+                      ]
+                  },
+              ],
+              'Analyses': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'Name',
+                      ]
+                  },
+              ],
+              'Dashboards': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'Name',
+                      ]
+                  },
+              ],
+              'Folders': [
+                  {
+                      'Arn': 'string',
+                      'Properties': [
+                          'Name'|'ParentFolderArn',
+                      ]
+                  },
+              ]
+          },
+          'RequestId': 'string',
+          'Status': 123,
+          'IncludePermissions': True|False,
+          'IncludeTags': True|False,
+          'ValidationStrategy': {
+              'StrictModeForAllResources': True|False
+          },
+          'Warnings': [
+              {
+                  'Arn': 'string',
+                  'Message': 'string'
+              },
+          ],
+          'IncludeFolderMemberships': True|False,
+          'IncludeFolderMembers': 'RECURSE'|'ONE_LEVEL'|'NONE'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **JobStatus** *(string) --* 
+
+        Indicates the status of a job through its queuing and execution.
+
+         
+
+        Poll this ``DescribeAssetBundleExportApi`` until ``JobStatus`` is either ``SUCCESSFUL`` or ``FAILED``.
+
+        
+      
+
+      - **DownloadUrl** *(string) --* 
+
+        The URL to download the exported asset bundle data from.
+
+         
+
+        This URL is available only after the job has succeeded. This URL is valid for 5 minutes after issuance. Call ``DescribeAssetBundleExportJob`` again for a fresh URL if needed.
+
+         
+
+        The downloaded asset bundle is a zip file named ``assetbundle-{jobId}.qs``. The file has a ``.qs`` extension.
+
+         
+
+        This URL can't be used in a ``StartAssetBundleImportJob`` API call and should only be used for download purposes.
+
+        
+      
+
+      - **Errors** *(list) --* 
+
+        An array of error records that describes any failures that occurred during the export job processing.
+
+         
+
+        Error records accumulate while the job runs. The complete set of error records is available after the job has completed and failed.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes an error that occurred during an Asset Bundle export job.
+
+          
+          
+
+          - **Arn** *(string) --* 
+
+            The ARN of the resource whose processing caused an error.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The specific error type of the error that occurred.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A description of the error.
+
+            
+      
+    
+      
+
+      - **Arn** *(string) --* 
+
+        The Amazon Resource Name (ARN) for the export job.
+
+        
+      
+
+      - **CreatedTime** *(datetime) --* 
+
+        The time that the export job was created.
+
+        
+      
+
+      - **AssetBundleExportJobId** *(string) --* 
+
+        The ID of the job. The job ID is set when you start a new job with a ``StartAssetBundleExportJob`` API call.
+
+        
+      
+
+      - **AwsAccountId** *(string) --* 
+
+        The ID of the Amazon Web Services account that the export job was executed in.
+
+        
+      
+
+      - **ResourceArns** *(list) --* 
+
+        A list of resource ARNs that exported with the job.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **IncludeAllDependencies** *(boolean) --* 
+
+        The include dependencies flag.
+
+        
+      
+
+      - **ExportFormat** *(string) --* 
+
+        The format of the exported asset bundle. A ``QUICKSIGHT_JSON`` formatted file can be used to make a ``StartAssetBundleImportJob`` API call. A ``CLOUDFORMATION_JSON`` formatted file can be used in the CloudFormation console and with the CloudFormation APIs.
+
+        
+      
+
+      - **CloudFormationOverridePropertyConfiguration** *(dict) --* 
+
+        The CloudFormation override property configuration for the export job.
+
+        
+        
+
+        - **ResourceIdOverrideConfiguration** *(dict) --* 
+
+          An optional list of structures that control how resource IDs are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - **PrefixForAllResources** *(boolean) --* 
+
+            An option to request a CloudFormation variable for a prefix to be prepended to each resource's ID before import. The prefix is only added to the asset IDs and does not change the name of the asset.
+
+            
+      
+        
+
+        - **VPCConnections** *(list) --* 
+
+          An optional list of structures that control how ``VPCConnection`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``VPCConnection`` resource is parameterized in the outputted CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``VPCConnection`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``VPCConnection`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **RefreshSchedules** *(list) --* 
+
+          An optional list of structures that control how ``RefreshSchedule`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``RefreshSchedule`` resource is parameterized in the returned CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``RefreshSchedule`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``RefreshSchedule`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **DataSources** *(list) --* 
+
+          An optional list of structures that control how ``DataSource`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``DataSource`` resource is parameterized in the returned CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``DataSource`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``DataSource`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **DataSets** *(list) --* 
+
+          An optional list of structures that control how ``DataSet`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``DataSet`` resource is parameterized in the returned CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``DataSet`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``DataSet`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **Themes** *(list) --* 
+
+          An optional list of structures that control how ``Theme`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``Theme`` resource is parameterized in the returned CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``Theme`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``Theme`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **Analyses** *(list) --* 
+
+          An optional list of structures that control how ``Analysis`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``Analysis`` resource is parameterized in the returned CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``Analysis`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``Analysis`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **Dashboards** *(list) --* 
+
+          An optional list of structures that control how ``Dashboard`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``Dashboard`` resource is parameterized in the returned CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``Dashboard`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``Dashboard`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **Folders** *(list) --* 
+
+          An optional list of structures that controls how ``Folder`` resources are parameterized in the returned CloudFormation template.
+
+          
+          
+
+          - *(dict) --* 
+
+            Controls how a specific ``Folder`` resource is parameterized in the returned CloudFormation template.
+
+            
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the specific ``Folder`` resource whose override properties are configured in this structure.
+
+              
+            
+
+            - **Properties** *(list) --* 
+
+              A list of ``Folder`` resource properties to generate variables for in the returned CloudFormation template.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+    
+      
+
+      - **RequestId** *(string) --* 
+
+        The Amazon Web Services request ID for this operation.
+
+        
+      
+
+      - **Status** *(integer) --* 
+
+        The HTTP status of the response.
+
+        
+      
+
+      - **IncludePermissions** *(boolean) --* 
+
+        The include permissions flag.
+
+        
+      
+
+      - **IncludeTags** *(boolean) --* 
+
+        The include tags flag.
+
+        
+      
+
+      - **ValidationStrategy** *(dict) --* 
+
+        The validation strategy that is used to export the analysis or dashboard.
+
+        
+        
+
+        - **StrictModeForAllResources** *(boolean) --* 
+
+          A Boolean value that indicates whether to export resources under strict or lenient mode.
+
+          
+    
+      
+
+      - **Warnings** *(list) --* 
+
+        An array of warning records that describe the analysis or dashboard that is exported. This array includes UI errors that can be skipped during the validation process.
+
+         
+
+        This property only appears if ``StrictModeForAllResources`` in ``ValidationStrategy`` is set to ``FALSE``.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a warning that occurred during an Asset Bundle export job.
+
+          
+          
+
+          - **Arn** *(string) --* 
+
+            The ARN of the resource whose processing caused a warning.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A description of the warning.
+
+            
+      
+    
+      
+
+      - **IncludeFolderMemberships** *(boolean) --* 
+
+        The include folder memberships flag.
+
+        
+      
+
+      - **IncludeFolderMembers** *(string) --* 
+
+        A setting that determines whether folder members are included.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`QuickSight.Client.exceptions.UnsupportedUserEditionException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ResourceNotFoundException`
+
+  

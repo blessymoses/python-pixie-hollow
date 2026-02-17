@@ -1,0 +1,298 @@
+:doc:`CloudTrail <../../cloudtrail>` / Client / start_import
+
+************
+start_import
+************
+
+
+
+.. py:method:: CloudTrail.Client.start_import(**kwargs)
+
+  
+
+  Starts an import of logged trail events from a source S3 bucket to a destination event data store. By default, CloudTrail only imports events contained in the S3 bucket's ``CloudTrail`` prefix and the prefixes inside the ``CloudTrail`` prefix, and does not check prefixes for other Amazon Web Services services. If you want to import CloudTrail events contained in another prefix, you must include the prefix in the ``S3LocationUri``. For more considerations about importing trail events, see `Considerations for copying trail events <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-copy-trail-to-lake.html#cloudtrail-trail-copy-considerations>`__ in the *CloudTrail User Guide*.
+
+   
+
+  When you start a new import, the ``Destinations`` and ``ImportSource`` parameters are required. Before starting a new import, disable any access control lists (ACLs) attached to the source S3 bucket. For more information about disabling ACLs, see `Controlling ownership of objects and disabling ACLs for your bucket <https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html>`__.
+
+   
+
+  When you retry an import, the ``ImportID`` parameter is required.
+
+   
+
+  .. note::
+
+    
+
+    If the destination event data store is for an organization, you must use the management account to import trail events. You cannot use the delegated administrator account for the organization.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudtrail-2013-11-01/StartImport>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_import(
+        Destinations=[
+            'string',
+        ],
+        ImportSource={
+            'S3': {
+                'S3LocationUri': 'string',
+                'S3BucketRegion': 'string',
+                'S3BucketAccessRoleArn': 'string'
+            }
+        },
+        StartEventTime=datetime(2015, 1, 1),
+        EndEventTime=datetime(2015, 1, 1),
+        ImportId='string'
+    )
+    
+  :type Destinations: list
+  :param Destinations: 
+
+    The ARN of the destination event data store. Use this parameter for a new import.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ImportSource: dict
+  :param ImportSource: 
+
+    The source S3 bucket for the import. Use this parameter for a new import.
+
+    
+
+  
+    - **S3** *(dict) --* **[REQUIRED]** 
+
+      The source S3 bucket.
+
+      
+
+    
+      - **S3LocationUri** *(string) --* **[REQUIRED]** 
+
+        The URI for the source S3 bucket.
+
+        
+
+      
+      - **S3BucketRegion** *(string) --* **[REQUIRED]** 
+
+        The Region associated with the source S3 bucket.
+
+        
+
+      
+      - **S3BucketAccessRoleArn** *(string) --* **[REQUIRED]** 
+
+        The IAM ARN role used to access the source S3 bucket.
+
+        
+
+      
+    
+  
+  :type StartEventTime: datetime
+  :param StartEventTime: 
+
+    Use with ``EndEventTime`` to bound a ``StartImport`` request, and limit imported trail events to only those events logged within a specified time period. When you specify a time range, CloudTrail checks the prefix and log file names to verify the names contain a date between the specified ``StartEventTime`` and ``EndEventTime`` before attempting to import events.
+
+    
+
+  
+  :type EndEventTime: datetime
+  :param EndEventTime: 
+
+    Use with ``StartEventTime`` to bound a ``StartImport`` request, and limit imported trail events to only those events logged within a specified time period. When you specify a time range, CloudTrail checks the prefix and log file names to verify the names contain a date between the specified ``StartEventTime`` and ``EndEventTime`` before attempting to import events.
+
+    
+
+  
+  :type ImportId: string
+  :param ImportId: 
+
+    The ID of the import. Use this parameter when you are retrying an import.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ImportId': 'string',
+          'Destinations': [
+              'string',
+          ],
+          'ImportSource': {
+              'S3': {
+                  'S3LocationUri': 'string',
+                  'S3BucketRegion': 'string',
+                  'S3BucketAccessRoleArn': 'string'
+              }
+          },
+          'StartEventTime': datetime(2015, 1, 1),
+          'EndEventTime': datetime(2015, 1, 1),
+          'ImportStatus': 'INITIALIZING'|'IN_PROGRESS'|'FAILED'|'STOPPED'|'COMPLETED',
+          'CreatedTimestamp': datetime(2015, 1, 1),
+          'UpdatedTimestamp': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ImportId** *(string) --* 
+
+        The ID of the import.
+
+        
+      
+
+      - **Destinations** *(list) --* 
+
+        The ARN of the destination event data store.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **ImportSource** *(dict) --* 
+
+        The source S3 bucket for the import.
+
+        
+        
+
+        - **S3** *(dict) --* 
+
+          The source S3 bucket.
+
+          
+          
+
+          - **S3LocationUri** *(string) --* 
+
+            The URI for the source S3 bucket.
+
+            
+          
+
+          - **S3BucketRegion** *(string) --* 
+
+            The Region associated with the source S3 bucket.
+
+            
+          
+
+          - **S3BucketAccessRoleArn** *(string) --* 
+
+            The IAM ARN role used to access the source S3 bucket.
+
+            
+      
+    
+      
+
+      - **StartEventTime** *(datetime) --* 
+
+        Used with ``EndEventTime`` to bound a ``StartImport`` request, and limit imported trail events to only those events logged within a specified time period.
+
+        
+      
+
+      - **EndEventTime** *(datetime) --* 
+
+        Used with ``StartEventTime`` to bound a ``StartImport`` request, and limit imported trail events to only those events logged within a specified time period.
+
+        
+      
+
+      - **ImportStatus** *(string) --* 
+
+        Shows the status of the import after a ``StartImport`` request. An import finishes with a status of ``COMPLETED`` if there were no failures, or ``FAILED`` if there were failures.
+
+        
+      
+
+      - **CreatedTimestamp** *(datetime) --* 
+
+        The timestamp for the import's creation.
+
+        
+      
+
+      - **UpdatedTimestamp** *(datetime) --* 
+
+        The timestamp of the import's last update, if applicable.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudTrail.Client.exceptions.AccountHasOngoingImportException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.EventDataStoreARNInvalidException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.EventDataStoreNotFoundException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidEventDataStoreStatusException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidEventDataStoreCategoryException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InactiveEventDataStoreException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidImportSourceException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.ImportNotFoundException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InsufficientEncryptionPolicyException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.OperationNotPermittedException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.UnsupportedOperationException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.OperationNotPermittedException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.UnsupportedOperationException`
+
+  

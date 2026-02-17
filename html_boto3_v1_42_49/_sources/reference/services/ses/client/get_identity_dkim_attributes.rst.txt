@@ -1,0 +1,183 @@
+:doc:`SES <../../ses>` / Client / get_identity_dkim_attributes
+
+****************************
+get_identity_dkim_attributes
+****************************
+
+
+
+.. py:method:: SES.Client.get_identity_dkim_attributes(**kwargs)
+
+  
+
+  Returns the current status of Easy DKIM signing for an entity. For domain name identities, this operation also returns the DKIM tokens that are required for Easy DKIM signing, and whether Amazon SES has successfully verified that these tokens have been published.
+
+   
+
+  This operation takes a list of identities as input and returns the following information for each:
+
+   
+
+  
+  * Whether Easy DKIM signing is enabled or disabled.
+   
+  * A set of DKIM tokens that represent the identity. If the identity is an email address, the tokens represent the domain of that address.
+   
+  * Whether Amazon SES has successfully verified the DKIM tokens published in the domain's DNS. This information is only returned for domain name identities, not for email addresses.
+  
+
+   
+
+  This operation is throttled at one request per second and can only get DKIM attributes for up to 100 identities at a time.
+
+   
+
+  For more information about creating DNS records using DKIM tokens, go to the `Amazon SES Developer Guide <https://docs.aws.amazon.com/ses/latest/dg/send-email-authentication-dkim-easy-managing.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/email-2010-12-01/GetIdentityDkimAttributes>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_identity_dkim_attributes(
+        Identities=[
+            'string',
+        ]
+    )
+    
+  :type Identities: list
+  :param Identities: **[REQUIRED]** 
+
+    A list of one or more verified identities - email addresses, domains, or both.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DkimAttributes': {
+              'string': {
+                  'DkimEnabled': True|False,
+                  'DkimVerificationStatus': 'Pending'|'Success'|'Failed'|'TemporaryFailure'|'NotStarted',
+                  'DkimTokens': [
+                      'string',
+                  ]
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the status of Amazon SES Easy DKIM signing for an identity. For domain identities, this response also contains the DKIM tokens that are required for Easy DKIM signing, and whether Amazon SES successfully verified that these tokens were published.
+
+      
+      
+
+      - **DkimAttributes** *(dict) --* 
+
+        The DKIM attributes for an email address or a domain.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(dict) --* 
+
+            Represents the DKIM attributes of a verified email address or a domain.
+
+            
+            
+
+            - **DkimEnabled** *(boolean) --* 
+
+              Is true if DKIM signing is enabled for email sent from the identity. It's false otherwise. The default value is true.
+
+              
+            
+
+            - **DkimVerificationStatus** *(string) --* 
+
+              Describes whether Amazon SES has successfully verified the DKIM DNS records (tokens) published in the domain name's DNS. (This only applies to domain identities, not email address identities.)
+
+              
+            
+
+            - **DkimTokens** *(list) --* 
+
+              A set of character strings that represent the domain's identity. Using these tokens, you need to create DNS CNAME records that point to DKIM public keys that are hosted by Amazon SES. Amazon Web Services eventually detects that you've updated your DNS records. This detection process might take up to 72 hours. After successful detection, Amazon SES is able to DKIM-sign email originating from that domain. (This only applies to domain identities, not email address identities.)
+
+               
+
+              For more information about creating DNS records using DKIM tokens, see the `Amazon SES Developer Guide <https://docs.aws.amazon.com/ses/latest/dg/send-email-authentication-dkim-easy.html>`__.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+    
+  
+  
+
+  **Examples**
+
+  The following example retrieves the Amazon SES Easy DKIM attributes for a list of identities:
+  ::
+
+    response = client.get_identity_dkim_attributes(
+        Identities=[
+            'example.com',
+            'user@example.com',
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'DkimAttributes': {
+            'example.com': {
+                'DkimEnabled': True,
+                'DkimTokens': [
+                    'EXAMPLEjcs5xoyqytjsotsijas7236gr',
+                    'EXAMPLEjr76cvoc6mysspnioorxsn6ep',
+                    'EXAMPLEkbmkqkhlm2lyz77ppkulerm4k',
+                ],
+                'DkimVerificationStatus': 'Success',
+            },
+            'user@example.com': {
+                'DkimEnabled': False,
+                'DkimVerificationStatus': 'NotStarted',
+            },
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,235 @@
+:doc:`DataSync <../../datasync>` / Client / update_location_fsx_open_zfs
+
+****************************
+update_location_fsx_open_zfs
+****************************
+
+
+
+.. py:method:: DataSync.Client.update_location_fsx_open_zfs(**kwargs)
+
+  
+
+  Modifies the following configuration parameters of the Amazon FSx for OpenZFS transfer location that you're using with DataSync.
+
+   
+
+  For more information, see `Configuring DataSync transfers with FSx for OpenZFS <https://docs.aws.amazon.com/datasync/latest/userguide/create-openzfs-location.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    Request parameters related to ``SMB`` aren't supported with the ``UpdateLocationFsxOpenZfs`` operation.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/UpdateLocationFsxOpenZfs>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_location_fsx_open_zfs(
+        LocationArn='string',
+        Protocol={
+            'NFS': {
+                'MountOptions': {
+                    'Version': 'AUTOMATIC'|'NFS3'|'NFS4_0'|'NFS4_1'
+                }
+            },
+            'SMB': {
+                'Domain': 'string',
+                'MountOptions': {
+                    'Version': 'AUTOMATIC'|'SMB2'|'SMB3'|'SMB1'|'SMB2_0'
+                },
+                'Password': 'string',
+                'User': 'string'
+            }
+        },
+        Subdirectory='string'
+    )
+    
+  :type LocationArn: string
+  :param LocationArn: **[REQUIRED]** 
+
+    Specifies the Amazon Resource Name (ARN) of the FSx for OpenZFS transfer location that you're updating.
+
+    
+
+  
+  :type Protocol: dict
+  :param Protocol: 
+
+    Specifies the data transfer protocol that DataSync uses to access your Amazon FSx file system.
+
+    
+
+  
+    - **NFS** *(dict) --* 
+
+      Specifies the Network File System (NFS) protocol configuration that DataSync uses to access your FSx for OpenZFS file system or FSx for ONTAP file system's storage virtual machine (SVM).
+
+      
+
+    
+      - **MountOptions** *(dict) --* 
+
+        Specifies how DataSync can access a location using the NFS protocol.
+
+        
+
+      
+        - **Version** *(string) --* 
+
+          Specifies the NFS version that you want DataSync to use when mounting your NFS share. If the server refuses to use the version specified, the task fails.
+
+           
+
+          You can specify the following options:
+
+           
+
+          
+          * ``AUTOMATIC`` (default): DataSync chooses NFS version 4.1.
+           
+          * ``NFS3``: Stateless protocol version that allows for asynchronous writes on the server.
+           
+          * ``NFSv4_0``: Stateful, firewall-friendly protocol version that supports delegations and pseudo file systems.
+           
+          * ``NFSv4_1``: Stateful protocol version that supports sessions, directory delegations, and parallel data processing. NFS version 4.1 also includes all features available in version 4.0.
+          
+
+           
+
+          .. note::
+
+            
+
+            DataSync currently only supports NFS version 3 with Amazon FSx for NetApp ONTAP locations.
+
+            
+
+          
+
+        
+      
+    
+    - **SMB** *(dict) --* 
+
+      Specifies the Server Message Block (SMB) protocol configuration that DataSync uses to access your FSx for ONTAP file system's SVM.
+
+      
+
+    
+      - **Domain** *(string) --* 
+
+        Specifies the name of the Windows domain that your storage virtual machine (SVM) belongs to.
+
+         
+
+        If you have multiple domains in your environment, configuring this setting makes sure that DataSync connects to the right SVM.
+
+         
+
+        If you have multiple Active Directory domains in your environment, configuring this parameter makes sure that DataSync connects to the right SVM.
+
+        
+
+      
+      - **MountOptions** *(dict) --* 
+
+        Specifies the version of the Server Message Block (SMB) protocol that DataSync uses to access an SMB file server.
+
+        
+
+      
+        - **Version** *(string) --* 
+
+          By default, DataSync automatically chooses an SMB protocol version based on negotiation with your SMB file server. You also can configure DataSync to use a specific SMB version, but we recommend doing this only if DataSync has trouble negotiating with the SMB file server automatically.
+
+           
+
+          These are the following options for configuring the SMB version:
+
+           
+
+          
+          * ``AUTOMATIC`` (default): DataSync and the SMB file server negotiate the highest version of SMB that they mutually support between 2.1 and 3.1.1. This is the recommended option. If you instead choose a specific version that your file server doesn't support, you may get an ``Operation Not Supported`` error.
+           
+          * ``SMB3``: Restricts the protocol negotiation to only SMB version 3.0.2.
+           
+          * ``SMB2``: Restricts the protocol negotiation to only SMB version 2.1.
+           
+          * ``SMB2_0``: Restricts the protocol negotiation to only SMB version 2.0.
+           
+          * ``SMB1``: Restricts the protocol negotiation to only SMB version 1.0. 
+
+          .. note::
+
+            The ``SMB1`` option isn't available when `creating an Amazon FSx for NetApp ONTAP location <https://docs.aws.amazon.com/datasync/latest/userguide/API_CreateLocationFsxOntap.html>`__.
+
+          
+          
+
+          
+
+        
+      
+      - **Password** *(string) --* **[REQUIRED]** 
+
+        Specifies the password of a user who has permission to access your SVM.
+
+        
+
+      
+      - **User** *(string) --* **[REQUIRED]** 
+
+        Specifies a user that can mount and access the files, folders, and metadata in your SVM.
+
+         
+
+        For information about choosing a user with the right level of access for your transfer, see `Using the SMB protocol <https://docs.aws.amazon.com/datasync/latest/userguide/create-ontap-location.html#create-ontap-location-smb>`__.
+
+        
+
+      
+    
+  
+  :type Subdirectory: string
+  :param Subdirectory: 
+
+    Specifies a subdirectory in the location's path that must begin with ``/fsx``. DataSync uses this subdirectory to read or write data (depending on whether the file system is a source or destination location).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`DataSync.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`DataSync.Client.exceptions.InternalException`
+
+  

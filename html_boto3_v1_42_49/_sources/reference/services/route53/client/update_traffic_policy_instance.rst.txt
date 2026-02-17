@@ -1,0 +1,218 @@
+:doc:`Route53 <../../route53>` / Client / update_traffic_policy_instance
+
+******************************
+update_traffic_policy_instance
+******************************
+
+
+
+.. py:method:: Route53.Client.update_traffic_policy_instance(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    After you submit a ``UpdateTrafficPolicyInstance`` request, there's a brief delay while Route 53 creates the resource record sets that are specified in the traffic policy definition. Use ``GetTrafficPolicyInstance`` with the ``id`` of updated traffic policy instance confirm that the ``UpdateTrafficPolicyInstance`` request completed successfully. For more information, see the ``State`` response element.
+
+    
+
+   
+
+  Updates the resource record sets in a specified hosted zone that were created based on the settings in a specified traffic policy version.
+
+   
+
+  When you update a traffic policy instance, Amazon Route 53 continues to respond to DNS queries for the root resource record set name (such as example.com) while it replaces one group of resource record sets with another. Route 53 performs the following operations:
+
+   
+
+   
+  * Route 53 creates a new group of resource record sets based on the specified traffic policy. This is true regardless of how significant the differences are between the existing resource record sets and the new resource record sets.
+   
+  * When all of the new resource record sets have been created, Route 53 starts to respond to DNS queries for the root resource record set name (such as example.com) by using the new resource record sets.
+   
+  * Route 53 deletes the old group of resource record sets that are associated with the root resource record set name.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/route53-2013-04-01/UpdateTrafficPolicyInstance>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_traffic_policy_instance(
+        Id='string',
+        TTL=123,
+        TrafficPolicyId='string',
+        TrafficPolicyVersion=123
+    )
+    
+  :type Id: string
+  :param Id: **[REQUIRED]** 
+
+    The ID of the traffic policy instance that you want to update.
+
+    
+
+  
+  :type TTL: integer
+  :param TTL: **[REQUIRED]** 
+
+    The TTL that you want Amazon Route 53 to assign to all of the updated resource record sets.
+
+    
+
+  
+  :type TrafficPolicyId: string
+  :param TrafficPolicyId: **[REQUIRED]** 
+
+    The ID of the traffic policy that you want Amazon Route 53 to use to update resource record sets for the specified traffic policy instance.
+
+    
+
+  
+  :type TrafficPolicyVersion: integer
+  :param TrafficPolicyVersion: **[REQUIRED]** 
+
+    The version of the traffic policy that you want Amazon Route 53 to use to update resource record sets for the specified traffic policy instance.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'TrafficPolicyInstance': {
+              'Id': 'string',
+              'HostedZoneId': 'string',
+              'Name': 'string',
+              'TTL': 123,
+              'State': 'string',
+              'Message': 'string',
+              'TrafficPolicyId': 'string',
+              'TrafficPolicyVersion': 123,
+              'TrafficPolicyType': 'SOA'|'A'|'TXT'|'NS'|'CNAME'|'MX'|'NAPTR'|'PTR'|'SRV'|'SPF'|'AAAA'|'CAA'|'DS'|'TLSA'|'SSHFP'|'SVCB'|'HTTPS'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      A complex type that contains information about the resource record sets that Amazon Route 53 created based on a specified traffic policy.
+
+      
+      
+
+      - **TrafficPolicyInstance** *(dict) --* 
+
+        A complex type that contains settings for the updated traffic policy instance.
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          The ID that Amazon Route 53 assigned to the new traffic policy instance.
+
+          
+        
+
+        - **HostedZoneId** *(string) --* 
+
+          The ID of the hosted zone that Amazon Route 53 created resource record sets in.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          The DNS name, such as www.example.com, for which Amazon Route 53 responds to queries by using the resource record sets that are associated with this traffic policy instance.
+
+          
+        
+
+        - **TTL** *(integer) --* 
+
+          The TTL that Amazon Route 53 assigned to all of the resource record sets that it created in the specified hosted zone.
+
+          
+        
+
+        - **State** *(string) --* 
+
+          The value of ``State`` is one of the following values:
+
+            Applied  
+
+          Amazon Route 53 has finished creating resource record sets, and changes have propagated to all Route 53 edge locations.
+
+            Creating  
+
+          Route 53 is creating the resource record sets. Use ``GetTrafficPolicyInstance`` to confirm that the ``CreateTrafficPolicyInstance`` request completed successfully.
+
+            Failed  
+
+          Route 53 wasn't able to create or update the resource record sets. When the value of ``State`` is ``Failed``, see ``Message`` for an explanation of what caused the request to fail.
+
+          
+        
+
+        - **Message** *(string) --* 
+
+          If ``State`` is ``Failed``, an explanation of the reason for the failure. If ``State`` is another value, ``Message`` is empty.
+
+          
+        
+
+        - **TrafficPolicyId** *(string) --* 
+
+          The ID of the traffic policy that Amazon Route 53 used to create resource record sets in the specified hosted zone.
+
+          
+        
+
+        - **TrafficPolicyVersion** *(integer) --* 
+
+          The version of the traffic policy that Amazon Route 53 used to create resource record sets in the specified hosted zone.
+
+          
+        
+
+        - **TrafficPolicyType** *(string) --* 
+
+          The DNS type that Amazon Route 53 assigned to all of the resource record sets that it created for this traffic policy instance.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Route53.Client.exceptions.InvalidInput`
+
+  
+  *   :py:class:`Route53.Client.exceptions.NoSuchTrafficPolicy`
+
+  
+  *   :py:class:`Route53.Client.exceptions.NoSuchTrafficPolicyInstance`
+
+  
+  *   :py:class:`Route53.Client.exceptions.PriorRequestNotComplete`
+
+  
+  *   :py:class:`Route53.Client.exceptions.ConflictingTypes`
+
+  

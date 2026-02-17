@@ -1,0 +1,218 @@
+:doc:`GameLift <../../gamelift>` / Client / create_fleet_locations
+
+**********************
+create_fleet_locations
+**********************
+
+
+
+.. py:method:: GameLift.Client.create_fleet_locations(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Container
+
+   
+
+  Adds remote locations to an EC2 and begins populating the new locations with instances. The new instances conform to the fleet's instance type, auto-scaling, and other configuration settings.
+
+   
+
+  .. note::
+
+    
+
+    You can't add remote locations to a fleet that resides in an Amazon Web Services Region that doesn't support multiple locations. Fleets created prior to March 2021 can't support multiple locations.
+
+    
+
+   
+
+  To add fleet locations, specify the fleet to be updated and provide a list of one or more locations.
+
+   
+
+  If successful, this operation returns the list of added locations with their status set to ``NEW``. Amazon GameLift Servers initiates the process of starting an instance in each added location. You can track the status of each new location by monitoring location creation events using `DescribeFleetEvents <https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetEvents.html>`__.
+
+   
+
+  **Learn more**
+
+   
+
+  `Setting up fleets <https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html>`__
+
+   
+
+  `Update fleet locations <https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-editing.html#fleets-update-locations>`__
+
+   
+
+  `Amazon GameLift Servers service locations <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-regions.html>`__ for managed hosting.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateFleetLocations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_fleet_locations(
+        FleetId='string',
+        Locations=[
+            {
+                'Location': 'string'
+            },
+        ]
+    )
+    
+  :type FleetId: string
+  :param FleetId: **[REQUIRED]** 
+
+    A unique identifier for the fleet to add locations to. You can use either the fleet ID or ARN value.
+
+    
+
+  
+  :type Locations: list
+  :param Locations: **[REQUIRED]** 
+
+    A list of locations to deploy additional instances to and manage as part of the fleet. You can add any Amazon GameLift Servers-supported Amazon Web Services Region as a remote location, in the form of an Amazon Web Services Region code such as ``us-west-2``.
+
+    
+
+  
+    - *(dict) --* 
+
+      A remote location where a multi-location fleet can deploy game servers for game hosting.
+
+      
+
+    
+      - **Location** *(string) --* **[REQUIRED]** 
+
+        An Amazon Web Services Region code, such as ``us-west-2``. For a list of supported Regions and Local Zones, see `Amazon GameLift Servers service locations <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-regions.html>`__ for managed hosting.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FleetId': 'string',
+          'FleetArn': 'string',
+          'LocationStates': [
+              {
+                  'Location': 'string',
+                  'Status': 'NEW'|'DOWNLOADING'|'VALIDATING'|'BUILDING'|'ACTIVATING'|'ACTIVE'|'DELETING'|'ERROR'|'TERMINATED'|'NOT_FOUND'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FleetId** *(string) --* 
+
+        A unique identifier for the fleet that was updated with new locations.
+
+        
+      
+
+      - **FleetArn** *(string) --* 
+
+        The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers fleet resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::fleet/fleet-a1234567-b8c9-0d1e-2fa3-b45c6d7e8912``.
+
+        
+      
+
+      - **LocationStates** *(list) --* 
+
+        The remote locations that are being added to the fleet, and the life-cycle status of each location. For new locations, the status is set to ``NEW``. During location creation, Amazon GameLift Servers updates each location's status as instances are deployed there and prepared for game hosting. This list does not include the fleet home Region or any remote locations that were already added to the fleet.
+
+        
+        
+
+        - *(dict) --* 
+
+          A fleet location and its life-cycle state. A location state object might be used to describe a fleet's remote location or home Region. Life-cycle state tracks the progress of launching the first instance in a new location and preparing it for game hosting, and then removing all instances and deleting the location from the fleet.
+
+           
+
+          
+          * **NEW** -- A new fleet location has been defined and desired instances is set to 1.
+           
+          * **DOWNLOADING/VALIDATING/BUILDING/ACTIVATING** -- Amazon GameLift Servers is setting up the new fleet location, creating new instances with the game build or Realtime script and starting server processes.
+           
+          * **ACTIVE** -- Hosts can now accept game sessions.
+           
+          * **ERROR** -- An error occurred when downloading, validating, building, or activating the fleet location.
+           
+          * **DELETING** -- Hosts are responding to a delete fleet location request.
+           
+          * **TERMINATED** -- The fleet location no longer exists.
+           
+          * **NOT_FOUND** -- The fleet location was not found. This could be because the custom location was removed or not created.
+          
+
+          
+          
+
+          - **Location** *(string) --* 
+
+            The fleet location, expressed as an Amazon Web Services Region code such as ``us-west-2``.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The life-cycle status of a fleet location.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotReadyException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidFleetStatusException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.LimitExceededException`
+
+  

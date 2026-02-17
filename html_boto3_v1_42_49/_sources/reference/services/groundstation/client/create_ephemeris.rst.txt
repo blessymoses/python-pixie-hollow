@@ -1,0 +1,604 @@
+:doc:`GroundStation <../../groundstation>` / Client / create_ephemeris
+
+****************
+create_ephemeris
+****************
+
+
+
+.. py:method:: GroundStation.Client.create_ephemeris(**kwargs)
+
+  
+
+  Create an ephemeris with your specified  EphemerisData.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/groundstation-2019-05-23/CreateEphemeris>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_ephemeris(
+        satelliteId='string',
+        enabled=True|False,
+        priority=123,
+        expirationTime=datetime(2015, 1, 1),
+        name='string',
+        kmsKeyArn='string',
+        ephemeris={
+            'tle': {
+                's3Object': {
+                    'bucket': 'string',
+                    'key': 'string',
+                    'version': 'string'
+                },
+                'tleData': [
+                    {
+                        'tleLine1': 'string',
+                        'tleLine2': 'string',
+                        'validTimeRange': {
+                            'startTime': datetime(2015, 1, 1),
+                            'endTime': datetime(2015, 1, 1)
+                        }
+                    },
+                ]
+            },
+            'oem': {
+                's3Object': {
+                    'bucket': 'string',
+                    'key': 'string',
+                    'version': 'string'
+                },
+                'oemData': 'string'
+            },
+            'azEl': {
+                'groundStation': 'string',
+                'data': {
+                    's3Object': {
+                        'bucket': 'string',
+                        'key': 'string',
+                        'version': 'string'
+                    },
+                    'azElData': {
+                        'angleUnit': 'DEGREE_ANGLE'|'RADIAN',
+                        'azElSegmentList': [
+                            {
+                                'referenceEpoch': datetime(2015, 1, 1),
+                                'validTimeRange': {
+                                    'startTime': datetime(2015, 1, 1),
+                                    'endTime': datetime(2015, 1, 1)
+                                },
+                                'azElList': [
+                                    {
+                                        'dt': 123.0,
+                                        'az': 123.0,
+                                        'el': 123.0
+                                    },
+                                ]
+                            },
+                        ]
+                    }
+                }
+            }
+        },
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type satelliteId: string
+  :param satelliteId: 
+
+    The satellite ID that associates this ephemeris with a satellite in AWS Ground Station.
+
+    
+
+  
+  :type enabled: boolean
+  :param enabled: 
+
+    Set to ``true`` to enable the ephemeris after validation. Set to ``false`` to keep it disabled.
+
+    
+
+  
+  :type priority: integer
+  :param priority: 
+
+    A priority score that determines which ephemeris to use when multiple ephemerides overlap.
+
+     
+
+    Higher numbers take precedence. The default is 1. Must be 1 or greater.
+
+    
+
+  
+  :type expirationTime: datetime
+  :param expirationTime: 
+
+    An overall expiration time for the ephemeris in UTC, after which it will become ``EXPIRED``.
+
+    
+
+  
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    A name that you can use to identify the ephemeris.
+
+    
+
+  
+  :type kmsKeyArn: string
+  :param kmsKeyArn: 
+
+    The ARN of the KMS key to use for encrypting the ephemeris.
+
+    
+
+  
+  :type ephemeris: dict
+  :param ephemeris: 
+
+    Ephemeris data.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``tle``, ``oem``, ``azEl``. 
+
+  
+    - **tle** *(dict) --* 
+
+      Two-line element set (TLE) ephemeris.
+
+       
+
+      For more detail about providing Two-line element sets to AWS Ground Station, see the `TLE section <https://docs.aws.amazon.com/ground-station/latest/ug/providing-tle-ephemeris-data.html>`__ of the AWS Ground Station user guide.
+
+      
+
+    
+      - **s3Object** *(dict) --* 
+
+        The Amazon S3 object that contains the ephemeris data.
+
+        
+
+      
+        - **bucket** *(string) --* 
+
+          An Amazon S3 Bucket name.
+
+          
+
+        
+        - **key** *(string) --* 
+
+          An Amazon S3 key for the ephemeris.
+
+          
+
+        
+        - **version** *(string) --* 
+
+          For versioned Amazon S3 objects, the version to use for the ephemeris.
+
+          
+
+        
+      
+      - **tleData** *(list) --* 
+
+        TLE data that you provide directly instead of using an Amazon S3 object.
+
+        
+
+      
+        - *(dict) --* 
+
+          Two-line element set (TLE) data.
+
+          
+
+        
+          - **tleLine1** *(string) --* **[REQUIRED]** 
+
+            First line of two-line element set (TLE) data.
+
+            
+
+          
+          - **tleLine2** *(string) --* **[REQUIRED]** 
+
+            Second line of two-line element set (TLE) data.
+
+            
+
+          
+          - **validTimeRange** *(dict) --* **[REQUIRED]** 
+
+            The valid time range for the TLE. Time ranges must be continuous without gaps or overlaps.
+
+            
+
+          
+            - **startTime** *(datetime) --* **[REQUIRED]** 
+
+              Unix epoch timestamp in UTC at which the time range starts.
+
+              
+
+            
+            - **endTime** *(datetime) --* **[REQUIRED]** 
+
+              Unix epoch timestamp in UTC at which the time range ends.
+
+              
+
+            
+          
+        
+    
+    
+    - **oem** *(dict) --* 
+
+      Ephemeris data in Orbit Ephemeris Message (OEM) format.
+
+       
+
+      AWS Ground Station processes OEM ephemerides according to the `CCSDS standard <https://ccsds.org/Pubs/502x0b3e1.pdf>`__ with some extra restrictions. OEM files should be in KVN format. For more detail about the OEM format that AWS Ground Station supports, see `OEM ephemeris format <https://docs.aws.amazon.com/ground-station/latest/ug/providing-oem-ephemeris-data.html#oem-ephemeris-format>`__ in the AWS Ground Station user guide.
+
+      
+
+    
+      - **s3Object** *(dict) --* 
+
+        The Amazon S3 object that contains the ephemeris data.
+
+        
+
+      
+        - **bucket** *(string) --* 
+
+          An Amazon S3 Bucket name.
+
+          
+
+        
+        - **key** *(string) --* 
+
+          An Amazon S3 key for the ephemeris.
+
+          
+
+        
+        - **version** *(string) --* 
+
+          For versioned Amazon S3 objects, the version to use for the ephemeris.
+
+          
+
+        
+      
+      - **oemData** *(string) --* 
+
+        OEM data that you provide directly instead of using an Amazon S3 object.
+
+        
+
+      
+    
+    - **azEl** *(dict) --* 
+
+      Azimuth elevation ephemeris data.
+
+       
+
+      Use this ephemeris type to provide pointing angles directly, rather than satellite orbital elements. Use this when you need precise antenna pointing but have imprecise or unknown satellite trajectory information.
+
+       
+
+      The azimuth elevation data specifies the antenna pointing direction at specific times relative to a ground station location. AWS Ground Station uses 4th order Lagrange interpolation to compute pointing angles between the provided data points.
+
+       
+
+      AWS Ground Station automatically filters interpolated pointing angles, including only those that are above the site mask elevation of the specified ground station.
+
+       
+
+      For more detail about providing azimuth elevation ephemerides to AWS Ground Station, see the `azimuth elevation ephemeris section <https://docs.aws.amazon.com/ground-station/latest/ug/providing-azimuth-elevation-ephemeris-data.html>`__ of the AWS Ground Station User Guide.
+
+      
+
+    
+      - **groundStation** *(string) --* **[REQUIRED]** 
+
+        The ground station name for which you're providing azimuth elevation data.
+
+         
+
+        This ephemeris is specific to this ground station and can't be used at other locations.
+
+        
+
+      
+      - **data** *(dict) --* **[REQUIRED]** 
+
+        Azimuth elevation segment data.
+
+         
+
+        You can provide data inline in the request or through an Amazon S3 object reference.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``s3Object``, ``azElData``. 
+
+      
+        - **s3Object** *(dict) --* 
+
+          The Amazon S3 object containing azimuth elevation segment data.
+
+           
+
+          The Amazon S3 object must contain JSON-formatted azimuth elevation data matching the  AzElSegments structure.
+
+          
+
+        
+          - **bucket** *(string) --* 
+
+            An Amazon S3 Bucket name.
+
+            
+
+          
+          - **key** *(string) --* 
+
+            An Amazon S3 key for the ephemeris.
+
+            
+
+          
+          - **version** *(string) --* 
+
+            For versioned Amazon S3 objects, the version to use for the ephemeris.
+
+            
+
+          
+        
+        - **azElData** *(dict) --* 
+
+          Azimuth elevation segment data provided directly in the request.
+
+           
+
+          Use this option for smaller datasets or when Amazon S3 access is not available.
+
+          
+
+        
+          - **angleUnit** *(string) --* **[REQUIRED]** 
+
+            The unit of measure for azimuth and elevation angles. All angles in all segments must use the same unit.
+
+            
+
+          
+          - **azElSegmentList** *(list) --* **[REQUIRED]** 
+
+            List of azimuth elevation segments.
+
+             
+
+            Must contain between 1 and 100 segments. Segments must be in chronological order with no overlaps.
+
+            
+
+          
+            - *(dict) --* 
+
+              A time segment containing azimuth elevation pointing data.
+
+               
+
+              Each segment defines a continuous time period with pointing angle data points. AWS Ground Station uses 4th order Lagrange interpolation between the provided points, so each segment must contain at least five data points.
+
+              
+
+            
+              - **referenceEpoch** *(datetime) --* **[REQUIRED]** 
+
+                The reference time for this segment in ISO 8601 format in Coordinated Universal Time (UTC).
+
+                 
+
+                All time values within the segment's  AzElSegment$azElList are specified as offsets in atomic seconds from this reference epoch.
+
+                 
+
+                Example: ``2024-01-15T12:00:00.000Z``
+
+                
+
+              
+              - **validTimeRange** *(dict) --* **[REQUIRED]** 
+
+                The valid time range for this segment.
+
+                 
+
+                Specifies the start and end timestamps in ISO 8601 format in Coordinated Universal Time (UTC). The segment's pointing data must cover this entire time range.
+
+                
+
+              
+                - **startTime** *(datetime) --* **[REQUIRED]** 
+
+                  Start time in ISO 8601 format in Coordinated Universal Time (UTC).
+
+                   
+
+                  Example: ``2026-11-15T10:28:48.000Z``
+
+                  
+
+                
+                - **endTime** *(datetime) --* **[REQUIRED]** 
+
+                  End time in ISO 8601 format in Coordinated Universal Time (UTC).
+
+                   
+
+                  Example: ``2024-01-15T12:00:00.000Z``
+
+                  
+
+                
+              
+              - **azElList** *(list) --* **[REQUIRED]** 
+
+                List of time-tagged azimuth elevation data points.
+
+                 
+
+                Must contain at least five points to support 4th order Lagrange interpolation. Points must be in chronological order with no duplicates.
+
+                
+
+              
+                - *(dict) --* 
+
+                  Time-tagged azimuth elevation pointing data.
+
+                   
+
+                  Specifies the antenna pointing direction at a specific time offset from the segment's reference epoch.
+
+                  
+
+                
+                  - **dt** *(float) --* **[REQUIRED]** 
+
+                    Time offset in atomic seconds from the segment's reference epoch.
+
+                     
+
+                    All ``dt`` values within a segment must be in ascending order with no duplicates.
+
+                     
+
+                    ``dt`` values may be:
+
+                     
+
+                    
+                    * negative
+                     
+                    * expressed as fractions of a second
+                     
+                    * expressed in scientific notation
+                    
+
+                    
+
+                  
+                  - **az** *(float) --* **[REQUIRED]** 
+
+                    Azimuth angle at the specified time.
+
+                     
+
+                    Valid ranges by unit:
+
+                     
+
+                    
+                    * ``DEGREE_ANGLE``: -180 to 360 degrees, measured clockwise from true north
+                     
+                    * ``RADIAN``: -π to 2π radians, measured clockwise from true north
+                    
+
+                    
+
+                  
+                  - **el** *(float) --* **[REQUIRED]** 
+
+                    Elevation angle at the specified time.
+
+                     
+
+                    Valid ranges by unit:
+
+                     
+
+                    
+                    * ``DEGREE_ANGLE``: -90 to 90 degrees, where 0 is the horizon, 90 is zenith, and negative values are below the horizon
+                     
+                    * ``RADIAN``: -π/2 to π/2 radians, where 0 is the horizon, π/2 is zenith, and negative values are below the horizon
+                    
+
+                    
+
+                  
+                
+            
+            
+        
+        
+      
+    
+  
+  :type tags: dict
+  :param tags: 
+
+    Tags assigned to an ephemeris.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ephemerisId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ephemerisId** *(string) --* 
+
+        The AWS Ground Station ephemeris ID.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`GroundStation.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`GroundStation.Client.exceptions.DependencyException`
+
+  
+  *   :py:class:`GroundStation.Client.exceptions.ResourceNotFoundException`
+
+  

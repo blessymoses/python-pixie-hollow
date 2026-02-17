@@ -1,0 +1,195 @@
+:doc:`Glacier <../../glacier>` / Client / upload_archive
+
+**************
+upload_archive
+**************
+
+
+
+.. py:method:: Glacier.Client.upload_archive(**kwargs)
+
+  
+
+  This operation adds an archive to a vault. This is a synchronous operation, and for a successful upload, your data is durably persisted. Amazon Glacier returns the archive ID in the ``x-amz-archive-id`` header of the response.
+
+   
+
+  You must use the archive ID to access your data in Amazon Glacier. After you upload an archive, you should save the archive ID returned so that you can retrieve or delete the archive later. Besides saving the archive ID, you can also index it and give it a friendly name to allow for better searching. You can also use the optional archive description field to specify how the archive is referred to in an external index of archives, such as you might create in Amazon DynamoDB. You can also get the vault inventory to obtain a list of archive IDs in a vault. For more information, see  InitiateJob.
+
+   
+
+  You must provide a SHA256 tree hash of the data you are uploading. For information about computing a SHA256 tree hash, see `Computing Checksums <https://docs.aws.amazon.com/amazonglacier/latest/dev/checksum-calculations.html>`__.
+
+   
+
+  You can optionally specify an archive description of up to 1,024 printable ASCII characters. You can get the archive description when you either retrieve the archive or get the vault inventory. For more information, see  InitiateJob. Amazon Glacier does not interpret the description in any way. An archive description does not need to be unique. You cannot use the description to retrieve or sort the archive list.
+
+   
+
+  Archives are immutable. After you upload an archive, you cannot edit the archive or its description.
+
+   
+
+  An AWS account has full permission to perform all operations (actions). However, AWS Identity and Access Management (IAM) users don't have any permissions by default. You must grant them explicit permission to perform specific actions. For more information, see `Access Control Using AWS Identity and Access Management (IAM) <https://docs.aws.amazon.com/amazonglacier/latest/dev/using-iam-with-amazon-glacier.html>`__.
+
+   
+
+  For conceptual information and underlying REST API, see `Uploading an Archive in Amazon Glacier <https://docs.aws.amazon.com/amazonglacier/latest/dev/uploading-an-archive.html>`__ and `Upload Archive <https://docs.aws.amazon.com/amazonglacier/latest/dev/api-archive-post.html>`__ in the *Amazon Glacier Developer Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/glacier-2012-06-01/UploadArchive>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.upload_archive(
+        vaultName='string',
+        archiveDescription='string',
+        body=b'bytes'|file
+    )
+    
+  :type vaultName: string
+  :param vaultName: **[REQUIRED]** 
+
+    The name of the vault.
+
+    
+
+  
+  :type accountId: string
+  :param accountId: 
+
+    The ``AccountId`` value is the AWS account ID of the account that owns the vault. You can either specify an AWS account ID or optionally a single ' ``-``' (hyphen), in which case Amazon Glacier uses the AWS account ID associated with the credentials used to sign the request. If you use an account ID, do not include any hyphens ('-') in the ID.
+
+        Note: this parameter is set to "-" bydefault if no value is not specified.
+
+
+  
+  :type archiveDescription: string
+  :param archiveDescription: 
+
+    The optional description of the archive you are uploading.
+
+    
+
+  
+  :type checksum: string
+  :param checksum: 
+
+    The SHA256 tree hash of the data being uploaded.
+
+        Please note that this parameter is automatically populated if it is not provided. Including this parameter is not required
+
+
+
+  
+  :type body: bytes or seekable file-like object
+  :param body: 
+
+    The data to upload.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'location': 'string',
+          'checksum': 'string',
+          'archiveId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains the Amazon Glacier response to your request.
+
+       
+
+      For information about the underlying REST API, see `Upload Archive <https://docs.aws.amazon.com/amazonglacier/latest/dev/api-archive-post.html>`__. For conceptual information, see `Working with Archives in Amazon Glacier <https://docs.aws.amazon.com/amazonglacier/latest/dev/working-with-archives.html>`__.
+
+      
+      
+
+      - **location** *(string) --* 
+
+        The relative URI path of the newly added archive resource.
+
+        
+      
+
+      - **checksum** *(string) --* 
+
+        The checksum of the archive computed by Amazon Glacier.
+
+        
+      
+
+      - **archiveId** *(string) --* 
+
+        The ID of the archive. This value is also included as part of the location.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Glacier.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Glacier.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Glacier.Client.exceptions.MissingParameterValueException`
+
+  
+  *   :py:class:`Glacier.Client.exceptions.RequestTimeoutException`
+
+  
+  *   :py:class:`Glacier.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`Glacier.Client.exceptions.NoLongerSupportedException`
+
+  
+
+  **Examples**
+
+  The example adds an archive to a vault.
+  ::
+
+    response = client.upload_archive(
+        accountId='-',
+        archiveDescription='',
+        body='example-data-to-upload',
+        checksum='',
+        vaultName='my-vault',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'archiveId': 'kKB7ymWJVpPSwhGP6ycSOAekp9ZYe_--zM_mw6k76ZFGEIWQX-ybtRDvc2VkPSDtfKmQrj0IRQLSGsNuDp-AJVlu2ccmDSyDUmZwKbwbpAdGATGDiB3hHO0bjbGehXTcApVud_wyDw',
+        'checksum': '969fb39823836d81f0cc028195fcdbcbbe76cdde932d4646fa7de5f21e18aa67',
+        'location': '/0123456789012/vaults/my-vault/archives/kKB7ymWJVpPSwhGP6ycSOAekp9ZYe_--zM_mw6k76ZFGEIWQX-ybtRDvc2VkPSDtfKmQrj0IRQLSGsNuDp-AJVlu2ccmDSyDUmZwKbwbpAdGATGDiB3hHO0bjbGehXTcApVud_wyDw',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

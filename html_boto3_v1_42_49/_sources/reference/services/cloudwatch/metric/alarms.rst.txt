@@ -1,0 +1,252 @@
+:doc:`Metric <index>` / Collection / alarms
+
+******
+alarms
+******
+
+
+
+.. py:attribute:: CloudWatch.Metric.alarms
+
+  A collection of Alarm resources.A Alarm Collection will include all resources by default, and extreme caution should be taken when performing actions on all resources.
+
+  .. py:method:: all()
+
+    Creates an iterable of all Alarm resources in the collection.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarmsForMetric>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = metric.alarms.all()
+      
+      
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    
+
+  .. py:method:: delete()
+
+    
+
+    Deletes the specified alarms. You can delete up to 100 alarms in one operation. However, this total can include no more than one composite alarm. For example, you could delete 99 metric alarms and one composite alarms with one operation, but you can't delete two composite alarms with one operation.
+
+     
+
+    If you specify any incorrect alarm names, the alarms you specify with correct names are still deleted. Other syntax errors might result in no alarms being deleted. To confirm that alarms were deleted successfully, you can use the `DescribeAlarms <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html>`__ operation after using ``DeleteAlarms``.
+
+     
+
+    .. note::
+
+      
+
+      It is possible to create a loop or cycle of composite alarms, where composite alarm A depends on composite alarm B, and composite alarm B also depends on composite alarm A. In this scenario, you can't delete any composite alarm that is part of the cycle because there is always still a composite alarm that depends on that alarm that you want to delete.
+
+       
+
+      To get out of such a situation, you must break the cycle by changing the rule of one of the composite alarms in the cycle to remove a dependency that creates the cycle. The simplest change to make to break a cycle is to change the ``AlarmRule`` of one of the alarms to ``false``.
+
+       
+
+      Additionally, the evaluation of composite alarms stops if CloudWatch detects a cycle in the evaluation path.
+
+      
+
+    
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DeleteAlarms>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response = metric.alarms.delete()
+      
+      
+    
+    :returns: None
+
+  .. py:method:: disable_actions()
+
+    
+
+    Disables the actions for the specified alarms. When an alarm's actions are disabled, the alarm actions do not execute when the alarm state changes.
+
+    
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DisableAlarmActions>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response = metric.alarms.disable_actions()
+      
+      
+    
+    :returns: None
+
+  .. py:method:: enable_actions()
+
+    
+
+    Enables the actions for the specified alarms.
+
+    
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/EnableAlarmActions>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response = metric.alarms.enable_actions()
+      
+      
+    
+    :returns: None
+
+  .. py:method:: filter(**kwargs)
+
+    Creates an iterable of all Alarm resources in the collection filtered by kwargs passed to method. A Alarm collection will include all resources by default if no filters are provided, and extreme caution should be taken when performing actions on all resources.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarmsForMetric>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = metric.alarms.filter(
+          Statistic='SampleCount'|'Average'|'Sum'|'Minimum'|'Maximum',
+          ExtendedStatistic='string',
+          Dimensions=[
+              {
+                  'Name': 'string',
+                  'Value': 'string'
+              },
+          ],
+          Period=123,
+          Unit='Seconds'|'Microseconds'|'Milliseconds'|'Bytes'|'Kilobytes'|'Megabytes'|'Gigabytes'|'Terabytes'|'Bits'|'Kilobits'|'Megabits'|'Gigabits'|'Terabits'|'Percent'|'Count'|'Bytes/Second'|'Kilobytes/Second'|'Megabytes/Second'|'Gigabytes/Second'|'Terabytes/Second'|'Bits/Second'|'Kilobits/Second'|'Megabits/Second'|'Gigabits/Second'|'Terabits/Second'|'Count/Second'|'None'
+      )
+      
+    :type Statistic: string
+    :param Statistic: 
+
+      The statistic for the metric, other than percentiles. For percentile statistics, use ``ExtendedStatistics``.
+
+      
+
+    
+    :type ExtendedStatistic: string
+    :param ExtendedStatistic: 
+
+      The percentile statistic for the metric. Specify a value between p0.0 and p100.
+
+      
+
+    
+    :type Dimensions: list
+    :param Dimensions: 
+
+      The dimensions associated with the metric. If the metric has any associated dimensions, you must specify them in order for the call to succeed.
+
+      
+
+    
+      - *(dict) --* 
+
+        A dimension is a name/value pair that is part of the identity of a metric. Because dimensions are part of the unique identifier for a metric, whenever you add a unique name/value pair to one of your metrics, you are creating a new variation of that metric. For example, many Amazon EC2 metrics publish ``InstanceId`` as a dimension name, and the actual instance ID as the value for that dimension.
+
+         
+
+        You can assign up to 30 dimensions to a metric.
+
+        
+
+      
+        - **Name** *(string) --* **[REQUIRED]** 
+
+          The name of the dimension. Dimension names must contain only ASCII characters, must include at least one non-whitespace character, and cannot start with a colon ( ``:``). ASCII control characters are not supported as part of dimension names.
+
+          
+
+        
+        - **Value** *(string) --* **[REQUIRED]** 
+
+          The value of the dimension. Dimension values must contain only ASCII characters and must include at least one non-whitespace character. ASCII control characters are not supported as part of dimension values.
+
+          
+
+        
+      
+  
+    :type Period: integer
+    :param Period: 
+
+      The period, in seconds, over which the statistic is applied.
+
+      
+
+    
+    :type Unit: string
+    :param Unit: 
+
+      The unit for the metric.
+
+      
+
+    
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    
+
+  .. py:method:: limit(**kwargs)
+
+    Creates an iterable up to a specified amount of Alarm resources in the collection.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarmsForMetric>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = metric.alarms.limit(
+          count=123
+      )
+      
+    :type count: integer
+    :param count: The limit to the number of resources in the iterable.
+
+    
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    
+
+  .. py:method:: page_size(**kwargs)
+
+    Creates an iterable of all Alarm resources in the collection, but limits the number of items returned by each service call by the specified amount.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarmsForMetric>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = metric.alarms.page_size(
+          count=123
+      )
+      
+    :type count: integer
+    :param count: The number of items returned by each service call
+
+    
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    

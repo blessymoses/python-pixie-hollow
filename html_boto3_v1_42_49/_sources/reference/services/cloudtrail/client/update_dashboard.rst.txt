@@ -1,0 +1,435 @@
+:doc:`CloudTrail <../../cloudtrail>` / Client / update_dashboard
+
+****************
+update_dashboard
+****************
+
+
+
+.. py:method:: CloudTrail.Client.update_dashboard(**kwargs)
+
+  
+
+  Updates the specified dashboard.
+
+   
+
+  To set a refresh schedule, CloudTrail must be granted permissions to run the ``StartDashboardRefresh`` operation to refresh the dashboard on your behalf. To provide permissions, run the ``PutResourcePolicy`` operation to attach a resource-based policy to the dashboard. For more information, see `Resource-based policy example for a dashboard <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/security_iam_resource-based-policy-examples.html#security_iam_resource-based-policy-examples-dashboards>`__ in the *CloudTrail User Guide*.
+
+   
+
+  CloudTrail runs queries to populate the dashboard's widgets during a manual or scheduled refresh. CloudTrail must be granted permissions to run the ``StartQuery`` operation on your behalf. To provide permissions, run the ``PutResourcePolicy`` operation to attach a resource-based policy to each event data store. For more information, see `Example\: Allow CloudTrail to run queries to populate a dashboard <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/security_iam_resource-based-policy-examples.html#security_iam_resource-based-policy-examples-eds-dashboard>`__ in the *CloudTrail User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudtrail-2013-11-01/UpdateDashboard>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_dashboard(
+        DashboardId='string',
+        Widgets=[
+            {
+                'QueryStatement': 'string',
+                'QueryParameters': [
+                    'string',
+                ],
+                'ViewProperties': {
+                    'string': 'string'
+                }
+            },
+        ],
+        RefreshSchedule={
+            'Frequency': {
+                'Unit': 'HOURS'|'DAYS',
+                'Value': 123
+            },
+            'Status': 'ENABLED'|'DISABLED',
+            'TimeOfDay': 'string'
+        },
+        TerminationProtectionEnabled=True|False
+    )
+    
+  :type DashboardId: string
+  :param DashboardId: **[REQUIRED]** 
+
+    The name or ARN of the dashboard.
+
+    
+
+  
+  :type Widgets: list
+  :param Widgets: 
+
+    An array of widgets for the dashboard. A custom dashboard can have a maximum of 10 widgets.
+
+     
+
+    To add new widgets, pass in an array that includes the existing widgets along with any new widgets. Run the ``GetDashboard`` operation to get the list of widgets for the dashboard.
+
+     
+
+    To remove widgets, pass in an array that includes the existing widgets minus the widgets you want removed.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains information about a widget on a CloudTrail Lake dashboard.
+
+      
+
+    
+      - **QueryStatement** *(string) --* **[REQUIRED]** 
+
+        The query statement for the widget. For custom dashboard widgets, you can query across multiple event data stores as long as all event data stores exist in your account.
+
+         
+
+        .. note::
+
+          
+
+          When a query uses ``?`` with ``eventTime``, ``?`` must be surrounded by single quotes as follows: ``'?'``.
+
+          
+
+        
+
+      
+      - **QueryParameters** *(list) --* 
+
+        The optional query parameters. The following query parameters are valid: ``$StartTime$``, ``$EndTime$``, and ``$Period$``.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **ViewProperties** *(dict) --* **[REQUIRED]** 
+
+        The view properties for the widget. For more information about view properties, see `View properties for widgets <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/lake-widget-properties.html>`__ in the *CloudTrail User Guide*.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+
+  :type RefreshSchedule: dict
+  :param RefreshSchedule: 
+
+    The refresh schedule configuration for the dashboard.
+
+    
+
+  
+    - **Frequency** *(dict) --* 
+
+      The frequency at which you want the dashboard refreshed.
+
+      
+
+    
+      - **Unit** *(string) --* 
+
+        The unit to use for the refresh.
+
+         
+
+        For custom dashboards, the unit can be ``HOURS`` or ``DAYS``.
+
+         
+
+        For the Highlights dashboard, the ``Unit`` must be ``HOURS``.
+
+        
+
+      
+      - **Value** *(integer) --* 
+
+        The value for the refresh schedule.
+
+         
+
+        For custom dashboards, the following values are valid when the unit is ``HOURS``: ``1``, ``6``, ``12``, ``24``
+
+         
+
+        For custom dashboards, the only valid value when the unit is ``DAYS`` is ``1``.
+
+         
+
+        For the Highlights dashboard, the ``Value`` must be ``6``.
+
+        
+
+      
+    
+    - **Status** *(string) --* 
+
+      Specifies whether the refresh schedule is enabled. Set the value to ``ENABLED`` to enable the refresh schedule, or to ``DISABLED`` to turn off the refresh schedule.
+
+      
+
+    
+    - **TimeOfDay** *(string) --* 
+
+      The time of day in UTC to run the schedule; for hourly only refer to minutes; default is 00:00.
+
+      
+
+    
+  
+  :type TerminationProtectionEnabled: boolean
+  :param TerminationProtectionEnabled: 
+
+    Specifies whether termination protection is enabled for the dashboard. If termination protection is enabled, you cannot delete the dashboard until termination protection is disabled.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DashboardArn': 'string',
+          'Name': 'string',
+          'Type': 'MANAGED'|'CUSTOM',
+          'Widgets': [
+              {
+                  'QueryAlias': 'string',
+                  'QueryStatement': 'string',
+                  'QueryParameters': [
+                      'string',
+                  ],
+                  'ViewProperties': {
+                      'string': 'string'
+                  }
+              },
+          ],
+          'RefreshSchedule': {
+              'Frequency': {
+                  'Unit': 'HOURS'|'DAYS',
+                  'Value': 123
+              },
+              'Status': 'ENABLED'|'DISABLED',
+              'TimeOfDay': 'string'
+          },
+          'TerminationProtectionEnabled': True|False,
+          'CreatedTimestamp': datetime(2015, 1, 1),
+          'UpdatedTimestamp': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DashboardArn** *(string) --* 
+
+        The ARN for the dashboard.
+
+        
+      
+
+      - **Name** *(string) --* 
+
+        The name for the dashboard.
+
+        
+      
+
+      - **Type** *(string) --* 
+
+        The type of dashboard.
+
+        
+      
+
+      - **Widgets** *(list) --* 
+
+        An array of widgets for the dashboard.
+
+        
+        
+
+        - *(dict) --* 
+
+          A widget on a CloudTrail Lake dashboard.
+
+          
+          
+
+          - **QueryAlias** *(string) --* 
+
+            The query alias used to identify the query for the widget.
+
+            
+          
+
+          - **QueryStatement** *(string) --* 
+
+            The SQL query statement for the widget.
+
+            
+          
+
+          - **QueryParameters** *(list) --* 
+
+            The query parameters for the widget.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **ViewProperties** *(dict) --* 
+
+            The view properties for the widget. For more information about view properties, see `View properties for widgets <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/lake-widget-properties.html>`__ in the *CloudTrail User Guide*..
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+      
+
+      - **RefreshSchedule** *(dict) --* 
+
+        The refresh schedule for the dashboard, if configured.
+
+        
+        
+
+        - **Frequency** *(dict) --* 
+
+          The frequency at which you want the dashboard refreshed.
+
+          
+          
+
+          - **Unit** *(string) --* 
+
+            The unit to use for the refresh.
+
+             
+
+            For custom dashboards, the unit can be ``HOURS`` or ``DAYS``.
+
+             
+
+            For the Highlights dashboard, the ``Unit`` must be ``HOURS``.
+
+            
+          
+
+          - **Value** *(integer) --* 
+
+            The value for the refresh schedule.
+
+             
+
+            For custom dashboards, the following values are valid when the unit is ``HOURS``: ``1``, ``6``, ``12``, ``24``
+
+             
+
+            For custom dashboards, the only valid value when the unit is ``DAYS`` is ``1``.
+
+             
+
+            For the Highlights dashboard, the ``Value`` must be ``6``.
+
+            
+      
+        
+
+        - **Status** *(string) --* 
+
+          Specifies whether the refresh schedule is enabled. Set the value to ``ENABLED`` to enable the refresh schedule, or to ``DISABLED`` to turn off the refresh schedule.
+
+          
+        
+
+        - **TimeOfDay** *(string) --* 
+
+          The time of day in UTC to run the schedule; for hourly only refer to minutes; default is 00:00.
+
+          
+    
+      
+
+      - **TerminationProtectionEnabled** *(boolean) --* 
+
+        Indicates whether termination protection is enabled for the dashboard.
+
+        
+      
+
+      - **CreatedTimestamp** *(datetime) --* 
+
+        The timestamp that shows when the dashboard was created.
+
+        
+      
+
+      - **UpdatedTimestamp** *(datetime) --* 
+
+        The timestamp that shows when the dashboard was updated.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudTrail.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.EventDataStoreNotFoundException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InactiveEventDataStoreException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InsufficientEncryptionPolicyException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidQueryStatementException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.UnsupportedOperationException`
+
+  

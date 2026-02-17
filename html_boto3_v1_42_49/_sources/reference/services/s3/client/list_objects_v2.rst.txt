@@ -1,0 +1,759 @@
+:doc:`S3 <../../s3>` / Client / list_objects_v2
+
+***************
+list_objects_v2
+***************
+
+
+
+.. py:method:: S3.Client.list_objects_v2(**kwargs)
+
+  
+
+  Returns some or all (up to 1,000) of the objects in a bucket with each request. You can use the request parameters as selection criteria to return a subset of the objects in a bucket. A ``200 OK`` response can contain valid or invalid XML. Make sure to design your application to parse the contents of the response and handle it appropriately. For more information about listing objects, see `Listing object keys programmatically <https://docs.aws.amazon.com/AmazonS3/latest/userguide/ListingKeysUsingAPIs.html>`__ in the *Amazon S3 User Guide*. To get a list of your buckets, see `ListBuckets <https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListBuckets.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    
+    * **General purpose bucket** - For general purpose buckets, ``ListObjectsV2`` doesn't return prefixes that are related only to in-progress multipart uploads.
+     
+    * **Directory buckets** - For directory buckets, ``ListObjectsV2`` response includes the prefixes that are related only to in-progress multipart uploads.
+     
+    * **Directory buckets** - For directory buckets, you must make requests for this API operation to the Zonal endpoint. These endpoints support virtual-hosted-style requests in the format ``https://amzn-s3-demo-bucket.s3express-zone-id.region-code.amazonaws.com/key-name ``. Path-style requests are not supported. For more information about endpoints in Availability Zones, see `Regional and Zonal endpoints for directory buckets in Availability Zones <https://docs.aws.amazon.com/AmazonS3/latest/userguide/endpoint-directory-buckets-AZ.html>`__ in the *Amazon S3 User Guide*. For more information about endpoints in Local Zones, see `Concepts for directory buckets in Local Zones <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-lzs-for-directory-buckets.html>`__ in the *Amazon S3 User Guide*.
+    
+
+    
+
+    Permissions  
+
+  
+  * **General purpose bucket permissions** - To use this operation, you must have READ access to the bucket. You must have permission to perform the ``s3:ListBucket`` action. The bucket owner has this permission by default and can grant this permission to others. For more information about permissions, see `Permissions Related to Bucket Subresource Operations <https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-with-s3-actions.html#using-with-s3-actions-related-to-bucket-subresources>`__ and `Managing Access Permissions to Your Amazon S3 Resources <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-access-control.html>`__ in the *Amazon S3 User Guide*.
+   
+  * **Directory bucket permissions** - To grant access to this API operation on a directory bucket, we recommend that you use the `CreateSession <https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateSession.html>`__ API operation for session-based authorization. Specifically, you grant the ``s3express:CreateSession`` permission to the directory bucket in a bucket policy or an IAM identity-based policy. Then, you make the ``CreateSession`` API call on the bucket to obtain a session token. With the session token in your request header, you can make API requests to this operation. After the session token expires, you make another ``CreateSession`` API call to generate a new session token for use. Amazon Web Services CLI or SDKs create session and refresh the session token automatically to avoid service interruptions when a session expires. For more information about authorization, see `CreateSession <https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateSession.html>`__.
+  
+
+    Sorting order of returned objects  
+
+  
+  * **General purpose bucket** - For general purpose buckets, ``ListObjectsV2`` returns objects in lexicographical order based on their key names.
+   
+  * **Directory bucket** - For directory buckets, ``ListObjectsV2`` does not return objects in lexicographical order.
+  
+
+    HTTP Host header syntax  
+
+  **Directory buckets** - The HTTP Host header syntax is ``Bucket-name.s3express-zone-id.region-code.amazonaws.com``.
+
+     
+
+  .. warning::
+
+     
+
+    This section describes the latest revision of this action. We recommend that you use this revised API operation for application development. For backward compatibility, Amazon S3 continues to support the prior version of this API operation, `ListObjects <https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjects.html>`__.
+
+     
+
+   
+
+  The following operations are related to ``ListObjectsV2``:
+
+   
+
+  
+  * `GetObject <https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html>`__
+   
+  * `PutObject <https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html>`__
+   
+  * `CreateBucket <https://docs.aws.amazon.com/AmazonS3/latest/API/API_CreateBucket.html>`__
+  
+
+   
+
+  .. warning::
+
+     
+
+    You must URL encode any signed header values that contain spaces. For example, if your header value is ``my file.txt``, containing two spaces after ``my``, you must URL encode this value to ``my%20%20file.txt``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/ListObjectsV2>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_objects_v2(
+        Bucket='string',
+        Delimiter='string',
+        EncodingType='url',
+        MaxKeys=123,
+        Prefix='string',
+        ContinuationToken='string',
+        FetchOwner=True|False,
+        StartAfter='string',
+        RequestPayer='requester',
+        ExpectedBucketOwner='string',
+        OptionalObjectAttributes=[
+            'RestoreStatus',
+        ]
+    )
+    
+  :type Bucket: string
+  :param Bucket: **[REQUIRED]** 
+
+    **Directory buckets** - When you use this operation with a directory bucket, you must use virtual-hosted-style requests in the format ``Bucket-name.s3express-zone-id.region-code.amazonaws.com``. Path-style requests are not supported. Directory bucket names must be unique in the chosen Zone (Availability Zone or Local Zone). Bucket names must follow the format ``bucket-base-name--zone-id--x-s3`` (for example, ``amzn-s3-demo-bucket--usw2-az1--x-s3``). For information about bucket naming restrictions, see `Directory bucket naming rules <https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-bucket-naming-rules.html>`__ in the *Amazon S3 User Guide*.
+
+     
+
+    **Access points** - When you use this action with an access point for general purpose buckets, you must provide the alias of the access point in place of the bucket name or specify the access point ARN. When you use this action with an access point for directory buckets, you must provide the access point name in place of the bucket name. When using the access point ARN, you must direct requests to the access point hostname. The access point hostname takes the form *AccessPointName*-*AccountId*.s3-accesspoint.*Region*.amazonaws.com. When using this action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in place of the bucket name. For more information about access point ARNs, see `Using access points <https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html>`__ in the *Amazon S3 User Guide*.
+
+     
+
+    .. note::
+
+      
+
+      Object Lambda access points are not supported by directory buckets.
+
+      
+
+     
+
+    **S3 on Outposts** - When you use this action with S3 on Outposts, you must direct requests to the S3 on Outposts hostname. The S3 on Outposts hostname takes the form ``AccessPointName-AccountId.outpostID.s3-outposts.Region.amazonaws.com``. When you use this action with S3 on Outposts, the destination bucket must be the Outposts access point ARN or the access point alias. For more information about S3 on Outposts, see `What is S3 on Outposts? <https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html>`__ in the *Amazon S3 User Guide*.
+
+    
+
+  
+  :type Delimiter: string
+  :param Delimiter: 
+
+    A delimiter is a character that you use to group keys.
+
+     
+
+    ``CommonPrefixes`` is filtered out from results if it is not lexicographically greater than the ``StartAfter`` value.
+
+     
+
+    .. note::
+
+      
+
+      
+      * **Directory buckets** - For directory buckets, ``/`` is the only supported delimiter.
+       
+      * **Directory buckets** - When you query ``ListObjectsV2`` with a delimiter during in-progress multipart uploads, the ``CommonPrefixes`` response parameter contains the prefixes that are associated with the in-progress multipart uploads. For more information about multipart uploads, see `Multipart Upload Overview <https://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html>`__ in the *Amazon S3 User Guide*.
+      
+
+      
+
+    
+
+  
+  :type EncodingType: string
+  :param EncodingType: 
+
+    Encoding type used by Amazon S3 to encode the `object keys <https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html>`__ in the response. Responses are encoded only in UTF-8. An object key can contain any Unicode character. However, the XML 1.0 parser can't parse certain characters, such as characters with an ASCII value from 0 to 10. For characters that aren't supported in XML 1.0, you can add this parameter to request that Amazon S3 encode the keys in the response. For more information about characters to avoid in object key names, see `Object key naming guidelines <https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html#object-key-guidelines>`__.
+
+     
+
+    .. note::
+
+      
+
+      When using the URL encoding type, non-ASCII characters that are used in an object's key name will be percent-encoded according to UTF-8 code values. For example, the object ``test_file(3).png`` will appear as ``test_file%283%29.png``.
+
+      
+
+    
+
+  
+  :type MaxKeys: integer
+  :param MaxKeys: 
+
+    Sets the maximum number of keys returned in the response. By default, the action returns up to 1,000 key names. The response might contain fewer keys but will never contain more.
+
+    
+
+  
+  :type Prefix: string
+  :param Prefix: 
+
+    Limits the response to keys that begin with the specified prefix.
+
+     
+
+    .. note::
+
+      
+
+      **Directory buckets** - For directory buckets, only prefixes that end in a delimiter ( ``/``) are supported.
+
+      
+
+    
+
+  
+  :type ContinuationToken: string
+  :param ContinuationToken: 
+
+    ``ContinuationToken`` indicates to Amazon S3 that the list is being continued on this bucket with a token. ``ContinuationToken`` is obfuscated and is not a real key. You can use this ``ContinuationToken`` for pagination of the list results.
+
+    
+
+  
+  :type FetchOwner: boolean
+  :param FetchOwner: 
+
+    The owner field is not present in ``ListObjectsV2`` by default. If you want to return the owner field with each key in the result, then set the ``FetchOwner`` field to ``true``.
+
+     
+
+    .. note::
+
+      
+
+      **Directory buckets** - For directory buckets, the bucket owner is returned as the object owner for all objects.
+
+      
+
+    
+
+  
+  :type StartAfter: string
+  :param StartAfter: 
+
+    StartAfter is where you want Amazon S3 to start listing from. Amazon S3 starts listing after this specified key. StartAfter can be any key in the bucket.
+
+     
+
+    .. note::
+
+      
+
+      This functionality is not supported for directory buckets.
+
+      
+
+    
+
+  
+  :type RequestPayer: string
+  :param RequestPayer: 
+
+    Confirms that the requester knows that she or he will be charged for the list objects request in V2 style. Bucket owners need not specify this parameter in their requests.
+
+     
+
+    .. note::
+
+      
+
+      This functionality is not supported for directory buckets.
+
+      
+
+    
+
+  
+  :type ExpectedBucketOwner: string
+  :param ExpectedBucketOwner: 
+
+    The account ID of the expected bucket owner. If the account ID that you provide does not match the actual owner of the bucket, the request fails with the HTTP status code ``403 Forbidden`` (access denied).
+
+    
+
+  
+  :type OptionalObjectAttributes: list
+  :param OptionalObjectAttributes: 
+
+    Specifies the optional fields that you want returned in the response. Fields that you do not specify are not returned.
+
+     
+
+    .. note::
+
+      
+
+      This functionality is not supported for directory buckets.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'IsTruncated': True|False,
+          'Contents': [
+              {
+                  'Key': 'string',
+                  'LastModified': datetime(2015, 1, 1),
+                  'ETag': 'string',
+                  'ChecksumAlgorithm': [
+                      'CRC32'|'CRC32C'|'SHA1'|'SHA256'|'CRC64NVME',
+                  ],
+                  'ChecksumType': 'COMPOSITE'|'FULL_OBJECT',
+                  'Size': 123,
+                  'StorageClass': 'STANDARD'|'REDUCED_REDUNDANCY'|'GLACIER'|'STANDARD_IA'|'ONEZONE_IA'|'INTELLIGENT_TIERING'|'DEEP_ARCHIVE'|'OUTPOSTS'|'GLACIER_IR'|'SNOW'|'EXPRESS_ONEZONE'|'FSX_OPENZFS'|'FSX_ONTAP',
+                  'Owner': {
+                      'DisplayName': 'string',
+                      'ID': 'string'
+                  },
+                  'RestoreStatus': {
+                      'IsRestoreInProgress': True|False,
+                      'RestoreExpiryDate': datetime(2015, 1, 1)
+                  }
+              },
+          ],
+          'Name': 'string',
+          'Prefix': 'string',
+          'Delimiter': 'string',
+          'MaxKeys': 123,
+          'CommonPrefixes': [
+              {
+                  'Prefix': 'string'
+              },
+          ],
+          'EncodingType': 'url',
+          'KeyCount': 123,
+          'ContinuationToken': 'string',
+          'NextContinuationToken': 'string',
+          'StartAfter': 'string',
+          'RequestCharged': 'requester'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **IsTruncated** *(boolean) --* 
+
+        Set to ``false`` if all of the results were returned. Set to ``true`` if more keys are available to return. If the number of results exceeds that specified by ``MaxKeys``, all of the results might not be returned.
+
+        
+      
+
+      - **Contents** *(list) --* 
+
+        Metadata about each object returned.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object consists of data and its descriptive metadata.
+
+          
+          
+
+          - **Key** *(string) --* 
+
+            The name that you assign to an object. You use the object key to retrieve the object.
+
+            
+          
+
+          - **LastModified** *(datetime) --* 
+
+            Creation date of the object.
+
+            
+          
+
+          - **ETag** *(string) --* 
+
+            The entity tag is a hash of the object. The ETag reflects changes only to the contents of an object, not its metadata. The ETag may or may not be an MD5 digest of the object data. Whether or not it is depends on how the object was created and how it is encrypted as described below:
+
+             
+
+            
+            * Objects created by the PUT Object, POST Object, or Copy operation, or through the Amazon Web Services Management Console, and are encrypted by SSE-S3 or plaintext, have ETags that are an MD5 digest of their object data.
+             
+            * Objects created by the PUT Object, POST Object, or Copy operation, or through the Amazon Web Services Management Console, and are encrypted by SSE-C or SSE-KMS, have ETags that are not an MD5 digest of their object data.
+             
+            * If an object is created by either the Multipart Upload or Part Copy operation, the ETag is not an MD5 digest, regardless of the method of encryption. If an object is larger than 16 MB, the Amazon Web Services Management Console will upload or copy that object as a Multipart Upload, and therefore the ETag will not be an MD5 digest.
+            
+
+             
+
+            .. note::
+
+              
+
+              **Directory buckets** - MD5 is not supported by directory buckets.
+
+              
+
+            
+          
+
+          - **ChecksumAlgorithm** *(list) --* 
+
+            The algorithm that was used to create a checksum of the object.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **ChecksumType** *(string) --* 
+
+            The checksum type that is used to calculate the object’s checksum value. For more information, see `Checking object integrity <https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html>`__ in the *Amazon S3 User Guide*.
+
+            
+          
+
+          - **Size** *(integer) --* 
+
+            Size in bytes of the object
+
+            
+          
+
+          - **StorageClass** *(string) --* 
+
+            The class of storage used to store the object.
+
+             
+
+            .. note::
+
+              
+
+              **Directory buckets** - Directory buckets only support ``EXPRESS_ONEZONE`` (the S3 Express One Zone storage class) in Availability Zones and ``ONEZONE_IA`` (the S3 One Zone-Infrequent Access storage class) in Dedicated Local Zones.
+
+              
+
+            
+          
+
+          - **Owner** *(dict) --* 
+
+            The owner of the object
+
+             
+
+            .. note::
+
+              
+
+              **Directory buckets** - The bucket owner is returned as the object owner.
+
+              
+
+            
+            
+
+            - **DisplayName** *(string) --* 
+            
+
+            - **ID** *(string) --* 
+
+              Container for the ID of the owner.
+
+              
+        
+          
+
+          - **RestoreStatus** *(dict) --* 
+
+            Specifies the restoration status of an object. Objects in certain storage classes must be restored before they can be retrieved. For more information about these storage classes and how to work with archived objects, see `Working with archived objects <https://docs.aws.amazon.com/AmazonS3/latest/userguide/archived-objects.html>`__ in the *Amazon S3 User Guide*.
+
+             
+
+            .. note::
+
+              
+
+              This functionality is not supported for directory buckets. Directory buckets only support ``EXPRESS_ONEZONE`` (the S3 Express One Zone storage class) in Availability Zones and ``ONEZONE_IA`` (the S3 One Zone-Infrequent Access storage class) in Dedicated Local Zones.
+
+              
+
+            
+            
+
+            - **IsRestoreInProgress** *(boolean) --* 
+
+              Specifies whether the object is currently being restored. If the object restoration is in progress, the header returns the value ``TRUE``. For example:
+
+               
+
+              ``x-amz-optional-object-attributes: IsRestoreInProgress="true"``
+
+               
+
+              If the object restoration has completed, the header returns the value ``FALSE``. For example:
+
+               
+
+              ``x-amz-optional-object-attributes: IsRestoreInProgress="false", RestoreExpiryDate="2012-12-21T00:00:00.000Z"``
+
+               
+
+              If the object hasn't been restored, there is no header response.
+
+              
+            
+
+            - **RestoreExpiryDate** *(datetime) --* 
+
+              Indicates when the restored copy will expire. This value is populated only if the object has already been restored. For example:
+
+               
+
+              ``x-amz-optional-object-attributes: IsRestoreInProgress="false", RestoreExpiryDate="2012-12-21T00:00:00.000Z"``
+
+              
+        
+      
+    
+      
+
+      - **Name** *(string) --* 
+
+        The bucket name.
+
+        
+      
+
+      - **Prefix** *(string) --* 
+
+        Keys that begin with the indicated prefix.
+
+         
+
+        .. note::
+
+          
+
+          **Directory buckets** - For directory buckets, only prefixes that end in a delimiter ( ``/``) are supported.
+
+          
+
+        
+      
+
+      - **Delimiter** *(string) --* 
+
+        Causes keys that contain the same string between the ``prefix`` and the first occurrence of the delimiter to be rolled up into a single result element in the ``CommonPrefixes`` collection. These rolled-up keys are not returned elsewhere in the response. Each rolled-up result counts as only one return against the ``MaxKeys`` value.
+
+         
+
+        .. note::
+
+          
+
+          **Directory buckets** - For directory buckets, ``/`` is the only supported delimiter.
+
+          
+
+        
+      
+
+      - **MaxKeys** *(integer) --* 
+
+        Sets the maximum number of keys returned in the response. By default, the action returns up to 1,000 key names. The response might contain fewer keys but will never contain more.
+
+        
+      
+
+      - **CommonPrefixes** *(list) --* 
+
+        All of the keys (up to 1,000) that share the same prefix are grouped together. When counting the total numbers of returns by this API operation, this group of keys is considered as one item.
+
+         
+
+        A response can contain ``CommonPrefixes`` only if you specify a delimiter.
+
+         
+
+        ``CommonPrefixes`` contains all (if there are any) keys between ``Prefix`` and the next occurrence of the string specified by a delimiter.
+
+         
+
+        ``CommonPrefixes`` lists keys that act like subdirectories in the directory specified by ``Prefix``.
+
+         
+
+        For example, if the prefix is ``notes/`` and the delimiter is a slash ( ``/``) as in ``notes/summer/july``, the common prefix is ``notes/summer/``. All of the keys that roll up into a common prefix count as a single return when calculating the number of returns.
+
+         
+
+        .. note::
+
+          
+
+          
+          * **Directory buckets** - For directory buckets, only prefixes that end in a delimiter ( ``/``) are supported.
+           
+          * **Directory buckets** - When you query ``ListObjectsV2`` with a delimiter during in-progress multipart uploads, the ``CommonPrefixes`` response parameter contains the prefixes that are associated with the in-progress multipart uploads. For more information about multipart uploads, see `Multipart Upload Overview <https://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html>`__ in the *Amazon S3 User Guide*.
+          
+
+          
+
+        
+        
+
+        - *(dict) --* 
+
+          Container for all (if there are any) keys between Prefix and the next occurrence of the string specified by a delimiter. CommonPrefixes lists keys that act like subdirectories in the directory specified by Prefix. For example, if the prefix is notes/ and the delimiter is a slash (/) as in notes/summer/july, the common prefix is notes/summer/.
+
+          
+          
+
+          - **Prefix** *(string) --* 
+
+            Container for the specified common prefix.
+
+            
+      
+    
+      
+
+      - **EncodingType** *(string) --* 
+
+        Encoding type used by Amazon S3 to encode object key names in the XML response.
+
+         
+
+        If you specify the ``encoding-type`` request parameter, Amazon S3 includes this element in the response, and returns encoded key name values in the following response elements:
+
+         
+
+        ``Delimiter, Prefix, Key,`` and ``StartAfter``.
+
+        
+      
+
+      - **KeyCount** *(integer) --* 
+
+        ``KeyCount`` is the number of keys returned with this request. ``KeyCount`` will always be less than or equal to the ``MaxKeys`` field. For example, if you ask for 50 keys, your result will include 50 keys or fewer.
+
+        
+      
+
+      - **ContinuationToken** *(string) --* 
+
+        If ``ContinuationToken`` was sent with the request, it is included in the response. You can use the returned ``ContinuationToken`` for pagination of the list response.
+
+        
+      
+
+      - **NextContinuationToken** *(string) --* 
+
+        ``NextContinuationToken`` is sent when ``isTruncated`` is true, which means there are more keys in the bucket that can be listed. The next list requests to Amazon S3 can be continued with this ``NextContinuationToken``. ``NextContinuationToken`` is obfuscated and is not a real key
+
+        
+      
+
+      - **StartAfter** *(string) --* 
+
+        If StartAfter was sent with the request, it is included in the response.
+
+         
+
+        .. note::
+
+          
+
+          This functionality is not supported for directory buckets.
+
+          
+
+        
+      
+
+      - **RequestCharged** *(string) --* 
+
+        If present, indicates that the requester was successfully charged for the request. For more information, see `Using Requester Pays buckets for storage transfers and usage <https://docs.aws.amazon.com/AmazonS3/latest/userguide/RequesterPaysBuckets.html>`__ in the *Amazon Simple Storage Service user guide*.
+
+         
+
+        .. note::
+
+          
+
+          This functionality is not supported for directory buckets.
+
+          
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`S3.Client.exceptions.NoSuchBucket`
+
+  
+
+  **Examples**
+
+  The following example retrieves object list. The request specifies max keys to limit response to include only 2 object keys. 
+  ::
+
+    response = client.list_objects_v2(
+        Bucket='examplebucket',
+        MaxKeys='2',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Contents': [
+            {
+                'ETag': '"70ee1738b6b21e2c8a43f3a5ab0eee71"',
+                'Key': 'happyface.jpg',
+                'LastModified': datetime(2014, 11, 21, 19, 40, 5, 4, 325, 0),
+                'Size': 11,
+                'StorageClass': 'STANDARD',
+            },
+            {
+                'ETag': '"becf17f89c30367a9a44495d62ed521a-1"',
+                'Key': 'test.jpg',
+                'LastModified': datetime(2014, 5, 2, 4, 51, 50, 4, 122, 0),
+                'Size': 4192256,
+                'StorageClass': 'STANDARD',
+            },
+        ],
+        'IsTruncated': True,
+        'KeyCount': '2',
+        'MaxKeys': '2',
+        'Name': 'examplebucket',
+        'NextContinuationToken': '1w41l63U0xa8q7smH50vCxyTQqdxo69O3EmK28Bi5PcROI4wI/EyIJg==',
+        'Prefix': '',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

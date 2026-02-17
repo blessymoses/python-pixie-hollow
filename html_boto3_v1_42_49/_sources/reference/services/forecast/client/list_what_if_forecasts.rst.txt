@@ -1,0 +1,256 @@
+:doc:`ForecastService <../../forecast>` / Client / list_what_if_forecasts
+
+**********************
+list_what_if_forecasts
+**********************
+
+
+
+.. py:method:: ForecastService.Client.list_what_if_forecasts(**kwargs)
+
+  
+
+  Returns a list of what-if forecasts created using the  CreateWhatIfForecast operation. For each what-if forecast, this operation returns a summary of its properties, including its Amazon Resource Name (ARN). You can retrieve the complete set of properties by using the what-if forecast ARN with the  DescribeWhatIfForecast operation.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/ListWhatIfForecasts>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_what_if_forecasts(
+        NextToken='string',
+        MaxResults=123,
+        Filters=[
+            {
+                'Key': 'string',
+                'Value': 'string',
+                'Condition': 'IS'|'IS_NOT'
+            },
+        ]
+    )
+    
+  :type NextToken: string
+  :param NextToken: 
+
+    If the result of the previous request was truncated, the response includes a ``NextToken``. To retrieve the next set of results, use the token in the next request. Tokens expire after 24 hours.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The number of items to return in the response.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    An array of filters. For each filter, you provide a condition and a match statement. The condition is either ``IS`` or ``IS_NOT``, which specifies whether to include or exclude the what-if forecast export jobs that match the statement from the list, respectively. The match statement consists of a key and a value.
+
+     
+
+    **Filter properties**
+
+     
+
+    
+    * ``Condition`` - The condition to apply. Valid values are ``IS`` and ``IS_NOT``. To include the forecast export jobs that match the statement, specify ``IS``. To exclude matching forecast export jobs, specify ``IS_NOT``.
+     
+    * ``Key`` - The name of the parameter to filter on. Valid values are ``WhatIfForecastArn`` and ``Status``.
+     
+    * ``Value`` - The value to match.
+    
+
+     
+
+    For example, to list all jobs that export a forecast named *electricityWhatIfForecast*, specify the following filter:
+
+     
+
+    ``"Filters": [ { "Condition": "IS", "Key": "WhatIfForecastArn", "Value": "arn:aws:forecast:us-west-2:<acct-id>:forecast/electricityWhatIfForecast" } ]``
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a filter for choosing a subset of objects. Each filter consists of a condition and a match statement. The condition is either ``IS`` or ``IS_NOT``, which specifies whether to include or exclude the objects that match the statement, respectively. The match statement consists of a key and a value.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name of the parameter to filter on.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value to match.
+
+        
+
+      
+      - **Condition** *(string) --* **[REQUIRED]** 
+
+        The condition to apply. To include the objects that match the statement, specify ``IS``. To exclude matching objects, specify ``IS_NOT``.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'WhatIfForecasts': [
+              {
+                  'WhatIfForecastArn': 'string',
+                  'WhatIfForecastName': 'string',
+                  'WhatIfAnalysisArn': 'string',
+                  'Status': 'string',
+                  'Message': 'string',
+                  'CreationTime': datetime(2015, 1, 1),
+                  'LastModificationTime': datetime(2015, 1, 1)
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **WhatIfForecasts** *(list) --* 
+
+        An array of ``WhatIfForecasts`` objects that describe the matched forecasts.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides a summary of the what-if forecast properties used in the  ListWhatIfForecasts operation. To get the complete set of properties, call the  DescribeWhatIfForecast operation, and provide the ``WhatIfForecastArn`` that is listed in the summary.
+
+          
+          
+
+          - **WhatIfForecastArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the what-if forecast.
+
+            
+          
+
+          - **WhatIfForecastName** *(string) --* 
+
+            The name of the what-if forecast.
+
+            
+          
+
+          - **WhatIfAnalysisArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the what-if analysis that contains this what-if forecast.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the what-if forecast. States include:
+
+             
+
+            
+            * ``ACTIVE``
+             
+            * ``CREATE_PENDING``, ``CREATE_IN_PROGRESS``, ``CREATE_FAILED``
+             
+            * ``CREATE_STOPPING``, ``CREATE_STOPPED``
+             
+            * ``DELETE_PENDING``, ``DELETE_IN_PROGRESS``, ``DELETE_FAILED``
+            
+
+             
+
+            .. note::
+
+              
+
+              The ``Status`` of the what-if analysis must be ``ACTIVE`` before you can access the analysis.
+
+              
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            If an error occurred, an informational message about the error.
+
+            
+          
+
+          - **CreationTime** *(datetime) --* 
+
+            When the what-if forecast was created.
+
+            
+          
+
+          - **LastModificationTime** *(datetime) --* 
+
+            The last time the resource was modified. The timestamp depends on the status of the job:
+
+             
+
+            
+            * ``CREATE_PENDING`` - The ``CreationTime``.
+             
+            * ``CREATE_IN_PROGRESS`` - The current timestamp.
+             
+            * ``CREATE_STOPPING`` - The current timestamp.
+             
+            * ``CREATE_STOPPED`` - When the job stopped.
+             
+            * ``ACTIVE`` or ``CREATE_FAILED`` - When the job finished or failed.
+            
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If the result of the previous request was truncated, the response includes a ``NextToken``. To retrieve the next set of results, use the token in the next request. Tokens expire after 24 hours.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ForecastService.Client.exceptions.InvalidNextTokenException`
+
+  
+  *   :py:class:`ForecastService.Client.exceptions.InvalidInputException`
+
+  

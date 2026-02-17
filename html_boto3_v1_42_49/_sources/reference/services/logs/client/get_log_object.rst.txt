@@ -1,0 +1,127 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / get_log_object
+
+**************
+get_log_object
+**************
+
+
+
+.. py:method:: CloudWatchLogs.Client.get_log_object(**kwargs)
+
+  
+
+  Retrieves a large logging object (LLO) and streams it back. This API is used to fetch the content of large portions of log events that have been ingested through the PutOpenTelemetryLogs API. When log events contain fields that would cause the total event size to exceed 1MB, CloudWatch Logs automatically processes up to 10 fields, starting with the largest fields. Each field is truncated as needed to keep the total event size as close to 1MB as possible. The excess portions are stored as Large Log Objects (LLOs) and these fields are processed separately and LLO reference system fields (in the format ``@ptr.$[path.to.field]``) are added. The path in the reference field reflects the original JSON structure where the large field was located. For example, this could be ``@ptr.$['input']['message']``, ``@ptr.$['AAA']['BBB']['CCC']['DDD']``, ``@ptr.$['AAA']``, or any other path matching your log structure.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/GetLogObject>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_log_object(
+        unmask=True|False,
+        logObjectPointer='string'
+    )
+    
+  :type unmask: boolean
+  :param unmask: 
+
+    A boolean flag that indicates whether to unmask sensitive log data. When set to true, any masked or redacted data in the log object will be displayed in its original form. Default is false.
+
+    
+
+  
+  :type logObjectPointer: string
+  :param logObjectPointer: **[REQUIRED]** 
+
+    A pointer to the specific log object to retrieve. This is a required parameter that uniquely identifies the log object within CloudWatch Logs. The pointer is typically obtained from a previous query or filter operation.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+
+    The response of this operation contains an :class:`.EventStream` member. When iterated the :class:`.EventStream` will yield events based on the structure below, where only one of the top level keys will be present for any given event.
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'fieldStream': EventStream({
+              'fields': {
+                  'data': b'bytes'
+              },
+              'InternalStreamingException': {
+                  'message': 'string'
+              }
+          })
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The response from the GetLogObject operation.
+
+      
+      
+
+      - **fieldStream** (:class:`.EventStream`) -- 
+
+        A stream of structured log data returned by the GetLogObject operation. This stream contains log events with their associated metadata and extracted fields.
+
+        
+        
+
+        - **fields** *(dict) --* 
+
+          A structure containing the extracted fields from a log event. These fields are extracted based on the log format and can be used for structured querying and analysis.
+
+          
+          
+
+          - **data** *(bytes) --* 
+
+            The actual log data content returned in the streaming response. This contains the fields and values of the log event in a structured format that can be parsed and processed by the client.
+
+            
+      
+        
+
+        - **InternalStreamingException** *(dict) --* 
+
+          An internal error occurred during the streaming of log data. This exception is thrown when there's an issue with the internal streaming mechanism used by the GetLogObject operation.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidOperationException`
+
+  

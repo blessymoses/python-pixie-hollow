@@ -1,0 +1,222 @@
+:doc:`IoTJobsDataPlane <../../iot-jobs-data>` / Client / update_job_execution
+
+********************
+update_job_execution
+********************
+
+
+
+.. py:method:: IoTJobsDataPlane.Client.update_job_execution(**kwargs)
+
+  
+
+  Updates the status of a job execution.
+
+   
+
+  Requires permission to access the `UpdateJobExecution <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiotjobsdataplane.html>`__ action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iot-jobs-data-2017-09-29/UpdateJobExecution>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_job_execution(
+        jobId='string',
+        thingName='string',
+        status='QUEUED'|'IN_PROGRESS'|'SUCCEEDED'|'FAILED'|'TIMED_OUT'|'REJECTED'|'REMOVED'|'CANCELED',
+        statusDetails={
+            'string': 'string'
+        },
+        stepTimeoutInMinutes=123,
+        expectedVersion=123,
+        includeJobExecutionState=True|False,
+        includeJobDocument=True|False,
+        executionNumber=123
+    )
+    
+  :type jobId: string
+  :param jobId: **[REQUIRED]** 
+
+    The unique identifier assigned to this job when it was created.
+
+    
+
+  
+  :type thingName: string
+  :param thingName: **[REQUIRED]** 
+
+    The name of the thing associated with the device.
+
+    
+
+  
+  :type status: string
+  :param status: **[REQUIRED]** 
+
+    The new status for the job execution (IN_PROGRESS, FAILED, SUCCESS, or REJECTED). This must be specified on every update.
+
+    
+
+  
+  :type statusDetails: dict
+  :param statusDetails: 
+
+    Optional. A collection of name/value pairs that describe the status of the job execution. If not specified, the statusDetails are unchanged.
+
+     
+
+    The maximum length of the value in the name/value pair is 1,024 characters.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type stepTimeoutInMinutes: integer
+  :param stepTimeoutInMinutes: 
+
+    Specifies the amount of time this device has to finish execution of this job. If the job execution status is not set to a terminal state before this timer expires, or before the timer is reset (by again calling ``UpdateJobExecution``, setting the status to ``IN_PROGRESS``, and specifying a new timeout value in this field) the job execution status will be automatically set to ``TIMED_OUT``. Note that setting or resetting the step timeout has no effect on the in progress timeout that may have been specified when the job was created ( ``CreateJob`` using field ``timeoutConfig``).
+
+     
+
+    Valid values for this parameter range from 1 to 10080 (1 minute to 7 days). A value of -1 is also valid and will cancel the current step timer (created by an earlier use of ``UpdateJobExecutionRequest``).
+
+    
+
+  
+  :type expectedVersion: integer
+  :param expectedVersion: 
+
+    Optional. The expected current version of the job execution. Each time you update the job execution, its version is incremented. If the version of the job execution stored in Jobs does not match, the update is rejected with a VersionMismatch error, and an ErrorResponse that contains the current job execution status data is returned. (This makes it unnecessary to perform a separate DescribeJobExecution request in order to obtain the job execution status data.)
+
+    
+
+  
+  :type includeJobExecutionState: boolean
+  :param includeJobExecutionState: 
+
+    Optional. When included and set to true, the response contains the JobExecutionState data. The default is false.
+
+    
+
+  
+  :type includeJobDocument: boolean
+  :param includeJobDocument: 
+
+    Optional. When set to true, the response contains the job document. The default is false.
+
+    
+
+  
+  :type executionNumber: integer
+  :param executionNumber: 
+
+    Optional. A number that identifies a particular job execution on a particular device.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'executionState': {
+              'status': 'QUEUED'|'IN_PROGRESS'|'SUCCEEDED'|'FAILED'|'TIMED_OUT'|'REJECTED'|'REMOVED'|'CANCELED',
+              'statusDetails': {
+                  'string': 'string'
+              },
+              'versionNumber': 123
+          },
+          'jobDocument': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **executionState** *(dict) --* 
+
+        A JobExecutionState object.
+
+        
+        
+
+        - **status** *(string) --* 
+
+          The status of the job execution. Can be one of: "QUEUED", "IN_PROGRESS", "FAILED", "SUCCESS", "CANCELED", "TIMED_OUT", "REJECTED", or "REMOVED".
+
+          
+        
+
+        - **statusDetails** *(dict) --* 
+
+          A collection of name/value pairs that describe the status of the job execution.
+
+           
+
+          The maximum length of the value in the name/value pair is 1,024 characters.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **versionNumber** *(integer) --* 
+
+          The version of the job execution. Job execution versions are incremented each time they are updated by a device.
+
+          
+    
+      
+
+      - **jobDocument** *(string) --* 
+
+        The contents of the Job Documents.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTJobsDataPlane.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoTJobsDataPlane.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTJobsDataPlane.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTJobsDataPlane.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`IoTJobsDataPlane.Client.exceptions.CertificateValidationException`
+
+  
+  *   :py:class:`IoTJobsDataPlane.Client.exceptions.InvalidStateTransitionException`
+
+  

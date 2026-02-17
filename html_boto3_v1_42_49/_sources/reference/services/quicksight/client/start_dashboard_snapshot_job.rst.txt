@@ -1,0 +1,739 @@
+:doc:`QuickSight <../../quicksight>` / Client / start_dashboard_snapshot_job
+
+****************************
+start_dashboard_snapshot_job
+****************************
+
+
+
+.. py:method:: QuickSight.Client.start_dashboard_snapshot_job(**kwargs)
+
+  
+
+  Starts an asynchronous job that generates a snapshot of a dashboard's output. You can request one or several of the following format configurations in each API call.
+
+   
+
+  
+  * 1 PDF
+   
+  * 1 Excel workbook that includes up to 5 table or pivot table visuals
+   
+  * 5 CSVs from table or pivot table visuals
+  
+
+   
+
+  .. note::
+
+    
+
+    Exporting CSV, Excel, or Pixel Perfect PDF reports requires Pixel Perfect Report Add-on.
+
+    
+
+   
+
+  The status of a submitted job can be polled with the ``DescribeDashboardSnapshotJob`` API. When you call the ``DescribeDashboardSnapshotJob`` API, check the ``JobStatus`` field in the response. Once the job reaches a ``COMPLETED`` or ``FAILED`` status, use the ``DescribeDashboardSnapshotJobResult`` API to obtain the URLs for the generated files. If the job fails, the ``DescribeDashboardSnapshotJobResult`` API returns detailed information about the error that occurred.
+
+   
+
+  **StartDashboardSnapshotJob API throttling**
+
+   
+
+  Quick Sight utilizes API throttling to create a more consistent user experience within a time span for customers when they call the ``StartDashboardSnapshotJob``. By default, 12 jobs can run simlutaneously in one Amazon Web Services account and users can submit up 10 API requests per second before an account is throttled. If an overwhelming number of API requests are made by the same user in a short period of time, Quick Sight throttles the API calls to maintin an optimal experience and reliability for all Quick Sight users.
+
+   
+
+  **Common throttling scenarios**
+
+   
+
+  The following list provides information about the most commin throttling scenarios that can occur.
+
+   
+
+  
+  * A large number of ``SnapshotExport`` API jobs are running simultaneously on an Amazon Web Services account. When a new ``StartDashboardSnapshotJob`` is created and there are already 12 jobs with the ``RUNNING`` status, the new job request fails and returns a ``LimitExceededException`` error. Wait for a current job to comlpete before you resubmit the new job.
+   
+  * **A large number of API requests are submitted on an Amazon Web Services account.** When a user makes more than 10 API calls to the Quick Sight API in one second, a ``ThrottlingException`` is returned.
+  
+
+   
+
+  If your use case requires a higher throttling limit, contact your account admin or `Amazon Web ServicesSupport <http://aws.amazon.com/contact-us/>`__ to explore options to tailor a more optimal expereince for your account.
+
+   
+
+  **Best practices to handle throttling**
+
+   
+
+  If your use case projects high levels of API traffic, try to reduce the degree of frequency and parallelism of API calls as much as you can to avoid throttling. You can also perform a timing test to calculate an estimate for the total processing time of your projected load that stays within the throttling limits of the Quick Sight APIs. For example, if your projected traffic is 100 snapshot jobs before 12:00 PM per day, start 12 jobs in parallel and measure the amount of time it takes to proccess all 12 jobs. Once you obtain the result, multiply the duration by 9, for example ``(12 minutes * 9 = 108 minutes)``. Use the new result to determine the latest time at which the jobs need to be started to meet your target deadline.
+
+   
+
+  The time that it takes to process a job can be impacted by the following factors:
+
+   
+
+  
+  * The dataset type (Direct Query or SPICE).
+   
+  * The size of the dataset.
+   
+  * The complexity of the calculated fields that are used in the dashboard.
+   
+  * The number of visuals that are on a sheet.
+   
+  * The types of visuals that are on the sheet.
+   
+  * The number of formats and snapshots that are requested in the job configuration.
+   
+  * The size of the generated snapshots.
+  
+
+   
+
+  **Registered user support**
+
+   
+
+  You can generate snapshots for registered Quick Sight users by using the Snapshot Job APIs with `identity-enhanced IAM role session credentials <https://docs.aws.amazon.com/singlesignon/latest/userguide/trustedidentitypropagation-identity-enhanced-iam-role-sessions.html>`__. This approach allows you to create snapshots on behalf of specific Quick Sight users while respecting their row-level security (RLS), column-level security (CLS), dynamic default parameters and dashboard parameter/filter settings.
+
+   
+
+  To generate snapshots for registered Quick Sight users, you need to:
+
+   
+
+  
+  * Obtain identity-enhanced IAM role session credentials from Amazon Web Services Security Token Service (STS).
+   
+  * Use these credentials to call the Snapshot Job APIs.
+  
+
+   
+
+  Identity-enhanced credentials are credentials that contain information about the end user (e.g., registered Quick Sight user).
+
+   
+
+  If your Quick Sight users are backed by `Amazon Web Services Identity Center <https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html>`__, then you need to set up a `trusted token issuer <https://docs.aws.amazon.com/singlesignon/latest/userguide/setuptrustedtokenissuer.html>`__. Then, getting identity-enhanced IAM credentials for a Quick Sight user will look like the following:
+
+   
+
+  
+  * Authenticate user with your OIDC compliant Identity Provider. You should get auth tokens back.
+   
+  * Use the OIDC API, `CreateTokenWithIAM <https://docs.aws.amazon.com/singlesignon/latest/OIDCAPIReference/API_CreateTokenWithIAM.html>`__, to exchange auth tokens to IAM tokens. One of the resulted tokens will be identity token.
+   
+  * Call STS AssumeRole API as you normally would, but provide an extra ``ProvidedContexts`` parameter in the API request. The list of contexts must have a single trusted context assertion. The ``ProviderArn`` should be ``arn:aws:iam::aws:contextProvider/IdentityCenter`` while ``ContextAssertion`` will be the identity token you received in response from CreateTokenWithIAM
+  
+
+   
+
+  For more details, see `IdC documentation on Identity-enhanced IAM role sessions <https://docs.aws.amazon.com/singlesignon/latest/userguide/trustedidentitypropagation-identity-enhanced-iam-role-sessions.html>`__.
+
+   
+
+  To obtain Identity-enhanced credentials for Quick Sight native users, IAM federated users, or Active Directory users, follow the steps below:
+
+   
+
+  
+  * Call Quick Sight `GetIdentityContext API <https://docs.aws.amazon.com/quicksight/latest/APIReference/API_GetIdentityContext.html>`__ to get identity token.
+   
+  * Call STS AssumeRole API as you normally would, but provide extra ``ProvidedContexts`` parameter in the API request. The list of contexts must have a single trusted context assertion. The ``ProviderArn`` should be ``arn:aws:iam::aws:contextProvider/QuickSight`` while ``ContextAssertion`` will be the identity token you received in response from GetIdentityContext
+  
+
+   
+
+  After obtaining the identity-enhanced IAM role session credentials, you can use them to start a job, describe the job and describe job result. You can use the same credentials as long as they haven't expired. All API requests made with these credentials are considered to be made by the impersonated Quick Sight user.
+
+   
+
+  .. warning::
+
+     
+
+    When using identity-enhanced session credentials, set the UserConfiguration request attribute to null. Otherwise, the request will be invalid.
+
+     
+
+   
+
+  **Possible error scenarios**
+
+   
+
+  The request fails with an Access Denied error in the following scenarios:
+
+   
+
+  
+  * The credentials have expired.
+   
+  * The impersonated Quick Sight user doesn't have access to the specified dashboard.
+   
+  * The impersonated Quick Sight user is restricted from exporting data in the selected formats. For more information about export restrictions, see `Customizing access to Amazon Quick Sight capabilities <https://docs.aws.amazon.com/quicksuite/latest/userguide/create-custom-permisions-profile.html>`__.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/quicksight-2018-04-01/StartDashboardSnapshotJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_dashboard_snapshot_job(
+        AwsAccountId='string',
+        DashboardId='string',
+        SnapshotJobId='string',
+        UserConfiguration={
+            'AnonymousUsers': [
+                {
+                    'RowLevelPermissionTags': [
+                        {
+                            'Key': 'string',
+                            'Value': 'string'
+                        },
+                    ]
+                },
+            ]
+        },
+        SnapshotConfiguration={
+            'FileGroups': [
+                {
+                    'Files': [
+                        {
+                            'SheetSelections': [
+                                {
+                                    'SheetId': 'string',
+                                    'SelectionScope': 'ALL_VISUALS'|'SELECTED_VISUALS',
+                                    'VisualIds': [
+                                        'string',
+                                    ]
+                                },
+                            ],
+                            'FormatType': 'CSV'|'PDF'|'EXCEL'
+                        },
+                    ]
+                },
+            ],
+            'DestinationConfiguration': {
+                'S3Destinations': [
+                    {
+                        'BucketConfiguration': {
+                            'BucketName': 'string',
+                            'BucketPrefix': 'string',
+                            'BucketRegion': 'string'
+                        }
+                    },
+                ]
+            },
+            'Parameters': {
+                'StringParameters': [
+                    {
+                        'Name': 'string',
+                        'Values': [
+                            'string',
+                        ]
+                    },
+                ],
+                'IntegerParameters': [
+                    {
+                        'Name': 'string',
+                        'Values': [
+                            123,
+                        ]
+                    },
+                ],
+                'DecimalParameters': [
+                    {
+                        'Name': 'string',
+                        'Values': [
+                            123.0,
+                        ]
+                    },
+                ],
+                'DateTimeParameters': [
+                    {
+                        'Name': 'string',
+                        'Values': [
+                            datetime(2015, 1, 1),
+                        ]
+                    },
+                ]
+            }
+        }
+    )
+    
+  :type AwsAccountId: string
+  :param AwsAccountId: **[REQUIRED]** 
+
+    The ID of the Amazon Web Services account that the dashboard snapshot job is executed in.
+
+    
+
+  
+  :type DashboardId: string
+  :param DashboardId: **[REQUIRED]** 
+
+    The ID of the dashboard that you want to start a snapshot job for.
+
+    
+
+  
+  :type SnapshotJobId: string
+  :param SnapshotJobId: **[REQUIRED]** 
+
+    An ID for the dashboard snapshot job. This ID is unique to the dashboard while the job is running. This ID can be used to poll the status of a job with a ``DescribeDashboardSnapshotJob`` while the job runs. You can reuse this ID for another job 24 hours after the current job is completed.
+
+    
+
+  
+  :type UserConfiguration: dict
+  :param UserConfiguration: 
+
+    A structure that contains information about the users that the dashboard snapshot is generated for. The users can be either anonymous users or registered users. Anonymous users cannot be used together with registered users.
+
+     
+
+    .. warning::
+
+       
+
+      When using identity-enhanced session credentials, set the UserConfiguration request attribute to null. Otherwise, the request will be invalid.
+
+      
+
+    
+
+  
+    - **AnonymousUsers** *(list) --* 
+
+      An array of records that describe the anonymous users that the dashboard snapshot is generated for.
+
+      
+
+    
+      - *(dict) --* 
+
+        A structure that contains information on the anonymous user configuration.
+
+        
+
+      
+        - **RowLevelPermissionTags** *(list) --* 
+
+          The tags to be used for row-level security (RLS). Make sure that the relevant datasets have RLS tags configured before you start a snapshot export job. You can configure the RLS tags of a dataset with a ``DataSet$RowLevelPermissionTagConfiguration`` API call.
+
+           
+
+          These are not the tags that are used for Amazon Web Services resource tagging. For more information on row level security in Amazon Quick Sight, see `Using Row-Level Security (RLS) with Tags <https://docs.aws.amazon.com/quicksight/latest/user/quicksight-dev-rls-tags.html>`__in the *Amazon Quick Suite User Guide*.
+
+          
+
+        
+          - *(dict) --* 
+
+            The key-value pair used for the row-level security tags feature.
+
+            
+
+          
+            - **Key** *(string) --* **[REQUIRED]** 
+
+              The key for the tag.
+
+              
+
+            
+            - **Value** *(string) --* **[REQUIRED]** 
+
+              The value that you want to assign the tag.
+
+              
+
+            
+          
+      
+      
+  
+  
+  :type SnapshotConfiguration: dict
+  :param SnapshotConfiguration: **[REQUIRED]** 
+
+    A structure that describes the configuration of the dashboard snapshot.
+
+    
+
+  
+    - **FileGroups** *(list) --* **[REQUIRED]** 
+
+      A list of ``SnapshotJobResultFileGroup`` objects that contain information about the snapshot that is generated. This list can hold a maximum of 6 ``FileGroup`` configurations.
+
+      
+
+    
+      - *(dict) --* 
+
+        A structure that contains the information on the snapshot files.
+
+        
+
+      
+        - **Files** *(list) --* 
+
+          A list of ``SnapshotFile`` objects that contain the information on the snapshot files that need to be generated. This structure can hold 1 configuration at a time.
+
+          
+
+        
+          - *(dict) --* 
+
+            A structure that contains the information for the snapshot that you want to generate. This information is provided by you when you start a new snapshot job.
+
+            
+
+          
+            - **SheetSelections** *(list) --* **[REQUIRED]** 
+
+              A list of ``SnapshotFileSheetSelection`` objects that contain information on the dashboard sheet that is exported. These objects provide information about the snapshot artifacts that are generated during the job. This structure can hold a maximum of 5 CSV configurations, 5 Excel configurations, or 1 configuration for PDF.
+
+              
+
+            
+              - *(dict) --* 
+
+                A structure that contains information that identifies the snapshot that needs to be generated.
+
+                
+
+              
+                - **SheetId** *(string) --* **[REQUIRED]** 
+
+                  The sheet ID of the dashboard to generate the snapshot artifact from. This value is required for CSV, Excel, and PDF format types.
+
+                  
+
+                
+                - **SelectionScope** *(string) --* **[REQUIRED]** 
+
+                  The selection scope of the visuals on a sheet of a dashboard that you are generating a snapthot of. You can choose one of the following options.
+
+                   
+
+                  
+                  * ``ALL_VISUALS`` - Selects all visuals that are on the sheet. This value is required if the snapshot is a PDF.
+                   
+                  * ``SELECTED_VISUALS`` - Select the visual that you want to add to the snapshot. This value is required if the snapshot is a CSV or Excel workbook.
+                  
+
+                  
+
+                
+                - **VisualIds** *(list) --* 
+
+                  A structure that lists the IDs of the visuals in the selected sheet. Supported visual types are table, pivot table visuals. This value is required if you are generating a CSV or Excel workbook. This value supports a maximum of 1 visual ID for CSV and 5 visual IDs across up to 5 sheet selections for Excel. If you are generating an Excel workbook, the order of the visual IDs provided in this structure determines the order of the worksheets in the Excel file.
+
+                  
+
+                
+                  - *(string) --* 
+
+                  
+              
+              
+          
+            - **FormatType** *(string) --* **[REQUIRED]** 
+
+              The format of the snapshot file to be generated. You can choose between ``CSV``, ``Excel``, or ``PDF``.
+
+              
+
+            
+          
+      
+      
+  
+    - **DestinationConfiguration** *(dict) --* 
+
+      A structure that contains information on the Amazon S3 bucket that the generated snapshot is stored in.
+
+      
+
+    
+      - **S3Destinations** *(list) --* 
+
+        A list of ``SnapshotS3DestinationConfiguration`` objects that contain Amazon S3 destination configurations. This structure can hold a maximum of 1 ``S3DestinationConfiguration``.
+
+        
+
+      
+        - *(dict) --* 
+
+          A structure that describes the Amazon S3 settings to use to save the generated dashboard snapshot.
+
+          
+
+        
+          - **BucketConfiguration** *(dict) --* **[REQUIRED]** 
+
+            A structure that contains details about the Amazon S3 bucket that the generated dashboard snapshot is saved in.
+
+            
+
+          
+            - **BucketName** *(string) --* **[REQUIRED]** 
+
+              The name of an existing Amazon S3 bucket where the generated snapshot artifacts are sent.
+
+              
+
+            
+            - **BucketPrefix** *(string) --* **[REQUIRED]** 
+
+              The prefix of the Amazon S3 bucket that the generated snapshots are stored in.
+
+              
+
+            
+            - **BucketRegion** *(string) --* **[REQUIRED]** 
+
+              The region that the Amazon S3 bucket is located in. The bucket must be located in the same region that the ``StartDashboardSnapshotJob`` API call is made.
+
+              
+
+            
+          
+        
+    
+    
+    - **Parameters** *(dict) --* 
+
+      A list of Quick Sight parameters and the list's override values.
+
+      
+
+    
+      - **StringParameters** *(list) --* 
+
+        The parameters that have a data type of string.
+
+        
+
+      
+        - *(dict) --* 
+
+          A string parameter.
+
+          
+
+        
+          - **Name** *(string) --* **[REQUIRED]** 
+
+            A display name for a string parameter.
+
+            
+
+          
+          - **Values** *(list) --* **[REQUIRED]** 
+
+            The values of a string parameter.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+    
+      - **IntegerParameters** *(list) --* 
+
+        The parameters that have a data type of integer.
+
+        
+
+      
+        - *(dict) --* 
+
+          An integer parameter.
+
+          
+
+        
+          - **Name** *(string) --* **[REQUIRED]** 
+
+            The name of the integer parameter.
+
+            
+
+          
+          - **Values** *(list) --* **[REQUIRED]** 
+
+            The values for the integer parameter.
+
+            
+
+          
+            - *(integer) --* 
+
+            
+        
+        
+    
+      - **DecimalParameters** *(list) --* 
+
+        The parameters that have a data type of decimal.
+
+        
+
+      
+        - *(dict) --* 
+
+          A decimal parameter.
+
+          
+
+        
+          - **Name** *(string) --* **[REQUIRED]** 
+
+            A display name for the decimal parameter.
+
+            
+
+          
+          - **Values** *(list) --* **[REQUIRED]** 
+
+            The values for the decimal parameter.
+
+            
+
+          
+            - *(float) --* 
+
+            
+        
+        
+    
+      - **DateTimeParameters** *(list) --* 
+
+        The parameters that have a data type of date-time.
+
+        
+
+      
+        - *(dict) --* 
+
+          A date-time parameter.
+
+          
+
+        
+          - **Name** *(string) --* **[REQUIRED]** 
+
+            A display name for the date-time parameter.
+
+            
+
+          
+          - **Values** *(list) --* **[REQUIRED]** 
+
+            The values for the date-time parameter.
+
+            
+
+          
+            - *(datetime) --* 
+
+            
+        
+        
+    
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Arn': 'string',
+          'SnapshotJobId': 'string',
+          'RequestId': 'string',
+          'Status': 123
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Arn** *(string) --* 
+
+        The Amazon Resource Name (ARN) for the dashboard snapshot job.
+
+        
+      
+
+      - **SnapshotJobId** *(string) --* 
+
+        The ID of the job. The job ID is set when you start a new job with a ``StartDashboardSnapshotJob`` API call.
+
+        
+      
+
+      - **RequestId** *(string) --* 
+
+        The Amazon Web Services request ID for this operation.
+
+        
+      
+
+      - **Status** *(integer) --* 
+
+        The HTTP status of the request
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`QuickSight.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ResourceExistsException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.UnsupportedUserEditionException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.UnsupportedPricingPlanException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.InternalFailureException`
+
+  

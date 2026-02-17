@@ -1,0 +1,2580 @@
+:doc:`BedrockRuntime <../../bedrock-runtime>` / Client / apply_guardrail
+
+***************
+apply_guardrail
+***************
+
+
+
+.. py:method:: BedrockRuntime.Client.apply_guardrail(**kwargs)
+
+  
+
+  The action to apply a guardrail.
+
+   
+
+  For troubleshooting some of the common errors you might encounter when using the ``ApplyGuardrail`` API, see `Troubleshooting Amazon Bedrock API Error Codes <https://docs.aws.amazon.com/bedrock/latest/userguide/troubleshooting-api-error-codes.html>`__ in the Amazon Bedrock User Guide
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/ApplyGuardrail>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.apply_guardrail(
+        guardrailIdentifier='string',
+        guardrailVersion='string',
+        source='INPUT'|'OUTPUT',
+        content=[
+            {
+                'text': {
+                    'text': 'string',
+                    'qualifiers': [
+                        'grounding_source'|'query'|'guard_content',
+                    ]
+                },
+                'image': {
+                    'format': 'png'|'jpeg',
+                    'source': {
+                        'bytes': b'bytes'
+                    }
+                }
+            },
+        ],
+        outputScope='INTERVENTIONS'|'FULL'
+    )
+    
+  :type guardrailIdentifier: string
+  :param guardrailIdentifier: **[REQUIRED]** 
+
+    The guardrail identifier used in the request to apply the guardrail.
+
+    
+
+  
+  :type guardrailVersion: string
+  :param guardrailVersion: **[REQUIRED]** 
+
+    The guardrail version used in the request to apply the guardrail.
+
+    
+
+  
+  :type source: string
+  :param source: **[REQUIRED]** 
+
+    The source of data used in the request to apply the guardrail.
+
+    
+
+  
+  :type content: list
+  :param content: **[REQUIRED]** 
+
+    The content details used in the request to apply the guardrail.
+
+    
+
+  
+    - *(dict) --* 
+
+      The content block to be evaluated by the guardrail.
+
+      .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``text``, ``image``. 
+
+    
+      - **text** *(dict) --* 
+
+        Text within content block to be evaluated by the guardrail.
+
+        
+
+      
+        - **text** *(string) --* **[REQUIRED]** 
+
+          The input text details to be evaluated by the guardrail.
+
+          
+
+        
+        - **qualifiers** *(list) --* 
+
+          The qualifiers describing the text block.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+      - **image** *(dict) --* 
+
+        Image within guardrail content block to be evaluated by the guardrail.
+
+        
+
+      
+        - **format** *(string) --* **[REQUIRED]** 
+
+          The format details for the file type of the image blocked by the guardrail.
+
+          
+
+        
+        - **source** *(dict) --* **[REQUIRED]** 
+
+          The image source (image bytes) details of the image blocked by the guardrail.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``bytes``. 
+
+        
+          - **bytes** *(bytes) --* 
+
+            The bytes details of the guardrail image source. Object used in independent api.
+
+            
+
+          
+        
+      
+    
+
+  :type outputScope: string
+  :param outputScope: 
+
+    Specifies the scope of the output that you get in the response. Set to ``FULL`` to return the entire output, including any detected and non-detected entries in the response for enhanced debugging.
+
+     
+
+    Note that the full output scope doesn't apply to word filters or regex in sensitive information filters. It does apply to all other filtering policies, including sensitive information with filters that can detect personally identifiable information (PII).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'usage': {
+              'topicPolicyUnits': 123,
+              'contentPolicyUnits': 123,
+              'wordPolicyUnits': 123,
+              'sensitiveInformationPolicyUnits': 123,
+              'sensitiveInformationPolicyFreeUnits': 123,
+              'contextualGroundingPolicyUnits': 123,
+              'contentPolicyImageUnits': 123,
+              'automatedReasoningPolicyUnits': 123,
+              'automatedReasoningPolicies': 123
+          },
+          'action': 'NONE'|'GUARDRAIL_INTERVENED',
+          'actionReason': 'string',
+          'outputs': [
+              {
+                  'text': 'string'
+              },
+          ],
+          'assessments': [
+              {
+                  'topicPolicy': {
+                      'topics': [
+                          {
+                              'name': 'string',
+                              'type': 'DENY',
+                              'action': 'BLOCKED'|'NONE',
+                              'detected': True|False
+                          },
+                      ]
+                  },
+                  'contentPolicy': {
+                      'filters': [
+                          {
+                              'type': 'INSULTS'|'HATE'|'SEXUAL'|'VIOLENCE'|'MISCONDUCT'|'PROMPT_ATTACK',
+                              'confidence': 'NONE'|'LOW'|'MEDIUM'|'HIGH',
+                              'filterStrength': 'NONE'|'LOW'|'MEDIUM'|'HIGH',
+                              'action': 'BLOCKED'|'NONE',
+                              'detected': True|False
+                          },
+                      ]
+                  },
+                  'wordPolicy': {
+                      'customWords': [
+                          {
+                              'match': 'string',
+                              'action': 'BLOCKED'|'NONE',
+                              'detected': True|False
+                          },
+                      ],
+                      'managedWordLists': [
+                          {
+                              'match': 'string',
+                              'type': 'PROFANITY',
+                              'action': 'BLOCKED'|'NONE',
+                              'detected': True|False
+                          },
+                      ]
+                  },
+                  'sensitiveInformationPolicy': {
+                      'piiEntities': [
+                          {
+                              'match': 'string',
+                              'type': 'ADDRESS'|'AGE'|'AWS_ACCESS_KEY'|'AWS_SECRET_KEY'|'CA_HEALTH_NUMBER'|'CA_SOCIAL_INSURANCE_NUMBER'|'CREDIT_DEBIT_CARD_CVV'|'CREDIT_DEBIT_CARD_EXPIRY'|'CREDIT_DEBIT_CARD_NUMBER'|'DRIVER_ID'|'EMAIL'|'INTERNATIONAL_BANK_ACCOUNT_NUMBER'|'IP_ADDRESS'|'LICENSE_PLATE'|'MAC_ADDRESS'|'NAME'|'PASSWORD'|'PHONE'|'PIN'|'SWIFT_CODE'|'UK_NATIONAL_HEALTH_SERVICE_NUMBER'|'UK_NATIONAL_INSURANCE_NUMBER'|'UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER'|'URL'|'USERNAME'|'US_BANK_ACCOUNT_NUMBER'|'US_BANK_ROUTING_NUMBER'|'US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER'|'US_PASSPORT_NUMBER'|'US_SOCIAL_SECURITY_NUMBER'|'VEHICLE_IDENTIFICATION_NUMBER',
+                              'action': 'ANONYMIZED'|'BLOCKED'|'NONE',
+                              'detected': True|False
+                          },
+                      ],
+                      'regexes': [
+                          {
+                              'name': 'string',
+                              'match': 'string',
+                              'regex': 'string',
+                              'action': 'ANONYMIZED'|'BLOCKED'|'NONE',
+                              'detected': True|False
+                          },
+                      ]
+                  },
+                  'contextualGroundingPolicy': {
+                      'filters': [
+                          {
+                              'type': 'GROUNDING'|'RELEVANCE',
+                              'threshold': 123.0,
+                              'score': 123.0,
+                              'action': 'BLOCKED'|'NONE',
+                              'detected': True|False
+                          },
+                      ]
+                  },
+                  'automatedReasoningPolicy': {
+                      'findings': [
+                          {
+                              'valid': {
+                                  'translation': {
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'untranslatedPremises': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'untranslatedClaims': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'confidence': 123.0
+                                  },
+                                  'claimsTrueScenario': {
+                                      'statements': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ]
+                                  },
+                                  'supportingRules': [
+                                      {
+                                          'identifier': 'string',
+                                          'policyVersionArn': 'string'
+                                      },
+                                  ],
+                                  'logicWarning': {
+                                      'type': 'ALWAYS_FALSE'|'ALWAYS_TRUE',
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ]
+                                  }
+                              },
+                              'invalid': {
+                                  'translation': {
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'untranslatedPremises': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'untranslatedClaims': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'confidence': 123.0
+                                  },
+                                  'contradictingRules': [
+                                      {
+                                          'identifier': 'string',
+                                          'policyVersionArn': 'string'
+                                      },
+                                  ],
+                                  'logicWarning': {
+                                      'type': 'ALWAYS_FALSE'|'ALWAYS_TRUE',
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ]
+                                  }
+                              },
+                              'satisfiable': {
+                                  'translation': {
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'untranslatedPremises': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'untranslatedClaims': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'confidence': 123.0
+                                  },
+                                  'claimsTrueScenario': {
+                                      'statements': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ]
+                                  },
+                                  'claimsFalseScenario': {
+                                      'statements': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ]
+                                  },
+                                  'logicWarning': {
+                                      'type': 'ALWAYS_FALSE'|'ALWAYS_TRUE',
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ]
+                                  }
+                              },
+                              'impossible': {
+                                  'translation': {
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'untranslatedPremises': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'untranslatedClaims': [
+                                          {
+                                              'text': 'string'
+                                          },
+                                      ],
+                                      'confidence': 123.0
+                                  },
+                                  'contradictingRules': [
+                                      {
+                                          'identifier': 'string',
+                                          'policyVersionArn': 'string'
+                                      },
+                                  ],
+                                  'logicWarning': {
+                                      'type': 'ALWAYS_FALSE'|'ALWAYS_TRUE',
+                                      'premises': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ],
+                                      'claims': [
+                                          {
+                                              'logic': 'string',
+                                              'naturalLanguage': 'string'
+                                          },
+                                      ]
+                                  }
+                              },
+                              'translationAmbiguous': {
+                                  'options': [
+                                      {
+                                          'translations': [
+                                              {
+                                                  'premises': [
+                                                      {
+                                                          'logic': 'string',
+                                                          'naturalLanguage': 'string'
+                                                      },
+                                                  ],
+                                                  'claims': [
+                                                      {
+                                                          'logic': 'string',
+                                                          'naturalLanguage': 'string'
+                                                      },
+                                                  ],
+                                                  'untranslatedPremises': [
+                                                      {
+                                                          'text': 'string'
+                                                      },
+                                                  ],
+                                                  'untranslatedClaims': [
+                                                      {
+                                                          'text': 'string'
+                                                      },
+                                                  ],
+                                                  'confidence': 123.0
+                                              },
+                                          ]
+                                      },
+                                  ],
+                                  'differenceScenarios': [
+                                      {
+                                          'statements': [
+                                              {
+                                                  'logic': 'string',
+                                                  'naturalLanguage': 'string'
+                                              },
+                                          ]
+                                      },
+                                  ]
+                              },
+                              'tooComplex': {},
+                              'noTranslations': {}
+                          },
+                      ]
+                  },
+                  'invocationMetrics': {
+                      'guardrailProcessingLatency': 123,
+                      'usage': {
+                          'topicPolicyUnits': 123,
+                          'contentPolicyUnits': 123,
+                          'wordPolicyUnits': 123,
+                          'sensitiveInformationPolicyUnits': 123,
+                          'sensitiveInformationPolicyFreeUnits': 123,
+                          'contextualGroundingPolicyUnits': 123,
+                          'contentPolicyImageUnits': 123,
+                          'automatedReasoningPolicyUnits': 123,
+                          'automatedReasoningPolicies': 123
+                      },
+                      'guardrailCoverage': {
+                          'textCharacters': {
+                              'guarded': 123,
+                              'total': 123
+                          },
+                          'images': {
+                              'guarded': 123,
+                              'total': 123
+                          }
+                      }
+                  },
+                  'appliedGuardrailDetails': {
+                      'guardrailId': 'string',
+                      'guardrailVersion': 'string',
+                      'guardrailArn': 'string',
+                      'guardrailOrigin': [
+                          'REQUEST'|'ACCOUNT_ENFORCED'|'ORGANIZATION_ENFORCED',
+                      ],
+                      'guardrailOwnership': 'SELF'|'CROSS_ACCOUNT'
+                  }
+              },
+          ],
+          'guardrailCoverage': {
+              'textCharacters': {
+                  'guarded': 123,
+                  'total': 123
+              },
+              'images': {
+                  'guarded': 123,
+                  'total': 123
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **usage** *(dict) --* 
+
+        The usage details in the response from the guardrail.
+
+        
+        
+
+        - **topicPolicyUnits** *(integer) --* 
+
+          The topic policy units processed by the guardrail.
+
+          
+        
+
+        - **contentPolicyUnits** *(integer) --* 
+
+          The content policy units processed by the guardrail.
+
+          
+        
+
+        - **wordPolicyUnits** *(integer) --* 
+
+          The word policy units processed by the guardrail.
+
+          
+        
+
+        - **sensitiveInformationPolicyUnits** *(integer) --* 
+
+          The sensitive information policy units processed by the guardrail.
+
+          
+        
+
+        - **sensitiveInformationPolicyFreeUnits** *(integer) --* 
+
+          The sensitive information policy free units processed by the guardrail.
+
+          
+        
+
+        - **contextualGroundingPolicyUnits** *(integer) --* 
+
+          The contextual grounding policy units processed by the guardrail.
+
+          
+        
+
+        - **contentPolicyImageUnits** *(integer) --* 
+
+          The content policy image units processed by the guardrail.
+
+          
+        
+
+        - **automatedReasoningPolicyUnits** *(integer) --* 
+
+          The number of text units processed by the automated reasoning policy.
+
+          
+        
+
+        - **automatedReasoningPolicies** *(integer) --* 
+
+          The number of automated reasoning policies that were processed during the guardrail evaluation.
+
+          
+    
+      
+
+      - **action** *(string) --* 
+
+        The action taken in the response from the guardrail.
+
+        
+      
+
+      - **actionReason** *(string) --* 
+
+        The reason for the action taken when harmful content is detected.
+
+        
+      
+
+      - **outputs** *(list) --* 
+
+        The output details in the response from the guardrail.
+
+        
+        
+
+        - *(dict) --* 
+
+          The output content produced by the guardrail.
+
+          
+          
+
+          - **text** *(string) --* 
+
+            The specific text for the output content produced by the guardrail.
+
+            
+      
+    
+      
+
+      - **assessments** *(list) --* 
+
+        The assessment details in the response from the guardrail.
+
+        
+        
+
+        - *(dict) --* 
+
+          A behavior assessment of the guardrail policies used in a call to the Converse API.
+
+          
+          
+
+          - **topicPolicy** *(dict) --* 
+
+            The topic policy.
+
+            
+            
+
+            - **topics** *(list) --* 
+
+              The topics in the assessment.
+
+              
+              
+
+              - *(dict) --* 
+
+                Information about a topic guardrail.
+
+                
+                
+
+                - **name** *(string) --* 
+
+                  The name for the guardrail.
+
+                  
+                
+
+                - **type** *(string) --* 
+
+                  The type behavior that the guardrail should perform when the model detects the topic.
+
+                  
+                
+
+                - **action** *(string) --* 
+
+                  The action the guardrail should take when it intervenes on a topic.
+
+                  
+                
+
+                - **detected** *(boolean) --* 
+
+                  Indicates whether topic content that breaches the guardrail configuration is detected.
+
+                  
+            
+          
+        
+          
+
+          - **contentPolicy** *(dict) --* 
+
+            The content policy.
+
+            
+            
+
+            - **filters** *(list) --* 
+
+              The content policy filters.
+
+              
+              
+
+              - *(dict) --* 
+
+                The content filter for a guardrail.
+
+                
+                
+
+                - **type** *(string) --* 
+
+                  The guardrail type.
+
+                  
+                
+
+                - **confidence** *(string) --* 
+
+                  The guardrail confidence.
+
+                  
+                
+
+                - **filterStrength** *(string) --* 
+
+                  The filter strength setting for the guardrail content filter.
+
+                  
+                
+
+                - **action** *(string) --* 
+
+                  The guardrail action.
+
+                  
+                
+
+                - **detected** *(boolean) --* 
+
+                  Indicates whether content that breaches the guardrail configuration is detected.
+
+                  
+            
+          
+        
+          
+
+          - **wordPolicy** *(dict) --* 
+
+            The word policy.
+
+            
+            
+
+            - **customWords** *(list) --* 
+
+              Custom words in the assessment.
+
+              
+              
+
+              - *(dict) --* 
+
+                A custom word configured in a guardrail.
+
+                
+                
+
+                - **match** *(string) --* 
+
+                  The match for the custom word.
+
+                  
+                
+
+                - **action** *(string) --* 
+
+                  The action for the custom word.
+
+                  
+                
+
+                - **detected** *(boolean) --* 
+
+                  Indicates whether custom word content that breaches the guardrail configuration is detected.
+
+                  
+            
+          
+            
+
+            - **managedWordLists** *(list) --* 
+
+              Managed word lists in the assessment.
+
+              
+              
+
+              - *(dict) --* 
+
+                A managed word configured in a guardrail.
+
+                
+                
+
+                - **match** *(string) --* 
+
+                  The match for the managed word.
+
+                  
+                
+
+                - **type** *(string) --* 
+
+                  The type for the managed word.
+
+                  
+                
+
+                - **action** *(string) --* 
+
+                  The action for the managed word.
+
+                  
+                
+
+                - **detected** *(boolean) --* 
+
+                  Indicates whether managed word content that breaches the guardrail configuration is detected.
+
+                  
+            
+          
+        
+          
+
+          - **sensitiveInformationPolicy** *(dict) --* 
+
+            The sensitive information policy.
+
+            
+            
+
+            - **piiEntities** *(list) --* 
+
+              The PII entities in the assessment.
+
+              
+              
+
+              - *(dict) --* 
+
+                A Personally Identifiable Information (PII) entity configured in a guardrail.
+
+                
+                
+
+                - **match** *(string) --* 
+
+                  The PII entity filter match.
+
+                  
+                
+
+                - **type** *(string) --* 
+
+                  The PII entity filter type.
+
+                  
+                
+
+                - **action** *(string) --* 
+
+                  The PII entity filter action.
+
+                  
+                
+
+                - **detected** *(boolean) --* 
+
+                  Indicates whether personally identifiable information (PII) that breaches the guardrail configuration is detected.
+
+                  
+            
+          
+            
+
+            - **regexes** *(list) --* 
+
+              The regex queries in the assessment.
+
+              
+              
+
+              - *(dict) --* 
+
+                A Regex filter configured in a guardrail.
+
+                
+                
+
+                - **name** *(string) --* 
+
+                  The regex filter name.
+
+                  
+                
+
+                - **match** *(string) --* 
+
+                  The regesx filter match.
+
+                  
+                
+
+                - **regex** *(string) --* 
+
+                  The regex query.
+
+                  
+                
+
+                - **action** *(string) --* 
+
+                  The region filter action.
+
+                  
+                
+
+                - **detected** *(boolean) --* 
+
+                  Indicates whether custom regex entities that breach the guardrail configuration are detected.
+
+                  
+            
+          
+        
+          
+
+          - **contextualGroundingPolicy** *(dict) --* 
+
+            The contextual grounding policy used for the guardrail assessment.
+
+            
+            
+
+            - **filters** *(list) --* 
+
+              The filter details for the guardrails contextual grounding filter.
+
+              
+              
+
+              - *(dict) --* 
+
+                The details for the guardrails contextual grounding filter.
+
+                
+                
+
+                - **type** *(string) --* 
+
+                  The contextual grounding filter type.
+
+                  
+                
+
+                - **threshold** *(float) --* 
+
+                  The threshold used by contextual grounding filter to determine whether the content is grounded or not.
+
+                  
+                
+
+                - **score** *(float) --* 
+
+                  The score generated by contextual grounding filter.
+
+                  
+                
+
+                - **action** *(string) --* 
+
+                  The action performed by the guardrails contextual grounding filter.
+
+                  
+                
+
+                - **detected** *(boolean) --* 
+
+                  Indicates whether content that fails the contextual grounding evaluation (grounding or relevance score less than the corresponding threshold) was detected.
+
+                  
+            
+          
+        
+          
+
+          - **automatedReasoningPolicy** *(dict) --* 
+
+            The automated reasoning policy assessment results, including logical validation findings for the input content.
+
+            
+            
+
+            - **findings** *(list) --* 
+
+              List of logical validation results produced by evaluating the input content against automated reasoning policies.
+
+              
+              
+
+              - *(dict) --* 
+
+                Represents a logical validation result from automated reasoning policy evaluation. The finding indicates whether claims in the input are logically valid, invalid, satisfiable, impossible, or have other logical issues.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``valid``, ``invalid``, ``satisfiable``, ``impossible``, ``translationAmbiguous``, ``tooComplex``, ``noTranslations``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+              
+                
+
+                - **valid** *(dict) --* 
+
+                  Contains the result when the automated reasoning evaluation determines that the claims in the input are logically valid and definitively true based on the provided premises and policy rules.
+
+                  
+                  
+
+                  - **translation** *(dict) --* 
+
+                    The logical translation of the input that this finding validates.
+
+                    
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as the foundation or assumptions for the claims.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are being validated against the premises and policy rules.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedPremises** *(list) --* 
+
+                      References to portions of the original input text that correspond to the premises but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedClaims** *(list) --* 
+
+                      References to portions of the original input text that correspond to the claims but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **confidence** *(float) --* 
+
+                      A confidence score between 0 and 1 indicating how certain the system is about the logical translation.
+
+                      
+                
+                  
+
+                  - **claimsTrueScenario** *(dict) --* 
+
+                    An example scenario demonstrating how the claims are logically true.
+
+                    
+                    
+
+                    - **statements** *(list) --* 
+
+                      List of logical assignments and statements that define this scenario.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                
+                  
+
+                  - **supportingRules** *(list) --* 
+
+                    The automated reasoning policy rules that support why this result is considered valid.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      References a specific automated reasoning policy rule that was applied during evaluation.
+
+                      
+                      
+
+                      - **identifier** *(string) --* 
+
+                        The unique identifier of the automated reasoning rule.
+
+                        
+                      
+
+                      - **policyVersionArn** *(string) --* 
+
+                        The ARN of the automated reasoning policy version that contains this rule.
+
+                        
+                  
+                
+                  
+
+                  - **logicWarning** *(dict) --* 
+
+                    Indication of a logic issue with the translation without needing to consider the automated reasoning policy rules.
+
+                    
+                    
+
+                    - **type** *(string) --* 
+
+                      The category of the detected logical issue, such as statements that are always true or always false.
+
+                      
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as premises under which the claims are validated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are validated while assuming the policy and premises.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                
+              
+                
+
+                - **invalid** *(dict) --* 
+
+                  Contains the result when the automated reasoning evaluation determines that the claims in the input are logically invalid and contradict the established premises or policy rules.
+
+                  
+                  
+
+                  - **translation** *(dict) --* 
+
+                    The logical translation of the input that this finding invalidates.
+
+                    
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as the foundation or assumptions for the claims.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are being validated against the premises and policy rules.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedPremises** *(list) --* 
+
+                      References to portions of the original input text that correspond to the premises but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedClaims** *(list) --* 
+
+                      References to portions of the original input text that correspond to the claims but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **confidence** *(float) --* 
+
+                      A confidence score between 0 and 1 indicating how certain the system is about the logical translation.
+
+                      
+                
+                  
+
+                  - **contradictingRules** *(list) --* 
+
+                    The automated reasoning policy rules that contradict the claims in the input.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      References a specific automated reasoning policy rule that was applied during evaluation.
+
+                      
+                      
+
+                      - **identifier** *(string) --* 
+
+                        The unique identifier of the automated reasoning rule.
+
+                        
+                      
+
+                      - **policyVersionArn** *(string) --* 
+
+                        The ARN of the automated reasoning policy version that contains this rule.
+
+                        
+                  
+                
+                  
+
+                  - **logicWarning** *(dict) --* 
+
+                    Indication of a logic issue with the translation without needing to consider the automated reasoning policy rules.
+
+                    
+                    
+
+                    - **type** *(string) --* 
+
+                      The category of the detected logical issue, such as statements that are always true or always false.
+
+                      
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as premises under which the claims are validated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are validated while assuming the policy and premises.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                
+              
+                
+
+                - **satisfiable** *(dict) --* 
+
+                  Contains the result when the automated reasoning evaluation determines that the claims in the input could be either true or false depending on additional assumptions not provided in the input context.
+
+                  
+                  
+
+                  - **translation** *(dict) --* 
+
+                    The logical translation of the input that this finding evaluates.
+
+                    
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as the foundation or assumptions for the claims.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are being validated against the premises and policy rules.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedPremises** *(list) --* 
+
+                      References to portions of the original input text that correspond to the premises but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedClaims** *(list) --* 
+
+                      References to portions of the original input text that correspond to the claims but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **confidence** *(float) --* 
+
+                      A confidence score between 0 and 1 indicating how certain the system is about the logical translation.
+
+                      
+                
+                  
+
+                  - **claimsTrueScenario** *(dict) --* 
+
+                    An example scenario demonstrating how the claims could be logically true.
+
+                    
+                    
+
+                    - **statements** *(list) --* 
+
+                      List of logical assignments and statements that define this scenario.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                
+                  
+
+                  - **claimsFalseScenario** *(dict) --* 
+
+                    An example scenario demonstrating how the claims could be logically false.
+
+                    
+                    
+
+                    - **statements** *(list) --* 
+
+                      List of logical assignments and statements that define this scenario.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                
+                  
+
+                  - **logicWarning** *(dict) --* 
+
+                    Indication of a logic issue with the translation without needing to consider the automated reasoning policy rules.
+
+                    
+                    
+
+                    - **type** *(string) --* 
+
+                      The category of the detected logical issue, such as statements that are always true or always false.
+
+                      
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as premises under which the claims are validated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are validated while assuming the policy and premises.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                
+              
+                
+
+                - **impossible** *(dict) --* 
+
+                  Contains the result when the automated reasoning evaluation determines that no valid logical conclusions can be drawn due to contradictions in the premises or policy rules themselves.
+
+                  
+                  
+
+                  - **translation** *(dict) --* 
+
+                    The logical translation of the input that this finding evaluates.
+
+                    
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as the foundation or assumptions for the claims.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are being validated against the premises and policy rules.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedPremises** *(list) --* 
+
+                      References to portions of the original input text that correspond to the premises but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **untranslatedClaims** *(list) --* 
+
+                      References to portions of the original input text that correspond to the claims but could not be fully translated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        References a portion of the original input text that corresponds to logical elements.
+
+                        
+                        
+
+                        - **text** *(string) --* 
+
+                          The specific text from the original input that this reference points to.
+
+                          
+                    
+                  
+                    
+
+                    - **confidence** *(float) --* 
+
+                      A confidence score between 0 and 1 indicating how certain the system is about the logical translation.
+
+                      
+                
+                  
+
+                  - **contradictingRules** *(list) --* 
+
+                    The automated reasoning policy rules that contradict the claims and/or premises in the input.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      References a specific automated reasoning policy rule that was applied during evaluation.
+
+                      
+                      
+
+                      - **identifier** *(string) --* 
+
+                        The unique identifier of the automated reasoning rule.
+
+                        
+                      
+
+                      - **policyVersionArn** *(string) --* 
+
+                        The ARN of the automated reasoning policy version that contains this rule.
+
+                        
+                  
+                
+                  
+
+                  - **logicWarning** *(dict) --* 
+
+                    Indication of a logic issue with the translation without needing to consider the automated reasoning policy rules.
+
+                    
+                    
+
+                    - **type** *(string) --* 
+
+                      The category of the detected logical issue, such as statements that are always true or always false.
+
+                      
+                    
+
+                    - **premises** *(list) --* 
+
+                      The logical statements that serve as premises under which the claims are validated.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                    
+
+                    - **claims** *(list) --* 
+
+                      The logical statements that are validated while assuming the policy and premises.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        A logical statement that includes both formal logic representation and natural language explanation.
+
+                        
+                        
+
+                        - **logic** *(string) --* 
+
+                          The formal logical representation of the statement.
+
+                          
+                        
+
+                        - **naturalLanguage** *(string) --* 
+
+                          The natural language explanation of the logical statement.
+
+                          
+                    
+                  
+                
+              
+                
+
+                - **translationAmbiguous** *(dict) --* 
+
+                  Contains the result when the automated reasoning evaluation detects that the input has multiple valid logical interpretations, requiring additional context or clarification to proceed with validation.
+
+                  
+                  
+
+                  - **options** *(list) --* 
+
+                    Different logical interpretations that were detected during translation of the input.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Represents one possible logical interpretation of ambiguous input content.
+
+                      
+                      
+
+                      - **translations** *(list) --* 
+
+                        Example translations that provide this possible interpretation of the input.
+
+                        
+                        
+
+                        - *(dict) --* 
+
+                          Contains the logical translation of natural language input into formal logical statements, including premises, claims, and confidence scores.
+
+                          
+                          
+
+                          - **premises** *(list) --* 
+
+                            The logical statements that serve as the foundation or assumptions for the claims.
+
+                            
+                            
+
+                            - *(dict) --* 
+
+                              A logical statement that includes both formal logic representation and natural language explanation.
+
+                              
+                              
+
+                              - **logic** *(string) --* 
+
+                                The formal logical representation of the statement.
+
+                                
+                              
+
+                              - **naturalLanguage** *(string) --* 
+
+                                The natural language explanation of the logical statement.
+
+                                
+                          
+                        
+                          
+
+                          - **claims** *(list) --* 
+
+                            The logical statements that are being validated against the premises and policy rules.
+
+                            
+                            
+
+                            - *(dict) --* 
+
+                              A logical statement that includes both formal logic representation and natural language explanation.
+
+                              
+                              
+
+                              - **logic** *(string) --* 
+
+                                The formal logical representation of the statement.
+
+                                
+                              
+
+                              - **naturalLanguage** *(string) --* 
+
+                                The natural language explanation of the logical statement.
+
+                                
+                          
+                        
+                          
+
+                          - **untranslatedPremises** *(list) --* 
+
+                            References to portions of the original input text that correspond to the premises but could not be fully translated.
+
+                            
+                            
+
+                            - *(dict) --* 
+
+                              References a portion of the original input text that corresponds to logical elements.
+
+                              
+                              
+
+                              - **text** *(string) --* 
+
+                                The specific text from the original input that this reference points to.
+
+                                
+                          
+                        
+                          
+
+                          - **untranslatedClaims** *(list) --* 
+
+                            References to portions of the original input text that correspond to the claims but could not be fully translated.
+
+                            
+                            
+
+                            - *(dict) --* 
+
+                              References a portion of the original input text that corresponds to logical elements.
+
+                              
+                              
+
+                              - **text** *(string) --* 
+
+                                The specific text from the original input that this reference points to.
+
+                                
+                          
+                        
+                          
+
+                          - **confidence** *(float) --* 
+
+                            A confidence score between 0 and 1 indicating how certain the system is about the logical translation.
+
+                            
+                      
+                    
+                  
+                
+                  
+
+                  - **differenceScenarios** *(list) --* 
+
+                    Scenarios showing how the different translation options differ in meaning.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Represents a logical scenario where claims can be evaluated as true or false, containing specific logical assignments.
+
+                      
+                      
+
+                      - **statements** *(list) --* 
+
+                        List of logical assignments and statements that define this scenario.
+
+                        
+                        
+
+                        - *(dict) --* 
+
+                          A logical statement that includes both formal logic representation and natural language explanation.
+
+                          
+                          
+
+                          - **logic** *(string) --* 
+
+                            The formal logical representation of the statement.
+
+                            
+                          
+
+                          - **naturalLanguage** *(string) --* 
+
+                            The natural language explanation of the logical statement.
+
+                            
+                      
+                    
+                  
+                
+              
+                
+
+                - **tooComplex** *(dict) --* 
+
+                  Contains the result when the automated reasoning evaluation cannot process the input due to its complexity or volume exceeding the system's processing capacity for logical analysis.
+
+                  
+              
+                
+
+                - **noTranslations** *(dict) --* 
+
+                  Contains the result when the automated reasoning evaluation cannot extract any relevant logical information from the input that can be validated against the policy rules.
+
+                  
+              
+            
+          
+        
+          
+
+          - **invocationMetrics** *(dict) --* 
+
+            The invocation metrics for the guardrail assessment.
+
+            
+            
+
+            - **guardrailProcessingLatency** *(integer) --* 
+
+              The processing latency details for the guardrail invocation metrics.
+
+              
+            
+
+            - **usage** *(dict) --* 
+
+              The usage details for the guardrail invocation metrics.
+
+              
+              
+
+              - **topicPolicyUnits** *(integer) --* 
+
+                The topic policy units processed by the guardrail.
+
+                
+              
+
+              - **contentPolicyUnits** *(integer) --* 
+
+                The content policy units processed by the guardrail.
+
+                
+              
+
+              - **wordPolicyUnits** *(integer) --* 
+
+                The word policy units processed by the guardrail.
+
+                
+              
+
+              - **sensitiveInformationPolicyUnits** *(integer) --* 
+
+                The sensitive information policy units processed by the guardrail.
+
+                
+              
+
+              - **sensitiveInformationPolicyFreeUnits** *(integer) --* 
+
+                The sensitive information policy free units processed by the guardrail.
+
+                
+              
+
+              - **contextualGroundingPolicyUnits** *(integer) --* 
+
+                The contextual grounding policy units processed by the guardrail.
+
+                
+              
+
+              - **contentPolicyImageUnits** *(integer) --* 
+
+                The content policy image units processed by the guardrail.
+
+                
+              
+
+              - **automatedReasoningPolicyUnits** *(integer) --* 
+
+                The number of text units processed by the automated reasoning policy.
+
+                
+              
+
+              - **automatedReasoningPolicies** *(integer) --* 
+
+                The number of automated reasoning policies that were processed during the guardrail evaluation.
+
+                
+          
+            
+
+            - **guardrailCoverage** *(dict) --* 
+
+              The coverage details for the guardrail invocation metrics.
+
+              
+              
+
+              - **textCharacters** *(dict) --* 
+
+                The text characters of the guardrail coverage details.
+
+                
+                
+
+                - **guarded** *(integer) --* 
+
+                  The text characters that were guarded by the guardrail coverage.
+
+                  
+                
+
+                - **total** *(integer) --* 
+
+                  The total text characters by the guardrail coverage.
+
+                  
+            
+              
+
+              - **images** *(dict) --* 
+
+                The guardrail coverage for images (the number of images that guardrails guarded).
+
+                
+                
+
+                - **guarded** *(integer) --* 
+
+                  The count (integer) of images guardrails guarded.
+
+                  
+                
+
+                - **total** *(integer) --* 
+
+                  Represents the total number of images (integer) that were in the request (guarded and unguarded).
+
+                  
+            
+          
+        
+          
+
+          - **appliedGuardrailDetails** *(dict) --* 
+
+            Details about the specific guardrail that was applied during this assessment, including its identifier, version, ARN, origin, and ownership information.
+
+            
+            
+
+            - **guardrailId** *(string) --* 
+
+              The unique ID of the guardrail that was applied.
+
+              
+            
+
+            - **guardrailVersion** *(string) --* 
+
+              The version of the guardrail that was applied.
+
+              
+            
+
+            - **guardrailArn** *(string) --* 
+
+              The ARN of the guardrail that was applied.
+
+              
+            
+
+            - **guardrailOrigin** *(list) --* 
+
+              The origin of how the guardrail was applied. This can be either requested at the API level or enforced at the account or organization level as a default guardrail.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **guardrailOwnership** *(string) --* 
+
+              The ownership type of the guardrail, indicating whether it is owned by the requesting account or is a cross-account guardrail shared from another AWS account.
+
+              
+        
+      
+    
+      
+
+      - **guardrailCoverage** *(dict) --* 
+
+        The guardrail coverage details in the apply guardrail response.
+
+        
+        
+
+        - **textCharacters** *(dict) --* 
+
+          The text characters of the guardrail coverage details.
+
+          
+          
+
+          - **guarded** *(integer) --* 
+
+            The text characters that were guarded by the guardrail coverage.
+
+            
+          
+
+          - **total** *(integer) --* 
+
+            The total text characters by the guardrail coverage.
+
+            
+      
+        
+
+        - **images** *(dict) --* 
+
+          The guardrail coverage for images (the number of images that guardrails guarded).
+
+          
+          
+
+          - **guarded** *(integer) --* 
+
+            The count (integer) of images guardrails guarded.
+
+            
+          
+
+          - **total** *(integer) --* 
+
+            Represents the total number of images (integer) that were in the request (guarded and unguarded).
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ServiceQuotaExceededException`
+
+  

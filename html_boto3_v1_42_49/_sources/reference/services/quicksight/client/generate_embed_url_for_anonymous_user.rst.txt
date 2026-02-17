@@ -1,0 +1,422 @@
+:doc:`QuickSight <../../quicksight>` / Client / generate_embed_url_for_anonymous_user
+
+*************************************
+generate_embed_url_for_anonymous_user
+*************************************
+
+
+
+.. py:method:: QuickSight.Client.generate_embed_url_for_anonymous_user(**kwargs)
+
+  
+
+  Generates an embed URL that you can use to embed an Amazon Quick Suite dashboard or visual in your website, without having to register any reader users. Before you use this action, make sure that you have configured the dashboards and permissions.
+
+   
+
+  The following rules apply to the generated URL:
+
+   
+
+  
+  * It contains a temporary bearer token. It is valid for 5 minutes after it is generated. Once redeemed within this period, it cannot be re-used again.
+   
+  * The URL validity period should not be confused with the actual session lifetime that can be customized using the ``SessionLifetimeInMinutes`` parameter. The resulting user session is valid for 15 minutes (minimum) to 10 hours (maximum). The default session duration is 10 hours.
+   
+  * You are charged only when the URL is used or there is interaction with Amazon Quick Suite.
+  
+
+   
+
+  For more information, see `Embedded Analytics <https://docs.aws.amazon.com/quicksight/latest/user/embedded-analytics.html>`__ in the *Amazon Quick Suite User Guide*.
+
+   
+
+  For more information about the high-level steps for embedding and for an interactive demo of the ways you can customize embedding, visit the `Amazon Quick Suite Developer Portal <https://docs.aws.amazon.com/quicksight/latest/user/quicksight-dev-portal.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/quicksight-2018-04-01/GenerateEmbedUrlForAnonymousUser>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.generate_embed_url_for_anonymous_user(
+        AwsAccountId='string',
+        SessionLifetimeInMinutes=123,
+        Namespace='string',
+        SessionTags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        AuthorizedResourceArns=[
+            'string',
+        ],
+        ExperienceConfiguration={
+            'Dashboard': {
+                'InitialDashboardId': 'string',
+                'EnabledFeatures': [
+                    'SHARED_VIEW',
+                ],
+                'DisabledFeatures': [
+                    'SHARED_VIEW',
+                ],
+                'FeatureConfigurations': {
+                    'SharedView': {
+                        'Enabled': True|False
+                    }
+                }
+            },
+            'DashboardVisual': {
+                'InitialDashboardVisualId': {
+                    'DashboardId': 'string',
+                    'SheetId': 'string',
+                    'VisualId': 'string'
+                }
+            },
+            'QSearchBar': {
+                'InitialTopicId': 'string'
+            },
+            'GenerativeQnA': {
+                'InitialTopicId': 'string'
+            }
+        },
+        AllowedDomains=[
+            'string',
+        ]
+    )
+    
+  :type AwsAccountId: string
+  :param AwsAccountId: **[REQUIRED]** 
+
+    The ID for the Amazon Web Services account that contains the dashboard that you're embedding.
+
+    
+
+  
+  :type SessionLifetimeInMinutes: integer
+  :param SessionLifetimeInMinutes: 
+
+    How many minutes the session is valid. The session lifetime must be in [15-600] minutes range.
+
+    
+
+  
+  :type Namespace: string
+  :param Namespace: **[REQUIRED]** 
+
+    The Amazon Quick Sight namespace that the anonymous user virtually belongs to. If you are not using an Amazon Quick Suite custom namespace, set this to ``default``.
+
+    
+
+  
+  :type SessionTags: list
+  :param SessionTags: 
+
+    Session tags are user-specified strings that identify a session in your application. You can use these tags to implement row-level security (RLS) controls. Before you use the ``SessionTags`` parameter, make sure that you have configured the relevant datasets using the ``DataSet$RowLevelPermissionTagConfiguration`` parameter so that session tags can be used to provide row-level security.
+
+     
+
+    When using session tags, you must call ``GenerateEmbedUrlForAnonymousUser`` from a secure, trusted environment. The API call passes session tags that enable server-side data redaction by using the row-level security (RLS) rules configured in your datasets. A secure, trusted environment has access controls that you implement. These controls ensure that only your server or authorized users can add or modify session tags.
+
+     
+
+    Besides, these are not the tags used for the Amazon Web Services resource tagging feature. For more information, see `Using Row-Level Security (RLS) with Tags <https://docs.aws.amazon.com/quicksight/latest/user/quicksight-dev-rls-tags.html>`__ in the *Amazon Quick Suite User Guide*.
+
+    
+
+  
+    - *(dict) --* 
+
+      The key-value pair used for the row-level security tags feature.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key for the tag.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value that you want to assign the tag.
+
+        
+
+      
+    
+
+  :type AuthorizedResourceArns: list
+  :param AuthorizedResourceArns: **[REQUIRED]** 
+
+    The Amazon Resource Names (ARNs) for the Quick Sight resources that the user is authorized to access during the lifetime of the session.
+
+     
+
+    If you choose ``Dashboard`` embedding experience, pass the list of dashboard ARNs in the account that you want the user to be able to view.
+
+     
+
+    If you want to make changes to the theme of your embedded content, pass a list of theme ARNs that the anonymous users need access to.
+
+     
+
+    Currently, you can pass up to 25 theme ARNs in each API call.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ExperienceConfiguration: dict
+  :param ExperienceConfiguration: **[REQUIRED]** 
+
+    The configuration of the experience that you are embedding.
+
+    
+
+  
+    - **Dashboard** *(dict) --* 
+
+      The type of embedding experience. In this case, Amazon Quick Sight dashboards.
+
+      
+
+    
+      - **InitialDashboardId** *(string) --* **[REQUIRED]** 
+
+        The dashboard ID for the dashboard that you want the user to see first. This ID is included in the output URL. When the URL in response is accessed, Amazon Quick Sight renders this dashboard.
+
+         
+
+        The Amazon Resource Name (ARN) of this dashboard must be included in the ``AuthorizedResourceArns`` parameter. Otherwise, the request will fail with ``InvalidParameterValueException``.
+
+        
+
+      
+      - **EnabledFeatures** *(list) --* 
+
+        A list of all enabled features of a specified anonymous dashboard.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **DisabledFeatures** *(list) --* 
+
+        A list of all disabled features of a specified anonymous dashboard.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **FeatureConfigurations** *(dict) --* 
+
+        The feature configuration for an embedded dashboard.
+
+        
+
+      
+        - **SharedView** *(dict) --* 
+
+          The shared view settings of an embedded dashboard.
+
+          
+
+        
+          - **Enabled** *(boolean) --* **[REQUIRED]** 
+
+            The shared view settings of an embedded dashboard.
+
+            
+
+          
+        
+      
+    
+    - **DashboardVisual** *(dict) --* 
+
+      The type of embedding experience. In this case, Amazon Quick Sight visuals.
+
+      
+
+    
+      - **InitialDashboardVisualId** *(dict) --* **[REQUIRED]** 
+
+        The visual ID for the visual that you want the user to see. This ID is included in the output URL. When the URL in response is accessed, Amazon Quick Sight renders this visual.
+
+         
+
+        The Amazon Resource Name (ARN) of the dashboard that the visual belongs to must be included in the ``AuthorizedResourceArns`` parameter. Otherwise, the request will fail with ``InvalidParameterValueException``.
+
+        
+
+      
+        - **DashboardId** *(string) --* **[REQUIRED]** 
+
+          The ID of the dashboard that has the visual that you want to embed. The ``DashboardId`` can be found in the ``IDs for developers`` section of the ``Embed visual`` pane of the visual's on-visual menu of the Quick Suite console. You can also get the ``DashboardId`` with a ``ListDashboards`` API operation.
+
+          
+
+        
+        - **SheetId** *(string) --* **[REQUIRED]** 
+
+          The ID of the sheet that the has visual that you want to embed. The ``SheetId`` can be found in the ``IDs for developers`` section of the ``Embed visual`` pane of the visual's on-visual menu of the Quick Suite console.
+
+          
+
+        
+        - **VisualId** *(string) --* **[REQUIRED]** 
+
+          The ID of the visual that you want to embed. The ``VisualID`` can be found in the ``IDs for developers`` section of the ``Embed visual`` pane of the visual's on-visual menu of the Amazon Quick Sight console.
+
+          
+
+        
+      
+    
+    - **QSearchBar** *(dict) --* 
+
+      The Q search bar that you want to use for anonymous user embedding.
+
+      
+
+    
+      - **InitialTopicId** *(string) --* **[REQUIRED]** 
+
+        The Quick Sight Q topic ID of the legacy topic that you want the anonymous user to see first. This ID is included in the output URL. When the URL in response is accessed, Quick Sight renders the Q search bar with this legacy topic pre-selected.
+
+         
+
+        The Amazon Resource Name (ARN) of this Q legacy topic must be included in the ``AuthorizedResourceArns`` parameter. Otherwise, the request fails with an ``InvalidParameterValueException`` error.
+
+        
+
+      
+    
+    - **GenerativeQnA** *(dict) --* 
+
+      The Generative Q&A experience that you want to use for anonymous user embedding.
+
+      
+
+    
+      - **InitialTopicId** *(string) --* **[REQUIRED]** 
+
+        The Quick Sight Q topic ID of the new reader experience topic that you want the anonymous user to see first. This ID is included in the output URL. When the URL in response is accessed, Quick Sight renders the Generative Q&A experience with this new reader experience topic pre selected.
+
+         
+
+        The Amazon Resource Name (ARN) of this Q new reader experience topic must be included in the ``AuthorizedResourceArns`` parameter. Otherwise, the request fails with an ``InvalidParameterValueException`` error.
+
+        
+
+      
+    
+  
+  :type AllowedDomains: list
+  :param AllowedDomains: 
+
+    The domains that you want to add to the allow list for access to the generated URL that is then embedded. This optional parameter overrides the static domains that are configured in the Manage Quick Sight menu in the Amazon Quick Sight console. Instead, it allows only the domains that you include in this parameter. You can list up to three domains or subdomains in each API call.
+
+     
+
+    To include all subdomains under a specific domain to the allow list, use ``*``. For example, ``https://*.sapp.amazon.com`` includes all subdomains under ``https://sapp.amazon.com``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'EmbedUrl': 'string',
+          'Status': 123,
+          'RequestId': 'string',
+          'AnonymousUserArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **EmbedUrl** *(string) --* 
+
+        The embed URL for the dashboard.
+
+        
+      
+
+      - **Status** *(integer) --* 
+
+        The HTTP status of the request.
+
+        
+      
+
+      - **RequestId** *(string) --* 
+
+        The Amazon Web Services request ID for this operation.
+
+        
+      
+
+      - **AnonymousUserArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) to use for the anonymous Amazon Quick Suite user.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`QuickSight.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.SessionLifetimeInMinutesInvalidException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.UnsupportedUserEditionException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.UnsupportedPricingPlanException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.InternalFailureException`
+
+  

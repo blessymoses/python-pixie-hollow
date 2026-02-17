@@ -1,0 +1,231 @@
+:doc:`GameLift <../../gamelift>` / Client / register_game_server
+
+********************
+register_game_server
+********************
+
+
+
+.. py:method:: GameLift.Client.register_game_server(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2 (FleetIQ)
+
+   
+
+  Creates a new game server resource and notifies Amazon GameLift Servers FleetIQ that the game server is ready to host gameplay and players. This operation is called by a game server process that is running on an instance in a game server group. Registering game servers enables Amazon GameLift Servers FleetIQ to track available game servers and enables game clients and services to claim a game server for a new game session.
+
+   
+
+  To register a game server, identify the game server group and instance where the game server is running, and provide a unique identifier for the game server. You can also include connection and game server data.
+
+   
+
+  Once a game server is successfully registered, it is put in status ``AVAILABLE``. A request to register a game server may fail if the instance it is running on is in the process of shutting down as part of instance balancing or scale-down activity.
+
+   
+
+  **Learn more**
+
+   
+
+  `Amazon GameLift Servers FleetIQ Guide <https://docs.aws.amazon.com/gamelift/latest/fleetiqguide/gsg-intro.html>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/RegisterGameServer>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.register_game_server(
+        GameServerGroupName='string',
+        GameServerId='string',
+        InstanceId='string',
+        ConnectionInfo='string',
+        GameServerData='string'
+    )
+    
+  :type GameServerGroupName: string
+  :param GameServerGroupName: **[REQUIRED]** 
+
+    A unique identifier for the game server group where the game server is running.
+
+    
+
+  
+  :type GameServerId: string
+  :param GameServerId: **[REQUIRED]** 
+
+    A custom string that uniquely identifies the game server to register. Game server IDs are developer-defined and must be unique across all game server groups in your Amazon Web Services account.
+
+    
+
+  
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The unique identifier for the instance where the game server is running. This ID is available in the instance metadata. EC2 instance IDs use a 17-character format, for example: ``i-1234567890abcdef0``.
+
+    
+
+  
+  :type ConnectionInfo: string
+  :param ConnectionInfo: 
+
+    Information that is needed to make inbound client connections to the game server. This might include the IP address and port, DNS name, and other information.
+
+    
+
+  
+  :type GameServerData: string
+  :param GameServerData: 
+
+    A set of custom game server properties, formatted as a single string value. This data is passed to a game client or service when it requests information on game servers.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GameServer': {
+              'GameServerGroupName': 'string',
+              'GameServerGroupArn': 'string',
+              'GameServerId': 'string',
+              'InstanceId': 'string',
+              'ConnectionInfo': 'string',
+              'GameServerData': 'string',
+              'ClaimStatus': 'CLAIMED',
+              'UtilizationStatus': 'AVAILABLE'|'UTILIZED',
+              'RegistrationTime': datetime(2015, 1, 1),
+              'LastClaimTime': datetime(2015, 1, 1),
+              'LastHealthCheckTime': datetime(2015, 1, 1)
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GameServer** *(dict) --* 
+
+        Object that describes the newly registered game server.
+
+        
+        
+
+        - **GameServerGroupName** *(string) --* 
+
+          A unique identifier for the game server group where the game server is running.
+
+          
+        
+
+        - **GameServerGroupArn** *(string) --* 
+
+          The ARN identifier for the game server group where the game server is located.
+
+          
+        
+
+        - **GameServerId** *(string) --* 
+
+          A custom string that uniquely identifies the game server. Game server IDs are developer-defined and are unique across all game server groups in an Amazon Web Services account.
+
+          
+        
+
+        - **InstanceId** *(string) --* 
+
+          The unique identifier for the instance where the game server is running. This ID is available in the instance metadata. EC2 instance IDs use a 17-character format, for example: ``i-1234567890abcdef0``.
+
+          
+        
+
+        - **ConnectionInfo** *(string) --* 
+
+          The port and IP address that must be used to establish a client connection to the game server.
+
+          
+        
+
+        - **GameServerData** *(string) --* 
+
+          A set of custom game server properties, formatted as a single string value. This data is passed to a game client or service when it requests information on game servers.
+
+          
+        
+
+        - **ClaimStatus** *(string) --* 
+
+          Indicates when an available game server has been reserved for gameplay but has not yet started hosting a game. Once it is claimed, the game server remains in ``CLAIMED`` status for a maximum of one minute. During this time, game clients connect to the game server to start the game and trigger the game server to update its utilization status. After one minute, the game server claim status reverts to null.
+
+          
+        
+
+        - **UtilizationStatus** *(string) --* 
+
+          Indicates whether the game server is currently available for new games or is busy. Possible statuses include:
+
+           
+
+          
+          * ``AVAILABLE`` - The game server is available to be claimed. A game server that has been claimed remains in this status until it reports game hosting activity.
+           
+          * ``UTILIZED`` - The game server is currently hosting a game session with players.
+          
+
+          
+        
+
+        - **RegistrationTime** *(datetime) --* 
+
+          Timestamp that indicates when the game server registered. The format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **LastClaimTime** *(datetime) --* 
+
+          Timestamp that indicates the last time the game server was claimed. The format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``). This value is used to calculate when a claimed game server's status should revert to null.
+
+          
+        
+
+        - **LastHealthCheckTime** *(datetime) --* 
+
+          Timestamp that indicates the last time the game server was updated with health status. The format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``). After game server registration, this property is only changed when a game server update specifies a health check value.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  

@@ -1,0 +1,198 @@
+:doc:`S3Vectors <../../s3vectors>` / Client / put_vectors
+
+***********
+put_vectors
+***********
+
+
+
+.. py:method:: S3Vectors.Client.put_vectors(**kwargs)
+
+  
+
+  Adds one or more vectors to a vector index. To specify the vector index, you can either use both the vector bucket name and the vector index name, or use the vector index Amazon Resource Name (ARN).
+
+   
+
+  For more information about limits, see `Limitations and restrictions <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-limitations.html>`__ in the *Amazon S3 User Guide*.
+
+   
+
+  .. note::
+
+    
+
+    When inserting vector data into your vector index, you must provide the vector data as ``float32`` (32-bit floating point) values. If you pass higher-precision values to an Amazon Web Services SDK, S3 Vectors converts the values to 32-bit floating point before storing them, and ``GetVectors``, ``ListVectors``, and ``QueryVectors`` operations return the float32 values. Different Amazon Web Services SDKs may have different default numeric types, so ensure your vectors are properly formatted as ``float32`` values regardless of which SDK you're using. For example, in Python, use ``numpy.float32`` or explicitly cast your values.
+
+    
+
+    Permissions  
+
+  You must have the ``s3vectors:PutVectors`` permission to use this operation.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3vectors-2025-07-15/PutVectors>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_vectors(
+        vectorBucketName='string',
+        indexName='string',
+        indexArn='string',
+        vectors=[
+            {
+                'key': 'string',
+                'data': {
+                    'float32': [
+                        ...,
+                    ]
+                },
+                'metadata': {...}|[...]|123|123.4|'string'|True|None
+            },
+        ]
+    )
+    
+  :type vectorBucketName: string
+  :param vectorBucketName: 
+
+    The name of the vector bucket that contains the vector index.
+
+    
+
+  
+  :type indexName: string
+  :param indexName: 
+
+    The name of the vector index where you want to write vectors.
+
+    
+
+  
+  :type indexArn: string
+  :param indexArn: 
+
+    The ARN of the vector index where you want to write vectors.
+
+    
+
+  
+  :type vectors: list
+  :param vectors: **[REQUIRED]** 
+
+    The vectors to add to a vector index. The number of vectors in a single request must not exceed the resource capacity, otherwise the request will be rejected with the error ``ServiceUnavailableException`` with the error message "Currently unable to handle the request".
+
+    
+
+  
+    - *(dict) --* 
+
+      The attributes of a vector to add to a vector index.
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        The name of the vector. The key uniquely identifies the vector in a vector index.
+
+        
+
+      
+      - **data** *(dict) --* **[REQUIRED]** 
+
+        The vector data of the vector.
+
+         
+
+        Vector dimensions must match the dimension count that's configured for the vector index.
+
+         
+
+        
+        * For the ``cosine`` distance metric, zero vectors (vectors containing all zeros) aren't allowed.
+         
+        * For both ``cosine`` and ``euclidean`` distance metrics, vector data must contain only valid floating-point values. Invalid values such as NaN (Not a Number) or Infinity aren't allowed.
+        
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``float32``. 
+
+      
+        - **float32** *(list) --* 
+
+          The vector data as 32-bit floating point numbers. The number of elements in this array must exactly match the dimension of the vector index where the operation is being performed.
+
+          
+
+        
+          - *(float) --* 
+
+          
+      
+      
+      - **metadata** (:ref:`document<document>`) -- 
+
+        Metadata about the vector. All metadata entries undergo validation to ensure they meet the format requirements for size and data types.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`S3Vectors.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.KmsInvalidKeyUsageException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.KmsInvalidStateException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.KmsNotFoundException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.RequestTimeoutException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.KmsDisabledException`
+
+  

@@ -1,0 +1,227 @@
+:doc:`CognitoIdentityProvider <../../cognito-idp>` / Client / get_user_attribute_verification_code
+
+************************************
+get_user_attribute_verification_code
+************************************
+
+
+
+.. py:method:: CognitoIdentityProvider.Client.get_user_attribute_verification_code(**kwargs)
+
+  
+
+  Given an attribute name, sends a user attribute verification code for the specified attribute name to the currently signed-in user.
+
+   
+
+  Authorize this action with a signed-in user's access token. It must include the scope ``aws.cognito.signin.user.admin``.
+
+   
+
+  .. note::
+
+    
+
+    Amazon Cognito doesn't evaluate Identity and Access Management (IAM) policies in requests for this API operation. For this operation, you can't use IAM credentials to authorize requests, and you can't grant IAM permissions in policies. For more information about authorization models in Amazon Cognito, see `Using the Amazon Cognito user pools API and user pool endpoints <https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html>`__.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    This action might generate an SMS text message. Starting June 1, 2021, US telecom carriers require you to register an origination phone number before you can send SMS messages to US phone numbers. If you use SMS text messages in Amazon Cognito, you must register a phone number with `Amazon Pinpoint <https://console.aws.amazon.com/pinpoint/home/>`__. Amazon Cognito uses the registered number automatically. Otherwise, Amazon Cognito users who must receive SMS messages might not be able to sign up, activate their accounts, or sign in.
+
+     
+
+    If you have never used SMS text messages with Amazon Cognito or any other Amazon Web Services service, Amazon Simple Notification Service might place your account in the SMS sandbox. In `sandbox mode <https://docs.aws.amazon.com/sns/latest/dg/sns-sms-sandbox.html>`__ , you can send messages only to verified phone numbers. After you test your app while in the sandbox environment, you can move out of the sandbox and into production. For more information, see `SMS message settings for Amazon Cognito user pools <https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-sms-settings.html>`__ in the *Amazon Cognito Developer Guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cognito-idp-2016-04-18/GetUserAttributeVerificationCode>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_user_attribute_verification_code(
+        AccessToken='string',
+        AttributeName='string',
+        ClientMetadata={
+            'string': 'string'
+        }
+    )
+    
+  :type AccessToken: string
+  :param AccessToken: **[REQUIRED]** 
+
+    A valid access token that Amazon Cognito issued to the currently signed-in user. Must include a scope claim for ``aws.cognito.signin.user.admin``.
+
+    
+
+  
+  :type AttributeName: string
+  :param AttributeName: **[REQUIRED]** 
+
+    The name of the attribute that the user wants to verify, for example ``email``.
+
+    
+
+  
+  :type ClientMetadata: dict
+  :param ClientMetadata: 
+
+    A map of custom key-value pairs that you can provide as input for any custom workflows that this action triggers.
+
+     
+
+    You create custom workflows by assigning Lambda functions to user pool triggers. When you use the GetUserAttributeVerificationCode API action, Amazon Cognito invokes the function that is assigned to the *custom message* trigger. When Amazon Cognito invokes this function, it passes a JSON payload, which the function receives as input. This payload contains a ``clientMetadata`` attribute, which provides the data that you assigned to the ClientMetadata parameter in your GetUserAttributeVerificationCode request. In your function code in Lambda, you can process the ``clientMetadata`` value to enhance your workflow for your specific needs.
+
+     
+
+    For more information, see `Using Lambda triggers <https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html>`__ in the *Amazon Cognito Developer Guide*.
+
+     
+
+    .. note::
+
+      
+
+      When you use the ``ClientMetadata`` parameter, note that Amazon Cognito won't do the following:
+
+       
+
+      
+      * Store the ``ClientMetadata`` value. This data is available only to Lambda triggers that are assigned to a user pool to support custom workflows. If your user pool configuration doesn't include triggers, the ``ClientMetadata`` parameter serves no purpose.
+       
+      * Validate the ``ClientMetadata`` value.
+       
+      * Encrypt the ``ClientMetadata`` value. Don't send sensitive information in this parameter.
+      
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CodeDeliveryDetails': {
+              'Destination': 'string',
+              'DeliveryMedium': 'SMS'|'EMAIL',
+              'AttributeName': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The verification code response returned by the server response to get the user attribute verification code.
+
+      
+      
+
+      - **CodeDeliveryDetails** *(dict) --* 
+
+        Information about the delivery destination of the user attribute verification code.
+
+        
+        
+
+        - **Destination** *(string) --* 
+
+          The email address or phone number destination where Amazon Cognito sent the code.
+
+          
+        
+
+        - **DeliveryMedium** *(string) --* 
+
+          The method that Amazon Cognito used to send the code.
+
+          
+        
+
+        - **AttributeName** *(string) --* 
+
+          The name of the attribute that Amazon Cognito verifies with the code.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.NotAuthorizedException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.UnexpectedLambdaException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.UserLambdaValidationException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InvalidLambdaResponseException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InvalidSmsRoleAccessPolicyException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InvalidSmsRoleTrustRelationshipException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InvalidEmailRoleAccessPolicyException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.CodeDeliveryFailureException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.PasswordResetRequiredException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.UserNotFoundException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.UserNotConfirmedException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InternalErrorException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.ForbiddenException`
+
+  

@@ -1,0 +1,243 @@
+:doc:`ECS <../../ecs>` / Client / list_tasks
+
+**********
+list_tasks
+**********
+
+
+
+.. py:method:: ECS.Client.list_tasks(**kwargs)
+
+  
+
+  Returns a list of tasks. You can filter the results by cluster, task definition family, container instance, launch type, what IAM principal started the task, or by the desired status of the task.
+
+   
+
+  Recently stopped tasks might appear in the returned results.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListTasks>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_tasks(
+        cluster='string',
+        containerInstance='string',
+        family='string',
+        nextToken='string',
+        maxResults=123,
+        startedBy='string',
+        serviceName='string',
+        desiredStatus='RUNNING'|'PENDING'|'STOPPED',
+        launchType='EC2'|'FARGATE'|'EXTERNAL'|'MANAGED_INSTANCES'
+    )
+    
+  :type cluster: string
+  :param cluster: 
+
+    The short name or full Amazon Resource Name (ARN) of the cluster to use when filtering the ``ListTasks`` results. If you do not specify a cluster, the default cluster is assumed.
+
+    
+
+  
+  :type containerInstance: string
+  :param containerInstance: 
+
+    The container instance ID or full ARN of the container instance to use when filtering the ``ListTasks`` results. Specifying a ``containerInstance`` limits the results to tasks that belong to that container instance.
+
+    
+
+  
+  :type family: string
+  :param family: 
+
+    The name of the task definition family to use when filtering the ``ListTasks`` results. Specifying a ``family`` limits the results to tasks that belong to that family.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The ``nextToken`` value returned from a ``ListTasks`` request indicating that more results are available to fulfill the request and further calls will be needed. If ``maxResults`` was provided, it's possible the number of results to be fewer than ``maxResults``.
+
+     
+
+    .. note::
+
+      
+
+      This token should be treated as an opaque identifier that is only used to retrieve the next items in a list and not for other programmatic purposes.
+
+      
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of task results that ``ListTasks`` returned in paginated output. When this parameter is used, ``ListTasks`` only returns ``maxResults`` results in a single page along with a ``nextToken`` response element. The remaining results of the initial request can be seen by sending another ``ListTasks`` request with the returned ``nextToken`` value. This value can be between 1 and 100. If this parameter isn't used, then ``ListTasks`` returns up to 100 results and a ``nextToken`` value if applicable.
+
+    
+
+  
+  :type startedBy: string
+  :param startedBy: 
+
+    The ``startedBy`` value to filter the task results with. Specifying a ``startedBy`` value limits the results to tasks that were started with that value.
+
+     
+
+    When you specify ``startedBy`` as the filter, it must be the only filter that you use.
+
+    
+
+  
+  :type serviceName: string
+  :param serviceName: 
+
+    The name of the service to use when filtering the ``ListTasks`` results. Specifying a ``serviceName`` limits the results to tasks that belong to that service.
+
+    
+
+  
+  :type desiredStatus: string
+  :param desiredStatus: 
+
+    The task desired status to use when filtering the ``ListTasks`` results. Specifying a ``desiredStatus`` of ``STOPPED`` limits the results to tasks that Amazon ECS has set the desired status to ``STOPPED``. This can be useful for debugging tasks that aren't starting properly or have died or finished. The default status filter is ``RUNNING``, which shows tasks that Amazon ECS has set the desired status to ``RUNNING``.
+
+     
+
+    .. note::
+
+      
+
+      Although you can filter results based on a desired status of ``PENDING``, this doesn't return any results. Amazon ECS never sets the desired status of a task to that value (only a task's ``lastStatus`` may have a value of ``PENDING``).
+
+      
+
+    
+
+  
+  :type launchType: string
+  :param launchType: 
+
+    The launch type to use when filtering the ``ListTasks`` results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'taskArns': [
+              'string',
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **taskArns** *(list) --* 
+
+        The list of task ARN entries for the ``ListTasks`` request.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The ``nextToken`` value to include in a future ``ListTasks`` request. When the results of a ``ListTasks`` request exceed ``maxResults``, this value can be used to retrieve the next page of results. This value is ``null`` when there are no more results to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ECS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.ClusterNotFoundException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.ServiceNotFoundException`
+
+  
+
+  **Examples**
+
+  This example lists all of the tasks in a cluster.
+  ::
+
+    response = client.list_tasks(
+        cluster='default',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'taskArns': [
+            'arn:aws:ecs:us-east-1:012345678910:task/0cc43cdb-3bee-4407-9c26-c0e6ea5bee84',
+            'arn:aws:ecs:us-east-1:012345678910:task/6b809ef6-c67e-4467-921f-ee261c15a0a1',
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example lists the tasks of a specified container instance. Specifying a ``containerInstance`` value limits  the  results  to  tasks  that belong to that container instance.
+  ::
+
+    response = client.list_tasks(
+        cluster='default',
+        containerInstance='f6bbb147-5370-4ace-8c73-c7181ded911f',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'taskArns': [
+            'arn:aws:ecs:us-east-1:012345678910:task/0cc43cdb-3bee-4407-9c26-c0e6ea5bee84',
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

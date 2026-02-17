@@ -1,0 +1,240 @@
+:doc:`FSx <../../fsx>` / Client / delete_volume
+
+*************
+delete_volume
+*************
+
+
+
+.. py:method:: FSx.Client.delete_volume(**kwargs)
+
+  
+
+  Deletes an Amazon FSx for NetApp ONTAP or Amazon FSx for OpenZFS volume.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/fsx-2018-03-01/DeleteVolume>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.delete_volume(
+        ClientRequestToken='string',
+        VolumeId='string',
+        OntapConfiguration={
+            'SkipFinalBackup': True|False,
+            'FinalBackupTags': [
+                {
+                    'Key': 'string',
+                    'Value': 'string'
+                },
+            ],
+            'BypassSnaplockEnterpriseRetention': True|False
+        },
+        OpenZFSConfiguration={
+            'Options': [
+                'DELETE_CHILD_VOLUMES_AND_SNAPSHOTS',
+            ]
+        }
+    )
+    
+  :type ClientRequestToken: string
+  :param ClientRequestToken: 
+
+    (Optional) An idempotency token for resource creation, in a string of up to 63 ASCII characters. This token is automatically filled on your behalf when you use the Command Line Interface (CLI) or an Amazon Web Services SDK.
+
+    This field is autopopulated if not provided.
+
+  
+  :type VolumeId: string
+  :param VolumeId: **[REQUIRED]** 
+
+    The ID of the volume that you are deleting.
+
+    
+
+  
+  :type OntapConfiguration: dict
+  :param OntapConfiguration: 
+
+    For Amazon FSx for ONTAP volumes, specify whether to take a final backup of the volume and apply tags to the backup. To apply tags to the backup, you must have the ``fsx:TagResource`` permission.
+
+    
+
+  
+    - **SkipFinalBackup** *(boolean) --* 
+
+      Set to true if you want to skip taking a final backup of the volume you are deleting.
+
+      
+
+    
+    - **FinalBackupTags** *(list) --* 
+
+      A list of ``Tag`` values, with a maximum of 50 elements.
+
+      
+
+    
+      - *(dict) --* 
+
+        Specifies a key-value pair for a resource tag.
+
+        
+
+      
+        - **Key** *(string) --* **[REQUIRED]** 
+
+          A value that specifies the ``TagKey``, the name of the tag. Tag keys must be unique for the resource to which they are attached.
+
+          
+
+        
+        - **Value** *(string) --* **[REQUIRED]** 
+
+          A value that specifies the ``TagValue``, the value assigned to the corresponding tag key. Tag values can be null and don't have to be unique in a tag set. For example, you can have a key-value pair in a tag set of ``finances : April`` and also of ``payroll : April``.
+
+          
+
+        
+      
+  
+    - **BypassSnaplockEnterpriseRetention** *(boolean) --* 
+
+      Setting this to ``true`` allows a SnapLock administrator to delete an FSx for ONTAP SnapLock Enterprise volume with unexpired write once, read many (WORM) files. The IAM permission ``fsx:BypassSnaplockEnterpriseRetention`` is also required to delete SnapLock Enterprise volumes with unexpired WORM files. The default value is ``false``.
+
+       
+
+      For more information, see `Deleting a SnapLock volume <https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/snaplock-delete-volume.html>`__.
+
+      
+
+    
+  
+  :type OpenZFSConfiguration: dict
+  :param OpenZFSConfiguration: 
+
+    For Amazon FSx for OpenZFS volumes, specify whether to delete all child volumes and snapshots.
+
+    
+
+  
+    - **Options** *(list) --* 
+
+      To delete the volume's child volumes, snapshots, and clones, use the string ``DELETE_CHILD_VOLUMES_AND_SNAPSHOTS``.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'VolumeId': 'string',
+          'Lifecycle': 'CREATING'|'CREATED'|'DELETING'|'FAILED'|'MISCONFIGURED'|'PENDING'|'AVAILABLE',
+          'OntapResponse': {
+              'FinalBackupId': 'string',
+              'FinalBackupTags': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **VolumeId** *(string) --* 
+
+        The ID of the volume that's being deleted.
+
+        
+      
+
+      - **Lifecycle** *(string) --* 
+
+        The lifecycle state of the volume being deleted. If the ``DeleteVolume`` operation is successful, this value is ``DELETING``.
+
+        
+      
+
+      - **OntapResponse** *(dict) --* 
+
+        Returned after a ``DeleteVolume`` request, showing the status of the delete request.
+
+        
+        
+
+        - **FinalBackupId** *(string) --* 
+
+          The ID of the source backup. Specifies the backup that you are copying.
+
+          
+        
+
+        - **FinalBackupTags** *(list) --* 
+
+          A list of ``Tag`` values, with a maximum of 50 elements.
+
+          
+          
+
+          - *(dict) --* 
+
+            Specifies a key-value pair for a resource tag.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              A value that specifies the ``TagKey``, the name of the tag. Tag keys must be unique for the resource to which they are attached.
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              A value that specifies the ``TagValue``, the value assigned to the corresponding tag key. Tag values can be null and don't have to be unique in a tag set. For example, you can have a key-value pair in a tag set of ``finances : April`` and also of ``payroll : April``.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`FSx.Client.exceptions.BadRequest`
+
+  
+  *   :py:class:`FSx.Client.exceptions.IncompatibleParameterError`
+
+  
+  *   :py:class:`FSx.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`FSx.Client.exceptions.VolumeNotFound`
+
+  
+  *   :py:class:`FSx.Client.exceptions.ServiceLimitExceeded`
+
+  

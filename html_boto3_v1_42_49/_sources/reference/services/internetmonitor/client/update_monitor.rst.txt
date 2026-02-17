@@ -1,0 +1,328 @@
+:doc:`CloudWatchInternetMonitor <../../internetmonitor>` / Client / update_monitor
+
+**************
+update_monitor
+**************
+
+
+
+.. py:method:: CloudWatchInternetMonitor.Client.update_monitor(**kwargs)
+
+  
+
+  Updates a monitor. You can update a monitor to change the percentage of traffic to monitor or the maximum number of city-networks (locations and ASNs), to add or remove resources, or to change the status of the monitor. Note that you can't change the name of a monitor.
+
+   
+
+  The city-network maximum that you choose is the limit, but you only pay for the number of city-networks that are actually monitored. For more information, see `Choosing a city-network maximum value <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/IMCityNetworksMaximum.html>`__ in the *Amazon CloudWatch User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/internetmonitor-2021-06-03/UpdateMonitor>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_monitor(
+        MonitorName='string',
+        ResourcesToAdd=[
+            'string',
+        ],
+        ResourcesToRemove=[
+            'string',
+        ],
+        Status='PENDING'|'ACTIVE'|'INACTIVE'|'ERROR',
+        ClientToken='string',
+        MaxCityNetworksToMonitor=123,
+        InternetMeasurementsLogDelivery={
+            'S3Config': {
+                'BucketName': 'string',
+                'BucketPrefix': 'string',
+                'LogDeliveryStatus': 'ENABLED'|'DISABLED'
+            }
+        },
+        TrafficPercentageToMonitor=123,
+        HealthEventsConfig={
+            'AvailabilityScoreThreshold': 123.0,
+            'PerformanceScoreThreshold': 123.0,
+            'AvailabilityLocalHealthEventsConfig': {
+                'Status': 'ENABLED'|'DISABLED',
+                'HealthScoreThreshold': 123.0,
+                'MinTrafficImpact': 123.0
+            },
+            'PerformanceLocalHealthEventsConfig': {
+                'Status': 'ENABLED'|'DISABLED',
+                'HealthScoreThreshold': 123.0,
+                'MinTrafficImpact': 123.0
+            }
+        }
+    )
+    
+  :type MonitorName: string
+  :param MonitorName: **[REQUIRED]** 
+
+    The name of the monitor.
+
+    
+
+  
+  :type ResourcesToAdd: list
+  :param ResourcesToAdd: 
+
+    The resources to include in a monitor, which you provide as a set of Amazon Resource Names (ARNs). Resources can be VPCs, NLBs, Amazon CloudFront distributions, or Amazon WorkSpaces directories.
+
+     
+
+    You can add a combination of VPCs and CloudFront distributions, or you can add WorkSpaces directories, or you can add NLBs. You can't add NLBs or WorkSpaces directories together with any other resources.
+
+     
+
+    .. note::
+
+      
+
+      If you add only Amazon Virtual Private Clouds resources, at least one VPC must have an Internet Gateway attached to it, to make sure that it has internet connectivity.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ResourcesToRemove: list
+  :param ResourcesToRemove: 
+
+    The resources to remove from a monitor, which you provide as a set of Amazon Resource Names (ARNs).
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type Status: string
+  :param Status: 
+
+    The status for a monitor. The accepted values for ``Status`` with the ``UpdateMonitor`` API call are the following: ``ACTIVE`` and ``INACTIVE``. The following values are *not* accepted: ``PENDING``, and ``ERROR``.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique, case-sensitive string of up to 64 ASCII characters that you specify to make an idempotent API request. You should not reuse the same client token for other API requests.
+
+    This field is autopopulated if not provided.
+
+  
+  :type MaxCityNetworksToMonitor: integer
+  :param MaxCityNetworksToMonitor: 
+
+    The maximum number of city-networks to monitor for your application. A city-network is the location (city) where clients access your application resources from and the ASN or network provider, such as an internet service provider (ISP), that clients access the resources through. Setting this limit can help control billing costs.
+
+    
+
+  
+  :type InternetMeasurementsLogDelivery: dict
+  :param InternetMeasurementsLogDelivery: 
+
+    Publish internet measurements for Internet Monitor to another location, such as an Amazon S3 bucket. The measurements are also published to Amazon CloudWatch Logs.
+
+    
+
+  
+    - **S3Config** *(dict) --* 
+
+      The configuration information for publishing Internet Monitor internet measurements to Amazon S3. The configuration includes the bucket name and (optionally) prefix for the S3 bucket to store the measurements, and the delivery status. The delivery status is ``ENABLED`` or ``DISABLED``, depending on whether you choose to deliver internet measurements to S3 logs.
+
+      
+
+    
+      - **BucketName** *(string) --* 
+
+        The Amazon S3 bucket name.
+
+        
+
+      
+      - **BucketPrefix** *(string) --* 
+
+        The Amazon S3 bucket prefix.
+
+        
+
+      
+      - **LogDeliveryStatus** *(string) --* 
+
+        The status of publishing Internet Monitor internet measurements to an Amazon S3 bucket.
+
+        
+
+      
+    
+  
+  :type TrafficPercentageToMonitor: integer
+  :param TrafficPercentageToMonitor: 
+
+    The percentage of the internet-facing traffic for your application that you want to monitor with this monitor. If you set a city-networks maximum, that limit overrides the traffic percentage that you set.
+
+     
+
+    To learn more, see `Choosing an application traffic percentage to monitor <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/IMTrafficPercentage.html>`__ in the Amazon CloudWatch Internet Monitor section of the *CloudWatch User Guide*.
+
+    
+
+  
+  :type HealthEventsConfig: dict
+  :param HealthEventsConfig: 
+
+    The list of health score thresholds. A threshold percentage for health scores, along with other configuration information, determines when Internet Monitor creates a health event when there's an internet issue that affects your application end users.
+
+     
+
+    For more information, see `Change health event thresholds <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-IM-overview.html#IMUpdateThresholdFromOverview>`__ in the Internet Monitor section of the *CloudWatch User Guide*.
+
+    
+
+  
+    - **AvailabilityScoreThreshold** *(float) --* 
+
+      The health event threshold percentage set for availability scores.
+
+      
+
+    
+    - **PerformanceScoreThreshold** *(float) --* 
+
+      The health event threshold percentage set for performance scores.
+
+      
+
+    
+    - **AvailabilityLocalHealthEventsConfig** *(dict) --* 
+
+      The configuration that determines the threshold and other conditions for when Internet Monitor creates a health event for a local availability issue.
+
+      
+
+    
+      - **Status** *(string) --* 
+
+        The status of whether Internet Monitor creates a health event based on a threshold percentage set for a local health score. The status can be ``ENABLED`` or ``DISABLED``.
+
+        
+
+      
+      - **HealthScoreThreshold** *(float) --* 
+
+        The health event threshold percentage set for a local health score.
+
+        
+
+      
+      - **MinTrafficImpact** *(float) --* 
+
+        The minimum percentage of overall traffic for an application that must be impacted by an issue before Internet Monitor creates an event when a threshold is crossed for a local health score.
+
+         
+
+        If you don't set a minimum traffic impact threshold, the default value is 0.1%.
+
+        
+
+      
+    
+    - **PerformanceLocalHealthEventsConfig** *(dict) --* 
+
+      The configuration that determines the threshold and other conditions for when Internet Monitor creates a health event for a local performance issue.
+
+      
+
+    
+      - **Status** *(string) --* 
+
+        The status of whether Internet Monitor creates a health event based on a threshold percentage set for a local health score. The status can be ``ENABLED`` or ``DISABLED``.
+
+        
+
+      
+      - **HealthScoreThreshold** *(float) --* 
+
+        The health event threshold percentage set for a local health score.
+
+        
+
+      
+      - **MinTrafficImpact** *(float) --* 
+
+        The minimum percentage of overall traffic for an application that must be impacted by an issue before Internet Monitor creates an event when a threshold is crossed for a local health score.
+
+         
+
+        If you don't set a minimum traffic impact threshold, the default value is 0.1%.
+
+        
+
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'MonitorArn': 'string',
+          'Status': 'PENDING'|'ACTIVE'|'INACTIVE'|'ERROR'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **MonitorArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the monitor.
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        The status of a monitor.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchInternetMonitor.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CloudWatchInternetMonitor.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchInternetMonitor.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CloudWatchInternetMonitor.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CloudWatchInternetMonitor.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CloudWatchInternetMonitor.Client.exceptions.ValidationException`
+
+  

@@ -1,0 +1,283 @@
+:doc:`CodeArtifact <../../codeartifact>` / Client / publish_package_version
+
+***********************
+publish_package_version
+***********************
+
+
+
+.. py:method:: CodeArtifact.Client.publish_package_version(**kwargs)
+
+  
+
+  Creates a new package version containing one or more assets (or files).
+
+   
+
+  The ``unfinished`` flag can be used to keep the package version in the ``Unfinished`` state until all of its assets have been uploaded (see `Package version status <https://docs.aws.amazon.com/codeartifact/latest/ug/packages-overview.html#package-version-status.html#package-version-status>`__ in the *CodeArtifact user guide*). To set the package version’s status to ``Published``, omit the ``unfinished`` flag when uploading the final asset, or set the status using `UpdatePackageVersionStatus <https://docs.aws.amazon.com/codeartifact/latest/APIReference/API_UpdatePackageVersionsStatus.html>`__. Once a package version’s status is set to ``Published``, it cannot change back to ``Unfinished``.
+
+   
+
+  .. note::
+
+    
+
+    Only generic packages can be published using this API. For more information, see `Using generic packages <https://docs.aws.amazon.com/codeartifact/latest/ug/using-generic.html>`__ in the *CodeArtifact User Guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codeartifact-2018-09-22/PublishPackageVersion>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.publish_package_version(
+        domain='string',
+        domainOwner='string',
+        repository='string',
+        format='npm'|'pypi'|'maven'|'nuget'|'generic'|'ruby'|'swift'|'cargo',
+        namespace='string',
+        package='string',
+        packageVersion='string',
+        assetContent=b'bytes'|file,
+        assetName='string',
+        assetSHA256='string',
+        unfinished=True|False
+    )
+    
+  :type domain: string
+  :param domain: **[REQUIRED]** 
+
+    The name of the domain that contains the repository that contains the package version to publish.
+
+    
+
+  
+  :type domainOwner: string
+  :param domainOwner: 
+
+    The 12-digit account number of the AWS account that owns the domain. It does not include dashes or spaces.
+
+    
+
+  
+  :type repository: string
+  :param repository: **[REQUIRED]** 
+
+    The name of the repository that the package version will be published to.
+
+    
+
+  
+  :type format: string
+  :param format: **[REQUIRED]** 
+
+    A format that specifies the type of the package version with the requested asset file.
+
+     
+
+    The only supported value is ``generic``.
+
+    
+
+  
+  :type namespace: string
+  :param namespace: 
+
+    The namespace of the package version to publish.
+
+    
+
+  
+  :type package: string
+  :param package: **[REQUIRED]** 
+
+    The name of the package version to publish.
+
+    
+
+  
+  :type packageVersion: string
+  :param packageVersion: **[REQUIRED]** 
+
+    The package version to publish (for example, ``3.5.2``).
+
+    
+
+  
+  :type assetContent: bytes or seekable file-like object
+  :param assetContent: **[REQUIRED]** 
+
+    The content of the asset to publish.
+
+    
+
+  
+  :type assetName: string
+  :param assetName: **[REQUIRED]** 
+
+    The name of the asset to publish. Asset names can include Unicode letters and numbers, and the following special characters: ``~ ! @ ^ & ( ) - ` _ + [ ] { } ; , . ```
+
+    
+
+  
+  :type assetSHA256: string
+  :param assetSHA256: **[REQUIRED]** 
+
+    The SHA256 hash of the ``assetContent`` to publish. This value must be calculated by the caller and provided with the request (see `Publishing a generic package <https://docs.aws.amazon.com/codeartifact/latest/ug/using-generic.html#publishing-generic-packages>`__ in the *CodeArtifact User Guide*).
+
+     
+
+    This value is used as an integrity check to verify that the ``assetContent`` has not changed after it was originally sent.
+
+    
+
+  
+  :type unfinished: boolean
+  :param unfinished: 
+
+    Specifies whether the package version should remain in the ``unfinished`` state. If omitted, the package version status will be set to ``Published`` (see `Package version status <https://docs.aws.amazon.com/codeartifact/latest/ug/packages-overview.html#package-version-status>`__ in the *CodeArtifact User Guide*).
+
+     
+
+    Valid values: ``unfinished``
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'format': 'npm'|'pypi'|'maven'|'nuget'|'generic'|'ruby'|'swift'|'cargo',
+          'namespace': 'string',
+          'package': 'string',
+          'version': 'string',
+          'versionRevision': 'string',
+          'status': 'Published'|'Unfinished'|'Unlisted'|'Archived'|'Disposed'|'Deleted',
+          'asset': {
+              'name': 'string',
+              'size': 123,
+              'hashes': {
+                  'string': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **format** *(string) --* 
+
+        The format of the package version.
+
+        
+      
+
+      - **namespace** *(string) --* 
+
+        The namespace of the package version.
+
+        
+      
+
+      - **package** *(string) --* 
+
+        The name of the package.
+
+        
+      
+
+      - **version** *(string) --* 
+
+        The version of the package.
+
+        
+      
+
+      - **versionRevision** *(string) --* 
+
+        The revision of the package version.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        A string that contains the status of the package version. For more information, see `Package version status <https://docs.aws.amazon.com/codeartifact/latest/ug/packages-overview.html#package-version-status.html#package-version-status>`__ in the *CodeArtifact User Guide*.
+
+        
+      
+
+      - **asset** *(dict) --* 
+
+        An `AssetSummary <https://docs.aws.amazon.com/codeartifact/latest/APIReference/API_AssetSummary.html>`__ for the published asset.
+
+        
+        
+
+        - **name** *(string) --* 
+
+          The name of the asset.
+
+          
+        
+
+        - **size** *(integer) --* 
+
+          The size of the asset.
+
+          
+        
+
+        - **hashes** *(dict) --* 
+
+          The hashes of the asset.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ValidationException`
+
+  

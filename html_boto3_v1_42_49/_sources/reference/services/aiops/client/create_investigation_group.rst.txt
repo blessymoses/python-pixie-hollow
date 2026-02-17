@@ -1,0 +1,280 @@
+:doc:`AIOps <../../aiops>` / Client / create_investigation_group
+
+**************************
+create_investigation_group
+**************************
+
+
+
+.. py:method:: AIOps.Client.create_investigation_group(**kwargs)
+
+  
+
+  Creates an *investigation group* in your account. Creating an investigation group is a one-time setup task for each Region in your account. It is a necessary task to be able to perform investigations.
+
+   
+
+  Settings in the investigation group help you centrally manage the common properties of your investigations, such as the following:
+
+   
+
+  
+  * Who can access the investigations
+   
+  * Whether investigation data is encrypted with a customer managed Key Management Service key.
+   
+  * How long investigations and their data are retained by default.
+  
+
+   
+
+  Currently, you can have one investigation group in each Region in your account. Each investigation in a Region is a part of the investigation group in that Region
+
+   
+
+  To create an investigation group and set up CloudWatch investigations, you must be signed in to an IAM principal that has either the ``AIOpsConsoleAdminPolicy`` or the ``AdministratorAccess`` IAM policy attached, or to an account that has similar permissions.
+
+   
+
+  .. warning::
+
+     
+
+    You can configure CloudWatch alarms to start investigations and add events to investigations. If you create your investigation group with ``CreateInvestigationGroup`` and you want to enable alarms to do this, you must use ``PutInvestigationGroupPolicy`` to create a resource policy that grants this permission to CloudWatch alarms.
+
+     
+
+    For more information about configuring CloudWatch alarms, see `Using Amazon CloudWatch alarms <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html>`__
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/aiops-2018-05-10/CreateInvestigationGroup>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_investigation_group(
+        name='string',
+        roleArn='string',
+        encryptionConfiguration={
+            'type': 'AWS_OWNED_KEY'|'CUSTOMER_MANAGED_KMS_KEY',
+            'kmsKeyId': 'string'
+        },
+        retentionInDays=123,
+        tags={
+            'string': 'string'
+        },
+        tagKeyBoundaries=[
+            'string',
+        ],
+        chatbotNotificationChannel={
+            'string': [
+                'string',
+            ]
+        },
+        isCloudTrailEventHistoryEnabled=True|False,
+        crossAccountConfigurations=[
+            {
+                'sourceRoleArn': 'string'
+            },
+        ]
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    Provides a name for the investigation group.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: **[REQUIRED]** 
+
+    Specify the ARN of the IAM role that CloudWatch investigations will use when it gathers investigation data. The permissions in this role determine which of your resources that CloudWatch investigations will have access to during investigations.
+
+     
+
+    For more information, see `How to control what data CloudWatch investigations has access to during investigations <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Investigations-Security.html#Investigations-Security-Data>`__.
+
+    
+
+  
+  :type encryptionConfiguration: dict
+  :param encryptionConfiguration: 
+
+    Use this structure if you want to use a customer managed KMS key to encrypt your investigation data. If you omit this parameter, CloudWatch investigations will use an Amazon Web Services key to encrypt the data. For more information, see `Encryption of investigation data <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Investigations-Security.html#Investigations-KMS>`__.
+
+    
+
+  
+    - **type** *(string) --* 
+
+      Displays whether investigation data is encrypted by a customer managed key or an Amazon Web Services owned key.
+
+      
+
+    
+    - **kmsKeyId** *(string) --* 
+
+      If the investigation group uses a customer managed key for encryption, this field displays the ID of that key.
+
+      
+
+    
+  
+  :type retentionInDays: integer
+  :param retentionInDays: 
+
+    Specify how long that investigation data is kept. For more information, see `Operational investigation data retention <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Investigations-Retention.html>`__.
+
+     
+
+    If you omit this parameter, the default of 90 days is used.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    A list of key-value pairs to associate with the investigation group. You can associate as many as 50 tags with an investigation group. To be able to associate tags when you create the investigation group, you must have the ``cloudwatch:TagResource`` permission.
+
+     
+
+    Tags can help you organize and categorize your resources. You can also use them to scope user permissions by granting a user permission to access or change only resources with certain tag values.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type tagKeyBoundaries: list
+  :param tagKeyBoundaries: 
+
+    Enter the existing custom tag keys for custom applications in your system. Resource tags help CloudWatch investigations narrow the search space when it is unable to discover definite relationships between resources. For example, to discover that an Amazon ECS service depends on an Amazon RDS database, CloudWatch investigations can discover this relationship using data sources such as X-Ray and CloudWatch Application Signals. However, if you haven't deployed these features, CloudWatch investigations will attempt to identify possible relationships. Tag boundaries can be used to narrow the resources that will be discovered by CloudWatch investigations in these cases.
+
+     
+
+    You don't need to enter tags created by myApplications or CloudFormation, because CloudWatch investigations can automatically detect those tags.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type chatbotNotificationChannel: dict
+  :param chatbotNotificationChannel: 
+
+    Use this structure to integrate CloudWatch investigations with chat applications. This structure is a string array. For the first string, specify the ARN of an Amazon SNS topic. For the array of strings, specify the ARNs of one or more chat applications configurations that you want to associate with that topic. For more information about these configuration ARNs, see `Getting started with Amazon Q in chat applications <https://docs.aws.amazon.com/chatbot/latest/adminguide/getting-started.html>`__ and `Resource type defined by Amazon Web Services Chatbot <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awschatbot.html#awschatbot-resources-for-iam-policies>`__.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(list) --* 
+
+      
+        - *(string) --* 
+
+        
+    
+
+
+  :type isCloudTrailEventHistoryEnabled: boolean
+  :param isCloudTrailEventHistoryEnabled: 
+
+    Specify ``true`` to enable CloudWatch investigations to have access to change events that are recorded by CloudTrail. The default is ``true``.
+
+    
+
+  
+  :type crossAccountConfigurations: list
+  :param crossAccountConfigurations: 
+
+    List of ``sourceRoleArn`` values that have been configured for cross-account access.
+
+    
+
+  
+    - *(dict) --* 
+
+      This structure contains information about the cross-account configuration in the account.
+
+      
+
+    
+      - **sourceRoleArn** *(string) --* 
+
+        The ARN of an existing role which will be used to do investigations on your behalf.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'arn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **arn** *(string) --* 
+
+        The ARN of the investigation group that you just created.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AIOps.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AIOps.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`AIOps.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AIOps.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AIOps.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`AIOps.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AIOps.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AIOps.Client.exceptions.ConflictException`
+
+  

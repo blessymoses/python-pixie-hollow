@@ -1,0 +1,248 @@
+:doc:`ForecastService <../../forecast>` / Client / describe_dataset
+
+****************
+describe_dataset
+****************
+
+
+
+.. py:method:: ForecastService.Client.describe_dataset(**kwargs)
+
+  
+
+  Describes an Amazon Forecast dataset created using the `CreateDataset <https://docs.aws.amazon.com/forecast/latest/dg/API_CreateDataset.html>`__ operation.
+
+   
+
+  In addition to listing the parameters specified in the ``CreateDataset`` request, this operation includes the following dataset properties:
+
+   
+
+  
+  * ``CreationTime``
+   
+  * ``LastModificationTime``
+   
+  * ``Status``
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeDataset>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_dataset(
+        DatasetArn='string'
+    )
+    
+  :type DatasetArn: string
+  :param DatasetArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the dataset.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DatasetArn': 'string',
+          'DatasetName': 'string',
+          'Domain': 'RETAIL'|'CUSTOM'|'INVENTORY_PLANNING'|'EC2_CAPACITY'|'WORK_FORCE'|'WEB_TRAFFIC'|'METRICS',
+          'DatasetType': 'TARGET_TIME_SERIES'|'RELATED_TIME_SERIES'|'ITEM_METADATA',
+          'DataFrequency': 'string',
+          'Schema': {
+              'Attributes': [
+                  {
+                      'AttributeName': 'string',
+                      'AttributeType': 'string'|'integer'|'float'|'timestamp'|'geolocation'
+                  },
+              ]
+          },
+          'EncryptionConfig': {
+              'RoleArn': 'string',
+              'KMSKeyArn': 'string'
+          },
+          'Status': 'string',
+          'CreationTime': datetime(2015, 1, 1),
+          'LastModificationTime': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DatasetArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the dataset.
+
+        
+      
+
+      - **DatasetName** *(string) --* 
+
+        The name of the dataset.
+
+        
+      
+
+      - **Domain** *(string) --* 
+
+        The domain associated with the dataset.
+
+        
+      
+
+      - **DatasetType** *(string) --* 
+
+        The dataset type.
+
+        
+      
+
+      - **DataFrequency** *(string) --* 
+
+        The frequency of data collection.
+
+         
+
+        Valid intervals are Y (Year), M (Month), W (Week), D (Day), H (Hour), 30min (30 minutes), 15min (15 minutes), 10min (10 minutes), 5min (5 minutes), and 1min (1 minute). For example, "M" indicates every month and "30min" indicates every 30 minutes.
+
+        
+      
+
+      - **Schema** *(dict) --* 
+
+        An array of ``SchemaAttribute`` objects that specify the dataset fields. Each ``SchemaAttribute`` specifies the name and data type of a field.
+
+        
+        
+
+        - **Attributes** *(list) --* 
+
+          An array of attributes specifying the name and type of each field in a dataset.
+
+          
+          
+
+          - *(dict) --* 
+
+            An attribute of a schema, which defines a dataset field. A schema attribute is required for every field in a dataset. The `Schema <https://docs.aws.amazon.com/forecast/latest/dg/API_Schema.html>`__ object contains an array of ``SchemaAttribute`` objects.
+
+            
+            
+
+            - **AttributeName** *(string) --* 
+
+              The name of the dataset field.
+
+              
+            
+
+            - **AttributeType** *(string) --* 
+
+              The data type of the field.
+
+               
+
+              For a related time series dataset, other than date, item_id, and forecast dimensions attributes, all attributes should be of numerical type (integer/float).
+
+              
+        
+      
+    
+      
+
+      - **EncryptionConfig** *(dict) --* 
+
+        The Key Management Service (KMS) key and the Identity and Access Management (IAM) role that Amazon Forecast can assume to access the key.
+
+        
+        
+
+        - **RoleArn** *(string) --* 
+
+          The ARN of the IAM role that Amazon Forecast can assume to access the KMS key.
+
+           
+
+          Passing a role across Amazon Web Services accounts is not allowed. If you pass a role that isn't in your account, you get an ``InvalidInputException`` error.
+
+          
+        
+
+        - **KMSKeyArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the KMS key.
+
+          
+    
+      
+
+      - **Status** *(string) --* 
+
+        The status of the dataset. States include:
+
+         
+
+        
+        * ``ACTIVE``
+         
+        * ``CREATE_PENDING``, ``CREATE_IN_PROGRESS``, ``CREATE_FAILED``
+         
+        * ``DELETE_PENDING``, ``DELETE_IN_PROGRESS``, ``DELETE_FAILED``
+         
+        * ``UPDATE_PENDING``, ``UPDATE_IN_PROGRESS``, ``UPDATE_FAILED``
+        
+
+         
+
+        The ``UPDATE`` states apply while data is imported to the dataset from a call to the `CreateDatasetImportJob <https://docs.aws.amazon.com/forecast/latest/dg/API_CreateDatasetImportJob.html>`__ operation and reflect the status of the dataset import job. For example, when the import job status is ``CREATE_IN_PROGRESS``, the status of the dataset is ``UPDATE_IN_PROGRESS``.
+
+         
+
+        .. note::
+
+          
+
+          The ``Status`` of the dataset must be ``ACTIVE`` before you can import training data.
+
+          
+
+        
+      
+
+      - **CreationTime** *(datetime) --* 
+
+        When the dataset was created.
+
+        
+      
+
+      - **LastModificationTime** *(datetime) --* 
+
+        When you create a dataset, ``LastModificationTime`` is the same as ``CreationTime``. While data is being imported to the dataset, ``LastModificationTime`` is the current time of the ``DescribeDataset`` call. After a `CreateDatasetImportJob <https://docs.aws.amazon.com/forecast/latest/dg/API_CreateDatasetImportJob.html>`__ operation has finished, ``LastModificationTime`` is when the import job completed or failed.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ForecastService.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`ForecastService.Client.exceptions.ResourceNotFoundException`
+
+  

@@ -1,0 +1,356 @@
+:doc:`Omics <../../omics>` / Client / create_sequence_store
+
+*********************
+create_sequence_store
+*********************
+
+
+
+.. py:method:: Omics.Client.create_sequence_store(**kwargs)
+
+  
+
+  Creates a sequence store and returns its metadata. Sequence stores are used to store sequence data files called read sets that are saved in FASTQ, BAM, uBAM, or CRAM formats. For aligned formats (BAM and CRAM), a sequence store can only use one reference genome. For unaligned formats (FASTQ and uBAM), a reference genome is not required. You can create multiple sequence stores per region per account.
+
+   
+
+  The following are optional parameters you can specify for your sequence store:
+
+   
+
+  
+  * Use ``s3AccessConfig`` to configure your sequence store with S3 access logs (recommended).
+   
+  * Use ``sseConfig`` to define your own KMS key for encryption.
+   
+  * Use ``eTagAlgorithmFamily`` to define which algorithm to use for the HealthOmics eTag on objects.
+   
+  * Use ``fallbackLocation`` to define a backup location for storing files that have failed a direct upload.
+   
+  * Use ``propagatedSetLevelTags`` to configure tags that propagate to all objects in your store.
+  
+
+   
+
+  For more information, see `Creating a HealthOmics sequence store <https://docs.aws.amazon.com/omics/latest/dev/create-sequence-store.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/CreateSequenceStore>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_sequence_store(
+        name='string',
+        description='string',
+        sseConfig={
+            'type': 'KMS',
+            'keyArn': 'string'
+        },
+        tags={
+            'string': 'string'
+        },
+        clientToken='string',
+        fallbackLocation='string',
+        eTagAlgorithmFamily='MD5up'|'SHA256up'|'SHA512up',
+        propagatedSetLevelTags=[
+            'string',
+        ],
+        s3AccessConfig={
+            'accessLogLocation': 'string'
+        }
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    A name for the store.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    A description for the store.
+
+    
+
+  
+  :type sseConfig: dict
+  :param sseConfig: 
+
+    Server-side encryption (SSE) settings for the store.
+
+    
+
+  
+    - **type** *(string) --* **[REQUIRED]** 
+
+      The encryption type.
+
+      
+
+    
+    - **keyArn** *(string) --* 
+
+      An encryption key ARN.
+
+      
+
+    
+  
+  :type tags: dict
+  :param tags: 
+
+    Tags for the store. You can configure up to 50 tags.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type clientToken: string
+  :param clientToken: 
+
+    An idempotency token used to dedupe retry requests so that duplicate runs are not created.
+
+    This field is autopopulated if not provided.
+
+  
+  :type fallbackLocation: string
+  :param fallbackLocation: 
+
+    An S3 location that is used to store files that have failed a direct upload. You can add or change the ``fallbackLocation`` after creating a sequence store. This is not required if you are uploading files from a different S3 bucket.
+
+    
+
+  
+  :type eTagAlgorithmFamily: string
+  :param eTagAlgorithmFamily: 
+
+    The ETag algorithm family to use for ingested read sets. The default value is MD5up. For more information on ETags, see `ETags and data provenance <https://docs.aws.amazon.com/omics/latest/dev/etags-and-provenance.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  :type propagatedSetLevelTags: list
+  :param propagatedSetLevelTags: 
+
+    The tags keys to propagate to the S3 objects associated with read sets in the sequence store. These tags can be used as input to add metadata to your read sets.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type s3AccessConfig: dict
+  :param s3AccessConfig: 
+
+    S3 access configuration parameters. This specifies the parameters needed to access logs stored in S3 buckets. The S3 bucket must be in the same region and account as the sequence store.
+
+    
+
+  
+    - **accessLogLocation** *(string) --* 
+
+      Location of the access logs.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'id': 'string',
+          'arn': 'string',
+          'name': 'string',
+          'description': 'string',
+          'sseConfig': {
+              'type': 'KMS',
+              'keyArn': 'string'
+          },
+          'creationTime': datetime(2015, 1, 1),
+          'fallbackLocation': 'string',
+          'eTagAlgorithmFamily': 'MD5up'|'SHA256up'|'SHA512up',
+          'status': 'CREATING'|'ACTIVE'|'UPDATING'|'DELETING'|'FAILED',
+          'statusMessage': 'string',
+          'propagatedSetLevelTags': [
+              'string',
+          ],
+          's3Access': {
+              's3Uri': 'string',
+              's3AccessPointArn': 'string',
+              'accessLogLocation': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **id** *(string) --* 
+
+        The store's ID.
+
+        
+      
+
+      - **arn** *(string) --* 
+
+        The store's ARN.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The store's name.
+
+        
+      
+
+      - **description** *(string) --* 
+
+        The store's description.
+
+        
+      
+
+      - **sseConfig** *(dict) --* 
+
+        Server-side encryption (SSE) settings for the store. This contains the KMS key ARN that is used to encrypt read set objects.
+
+        
+        
+
+        - **type** *(string) --* 
+
+          The encryption type.
+
+          
+        
+
+        - **keyArn** *(string) --* 
+
+          An encryption key ARN.
+
+          
+    
+      
+
+      - **creationTime** *(datetime) --* 
+
+        When the store was created.
+
+        
+      
+
+      - **fallbackLocation** *(string) --* 
+
+        An S3 location that is used to store files that have failed a direct upload.
+
+        
+      
+
+      - **eTagAlgorithmFamily** *(string) --* 
+
+        The algorithm family of the ETag.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The status of the sequence store.
+
+        
+      
+
+      - **statusMessage** *(string) --* 
+
+        The status message of the sequence store.
+
+        
+      
+
+      - **propagatedSetLevelTags** *(list) --* 
+
+        The tags keys to propagate to the S3 objects associated with read sets in the sequence store.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **s3Access** *(dict) --* 
+
+        The S3 access metadata of the sequence store.
+
+        
+        
+
+        - **s3Uri** *(string) --* 
+
+          The S3 URI of the sequence store.
+
+          
+        
+
+        - **s3AccessPointArn** *(string) --* 
+
+          This is ARN of the access point associated with the S3 bucket storing read sets.
+
+          
+        
+
+        - **accessLogLocation** *(string) --* 
+
+          Location of the access logs.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Omics.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.RequestTimeoutException`
+
+  

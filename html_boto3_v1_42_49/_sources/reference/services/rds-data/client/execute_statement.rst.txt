@@ -1,0 +1,968 @@
+:doc:`RDSDataService <../../rds-data>` / Client / execute_statement
+
+*****************
+execute_statement
+*****************
+
+
+
+.. py:method:: RDSDataService.Client.execute_statement(**kwargs)
+
+  
+
+  Runs a SQL statement against a database.
+
+   
+
+  .. note::
+
+    
+
+    If a call isn't part of a transaction because it doesn't include the ``transactionID`` parameter, changes that result from the call are committed automatically.
+
+     
+
+    If the binary response data from the database is more than 1 MB, the call is terminated.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rds-data-2018-08-01/ExecuteStatement>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.execute_statement(
+        resourceArn='string',
+        secretArn='string',
+        sql='string',
+        database='string',
+        schema='string',
+        parameters=[
+            {
+                'name': 'string',
+                'value': {
+                    'isNull': True|False,
+                    'booleanValue': True|False,
+                    'longValue': 123,
+                    'doubleValue': 123.0,
+                    'stringValue': 'string',
+                    'blobValue': b'bytes',
+                    'arrayValue': {
+                        'booleanValues': [
+                            True|False,
+                        ],
+                        'longValues': [
+                            123,
+                        ],
+                        'doubleValues': [
+                            123.0,
+                        ],
+                        'stringValues': [
+                            'string',
+                        ],
+                        'arrayValues': [
+                            {'... recursive ...'},
+                        ]
+                    }
+                },
+                'typeHint': 'JSON'|'UUID'|'TIMESTAMP'|'DATE'|'TIME'|'DECIMAL'
+            },
+        ],
+        transactionId='string',
+        includeResultMetadata=True|False,
+        continueAfterTimeout=True|False,
+        resultSetOptions={
+            'decimalReturnType': 'STRING'|'DOUBLE_OR_LONG',
+            'longReturnType': 'STRING'|'LONG'
+        },
+        formatRecordsAs='NONE'|'JSON'
+    )
+    
+  :type resourceArn: string
+  :param resourceArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the Aurora Serverless DB cluster.
+
+    
+
+  
+  :type secretArn: string
+  :param secretArn: **[REQUIRED]** 
+
+    The ARN of the secret that enables access to the DB cluster. Enter the database user name and password for the credentials in the secret.
+
+     
+
+    For information about creating the secret, see `Create a database secret <https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_database_secret.html>`__.
+
+    
+
+  
+  :type sql: string
+  :param sql: **[REQUIRED]** 
+
+    The SQL statement to run.
+
+    
+
+  
+  :type database: string
+  :param database: 
+
+    The name of the database.
+
+    
+
+  
+  :type schema: string
+  :param schema: 
+
+    The name of the database schema.
+
+     
+
+    .. note::
+
+      
+
+      Currently, the ``schema`` parameter isn't supported.
+
+      
+
+    
+
+  
+  :type parameters: list
+  :param parameters: 
+
+    The parameters for the SQL statement.
+
+     
+
+    .. note::
+
+      
+
+      Array parameters are not supported.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      A parameter used in a SQL statement.
+
+      
+
+    
+      - **name** *(string) --* 
+
+        The name of the parameter.
+
+        
+
+      
+      - **value** *(dict) --* 
+
+        The value of the parameter.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``isNull``, ``booleanValue``, ``longValue``, ``doubleValue``, ``stringValue``, ``blobValue``, ``arrayValue``. 
+
+      
+        - **isNull** *(boolean) --* 
+
+          A NULL value.
+
+          
+
+        
+        - **booleanValue** *(boolean) --* 
+
+          A value of Boolean data type.
+
+          
+
+        
+        - **longValue** *(integer) --* 
+
+          A value of long data type.
+
+          
+
+        
+        - **doubleValue** *(float) --* 
+
+          A value of double data type.
+
+          
+
+        
+        - **stringValue** *(string) --* 
+
+          A value of string data type.
+
+          
+
+        
+        - **blobValue** *(bytes) --* 
+
+          A value of BLOB data type.
+
+          
+
+        
+        - **arrayValue** *(dict) --* 
+
+          An array of values.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``booleanValues``, ``longValues``, ``doubleValues``, ``stringValues``, ``arrayValues``. 
+
+        
+          - **booleanValues** *(list) --* 
+
+            An array of Boolean values.
+
+            
+
+          
+            - *(boolean) --* 
+
+            
+        
+          - **longValues** *(list) --* 
+
+            An array of integers.
+
+            
+
+          
+            - *(integer) --* 
+
+            
+        
+          - **doubleValues** *(list) --* 
+
+            An array of floating-point numbers.
+
+            
+
+          
+            - *(float) --* 
+
+            
+        
+          - **stringValues** *(list) --* 
+
+            An array of strings.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+          - **arrayValues** *(list) --* 
+
+            An array of arrays.
+
+            
+
+          
+            - *(dict) --* 
+
+              Contains an array.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``booleanValues``, ``longValues``, ``doubleValues``, ``stringValues``, ``arrayValues``. 
+
+            
+        
+        
+      
+      - **typeHint** *(string) --* 
+
+        A hint that specifies the correct object type for data type mapping. Possible values are as follows:
+
+         
+
+        
+        * ``DATE`` - The corresponding ``String`` parameter value is sent as an object of ``DATE`` type to the database. The accepted format is ``YYYY-MM-DD``.
+         
+        * ``DECIMAL`` - The corresponding ``String`` parameter value is sent as an object of ``DECIMAL`` type to the database.
+         
+        * ``JSON`` - The corresponding ``String`` parameter value is sent as an object of ``JSON`` type to the database.
+         
+        * ``TIME`` - The corresponding ``String`` parameter value is sent as an object of ``TIME`` type to the database. The accepted format is ``HH:MM:SS[.FFF]``.
+         
+        * ``TIMESTAMP`` - The corresponding ``String`` parameter value is sent as an object of ``TIMESTAMP`` type to the database. The accepted format is ``YYYY-MM-DD HH:MM:SS[.FFF]``.
+         
+        * ``UUID`` - The corresponding ``String`` parameter value is sent as an object of ``UUID`` type to the database.
+        
+
+        
+
+      
+    
+
+  :type transactionId: string
+  :param transactionId: 
+
+    The identifier of a transaction that was started by using the ``BeginTransaction`` operation. Specify the transaction ID of the transaction that you want to include the SQL statement in.
+
+     
+
+    If the SQL statement is not part of a transaction, don't set this parameter.
+
+    
+
+  
+  :type includeResultMetadata: boolean
+  :param includeResultMetadata: 
+
+    A value that indicates whether to include metadata in the results.
+
+    
+
+  
+  :type continueAfterTimeout: boolean
+  :param continueAfterTimeout: 
+
+    A value that indicates whether to continue running the statement after the call times out. By default, the statement stops running when the call times out.
+
+     
+
+    .. note::
+
+      
+
+      For DDL statements, we recommend continuing to run the statement after the call times out. When a DDL statement terminates before it is finished running, it can result in errors and possibly corrupted data structures.
+
+      
+
+    
+
+  
+  :type resultSetOptions: dict
+  :param resultSetOptions: 
+
+    Options that control how the result set is returned.
+
+    
+
+  
+    - **decimalReturnType** *(string) --* 
+
+      A value that indicates how a field of ``DECIMAL`` type is represented in the response. The value of ``STRING``, the default, specifies that it is converted to a String value. The value of ``DOUBLE_OR_LONG`` specifies that it is converted to a Long value if its scale is 0, or to a Double value otherwise.
+
+       
+
+      .. note::
+
+        
+
+        Conversion to Double or Long can result in roundoff errors due to precision loss. We recommend converting to String, especially when working with currency values.
+
+        
+
+      
+
+    
+    - **longReturnType** *(string) --* 
+
+      A value that indicates how a field of ``LONG`` type is represented. Allowed values are ``LONG`` and ``STRING``. The default is ``LONG``. Specify ``STRING`` if the length or precision of numeric values might cause truncation or rounding errors.
+
+      
+
+    
+  
+  :type formatRecordsAs: string
+  :param formatRecordsAs: 
+
+    A value that indicates whether to format the result set as a single JSON string. This parameter only applies to ``SELECT`` statements and is ignored for other types of statements. Allowed values are ``NONE`` and ``JSON``. The default value is ``NONE``. The result is returned in the ``formattedRecords`` field.
+
+     
+
+    For usage information about the JSON format for result sets, see `Using the Data API <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/data-api.html>`__ in the *Amazon Aurora User Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'records': [
+              [
+                  {
+                      'isNull': True|False,
+                      'booleanValue': True|False,
+                      'longValue': 123,
+                      'doubleValue': 123.0,
+                      'stringValue': 'string',
+                      'blobValue': b'bytes',
+                      'arrayValue': {
+                          'booleanValues': [
+                              True|False,
+                          ],
+                          'longValues': [
+                              123,
+                          ],
+                          'doubleValues': [
+                              123.0,
+                          ],
+                          'stringValues': [
+                              'string',
+                          ],
+                          'arrayValues': [
+                              {'... recursive ...'},
+                          ]
+                      }
+                  },
+              ],
+          ],
+          'columnMetadata': [
+              {
+                  'name': 'string',
+                  'type': 123,
+                  'typeName': 'string',
+                  'label': 'string',
+                  'schemaName': 'string',
+                  'tableName': 'string',
+                  'isAutoIncrement': True|False,
+                  'isSigned': True|False,
+                  'isCurrency': True|False,
+                  'isCaseSensitive': True|False,
+                  'nullable': 123,
+                  'precision': 123,
+                  'scale': 123,
+                  'arrayBaseColumnType': 123
+              },
+          ],
+          'numberOfRecordsUpdated': 123,
+          'generatedFields': [
+              {
+                  'isNull': True|False,
+                  'booleanValue': True|False,
+                  'longValue': 123,
+                  'doubleValue': 123.0,
+                  'stringValue': 'string',
+                  'blobValue': b'bytes',
+                  'arrayValue': {
+                      'booleanValues': [
+                          True|False,
+                      ],
+                      'longValues': [
+                          123,
+                      ],
+                      'doubleValues': [
+                          123.0,
+                      ],
+                      'stringValues': [
+                          'string',
+                      ],
+                      'arrayValues': [
+                          {'... recursive ...'},
+                      ]
+                  }
+              },
+          ],
+          'formattedRecords': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The response elements represent the output of a request to run a SQL statement against a database.
+
+      
+      
+
+      - **records** *(list) --* 
+
+        The records returned by the SQL statement. This field is blank if the ``formatRecordsAs`` parameter is set to ``JSON``.
+
+        
+        
+
+        - *(list) --* 
+          
+
+          - *(dict) --* 
+
+            Contains a value.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``isNull``, ``booleanValue``, ``longValue``, ``doubleValue``, ``stringValue``, ``blobValue``, ``arrayValue``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **isNull** *(boolean) --* 
+
+              A NULL value.
+
+              
+            
+
+            - **booleanValue** *(boolean) --* 
+
+              A value of Boolean data type.
+
+              
+            
+
+            - **longValue** *(integer) --* 
+
+              A value of long data type.
+
+              
+            
+
+            - **doubleValue** *(float) --* 
+
+              A value of double data type.
+
+              
+            
+
+            - **stringValue** *(string) --* 
+
+              A value of string data type.
+
+              
+            
+
+            - **blobValue** *(bytes) --* 
+
+              A value of BLOB data type.
+
+              
+            
+
+            - **arrayValue** *(dict) --* 
+
+              An array of values.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``booleanValues``, ``longValues``, ``doubleValues``, ``stringValues``, ``arrayValues``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **booleanValues** *(list) --* 
+
+                An array of Boolean values.
+
+                
+                
+
+                - *(boolean) --* 
+            
+              
+
+              - **longValues** *(list) --* 
+
+                An array of integers.
+
+                
+                
+
+                - *(integer) --* 
+            
+              
+
+              - **doubleValues** *(list) --* 
+
+                An array of floating-point numbers.
+
+                
+                
+
+                - *(float) --* 
+            
+              
+
+              - **stringValues** *(list) --* 
+
+                An array of strings.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **arrayValues** *(list) --* 
+
+                An array of arrays.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Contains an array.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``booleanValues``, ``longValues``, ``doubleValues``, ``stringValues``, ``arrayValues``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+            
+          
+        
+      
+    
+      
+
+      - **columnMetadata** *(list) --* 
+
+        Metadata for the columns included in the results. This field is blank if the ``formatRecordsAs`` parameter is set to ``JSON``.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the metadata for a column.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the column.
+
+            
+          
+
+          - **type** *(integer) --* 
+
+            The type of the column.
+
+            
+          
+
+          - **typeName** *(string) --* 
+
+            The database-specific data type of the column.
+
+            
+          
+
+          - **label** *(string) --* 
+
+            The label for the column.
+
+            
+          
+
+          - **schemaName** *(string) --* 
+
+            The name of the schema that owns the table that includes the column.
+
+            
+          
+
+          - **tableName** *(string) --* 
+
+            The name of the table that includes the column.
+
+            
+          
+
+          - **isAutoIncrement** *(boolean) --* 
+
+            A value that indicates whether the column increments automatically.
+
+            
+          
+
+          - **isSigned** *(boolean) --* 
+
+            A value that indicates whether an integer column is signed.
+
+            
+          
+
+          - **isCurrency** *(boolean) --* 
+
+            A value that indicates whether the column contains currency values.
+
+            
+          
+
+          - **isCaseSensitive** *(boolean) --* 
+
+            A value that indicates whether the column is case-sensitive.
+
+            
+          
+
+          - **nullable** *(integer) --* 
+
+            A value that indicates whether the column is nullable.
+
+            
+          
+
+          - **precision** *(integer) --* 
+
+            The precision value of a decimal number column.
+
+            
+          
+
+          - **scale** *(integer) --* 
+
+            The scale value of a decimal number column.
+
+            
+          
+
+          - **arrayBaseColumnType** *(integer) --* 
+
+            The type of the column.
+
+            
+      
+    
+      
+
+      - **numberOfRecordsUpdated** *(integer) --* 
+
+        The number of records updated by the request.
+
+        
+      
+
+      - **generatedFields** *(list) --* 
+
+        Values for fields generated during a DML request.
+
+         
+
+        .. note::
+
+          
+
+          The ``generatedFields`` data isn't supported by Aurora PostgreSQL. To get the values of generated fields, use the ``RETURNING`` clause. For more information, see `Returning Data From Modified Rows <https://www.postgresql.org/docs/10/dml-returning.html>`__ in the PostgreSQL documentation.
+
+          
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains a value.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``isNull``, ``booleanValue``, ``longValue``, ``doubleValue``, ``stringValue``, ``blobValue``, ``arrayValue``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+        
+          
+
+          - **isNull** *(boolean) --* 
+
+            A NULL value.
+
+            
+          
+
+          - **booleanValue** *(boolean) --* 
+
+            A value of Boolean data type.
+
+            
+          
+
+          - **longValue** *(integer) --* 
+
+            A value of long data type.
+
+            
+          
+
+          - **doubleValue** *(float) --* 
+
+            A value of double data type.
+
+            
+          
+
+          - **stringValue** *(string) --* 
+
+            A value of string data type.
+
+            
+          
+
+          - **blobValue** *(bytes) --* 
+
+            A value of BLOB data type.
+
+            
+          
+
+          - **arrayValue** *(dict) --* 
+
+            An array of values.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``booleanValues``, ``longValues``, ``doubleValues``, ``stringValues``, ``arrayValues``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **booleanValues** *(list) --* 
+
+              An array of Boolean values.
+
+              
+              
+
+              - *(boolean) --* 
+          
+            
+
+            - **longValues** *(list) --* 
+
+              An array of integers.
+
+              
+              
+
+              - *(integer) --* 
+          
+            
+
+            - **doubleValues** *(list) --* 
+
+              An array of floating-point numbers.
+
+              
+              
+
+              - *(float) --* 
+          
+            
+
+            - **stringValues** *(list) --* 
+
+              An array of strings.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **arrayValues** *(list) --* 
+
+              An array of arrays.
+
+              
+              
+
+              - *(dict) --* 
+
+                Contains an array.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``booleanValues``, ``longValues``, ``doubleValues``, ``stringValues``, ``arrayValues``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+              
+          
+        
+      
+    
+      
+
+      - **formattedRecords** *(string) --* 
+
+        A string value that represents the result set of a ``SELECT`` statement in JSON format. This value is only present when the ``formatRecordsAs`` parameter is set to ``JSON``.
+
+         
+
+        The size limit for this field is currently 10 MB. If the JSON-formatted string representing the result set requires more than 10 MB, the call returns an error.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`RDSDataService.Client.exceptions.SecretsErrorException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.HttpEndpointNotEnabledException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.DatabaseErrorException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.DatabaseResumingException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.DatabaseUnavailableException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.TransactionNotFoundException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.InvalidSecretException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.InvalidResourceStateException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.ServiceUnavailableError`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.DatabaseNotFoundException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.StatementTimeoutException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.InternalServerErrorException`
+
+  
+  *   :py:class:`RDSDataService.Client.exceptions.UnsupportedResultException`
+
+  

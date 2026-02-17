@@ -1,0 +1,241 @@
+:doc:`BedrockAgentCoreControl <../../bedrock-agentcore-control>` / Paginator / ListPolicies
+
+************
+ListPolicies
+************
+
+
+
+.. py:class:: BedrockAgentCoreControl.Paginator.ListPolicies
+
+  ::
+
+    
+    paginator = client.get_paginator('list_policies')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`BedrockAgentCoreControl.Client.list_policies`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agentcore-control-2023-06-05/ListPolicies>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          policyEngineId='string',
+          targetResourceScope='string',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type policyEngineId: string
+    :param policyEngineId: **[REQUIRED]** 
+
+      The identifier of the policy engine whose policies to retrieve.
+
+      
+
+    
+    :type targetResourceScope: string
+    :param targetResourceScope: 
+
+      Optional filter to list policies that apply to a specific resource scope or resource type. This helps narrow down policy results to those relevant for particular Amazon Web Services resources, agent tools, or operational contexts within the policy engine ecosystem.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'policies': [
+                {
+                    'policyId': 'string',
+                    'name': 'string',
+                    'policyEngineId': 'string',
+                    'definition': {
+                        'cedar': {
+                            'statement': 'string'
+                        }
+                    },
+                    'description': 'string',
+                    'createdAt': datetime(2015, 1, 1),
+                    'updatedAt': datetime(2015, 1, 1),
+                    'policyArn': 'string',
+                    'status': 'CREATING'|'ACTIVE'|'UPDATING'|'DELETING'|'CREATE_FAILED'|'UPDATE_FAILED'|'DELETE_FAILED',
+                    'statusReasons': [
+                        'string',
+                    ]
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **policies** *(list) --* 
+
+          An array of policy objects that match the specified criteria. Each policy object contains the policy metadata, status, and key identifiers for further operations.
+
+          
+          
+
+          - *(dict) --* 
+
+            Represents a complete policy resource within the AgentCore Policy system. Policies are ARN-able resources that contain Cedar policy statements and associated metadata for controlling agent behavior and access decisions. Each policy belongs to a policy engine and defines fine-grained authorization rules that are evaluated in real-time as agents interact with tools through Gateway. Policies use the Cedar policy language to specify who (principals based on OAuth claims like username, role, or scope) can perform what actions (tool calls) on which resources (Gateways), with optional conditions for attribute-based access control. Multiple policies can apply to a single request, with Cedar's forbid-wins semantics ensuring that security restrictions are never accidentally overridden.
+
+            
+            
+
+            - **policyId** *(string) --* 
+
+              The unique identifier for the policy. This system-generated identifier consists of the user name plus a 10-character generated suffix and serves as the primary key for policy operations.
+
+              
+            
+
+            - **name** *(string) --* 
+
+              The customer-assigned immutable name for the policy. This human-readable identifier must be unique within the account and cannot exceed 48 characters.
+
+              
+            
+
+            - **policyEngineId** *(string) --* 
+
+              The identifier of the policy engine that manages this policy. This establishes the policy engine context for policy evaluation and management.
+
+              
+            
+
+            - **definition** *(dict) --* 
+
+              The Cedar policy statement that defines the access control rules. This contains the actual policy logic used for agent behavior control and access decisions.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``cedar``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **cedar** *(dict) --* 
+
+                The Cedar policy definition within the policy definition structure. This contains the Cedar policy statement that defines the authorization logic using Cedar's human-readable, analyzable policy language. Cedar policies specify principals (who can access), actions (what operations are allowed), resources (what can be accessed), and optional conditions for fine-grained control. Cedar provides a formal policy language designed for authorization with deterministic evaluation, making policies testable, reviewable, and auditable. All Cedar policies follow a default-deny model where actions are denied unless explicitly permitted, and forbid policies always override permit policies.
+
+                
+                
+
+                - **statement** *(string) --* 
+
+                  The Cedar policy statement that defines the authorization logic. This statement follows Cedar syntax and specifies principals, actions, resources, and conditions that determine when access should be allowed or denied.
+
+                  
+            
+          
+            
+
+            - **description** *(string) --* 
+
+              A human-readable description of the policy's purpose and functionality. Limited to 4,096 characters, this helps administrators understand and manage the policy.
+
+              
+            
+
+            - **createdAt** *(datetime) --* 
+
+              The timestamp when the policy was originally created. This is automatically set by the service and used for auditing and lifecycle management.
+
+              
+            
+
+            - **updatedAt** *(datetime) --* 
+
+              The timestamp when the policy was last modified. This tracks the most recent changes to the policy configuration or metadata.
+
+              
+            
+
+            - **policyArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the policy. This globally unique identifier can be used for cross-service references and IAM policy statements.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The current status of the policy.
+
+              
+            
+
+            - **statusReasons** *(list) --* 
+
+              Additional information about the policy status. This provides details about any failures or the current state of the policy lifecycle.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

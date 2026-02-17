@@ -1,0 +1,212 @@
+:doc:`signer <../../signer>` / Client / start_signing_job
+
+*****************
+start_signing_job
+*****************
+
+
+
+.. py:method:: signer.Client.start_signing_job(**kwargs)
+
+  
+
+  Initiates a signing job to be performed on the code provided. Signing jobs are viewable by the ``ListSigningJobs`` operation. Note the following requirements:
+
+   
+
+  
+  * You must create an Amazon S3 source bucket. For more information, see `Creating a Bucket <http://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html>`__ in the *Amazon S3 Getting Started Guide*.
+   
+  * Your S3 source bucket must be version enabled.
+   
+  * You must create an S3 destination bucket. AWS Signer uses your S3 destination bucket to write your signed code.
+   
+  * You specify the name of the source and destination buckets when calling the ``StartSigningJob`` operation.
+   
+  * You must ensure the S3 buckets are from the same Region as the signing profile. Cross-Region signing isn't supported.
+   
+  * You must also specify a request token that identifies your request to Signer.
+  
+
+   
+
+  You can call the  DescribeSigningJob and the  ListSigningJobs actions after you call ``StartSigningJob``.
+
+   
+
+  For a Java example that shows how to use this action, see `StartSigningJob <https://docs.aws.amazon.com/signer/latest/developerguide/api-startsigningjob.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/signer-2017-08-25/StartSigningJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_signing_job(
+        source={
+            's3': {
+                'bucketName': 'string',
+                'key': 'string',
+                'version': 'string'
+            }
+        },
+        destination={
+            's3': {
+                'bucketName': 'string',
+                'prefix': 'string'
+            }
+        },
+        profileName='string',
+        clientRequestToken='string',
+        profileOwner='string'
+    )
+    
+  :type source: dict
+  :param source: **[REQUIRED]** 
+
+    The S3 bucket that contains the object to sign or a BLOB that contains your raw code.
+
+    
+
+  
+    - **s3** *(dict) --* 
+
+      The ``S3Source`` object.
+
+      
+
+    
+      - **bucketName** *(string) --* **[REQUIRED]** 
+
+        Name of the S3 bucket.
+
+        
+
+      
+      - **key** *(string) --* **[REQUIRED]** 
+
+        Key name of the bucket object that contains your unsigned code.
+
+        
+
+      
+      - **version** *(string) --* **[REQUIRED]** 
+
+        Version of your source image in your version enabled S3 bucket.
+
+        
+
+      
+    
+  
+  :type destination: dict
+  :param destination: **[REQUIRED]** 
+
+    The S3 bucket in which to save your signed object. The destination contains the name of your bucket and an optional prefix.
+
+    
+
+  
+    - **s3** *(dict) --* 
+
+      The ``S3Destination`` object.
+
+      
+
+    
+      - **bucketName** *(string) --* 
+
+        Name of the S3 bucket.
+
+        
+
+      
+      - **prefix** *(string) --* 
+
+        An S3 prefix that you can use to limit responses to those that begin with the specified prefix.
+
+        
+
+      
+    
+  
+  :type profileName: string
+  :param profileName: **[REQUIRED]** 
+
+    The name of the signing profile.
+
+    
+
+  
+  :type clientRequestToken: string
+  :param clientRequestToken: **[REQUIRED]** 
+
+    String that identifies the signing request. All calls after the first that use this token return the same response as the first call.
+
+    This field is autopopulated if not provided.
+
+  
+  :type profileOwner: string
+  :param profileOwner: 
+
+    The AWS account ID of the signing profile owner.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobId': 'string',
+          'jobOwner': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobId** *(string) --* 
+
+        The ID of your signing job.
+
+        
+      
+
+      - **jobOwner** *(string) --* 
+
+        The AWS account ID of the signing job owner.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`signer.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`signer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`signer.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`signer.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`signer.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`signer.Client.exceptions.InternalServiceErrorException`
+
+  

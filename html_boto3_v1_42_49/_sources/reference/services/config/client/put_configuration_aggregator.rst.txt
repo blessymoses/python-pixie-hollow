@@ -1,0 +1,542 @@
+:doc:`ConfigService <../../config>` / Client / put_configuration_aggregator
+
+****************************
+put_configuration_aggregator
+****************************
+
+
+
+.. py:method:: ConfigService.Client.put_configuration_aggregator(**kwargs)
+
+  
+
+  Creates and updates the configuration aggregator with the selected source accounts and regions. The source account can be individual account(s) or an organization.
+
+   
+
+  ``accountIds`` that are passed will be replaced with existing accounts. If you want to add additional accounts into the aggregator, call ``DescribeConfigurationAggregators`` to get the previous accounts and then append new ones.
+
+   
+
+  .. note::
+
+    
+
+    Config should be enabled in source accounts and regions you want to aggregate.
+
+     
+
+    If your source type is an organization, you must be signed in to the management account or a registered delegated administrator and all the features must be enabled in your organization. If the caller is a management account, Config calls ``EnableAwsServiceAccess`` API to enable integration between Config and Organizations. If the caller is a registered delegated administrator, Config calls ``ListDelegatedAdministrators`` API to verify whether the caller is a valid delegated administrator.
+
+     
+
+    To register a delegated administrator, see `Register a Delegated Administrator <https://docs.aws.amazon.com/config/latest/developerguide/set-up-aggregator-cli.html#register-a-delegated-administrator-cli>`__ in the *Config developer guide*.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    **Tags are added at creation and cannot be updated with this operation**
+
+     
+
+    ``PutConfigurationAggregator`` is an idempotent API. Subsequent requests won’t create a duplicate resource if one was already created. If a following request has different ``tags`` values, Config will ignore these differences and treat it as an idempotent request of the previous. In this case, ``tags`` will not be updated, even if they are different.
+
+     
+
+    Use `TagResource <https://docs.aws.amazon.com/config/latest/APIReference/API_TagResource.html>`__ and `UntagResource <https://docs.aws.amazon.com/config/latest/APIReference/API_UntagResource.html>`__ to update tags after creation.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/config-2014-11-12/PutConfigurationAggregator>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_configuration_aggregator(
+        ConfigurationAggregatorName='string',
+        AccountAggregationSources=[
+            {
+                'AccountIds': [
+                    'string',
+                ],
+                'AllAwsRegions': True|False,
+                'AwsRegions': [
+                    'string',
+                ]
+            },
+        ],
+        OrganizationAggregationSource={
+            'RoleArn': 'string',
+            'AwsRegions': [
+                'string',
+            ],
+            'AllAwsRegions': True|False
+        },
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        AggregatorFilters={
+            'ResourceType': {
+                'Type': 'INCLUDE',
+                'Value': [
+                    'string',
+                ]
+            },
+            'ServicePrincipal': {
+                'Type': 'INCLUDE',
+                'Value': [
+                    'string',
+                ]
+            }
+        }
+    )
+    
+  :type ConfigurationAggregatorName: string
+  :param ConfigurationAggregatorName: **[REQUIRED]** 
+
+    The name of the configuration aggregator.
+
+    
+
+  
+  :type AccountAggregationSources: list
+  :param AccountAggregationSources: 
+
+    A list of AccountAggregationSource object.
+
+    
+
+  
+    - *(dict) --* 
+
+      A collection of accounts and regions.
+
+      
+
+    
+      - **AccountIds** *(list) --* **[REQUIRED]** 
+
+        The 12-digit account ID of the account being aggregated.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **AllAwsRegions** *(boolean) --* 
+
+        If true, aggregate existing Config regions and future regions.
+
+        
+
+      
+      - **AwsRegions** *(list) --* 
+
+        The source regions being aggregated.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type OrganizationAggregationSource: dict
+  :param OrganizationAggregationSource: 
+
+    An OrganizationAggregationSource object.
+
+    
+
+  
+    - **RoleArn** *(string) --* **[REQUIRED]** 
+
+      ARN of the IAM role used to retrieve Amazon Web Services Organization details associated with the aggregator account.
+
+      
+
+    
+    - **AwsRegions** *(list) --* 
+
+      The source regions being aggregated.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AllAwsRegions** *(boolean) --* 
+
+      If true, aggregate existing Config regions and future regions.
+
+      
+
+    
+  
+  :type Tags: list
+  :param Tags: 
+
+    An array of tag object.
+
+    
+
+  
+    - *(dict) --* 
+
+      The tags for the resource. The metadata that you apply to a resource to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define. Tag keys can have a maximum character length of 128 characters, and tag values can have a maximum length of 256 characters.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        One part of a key-value pair that make up a tag. A key is a general label that acts like a category for more specific tag values.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The optional part of a key-value pair that make up a tag. A value acts as a descriptor within a tag category (key).
+
+        
+
+      
+    
+
+  :type AggregatorFilters: dict
+  :param AggregatorFilters: 
+
+    An object to filter configuration recorders in an aggregator. Either ``ResourceType`` or ``ServicePrincipal`` is required.
+
+    
+
+  
+    - **ResourceType** *(dict) --* 
+
+      An object to filter the configuration recorders based on the resource types in scope for recording.
+
+      
+
+    
+      - **Type** *(string) --* 
+
+        The type of resource type filter to apply. ``INCLUDE`` specifies that the list of resource types in the ``Value`` field will be aggregated and no other resource types will be filtered.
+
+        
+
+      
+      - **Value** *(list) --* 
+
+        Comma-separate list of resource types to filter your aggregated configuration recorders.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+    - **ServicePrincipal** *(dict) --* 
+
+      An object to filter service-linked configuration recorders in an aggregator based on the linked Amazon Web Services service.
+
+      
+
+    
+      - **Type** *(string) --* 
+
+        The type of service principal filter to apply. ``INCLUDE`` specifies that the list of service principals in the ``Value`` field will be aggregated and no other service principals will be filtered.
+
+        
+
+      
+      - **Value** *(list) --* 
+
+        Comma-separated list of service principals for the linked Amazon Web Services services to filter your aggregated service-linked configuration recorders.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ConfigurationAggregator': {
+              'ConfigurationAggregatorName': 'string',
+              'ConfigurationAggregatorArn': 'string',
+              'AccountAggregationSources': [
+                  {
+                      'AccountIds': [
+                          'string',
+                      ],
+                      'AllAwsRegions': True|False,
+                      'AwsRegions': [
+                          'string',
+                      ]
+                  },
+              ],
+              'OrganizationAggregationSource': {
+                  'RoleArn': 'string',
+                  'AwsRegions': [
+                      'string',
+                  ],
+                  'AllAwsRegions': True|False
+              },
+              'CreationTime': datetime(2015, 1, 1),
+              'LastUpdatedTime': datetime(2015, 1, 1),
+              'CreatedBy': 'string',
+              'AggregatorFilters': {
+                  'ResourceType': {
+                      'Type': 'INCLUDE',
+                      'Value': [
+                          'string',
+                      ]
+                  },
+                  'ServicePrincipal': {
+                      'Type': 'INCLUDE',
+                      'Value': [
+                          'string',
+                      ]
+                  }
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ConfigurationAggregator** *(dict) --* 
+
+        Returns a ConfigurationAggregator object.
+
+        
+        
+
+        - **ConfigurationAggregatorName** *(string) --* 
+
+          The name of the aggregator.
+
+          
+        
+
+        - **ConfigurationAggregatorArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the aggregator.
+
+          
+        
+
+        - **AccountAggregationSources** *(list) --* 
+
+          Provides a list of source accounts and regions to be aggregated.
+
+          
+          
+
+          - *(dict) --* 
+
+            A collection of accounts and regions.
+
+            
+            
+
+            - **AccountIds** *(list) --* 
+
+              The 12-digit account ID of the account being aggregated.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **AllAwsRegions** *(boolean) --* 
+
+              If true, aggregate existing Config regions and future regions.
+
+              
+            
+
+            - **AwsRegions** *(list) --* 
+
+              The source regions being aggregated.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **OrganizationAggregationSource** *(dict) --* 
+
+          Provides an organization and list of regions to be aggregated.
+
+          
+          
+
+          - **RoleArn** *(string) --* 
+
+            ARN of the IAM role used to retrieve Amazon Web Services Organization details associated with the aggregator account.
+
+            
+          
+
+          - **AwsRegions** *(list) --* 
+
+            The source regions being aggregated.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **AllAwsRegions** *(boolean) --* 
+
+            If true, aggregate existing Config regions and future regions.
+
+            
+      
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          The time stamp when the configuration aggregator was created.
+
+          
+        
+
+        - **LastUpdatedTime** *(datetime) --* 
+
+          The time of the last update.
+
+          
+        
+
+        - **CreatedBy** *(string) --* 
+
+          Amazon Web Services service that created the configuration aggregator.
+
+          
+        
+
+        - **AggregatorFilters** *(dict) --* 
+
+          An object to filter the data you specify for an aggregator.
+
+          
+          
+
+          - **ResourceType** *(dict) --* 
+
+            An object to filter the configuration recorders based on the resource types in scope for recording.
+
+            
+            
+
+            - **Type** *(string) --* 
+
+              The type of resource type filter to apply. ``INCLUDE`` specifies that the list of resource types in the ``Value`` field will be aggregated and no other resource types will be filtered.
+
+              
+            
+
+            - **Value** *(list) --* 
+
+              Comma-separate list of resource types to filter your aggregated configuration recorders.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **ServicePrincipal** *(dict) --* 
+
+            An object to filter service-linked configuration recorders in an aggregator based on the linked Amazon Web Services service.
+
+            
+            
+
+            - **Type** *(string) --* 
+
+              The type of service principal filter to apply. ``INCLUDE`` specifies that the list of service principals in the ``Value`` field will be aggregated and no other service principals will be filtered.
+
+              
+            
+
+            - **Value** *(list) --* 
+
+              Comma-separated list of service principals for the linked Amazon Web Services services to filter your aggregated service-linked configuration recorders.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidRoleException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.OrganizationAccessDeniedException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.NoAvailableOrganizationException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.OrganizationAllFeaturesNotEnabledException`
+
+  

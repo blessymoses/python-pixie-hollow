@@ -1,0 +1,214 @@
+:doc:`ElasticLoadBalancing <../../elb>` / Client / create_load_balancer_listeners
+
+******************************
+create_load_balancer_listeners
+******************************
+
+
+
+.. py:method:: ElasticLoadBalancing.Client.create_load_balancer_listeners(**kwargs)
+
+  
+
+  Creates one or more listeners for the specified load balancer. If a listener with the specified port does not already exist, it is created; otherwise, the properties of the new listener must match the properties of the existing listener.
+
+   
+
+  For more information, see `Listeners for Your Classic Load Balancer <https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-listener-config.html>`__ in the *Classic Load Balancers Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticloadbalancing-2012-06-01/CreateLoadBalancerListeners>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_load_balancer_listeners(
+        LoadBalancerName='string',
+        Listeners=[
+            {
+                'Protocol': 'string',
+                'LoadBalancerPort': 123,
+                'InstanceProtocol': 'string',
+                'InstancePort': 123,
+                'SSLCertificateId': 'string'
+            },
+        ]
+    )
+    
+  :type LoadBalancerName: string
+  :param LoadBalancerName: **[REQUIRED]** 
+
+    The name of the load balancer.
+
+    
+
+  
+  :type Listeners: list
+  :param Listeners: **[REQUIRED]** 
+
+    The listeners.
+
+    
+
+  
+    - *(dict) --* 
+
+      Information about a listener.
+
+       
+
+      For information about the protocols and the ports supported by Elastic Load Balancing, see `Listeners for Your Classic Load Balancer <https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-listener-config.html>`__ in the *Classic Load Balancers Guide*.
+
+      
+
+    
+      - **Protocol** *(string) --* **[REQUIRED]** 
+
+        The load balancer transport protocol to use for routing: HTTP, HTTPS, TCP, or SSL.
+
+        
+
+      
+      - **LoadBalancerPort** *(integer) --* **[REQUIRED]** 
+
+        The port on which the load balancer is listening. On EC2-VPC, you can specify any port from the range 1-65535. On EC2-Classic, you can specify any port from the following list: 25, 80, 443, 465, 587, 1024-65535.
+
+        
+
+      
+      - **InstanceProtocol** *(string) --* 
+
+        The protocol to use for routing traffic to instances: HTTP, HTTPS, TCP, or SSL.
+
+         
+
+        If the front-end protocol is TCP or SSL, the back-end protocol must be TCP or SSL. If the front-end protocol is HTTP or HTTPS, the back-end protocol must be HTTP or HTTPS.
+
+         
+
+        If there is another listener with the same ``InstancePort`` whose ``InstanceProtocol`` is secure, (HTTPS or SSL), the listener's ``InstanceProtocol`` must also be secure.
+
+         
+
+        If there is another listener with the same ``InstancePort`` whose ``InstanceProtocol`` is HTTP or TCP, the listener's ``InstanceProtocol`` must be HTTP or TCP.
+
+        
+
+      
+      - **InstancePort** *(integer) --* **[REQUIRED]** 
+
+        The port on which the instance is listening.
+
+        
+
+      
+      - **SSLCertificateId** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the server certificate.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains the parameters for CreateLoadBalancerListener.
+
+      
+  
+  **Exceptions**
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.AccessPointNotFoundException`
+
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.DuplicateListenerException`
+
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.CertificateNotFoundException`
+
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.InvalidConfigurationRequestException`
+
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.UnsupportedProtocolException`
+
+  
+
+  **Examples**
+
+  This example creates a listener for your load balancer at port 80 using the HTTP protocol.
+  ::
+
+    response = client.create_load_balancer_listeners(
+        Listeners=[
+            {
+                'InstancePort': 80,
+                'InstanceProtocol': 'HTTP',
+                'LoadBalancerPort': 80,
+                'Protocol': 'HTTP',
+            },
+        ],
+        LoadBalancerName='my-load-balancer',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example creates a listener for your load balancer at port 443 using the HTTPS protocol.
+  ::
+
+    response = client.create_load_balancer_listeners(
+        Listeners=[
+            {
+                'InstancePort': 80,
+                'InstanceProtocol': 'HTTP',
+                'LoadBalancerPort': 443,
+                'Protocol': 'HTTPS',
+                'SSLCertificateId': 'arn:aws:iam::123456789012:server-certificate/my-server-cert',
+            },
+        ],
+        LoadBalancerName='my-load-balancer',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

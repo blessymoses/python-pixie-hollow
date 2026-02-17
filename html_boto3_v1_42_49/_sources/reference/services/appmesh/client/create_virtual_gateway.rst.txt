@@ -1,0 +1,1672 @@
+:doc:`AppMesh <../../appmesh>` / Client / create_virtual_gateway
+
+**********************
+create_virtual_gateway
+**********************
+
+
+
+.. py:method:: AppMesh.Client.create_virtual_gateway(**kwargs)
+
+  
+
+  Creates a virtual gateway.
+
+   
+
+  A virtual gateway allows resources outside your mesh to communicate to resources that are inside your mesh. The virtual gateway represents an Envoy proxy running in an Amazon ECS task, in a Kubernetes service, or on an Amazon EC2 instance. Unlike a virtual node, which represents an Envoy running with an application, a virtual gateway represents Envoy deployed by itself.
+
+   
+
+  For more information about virtual gateways, see `Virtual gateways <https://docs.aws.amazon.com/app-mesh/latest/userguide/virtual_gateways.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/appmesh-2019-01-25/CreateVirtualGateway>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_virtual_gateway(
+        clientToken='string',
+        meshName='string',
+        meshOwner='string',
+        spec={
+            'backendDefaults': {
+                'clientPolicy': {
+                    'tls': {
+                        'certificate': {
+                            'file': {
+                                'certificateChain': 'string',
+                                'privateKey': 'string'
+                            },
+                            'sds': {
+                                'secretName': 'string'
+                            }
+                        },
+                        'enforce': True|False,
+                        'ports': [
+                            123,
+                        ],
+                        'validation': {
+                            'subjectAlternativeNames': {
+                                'match': {
+                                    'exact': [
+                                        'string',
+                                    ]
+                                }
+                            },
+                            'trust': {
+                                'acm': {
+                                    'certificateAuthorityArns': [
+                                        'string',
+                                    ]
+                                },
+                                'file': {
+                                    'certificateChain': 'string'
+                                },
+                                'sds': {
+                                    'secretName': 'string'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            'listeners': [
+                {
+                    'connectionPool': {
+                        'grpc': {
+                            'maxRequests': 123
+                        },
+                        'http': {
+                            'maxConnections': 123,
+                            'maxPendingRequests': 123
+                        },
+                        'http2': {
+                            'maxRequests': 123
+                        }
+                    },
+                    'healthCheck': {
+                        'healthyThreshold': 123,
+                        'intervalMillis': 123,
+                        'path': 'string',
+                        'port': 123,
+                        'protocol': 'http'|'http2'|'grpc',
+                        'timeoutMillis': 123,
+                        'unhealthyThreshold': 123
+                    },
+                    'portMapping': {
+                        'port': 123,
+                        'protocol': 'http'|'http2'|'grpc'
+                    },
+                    'tls': {
+                        'certificate': {
+                            'acm': {
+                                'certificateArn': 'string'
+                            },
+                            'file': {
+                                'certificateChain': 'string',
+                                'privateKey': 'string'
+                            },
+                            'sds': {
+                                'secretName': 'string'
+                            }
+                        },
+                        'mode': 'STRICT'|'PERMISSIVE'|'DISABLED',
+                        'validation': {
+                            'subjectAlternativeNames': {
+                                'match': {
+                                    'exact': [
+                                        'string',
+                                    ]
+                                }
+                            },
+                            'trust': {
+                                'file': {
+                                    'certificateChain': 'string'
+                                },
+                                'sds': {
+                                    'secretName': 'string'
+                                }
+                            }
+                        }
+                    }
+                },
+            ],
+            'logging': {
+                'accessLog': {
+                    'file': {
+                        'format': {
+                            'json': [
+                                {
+                                    'key': 'string',
+                                    'value': 'string'
+                                },
+                            ],
+                            'text': 'string'
+                        },
+                        'path': 'string'
+                    }
+                }
+            }
+        },
+        tags=[
+            {
+                'key': 'string',
+                'value': 'string'
+            },
+        ],
+        virtualGatewayName='string'
+    )
+    
+  :type clientToken: string
+  :param clientToken: 
+
+    Unique, case-sensitive identifier that you provide to ensure the idempotency of the request. Up to 36 letters, numbers, hyphens, and underscores are allowed.
+
+    This field is autopopulated if not provided.
+
+  
+  :type meshName: string
+  :param meshName: **[REQUIRED]** 
+
+    The name of the service mesh to create the virtual gateway in.
+
+    
+
+  
+  :type meshOwner: string
+  :param meshOwner: 
+
+    The Amazon Web Services IAM account ID of the service mesh owner. If the account ID is not your own, then the account that you specify must share the mesh with your account before you can create the resource in the service mesh. For more information about mesh sharing, see `Working with shared meshes <https://docs.aws.amazon.com/app-mesh/latest/userguide/sharing.html>`__.
+
+    
+
+  
+  :type spec: dict
+  :param spec: **[REQUIRED]** 
+
+    The virtual gateway specification to apply.
+
+    
+
+  
+    - **backendDefaults** *(dict) --* 
+
+      A reference to an object that represents the defaults for backends.
+
+      
+
+    
+      - **clientPolicy** *(dict) --* 
+
+        A reference to an object that represents a client policy.
+
+        
+
+      
+        - **tls** *(dict) --* 
+
+          A reference to an object that represents a Transport Layer Security (TLS) client policy.
+
+          
+
+        
+          - **certificate** *(dict) --* 
+
+            A reference to an object that represents a virtual gateway's client's Transport Layer Security (TLS) certificate.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``file``, ``sds``. 
+
+          
+            - **file** *(dict) --* 
+
+              An object that represents a local file certificate. The certificate must meet specific requirements and you must have proxy authorization enabled. For more information, see `Transport Layer Security (TLS) <https://docs.aws.amazon.com/app-mesh/latest/userguide/tls.html>`__.
+
+              
+
+            
+              - **certificateChain** *(string) --* **[REQUIRED]** 
+
+                The certificate chain for the certificate.
+
+                
+
+              
+              - **privateKey** *(string) --* **[REQUIRED]** 
+
+                The private key for a certificate stored on the file system of the mesh endpoint that the proxy is running on.
+
+                
+
+              
+            
+            - **sds** *(dict) --* 
+
+              A reference to an object that represents a virtual gateway's client's Secret Discovery Service certificate.
+
+              
+
+            
+              - **secretName** *(string) --* **[REQUIRED]** 
+
+                A reference to an object that represents the name of the secret secret requested from the Secret Discovery Service provider representing Transport Layer Security (TLS) materials like a certificate or certificate chain.
+
+                
+
+              
+            
+          
+          - **enforce** *(boolean) --* 
+
+            Whether the policy is enforced. The default is ``True``, if a value isn't specified.
+
+            
+
+          
+          - **ports** *(list) --* 
+
+            One or more ports that the policy is enforced for.
+
+            
+
+          
+            - *(integer) --* 
+
+            
+        
+          - **validation** *(dict) --* **[REQUIRED]** 
+
+            A reference to an object that represents a Transport Layer Security (TLS) validation context.
+
+            
+
+          
+            - **subjectAlternativeNames** *(dict) --* 
+
+              A reference to an object that represents the SANs for a virtual gateway's listener's Transport Layer Security (TLS) validation context.
+
+              
+
+            
+              - **match** *(dict) --* **[REQUIRED]** 
+
+                An object that represents the criteria for determining a SANs match.
+
+                
+
+              
+                - **exact** *(list) --* **[REQUIRED]** 
+
+                  The values sent must match the specified values exactly.
+
+                  
+
+                
+                  - *(string) --* 
+
+                  
+              
+              
+            
+            - **trust** *(dict) --* **[REQUIRED]** 
+
+              A reference to where to retrieve the trust chain when validating a peer’s Transport Layer Security (TLS) certificate.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``acm``, ``file``, ``sds``. 
+
+            
+              - **acm** *(dict) --* 
+
+                A reference to an object that represents a Transport Layer Security (TLS) validation context trust for an Certificate Manager certificate.
+
+                
+
+              
+                - **certificateAuthorityArns** *(list) --* **[REQUIRED]** 
+
+                  One or more ACM Amazon Resource Name (ARN)s.
+
+                  
+
+                
+                  - *(string) --* 
+
+                  
+              
+              
+              - **file** *(dict) --* 
+
+                An object that represents a Transport Layer Security (TLS) validation context trust for a local file.
+
+                
+
+              
+                - **certificateChain** *(string) --* **[REQUIRED]** 
+
+                  The certificate trust chain for a certificate stored on the file system of the virtual node that the proxy is running on.
+
+                  
+
+                
+              
+              - **sds** *(dict) --* 
+
+                A reference to an object that represents a virtual gateway's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                
+
+              
+                - **secretName** *(string) --* **[REQUIRED]** 
+
+                  A reference to an object that represents the name of the secret for a virtual gateway's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                  
+
+                
+              
+            
+          
+        
+      
+    
+    - **listeners** *(list) --* **[REQUIRED]** 
+
+      The listeners that the mesh endpoint is expected to receive inbound traffic from. You can specify one listener.
+
+      
+
+    
+      - *(dict) --* 
+
+        An object that represents a listener for a virtual gateway.
+
+        
+
+      
+        - **connectionPool** *(dict) --* 
+
+          The connection pool information for the virtual gateway listener.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``grpc``, ``http``, ``http2``. 
+
+        
+          - **grpc** *(dict) --* 
+
+            An object that represents a type of connection pool.
+
+            
+
+          
+            - **maxRequests** *(integer) --* **[REQUIRED]** 
+
+              Maximum number of inflight requests Envoy can concurrently support across hosts in upstream cluster.
+
+              
+
+            
+          
+          - **http** *(dict) --* 
+
+            An object that represents a type of connection pool.
+
+            
+
+          
+            - **maxConnections** *(integer) --* **[REQUIRED]** 
+
+              Maximum number of outbound TCP connections Envoy can establish concurrently with all hosts in upstream cluster.
+
+              
+
+            
+            - **maxPendingRequests** *(integer) --* 
+
+              Number of overflowing requests after ``max_connections`` Envoy will queue to upstream cluster.
+
+              
+
+            
+          
+          - **http2** *(dict) --* 
+
+            An object that represents a type of connection pool.
+
+            
+
+          
+            - **maxRequests** *(integer) --* **[REQUIRED]** 
+
+              Maximum number of inflight requests Envoy can concurrently support across hosts in upstream cluster.
+
+              
+
+            
+          
+        
+        - **healthCheck** *(dict) --* 
+
+          The health check information for the listener.
+
+          
+
+        
+          - **healthyThreshold** *(integer) --* **[REQUIRED]** 
+
+            The number of consecutive successful health checks that must occur before declaring the listener healthy.
+
+            
+
+          
+          - **intervalMillis** *(integer) --* **[REQUIRED]** 
+
+            The time period in milliseconds between each health check execution.
+
+            
+
+          
+          - **path** *(string) --* 
+
+            The destination path for the health check request. This value is only used if the specified protocol is HTTP or HTTP/2. For any other protocol, this value is ignored.
+
+            
+
+          
+          - **port** *(integer) --* 
+
+            The destination port for the health check request. This port must match the port defined in the  PortMapping for the listener.
+
+            
+
+          
+          - **protocol** *(string) --* **[REQUIRED]** 
+
+            The protocol for the health check request. If you specify ``grpc``, then your service must conform to the `GRPC Health Checking Protocol <https://github.com/grpc/grpc/blob/master/doc/health-checking.md>`__.
+
+            
+
+          
+          - **timeoutMillis** *(integer) --* **[REQUIRED]** 
+
+            The amount of time to wait when receiving a response from the health check, in milliseconds.
+
+            
+
+          
+          - **unhealthyThreshold** *(integer) --* **[REQUIRED]** 
+
+            The number of consecutive failed health checks that must occur before declaring a virtual gateway unhealthy.
+
+            
+
+          
+        
+        - **portMapping** *(dict) --* **[REQUIRED]** 
+
+          The port mapping information for the listener.
+
+          
+
+        
+          - **port** *(integer) --* **[REQUIRED]** 
+
+            The port used for the port mapping. Specify one protocol.
+
+            
+
+          
+          - **protocol** *(string) --* **[REQUIRED]** 
+
+            The protocol used for the port mapping.
+
+            
+
+          
+        
+        - **tls** *(dict) --* 
+
+          A reference to an object that represents the Transport Layer Security (TLS) properties for the listener.
+
+          
+
+        
+          - **certificate** *(dict) --* **[REQUIRED]** 
+
+            An object that represents a Transport Layer Security (TLS) certificate.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``acm``, ``file``, ``sds``. 
+
+          
+            - **acm** *(dict) --* 
+
+              A reference to an object that represents an Certificate Manager certificate.
+
+              
+
+            
+              - **certificateArn** *(string) --* **[REQUIRED]** 
+
+                The Amazon Resource Name (ARN) for the certificate. The certificate must meet specific requirements and you must have proxy authorization enabled. For more information, see `Transport Layer Security (TLS) <https://docs.aws.amazon.com/app-mesh/latest/userguide/tls.html#virtual-node-tls-prerequisites>`__.
+
+                
+
+              
+            
+            - **file** *(dict) --* 
+
+              A reference to an object that represents a local file certificate.
+
+              
+
+            
+              - **certificateChain** *(string) --* **[REQUIRED]** 
+
+                The certificate chain for the certificate.
+
+                
+
+              
+              - **privateKey** *(string) --* **[REQUIRED]** 
+
+                The private key for a certificate stored on the file system of the mesh endpoint that the proxy is running on.
+
+                
+
+              
+            
+            - **sds** *(dict) --* 
+
+              A reference to an object that represents a virtual gateway's listener's Secret Discovery Service certificate.
+
+              
+
+            
+              - **secretName** *(string) --* **[REQUIRED]** 
+
+                A reference to an object that represents the name of the secret secret requested from the Secret Discovery Service provider representing Transport Layer Security (TLS) materials like a certificate or certificate chain.
+
+                
+
+              
+            
+          
+          - **mode** *(string) --* **[REQUIRED]** 
+
+            Specify one of the following modes.
+
+             
+
+            
+            * STRICT – Listener only accepts connections with TLS enabled.
+             
+            * PERMISSIVE – Listener accepts connections with or without TLS enabled.
+             
+            * DISABLED – Listener only accepts connections without TLS.
+            
+
+            
+
+          
+          - **validation** *(dict) --* 
+
+            A reference to an object that represents a virtual gateway's listener's Transport Layer Security (TLS) validation context.
+
+            
+
+          
+            - **subjectAlternativeNames** *(dict) --* 
+
+              A reference to an object that represents the SANs for a virtual gateway listener's Transport Layer Security (TLS) validation context.
+
+              
+
+            
+              - **match** *(dict) --* **[REQUIRED]** 
+
+                An object that represents the criteria for determining a SANs match.
+
+                
+
+              
+                - **exact** *(list) --* **[REQUIRED]** 
+
+                  The values sent must match the specified values exactly.
+
+                  
+
+                
+                  - *(string) --* 
+
+                  
+              
+              
+            
+            - **trust** *(dict) --* **[REQUIRED]** 
+
+              A reference to where to retrieve the trust chain when validating a peer’s Transport Layer Security (TLS) certificate.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``file``, ``sds``. 
+
+            
+              - **file** *(dict) --* 
+
+                An object that represents a Transport Layer Security (TLS) validation context trust for a local file.
+
+                
+
+              
+                - **certificateChain** *(string) --* **[REQUIRED]** 
+
+                  The certificate trust chain for a certificate stored on the file system of the virtual node that the proxy is running on.
+
+                  
+
+                
+              
+              - **sds** *(dict) --* 
+
+                A reference to an object that represents a virtual gateway's listener's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                
+
+              
+                - **secretName** *(string) --* **[REQUIRED]** 
+
+                  A reference to an object that represents the name of the secret for a virtual gateway's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                  
+
+                
+              
+            
+          
+        
+      
+  
+    - **logging** *(dict) --* 
+
+      An object that represents logging information.
+
+      
+
+    
+      - **accessLog** *(dict) --* 
+
+        The access log configuration.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``file``. 
+
+      
+        - **file** *(dict) --* 
+
+          The file object to send virtual gateway access logs to.
+
+          
+
+        
+          - **format** *(dict) --* 
+
+            The specified format for the virtual gateway access logs. It can be either ``json_format`` or ``text_format``.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``json``, ``text``. 
+
+          
+            - **json** *(list) --* 
+
+            
+              - *(dict) --* 
+
+                An object that represents the key value pairs for the JSON.
+
+                
+
+              
+                - **key** *(string) --* **[REQUIRED]** 
+
+                  The specified key for the JSON.
+
+                  
+
+                
+                - **value** *(string) --* **[REQUIRED]** 
+
+                  The specified value for the JSON.
+
+                  
+
+                
+              
+          
+            - **text** *(string) --* 
+
+            
+          
+          - **path** *(string) --* **[REQUIRED]** 
+
+            The file path to write access logs to. You can use ``/dev/stdout`` to send access logs to standard out and configure your Envoy container to use a log driver, such as ``awslogs``, to export the access logs to a log storage service such as Amazon CloudWatch Logs. You can also specify a path in the Envoy container's file system to write the files to disk.
+
+            
+
+          
+        
+      
+    
+  
+  :type tags: list
+  :param tags: 
+
+    Optional metadata that you can apply to the virtual gateway to assist with categorization and organization. Each tag consists of a key and an optional value, both of which you define. Tag keys can have a maximum character length of 128 characters, and tag values can have a maximum length of 256 characters.
+
+    
+
+  
+    - *(dict) --* 
+
+      Optional metadata that you apply to a resource to assist with categorization and organization. Each tag consists of a key and an optional value, both of which you define. Tag keys can have a maximum character length of 128 characters, and tag values can have a maximum length of 256 characters.
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+        
+
+      
+      - **value** *(string) --* **[REQUIRED]** 
+
+        The optional part of a key-value pair that make up a tag. A ``value`` acts as a descriptor within a tag category (key).
+
+        
+
+      
+    
+
+  :type virtualGatewayName: string
+  :param virtualGatewayName: **[REQUIRED]** 
+
+    The name to use for the virtual gateway.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'virtualGateway': {
+              'meshName': 'string',
+              'metadata': {
+                  'arn': 'string',
+                  'createdAt': datetime(2015, 1, 1),
+                  'lastUpdatedAt': datetime(2015, 1, 1),
+                  'meshOwner': 'string',
+                  'resourceOwner': 'string',
+                  'uid': 'string',
+                  'version': 123
+              },
+              'spec': {
+                  'backendDefaults': {
+                      'clientPolicy': {
+                          'tls': {
+                              'certificate': {
+                                  'file': {
+                                      'certificateChain': 'string',
+                                      'privateKey': 'string'
+                                  },
+                                  'sds': {
+                                      'secretName': 'string'
+                                  }
+                              },
+                              'enforce': True|False,
+                              'ports': [
+                                  123,
+                              ],
+                              'validation': {
+                                  'subjectAlternativeNames': {
+                                      'match': {
+                                          'exact': [
+                                              'string',
+                                          ]
+                                      }
+                                  },
+                                  'trust': {
+                                      'acm': {
+                                          'certificateAuthorityArns': [
+                                              'string',
+                                          ]
+                                      },
+                                      'file': {
+                                          'certificateChain': 'string'
+                                      },
+                                      'sds': {
+                                          'secretName': 'string'
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  'listeners': [
+                      {
+                          'connectionPool': {
+                              'grpc': {
+                                  'maxRequests': 123
+                              },
+                              'http': {
+                                  'maxConnections': 123,
+                                  'maxPendingRequests': 123
+                              },
+                              'http2': {
+                                  'maxRequests': 123
+                              }
+                          },
+                          'healthCheck': {
+                              'healthyThreshold': 123,
+                              'intervalMillis': 123,
+                              'path': 'string',
+                              'port': 123,
+                              'protocol': 'http'|'http2'|'grpc',
+                              'timeoutMillis': 123,
+                              'unhealthyThreshold': 123
+                          },
+                          'portMapping': {
+                              'port': 123,
+                              'protocol': 'http'|'http2'|'grpc'
+                          },
+                          'tls': {
+                              'certificate': {
+                                  'acm': {
+                                      'certificateArn': 'string'
+                                  },
+                                  'file': {
+                                      'certificateChain': 'string',
+                                      'privateKey': 'string'
+                                  },
+                                  'sds': {
+                                      'secretName': 'string'
+                                  }
+                              },
+                              'mode': 'STRICT'|'PERMISSIVE'|'DISABLED',
+                              'validation': {
+                                  'subjectAlternativeNames': {
+                                      'match': {
+                                          'exact': [
+                                              'string',
+                                          ]
+                                      }
+                                  },
+                                  'trust': {
+                                      'file': {
+                                          'certificateChain': 'string'
+                                      },
+                                      'sds': {
+                                          'secretName': 'string'
+                                      }
+                                  }
+                              }
+                          }
+                      },
+                  ],
+                  'logging': {
+                      'accessLog': {
+                          'file': {
+                              'format': {
+                                  'json': [
+                                      {
+                                          'key': 'string',
+                                          'value': 'string'
+                                      },
+                                  ],
+                                  'text': 'string'
+                              },
+                              'path': 'string'
+                          }
+                      }
+                  }
+              },
+              'status': {
+                  'status': 'ACTIVE'|'INACTIVE'|'DELETED'
+              },
+              'virtualGatewayName': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **virtualGateway** *(dict) --* 
+
+        The full description of your virtual gateway following the create call.
+
+        
+        
+
+        - **meshName** *(string) --* 
+
+          The name of the service mesh that the virtual gateway resides in.
+
+          
+        
+
+        - **metadata** *(dict) --* 
+
+          An object that represents metadata for a resource.
+
+          
+          
+
+          - **arn** *(string) --* 
+
+            The full Amazon Resource Name (ARN) for the resource.
+
+            
+          
+
+          - **createdAt** *(datetime) --* 
+
+            The Unix epoch timestamp in seconds for when the resource was created.
+
+            
+          
+
+          - **lastUpdatedAt** *(datetime) --* 
+
+            The Unix epoch timestamp in seconds for when the resource was last updated.
+
+            
+          
+
+          - **meshOwner** *(string) --* 
+
+            The Amazon Web Services IAM account ID of the service mesh owner. If the account ID is not your own, then it's the ID of the account that shared the mesh with your account. For more information about mesh sharing, see `Working with shared meshes <https://docs.aws.amazon.com/app-mesh/latest/userguide/sharing.html>`__.
+
+            
+          
+
+          - **resourceOwner** *(string) --* 
+
+            The Amazon Web Services IAM account ID of the resource owner. If the account ID is not your own, then it's the ID of the mesh owner or of another account that the mesh is shared with. For more information about mesh sharing, see `Working with shared meshes <https://docs.aws.amazon.com/app-mesh/latest/userguide/sharing.html>`__.
+
+            
+          
+
+          - **uid** *(string) --* 
+
+            The unique identifier for the resource.
+
+            
+          
+
+          - **version** *(integer) --* 
+
+            The version of the resource. Resources are created at version 1, and this version is incremented each time that they're updated.
+
+            
+      
+        
+
+        - **spec** *(dict) --* 
+
+          The specifications of the virtual gateway.
+
+          
+          
+
+          - **backendDefaults** *(dict) --* 
+
+            A reference to an object that represents the defaults for backends.
+
+            
+            
+
+            - **clientPolicy** *(dict) --* 
+
+              A reference to an object that represents a client policy.
+
+              
+              
+
+              - **tls** *(dict) --* 
+
+                A reference to an object that represents a Transport Layer Security (TLS) client policy.
+
+                
+                
+
+                - **certificate** *(dict) --* 
+
+                  A reference to an object that represents a virtual gateway's client's Transport Layer Security (TLS) certificate.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``file``, ``sds``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **file** *(dict) --* 
+
+                    An object that represents a local file certificate. The certificate must meet specific requirements and you must have proxy authorization enabled. For more information, see `Transport Layer Security (TLS) <https://docs.aws.amazon.com/app-mesh/latest/userguide/tls.html>`__.
+
+                    
+                    
+
+                    - **certificateChain** *(string) --* 
+
+                      The certificate chain for the certificate.
+
+                      
+                    
+
+                    - **privateKey** *(string) --* 
+
+                      The private key for a certificate stored on the file system of the mesh endpoint that the proxy is running on.
+
+                      
+                
+                  
+
+                  - **sds** *(dict) --* 
+
+                    A reference to an object that represents a virtual gateway's client's Secret Discovery Service certificate.
+
+                    
+                    
+
+                    - **secretName** *(string) --* 
+
+                      A reference to an object that represents the name of the secret secret requested from the Secret Discovery Service provider representing Transport Layer Security (TLS) materials like a certificate or certificate chain.
+
+                      
+                
+              
+                
+
+                - **enforce** *(boolean) --* 
+
+                  Whether the policy is enforced. The default is ``True``, if a value isn't specified.
+
+                  
+                
+
+                - **ports** *(list) --* 
+
+                  One or more ports that the policy is enforced for.
+
+                  
+                  
+
+                  - *(integer) --* 
+              
+                
+
+                - **validation** *(dict) --* 
+
+                  A reference to an object that represents a Transport Layer Security (TLS) validation context.
+
+                  
+                  
+
+                  - **subjectAlternativeNames** *(dict) --* 
+
+                    A reference to an object that represents the SANs for a virtual gateway's listener's Transport Layer Security (TLS) validation context.
+
+                    
+                    
+
+                    - **match** *(dict) --* 
+
+                      An object that represents the criteria for determining a SANs match.
+
+                      
+                      
+
+                      - **exact** *(list) --* 
+
+                        The values sent must match the specified values exactly.
+
+                        
+                        
+
+                        - *(string) --* 
+                    
+                  
+                
+                  
+
+                  - **trust** *(dict) --* 
+
+                    A reference to where to retrieve the trust chain when validating a peer’s Transport Layer Security (TLS) certificate.
+
+                    .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``acm``, ``file``, ``sds``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                  
+                    
+
+                    - **acm** *(dict) --* 
+
+                      A reference to an object that represents a Transport Layer Security (TLS) validation context trust for an Certificate Manager certificate.
+
+                      
+                      
+
+                      - **certificateAuthorityArns** *(list) --* 
+
+                        One or more ACM Amazon Resource Name (ARN)s.
+
+                        
+                        
+
+                        - *(string) --* 
+                    
+                  
+                    
+
+                    - **file** *(dict) --* 
+
+                      An object that represents a Transport Layer Security (TLS) validation context trust for a local file.
+
+                      
+                      
+
+                      - **certificateChain** *(string) --* 
+
+                        The certificate trust chain for a certificate stored on the file system of the virtual node that the proxy is running on.
+
+                        
+                  
+                    
+
+                    - **sds** *(dict) --* 
+
+                      A reference to an object that represents a virtual gateway's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                      
+                      
+
+                      - **secretName** *(string) --* 
+
+                        A reference to an object that represents the name of the secret for a virtual gateway's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                        
+                  
+                
+              
+            
+          
+        
+          
+
+          - **listeners** *(list) --* 
+
+            The listeners that the mesh endpoint is expected to receive inbound traffic from. You can specify one listener.
+
+            
+            
+
+            - *(dict) --* 
+
+              An object that represents a listener for a virtual gateway.
+
+              
+              
+
+              - **connectionPool** *(dict) --* 
+
+                The connection pool information for the virtual gateway listener.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``grpc``, ``http``, ``http2``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+              
+                
+
+                - **grpc** *(dict) --* 
+
+                  An object that represents a type of connection pool.
+
+                  
+                  
+
+                  - **maxRequests** *(integer) --* 
+
+                    Maximum number of inflight requests Envoy can concurrently support across hosts in upstream cluster.
+
+                    
+              
+                
+
+                - **http** *(dict) --* 
+
+                  An object that represents a type of connection pool.
+
+                  
+                  
+
+                  - **maxConnections** *(integer) --* 
+
+                    Maximum number of outbound TCP connections Envoy can establish concurrently with all hosts in upstream cluster.
+
+                    
+                  
+
+                  - **maxPendingRequests** *(integer) --* 
+
+                    Number of overflowing requests after ``max_connections`` Envoy will queue to upstream cluster.
+
+                    
+              
+                
+
+                - **http2** *(dict) --* 
+
+                  An object that represents a type of connection pool.
+
+                  
+                  
+
+                  - **maxRequests** *(integer) --* 
+
+                    Maximum number of inflight requests Envoy can concurrently support across hosts in upstream cluster.
+
+                    
+              
+            
+              
+
+              - **healthCheck** *(dict) --* 
+
+                The health check information for the listener.
+
+                
+                
+
+                - **healthyThreshold** *(integer) --* 
+
+                  The number of consecutive successful health checks that must occur before declaring the listener healthy.
+
+                  
+                
+
+                - **intervalMillis** *(integer) --* 
+
+                  The time period in milliseconds between each health check execution.
+
+                  
+                
+
+                - **path** *(string) --* 
+
+                  The destination path for the health check request. This value is only used if the specified protocol is HTTP or HTTP/2. For any other protocol, this value is ignored.
+
+                  
+                
+
+                - **port** *(integer) --* 
+
+                  The destination port for the health check request. This port must match the port defined in the  PortMapping for the listener.
+
+                  
+                
+
+                - **protocol** *(string) --* 
+
+                  The protocol for the health check request. If you specify ``grpc``, then your service must conform to the `GRPC Health Checking Protocol <https://github.com/grpc/grpc/blob/master/doc/health-checking.md>`__.
+
+                  
+                
+
+                - **timeoutMillis** *(integer) --* 
+
+                  The amount of time to wait when receiving a response from the health check, in milliseconds.
+
+                  
+                
+
+                - **unhealthyThreshold** *(integer) --* 
+
+                  The number of consecutive failed health checks that must occur before declaring a virtual gateway unhealthy.
+
+                  
+            
+              
+
+              - **portMapping** *(dict) --* 
+
+                The port mapping information for the listener.
+
+                
+                
+
+                - **port** *(integer) --* 
+
+                  The port used for the port mapping. Specify one protocol.
+
+                  
+                
+
+                - **protocol** *(string) --* 
+
+                  The protocol used for the port mapping.
+
+                  
+            
+              
+
+              - **tls** *(dict) --* 
+
+                A reference to an object that represents the Transport Layer Security (TLS) properties for the listener.
+
+                
+                
+
+                - **certificate** *(dict) --* 
+
+                  An object that represents a Transport Layer Security (TLS) certificate.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``acm``, ``file``, ``sds``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **acm** *(dict) --* 
+
+                    A reference to an object that represents an Certificate Manager certificate.
+
+                    
+                    
+
+                    - **certificateArn** *(string) --* 
+
+                      The Amazon Resource Name (ARN) for the certificate. The certificate must meet specific requirements and you must have proxy authorization enabled. For more information, see `Transport Layer Security (TLS) <https://docs.aws.amazon.com/app-mesh/latest/userguide/tls.html#virtual-node-tls-prerequisites>`__.
+
+                      
+                
+                  
+
+                  - **file** *(dict) --* 
+
+                    A reference to an object that represents a local file certificate.
+
+                    
+                    
+
+                    - **certificateChain** *(string) --* 
+
+                      The certificate chain for the certificate.
+
+                      
+                    
+
+                    - **privateKey** *(string) --* 
+
+                      The private key for a certificate stored on the file system of the mesh endpoint that the proxy is running on.
+
+                      
+                
+                  
+
+                  - **sds** *(dict) --* 
+
+                    A reference to an object that represents a virtual gateway's listener's Secret Discovery Service certificate.
+
+                    
+                    
+
+                    - **secretName** *(string) --* 
+
+                      A reference to an object that represents the name of the secret secret requested from the Secret Discovery Service provider representing Transport Layer Security (TLS) materials like a certificate or certificate chain.
+
+                      
+                
+              
+                
+
+                - **mode** *(string) --* 
+
+                  Specify one of the following modes.
+
+                   
+
+                  
+                  * STRICT – Listener only accepts connections with TLS enabled.
+                   
+                  * PERMISSIVE – Listener accepts connections with or without TLS enabled.
+                   
+                  * DISABLED – Listener only accepts connections without TLS.
+                  
+
+                  
+                
+
+                - **validation** *(dict) --* 
+
+                  A reference to an object that represents a virtual gateway's listener's Transport Layer Security (TLS) validation context.
+
+                  
+                  
+
+                  - **subjectAlternativeNames** *(dict) --* 
+
+                    A reference to an object that represents the SANs for a virtual gateway listener's Transport Layer Security (TLS) validation context.
+
+                    
+                    
+
+                    - **match** *(dict) --* 
+
+                      An object that represents the criteria for determining a SANs match.
+
+                      
+                      
+
+                      - **exact** *(list) --* 
+
+                        The values sent must match the specified values exactly.
+
+                        
+                        
+
+                        - *(string) --* 
+                    
+                  
+                
+                  
+
+                  - **trust** *(dict) --* 
+
+                    A reference to where to retrieve the trust chain when validating a peer’s Transport Layer Security (TLS) certificate.
+
+                    .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``file``, ``sds``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                  
+                    
+
+                    - **file** *(dict) --* 
+
+                      An object that represents a Transport Layer Security (TLS) validation context trust for a local file.
+
+                      
+                      
+
+                      - **certificateChain** *(string) --* 
+
+                        The certificate trust chain for a certificate stored on the file system of the virtual node that the proxy is running on.
+
+                        
+                  
+                    
+
+                    - **sds** *(dict) --* 
+
+                      A reference to an object that represents a virtual gateway's listener's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                      
+                      
+
+                      - **secretName** *(string) --* 
+
+                        A reference to an object that represents the name of the secret for a virtual gateway's Transport Layer Security (TLS) Secret Discovery Service validation context trust.
+
+                        
+                  
+                
+              
+            
+          
+        
+          
+
+          - **logging** *(dict) --* 
+
+            An object that represents logging information.
+
+            
+            
+
+            - **accessLog** *(dict) --* 
+
+              The access log configuration.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``file``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **file** *(dict) --* 
+
+                The file object to send virtual gateway access logs to.
+
+                
+                
+
+                - **format** *(dict) --* 
+
+                  The specified format for the virtual gateway access logs. It can be either ``json_format`` or ``text_format``.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``json``, ``text``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **json** *(list) --* 
+                    
+
+                    - *(dict) --* 
+
+                      An object that represents the key value pairs for the JSON.
+
+                      
+                      
+
+                      - **key** *(string) --* 
+
+                        The specified key for the JSON.
+
+                        
+                      
+
+                      - **value** *(string) --* 
+
+                        The specified value for the JSON.
+
+                        
+                  
+                
+                  
+
+                  - **text** *(string) --* 
+              
+                
+
+                - **path** *(string) --* 
+
+                  The file path to write access logs to. You can use ``/dev/stdout`` to send access logs to standard out and configure your Envoy container to use a log driver, such as ``awslogs``, to export the access logs to a log storage service such as Amazon CloudWatch Logs. You can also specify a path in the Envoy container's file system to write the files to disk.
+
+                  
+            
+          
+        
+      
+        
+
+        - **status** *(dict) --* 
+
+          The current status of the virtual gateway.
+
+          
+          
+
+          - **status** *(string) --* 
+
+            The current status.
+
+            
+      
+        
+
+        - **virtualGatewayName** *(string) --* 
+
+          The name of the virtual gateway.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AppMesh.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`AppMesh.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`AppMesh.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`AppMesh.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`AppMesh.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`AppMesh.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`AppMesh.Client.exceptions.InternalServerErrorException`
+
+  
+  *   :py:class:`AppMesh.Client.exceptions.LimitExceededException`
+
+  

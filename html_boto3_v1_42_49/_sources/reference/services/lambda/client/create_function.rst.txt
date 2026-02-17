@@ -1,0 +1,1581 @@
+:doc:`Lambda <../../lambda>` / Client / create_function
+
+***************
+create_function
+***************
+
+
+
+.. py:method:: Lambda.Client.create_function(**kwargs)
+
+  
+
+  Creates a Lambda function. To create a function, you need a `deployment package <https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html>`__ and an `execution role <https://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role>`__. The deployment package is a .zip file archive or container image that contains your function code. The execution role grants the function permission to use Amazon Web Services services, such as Amazon CloudWatch Logs for log streaming and X-Ray for request tracing.
+
+   
+
+  If the deployment package is a `container image <https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html>`__, then you set the package type to ``Image``. For a container image, the code property must include the URI of a container image in the Amazon ECR registry. You do not need to specify the handler and runtime properties.
+
+   
+
+  If the deployment package is a `.zip file archive <https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html#gettingstarted-package-zip>`__, then you set the package type to ``Zip``. For a .zip file archive, the code property specifies the location of the .zip file. You must also specify the handler and runtime properties. The code in the deployment package must be compatible with the target instruction set architecture of the function ( ``x86-64`` or ``arm64``). If you do not specify the architecture, then the default value is ``x86-64``.
+
+   
+
+  When you create a function, Lambda provisions an instance of the function and its supporting resources. If your function connects to a VPC, this process can take a minute or so. During this time, you can't invoke or modify the function. The ``State``, ``StateReason``, and ``StateReasonCode`` fields in the response from  GetFunctionConfiguration indicate when the function is ready to invoke. For more information, see `Lambda function states <https://docs.aws.amazon.com/lambda/latest/dg/functions-states.html>`__.
+
+   
+
+  A function has an unpublished version, and can have published versions and aliases. The unpublished version changes when you update your function's code and configuration. A published version is a snapshot of your function code and configuration that can't be changed. An alias is a named resource that maps to a version, and can be changed to map to a different version. Use the ``Publish`` parameter to create version ``1`` of your function from its initial configuration.
+
+   
+
+  The other parameters let you configure version-specific and function-level settings. You can modify version-specific settings later with  UpdateFunctionConfiguration. Function-level settings apply to both the unpublished and published versions of the function, and include tags (  TagResource) and per-function concurrency limits (  PutFunctionConcurrency).
+
+   
+
+  You can use code signing if your deployment package is a .zip file archive. To enable code signing for this function, specify the ARN of a code-signing configuration. When a user attempts to deploy a code package with  UpdateFunctionCode, Lambda checks that the code package has a valid signature from a trusted publisher. The code-signing configuration includes set of signing profiles, which define the trusted publishers for this function.
+
+   
+
+  If another Amazon Web Services account or an Amazon Web Services service invokes your function, use  AddPermission to grant permission by creating a resource-based Identity and Access Management (IAM) policy. You can grant permissions at the function level, on a version, or on an alias.
+
+   
+
+  To invoke your function directly, use  Invoke. To invoke your function in response to events in other Amazon Web Services services, create an event source mapping (  CreateEventSourceMapping), or configure a function trigger in the other service. For more information, see `Invoking Lambda functions <https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/CreateFunction>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_function(
+        FunctionName='string',
+        Runtime='nodejs'|'nodejs4.3'|'nodejs6.10'|'nodejs8.10'|'nodejs10.x'|'nodejs12.x'|'nodejs14.x'|'nodejs16.x'|'java8'|'java8.al2'|'java11'|'python2.7'|'python3.6'|'python3.7'|'python3.8'|'python3.9'|'dotnetcore1.0'|'dotnetcore2.0'|'dotnetcore2.1'|'dotnetcore3.1'|'dotnet6'|'dotnet8'|'nodejs4.3-edge'|'go1.x'|'ruby2.5'|'ruby2.7'|'provided'|'provided.al2'|'nodejs18.x'|'python3.10'|'java17'|'ruby3.2'|'ruby3.3'|'ruby3.4'|'python3.11'|'nodejs20.x'|'provided.al2023'|'python3.12'|'java21'|'python3.13'|'nodejs22.x'|'nodejs24.x'|'python3.14'|'java25'|'dotnet10',
+        Role='string',
+        Handler='string',
+        Code={
+            'ZipFile': b'bytes',
+            'S3Bucket': 'string',
+            'S3Key': 'string',
+            'S3ObjectVersion': 'string',
+            'ImageUri': 'string',
+            'SourceKMSKeyArn': 'string'
+        },
+        Description='string',
+        Timeout=123,
+        MemorySize=123,
+        Publish=True|False,
+        VpcConfig={
+            'SubnetIds': [
+                'string',
+            ],
+            'SecurityGroupIds': [
+                'string',
+            ],
+            'Ipv6AllowedForDualStack': True|False
+        },
+        PackageType='Zip'|'Image',
+        DeadLetterConfig={
+            'TargetArn': 'string'
+        },
+        Environment={
+            'Variables': {
+                'string': 'string'
+            }
+        },
+        KMSKeyArn='string',
+        TracingConfig={
+            'Mode': 'Active'|'PassThrough'
+        },
+        Tags={
+            'string': 'string'
+        },
+        Layers=[
+            'string',
+        ],
+        FileSystemConfigs=[
+            {
+                'Arn': 'string',
+                'LocalMountPath': 'string'
+            },
+        ],
+        ImageConfig={
+            'EntryPoint': [
+                'string',
+            ],
+            'Command': [
+                'string',
+            ],
+            'WorkingDirectory': 'string'
+        },
+        CodeSigningConfigArn='string',
+        Architectures=[
+            'x86_64'|'arm64',
+        ],
+        EphemeralStorage={
+            'Size': 123
+        },
+        SnapStart={
+            'ApplyOn': 'PublishedVersions'|'None'
+        },
+        LoggingConfig={
+            'LogFormat': 'JSON'|'Text',
+            'ApplicationLogLevel': 'TRACE'|'DEBUG'|'INFO'|'WARN'|'ERROR'|'FATAL',
+            'SystemLogLevel': 'DEBUG'|'INFO'|'WARN',
+            'LogGroup': 'string'
+        },
+        CapacityProviderConfig={
+            'LambdaManagedInstancesCapacityProviderConfig': {
+                'CapacityProviderArn': 'string',
+                'PerExecutionEnvironmentMaxConcurrency': 123,
+                'ExecutionEnvironmentMemoryGiBPerVCpu': 123.0
+            }
+        },
+        PublishTo='LATEST_PUBLISHED',
+        DurableConfig={
+            'RetentionPeriodInDays': 123,
+            'ExecutionTimeout': 123
+        },
+        TenancyConfig={
+            'TenantIsolationMode': 'PER_TENANT'
+        }
+    )
+    
+  :type FunctionName: string
+  :param FunctionName: **[REQUIRED]** 
+
+    The name or ARN of the Lambda function.
+
+     
+
+    **Name formats**
+
+     
+
+    
+    * **Function name** – ``my-function``.
+     
+    * **Function ARN** – ``arn:aws:lambda:us-west-2:123456789012:function:my-function``.
+     
+    * **Partial ARN** – ``123456789012:function:my-function``.
+    
+
+     
+
+    The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.
+
+    
+
+  
+  :type Runtime: string
+  :param Runtime: 
+
+    The identifier of the function's `runtime <https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html>`__. Runtime is required if the deployment package is a .zip file archive. Specifying a runtime results in an error if you're deploying a function using a container image.
+
+     
+
+    The following list includes deprecated runtimes. Lambda blocks creating new functions and updating existing functions shortly after each runtime is deprecated. For more information, see `Runtime use after deprecation <https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html#runtime-deprecation-levels>`__.
+
+     
+
+    For a list of all currently supported runtimes, see `Supported runtimes <https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html#runtimes-supported>`__.
+
+    
+
+  
+  :type Role: string
+  :param Role: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the function's execution role.
+
+    
+
+  
+  :type Handler: string
+  :param Handler: 
+
+    The name of the method within your code that Lambda calls to run your function. Handler is required if the deployment package is a .zip file archive. The format includes the file name. It can also include namespaces and other qualifiers, depending on the runtime. For more information, see `Lambda programming model <https://docs.aws.amazon.com/lambda/latest/dg/foundation-progmodel.html>`__.
+
+    
+
+  
+  :type Code: dict
+  :param Code: **[REQUIRED]** 
+
+    The code for the function.
+
+    
+
+  
+    - **ZipFile** *(bytes) --* 
+
+      The base64-encoded contents of the deployment package. Amazon Web Services SDK and CLI clients handle the encoding for you.
+
+      
+
+    
+    - **S3Bucket** *(string) --* 
+
+      An Amazon S3 bucket in the same Amazon Web Services Region as your function. The bucket can be in a different Amazon Web Services account.
+
+      
+
+    
+    - **S3Key** *(string) --* 
+
+      The Amazon S3 key of the deployment package.
+
+      
+
+    
+    - **S3ObjectVersion** *(string) --* 
+
+      For versioned objects, the version of the deployment package object to use.
+
+      
+
+    
+    - **ImageUri** *(string) --* 
+
+      URI of a `container image <https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html>`__ in the Amazon ECR registry.
+
+      
+
+    
+    - **SourceKMSKeyArn** *(string) --* 
+
+      The ARN of the Key Management Service (KMS) customer managed key that's used to encrypt your function's .zip deployment package. If you don't provide a customer managed key, Lambda uses an `Amazon Web Services owned key <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-owned-cmk>`__.
+
+      
+
+    
+  
+  :type Description: string
+  :param Description: 
+
+    A description of the function.
+
+    
+
+  
+  :type Timeout: integer
+  :param Timeout: 
+
+    The amount of time (in seconds) that Lambda allows a function to run before stopping it. The default is 3 seconds. The maximum allowed value is 900 seconds. For more information, see `Lambda execution environment <https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html>`__.
+
+    
+
+  
+  :type MemorySize: integer
+  :param MemorySize: 
+
+    The amount of `memory available to the function <https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-common.html#configuration-memory-console>`__ at runtime. Increasing the function memory also increases its CPU allocation. The default value is 128 MB. The value can be any multiple of 1 MB.
+
+    
+
+  
+  :type Publish: boolean
+  :param Publish: 
+
+    Set to true to publish the first version of the function during creation.
+
+    
+
+  
+  :type VpcConfig: dict
+  :param VpcConfig: 
+
+    For network connectivity to Amazon Web Services resources in a VPC, specify a list of security groups and subnets in the VPC. When you connect a function to a VPC, it can access resources and the internet only through that VPC. For more information, see `Configuring a Lambda function to access resources in a VPC <https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html>`__.
+
+    
+
+  
+    - **SubnetIds** *(list) --* 
+
+      A list of VPC subnet IDs.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **SecurityGroupIds** *(list) --* 
+
+      A list of VPC security group IDs.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **Ipv6AllowedForDualStack** *(boolean) --* 
+
+      Allows outbound IPv6 traffic on VPC functions that are connected to dual-stack subnets.
+
+      
+
+    
+  
+  :type PackageType: string
+  :param PackageType: 
+
+    The type of deployment package. Set to ``Image`` for container image and set to ``Zip`` for .zip file archive.
+
+    
+
+  
+  :type DeadLetterConfig: dict
+  :param DeadLetterConfig: 
+
+    A dead-letter queue configuration that specifies the queue or topic where Lambda sends asynchronous events when they fail processing. For more information, see `Dead-letter queues <https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html#invocation-dlq>`__.
+
+    
+
+  
+    - **TargetArn** *(string) --* 
+
+      The Amazon Resource Name (ARN) of an Amazon SQS queue or Amazon SNS topic.
+
+      
+
+    
+  
+  :type Environment: dict
+  :param Environment: 
+
+    Environment variables that are accessible from function code during execution.
+
+    
+
+  
+    - **Variables** *(dict) --* 
+
+      Environment variable key-value pairs. For more information, see `Using Lambda environment variables <https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html>`__.
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+  
+  :type KMSKeyArn: string
+  :param KMSKeyArn: 
+
+    The ARN of the Key Management Service (KMS) customer managed key that's used to encrypt the following resources:
+
+     
+
+    
+    * The function's `environment variables <https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-encryption>`__.
+     
+    * The function's `Lambda SnapStart <https://docs.aws.amazon.com/lambda/latest/dg/snapstart-security.html>`__ snapshots.
+     
+    * When used with ``SourceKMSKeyArn``, the unzipped version of the .zip deployment package that's used for function invocations. For more information, see `Specifying a customer managed key for Lambda <https://docs.aws.amazon.com/lambda/latest/dg/encrypt-zip-package.html#enable-zip-custom-encryption>`__.
+     
+    * The optimized version of the container image that's used for function invocations. Note that this is not the same key that's used to protect your container image in the Amazon Elastic Container Registry (Amazon ECR). For more information, see `Function lifecycle <https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-lifecycle>`__.
+    
+
+     
+
+    If you don't provide a customer managed key, Lambda uses an `Amazon Web Services owned key <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-owned-cmk>`__ or an `Amazon Web Services managed key <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk>`__.
+
+    
+
+  
+  :type TracingConfig: dict
+  :param TracingConfig: 
+
+    Set ``Mode`` to ``Active`` to sample and trace a subset of incoming requests with `X-Ray <https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html>`__.
+
+    
+
+  
+    - **Mode** *(string) --* 
+
+      The tracing mode.
+
+      
+
+    
+  
+  :type Tags: dict
+  :param Tags: 
+
+    A list of `tags <https://docs.aws.amazon.com/lambda/latest/dg/tagging.html>`__ to apply to the function.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type Layers: list
+  :param Layers: 
+
+    A list of `function layers <https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html>`__ to add to the function's execution environment. Specify each layer by its ARN, including the version.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type FileSystemConfigs: list
+  :param FileSystemConfigs: 
+
+    Connection settings for an Amazon EFS file system.
+
+    
+
+  
+    - *(dict) --* 
+
+      Details about the connection between a Lambda function and an `Amazon EFS file system <https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html>`__.
+
+      
+
+    
+      - **Arn** *(string) --* **[REQUIRED]** 
+
+        The Amazon Resource Name (ARN) of the Amazon EFS access point that provides access to the file system.
+
+        
+
+      
+      - **LocalMountPath** *(string) --* **[REQUIRED]** 
+
+        The path where the function can access the file system, starting with ``/mnt/``.
+
+        
+
+      
+    
+
+  :type ImageConfig: dict
+  :param ImageConfig: 
+
+    Container image `configuration values <https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-parms>`__ that override the values in the container image Dockerfile.
+
+    
+
+  
+    - **EntryPoint** *(list) --* 
+
+      Specifies the entry point to their application, which is typically the location of the runtime executable.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **Command** *(list) --* 
+
+      Specifies parameters that you want to pass in with ENTRYPOINT.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **WorkingDirectory** *(string) --* 
+
+      Specifies the working directory.
+
+      
+
+    
+  
+  :type CodeSigningConfigArn: string
+  :param CodeSigningConfigArn: 
+
+    To enable code signing for this function, specify the ARN of a code-signing configuration. A code-signing configuration includes a set of signing profiles, which define the trusted publishers for this function.
+
+    
+
+  
+  :type Architectures: list
+  :param Architectures: 
+
+    The instruction set architecture that the function supports. Enter a string array with one of the valid values (arm64 or x86_64). The default value is ``x86_64``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type EphemeralStorage: dict
+  :param EphemeralStorage: 
+
+    The size of the function's ``/tmp`` directory in MB. The default value is 512, but can be any whole number between 512 and 10,240 MB. For more information, see `Configuring ephemeral storage (console) <https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-common.html#configuration-ephemeral-storage>`__.
+
+    
+
+  
+    - **Size** *(integer) --* **[REQUIRED]** 
+
+      The size of the function's ``/tmp`` directory.
+
+      
+
+    
+  
+  :type SnapStart: dict
+  :param SnapStart: 
+
+    The function's `SnapStart <https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html>`__ setting.
+
+    
+
+  
+    - **ApplyOn** *(string) --* 
+
+      Set to ``PublishedVersions`` to create a snapshot of the initialized execution environment when you publish a function version.
+
+      
+
+    
+  
+  :type LoggingConfig: dict
+  :param LoggingConfig: 
+
+    The function's Amazon CloudWatch Logs configuration settings.
+
+    
+
+  
+    - **LogFormat** *(string) --* 
+
+      The format in which Lambda sends your function's application and system logs to CloudWatch. Select between plain text and structured JSON.
+
+      
+
+    
+    - **ApplicationLogLevel** *(string) --* 
+
+      Set this property to filter the application logs for your function that Lambda sends to CloudWatch. Lambda only sends application logs at the selected level of detail and lower, where ``TRACE`` is the highest level and ``FATAL`` is the lowest.
+
+      
+
+    
+    - **SystemLogLevel** *(string) --* 
+
+      Set this property to filter the system logs for your function that Lambda sends to CloudWatch. Lambda only sends system logs at the selected level of detail and lower, where ``DEBUG`` is the highest level and ``WARN`` is the lowest.
+
+      
+
+    
+    - **LogGroup** *(string) --* 
+
+      The name of the Amazon CloudWatch log group the function sends logs to. By default, Lambda functions send logs to a default log group named ``/aws/lambda/<function name>``. To use a different log group, enter an existing log group or enter a new log group name.
+
+      
+
+    
+  
+  :type CapacityProviderConfig: dict
+  :param CapacityProviderConfig: 
+
+    Configuration for the capacity provider that manages compute resources for Lambda functions.
+
+    
+
+  
+    - **LambdaManagedInstancesCapacityProviderConfig** *(dict) --* **[REQUIRED]** 
+
+      Configuration for Lambda-managed instances used by the capacity provider.
+
+      
+
+    
+      - **CapacityProviderArn** *(string) --* **[REQUIRED]** 
+
+        The Amazon Resource Name (ARN) of the capacity provider.
+
+        
+
+      
+      - **PerExecutionEnvironmentMaxConcurrency** *(integer) --* 
+
+        The maximum number of concurrent execution environments that can run on each compute instance.
+
+        
+
+      
+      - **ExecutionEnvironmentMemoryGiBPerVCpu** *(float) --* 
+
+        The amount of memory in GiB allocated per vCPU for execution environments.
+
+        
+
+      
+    
+  
+  :type PublishTo: string
+  :param PublishTo: 
+
+    Specifies where to publish the function version or configuration.
+
+    
+
+  
+  :type DurableConfig: dict
+  :param DurableConfig: 
+
+    Configuration settings for durable functions. Enables creating functions with durability that can remember their state and continue execution even after interruptions.
+
+    
+
+  
+    - **RetentionPeriodInDays** *(integer) --* 
+
+      The number of days to retain execution history after a durable execution completes. After this period, execution history is no longer available through the GetDurableExecutionHistory API.
+
+      
+
+    
+    - **ExecutionTimeout** *(integer) --* 
+
+      The maximum time (in seconds) that a durable execution can run before timing out. This timeout applies to the entire durable execution, not individual function invocations.
+
+      
+
+    
+  
+  :type TenancyConfig: dict
+  :param TenancyConfig: 
+
+    Configuration for multi-tenant applications that use Lambda functions. Defines tenant isolation settings and resource allocations. Required for functions supporting multiple tenants.
+
+    
+
+  
+    - **TenantIsolationMode** *(string) --* **[REQUIRED]** 
+
+      Tenant isolation mode allows for invocation to be sent to a corresponding execution environment dedicated to a specific tenant ID.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FunctionName': 'string',
+          'FunctionArn': 'string',
+          'Runtime': 'nodejs'|'nodejs4.3'|'nodejs6.10'|'nodejs8.10'|'nodejs10.x'|'nodejs12.x'|'nodejs14.x'|'nodejs16.x'|'java8'|'java8.al2'|'java11'|'python2.7'|'python3.6'|'python3.7'|'python3.8'|'python3.9'|'dotnetcore1.0'|'dotnetcore2.0'|'dotnetcore2.1'|'dotnetcore3.1'|'dotnet6'|'dotnet8'|'nodejs4.3-edge'|'go1.x'|'ruby2.5'|'ruby2.7'|'provided'|'provided.al2'|'nodejs18.x'|'python3.10'|'java17'|'ruby3.2'|'ruby3.3'|'ruby3.4'|'python3.11'|'nodejs20.x'|'provided.al2023'|'python3.12'|'java21'|'python3.13'|'nodejs22.x'|'nodejs24.x'|'python3.14'|'java25'|'dotnet10',
+          'Role': 'string',
+          'Handler': 'string',
+          'CodeSize': 123,
+          'Description': 'string',
+          'Timeout': 123,
+          'MemorySize': 123,
+          'LastModified': 'string',
+          'CodeSha256': 'string',
+          'Version': 'string',
+          'VpcConfig': {
+              'SubnetIds': [
+                  'string',
+              ],
+              'SecurityGroupIds': [
+                  'string',
+              ],
+              'VpcId': 'string',
+              'Ipv6AllowedForDualStack': True|False
+          },
+          'DeadLetterConfig': {
+              'TargetArn': 'string'
+          },
+          'Environment': {
+              'Variables': {
+                  'string': 'string'
+              },
+              'Error': {
+                  'ErrorCode': 'string',
+                  'Message': 'string'
+              }
+          },
+          'KMSKeyArn': 'string',
+          'TracingConfig': {
+              'Mode': 'Active'|'PassThrough'
+          },
+          'MasterArn': 'string',
+          'RevisionId': 'string',
+          'Layers': [
+              {
+                  'Arn': 'string',
+                  'CodeSize': 123,
+                  'SigningProfileVersionArn': 'string',
+                  'SigningJobArn': 'string'
+              },
+          ],
+          'State': 'Pending'|'Active'|'Inactive'|'Failed'|'Deactivating'|'Deactivated'|'ActiveNonInvocable'|'Deleting',
+          'StateReason': 'string',
+          'StateReasonCode': 'Idle'|'Creating'|'Restoring'|'EniLimitExceeded'|'InsufficientRolePermissions'|'InvalidConfiguration'|'InternalError'|'SubnetOutOfIPAddresses'|'InvalidSubnet'|'InvalidSecurityGroup'|'ImageDeleted'|'ImageAccessDenied'|'InvalidImage'|'KMSKeyAccessDenied'|'KMSKeyNotFound'|'InvalidStateKMSKey'|'DisabledKMSKey'|'EFSIOError'|'EFSMountConnectivityError'|'EFSMountFailure'|'EFSMountTimeout'|'InvalidRuntime'|'InvalidZipFileException'|'FunctionError'|'DrainingDurableExecutions'|'VcpuLimitExceeded'|'CapacityProviderScalingLimitExceeded'|'InsufficientCapacity'|'EC2RequestLimitExceeded'|'FunctionError.InitTimeout'|'FunctionError.RuntimeInitError'|'FunctionError.ExtensionInitError'|'FunctionError.InvalidEntryPoint'|'FunctionError.InvalidWorkingDirectory'|'FunctionError.PermissionDenied'|'FunctionError.TooManyExtensions'|'FunctionError.InitResourceExhausted'|'DisallowedByVpcEncryptionControl',
+          'LastUpdateStatus': 'Successful'|'Failed'|'InProgress',
+          'LastUpdateStatusReason': 'string',
+          'LastUpdateStatusReasonCode': 'EniLimitExceeded'|'InsufficientRolePermissions'|'InvalidConfiguration'|'InternalError'|'SubnetOutOfIPAddresses'|'InvalidSubnet'|'InvalidSecurityGroup'|'ImageDeleted'|'ImageAccessDenied'|'InvalidImage'|'KMSKeyAccessDenied'|'KMSKeyNotFound'|'InvalidStateKMSKey'|'DisabledKMSKey'|'EFSIOError'|'EFSMountConnectivityError'|'EFSMountFailure'|'EFSMountTimeout'|'InvalidRuntime'|'InvalidZipFileException'|'FunctionError'|'VcpuLimitExceeded'|'CapacityProviderScalingLimitExceeded'|'InsufficientCapacity'|'EC2RequestLimitExceeded'|'FunctionError.InitTimeout'|'FunctionError.RuntimeInitError'|'FunctionError.ExtensionInitError'|'FunctionError.InvalidEntryPoint'|'FunctionError.InvalidWorkingDirectory'|'FunctionError.PermissionDenied'|'FunctionError.TooManyExtensions'|'FunctionError.InitResourceExhausted'|'DisallowedByVpcEncryptionControl',
+          'FileSystemConfigs': [
+              {
+                  'Arn': 'string',
+                  'LocalMountPath': 'string'
+              },
+          ],
+          'PackageType': 'Zip'|'Image',
+          'ImageConfigResponse': {
+              'ImageConfig': {
+                  'EntryPoint': [
+                      'string',
+                  ],
+                  'Command': [
+                      'string',
+                  ],
+                  'WorkingDirectory': 'string'
+              },
+              'Error': {
+                  'ErrorCode': 'string',
+                  'Message': 'string'
+              }
+          },
+          'SigningProfileVersionArn': 'string',
+          'SigningJobArn': 'string',
+          'Architectures': [
+              'x86_64'|'arm64',
+          ],
+          'EphemeralStorage': {
+              'Size': 123
+          },
+          'SnapStart': {
+              'ApplyOn': 'PublishedVersions'|'None',
+              'OptimizationStatus': 'On'|'Off'
+          },
+          'RuntimeVersionConfig': {
+              'RuntimeVersionArn': 'string',
+              'Error': {
+                  'ErrorCode': 'string',
+                  'Message': 'string'
+              }
+          },
+          'LoggingConfig': {
+              'LogFormat': 'JSON'|'Text',
+              'ApplicationLogLevel': 'TRACE'|'DEBUG'|'INFO'|'WARN'|'ERROR'|'FATAL',
+              'SystemLogLevel': 'DEBUG'|'INFO'|'WARN',
+              'LogGroup': 'string'
+          },
+          'CapacityProviderConfig': {
+              'LambdaManagedInstancesCapacityProviderConfig': {
+                  'CapacityProviderArn': 'string',
+                  'PerExecutionEnvironmentMaxConcurrency': 123,
+                  'ExecutionEnvironmentMemoryGiBPerVCpu': 123.0
+              }
+          },
+          'ConfigSha256': 'string',
+          'DurableConfig': {
+              'RetentionPeriodInDays': 123,
+              'ExecutionTimeout': 123
+          },
+          'TenancyConfig': {
+              'TenantIsolationMode': 'PER_TENANT'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Details about a function's configuration.
+
+      
+      
+
+      - **FunctionName** *(string) --* 
+
+        The name of the function.
+
+        
+      
+
+      - **FunctionArn** *(string) --* 
+
+        The function's Amazon Resource Name (ARN).
+
+        
+      
+
+      - **Runtime** *(string) --* 
+
+        The identifier of the function's `runtime <https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html>`__. Runtime is required if the deployment package is a .zip file archive. Specifying a runtime results in an error if you're deploying a function using a container image.
+
+         
+
+        The following list includes deprecated runtimes. Lambda blocks creating new functions and updating existing functions shortly after each runtime is deprecated. For more information, see `Runtime use after deprecation <https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html#runtime-deprecation-levels>`__.
+
+         
+
+        For a list of all currently supported runtimes, see `Supported runtimes <https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html#runtimes-supported>`__.
+
+        
+      
+
+      - **Role** *(string) --* 
+
+        The function's execution role.
+
+        
+      
+
+      - **Handler** *(string) --* 
+
+        The function that Lambda calls to begin running your function.
+
+        
+      
+
+      - **CodeSize** *(integer) --* 
+
+        The size of the function's deployment package, in bytes.
+
+        
+      
+
+      - **Description** *(string) --* 
+
+        The function's description.
+
+        
+      
+
+      - **Timeout** *(integer) --* 
+
+        The amount of time in seconds that Lambda allows a function to run before stopping it.
+
+        
+      
+
+      - **MemorySize** *(integer) --* 
+
+        The amount of memory available to the function at runtime.
+
+        
+      
+
+      - **LastModified** *(string) --* 
+
+        The date and time that the function was last updated, in `ISO-8601 format <https://www.w3.org/TR/NOTE-datetime>`__ (YYYY-MM-DDThh:mm:ss.sTZD).
+
+        
+      
+
+      - **CodeSha256** *(string) --* 
+
+        The SHA256 hash of the function's deployment package.
+
+        
+      
+
+      - **Version** *(string) --* 
+
+        The version of the Lambda function.
+
+        
+      
+
+      - **VpcConfig** *(dict) --* 
+
+        The function's networking configuration.
+
+        
+        
+
+        - **SubnetIds** *(list) --* 
+
+          A list of VPC subnet IDs.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **SecurityGroupIds** *(list) --* 
+
+          A list of VPC security group IDs.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **VpcId** *(string) --* 
+
+          The ID of the VPC.
+
+          
+        
+
+        - **Ipv6AllowedForDualStack** *(boolean) --* 
+
+          Allows outbound IPv6 traffic on VPC functions that are connected to dual-stack subnets.
+
+          
+    
+      
+
+      - **DeadLetterConfig** *(dict) --* 
+
+        The function's dead letter queue.
+
+        
+        
+
+        - **TargetArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of an Amazon SQS queue or Amazon SNS topic.
+
+          
+    
+      
+
+      - **Environment** *(dict) --* 
+
+        The function's `environment variables <https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html>`__. Omitted from CloudTrail logs.
+
+        
+        
+
+        - **Variables** *(dict) --* 
+
+          Environment variable key-value pairs. Omitted from CloudTrail logs.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **Error** *(dict) --* 
+
+          Error messages for environment variables that couldn't be applied.
+
+          
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            The error message.
+
+            
+      
+    
+      
+
+      - **KMSKeyArn** *(string) --* 
+
+        The ARN of the Key Management Service (KMS) customer managed key that's used to encrypt the following resources:
+
+         
+
+        
+        * The function's `environment variables <https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-encryption>`__.
+         
+        * The function's `Lambda SnapStart <https://docs.aws.amazon.com/lambda/latest/dg/snapstart-security.html>`__ snapshots.
+         
+        * When used with ``SourceKMSKeyArn``, the unzipped version of the .zip deployment package that's used for function invocations. For more information, see `Specifying a customer managed key for Lambda <https://docs.aws.amazon.com/lambda/latest/dg/encrypt-zip-package.html#enable-zip-custom-encryption>`__.
+         
+        * The optimized version of the container image that's used for function invocations. Note that this is not the same key that's used to protect your container image in the Amazon Elastic Container Registry (Amazon ECR). For more information, see `Function lifecycle <https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-lifecycle>`__.
+        
+
+         
+
+        If you don't provide a customer managed key, Lambda uses an `Amazon Web Services owned key <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-owned-cmk>`__ or an `Amazon Web Services managed key <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk>`__.
+
+        
+      
+
+      - **TracingConfig** *(dict) --* 
+
+        The function's X-Ray tracing configuration.
+
+        
+        
+
+        - **Mode** *(string) --* 
+
+          The tracing mode.
+
+          
+    
+      
+
+      - **MasterArn** *(string) --* 
+
+        For Lambda@Edge functions, the ARN of the main function.
+
+        
+      
+
+      - **RevisionId** *(string) --* 
+
+        The latest updated revision of the function or alias.
+
+        
+      
+
+      - **Layers** *(list) --* 
+
+        The function's `layers <https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html>`__.
+
+        
+        
+
+        - *(dict) --* 
+
+          An `Lambda layer <https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html>`__.
+
+          
+          
+
+          - **Arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the function layer.
+
+            
+          
+
+          - **CodeSize** *(integer) --* 
+
+            The size of the layer archive in bytes.
+
+            
+          
+
+          - **SigningProfileVersionArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) for a signing profile version.
+
+            
+          
+
+          - **SigningJobArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of a signing job.
+
+            
+      
+    
+      
+
+      - **State** *(string) --* 
+
+        The current state of the function. When the state is ``Inactive``, you can reactivate the function by invoking it.
+
+        
+      
+
+      - **StateReason** *(string) --* 
+
+        The reason for the function's current state.
+
+        
+      
+
+      - **StateReasonCode** *(string) --* 
+
+        The reason code for the function's current state. When the code is ``Creating``, you can't invoke or modify the function.
+
+        
+      
+
+      - **LastUpdateStatus** *(string) --* 
+
+        The status of the last update that was performed on the function. This is first set to ``Successful`` after function creation completes.
+
+        
+      
+
+      - **LastUpdateStatusReason** *(string) --* 
+
+        The reason for the last update that was performed on the function.
+
+        
+      
+
+      - **LastUpdateStatusReasonCode** *(string) --* 
+
+        The reason code for the last update that was performed on the function.
+
+        
+      
+
+      - **FileSystemConfigs** *(list) --* 
+
+        Connection settings for an `Amazon EFS file system <https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html>`__.
+
+        
+        
+
+        - *(dict) --* 
+
+          Details about the connection between a Lambda function and an `Amazon EFS file system <https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html>`__.
+
+          
+          
+
+          - **Arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Amazon EFS access point that provides access to the file system.
+
+            
+          
+
+          - **LocalMountPath** *(string) --* 
+
+            The path where the function can access the file system, starting with ``/mnt/``.
+
+            
+      
+    
+      
+
+      - **PackageType** *(string) --* 
+
+        The type of deployment package. Set to ``Image`` for container image and set ``Zip`` for .zip file archive.
+
+        
+      
+
+      - **ImageConfigResponse** *(dict) --* 
+
+        The function's image configuration values.
+
+        
+        
+
+        - **ImageConfig** *(dict) --* 
+
+          Configuration values that override the container image Dockerfile.
+
+          
+          
+
+          - **EntryPoint** *(list) --* 
+
+            Specifies the entry point to their application, which is typically the location of the runtime executable.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **Command** *(list) --* 
+
+            Specifies parameters that you want to pass in with ENTRYPOINT.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **WorkingDirectory** *(string) --* 
+
+            Specifies the working directory.
+
+            
+      
+        
+
+        - **Error** *(dict) --* 
+
+          Error response to ``GetFunctionConfiguration``.
+
+          
+          
+
+          - **ErrorCode** *(string) --* 
+
+            Error code.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            Error message.
+
+            
+      
+    
+      
+
+      - **SigningProfileVersionArn** *(string) --* 
+
+        The ARN of the signing profile version.
+
+        
+      
+
+      - **SigningJobArn** *(string) --* 
+
+        The ARN of the signing job.
+
+        
+      
+
+      - **Architectures** *(list) --* 
+
+        The instruction set architecture that the function supports. Architecture is a string array with one of the valid values. The default architecture value is ``x86_64``.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **EphemeralStorage** *(dict) --* 
+
+        The size of the function's ``/tmp`` directory in MB. The default value is 512, but can be any whole number between 512 and 10,240 MB. For more information, see `Configuring ephemeral storage (console) <https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-common.html#configuration-ephemeral-storage>`__.
+
+        
+        
+
+        - **Size** *(integer) --* 
+
+          The size of the function's ``/tmp`` directory.
+
+          
+    
+      
+
+      - **SnapStart** *(dict) --* 
+
+        Set ``ApplyOn`` to ``PublishedVersions`` to create a snapshot of the initialized execution environment when you publish a function version. For more information, see `Improving startup performance with Lambda SnapStart <https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html>`__.
+
+        
+        
+
+        - **ApplyOn** *(string) --* 
+
+          When set to ``PublishedVersions``, Lambda creates a snapshot of the execution environment when you publish a function version.
+
+          
+        
+
+        - **OptimizationStatus** *(string) --* 
+
+          When you provide a `qualified Amazon Resource Name (ARN) <https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html#versioning-versions-using>`__, this response element indicates whether SnapStart is activated for the specified function version.
+
+          
+    
+      
+
+      - **RuntimeVersionConfig** *(dict) --* 
+
+        The ARN of the runtime and any errors that occured.
+
+        
+        
+
+        - **RuntimeVersionArn** *(string) --* 
+
+          The ARN of the runtime version you want the function to use.
+
+          
+        
+
+        - **Error** *(dict) --* 
+
+          Error response when Lambda is unable to retrieve the runtime version for a function.
+
+          
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            The error message.
+
+            
+      
+    
+      
+
+      - **LoggingConfig** *(dict) --* 
+
+        The function's Amazon CloudWatch Logs configuration settings.
+
+        
+        
+
+        - **LogFormat** *(string) --* 
+
+          The format in which Lambda sends your function's application and system logs to CloudWatch. Select between plain text and structured JSON.
+
+          
+        
+
+        - **ApplicationLogLevel** *(string) --* 
+
+          Set this property to filter the application logs for your function that Lambda sends to CloudWatch. Lambda only sends application logs at the selected level of detail and lower, where ``TRACE`` is the highest level and ``FATAL`` is the lowest.
+
+          
+        
+
+        - **SystemLogLevel** *(string) --* 
+
+          Set this property to filter the system logs for your function that Lambda sends to CloudWatch. Lambda only sends system logs at the selected level of detail and lower, where ``DEBUG`` is the highest level and ``WARN`` is the lowest.
+
+          
+        
+
+        - **LogGroup** *(string) --* 
+
+          The name of the Amazon CloudWatch log group the function sends logs to. By default, Lambda functions send logs to a default log group named ``/aws/lambda/<function name>``. To use a different log group, enter an existing log group or enter a new log group name.
+
+          
+    
+      
+
+      - **CapacityProviderConfig** *(dict) --* 
+
+        Configuration for the capacity provider that manages compute resources for Lambda functions.
+
+        
+        
+
+        - **LambdaManagedInstancesCapacityProviderConfig** *(dict) --* 
+
+          Configuration for Lambda-managed instances used by the capacity provider.
+
+          
+          
+
+          - **CapacityProviderArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the capacity provider.
+
+            
+          
+
+          - **PerExecutionEnvironmentMaxConcurrency** *(integer) --* 
+
+            The maximum number of concurrent execution environments that can run on each compute instance.
+
+            
+          
+
+          - **ExecutionEnvironmentMemoryGiBPerVCpu** *(float) --* 
+
+            The amount of memory in GiB allocated per vCPU for execution environments.
+
+            
+      
+    
+      
+
+      - **ConfigSha256** *(string) --* 
+
+        The SHA256 hash of the function configuration.
+
+        
+      
+
+      - **DurableConfig** *(dict) --* 
+
+        The function's durable execution configuration settings, if the function is configured for durability.
+
+        
+        
+
+        - **RetentionPeriodInDays** *(integer) --* 
+
+          The number of days to retain execution history after a durable execution completes. After this period, execution history is no longer available through the GetDurableExecutionHistory API.
+
+          
+        
+
+        - **ExecutionTimeout** *(integer) --* 
+
+          The maximum time (in seconds) that a durable execution can run before timing out. This timeout applies to the entire durable execution, not individual function invocations.
+
+          
+    
+      
+
+      - **TenancyConfig** *(dict) --* 
+
+        The function's tenant isolation configuration settings. Determines whether the Lambda function runs on a shared or dedicated infrastructure per unique tenant.
+
+        
+        
+
+        - **TenantIsolationMode** *(string) --* 
+
+          Tenant isolation mode allows for invocation to be sent to a corresponding execution environment dedicated to a specific tenant ID.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Lambda.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.ResourceConflictException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.InvalidCodeSignatureException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.CodeVerificationFailedException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.CodeSigningConfigNotFoundException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.CodeStorageExceededException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.FunctionVersionsPerCapacityProviderLimitExceededException`
+
+  
+
+  **Examples**
+
+  The following example creates a function with a deployment package in Amazon S3 and enables X-Ray tracing and environment variable encryption.
+  ::
+
+    response = client.create_function(
+        Code={
+            'S3Bucket': 'my-bucket-1xpuxmplzrlbh',
+            'S3Key': 'function.zip',
+        },
+        Description='Process image objects from Amazon S3.',
+        Environment={
+            'Variables': {
+                'BUCKET': 'my-bucket-1xpuxmplzrlbh',
+                'PREFIX': 'inbound',
+            },
+        },
+        FunctionName='my-function',
+        Handler='index.handler',
+        KMSKeyArn='arn:aws:kms:us-west-2:123456789012:key/b0844d6c-xmpl-4463-97a4-d49f50839966',
+        MemorySize=256,
+        Publish=True,
+        Role='arn:aws:iam::123456789012:role/lambda-role',
+        Runtime='nodejs12.x',
+        Tags={
+            'DEPARTMENT': 'Assets',
+        },
+        Timeout=15,
+        TracingConfig={
+            'Mode': 'Active',
+        },
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'CodeSha256': 'YFgDgEKG3ugvF1+pX64gV6tu9qNuIYNUdgJm8nCxsm4=',
+        'CodeSize': 5797206,
+        'Description': 'Process image objects from Amazon S3.',
+        'Environment': {
+            'Variables': {
+                'BUCKET': 'my-bucket-1xpuxmplzrlbh',
+                'PREFIX': 'inbound',
+            },
+        },
+        'FunctionArn': 'arn:aws:lambda:us-west-2:123456789012:function:my-function',
+        'FunctionName': 'my-function',
+        'Handler': 'index.handler',
+        'KMSKeyArn': 'arn:aws:kms:us-west-2:123456789012:key/b0844d6c-xmpl-4463-97a4-d49f50839966',
+        'LastModified': '2020-04-10T19:06:32.563+0000',
+        'LastUpdateStatus': 'Successful',
+        'MemorySize': 256,
+        'RevisionId': 'b75dcd81-xmpl-48a8-a75a-93ba8b5b9727',
+        'Role': 'arn:aws:iam::123456789012:role/lambda-role',
+        'Runtime': 'nodejs12.x',
+        'State': 'Active',
+        'Timeout': 15,
+        'TracingConfig': {
+            'Mode': 'Active',
+        },
+        'Version': '1',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

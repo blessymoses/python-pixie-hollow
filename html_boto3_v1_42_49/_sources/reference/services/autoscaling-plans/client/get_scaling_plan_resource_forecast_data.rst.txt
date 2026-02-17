@@ -1,0 +1,179 @@
+:doc:`AutoScalingPlans <../../autoscaling-plans>` / Client / get_scaling_plan_resource_forecast_data
+
+***************************************
+get_scaling_plan_resource_forecast_data
+***************************************
+
+
+
+.. py:method:: AutoScalingPlans.Client.get_scaling_plan_resource_forecast_data(**kwargs)
+
+  
+
+  Retrieves the forecast data for a scalable resource.
+
+   
+
+  Capacity forecasts are represented as predicted values, or data points, that are calculated using historical data points from a specified CloudWatch load metric. Data points are available for up to 56 days.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-plans-2018-01-06/GetScalingPlanResourceForecastData>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_scaling_plan_resource_forecast_data(
+        ScalingPlanName='string',
+        ScalingPlanVersion=123,
+        ServiceNamespace='autoscaling'|'ecs'|'ec2'|'rds'|'dynamodb',
+        ResourceId='string',
+        ScalableDimension='autoscaling:autoScalingGroup:DesiredCapacity'|'ecs:service:DesiredCount'|'ec2:spot-fleet-request:TargetCapacity'|'rds:cluster:ReadReplicaCount'|'dynamodb:table:ReadCapacityUnits'|'dynamodb:table:WriteCapacityUnits'|'dynamodb:index:ReadCapacityUnits'|'dynamodb:index:WriteCapacityUnits',
+        ForecastDataType='CapacityForecast'|'LoadForecast'|'ScheduledActionMinCapacity'|'ScheduledActionMaxCapacity',
+        StartTime=datetime(2015, 1, 1),
+        EndTime=datetime(2015, 1, 1)
+    )
+    
+  :type ScalingPlanName: string
+  :param ScalingPlanName: **[REQUIRED]** 
+
+    The name of the scaling plan.
+
+    
+
+  
+  :type ScalingPlanVersion: integer
+  :param ScalingPlanVersion: **[REQUIRED]** 
+
+    The version number of the scaling plan. Currently, the only valid value is ``1``.
+
+    
+
+  
+  :type ServiceNamespace: string
+  :param ServiceNamespace: **[REQUIRED]** 
+
+    The namespace of the AWS service. The only valid value is ``autoscaling``.
+
+    
+
+  
+  :type ResourceId: string
+  :param ResourceId: **[REQUIRED]** 
+
+    The ID of the resource. This string consists of a prefix ( ``autoScalingGroup``) followed by the name of a specified Auto Scaling group ( ``my-asg``). Example: ``autoScalingGroup/my-asg``.
+
+    
+
+  
+  :type ScalableDimension: string
+  :param ScalableDimension: **[REQUIRED]** 
+
+    The scalable dimension for the resource. The only valid value is ``autoscaling:autoScalingGroup:DesiredCapacity``.
+
+    
+
+  
+  :type ForecastDataType: string
+  :param ForecastDataType: **[REQUIRED]** 
+
+    The type of forecast data to get.
+
+     
+
+    
+    * ``LoadForecast``: The load metric forecast.
+     
+    * ``CapacityForecast``: The capacity forecast.
+     
+    * ``ScheduledActionMinCapacity``: The minimum capacity for each scheduled scaling action. This data is calculated as the larger of two values: the capacity forecast or the minimum capacity in the scaling instruction.
+     
+    * ``ScheduledActionMaxCapacity``: The maximum capacity for each scheduled scaling action. The calculation used is determined by the predictive scaling maximum capacity behavior setting in the scaling instruction.
+    
+
+    
+
+  
+  :type StartTime: datetime
+  :param StartTime: **[REQUIRED]** 
+
+    The inclusive start time of the time range for the forecast data to get. The date and time can be at most 56 days before the current date and time.
+
+    
+
+  
+  :type EndTime: datetime
+  :param EndTime: **[REQUIRED]** 
+
+    The exclusive end time of the time range for the forecast data to get. The maximum time duration between the start and end time is seven days.
+
+     
+
+    Although this parameter can accept a date and time that is more than two days in the future, the availability of forecast data has limits. AWS Auto Scaling only issues forecasts for periods of two days in advance.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Datapoints': [
+              {
+                  'Timestamp': datetime(2015, 1, 1),
+                  'Value': 123.0
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Datapoints** *(list) --* 
+
+        The data points to return.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents a single value in the forecast data used for predictive scaling.
+
+          
+          
+
+          - **Timestamp** *(datetime) --* 
+
+            The time stamp for the data point in UTC format.
+
+            
+          
+
+          - **Value** *(float) --* 
+
+            The value of the data point.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScalingPlans.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AutoScalingPlans.Client.exceptions.InternalServiceException`
+
+  

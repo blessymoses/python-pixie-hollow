@@ -1,0 +1,346 @@
+:doc:`LocationService <../../location>` / Client / get_geofence
+
+************
+get_geofence
+************
+
+
+
+.. py:method:: LocationService.Client.get_geofence(**kwargs)
+
+  
+
+  Retrieves the geofence details from a geofence collection.
+
+   
+
+  .. note::
+
+    
+
+    The returned geometry will always match the geometry format used when the geofence was created.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/GetGeofence>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_geofence(
+        CollectionName='string',
+        GeofenceId='string'
+    )
+    
+  :type CollectionName: string
+  :param CollectionName: **[REQUIRED]** 
+
+    The geofence collection storing the target geofence.
+
+    
+
+  
+  :type GeofenceId: string
+  :param GeofenceId: **[REQUIRED]** 
+
+    The geofence you're retrieving details for.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GeofenceId': 'string',
+          'Geometry': {
+              'Polygon': [
+                  [
+                      [
+                          123.0,
+                      ],
+                  ],
+              ],
+              'Circle': {
+                  'Center': [
+                      123.0,
+                  ],
+                  'Radius': 123.0
+              },
+              'Geobuf': b'bytes',
+              'MultiPolygon': [
+                  [
+                      [
+                          [
+                              123.0,
+                          ],
+                      ],
+                  ],
+              ]
+          },
+          'Status': 'string',
+          'CreateTime': datetime(2015, 1, 1),
+          'UpdateTime': datetime(2015, 1, 1),
+          'GeofenceProperties': {
+              'string': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GeofenceId** *(string) --* 
+
+        The geofence identifier.
+
+        
+      
+
+      - **Geometry** *(dict) --* 
+
+        Contains the geofence geometry details describing the position of the geofence. Can be a circle, a polygon, or a multipolygon.
+
+        
+        
+
+        - **Polygon** *(list) --* 
+
+          A ``Polygon`` is a list of up to 250 linear rings which represent the shape of a geofence. This list *must* include 1 exterior ring (representing the outer perimeter of the geofence), and can optionally include up to 249 interior rings (representing polygonal spaces within the perimeter, which are excluded from the geofence area).
+
+           
+
+          A linear ring is an array of 4 or more vertices, where the first and last vertex are the same (to form a closed boundary). Each vertex is a 2-dimensional point represented as an array of doubles of length 2: ``[longitude, latitude]``.
+
+           
+
+          Each linear ring is represented as an array of arrays of doubles ( ``[[longitude, latitude], [longitude, latitude], ...]``). The vertices for the exterior ring must be listed in *counter-clockwise* sequence. Vertices for all interior rings must be listed in *clockwise* sequence.
+
+           
+
+          The list of linear rings that describe the entire ``Polygon`` is represented as an array of arrays of arrays of doubles ( ``[[[longitude, latitude], [longitude, latitude], ...], [[longitude, latitude], [longitude, latitude], ...], ...]``). The exterior ring must be listed first, before any interior rings.
+
+           
+
+          .. note::
+
+            
+
+            The following additional requirements and limitations apply to geometries defined using the ``Polygon`` parameter:
+
+             
+
+            
+            * The entire ``Polygon`` must consist of no more than 1,000 vertices, including all vertices from the exterior ring and all interior rings.
+             
+            * Rings must not touch or cross each other.
+             
+            * All interior rings must be fully contained within the exterior ring.
+             
+            * Interior rings must not contain other interior rings.
+             
+            * No ring is permitted to intersect itself.
+            
+
+            
+
+          
+          
+
+          - *(list) --* 
+            
+
+            - *(list) --* 
+              
+
+              - *(float) --* 
+          
+        
+      
+        
+
+        - **Circle** *(dict) --* 
+
+          A circle on the earth, as defined by a center point and a radius.
+
+          
+          
+
+          - **Center** *(list) --* 
+
+            A single point geometry, specifying the center of the circle, using `WGS 84 <https://gisgeography.com/wgs84-world-geodetic-system/>`__ coordinates, in the form ``[longitude, latitude]``.
+
+            
+            
+
+            - *(float) --* 
+        
+          
+
+          - **Radius** *(float) --* 
+
+            The radius of the circle in meters. Must be greater than zero and no larger than 100,000 (100 kilometers).
+
+            
+      
+        
+
+        - **Geobuf** *(bytes) --* 
+
+          Geobuf is a compact binary encoding for geographic data that provides lossless compression of GeoJSON polygons. The Geobuf must be Base64-encoded.
+
+           
+
+          This parameter can contain a Geobuf-encoded GeoJSON geometry object of type ``Polygon`` *OR* ``MultiPolygon``. For more information and specific configuration requirements for these object types, see `Polygon <https://docs.aws.amazon.com/location/latest/APIReference/API_WaypointGeofencing_GeofenceGeometry.html#location-Type-WaypointGeofencing_GeofenceGeometry-Polygon>`__ and `MultiPolygon <https://docs.aws.amazon.com/location/latest/APIReference/API_WaypointGeofencing_GeofenceGeometry.html#location-Type-WaypointGeofencing_GeofenceGeometry-MultiPolygon>`__.
+
+           
+
+          .. note::
+
+            
+
+            The following limitations apply specifically to geometries defined using the ``Geobuf`` parameter, and supercede the corresponding limitations of the ``Polygon`` and ``MultiPolygon`` parameters:
+
+             
+
+            
+            * A ``Polygon`` in ``Geobuf`` format can have up to 25,000 rings and up to 100,000 total vertices, including all vertices from all component rings.
+             
+            * A ``MultiPolygon`` in ``Geobuf`` format can contain up to 10,000 ``Polygons`` and up to 100,000 total vertices, including all vertices from all component ``Polygons``.
+            
+
+            
+
+          
+        
+
+        - **MultiPolygon** *(list) --* 
+
+          A ``MultiPolygon`` is a list of up to 250 ``Polygon`` elements which represent the shape of a geofence. The ``Polygon`` components of a ``MultiPolygon`` geometry can define separate geographical areas that are considered part of the same geofence, perimeters of larger exterior areas with smaller interior spaces that are excluded from the geofence, or some combination of these use cases to form complex geofence boundaries.
+
+           
+
+          For more information and specific configuration requirements for the ``Polygon`` components that form a ``MultiPolygon``, see `Polygon <https://docs.aws.amazon.com/location/latest/APIReference/API_WaypointGeofencing_GeofenceGeometry.html#location-Type-WaypointGeofencing_GeofenceGeometry-Polygon>`__.
+
+           
+
+          .. note::
+
+            
+
+            The following additional requirements and limitations apply to geometries defined using the ``MultiPolygon`` parameter:
+
+             
+
+            
+            * The entire ``MultiPolygon`` must consist of no more than 1,000 vertices, including all vertices from all component ``Polygons``.
+             
+            * Each edge of a component ``Polygon`` must intersect no more than 5 edges from other ``Polygons``. Parallel edges that are shared but do not cross are not counted toward this limit.
+             
+            * The total number of intersecting edges of component ``Polygons`` must be no more than 100,000. Parallel edges that are shared but do not cross are not counted toward this limit.
+            
+
+            
+
+          
+          
+
+          - *(list) --* 
+            
+
+            - *(list) --* 
+              
+
+              - *(list) --* 
+                
+
+                - *(float) --* 
+            
+          
+        
+      
+    
+      
+
+      - **Status** *(string) --* 
+
+        Identifies the state of the geofence. A geofence will hold one of the following states:
+
+         
+
+        
+        * ``ACTIVE`` — The geofence has been indexed by the system.
+         
+        * ``PENDING`` — The geofence is being processed by the system.
+         
+        * ``FAILED`` — The geofence failed to be indexed by the system.
+         
+        * ``DELETED`` — The geofence has been deleted from the system index.
+         
+        * ``DELETING`` — The geofence is being deleted from the system index.
+        
+
+        
+      
+
+      - **CreateTime** *(datetime) --* 
+
+        The timestamp for when the geofence collection was created in `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``
+
+        
+      
+
+      - **UpdateTime** *(datetime) --* 
+
+        The timestamp for when the geofence collection was last updated in `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``
+
+        
+      
+
+      - **GeofenceProperties** *(dict) --* 
+
+        User defined properties of the geofence. A property is a key-value pair stored with the geofence and added to any geofence event triggered with that geofence.
+
+         
+
+        Format: ``"key" : "value"``
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`LocationService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ThrottlingException`
+
+  

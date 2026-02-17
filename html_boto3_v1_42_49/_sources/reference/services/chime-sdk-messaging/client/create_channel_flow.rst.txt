@@ -1,0 +1,246 @@
+:doc:`ChimeSDKMessaging <../../chime-sdk-messaging>` / Client / create_channel_flow
+
+*******************
+create_channel_flow
+*******************
+
+
+
+.. py:method:: ChimeSDKMessaging.Client.create_channel_flow(**kwargs)
+
+  
+
+  Creates a channel flow, a container for processors. Processors are AWS Lambda functions that perform actions on chat messages, such as stripping out profanity. You can associate channel flows with channels, and the processors in the channel flow then take action on all messages sent to that channel. This is a developer API.
+
+   
+
+  Channel flows process the following items:
+
+   
+
+   
+  * New and updated messages
+   
+  * Persistent and non-persistent messages
+   
+  * The Standard message type
+   
+
+   
+
+  .. note::
+
+    
+
+    Channel flows don't process Control or System messages. For more information about the message types provided by Chime SDK messaging, refer to `Message types <https://docs.aws.amazon.com/chime-sdk/latest/dg/using-the-messaging-sdk.html#msg-types>`__ in the *Amazon Chime developer guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/chime-sdk-messaging-2021-05-15/CreateChannelFlow>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_channel_flow(
+        AppInstanceArn='string',
+        Processors=[
+            {
+                'Name': 'string',
+                'Configuration': {
+                    'Lambda': {
+                        'ResourceArn': 'string',
+                        'InvocationType': 'ASYNC'
+                    }
+                },
+                'ExecutionOrder': 123,
+                'FallbackAction': 'CONTINUE'|'ABORT'
+            },
+        ],
+        Name='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        ClientRequestToken='string'
+    )
+    
+  :type AppInstanceArn: string
+  :param AppInstanceArn: **[REQUIRED]** 
+
+    The ARN of the channel flow request.
+
+    
+
+  
+  :type Processors: list
+  :param Processors: **[REQUIRED]** 
+
+    Information about the processor Lambda functions.
+
+    
+
+  
+    - *(dict) --* 
+
+      The information about a processor in a channel flow.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The name of the channel flow.
+
+        
+
+      
+      - **Configuration** *(dict) --* **[REQUIRED]** 
+
+        The information about the type of processor and its identifier.
+
+        
+
+      
+        - **Lambda** *(dict) --* **[REQUIRED]** 
+
+          Indicates that the processor is of type Lambda.
+
+          
+
+        
+          - **ResourceArn** *(string) --* **[REQUIRED]** 
+
+            The ARN of the Lambda message processing function.
+
+            
+
+          
+          - **InvocationType** *(string) --* **[REQUIRED]** 
+
+            Controls how the Lambda function is invoked.
+
+            
+
+          
+        
+      
+      - **ExecutionOrder** *(integer) --* **[REQUIRED]** 
+
+        The sequence in which processors run. If you have multiple processors in a channel flow, message processing goes through each processor in the sequence. The value determines the sequence. At this point, we support only 1 processor within a flow.
+
+        
+
+      
+      - **FallbackAction** *(string) --* **[REQUIRED]** 
+
+        Determines whether to continue with message processing or stop it in cases where communication with a processor fails. If a processor has a fallback action of ``ABORT`` and communication with it fails, the processor sets the message status to ``FAILED`` and does not send the message to any recipients. Note that if the last processor in the channel flow sequence has a fallback action of ``CONTINUE`` and communication with the processor fails, then the message is considered processed and sent to recipients of the channel.
+
+        
+
+      
+    
+
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name of the channel flow.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    The tags for the creation request.
+
+    
+
+  
+    - *(dict) --* 
+
+      A tag object containing a key-value pair.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key in a tag.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value in a tag.
+
+        
+
+      
+    
+
+  :type ClientRequestToken: string
+  :param ClientRequestToken: **[REQUIRED]** 
+
+    The client token for the request. An Idempotency token.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ChannelFlowArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ChannelFlowArn** *(string) --* 
+
+        The ARN of the channel flow.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.UnauthorizedClientException`
+
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.ResourceLimitExceededException`
+
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.ThrottledClientException`
+
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`ChimeSDKMessaging.Client.exceptions.ServiceFailureException`
+
+  

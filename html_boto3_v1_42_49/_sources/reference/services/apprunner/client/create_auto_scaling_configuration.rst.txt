@@ -1,0 +1,291 @@
+:doc:`AppRunner <../../apprunner>` / Client / create_auto_scaling_configuration
+
+*********************************
+create_auto_scaling_configuration
+*********************************
+
+
+
+.. py:method:: AppRunner.Client.create_auto_scaling_configuration(**kwargs)
+
+  
+
+  Create an App Runner automatic scaling configuration resource. App Runner requires this resource when you create or update App Runner services and you require non-default auto scaling settings. You can share an auto scaling configuration across multiple services.
+
+   
+
+  Create multiple revisions of a configuration by calling this action multiple times using the same ``AutoScalingConfigurationName``. The call returns incremental ``AutoScalingConfigurationRevision`` values. When you create a service and configure an auto scaling configuration resource, the service uses the latest active revision of the auto scaling configuration by default. You can optionally configure the service to use a specific revision.
+
+   
+
+  Configure a higher ``MinSize`` to increase the spread of your App Runner service over more Availability Zones in the Amazon Web Services Region. The tradeoff is a higher minimal cost.
+
+   
+
+  Configure a lower ``MaxSize`` to control your cost. The tradeoff is lower responsiveness during peak demand.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/apprunner-2020-05-15/CreateAutoScalingConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_auto_scaling_configuration(
+        AutoScalingConfigurationName='string',
+        MaxConcurrency=123,
+        MinSize=123,
+        MaxSize=123,
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type AutoScalingConfigurationName: string
+  :param AutoScalingConfigurationName: **[REQUIRED]** 
+
+    A name for the auto scaling configuration. When you use it for the first time in an Amazon Web Services Region, App Runner creates revision number ``1`` of this name. When you use the same name in subsequent calls, App Runner creates incremental revisions of the configuration.
+
+     
+
+    .. note::
+
+      
+
+      Prior to the release of `Auto scale configuration enhancements <https://docs.aws.amazon.com/apprunner/latest/relnotes/release-2023-09-22-auto-scale-config.html>`__, the name ``DefaultConfiguration`` was reserved.
+
+       
+
+      This restriction is no longer in place. You can now manage ``DefaultConfiguration`` the same way you manage your custom auto scaling configurations. This means you can do the following with the ``DefaultConfiguration`` that App Runner provides:
+
+       
+
+      
+      * Create new revisions of the ``DefaultConfiguration``.
+       
+      * Delete the revisions of the ``DefaultConfiguration``.
+       
+      * Delete the auto scaling configuration for which the App Runner ``DefaultConfiguration`` was created.
+       
+      * If you delete the auto scaling configuration you can create another custom auto scaling configuration with the same ``DefaultConfiguration`` name. The original ``DefaultConfiguration`` resource provided by App Runner remains in your account unless you make changes to it.
+      
+
+      
+
+    
+
+  
+  :type MaxConcurrency: integer
+  :param MaxConcurrency: 
+
+    The maximum number of concurrent requests that you want an instance to process. If the number of concurrent requests exceeds this limit, App Runner scales up your service.
+
+     
+
+    Default: ``100``
+
+    
+
+  
+  :type MinSize: integer
+  :param MinSize: 
+
+    The minimum number of instances that App Runner provisions for your service. The service always has at least ``MinSize`` provisioned instances. Some of them actively serve traffic. The rest of them (provisioned and inactive instances) are a cost-effective compute capacity reserve and are ready to be quickly activated. You pay for memory usage of all the provisioned instances. You pay for CPU usage of only the active subset.
+
+     
+
+    App Runner temporarily doubles the number of provisioned instances during deployments, to maintain the same capacity for both old and new code.
+
+     
+
+    Default: ``1``
+
+    
+
+  
+  :type MaxSize: integer
+  :param MaxSize: 
+
+    The maximum number of instances that your service scales up to. At most ``MaxSize`` instances actively serve traffic for your service.
+
+     
+
+    Default: ``25``
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of metadata items that you can associate with your auto scaling configuration resource. A tag is a key-value pair.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a tag that is applied to an App Runner resource. A tag is a metadata item consisting of a key-value pair.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        The key of the tag.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The value of the tag.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'AutoScalingConfiguration': {
+              'AutoScalingConfigurationArn': 'string',
+              'AutoScalingConfigurationName': 'string',
+              'AutoScalingConfigurationRevision': 123,
+              'Latest': True|False,
+              'Status': 'ACTIVE'|'INACTIVE',
+              'MaxConcurrency': 123,
+              'MinSize': 123,
+              'MaxSize': 123,
+              'CreatedAt': datetime(2015, 1, 1),
+              'DeletedAt': datetime(2015, 1, 1),
+              'HasAssociatedService': True|False,
+              'IsDefault': True|False
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **AutoScalingConfiguration** *(dict) --* 
+
+        A description of the App Runner auto scaling configuration that's created by this request.
+
+        
+        
+
+        - **AutoScalingConfigurationArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of this auto scaling configuration.
+
+          
+        
+
+        - **AutoScalingConfigurationName** *(string) --* 
+
+          The customer-provided auto scaling configuration name. It can be used in multiple revisions of a configuration.
+
+          
+        
+
+        - **AutoScalingConfigurationRevision** *(integer) --* 
+
+          The revision of this auto scaling configuration. It's unique among all the active configurations ( ``"Status": "ACTIVE"``) that share the same ``AutoScalingConfigurationName``.
+
+          
+        
+
+        - **Latest** *(boolean) --* 
+
+          It's set to ``true`` for the configuration with the highest ``Revision`` among all configurations that share the same ``AutoScalingConfigurationName``. It's set to ``false`` otherwise.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The current state of the auto scaling configuration. If the status of a configuration revision is ``INACTIVE``, it was deleted and can't be used. Inactive configuration revisions are permanently removed some time after they are deleted.
+
+          
+        
+
+        - **MaxConcurrency** *(integer) --* 
+
+          The maximum number of concurrent requests that an instance processes. If the number of concurrent requests exceeds this limit, App Runner scales the service up.
+
+          
+        
+
+        - **MinSize** *(integer) --* 
+
+          The minimum number of instances that App Runner provisions for a service. The service always has at least ``MinSize`` provisioned instances. Some of them actively serve traffic. The rest of them (provisioned and inactive instances) are a cost-effective compute capacity reserve and are ready to be quickly activated. You pay for memory usage of all the provisioned instances. You pay for CPU usage of only the active subset.
+
+           
+
+          App Runner temporarily doubles the number of provisioned instances during deployments, to maintain the same capacity for both old and new code.
+
+          
+        
+
+        - **MaxSize** *(integer) --* 
+
+          The maximum number of instances that a service scales up to. At most ``MaxSize`` instances actively serve traffic for your service.
+
+          
+        
+
+        - **CreatedAt** *(datetime) --* 
+
+          The time when the auto scaling configuration was created. It's in Unix time stamp format.
+
+          
+        
+
+        - **DeletedAt** *(datetime) --* 
+
+          The time when the auto scaling configuration was deleted. It's in Unix time stamp format.
+
+          
+        
+
+        - **HasAssociatedService** *(boolean) --* 
+
+          Indicates if this auto scaling configuration has an App Runner service associated with it. A value of ``true`` indicates one or more services are associated. A value of ``false`` indicates no services are associated.
+
+          
+        
+
+        - **IsDefault** *(boolean) --* 
+
+          Indicates if this auto scaling configuration should be used as the default for a new App Runner service that does not have an auto scaling configuration ARN specified during creation. Each account can have only one default ``AutoScalingConfiguration`` per region. The default ``AutoScalingConfiguration`` can be any revision under the same ``AutoScalingConfigurationName``.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AppRunner.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`AppRunner.Client.exceptions.InternalServiceErrorException`
+
+  
+  *   :py:class:`AppRunner.Client.exceptions.ServiceQuotaExceededException`
+
+  

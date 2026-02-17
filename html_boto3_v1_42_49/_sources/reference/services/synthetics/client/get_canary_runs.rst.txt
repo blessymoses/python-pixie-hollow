@@ -1,0 +1,295 @@
+:doc:`Synthetics <../../synthetics>` / Client / get_canary_runs
+
+***************
+get_canary_runs
+***************
+
+
+
+.. py:method:: Synthetics.Client.get_canary_runs(**kwargs)
+
+  
+
+  Retrieves a list of runs for a specified canary.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/synthetics-2017-10-11/GetCanaryRuns>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_canary_runs(
+        Name='string',
+        NextToken='string',
+        MaxResults=123,
+        DryRunId='string',
+        RunType='CANARY_RUN'|'DRY_RUN'
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name of the canary that you want to see runs for.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A token that indicates that there is more data available. You can use this token in a subsequent ``GetCanaryRuns`` operation to retrieve the next set of results.
+
+     
+
+    .. note::
+
+      
+
+      When auto retry is enabled for the canary, the first subsequent retry is suffixed with *1 indicating its the first retry and the next subsequent try is suffixed with *2.
+
+      
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    Specify this parameter to limit how many runs are returned each time you use the ``GetCanaryRuns`` operation. If you omit this parameter, the default of 100 is used.
+
+    
+
+  
+  :type DryRunId: string
+  :param DryRunId: 
+
+    The DryRunId associated with an existing canary’s dry run. You can use this DryRunId to retrieve information about the dry run.
+
+    
+
+  
+  :type RunType: string
+  :param RunType: 
+
+    
+    * When you provide ``RunType=CANARY_RUN`` and ``dryRunId``, you will get an exception
+     
+    * When a value is not provided for ``RunType``, the default value is ``CANARY_RUN``
+     
+    * When ``CANARY_RUN`` is provided, all canary runs excluding dry runs are returned
+     
+    * When ``DRY_RUN`` is provided, all dry runs excluding canary runs are returned
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CanaryRuns': [
+              {
+                  'Id': 'string',
+                  'ScheduledRunId': 'string',
+                  'RetryAttempt': 123,
+                  'Name': 'string',
+                  'Status': {
+                      'State': 'RUNNING'|'PASSED'|'FAILED',
+                      'StateReason': 'string',
+                      'StateReasonCode': 'CANARY_FAILURE'|'EXECUTION_FAILURE',
+                      'TestResult': 'PASSED'|'FAILED'|'UNKNOWN'
+                  },
+                  'Timeline': {
+                      'Started': datetime(2015, 1, 1),
+                      'Completed': datetime(2015, 1, 1),
+                      'MetricTimestampForRunAndRetries': datetime(2015, 1, 1)
+                  },
+                  'ArtifactS3Location': 'string',
+                  'DryRunConfig': {
+                      'DryRunId': 'string'
+                  },
+                  'BrowserType': 'CHROME'|'FIREFOX'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **CanaryRuns** *(list) --* 
+
+        An array of structures. Each structure contains the details of one of the retrieved canary runs.
+
+        
+        
+
+        - *(dict) --* 
+
+          This structure contains the details about one run of one canary.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            A unique ID that identifies this canary run.
+
+            
+          
+
+          - **ScheduledRunId** *(string) --* 
+
+            The ID of the scheduled canary run.
+
+            
+          
+
+          - **RetryAttempt** *(integer) --* 
+
+            The count in number of the retry attempt.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The name of the canary.
+
+            
+          
+
+          - **Status** *(dict) --* 
+
+            The status of this run.
+
+            
+            
+
+            - **State** *(string) --* 
+
+              The current state of the run.
+
+              
+            
+
+            - **StateReason** *(string) --* 
+
+              If run of the canary failed, this field contains the reason for the error.
+
+              
+            
+
+            - **StateReasonCode** *(string) --* 
+
+              If this value is ``CANARY_FAILURE``, either the canary script failed or Synthetics ran into a fatal error when running the canary. For example, a canary timeout misconfiguration setting can cause the canary to timeout before Synthetics can evaluate its status.
+
+               
+
+              If this value is ``EXECUTION_FAILURE``, a non-critical failure occurred such as failing to save generated debug artifacts (for example, screenshots or har files).
+
+               
+
+              If both types of failures occurred, the ``CANARY_FAILURE`` takes precedence. To understand the exact error, use the `StateReason <https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_CanaryRunStatus.html>`__ API.
+
+              
+            
+
+            - **TestResult** *(string) --* 
+
+              Specifies the status of canary script for this run. When Synthetics tries to determine the status but fails, the result is marked as ``UNKNOWN``. For the overall status of canary run, see `State <https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_CanaryRunStatus.html>`__.
+
+              
+        
+          
+
+          - **Timeline** *(dict) --* 
+
+            A structure that contains the start and end times of this run.
+
+            
+            
+
+            - **Started** *(datetime) --* 
+
+              The start time of the run.
+
+              
+            
+
+            - **Completed** *(datetime) --* 
+
+              The end time of the run.
+
+              
+            
+
+            - **MetricTimestampForRunAndRetries** *(datetime) --* 
+
+              The time at which the metrics will be generated for this run or retries.
+
+              
+        
+          
+
+          - **ArtifactS3Location** *(string) --* 
+
+            The location where the canary stored artifacts from the run. Artifacts include the log file, screenshots, and HAR files.
+
+            
+          
+
+          - **DryRunConfig** *(dict) --* 
+
+            Returns the dry run configurations for a canary.
+
+            
+            
+
+            - **DryRunId** *(string) --* 
+
+              The DryRunId associated with an existing canary’s dry run. You can use this DryRunId to retrieve information about the dry run.
+
+              
+        
+          
+
+          - **BrowserType** *(string) --* 
+
+            The browser type associated with this canary run.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A token that indicates that there is more data available. You can use this token in a subsequent ``GetCanaryRuns`` operation to retrieve the next set of results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Synthetics.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Synthetics.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Synthetics.Client.exceptions.ResourceNotFoundException`
+
+  

@@ -1,0 +1,239 @@
+:doc:`BedrockAgentCoreControl <../../bedrock-agentcore-control>` / Client / update_policy
+
+*************
+update_policy
+*************
+
+
+
+.. py:method:: BedrockAgentCoreControl.Client.update_policy(**kwargs)
+
+  
+
+  Updates an existing policy within the AgentCore Policy system. This operation allows modification of the policy description and definition while maintaining the policy's identity. The updated policy is validated against the Cedar schema before being applied. This is an asynchronous operation. Use the ``GetPolicy`` operation to poll the ``status`` field to track completion.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agentcore-control-2023-06-05/UpdatePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_policy(
+        policyEngineId='string',
+        policyId='string',
+        description='string',
+        definition={
+            'cedar': {
+                'statement': 'string'
+            }
+        },
+        validationMode='FAIL_ON_ANY_FINDINGS'|'IGNORE_ALL_FINDINGS'
+    )
+    
+  :type policyEngineId: string
+  :param policyEngineId: **[REQUIRED]** 
+
+    The identifier of the policy engine that manages the policy to be updated. This ensures the policy is updated within the correct policy engine context.
+
+    
+
+  
+  :type policyId: string
+  :param policyId: **[REQUIRED]** 
+
+    The unique identifier of the policy to be updated. This must be a valid policy ID that exists within the specified policy engine.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    The new human-readable description for the policy. This optional field allows updating the policy's documentation while keeping the same policy logic.
+
+    
+
+  
+  :type definition: dict
+  :param definition: **[REQUIRED]** 
+
+    The new Cedar policy statement that defines the access control rules. This replaces the existing policy definition with new logic while maintaining the policy's identity.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``cedar``. 
+
+  
+    - **cedar** *(dict) --* 
+
+      The Cedar policy definition within the policy definition structure. This contains the Cedar policy statement that defines the authorization logic using Cedar's human-readable, analyzable policy language. Cedar policies specify principals (who can access), actions (what operations are allowed), resources (what can be accessed), and optional conditions for fine-grained control. Cedar provides a formal policy language designed for authorization with deterministic evaluation, making policies testable, reviewable, and auditable. All Cedar policies follow a default-deny model where actions are denied unless explicitly permitted, and forbid policies always override permit policies.
+
+      
+
+    
+      - **statement** *(string) --* **[REQUIRED]** 
+
+        The Cedar policy statement that defines the authorization logic. This statement follows Cedar syntax and specifies principals, actions, resources, and conditions that determine when access should be allowed or denied.
+
+        
+
+      
+    
+  
+  :type validationMode: string
+  :param validationMode: 
+
+    The validation mode for the policy update. Determines how Cedar analyzer validation results are handled during policy updates. FAIL_ON_ANY_FINDINGS runs the Cedar analyzer and fails the update if validation issues are detected, ensuring the policy conforms to the Cedar schema and tool context. IGNORE_ALL_FINDINGS runs the Cedar analyzer but allows updates despite validation warnings. Use FAIL_ON_ANY_FINDINGS to ensure policy correctness during updates, especially when modifying policy logic or conditions.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'policyId': 'string',
+          'name': 'string',
+          'policyEngineId': 'string',
+          'definition': {
+              'cedar': {
+                  'statement': 'string'
+              }
+          },
+          'description': 'string',
+          'createdAt': datetime(2015, 1, 1),
+          'updatedAt': datetime(2015, 1, 1),
+          'policyArn': 'string',
+          'status': 'CREATING'|'ACTIVE'|'UPDATING'|'DELETING'|'CREATE_FAILED'|'UPDATE_FAILED'|'DELETE_FAILED',
+          'statusReasons': [
+              'string',
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **policyId** *(string) --* 
+
+        The unique identifier of the updated policy.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The name of the updated policy.
+
+        
+      
+
+      - **policyEngineId** *(string) --* 
+
+        The identifier of the policy engine managing the updated policy.
+
+        
+      
+
+      - **definition** *(dict) --* 
+
+        The updated Cedar policy statement.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``cedar``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **cedar** *(dict) --* 
+
+          The Cedar policy definition within the policy definition structure. This contains the Cedar policy statement that defines the authorization logic using Cedar's human-readable, analyzable policy language. Cedar policies specify principals (who can access), actions (what operations are allowed), resources (what can be accessed), and optional conditions for fine-grained control. Cedar provides a formal policy language designed for authorization with deterministic evaluation, making policies testable, reviewable, and auditable. All Cedar policies follow a default-deny model where actions are denied unless explicitly permitted, and forbid policies always override permit policies.
+
+          
+          
+
+          - **statement** *(string) --* 
+
+            The Cedar policy statement that defines the authorization logic. This statement follows Cedar syntax and specifies principals, actions, resources, and conditions that determine when access should be allowed or denied.
+
+            
+      
+    
+      
+
+      - **description** *(string) --* 
+
+        The updated description of the policy.
+
+        
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The original creation timestamp of the policy.
+
+        
+      
+
+      - **updatedAt** *(datetime) --* 
+
+        The timestamp when the policy was last updated.
+
+        
+      
+
+      - **policyArn** *(string) --* 
+
+        The ARN of the updated policy.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The current status of the updated policy.
+
+        
+      
+
+      - **statusReasons** *(list) --* 
+
+        Additional information about the update status.
+
+        
+        
+
+        - *(string) --* 
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.InternalServerException`
+
+  

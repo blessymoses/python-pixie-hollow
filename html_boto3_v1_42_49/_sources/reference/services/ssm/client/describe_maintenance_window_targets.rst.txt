@@ -1,0 +1,369 @@
+:doc:`SSM <../../ssm>` / Client / describe_maintenance_window_targets
+
+***********************************
+describe_maintenance_window_targets
+***********************************
+
+
+
+.. py:method:: SSM.Client.describe_maintenance_window_targets(**kwargs)
+
+  
+
+  Lists the targets registered with the maintenance window.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeMaintenanceWindowTargets>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_maintenance_window_targets(
+        WindowId='string',
+        Filters=[
+            {
+                'Key': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type WindowId: string
+  :param WindowId: **[REQUIRED]** 
+
+    The ID of the maintenance window whose targets should be retrieved.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    Optional filters that can be used to narrow down the scope of the returned window targets. The supported filter keys are ``Type``, ``WindowTargetId``, and ``OwnerInformation``.
+
+    
+
+  
+    - *(dict) --* 
+
+      Filter used in the request. Supported filter keys depend on the API operation that includes the filter. API operations that use ``MaintenanceWindowFilter>`` include the following:
+
+       
+
+      
+      *  DescribeMaintenanceWindowExecutions
+       
+      *  DescribeMaintenanceWindowExecutionTaskInvocations
+       
+      *  DescribeMaintenanceWindowExecutionTasks
+       
+      *  DescribeMaintenanceWindows
+       
+      *  DescribeMaintenanceWindowTargets
+       
+      *  DescribeMaintenanceWindowTasks
+      
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        The name of the filter.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The filter values.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this call. The call also returns a token that you can specify in a subsequent call to get the next set of results.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Targets': [
+              {
+                  'WindowId': 'string',
+                  'WindowTargetId': 'string',
+                  'ResourceType': 'INSTANCE'|'RESOURCE_GROUP',
+                  'Targets': [
+                      {
+                          'Key': 'string',
+                          'Values': [
+                              'string',
+                          ]
+                      },
+                  ],
+                  'OwnerInformation': 'string',
+                  'Name': 'string',
+                  'Description': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Targets** *(list) --* 
+
+        Information about the targets in the maintenance window.
+
+        
+        
+
+        - *(dict) --* 
+
+          The target registered with the maintenance window.
+
+          
+          
+
+          - **WindowId** *(string) --* 
+
+            The ID of the maintenance window to register the target with.
+
+            
+          
+
+          - **WindowTargetId** *(string) --* 
+
+            The ID of the target.
+
+            
+          
+
+          - **ResourceType** *(string) --* 
+
+            The type of target that is being registered with the maintenance window.
+
+            
+          
+
+          - **Targets** *(list) --* 
+
+            The targets, either managed nodes or tags.
+
+             
+
+            Specify managed nodes using the following format:
+
+             
+
+            ``Key=instanceids,Values=<instanceid1>,<instanceid2>``
+
+             
+
+            Tags are specified using the following format:
+
+             
+
+            ``Key=<tag name>,Values=<tag value>``.
+
+            
+            
+
+            - *(dict) --* 
+
+              An array of search criteria that targets managed nodes using a key-value pair that you specify.
+
+               
+
+              .. note::
+
+                
+
+                One or more targets must be specified for maintenance window Run Command-type tasks. Depending on the task, targets are optional for other maintenance window task types (Automation, Lambda, and Step Functions). For more information about running tasks that don't specify targets, see `Registering maintenance window tasks without targets <https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+                
+
+               
+
+              Supported formats include the following.
+
+               
+
+              **For all Systems Manager tools:**
+
+               
+
+              
+              * ``Key=tag-key,Values=tag-value-1,tag-value-2``
+              
+
+               
+
+              **For Automation and Change Manager:**
+
+               
+
+              
+              * ``Key=tag:tag-key,Values=tag-value``
+               
+              * ``Key=ResourceGroup,Values=resource-group-name``
+               
+              * ``Key=ParameterValues,Values=value-1,value-2,value-3``
+               
+              * To target all instances in the Amazon Web Services Region: 
+
+                
+                * ``Key=AWS::EC2::Instance,Values=*``
+                 
+                * ``Key=InstanceIds,Values=*``
+                
+
+              
+              
+
+               
+
+              **For Run Command and Maintenance Windows:**
+
+               
+
+              
+              * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+               
+              * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+               
+              * ``Key=resource-groups:Name,Values=resource-group-name``
+               
+              * Additionally, Maintenance Windows support targeting resource types: 
+
+                
+                * ``Key=resource-groups:ResourceTypeFilters,Values=resource-type-1,resource-type-2``
+                
+
+              
+              
+
+               
+
+              **For State Manager:**
+
+               
+
+              
+              * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+               
+              * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+               
+              * To target all instances in the Amazon Web Services Region: 
+
+                
+                * ``Key=InstanceIds,Values=*``
+                
+
+              
+              
+
+               
+
+              For more information about how to send commands that target managed nodes using ``Key,Value`` parameters, see `Targeting multiple managed nodes <https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-multiple.html#send-commands-targeting>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+              
+              
+
+              - **Key** *(string) --* 
+
+                User-defined criteria for sending commands that target managed nodes that meet the criteria.
+
+                
+              
+
+              - **Values** *(list) --* 
+
+                User-defined criteria that maps to ``Key``. For example, if you specified ``tag:ServerRole``, you could specify ``value:WebServer`` to run a command on instances that include EC2 tags of ``ServerRole,WebServer``.
+
+                 
+
+                Depending on the type of target, the maximum number of values for a key might be lower than the global maximum of 50.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+        
+          
+
+          - **OwnerInformation** *(string) --* 
+
+            A user-provided value that will be included in any Amazon CloudWatch Events events that are raised while running tasks for these targets in this maintenance window.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The name for the maintenance window target.
+
+            
+          
+
+          - **Description** *(string) --* 
+
+            A description for the target.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to use when requesting the next set of items. If there are no additional items to return, the string is empty.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.DoesNotExistException`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  

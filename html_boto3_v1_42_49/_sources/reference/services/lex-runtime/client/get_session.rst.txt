@@ -1,0 +1,433 @@
+:doc:`LexRuntimeService <../../lex-runtime>` / Client / get_session
+
+***********
+get_session
+***********
+
+
+
+.. py:method:: LexRuntimeService.Client.get_session(**kwargs)
+
+  
+
+  Returns session information for a specified bot, alias, and user ID.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/runtime.lex-2016-11-28/GetSession>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_session(
+        botName='string',
+        botAlias='string',
+        userId='string',
+        checkpointLabelFilter='string'
+    )
+    
+  :type botName: string
+  :param botName: **[REQUIRED]** 
+
+    The name of the bot that contains the session data.
+
+    
+
+  
+  :type botAlias: string
+  :param botAlias: **[REQUIRED]** 
+
+    The alias in use for the bot that contains the session data.
+
+    
+
+  
+  :type userId: string
+  :param userId: **[REQUIRED]** 
+
+    The ID of the client application user. Amazon Lex uses this to identify a user's conversation with your bot.
+
+    
+
+  
+  :type checkpointLabelFilter: string
+  :param checkpointLabelFilter: 
+
+    A string used to filter the intents returned in the ``recentIntentSummaryView`` structure.
+
+     
+
+    When you specify a filter, only intents with their ``checkpointLabel`` field set to that string are returned.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'recentIntentSummaryView': [
+              {
+                  'intentName': 'string',
+                  'checkpointLabel': 'string',
+                  'slots': {
+                      'string': 'string'
+                  },
+                  'confirmationStatus': 'None'|'Confirmed'|'Denied',
+                  'dialogActionType': 'ElicitIntent'|'ConfirmIntent'|'ElicitSlot'|'Close'|'Delegate',
+                  'fulfillmentState': 'Fulfilled'|'Failed'|'ReadyForFulfillment',
+                  'slotToElicit': 'string'
+              },
+          ],
+          'sessionAttributes': {
+              'string': 'string'
+          },
+          'sessionId': 'string',
+          'dialogAction': {
+              'type': 'ElicitIntent'|'ConfirmIntent'|'ElicitSlot'|'Close'|'Delegate',
+              'intentName': 'string',
+              'slots': {
+                  'string': 'string'
+              },
+              'slotToElicit': 'string',
+              'fulfillmentState': 'Fulfilled'|'Failed'|'ReadyForFulfillment',
+              'message': 'string',
+              'messageFormat': 'PlainText'|'CustomPayload'|'SSML'|'Composite'
+          },
+          'activeContexts': [
+              {
+                  'name': 'string',
+                  'timeToLive': {
+                      'timeToLiveInSeconds': 123,
+                      'turnsToLive': 123
+                  },
+                  'parameters': {
+                      'string': 'string'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **recentIntentSummaryView** *(list) --* 
+
+        An array of information about the intents used in the session. The array can contain a maximum of three summaries. If more than three intents are used in the session, the ``recentIntentSummaryView`` operation contains information about the last three intents used.
+
+         
+
+        If you set the ``checkpointLabelFilter`` parameter in the request, the array contains only the intents with the specified label.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides information about the state of an intent. You can use this information to get the current state of an intent so that you can process the intent, or so that you can return the intent to its previous state.
+
+          
+          
+
+          - **intentName** *(string) --* 
+
+            The name of the intent.
+
+            
+          
+
+          - **checkpointLabel** *(string) --* 
+
+            A user-defined label that identifies a particular intent. You can use this label to return to a previous intent.
+
+             
+
+            Use the ``checkpointLabelFilter`` parameter of the ``GetSessionRequest`` operation to filter the intents returned by the operation to those with only the specified label.
+
+            
+          
+
+          - **slots** *(dict) --* 
+
+            Map of the slots that have been gathered and their values.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+          
+
+          - **confirmationStatus** *(string) --* 
+
+            The status of the intent after the user responds to the confirmation prompt. If the user confirms the intent, Amazon Lex sets this field to ``Confirmed``. If the user denies the intent, Amazon Lex sets this value to ``Denied``. The possible values are:
+
+             
+
+            
+            * ``Confirmed`` - The user has responded "Yes" to the confirmation prompt, confirming that the intent is complete and that it is ready to be fulfilled.
+             
+            * ``Denied`` - The user has responded "No" to the confirmation prompt.
+             
+            * ``None`` - The user has never been prompted for confirmation; or, the user was prompted but did not confirm or deny the prompt.
+            
+
+            
+          
+
+          - **dialogActionType** *(string) --* 
+
+            The next action that the bot should take in its interaction with the user. The possible values are:
+
+             
+
+            
+            * ``ConfirmIntent`` - The next action is asking the user if the intent is complete and ready to be fulfilled. This is a yes/no question such as "Place the order?"
+             
+            * ``Close`` - Indicates that the there will not be a response from the user. For example, the statement "Your order has been placed" does not require a response.
+             
+            * ``ElicitIntent`` - The next action is to determine the intent that the user wants to fulfill.
+             
+            * ``ElicitSlot`` - The next action is to elicit a slot value from the user.
+            
+
+            
+          
+
+          - **fulfillmentState** *(string) --* 
+
+            The fulfillment state of the intent. The possible values are:
+
+             
+
+            
+            * ``Failed`` - The Lambda function associated with the intent failed to fulfill the intent.
+             
+            * ``Fulfilled`` - The intent has fulfilled by the Lambda function associated with the intent.
+             
+            * ``ReadyForFulfillment`` - All of the information necessary for the intent is present and the intent ready to be fulfilled by the client application.
+            
+
+            
+          
+
+          - **slotToElicit** *(string) --* 
+
+            The next slot to elicit from the user. If there is not slot to elicit, the field is blank.
+
+            
+      
+    
+      
+
+      - **sessionAttributes** *(dict) --* 
+
+        Map of key/value pairs representing the session-specific context information. It contains application information passed between Amazon Lex and a client application.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **sessionId** *(string) --* 
+
+        A unique identifier for the session.
+
+        
+      
+
+      - **dialogAction** *(dict) --* 
+
+        Describes the current state of the bot.
+
+        
+        
+
+        - **type** *(string) --* 
+
+          The next action that the bot should take in its interaction with the user. The possible values are:
+
+           
+
+          
+          * ``ConfirmIntent`` - The next action is asking the user if the intent is complete and ready to be fulfilled. This is a yes/no question such as "Place the order?"
+           
+          * ``Close`` - Indicates that the there will not be a response from the user. For example, the statement "Your order has been placed" does not require a response.
+           
+          * ``Delegate`` - The next action is determined by Amazon Lex.
+           
+          * ``ElicitIntent`` - The next action is to determine the intent that the user wants to fulfill.
+           
+          * ``ElicitSlot`` - The next action is to elicit a slot value from the user.
+          
+
+          
+        
+
+        - **intentName** *(string) --* 
+
+          The name of the intent.
+
+          
+        
+
+        - **slots** *(dict) --* 
+
+          Map of the slots that have been gathered and their values.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **slotToElicit** *(string) --* 
+
+          The name of the slot that should be elicited from the user.
+
+          
+        
+
+        - **fulfillmentState** *(string) --* 
+
+          The fulfillment state of the intent. The possible values are:
+
+           
+
+          
+          * ``Failed`` - The Lambda function associated with the intent failed to fulfill the intent.
+           
+          * ``Fulfilled`` - The intent has fulfilled by the Lambda function associated with the intent.
+           
+          * ``ReadyForFulfillment`` - All of the information necessary for the intent is present and the intent ready to be fulfilled by the client application.
+          
+
+          
+        
+
+        - **message** *(string) --* 
+
+          The message that should be shown to the user. If you don't specify a message, Amazon Lex will use the message configured for the intent.
+
+          
+        
+
+        - **messageFormat** *(string) --* 
+
+          
+          * ``PlainText`` - The message contains plain UTF-8 text.
+           
+          * ``CustomPayload`` - The message is a custom format for the client.
+           
+          * ``SSML`` - The message contains text formatted for voice output.
+           
+          * ``Composite`` - The message contains an escaped JSON object containing one or more messages. For more information, see `Message Groups <https://docs.aws.amazon.com/lex/latest/dg/howitworks-manage-prompts.html>`__.
+          
+
+          
+    
+      
+
+      - **activeContexts** *(list) --* 
+
+        A list of active contexts for the session. A context can be set when an intent is fulfilled or by calling the ``PostContent``, ``PostText``, or ``PutSession`` operation.
+
+         
+
+        You can use a context to control the intents that can follow up an intent, or to modify the operation of your application.
+
+        
+        
+
+        - *(dict) --* 
+
+          A context is a variable that contains information about the current state of the conversation between a user and Amazon Lex. Context can be set automatically by Amazon Lex when an intent is fulfilled, or it can be set at runtime using the ``PutContent``, ``PutText``, or ``PutSession`` operation.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the context.
+
+            
+          
+
+          - **timeToLive** *(dict) --* 
+
+            The length of time or number of turns that a context remains active.
+
+            
+            
+
+            - **timeToLiveInSeconds** *(integer) --* 
+
+              The number of seconds that the context should be active after it is first sent in a ``PostContent`` or ``PostText`` response. You can set the value between 5 and 86,400 seconds (24 hours).
+
+              
+            
+
+            - **turnsToLive** *(integer) --* 
+
+              The number of conversation turns that the context should be active. A conversation turn is one ``PostContent`` or ``PostText`` request and the corresponding response from Amazon Lex.
+
+              
+        
+          
+
+          - **parameters** *(dict) --* 
+
+            State variables for the current context. You can use these values as default values for slots in subsequent events.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.InternalFailureException`
+
+  

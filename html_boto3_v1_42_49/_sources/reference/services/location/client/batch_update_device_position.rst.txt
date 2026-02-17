@@ -1,0 +1,240 @@
+:doc:`LocationService <../../location>` / Client / batch_update_device_position
+
+****************************
+batch_update_device_position
+****************************
+
+
+
+.. py:method:: LocationService.Client.batch_update_device_position(**kwargs)
+
+  
+
+  Uploads position update data for one or more devices to a tracker resource (up to 10 devices per batch). Amazon Location uses the data when it reports the last known device position and position history. Amazon Location retains location data for 30 days.
+
+   
+
+  .. note::
+
+    
+
+    Position updates are handled based on the ``PositionFiltering`` property of the tracker. When ``PositionFiltering`` is set to ``TimeBased``, updates are evaluated against linked geofence collections, and location data is stored at a maximum of one position per 30 second interval. If your update frequency is more often than every 30 seconds, only one update per 30 seconds is stored for each unique device ID.
+
+     
+
+    When ``PositionFiltering`` is set to ``DistanceBased`` filtering, location data is stored and evaluated against linked geofence collections only if the device has moved more than 30 m (98.4 ft).
+
+     
+
+    When ``PositionFiltering`` is set to ``AccuracyBased`` filtering, location data is stored and evaluated against linked geofence collections only if the device has moved more than the measured accuracy. For example, if two consecutive updates from a device have a horizontal accuracy of 5 m and 10 m, the second update is neither stored or evaluated if the device has moved less than 15 m. If ``PositionFiltering`` is set to ``AccuracyBased`` filtering, Amazon Location uses the default value ``{ "Horizontal": 0}`` when accuracy is not provided on a ``DevicePositionUpdate``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/BatchUpdateDevicePosition>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_update_device_position(
+        TrackerName='string',
+        Updates=[
+            {
+                'DeviceId': 'string',
+                'SampleTime': datetime(2015, 1, 1),
+                'Position': [
+                    123.0,
+                ],
+                'Accuracy': {
+                    'Horizontal': 123.0
+                },
+                'PositionProperties': {
+                    'string': 'string'
+                }
+            },
+        ]
+    )
+    
+  :type TrackerName: string
+  :param TrackerName: **[REQUIRED]** 
+
+    The name of the tracker resource to update.
+
+    
+
+  
+  :type Updates: list
+  :param Updates: **[REQUIRED]** 
+
+    Contains the position update details for each device, up to 10 devices.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains the position update details for a device.
+
+      
+
+    
+      - **DeviceId** *(string) --* **[REQUIRED]** 
+
+        The device associated to the position update.
+
+        
+
+      
+      - **SampleTime** *(datetime) --* **[REQUIRED]** 
+
+        The timestamp at which the device's position was determined. Uses `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``
+
+        
+
+      
+      - **Position** *(list) --* **[REQUIRED]** 
+
+        The latest device position defined in `WGS 84 <https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84>`__ format: ``[X or longitude, Y or latitude]``.
+
+        
+
+      
+        - *(float) --* 
+
+        
+    
+      - **Accuracy** *(dict) --* 
+
+        The accuracy of the device position.
+
+        
+
+      
+        - **Horizontal** *(float) --* **[REQUIRED]** 
+
+          Estimated maximum distance, in meters, between the measured position and the true position of a device, along the Earth's surface.
+
+          
+
+        
+      
+      - **PositionProperties** *(dict) --* 
+
+        Associates one of more properties with the position update. A property is a key-value pair stored with the position update and added to any geofence event the update may trigger.
+
+         
+
+        Format: ``"key" : "value"``
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Errors': [
+              {
+                  'DeviceId': 'string',
+                  'SampleTime': datetime(2015, 1, 1),
+                  'Error': {
+                      'Code': 'AccessDeniedError'|'ConflictError'|'InternalServerError'|'ResourceNotFoundError'|'ThrottlingError'|'ValidationError',
+                      'Message': 'string'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Errors** *(list) --* 
+
+        Contains error details for each device that failed to update its position.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains error details for each device that failed to update its position.
+
+          
+          
+
+          - **DeviceId** *(string) --* 
+
+            The device associated with the failed location update.
+
+            
+          
+
+          - **SampleTime** *(datetime) --* 
+
+            The timestamp at which the device position was determined. Uses `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``.
+
+            
+          
+
+          - **Error** *(dict) --* 
+
+            Contains details related to the error code such as the error code and error message.
+
+            
+            
+
+            - **Code** *(string) --* 
+
+              The error code associated with the batch request error.
+
+              
+            
+
+            - **Message** *(string) --* 
+
+              A message with the reason for the batch request error.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`LocationService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ThrottlingException`
+
+  

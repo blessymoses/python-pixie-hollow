@@ -1,0 +1,314 @@
+:doc:`Lightsail <../../lightsail>` / Client / create_cloud_formation_stack
+
+****************************
+create_cloud_formation_stack
+****************************
+
+
+
+.. py:method:: Lightsail.Client.create_cloud_formation_stack(**kwargs)
+
+  
+
+  Creates an AWS CloudFormation stack, which creates a new Amazon EC2 instance from an exported Amazon Lightsail snapshot. This operation results in a CloudFormation stack record that can be used to track the AWS CloudFormation stack created. Use the ``get cloud formation stack records`` operation to get a list of the CloudFormation stacks created.
+
+   
+
+  .. warning::
+
+     
+
+    Wait until after your new Amazon EC2 instance is created before running the ``create cloud formation stack`` operation again with the same export snapshot record.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/CreateCloudFormationStack>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_cloud_formation_stack(
+        instances=[
+            {
+                'sourceName': 'string',
+                'instanceType': 'string',
+                'portInfoSource': 'DEFAULT'|'INSTANCE'|'NONE'|'CLOSED',
+                'userData': 'string',
+                'availabilityZone': 'string'
+            },
+        ]
+    )
+    
+  :type instances: list
+  :param instances: **[REQUIRED]** 
+
+    An array of parameters that will be used to create the new Amazon EC2 instance. You can only pass one instance entry at a time in this array. You will get an invalid parameter error if you pass more than one instance entry in this array.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes the Amazon Elastic Compute Cloud instance and related resources to be created using the ``create cloud formation stack`` operation.
+
+      
+
+    
+      - **sourceName** *(string) --* **[REQUIRED]** 
+
+        The name of the export snapshot record, which contains the exported Lightsail instance snapshot that will be used as the source of the new Amazon EC2 instance.
+
+         
+
+        Use the ``get export snapshot records`` operation to get a list of export snapshot records that you can use to create a CloudFormation stack.
+
+        
+
+      
+      - **instanceType** *(string) --* **[REQUIRED]** 
+
+        The instance type ( ``t2.micro``) to use for the new Amazon EC2 instance.
+
+        
+
+      
+      - **portInfoSource** *(string) --* **[REQUIRED]** 
+
+        The port configuration to use for the new Amazon EC2 instance.
+
+         
+
+        The following configuration options are available:
+
+         
+
+        
+        * ``DEFAULT`` - Use the default firewall settings from the Lightsail instance blueprint. If this is specified, then IPv4 and IPv6 will be configured for the new instance that is created in Amazon EC2.
+         
+        * ``INSTANCE`` - Use the configured firewall settings from the source Lightsail instance. If this is specified, the new instance that is created in Amazon EC2 will be configured to match the configuration of the source Lightsail instance. For example, if the source instance is configured for dual-stack (IPv4 and IPv6), then IPv4 and IPv6 will be configured for the new instance that is created in Amazon EC2. If the source instance is configured for IPv4 only, then only IPv4 will be configured for the new instance that is created in Amazon EC2.
+         
+        * ``NONE`` - Use the default Amazon EC2 security group. If this is specified, then only IPv4 will be configured for the new instance that is created in Amazon EC2.
+         
+        * ``CLOSED`` - All ports closed. If this is specified, then only IPv4 will be configured for the new instance that is created in Amazon EC2.
+        
+
+         
+
+        .. note::
+
+          
+
+          If you configured ``lightsail-connect`` as a ``cidrListAliases`` on your instance, or if you chose to allow the Lightsail browser-based SSH or RDP clients to connect to your instance, that configuration is not carried over to your new Amazon EC2 instance.
+
+          
+
+        
+
+      
+      - **userData** *(string) --* 
+
+        A launch script you can create that configures a server with additional user data. For example, you might want to run ``apt-get -y update``.
+
+         
+
+        .. note::
+
+          
+
+          Depending on the machine image you choose, the command to get software on your instance varies. Amazon Linux and CentOS use ``yum``, Debian and Ubuntu use ``apt-get``, and FreeBSD uses ``pkg``.
+
+          
+
+        
+
+      
+      - **availabilityZone** *(string) --* **[REQUIRED]** 
+
+        The Availability Zone for the new Amazon EC2 instance.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'operations': [
+              {
+                  'id': 'string',
+                  'resourceName': 'string',
+                  'resourceType': 'ContainerService'|'Instance'|'StaticIp'|'KeyPair'|'InstanceSnapshot'|'Domain'|'PeeredVpc'|'LoadBalancer'|'LoadBalancerTlsCertificate'|'Disk'|'DiskSnapshot'|'RelationalDatabase'|'RelationalDatabaseSnapshot'|'ExportSnapshotRecord'|'CloudFormationStackRecord'|'Alarm'|'ContactMethod'|'Distribution'|'Certificate'|'Bucket',
+                  'createdAt': datetime(2015, 1, 1),
+                  'location': {
+                      'availabilityZone': 'string',
+                      'regionName': 'us-east-1'|'us-east-2'|'us-west-1'|'us-west-2'|'eu-west-1'|'eu-west-2'|'eu-west-3'|'eu-central-1'|'ca-central-1'|'ap-south-1'|'ap-southeast-1'|'ap-southeast-2'|'ap-northeast-1'|'ap-northeast-2'|'eu-north-1'|'ap-southeast-3'
+                  },
+                  'isTerminal': True|False,
+                  'operationDetails': 'string',
+                  'operationType': 'DeleteKnownHostKeys'|'DeleteInstance'|'CreateInstance'|'StopInstance'|'StartInstance'|'RebootInstance'|'OpenInstancePublicPorts'|'PutInstancePublicPorts'|'CloseInstancePublicPorts'|'AllocateStaticIp'|'ReleaseStaticIp'|'AttachStaticIp'|'DetachStaticIp'|'UpdateDomainEntry'|'DeleteDomainEntry'|'CreateDomain'|'DeleteDomain'|'CreateInstanceSnapshot'|'DeleteInstanceSnapshot'|'CreateInstancesFromSnapshot'|'CreateLoadBalancer'|'DeleteLoadBalancer'|'AttachInstancesToLoadBalancer'|'DetachInstancesFromLoadBalancer'|'UpdateLoadBalancerAttribute'|'CreateLoadBalancerTlsCertificate'|'DeleteLoadBalancerTlsCertificate'|'AttachLoadBalancerTlsCertificate'|'CreateDisk'|'DeleteDisk'|'AttachDisk'|'DetachDisk'|'CreateDiskSnapshot'|'DeleteDiskSnapshot'|'CreateDiskFromSnapshot'|'CreateRelationalDatabase'|'UpdateRelationalDatabase'|'DeleteRelationalDatabase'|'CreateRelationalDatabaseFromSnapshot'|'CreateRelationalDatabaseSnapshot'|'DeleteRelationalDatabaseSnapshot'|'UpdateRelationalDatabaseParameters'|'StartRelationalDatabase'|'RebootRelationalDatabase'|'StopRelationalDatabase'|'EnableAddOn'|'DisableAddOn'|'PutAlarm'|'GetAlarms'|'DeleteAlarm'|'TestAlarm'|'CreateContactMethod'|'GetContactMethods'|'SendContactMethodVerification'|'DeleteContactMethod'|'CreateDistribution'|'UpdateDistribution'|'DeleteDistribution'|'ResetDistributionCache'|'AttachCertificateToDistribution'|'DetachCertificateFromDistribution'|'UpdateDistributionBundle'|'SetIpAddressType'|'CreateCertificate'|'DeleteCertificate'|'CreateContainerService'|'UpdateContainerService'|'DeleteContainerService'|'CreateContainerServiceDeployment'|'CreateContainerServiceRegistryLogin'|'RegisterContainerImage'|'DeleteContainerImage'|'CreateBucket'|'DeleteBucket'|'CreateBucketAccessKey'|'DeleteBucketAccessKey'|'UpdateBucketBundle'|'UpdateBucket'|'SetResourceAccessForBucket'|'UpdateInstanceMetadataOptions'|'StartGUISession'|'StopGUISession'|'SetupInstanceHttps',
+                  'status': 'NotStarted'|'Started'|'Failed'|'Completed'|'Succeeded',
+                  'statusChangedAt': datetime(2015, 1, 1),
+                  'errorCode': 'string',
+                  'errorDetails': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **operations** *(list) --* 
+
+        An array of objects that describe the result of the action, such as the status of the request, the timestamp of the request, and the resources affected by the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes the API operation.
+
+          
+          
+
+          - **id** *(string) --* 
+
+            The ID of the operation.
+
+            
+          
+
+          - **resourceName** *(string) --* 
+
+            The resource name.
+
+            
+          
+
+          - **resourceType** *(string) --* 
+
+            The resource type.
+
+            
+          
+
+          - **createdAt** *(datetime) --* 
+
+            The timestamp when the operation was initialized ( ``1479816991.349``).
+
+            
+          
+
+          - **location** *(dict) --* 
+
+            The Amazon Web Services Region and Availability Zone.
+
+            
+            
+
+            - **availabilityZone** *(string) --* 
+
+              The Availability Zone. Follows the format ``us-east-2a`` (case-sensitive).
+
+              
+            
+
+            - **regionName** *(string) --* 
+
+              The Amazon Web Services Region name.
+
+              
+        
+          
+
+          - **isTerminal** *(boolean) --* 
+
+            A Boolean value indicating whether the operation is terminal.
+
+            
+          
+
+          - **operationDetails** *(string) --* 
+
+            Details about the operation ( ``Debian-1GB-Ohio-1``).
+
+            
+          
+
+          - **operationType** *(string) --* 
+
+            The type of operation.
+
+            
+          
+
+          - **status** *(string) --* 
+
+            The status of the operation.
+
+            
+          
+
+          - **statusChangedAt** *(datetime) --* 
+
+            The timestamp when the status was changed ( ``1479816991.349``).
+
+            
+          
+
+          - **errorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **errorDetails** *(string) --* 
+
+            The error details.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Lightsail.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.OperationFailureException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.AccountSetupInProgressException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.RegionSetupInProgressException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.UnauthenticatedException`
+
+  

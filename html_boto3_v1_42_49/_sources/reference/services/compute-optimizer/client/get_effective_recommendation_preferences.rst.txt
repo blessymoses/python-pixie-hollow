@@ -1,0 +1,318 @@
+:doc:`ComputeOptimizer <../../compute-optimizer>` / Client / get_effective_recommendation_preferences
+
+****************************************
+get_effective_recommendation_preferences
+****************************************
+
+
+
+.. py:method:: ComputeOptimizer.Client.get_effective_recommendation_preferences(**kwargs)
+
+  
+
+  Returns the recommendation preferences that are in effect for a given resource, such as enhanced infrastructure metrics. Considers all applicable preferences that you might have set at the resource, account, and organization level.
+
+   
+
+  When you create a recommendation preference, you can set its status to ``Active`` or ``Inactive``. Use this action to view the recommendation preferences that are in effect, or ``Active``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/compute-optimizer-2019-11-01/GetEffectiveRecommendationPreferences>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_effective_recommendation_preferences(
+        resourceArn='string'
+    )
+    
+  :type resourceArn: string
+  :param resourceArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the resource for which to confirm effective recommendation preferences. Only EC2 instance and Amazon EC2 Auto Scaling group ARNs are currently supported.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'enhancedInfrastructureMetrics': 'Active'|'Inactive',
+          'externalMetricsPreference': {
+              'source': 'Datadog'|'Dynatrace'|'NewRelic'|'Instana'
+          },
+          'lookBackPeriod': 'DAYS_14'|'DAYS_32'|'DAYS_93',
+          'utilizationPreferences': [
+              {
+                  'metricName': 'CpuUtilization'|'MemoryUtilization',
+                  'metricParameters': {
+                      'threshold': 'P90'|'P95'|'P99_5',
+                      'headroom': 'PERCENT_30'|'PERCENT_20'|'PERCENT_10'|'PERCENT_0'
+                  }
+              },
+          ],
+          'preferredResources': [
+              {
+                  'name': 'Ec2InstanceTypes',
+                  'includeList': [
+                      'string',
+                  ],
+                  'effectiveIncludeList': [
+                      'string',
+                  ],
+                  'excludeList': [
+                      'string',
+                  ]
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **enhancedInfrastructureMetrics** *(string) --* 
+
+        The status of the enhanced infrastructure metrics recommendation preference. Considers all applicable preferences that you might have set at the resource, account, and organization level.
+
+         
+
+        A status of ``Active`` confirms that the preference is applied in the latest recommendation refresh, and a status of ``Inactive`` confirms that it's not yet applied to recommendations.
+
+         
+
+        To validate whether the preference is applied to your last generated set of recommendations, review the ``effectiveRecommendationPreferences`` value in the response of the  GetAutoScalingGroupRecommendations and  GetEC2InstanceRecommendations actions.
+
+         
+
+        For more information, see `Enhanced infrastructure metrics <https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html>`__ in the *Compute Optimizer User Guide*.
+
+        
+      
+
+      - **externalMetricsPreference** *(dict) --* 
+
+        The provider of the external metrics recommendation preference. Considers all applicable preferences that you might have set at the account and organization level.
+
+         
+
+        If the preference is applied in the latest recommendation refresh, an object with a valid ``source`` value appears in the response. If the preference isn't applied to the recommendations already, then this object doesn't appear in the response.
+
+         
+
+        To validate whether the preference is applied to your last generated set of recommendations, review the ``effectiveRecommendationPreferences`` value in the response of the  GetEC2InstanceRecommendations actions.
+
+         
+
+        For more information, see `Enhanced infrastructure metrics <https://docs.aws.amazon.com/compute-optimizer/latest/ug/external-metrics-ingestion.html>`__ in the *Compute Optimizer User Guide*.
+
+        
+        
+
+        - **source** *(string) --* 
+
+          Contains the source options for external metrics preferences.
+
+          
+    
+      
+
+      - **lookBackPeriod** *(string) --* 
+
+        The number of days the utilization metrics of the Amazon Web Services resource are analyzed.
+
+         
+
+        To validate that the preference is applied to your last generated set of recommendations, review the ``effectiveRecommendationPreferences`` value in the response of the GetAutoScalingGroupRecommendations or GetEC2InstanceRecommendations actions.
+
+        
+      
+
+      - **utilizationPreferences** *(list) --* 
+
+        The resource’s CPU and memory utilization preferences, such as threshold and headroom, that were used to generate rightsizing recommendations. It considers all applicable preferences that you set at the resource, account, and organization level.
+
+         
+
+        To validate that the preference is applied to your last generated set of recommendations, review the ``effectiveRecommendationPreferences`` value in the response of the GetAutoScalingGroupRecommendations or GetEC2InstanceRecommendations actions.
+
+        
+        
+
+        - *(dict) --* 
+
+          The preference to control the resource’s CPU utilization threshold, CPU utilization headroom, and memory utilization headroom.
+
+           
+
+          .. note::
+
+            
+
+            This preference is only available for the Amazon EC2 instance resource type.
+
+            
+
+          
+          
+
+          - **metricName** *(string) --* 
+
+            The name of the resource utilization metric name to customize.
+
+            
+          
+
+          - **metricParameters** *(dict) --* 
+
+            The parameters to set when customizing the resource utilization thresholds.
+
+            
+            
+
+            - **threshold** *(string) --* 
+
+              The threshold value used for the specified metric parameter.
+
+               
+
+              .. note::
+
+                
+
+                You can only specify the threshold value for CPU utilization.
+
+                
+
+              
+            
+
+            - **headroom** *(string) --* 
+
+              The headroom value in percentage used for the specified metric parameter.
+
+               
+
+              The following lists the valid values for CPU and memory utilization.
+
+               
+
+              
+              * CPU utilization: ``PERCENT_30 | PERCENT_20 | PERCENT_0``
+               
+              * Memory utilization: ``PERCENT_30 | PERCENT_20 | PERCENT_10``
+              
+
+              
+        
+      
+    
+      
+
+      - **preferredResources** *(list) --* 
+
+        The resource type values that are considered as candidates when generating rightsizing recommendations. This object resolves any wildcard expressions and returns the effective list of candidate resource type values. It also considers all applicable preferences that you set at the resource, account, and organization level.
+
+         
+
+        To validate that the preference is applied to your last generated set of recommendations, review the ``effectiveRecommendationPreferences`` value in the response of the GetAutoScalingGroupRecommendations or GetEC2InstanceRecommendations actions.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes the effective preferred resources that Compute Optimizer considers as rightsizing recommendation candidates.
+
+           
+
+          .. note::
+
+            
+
+            Compute Optimizer only supports Amazon EC2 instance types.
+
+            
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the preferred resource list.
+
+            
+          
+
+          - **includeList** *(list) --* 
+
+            The list of preferred resource values that you want considered as rightsizing recommendation candidates.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **effectiveIncludeList** *(list) --* 
+
+            The expanded version of your preferred resource's include list.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **excludeList** *(list) --* 
+
+            The list of preferred resources values that you want excluded from rightsizing recommendation candidates.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.OptInRequiredException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.MissingAuthenticationToken`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ThrottlingException`
+
+  

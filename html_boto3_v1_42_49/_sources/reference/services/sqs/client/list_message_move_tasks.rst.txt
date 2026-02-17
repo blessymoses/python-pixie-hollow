@@ -1,0 +1,184 @@
+:doc:`SQS <../../sqs>` / Client / list_message_move_tasks
+
+***********************
+list_message_move_tasks
+***********************
+
+
+
+.. py:method:: SQS.Client.list_message_move_tasks(**kwargs)
+
+  
+
+  Gets the most recent message movement tasks (up to 10) under a specific source queue.
+
+   
+
+  .. note::
+
+    
+
+    
+    * This action is currently limited to supporting message redrive from `dead-letter queues (DLQs) <https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html>`__ only. In this context, the source queue is the dead-letter queue (DLQ), while the destination queue can be the original source queue (from which the messages were driven to the dead-letter-queue), or a custom destination queue.
+     
+    * Only one active message movement task is supported per queue at any given time.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ListMessageMoveTasks>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_message_move_tasks(
+        SourceArn='string',
+        MaxResults=123
+    )
+    
+  :type SourceArn: string
+  :param SourceArn: **[REQUIRED]** 
+
+    The ARN of the queue whose message movement tasks are to be listed.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of results to include in the response. The default is 1, which provides the most recent message movement task. The upper limit is 10.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Results': [
+              {
+                  'TaskHandle': 'string',
+                  'Status': 'string',
+                  'SourceArn': 'string',
+                  'DestinationArn': 'string',
+                  'MaxNumberOfMessagesPerSecond': 123,
+                  'ApproximateNumberOfMessagesMoved': 123,
+                  'ApproximateNumberOfMessagesToMove': 123,
+                  'FailureReason': 'string',
+                  'StartedTimestamp': 123
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Results** *(list) --* 
+
+        A list of message movement tasks and their attributes.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the details of a message movement task.
+
+          
+          
+
+          - **TaskHandle** *(string) --* 
+
+            An identifier associated with a message movement task. When this field is returned in the response of the ``ListMessageMoveTasks`` action, it is only populated for tasks that are in RUNNING status.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the message movement task. Possible values are: RUNNING, COMPLETED, CANCELLING, CANCELLED, and FAILED.
+
+            
+          
+
+          - **SourceArn** *(string) --* 
+
+            The ARN of the queue that contains the messages to be moved to another queue.
+
+            
+          
+
+          - **DestinationArn** *(string) --* 
+
+            The ARN of the destination queue if it has been specified in the ``StartMessageMoveTask`` request. If a ``DestinationArn`` has not been specified in the ``StartMessageMoveTask`` request, this field value will be NULL.
+
+            
+          
+
+          - **MaxNumberOfMessagesPerSecond** *(integer) --* 
+
+            The number of messages to be moved per second (the message movement rate), if it has been specified in the ``StartMessageMoveTask`` request. If a ``MaxNumberOfMessagesPerSecond`` has not been specified in the ``StartMessageMoveTask`` request, this field value will be NULL.
+
+            
+          
+
+          - **ApproximateNumberOfMessagesMoved** *(integer) --* 
+
+            The approximate number of messages already moved to the destination queue.
+
+            
+          
+
+          - **ApproximateNumberOfMessagesToMove** *(integer) --* 
+
+            The number of messages to be moved from the source queue. This number is obtained at the time of starting the message movement task and is only included after the message movement task is selected to start.
+
+            
+          
+
+          - **FailureReason** *(string) --* 
+
+            The task failure reason (only included if the task status is FAILED).
+
+            
+          
+
+          - **StartedTimestamp** *(integer) --* 
+
+            The timestamp of starting the message movement task.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SQS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SQS.Client.exceptions.RequestThrottled`
+
+  
+  *   :py:class:`SQS.Client.exceptions.InvalidAddress`
+
+  
+  *   :py:class:`SQS.Client.exceptions.InvalidSecurity`
+
+  
+  *   :py:class:`SQS.Client.exceptions.UnsupportedOperation`
+
+  

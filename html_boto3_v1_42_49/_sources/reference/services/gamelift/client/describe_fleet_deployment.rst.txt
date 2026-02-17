@@ -1,0 +1,274 @@
+:doc:`GameLift <../../gamelift>` / Client / describe_fleet_deployment
+
+*************************
+describe_fleet_deployment
+*************************
+
+
+
+.. py:method:: GameLift.Client.describe_fleet_deployment(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** Container
+
+   
+
+  Retrieves information about a managed container fleet deployment.
+
+   
+
+  **Request options**
+
+   
+
+  
+  * Get information about the latest deployment for a specific fleet. Provide the fleet ID or ARN.
+   
+  * Get information about a specific deployment. Provide the fleet ID or ARN and the deployment ID.
+  
+
+   
+
+  **Results**
+
+   
+
+  If successful, a ``FleetDeployment`` object is returned.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeFleetDeployment>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_fleet_deployment(
+        FleetId='string',
+        DeploymentId='string'
+    )
+    
+  :type FleetId: string
+  :param FleetId: **[REQUIRED]** 
+
+    A unique identifier for the container fleet. You can use either the fleet ID or ARN value.
+
+    
+
+  
+  :type DeploymentId: string
+  :param DeploymentId: 
+
+    A unique identifier for the deployment to return information for.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FleetDeployment': {
+              'DeploymentId': 'string',
+              'FleetId': 'string',
+              'GameServerBinaryArn': 'string',
+              'RollbackGameServerBinaryArn': 'string',
+              'PerInstanceBinaryArn': 'string',
+              'RollbackPerInstanceBinaryArn': 'string',
+              'DeploymentStatus': 'IN_PROGRESS'|'IMPAIRED'|'COMPLETE'|'ROLLBACK_IN_PROGRESS'|'ROLLBACK_COMPLETE'|'CANCELLED'|'PENDING',
+              'DeploymentConfiguration': {
+                  'ProtectionStrategy': 'WITH_PROTECTION'|'IGNORE_PROTECTION',
+                  'MinimumHealthyPercentage': 123,
+                  'ImpairmentStrategy': 'MAINTAIN'|'ROLLBACK'
+              },
+              'CreationTime': datetime(2015, 1, 1)
+          },
+          'LocationalDeployments': {
+              'string': {
+                  'DeploymentStatus': 'IN_PROGRESS'|'IMPAIRED'|'COMPLETE'|'ROLLBACK_IN_PROGRESS'|'ROLLBACK_COMPLETE'|'CANCELLED'|'PENDING'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FleetDeployment** *(dict) --* 
+
+        The requested deployment information.
+
+        
+        
+
+        - **DeploymentId** *(string) --* 
+
+          A unique identifier for the deployment.
+
+          
+        
+
+        - **FleetId** *(string) --* 
+
+          A unique identifier for the container fleet.
+
+          
+        
+
+        - **GameServerBinaryArn** *(string) --* 
+
+          The unique identifier for the version of the game server container group definition that is being deployed.
+
+          
+        
+
+        - **RollbackGameServerBinaryArn** *(string) --* 
+
+          The unique identifier for the version of the game server container group definition to roll back to if deployment fails. Amazon GameLift Servers sets this property to the container group definition version that the fleet used when it was last active.
+
+          
+        
+
+        - **PerInstanceBinaryArn** *(string) --* 
+
+          The unique identifier for the version of the per-instance container group definition that is being deployed.
+
+          
+        
+
+        - **RollbackPerInstanceBinaryArn** *(string) --* 
+
+          The unique identifier for the version of the per-instance container group definition to roll back to if deployment fails. Amazon GameLift Servers sets this property to the container group definition version that the fleet used when it was last active.
+
+          
+        
+
+        - **DeploymentStatus** *(string) --* 
+
+          The status of fleet deployment activity in the location.
+
+           
+
+          
+          * ``IN_PROGRESS`` -- The deployment is in progress.
+           
+          * ``IMPAIRED`` -- The deployment failed and the fleet has some impaired containers.
+           
+          * ``COMPLETE`` -- The deployment has completed successfully.
+           
+          * ``ROLLBACK_IN_PROGRESS`` -- The deployment failed and rollback has been initiated.
+           
+          * ``ROLLBACK_IN_COMPLETE`` -- The deployment failed and rollback has been completed.
+           
+          * ``CANCELLED`` -- The deployment was cancelled.
+          
+
+          
+        
+
+        - **DeploymentConfiguration** *(dict) --* 
+
+          Instructions for how to deploy updates to a container fleet and what actions to take if the deployment fails.
+
+          
+          
+
+          - **ProtectionStrategy** *(string) --* 
+
+            Determines how fleet deployment activity affects active game sessions on the fleet. With protection, a deployment honors game session protection, and delays actions that would interrupt a protected active game session until the game session ends. Without protection, deployment activity can shut down all running tasks, including active game sessions, regardless of game session protection.
+
+            
+          
+
+          - **MinimumHealthyPercentage** *(integer) --* 
+
+            Sets a minimum level of healthy tasks to maintain during deployment activity.
+
+            
+          
+
+          - **ImpairmentStrategy** *(string) --* 
+
+            Determines what actions to take if a deployment fails. If the fleet is multi-location, this strategy applies across all fleet locations. With a rollback strategy, updated fleet instances are rolled back to the last successful deployment. Alternatively, you can maintain a few impaired containers for the purpose of debugging, while all other tasks return to the last successful deployment.
+
+            
+      
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          A time stamp indicating when this data object was created. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+    
+      
+
+      - **LocationalDeployments** *(dict) --* 
+
+        If the deployment is for a multi-location fleet, the requests returns the deployment status in each fleet location.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(dict) --* 
+
+            For a multi-location container fleet, describes the progress of a deployment across all fleet locations.
+
+            
+            
+
+            - **DeploymentStatus** *(string) --* 
+
+              The status of fleet deployment activity in the location.
+
+               
+
+              
+              * ``IN_PROGRESS`` -- The deployment is in progress.
+               
+              * ``IMPAIRED`` -- The deployment failed and the fleet has some impaired containers.
+               
+              * ``COMPLETE`` -- The deployment has completed successfully.
+               
+              * ``ROLLBACK_IN_PROGRESS`` -- The deployment failed and rollback has been initiated.
+               
+              * ``ROLLBACK_IN_COMPLETE`` -- The deployment failed and rollback has been completed.
+               
+              * ``CANCELLED`` -- The deployment was cancelled.
+              
+
+              
+        
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  

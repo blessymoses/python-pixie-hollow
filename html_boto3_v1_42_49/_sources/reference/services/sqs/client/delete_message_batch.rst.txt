@@ -1,0 +1,230 @@
+:doc:`SQS <../../sqs>` / Client / delete_message_batch
+
+********************
+delete_message_batch
+********************
+
+
+
+.. py:method:: SQS.Client.delete_message_batch(**kwargs)
+
+  
+
+  Deletes up to ten messages from the specified queue. This is a batch version of ``DeleteMessage.`` The result of the action on each message is reported individually in the response.
+
+   
+
+  .. warning::
+
+     
+
+    Because the batch request can result in a combination of successful and unsuccessful actions, you should check for batch errors even when the call returns an HTTP status code of ``200``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/DeleteMessageBatch>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.delete_message_batch(
+        QueueUrl='string',
+        Entries=[
+            {
+                'Id': 'string',
+                'ReceiptHandle': 'string'
+            },
+        ]
+    )
+    
+  :type QueueUrl: string
+  :param QueueUrl: **[REQUIRED]** 
+
+    The URL of the Amazon SQS queue from which messages are deleted.
+
+     
+
+    Queue URLs and names are case-sensitive.
+
+    
+
+  
+  :type Entries: list
+  :param Entries: **[REQUIRED]** 
+
+    Lists the receipt handles for the messages to be deleted.
+
+    
+
+  
+    - *(dict) --* 
+
+      Encloses a receipt handle and an identifier for it.
+
+      
+
+    
+      - **Id** *(string) --* **[REQUIRED]** 
+
+        The identifier for this particular receipt handle. This is used to communicate the result.
+
+         
+
+        .. note::
+
+          
+
+          The ``Id``s of a batch request need to be unique within a request.
+
+           
+
+          This identifier can have up to 80 characters. The following characters are accepted: alphanumeric characters, hyphens(-), and underscores (_).
+
+          
+
+        
+
+      
+      - **ReceiptHandle** *(string) --* **[REQUIRED]** 
+
+        A receipt handle.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Successful': [
+              {
+                  'Id': 'string'
+              },
+          ],
+          'Failed': [
+              {
+                  'Id': 'string',
+                  'SenderFault': True|False,
+                  'Code': 'string',
+                  'Message': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      For each message in the batch, the response contains a ``DeleteMessageBatchResultEntry`` tag if the message is deleted or a ``BatchResultErrorEntry`` tag if the message can't be deleted.
+
+      
+      
+
+      - **Successful** *(list) --* 
+
+        A list of ``DeleteMessageBatchResultEntry`` items.
+
+        
+        
+
+        - *(dict) --* 
+
+          Encloses the ``Id`` of an entry in ``DeleteMessageBatch.``
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            Represents a successfully deleted message.
+
+            
+      
+    
+      
+
+      - **Failed** *(list) --* 
+
+        A list of ``BatchResultErrorEntry`` items.
+
+        
+        
+
+        - *(dict) --* 
+
+          Gives a detailed description of the result of an action on each entry in the request.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The ``Id`` of an entry in a batch request.
+
+            
+          
+
+          - **SenderFault** *(boolean) --* 
+
+            Specifies whether the error happened due to the caller of the batch API action.
+
+            
+          
+
+          - **Code** *(string) --* 
+
+            An error code representing why the action failed on this entry.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A message explaining why the action failed on this entry.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SQS.Client.exceptions.TooManyEntriesInBatchRequest`
+
+  
+  *   :py:class:`SQS.Client.exceptions.EmptyBatchRequest`
+
+  
+  *   :py:class:`SQS.Client.exceptions.BatchEntryIdsNotDistinct`
+
+  
+  *   :py:class:`SQS.Client.exceptions.InvalidBatchEntryId`
+
+  
+  *   :py:class:`SQS.Client.exceptions.RequestThrottled`
+
+  
+  *   :py:class:`SQS.Client.exceptions.QueueDoesNotExist`
+
+  
+  *   :py:class:`SQS.Client.exceptions.UnsupportedOperation`
+
+  
+  *   :py:class:`SQS.Client.exceptions.InvalidAddress`
+
+  
+  *   :py:class:`SQS.Client.exceptions.InvalidSecurity`
+
+  

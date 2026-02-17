@@ -1,0 +1,750 @@
+:doc:`ParallelComputingService <../../pcs>` / Client / update_cluster
+
+**************
+update_cluster
+**************
+
+
+
+.. py:method:: ParallelComputingService.Client.update_cluster(**kwargs)
+
+  
+
+  Updates a cluster configuration. You can modify Slurm scheduler settings, accounting configuration, and security groups for an existing cluster.
+
+   
+
+  .. note::
+
+    
+
+    You can only update clusters that are in ``ACTIVE``, ``UPDATE_FAILED``, or ``SUSPENDED`` state. All associated resources (queues and compute node groups) must be in ``ACTIVE`` state before you can update the cluster.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/UpdateCluster>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_cluster(
+        clusterIdentifier='string',
+        clientToken='string',
+        slurmConfiguration={
+            'scaleDownIdleTimeInSeconds': 123,
+            'slurmCustomSettings': [
+                {
+                    'parameterName': 'string',
+                    'parameterValue': 'string'
+                },
+            ],
+            'accounting': {
+                'defaultPurgeTimeInDays': 123,
+                'mode': 'STANDARD'|'NONE'
+            },
+            'slurmRest': {
+                'mode': 'STANDARD'|'NONE'
+            }
+        }
+    )
+    
+  :type clusterIdentifier: string
+  :param clusterIdentifier: **[REQUIRED]** 
+
+    The name or ID of the cluster to update.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. Idempotency ensures that an API request completes only once. With an idempotent request, if the original request completes successfully, the subsequent retries with the same client token return the result from the original successful request and they have no additional effect. If you don't specify a client token, the CLI and SDK automatically generate 1 for you.
+
+    This field is autopopulated if not provided.
+
+  
+  :type slurmConfiguration: dict
+  :param slurmConfiguration: 
+
+    Additional options related to the Slurm scheduler.
+
+    
+
+  
+    - **scaleDownIdleTimeInSeconds** *(integer) --* 
+
+      The time (in seconds) before an idle node is scaled down.
+
+       
+
+      Default: ``600``
+
+      
+
+    
+    - **slurmCustomSettings** *(list) --* 
+
+      Additional Slurm-specific configuration that directly maps to Slurm settings.
+
+      
+
+    
+      - *(dict) --* 
+
+        Additional settings that directly map to Slurm settings.
+
+         
+
+        .. warning::
+
+           
+
+          PCS supports a subset of Slurm settings. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+          
+
+        
+
+      
+        - **parameterName** *(string) --* **[REQUIRED]** 
+
+          PCS supports custom Slurm settings for clusters, compute node groups, and queues. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+          
+
+        
+        - **parameterValue** *(string) --* **[REQUIRED]** 
+
+          The values for the configured Slurm settings.
+
+          
+
+        
+      
+  
+    - **accounting** *(dict) --* 
+
+      The accounting configuration includes configurable settings for Slurm accounting.
+
+      
+
+    
+      - **defaultPurgeTimeInDays** *(integer) --* 
+
+        The default value for all purge settings for ``slurmdbd.conf``. For more information, see the `slurmdbd.conf documentation at SchedMD <https://slurm.schedmd.com/slurmdbd.conf.html>`__.
+
+         
+
+        The default value for ``defaultPurgeTimeInDays`` is ``-1``.
+
+         
+
+        A value of ``-1`` means there is no purge time and records persist as long as the cluster exists.
+
+         
+
+        .. warning::
+
+           
+
+          ``0`` isn't a valid value.
+
+          
+
+        
+
+      
+      - **mode** *(string) --* 
+
+        The default value for ``mode`` is ``NONE``. A value of ``STANDARD`` means Slurm accounting is enabled.
+
+        
+
+      
+    
+    - **slurmRest** *(dict) --* 
+
+      The Slurm REST API configuration for the cluster.
+
+      
+
+    
+      - **mode** *(string) --* 
+
+        The default value for ``mode`` is ``NONE``. A value of ``STANDARD`` means the Slurm REST API is enabled.
+
+        
+
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'cluster': {
+              'name': 'string',
+              'id': 'string',
+              'arn': 'string',
+              'status': 'CREATING'|'ACTIVE'|'UPDATING'|'DELETING'|'CREATE_FAILED'|'DELETE_FAILED'|'UPDATE_FAILED'|'SUSPENDING'|'SUSPENDED'|'RESUMING',
+              'createdAt': datetime(2015, 1, 1),
+              'modifiedAt': datetime(2015, 1, 1),
+              'scheduler': {
+                  'type': 'SLURM',
+                  'version': 'string'
+              },
+              'size': 'SMALL'|'MEDIUM'|'LARGE',
+              'slurmConfiguration': {
+                  'scaleDownIdleTimeInSeconds': 123,
+                  'slurmCustomSettings': [
+                      {
+                          'parameterName': 'string',
+                          'parameterValue': 'string'
+                      },
+                  ],
+                  'authKey': {
+                      'secretArn': 'string',
+                      'secretVersion': 'string'
+                  },
+                  'jwtAuth': {
+                      'jwtKey': {
+                          'secretArn': 'string',
+                          'secretVersion': 'string'
+                      }
+                  },
+                  'accounting': {
+                      'defaultPurgeTimeInDays': 123,
+                      'mode': 'STANDARD'|'NONE'
+                  },
+                  'slurmRest': {
+                      'mode': 'STANDARD'|'NONE'
+                  }
+              },
+              'networking': {
+                  'subnetIds': [
+                      'string',
+                  ],
+                  'securityGroupIds': [
+                      'string',
+                  ],
+                  'networkType': 'IPV4'|'IPV6'
+              },
+              'endpoints': [
+                  {
+                      'type': 'SLURMCTLD'|'SLURMDBD'|'SLURMRESTD',
+                      'privateIpAddress': 'string',
+                      'publicIpAddress': 'string',
+                      'ipv6Address': 'string',
+                      'port': 'string'
+                  },
+              ],
+              'errorInfo': [
+                  {
+                      'code': 'string',
+                      'message': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **cluster** *(dict) --* 
+
+        The cluster resource and configuration.
+
+        
+        
+
+        - **name** *(string) --* 
+
+          The name that identifies the cluster.
+
+          
+        
+
+        - **id** *(string) --* 
+
+          The generated unique ID of the cluster.
+
+          
+        
+
+        - **arn** *(string) --* 
+
+          The unique Amazon Resource Name (ARN) of the cluster.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The provisioning status of the cluster.
+
+           
+
+          .. note::
+
+            
+
+            The provisioning status doesn't indicate the overall health of the cluster.
+
+            
+
+           
+
+          .. warning::
+
+             
+
+            The resource enters the ``SUSPENDING`` and ``SUSPENDED`` states when the scheduler is beyond end of life and we have suspended the cluster. When in these states, you can't use the cluster. The cluster controller is down and all compute instances are terminated. The resources still count toward your service quotas. You can delete a resource if its status is ``SUSPENDED``. For more information, see `Frequently asked questions about Slurm versions in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html>`__ in the *PCS User Guide*.
+
+            
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The date and time the resource was created.
+
+          
+        
+
+        - **modifiedAt** *(datetime) --* 
+
+          The date and time the resource was modified.
+
+          
+        
+
+        - **scheduler** *(dict) --* 
+
+          The cluster management and job scheduling software associated with the cluster.
+
+          
+          
+
+          - **type** *(string) --* 
+
+            The software PCS uses to manage cluster scaling and job scheduling.
+
+            
+          
+
+          - **version** *(string) --* 
+
+            The version of the specified scheduling software that PCS uses to manage cluster scaling and job scheduling. For more information, see `Slurm versions in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions.html>`__ in the *PCS User Guide*.
+
+             
+
+            Valid Values: ``23.11 | 24.05 | 24.11``
+
+            
+      
+        
+
+        - **size** *(string) --* 
+
+          The size of the cluster.
+
+           
+
+          
+          * ``SMALL``: 32 compute nodes and 256 jobs
+           
+          * ``MEDIUM``: 512 compute nodes and 8192 jobs
+           
+          * ``LARGE``: 2048 compute nodes and 16,384 jobs
+          
+
+          
+        
+
+        - **slurmConfiguration** *(dict) --* 
+
+          Additional options related to the Slurm scheduler.
+
+          
+          
+
+          - **scaleDownIdleTimeInSeconds** *(integer) --* 
+
+            The time (in seconds) before an idle node is scaled down.
+
+             
+
+            Default: ``600``
+
+            
+          
+
+          - **slurmCustomSettings** *(list) --* 
+
+            Additional Slurm-specific configuration that directly maps to Slurm settings.
+
+            
+            
+
+            - *(dict) --* 
+
+              Additional settings that directly map to Slurm settings.
+
+               
+
+              .. warning::
+
+                 
+
+                PCS supports a subset of Slurm settings. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+                
+
+              
+              
+
+              - **parameterName** *(string) --* 
+
+                PCS supports custom Slurm settings for clusters, compute node groups, and queues. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+                
+              
+
+              - **parameterValue** *(string) --* 
+
+                The values for the configured Slurm settings.
+
+                
+          
+        
+          
+
+          - **authKey** *(dict) --* 
+
+            The shared Slurm key for authentication, also known as the **cluster secret**.
+
+            
+            
+
+            - **secretArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the shared Slurm key.
+
+              
+            
+
+            - **secretVersion** *(string) --* 
+
+              The version of the shared Slurm key.
+
+              
+        
+          
+
+          - **jwtAuth** *(dict) --* 
+
+            The JWT authentication configuration for Slurm REST API access.
+
+            
+            
+
+            - **jwtKey** *(dict) --* 
+
+              The JWT key for Slurm REST API authentication.
+
+              
+              
+
+              - **secretArn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the Amazon Web Services Secrets Manager secret containing the JWT key.
+
+                
+              
+
+              - **secretVersion** *(string) --* 
+
+                The version of the Amazon Web Services Secrets Manager secret containing the JWT key.
+
+                
+          
+        
+          
+
+          - **accounting** *(dict) --* 
+
+            The accounting configuration includes configurable settings for Slurm accounting.
+
+            
+            
+
+            - **defaultPurgeTimeInDays** *(integer) --* 
+
+              The default value for all purge settings for ``slurmdbd.conf``. For more information, see the `slurmdbd.conf documentation at SchedMD <https://slurm.schedmd.com/slurmdbd.conf.html>`__.
+
+               
+
+              The default value for ``defaultPurgeTimeInDays`` is ``-1``.
+
+               
+
+              A value of ``-1`` means there is no purge time and records persist as long as the cluster exists.
+
+               
+
+              .. warning::
+
+                 
+
+                ``0`` isn't a valid value.
+
+                
+
+              
+            
+
+            - **mode** *(string) --* 
+
+              The default value for ``mode`` is ``NONE``. A value of ``STANDARD`` means Slurm accounting is enabled.
+
+              
+        
+          
+
+          - **slurmRest** *(dict) --* 
+
+            The Slurm REST API configuration for the cluster.
+
+            
+            
+
+            - **mode** *(string) --* 
+
+              The default value for ``mode`` is ``NONE``. A value of ``STANDARD`` means the Slurm REST API is enabled.
+
+              
+        
+      
+        
+
+        - **networking** *(dict) --* 
+
+          The networking configuration for the cluster's control plane.
+
+          
+          
+
+          - **subnetIds** *(list) --* 
+
+            The ID of the subnet where PCS creates an Elastic Network Interface (ENI) to enable communication between managed controllers and PCS resources. The subnet must have an available IP address, cannot reside in Outposts, Wavelength, or an Amazon Web Services Local Zone.
+
+             
+
+            Example: ``subnet-abcd1234``
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **securityGroupIds** *(list) --* 
+
+            The list of security group IDs associated with the Elastic Network Interface (ENI) created in subnets.
+
+             
+
+            The following rules are required:
+
+             
+
+            
+            * Inbound rule 1 
+
+              
+              * Protocol: All
+               
+              * Ports: All
+               
+              * Source: Self
+              
+
+            
+             
+            * Outbound rule 1 
+
+              
+              * Protocol: All
+               
+              * Ports: All
+               
+              * Destination: 0.0.0.0/0 (IPv4) or ::/0 (IPv6)
+              
+
+            
+             
+            * Outbound rule 2 
+
+              
+              * Protocol: All
+               
+              * Ports: All
+               
+              * Destination: Self
+              
+
+            
+            
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **networkType** *(string) --* 
+
+            The IP address version the cluster uses. The default is ``IPV4``.
+
+            
+      
+        
+
+        - **endpoints** *(list) --* 
+
+          The list of endpoints available for interaction with the scheduler.
+
+          
+          
+
+          - *(dict) --* 
+
+            An endpoint available for interaction with the scheduler.
+
+            
+            
+
+            - **type** *(string) --* 
+
+              Indicates the type of endpoint running at the specific IP address.
+
+              
+            
+
+            - **privateIpAddress** *(string) --* 
+
+              For clusters that use IPv4, this is the endpoint's private IP address.
+
+               
+
+              Example: ``10.1.2.3``
+
+               
+
+              For clusters configured to use IPv6, this is an empty string.
+
+              
+            
+
+            - **publicIpAddress** *(string) --* 
+
+              The endpoint's public IP address.
+
+               
+
+              Example: ``192.0.2.1``
+
+              
+            
+
+            - **ipv6Address** *(string) --* 
+
+              The endpoint's IPv6 address.
+
+               
+
+              Example: ``2001:db8::1``
+
+              
+            
+
+            - **port** *(string) --* 
+
+              The endpoint's connection port number.
+
+               
+
+              Example: ``1234``
+
+              
+        
+      
+        
+
+        - **errorInfo** *(list) --* 
+
+          The list of errors that occurred during cluster provisioning.
+
+          
+          
+
+          - *(dict) --* 
+
+            An error that occurred during resource creation.
+
+            
+            
+
+            - **code** *(string) --* 
+
+              The short-form error code.
+
+              
+            
+
+            - **message** *(string) --* 
+
+              The detailed error information.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.AccessDeniedException`
+
+  

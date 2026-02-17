@@ -1,0 +1,722 @@
+:doc:`LocationService <../../location>` / Client / calculate_route_matrix
+
+**********************
+calculate_route_matrix
+**********************
+
+
+
+.. py:method:: LocationService.Client.calculate_route_matrix(**kwargs)
+
+  
+
+  
+
+  .. warning::
+
+    
+
+    This operation is no longer current and may be deprecated in the future. We recommend you upgrade to the `V2 CalculateRouteMatrix </location/latest/APIReference/API_CalculateRouteMatrix.html>`__ unless you require Grab data.
+
+     
+
+    
+    * This version of ``CalculateRouteMatrix`` is part of a previous Amazon Location Service Routes API (version 1) which has been superseded by a more intuitive, powerful, and complete API (version 2).
+     
+    * The version 2 ``CalculateRouteMatrix`` operation gives better results for matrix routing calculations.
+     
+    * If you are using an Amazon Web Services SDK or the Amazon Web Services CLI, note that the Routes API version 2 is found under ``geo-routes`` or ``geo_routes``, not under ``location``.
+     
+    * Since Grab is not yet fully supported in Routes API version 2, we recommend you continue using API version 1 when using Grab.
+     
+    * Start your version 2 API journey with the Routes V2 `API Reference </location/latest/APIReference/API_Operations_Amazon_Location_Service_Routes_V2.html>`__ or the `Developer Guide </location/latest/developerguide/routes.html>`__.
+    
+
+    
+
+   
+
+  `Calculates a route matrix <https://docs.aws.amazon.com/location/previous/developerguide/calculate-route-matrix.html>`__ given the following required parameters: ``DeparturePositions`` and ``DestinationPositions``. ``CalculateRouteMatrix`` calculates routes and returns the travel time and travel distance from each departure position to each destination position in the request. For example, given departure positions A and B, and destination positions X and Y, ``CalculateRouteMatrix`` will return time and distance for routes from A to X, A to Y, B to X, and B to Y (in that order). The number of results returned (and routes calculated) will be the number of ``DeparturePositions`` times the number of ``DestinationPositions``.
+
+   
+
+  .. note::
+
+    
+
+    Your account is charged for each route calculated, not the number of requests.
+
+    
+
+   
+
+  Requires that you first `create a route calculator resource <https://docs.aws.amazon.com/location-routes/latest/APIReference/API_CreateRouteCalculator.html>`__.
+
+   
+
+  By default, a request that doesn't specify a departure time uses the best time of day to travel with the best traffic conditions when calculating routes.
+
+   
+
+  Additional options include:
+
+   
+
+  
+  * `Specifying a departure time <https://docs.aws.amazon.com/location/previous/developerguide/departure-time.html>`__ using either ``DepartureTime`` or ``DepartNow``. This calculates routes based on predictive traffic data at the given time. 
+
+  .. note::
+
+    You can't specify both ``DepartureTime`` and ``DepartNow`` in a single request. Specifying both parameters returns a validation error.
+
+  
+   
+  * `Specifying a travel mode <https://docs.aws.amazon.com/location/previous/developerguide/travel-mode.html>`__ using TravelMode sets the transportation mode used to calculate the routes. This also lets you specify additional route preferences in ``CarModeOptions`` if traveling by ``Car``, or ``TruckModeOptions`` if traveling by ``Truck``.
+  
+
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/CalculateRouteMatrix>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.calculate_route_matrix(
+        CalculatorName='string',
+        DeparturePositions=[
+            [
+                123.0,
+            ],
+        ],
+        DestinationPositions=[
+            [
+                123.0,
+            ],
+        ],
+        TravelMode='Car'|'Truck'|'Walking'|'Bicycle'|'Motorcycle',
+        DepartureTime=datetime(2015, 1, 1),
+        DepartNow=True|False,
+        DistanceUnit='Kilometers'|'Miles',
+        CarModeOptions={
+            'AvoidFerries': True|False,
+            'AvoidTolls': True|False
+        },
+        TruckModeOptions={
+            'AvoidFerries': True|False,
+            'AvoidTolls': True|False,
+            'Dimensions': {
+                'Length': 123.0,
+                'Height': 123.0,
+                'Width': 123.0,
+                'Unit': 'Meters'|'Feet'
+            },
+            'Weight': {
+                'Total': 123.0,
+                'Unit': 'Kilograms'|'Pounds'
+            }
+        },
+        Key='string'
+    )
+    
+  :type CalculatorName: string
+  :param CalculatorName: **[REQUIRED]** 
+
+    The name of the route calculator resource that you want to use to calculate the route matrix.
+
+    
+
+  
+  :type DeparturePositions: list
+  :param DeparturePositions: **[REQUIRED]** 
+
+    The list of departure (origin) positions for the route matrix. An array of points, each of which is itself a 2-value array defined in `WGS 84 <https://earth-info.nga.mil/GandG/wgs84/index.html>`__ format: ``[longitude, latitude]``. For example, ``[-123.115, 49.285]``.
+
+     
+
+    .. warning::
+
+       
+
+      Depending on the data provider selected in the route calculator resource there may be additional restrictions on the inputs you can choose. See `Position restrictions <https://docs.aws.amazon.com/location/previous/developerguide/calculate-route-matrix.html#matrix-routing-position-limits>`__ in the *Amazon Location Service Developer Guide*.
+
+       
+
+     
+
+    .. note::
+
+      
+
+      For route calculators that use Esri as the data provider, if you specify a departure that's not located on a road, Amazon Location `moves the position to the nearest road <https://docs.aws.amazon.com/location/previous/developerguide/snap-to-nearby-road.html>`__. The snapped value is available in the result in ``SnappedDeparturePositions``.
+
+      
+
+     
+
+    Valid Values: ``[-180 to 180,-90 to 90]``
+
+    
+
+  
+    - *(list) --* 
+
+    
+      - *(float) --* 
+
+      
+  
+
+  :type DestinationPositions: list
+  :param DestinationPositions: **[REQUIRED]** 
+
+    The list of destination positions for the route matrix. An array of points, each of which is itself a 2-value array defined in `WGS 84 <https://earth-info.nga.mil/GandG/wgs84/index.html>`__ format: ``[longitude, latitude]``. For example, ``[-122.339, 47.615]``
+
+     
+
+    .. warning::
+
+       
+
+      Depending on the data provider selected in the route calculator resource there may be additional restrictions on the inputs you can choose. See `Position restrictions <https://docs.aws.amazon.com/location/previous/developerguide/calculate-route-matrix.html#matrix-routing-position-limits>`__ in the *Amazon Location Service Developer Guide*.
+
+       
+
+     
+
+    .. note::
+
+      
+
+      For route calculators that use Esri as the data provider, if you specify a destination that's not located on a road, Amazon Location `moves the position to the nearest road <https://docs.aws.amazon.com/location/previous/developerguide/snap-to-nearby-road.html>`__. The snapped value is available in the result in ``SnappedDestinationPositions``.
+
+      
+
+     
+
+    Valid Values: ``[-180 to 180,-90 to 90]``
+
+    
+
+  
+    - *(list) --* 
+
+    
+      - *(float) --* 
+
+      
+  
+
+  :type TravelMode: string
+  :param TravelMode: 
+
+    Specifies the mode of transport when calculating a route. Used in estimating the speed of travel and road compatibility.
+
+     
+
+    The ``TravelMode`` you specify also determines how you specify route preferences:
+
+     
+
+    
+    * If traveling by ``Car`` use the ``CarModeOptions`` parameter.
+     
+    * If traveling by ``Truck`` use the ``TruckModeOptions`` parameter.
+    
+
+     
+
+    .. note::
+
+      
+
+      ``Bicycle`` or ``Motorcycle`` are only valid when using ``Grab`` as a data provider, and only within Southeast Asia.
+
+       
+
+      ``Truck`` is not available for Grab.
+
+       
+
+      For more information about using Grab as a data provider, see `GrabMaps <https://docs.aws.amazon.com/location/previous/developerguide/grab.html>`__ in the *Amazon Location Service Developer Guide*.
+
+      
+
+     
+
+    Default Value: ``Car``
+
+    
+
+  
+  :type DepartureTime: datetime
+  :param DepartureTime: 
+
+    Specifies the desired time of departure. Uses the given time to calculate the route matrix. You can't set both ``DepartureTime`` and ``DepartNow``. If neither is set, the best time of day to travel with the best traffic conditions is used to calculate the route matrix.
+
+     
+
+    .. note::
+
+      
+
+      Setting a departure time in the past returns a ``400 ValidationException`` error.
+
+      
+
+     
+
+    
+    * In `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``. For example, ``2020–07-2T12:15:20.000Z+01:00``
+    
+
+    
+
+  
+  :type DepartNow: boolean
+  :param DepartNow: 
+
+    Sets the time of departure as the current time. Uses the current time to calculate the route matrix. You can't set both ``DepartureTime`` and ``DepartNow``. If neither is set, the best time of day to travel with the best traffic conditions is used to calculate the route matrix.
+
+     
+
+    Default Value: ``false``
+
+     
+
+    Valid Values: ``false`` | ``true``
+
+    
+
+  
+  :type DistanceUnit: string
+  :param DistanceUnit: 
+
+    Set the unit system to specify the distance.
+
+     
+
+    Default Value: ``Kilometers``
+
+    
+
+  
+  :type CarModeOptions: dict
+  :param CarModeOptions: 
+
+    Specifies route preferences when traveling by ``Car``, such as avoiding routes that use ferries or tolls.
+
+     
+
+    Requirements: ``TravelMode`` must be specified as ``Car``.
+
+    
+
+  
+    - **AvoidFerries** *(boolean) --* 
+
+      Avoids ferries when calculating routes.
+
+       
+
+      Default Value: ``false``
+
+       
+
+      Valid Values: ``false`` | ``true``
+
+      
+
+    
+    - **AvoidTolls** *(boolean) --* 
+
+      Avoids tolls when calculating routes.
+
+       
+
+      Default Value: ``false``
+
+       
+
+      Valid Values: ``false`` | ``true``
+
+      
+
+    
+  
+  :type TruckModeOptions: dict
+  :param TruckModeOptions: 
+
+    Specifies route preferences when traveling by ``Truck``, such as avoiding routes that use ferries or tolls, and truck specifications to consider when choosing an optimal road.
+
+     
+
+    Requirements: ``TravelMode`` must be specified as ``Truck``.
+
+    
+
+  
+    - **AvoidFerries** *(boolean) --* 
+
+      Avoids ferries when calculating routes.
+
+       
+
+      Default Value: ``false``
+
+       
+
+      Valid Values: ``false`` | ``true``
+
+      
+
+    
+    - **AvoidTolls** *(boolean) --* 
+
+      Avoids tolls when calculating routes.
+
+       
+
+      Default Value: ``false``
+
+       
+
+      Valid Values: ``false`` | ``true``
+
+      
+
+    
+    - **Dimensions** *(dict) --* 
+
+      Specifies the truck's dimension specifications including length, height, width, and unit of measurement. Used to avoid roads that can't support the truck's dimensions.
+
+      
+
+    
+      - **Length** *(float) --* 
+
+        The length of the truck.
+
+         
+
+        
+        * For example, ``15.5``.
+        
+
+         
+
+        .. note::
+
+          
+
+          For routes calculated with a HERE resource, this value must be between 0 and 300 meters.
+
+          
+
+        
+
+      
+      - **Height** *(float) --* 
+
+        The height of the truck.
+
+         
+
+        
+        * For example, ``4.5``.
+        
+
+         
+
+        .. note::
+
+          
+
+          For routes calculated with a HERE resource, this value must be between 0 and 50 meters.
+
+          
+
+        
+
+      
+      - **Width** *(float) --* 
+
+        The width of the truck.
+
+         
+
+        
+        * For example, ``4.5``.
+        
+
+         
+
+        .. note::
+
+          
+
+          For routes calculated with a HERE resource, this value must be between 0 and 50 meters.
+
+          
+
+        
+
+      
+      - **Unit** *(string) --* 
+
+        Specifies the unit of measurement for the truck dimensions.
+
+         
+
+        Default Value: ``Meters``
+
+        
+
+      
+    
+    - **Weight** *(dict) --* 
+
+      Specifies the truck's weight specifications including total weight and unit of measurement. Used to avoid roads that can't support the truck's weight.
+
+      
+
+    
+      - **Total** *(float) --* 
+
+        The total weight of the truck.
+
+         
+
+        
+        * For example, ``3500``.
+        
+
+        
+
+      
+      - **Unit** *(string) --* 
+
+        The unit of measurement to use for the truck weight.
+
+         
+
+        Default Value: ``Kilograms``
+
+        
+
+      
+    
+  
+  :type Key: string
+  :param Key: 
+
+    The optional `API key <https://docs.aws.amazon.com/location/previous/developerguide/using-apikeys.html>`__ to authorize the request.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RouteMatrix': [
+              [
+                  {
+                      'Distance': 123.0,
+                      'DurationSeconds': 123.0,
+                      'Error': {
+                          'Code': 'RouteNotFound'|'RouteTooLong'|'PositionsNotFound'|'DestinationPositionNotFound'|'DeparturePositionNotFound'|'OtherValidationError',
+                          'Message': 'string'
+                      }
+                  },
+              ],
+          ],
+          'SnappedDeparturePositions': [
+              [
+                  123.0,
+              ],
+          ],
+          'SnappedDestinationPositions': [
+              [
+                  123.0,
+              ],
+          ],
+          'Summary': {
+              'DataSource': 'string',
+              'RouteCount': 123,
+              'ErrorCount': 123,
+              'DistanceUnit': 'Kilometers'|'Miles'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Returns the result of the route matrix calculation.
+
+      
+      
+
+      - **RouteMatrix** *(list) --* 
+
+        The calculated route matrix containing the results for all pairs of ``DeparturePositions`` to ``DestinationPositions``. Each row corresponds to one entry in ``DeparturePositions``. Each entry in the row corresponds to the route from that entry in ``DeparturePositions`` to an entry in ``DestinationPositions``.
+
+        
+        
+
+        - *(list) --* 
+          
+
+          - *(dict) --* 
+
+            The result for the calculated route of one ``DeparturePosition`` ``DestinationPosition`` pair.
+
+            
+            
+
+            - **Distance** *(float) --* 
+
+              The total distance of travel for the route.
+
+              
+            
+
+            - **DurationSeconds** *(float) --* 
+
+              The expected duration of travel for the route.
+
+              
+            
+
+            - **Error** *(dict) --* 
+
+              An error corresponding to the calculation of a route between the ``DeparturePosition`` and ``DestinationPosition``.
+
+              
+              
+
+              - **Code** *(string) --* 
+
+                The type of error which occurred for the route calculation.
+
+                
+              
+
+              - **Message** *(string) --* 
+
+                A message about the error that occurred for the route calculation.
+
+                
+          
+        
+      
+    
+      
+
+      - **SnappedDeparturePositions** *(list) --* 
+
+        For routes calculated using an Esri route calculator resource, departure positions are snapped to the closest road. For Esri route calculator resources, this returns the list of departure/origin positions used for calculation of the ``RouteMatrix``.
+
+        
+        
+
+        - *(list) --* 
+          
+
+          - *(float) --* 
+      
+    
+      
+
+      - **SnappedDestinationPositions** *(list) --* 
+
+        The list of destination positions for the route matrix used for calculation of the ``RouteMatrix``.
+
+        
+        
+
+        - *(list) --* 
+          
+
+          - *(float) --* 
+      
+    
+      
+
+      - **Summary** *(dict) --* 
+
+        Contains information about the route matrix, ``DataSource``, ``DistanceUnit``, ``RouteCount`` and ``ErrorCount``.
+
+        
+        
+
+        - **DataSource** *(string) --* 
+
+          The data provider of traffic and road network data used to calculate the routes. Indicates one of the available providers:
+
+           
+
+          
+          * ``Esri``
+           
+          * ``Grab``
+           
+          * ``Here``
+          
+
+           
+
+          For more information about data providers, see `Amazon Location Service data providers <https://docs.aws.amazon.com/location/previous/developerguide/what-is-data-provider.html>`__.
+
+          
+        
+
+        - **RouteCount** *(integer) --* 
+
+          The count of cells in the route matrix. Equal to the number of ``DeparturePositions`` multiplied by the number of ``DestinationPositions``.
+
+          
+        
+
+        - **ErrorCount** *(integer) --* 
+
+          The count of error results in the route matrix. If this number is 0, all routes were calculated successfully.
+
+          
+        
+
+        - **DistanceUnit** *(string) --* 
+
+          The unit of measurement for route distances.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`LocationService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ThrottlingException`
+
+  

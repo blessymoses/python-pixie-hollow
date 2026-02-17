@@ -1,0 +1,180 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / put_integration
+
+***************
+put_integration
+***************
+
+
+
+.. py:method:: CloudWatchLogs.Client.put_integration(**kwargs)
+
+  
+
+  Creates an integration between CloudWatch Logs and another service in this account. Currently, only integrations with OpenSearch Service are supported, and currently you can have only one integration in your account.
+
+   
+
+  Integrating with OpenSearch Service makes it possible for you to create curated vended logs dashboards, powered by OpenSearch Service analytics. For more information, see `Vended log dashboards powered by Amazon OpenSearch Service <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs-OpenSearch-Dashboards.html>`__.
+
+   
+
+  You can use this operation only to create a new integration. You can't modify an existing integration.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/PutIntegration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_integration(
+        integrationName='string',
+        resourceConfig={
+            'openSearchResourceConfig': {
+                'kmsKeyArn': 'string',
+                'dataSourceRoleArn': 'string',
+                'dashboardViewerPrincipals': [
+                    'string',
+                ],
+                'applicationArn': 'string',
+                'retentionDays': 123
+            }
+        },
+        integrationType='OPENSEARCH'
+    )
+    
+  :type integrationName: string
+  :param integrationName: **[REQUIRED]** 
+
+    A name for the integration.
+
+    
+
+  
+  :type resourceConfig: dict
+  :param resourceConfig: **[REQUIRED]** 
+
+    A structure that contains configuration information for the integration that you are creating.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``openSearchResourceConfig``. 
+
+  
+    - **openSearchResourceConfig** *(dict) --* 
+
+      This structure contains configuration details about an integration between CloudWatch Logs and OpenSearch Service.
+
+      
+
+    
+      - **kmsKeyArn** *(string) --* 
+
+        To have the vended dashboard data encrypted with KMS instead of the CloudWatch Logs default encryption method, specify the ARN of the KMS key that you want to use.
+
+        
+
+      
+      - **dataSourceRoleArn** *(string) --* **[REQUIRED]** 
+
+        Specify the ARN of an IAM role that CloudWatch Logs will use to create the integration. This role must have the permissions necessary to access the OpenSearch Service collection to be able to create the dashboards. For more information about the permissions needed, see `Permissions that the integration needs <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/OpenSearch-Dashboards-CreateRole.html>`__ in the CloudWatch Logs User Guide.
+
+        
+
+      
+      - **dashboardViewerPrincipals** *(list) --* **[REQUIRED]** 
+
+        Specify the ARNs of IAM roles and IAM users who you want to grant permission to for viewing the dashboards.
+
+         
+
+        .. warning::
+
+           
+
+          In addition to specifying these users here, you must also grant them the **CloudWatchOpenSearchDashboardAccess** IAM policy. For more information, see `IAM policies for users <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/OpenSearch-Dashboards-UserRoles.html>`__.
+
+          
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **applicationArn** *(string) --* 
+
+        If you want to use an existing OpenSearch Service application for your integration with OpenSearch Service, specify it here. If you omit this, a new application will be created.
+
+        
+
+      
+      - **retentionDays** *(integer) --* **[REQUIRED]** 
+
+        Specify how many days that you want the data derived by OpenSearch Service to be retained in the index that the dashboard refers to. This also sets the maximum time period that you can choose when viewing data in the dashboard. Choosing a longer time frame will incur additional costs.
+
+        
+
+      
+    
+  
+  :type integrationType: string
+  :param integrationType: **[REQUIRED]** 
+
+    The type of integration. Currently, the only supported type is ``OPENSEARCH``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'integrationName': 'string',
+          'integrationStatus': 'PROVISIONING'|'ACTIVE'|'FAILED'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **integrationName** *(string) --* 
+
+        The name of the integration that you just created.
+
+        
+      
+
+      - **integrationStatus** *(string) --* 
+
+        The status of the integration that you just created.
+
+         
+
+        After you create an integration, it takes a few minutes to complete. During this time, you'll see the status as ``PROVISIONING``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ValidationException`
+
+  

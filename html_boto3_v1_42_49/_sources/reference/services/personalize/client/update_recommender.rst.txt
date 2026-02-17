@@ -1,0 +1,182 @@
+:doc:`Personalize <../../personalize>` / Client / update_recommender
+
+******************
+update_recommender
+******************
+
+
+
+.. py:method:: Personalize.Client.update_recommender(**kwargs)
+
+  
+
+  Updates the recommender to modify the recommender configuration. If you update the recommender to modify the columns used in training, Amazon Personalize automatically starts a full retraining of the models backing your recommender. While the update completes, you can still get recommendations from the recommender. The recommender uses the previous configuration until the update completes. To track the status of this update, use the ``latestRecommenderUpdate`` returned in the `DescribeRecommender <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeRecommender.html>`__ operation.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/personalize-2018-05-22/UpdateRecommender>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_recommender(
+        recommenderArn='string',
+        recommenderConfig={
+            'itemExplorationConfig': {
+                'string': 'string'
+            },
+            'minRecommendationRequestsPerSecond': 123,
+            'trainingDataConfig': {
+                'excludedDatasetColumns': {
+                    'string': [
+                        'string',
+                    ]
+                },
+                'includedDatasetColumns': {
+                    'string': [
+                        'string',
+                    ]
+                }
+            },
+            'enableMetadataWithRecommendations': True|False
+        }
+    )
+    
+  :type recommenderArn: string
+  :param recommenderArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the recommender to modify.
+
+    
+
+  
+  :type recommenderConfig: dict
+  :param recommenderConfig: **[REQUIRED]** 
+
+    The configuration details of the recommender.
+
+    
+
+  
+    - **itemExplorationConfig** *(dict) --* 
+
+      Specifies the exploration configuration hyperparameters, including ``explorationWeight`` and ``explorationItemAgeCutOff``, you want to use to configure the amount of item exploration Amazon Personalize uses when recommending items. Provide ``itemExplorationConfig`` data only if your recommenders generate personalized recommendations for a user (not popular items or similar items).
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+    - **minRecommendationRequestsPerSecond** *(integer) --* 
+
+      Specifies the requested minimum provisioned recommendation requests per second that Amazon Personalize will support. A high ``minRecommendationRequestsPerSecond`` will increase your bill. We recommend starting with 1 for ``minRecommendationRequestsPerSecond`` (the default). Track your usage using Amazon CloudWatch metrics, and increase the ``minRecommendationRequestsPerSecond`` as necessary.
+
+      
+
+    
+    - **trainingDataConfig** *(dict) --* 
+
+      Specifies the training data configuration to use when creating a domain recommender.
+
+      
+
+    
+      - **excludedDatasetColumns** *(dict) --* 
+
+        Specifies the columns to exclude from training. Each key is a dataset type, and each value is a list of columns. Exclude columns to control what data Amazon Personalize uses to generate recommendations.
+
+         
+
+        For example, you might have a column that you want to use only to filter recommendations. You can exclude this column from training and Amazon Personalize considers it only when filtering.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(list) --* 
+
+          
+            - *(string) --* 
+
+            
+        
+    
+  
+      - **includedDatasetColumns** *(dict) --* 
+
+        A map that specifies which columns to include from each dataset during training. The map can contain up to 3 entries, where each key is a dataset name (maximum length of 256 characters, must contain only letters and underscores) and each value is an array of up to 50 column names. Column names can be up to 150 characters long, must start with a letter or underscore, and can contain only letters, numbers, and underscores.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(list) --* 
+
+          
+            - *(string) --* 
+
+            
+        
+    
+  
+    
+    - **enableMetadataWithRecommendations** *(boolean) --* 
+
+      Whether metadata with recommendations is enabled for the recommender. If enabled, you can specify the columns from your Items dataset in your request for recommendations. Amazon Personalize returns this data for each item in the recommendation response. For information about enabling metadata for a recommender, see `Enabling metadata in recommendations for a recommender <https://docs.aws.amazon.com/personalize/latest/dg/creating-recommenders.html#create-recommender-return-metadata>`__.
+
+       
+
+      If you enable metadata in recommendations, you will incur additional costs. For more information, see `Amazon Personalize pricing <https://aws.amazon.com/personalize/pricing/>`__.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'recommenderArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **recommenderArn** *(string) --* 
+
+        The same recommender Amazon Resource Name (ARN) as given in the request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceInUseException`
+
+  

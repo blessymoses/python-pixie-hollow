@@ -1,0 +1,322 @@
+:doc:`Backup <../../backup>` / Client / list_backup_job_summaries
+
+*************************
+list_backup_job_summaries
+*************************
+
+
+
+.. py:method:: Backup.Client.list_backup_job_summaries(**kwargs)
+
+  
+
+  This is a request for a summary of backup jobs created or running within the most recent 30 days. You can include parameters AccountID, State, ResourceType, MessageCategory, AggregationPeriod, MaxResults, or NextToken to filter results.
+
+   
+
+  This request returns a summary that contains Region, Account, State, ResourceType, MessageCategory, StartTime, EndTime, and Count of included jobs.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/ListBackupJobSummaries>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_backup_job_summaries(
+        AccountId='string',
+        State='CREATED'|'PENDING'|'RUNNING'|'ABORTING'|'ABORTED'|'COMPLETED'|'FAILED'|'EXPIRED'|'PARTIAL'|'AGGREGATE_ALL'|'ANY',
+        ResourceType='string',
+        MessageCategory='string',
+        AggregationPeriod='ONE_DAY'|'SEVEN_DAYS'|'FOURTEEN_DAYS',
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type AccountId: string
+  :param AccountId: 
+
+    Returns the job count for the specified account.
+
+     
+
+    If the request is sent from a member account or an account not part of Amazon Web Services Organizations, jobs within requestor's account will be returned.
+
+     
+
+    Root, admin, and delegated administrator accounts can use the value ANY to return job counts from every account in the organization.
+
+     
+
+    ``AGGREGATE_ALL`` aggregates job counts from all accounts within the authenticated organization, then returns the sum.
+
+    
+
+  
+  :type State: string
+  :param State: 
+
+    This parameter returns the job count for jobs with the specified state.
+
+     
+
+    The the value ANY returns count of all states.
+
+     
+
+    ``AGGREGATE_ALL`` aggregates job counts for all states and returns the sum.
+
+     
+
+    ``Completed with issues`` is a status found only in the Backup console. For API, this status refers to jobs with a state of ``COMPLETED`` and a ``MessageCategory`` with a value other than ``SUCCESS``; that is, the status is completed but comes with a status message. To obtain the job count for ``Completed with issues``, run two GET requests, and subtract the second, smaller number:
+
+     
+
+    GET /audit/backup-job-summaries?AggregationPeriod=FOURTEEN_DAYS&State=COMPLETED
+
+     
+
+    GET /audit/backup-job-summaries?AggregationPeriod=FOURTEEN_DAYS&MessageCategory=SUCCESS&State=COMPLETED
+
+    
+
+  
+  :type ResourceType: string
+  :param ResourceType: 
+
+    Returns the job count for the specified resource type. Use request ``GetSupportedResourceTypes`` to obtain strings for supported resource types.
+
+     
+
+    The the value ANY returns count of all resource types.
+
+     
+
+    ``AGGREGATE_ALL`` aggregates job counts for all resource types and returns the sum.
+
+     
+
+    The type of Amazon Web Services resource to be backed up; for example, an Amazon Elastic Block Store (Amazon EBS) volume or an Amazon Relational Database Service (Amazon RDS) database.
+
+    
+
+  
+  :type MessageCategory: string
+  :param MessageCategory: 
+
+    This parameter returns the job count for the specified message category.
+
+     
+
+    Example accepted strings include ``AccessDenied``, ``Success``, and ``InvalidParameters``. See `Monitoring <https://docs.aws.amazon.com/aws-backup/latest/devguide/monitoring.html>`__ for a list of accepted MessageCategory strings.
+
+     
+
+    The the value ANY returns count of all message categories.
+
+     
+
+    ``AGGREGATE_ALL`` aggregates job counts for all message categories and returns the sum.
+
+    
+
+  
+  :type AggregationPeriod: string
+  :param AggregationPeriod: 
+
+    The period for the returned results.
+
+     
+
+    
+    * ``ONE_DAY`` - The daily job count for the prior 14 days.
+     
+    * ``SEVEN_DAYS`` - The aggregated job count for the prior 7 days.
+     
+    * ``FOURTEEN_DAYS`` - The aggregated job count for prior 14 days.
+    
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to be returned.
+
+     
+
+    The value is an integer. Range of accepted values is from 1 to 500.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The next item following a partial list of returned resources. For example, if a request is made to return ``MaxResults`` number of resources, ``NextToken`` allows you to return more items in your list starting at the location pointed to by the next token.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'BackupJobSummaries': [
+              {
+                  'Region': 'string',
+                  'AccountId': 'string',
+                  'State': 'CREATED'|'PENDING'|'RUNNING'|'ABORTING'|'ABORTED'|'COMPLETED'|'FAILED'|'EXPIRED'|'PARTIAL'|'AGGREGATE_ALL'|'ANY',
+                  'ResourceType': 'string',
+                  'MessageCategory': 'string',
+                  'Count': 123,
+                  'StartTime': datetime(2015, 1, 1),
+                  'EndTime': datetime(2015, 1, 1)
+              },
+          ],
+          'AggregationPeriod': 'string',
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **BackupJobSummaries** *(list) --* 
+
+        The summary information.
+
+        
+        
+
+        - *(dict) --* 
+
+          This is a summary of jobs created or running within the most recent 30 days.
+
+           
+
+          The returned summary may contain the following: Region, Account, State, RestourceType, MessageCategory, StartTime, EndTime, and Count of included jobs.
+
+          
+          
+
+          - **Region** *(string) --* 
+
+            The Amazon Web Services Regions within the job summary.
+
+            
+          
+
+          - **AccountId** *(string) --* 
+
+            The account ID that owns the jobs within the summary.
+
+            
+          
+
+          - **State** *(string) --* 
+
+            This value is job count for jobs with the specified state.
+
+            
+          
+
+          - **ResourceType** *(string) --* 
+
+            This value is the job count for the specified resource type. The request ``GetSupportedResourceTypes`` returns strings for supported resource types.
+
+            
+          
+
+          - **MessageCategory** *(string) --* 
+
+            This parameter is the job count for the specified message category.
+
+             
+
+            Example strings include ``AccessDenied``, ``Success``, and ``InvalidParameters``. See `Monitoring <https://docs.aws.amazon.com/aws-backup/latest/devguide/monitoring.html>`__ for a list of MessageCategory strings.
+
+             
+
+            The the value ANY returns count of all message categories.
+
+             
+
+            ``AGGREGATE_ALL`` aggregates job counts for all message categories and returns the sum.
+
+            
+          
+
+          - **Count** *(integer) --* 
+
+            The value as a number of jobs in a job summary.
+
+            
+          
+
+          - **StartTime** *(datetime) --* 
+
+            The value of time in number format of a job start time.
+
+             
+
+            This value is the time in Unix format, Coordinated Universal Time (UTC), and accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+            
+          
+
+          - **EndTime** *(datetime) --* 
+
+            The value of time in number format of a job end time.
+
+             
+
+            This value is the time in Unix format, Coordinated Universal Time (UTC), and accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+            
+      
+    
+      
+
+      - **AggregationPeriod** *(string) --* 
+
+        The period for the returned results.
+
+         
+
+        
+        * ``ONE_DAY`` - The daily job count for the prior 14 days.
+         
+        * ``SEVEN_DAYS`` - The aggregated job count for the prior 7 days.
+         
+        * ``FOURTEEN_DAYS`` - The aggregated job count for prior 14 days.
+        
+
+        
+      
+
+      - **NextToken** *(string) --* 
+
+        The next item following a partial list of returned resources. For example, if a request is made to return ``MaxResults`` number of resources, ``NextToken`` allows you to return more items in your list starting at the location pointed to by the next token.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Backup.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.ServiceUnavailableException`
+
+  

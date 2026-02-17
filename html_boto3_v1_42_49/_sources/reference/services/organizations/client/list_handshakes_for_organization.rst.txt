@@ -1,0 +1,462 @@
+:doc:`Organizations <../../organizations>` / Client / list_handshakes_for_organization
+
+********************************
+list_handshakes_for_organization
+********************************
+
+
+
+.. py:method:: Organizations.Client.list_handshakes_for_organization(**kwargs)
+
+  
+
+  Lists the recent handshakes that you have sent.
+
+   
+
+  You can view ``CANCELED``, ``ACCEPTED``, ``DECLINED``, or ``EXPIRED`` handshakes in API responses for 30 days before they are deleted.
+
+   
+
+  You can only call this operation from the management account or a member account that is a delegated administrator.
+
+   
+
+  .. note::
+
+    
+
+    When calling List* operations, always check the ``NextToken`` response parameter value, even if you receive an empty result set. These operations can occasionally return an empty set of results even when more results are available. Continue making requests until ``NextToken`` returns null. A null ``NextToken`` value indicates that you have retrieved all available results.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/ListHandshakesForOrganization>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_handshakes_for_organization(
+        Filter={
+            'ActionType': 'INVITE'|'ENABLE_ALL_FEATURES'|'APPROVE_ALL_FEATURES'|'ADD_ORGANIZATIONS_SERVICE_LINKED_ROLE'|'TRANSFER_RESPONSIBILITY',
+            'ParentHandshakeId': 'string'
+        },
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type Filter: dict
+  :param Filter: 
+
+    A ``HandshakeFilter`` object. Contains the filer used to select the handshakes for an operation.
+
+    
+
+  
+    - **ActionType** *(string) --* 
+
+      The type of handshake.
+
+       
+
+      If you specify ``ActionType``, you cannot also specify ``ParentHandshakeId``.
+
+      
+
+    
+    - **ParentHandshakeId** *(string) --* 
+
+      The parent handshake. Only used for handshake types that are a child of another type.
+
+       
+
+      If you specify ``ParentHandshakeId``, you cannot also specify ``ActionType``.
+
+       
+
+      The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+      
+
+    
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The parameter for receiving additional results if you receive a ``NextToken`` response in a previous request. A ``NextToken`` response indicates that more output is available. Set this parameter to the value of the previous call's ``NextToken`` response to indicate where the output should continue from.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return in the response. If more results exist than the specified ``MaxResults`` value, a token is included in the response so that you can retrieve the remaining results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Handshakes': [
+              {
+                  'Id': 'string',
+                  'Arn': 'string',
+                  'Parties': [
+                      {
+                          'Id': 'string',
+                          'Type': 'ACCOUNT'|'ORGANIZATION'|'EMAIL'
+                      },
+                  ],
+                  'State': 'REQUESTED'|'OPEN'|'CANCELED'|'ACCEPTED'|'DECLINED'|'EXPIRED',
+                  'RequestedTimestamp': datetime(2015, 1, 1),
+                  'ExpirationTimestamp': datetime(2015, 1, 1),
+                  'Action': 'INVITE'|'ENABLE_ALL_FEATURES'|'APPROVE_ALL_FEATURES'|'ADD_ORGANIZATIONS_SERVICE_LINKED_ROLE'|'TRANSFER_RESPONSIBILITY',
+                  'Resources': [
+                      {
+                          'Value': 'string',
+                          'Type': 'ACCOUNT'|'ORGANIZATION'|'ORGANIZATION_FEATURE_SET'|'EMAIL'|'MASTER_EMAIL'|'MASTER_NAME'|'NOTES'|'PARENT_HANDSHAKE'|'RESPONSIBILITY_TRANSFER'|'TRANSFER_START_TIMESTAMP'|'TRANSFER_TYPE'|'MANAGEMENT_ACCOUNT'|'MANAGEMENT_EMAIL'|'MANAGEMENT_NAME',
+                          'Resources': {'... recursive ...'}
+                      },
+                  ]
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Handshakes** *(list) --* 
+
+        An array of ``Handshake``objects. Contains details for a handshake.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains details for a handshake. A handshake is the secure exchange of information between two Amazon Web Services accounts: a sender and a recipient.
+
+           
+
+          **Note:** Handshakes that are ``CANCELED``, ``ACCEPTED``, ``DECLINED``, or ``EXPIRED`` show up in lists for only 30 days after entering that state After that they are deleted.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            ID for the handshake.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+            
+          
+
+          - **Arn** *(string) --* 
+
+            Amazon Resource Name (ARN) for the handshake.
+
+             
+
+            For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+            
+          
+
+          - **Parties** *(list) --* 
+
+            An array of ``HandshakeParty`` objects. Contains details for participant in a handshake.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains details for a participant in a handshake.
+
+              
+              
+
+              - **Id** *(string) --* 
+
+                ID for the participant: Acccount ID, organization ID, or email address.
+
+                 
+
+                The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+                
+              
+
+              - **Type** *(string) --* 
+
+                The type of ID for the participant.
+
+                
+          
+        
+          
+
+          - **State** *(string) --* 
+
+            Current state for the handshake.
+
+             
+
+            
+            * **REQUESTED**: Handshake awaiting a response from the recipient.
+             
+            * **OPEN**: Handshake sent to multiple recipients and all recipients have responded. The sender can now complete the handshake action.
+             
+            * **CANCELED**: Handshake canceled by the sender.
+             
+            * **ACCEPTED**: Handshake accepted by the recipient.
+             
+            * **DECLINED**: Handshake declined by the recipient.
+             
+            * **EXPIRED**: Handshake has expired.
+            
+
+            
+          
+
+          - **RequestedTimestamp** *(datetime) --* 
+
+            Timestamp when the handshake request was made.
+
+            
+          
+
+          - **ExpirationTimestamp** *(datetime) --* 
+
+            Timestamp when the handshake expires.
+
+            
+          
+
+          - **Action** *(string) --* 
+
+            The type of handshake:
+
+             
+
+            
+            * **INVITE**: Handshake sent to a standalone account requesting that it to join the sender's organization.
+             
+            * **ENABLE_ALL_FEATURES**: Handshake sent to invited member accounts to enable all features for the organization.
+             
+            * **APPROVE_ALL_FEATURES**: Handshake sent to the management account when all invited member accounts have approved to enable all features.
+             
+            * **TRANSFER_RESPONSIBILITY**: Handshake sent to another organization's management account requesting that it designate the sender with the specified responsibilities for recipient's organization.
+            
+
+            
+          
+
+          - **Resources** *(list) --* 
+
+            An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains additional details for a handshake.
+
+              
+              
+
+              - **Value** *(string) --* 
+
+                Additional information for the handshake. The format of the value string must match the requirements of the specified type.
+
+                
+              
+
+              - **Type** *(string) --* 
+
+                The type of information being passed, specifying how the value is to be interpreted by the other party:
+
+                 
+
+                
+                * **ACCOUNT**: ID for an Amazon Web Services account.
+                 
+                * **ORGANIZATION**: ID for an organization.
+                 
+                * **EMAIL**: Email address for the recipient.
+                 
+                * **OWNER_EMAIL**: Email address for the sender.
+                 
+                * **OWNER_NAME**: Name of the sender.
+                 
+                * **NOTES**: Additional text included by the sender for the recipient.
+                
+
+                
+              
+
+              - **Resources** *(list) --* 
+
+                An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+                
+          
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If present, indicates that more output is available than is included in the current response. Use this value in the ``NextToken`` request parameter in a subsequent call to the operation to get the next part of the output. You should repeat this until the ``NextToken`` response element comes back as ``null``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+
+  **Examples**
+
+  The following example shows you how to get a list of handshakes associated with the current organization:
+  ::
+
+    response = client.list_handshakes_for_organization(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Handshakes': [
+            {
+                'Action': 'INVITE',
+                'Arn': 'arn:aws:organizations::111111111111:handshake/o-exampleorgid/invite/h-examplehandshakeid111',
+                'ExpirationTimestamp': datetime(2017, 1, 28, 14, 35, 23, 5, 28, 0),
+                'Id': 'h-examplehandshakeid111',
+                'Parties': [
+                    {
+                        'Id': 'o-exampleorgid',
+                        'Type': 'ORGANIZATION',
+                    },
+                    {
+                        'Id': 'juan@example.com',
+                        'Type': 'EMAIL',
+                    },
+                ],
+                'RequestedTimestamp': datetime(2017, 1, 13, 14, 35, 23, 4, 13, 0),
+                'Resources': [
+                    {
+                        'Resources': [
+                            {
+                                'Type': 'MASTER_EMAIL',
+                                'Value': 'bill@amazon.com',
+                            },
+                            {
+                                'Type': 'MASTER_NAME',
+                                'Value': 'Org Master Account',
+                            },
+                            {
+                                'Type': 'ORGANIZATION_FEATURE_SET',
+                                'Value': 'FULL',
+                            },
+                        ],
+                        'Type': 'ORGANIZATION',
+                        'Value': 'o-exampleorgid',
+                    },
+                    {
+                        'Type': 'EMAIL',
+                        'Value': 'juan@example.com',
+                    },
+                ],
+                'State': 'OPEN',
+            },
+            {
+                'Action': 'INVITE',
+                'Arn': 'arn:aws:organizations::111111111111:handshake/o-exampleorgid/invite/h-examplehandshakeid111',
+                'ExpirationTimestamp': datetime(2017, 1, 28, 14, 35, 23, 5, 28, 0),
+                'Id': 'h-examplehandshakeid222',
+                'Parties': [
+                    {
+                        'Id': 'o-exampleorgid',
+                        'Type': 'ORGANIZATION',
+                    },
+                    {
+                        'Id': 'anika@example.com',
+                        'Type': 'EMAIL',
+                    },
+                ],
+                'RequestedTimestamp': datetime(2017, 1, 13, 14, 35, 23, 4, 13, 0),
+                'Resources': [
+                    {
+                        'Resources': [
+                            {
+                                'Type': 'MASTER_EMAIL',
+                                'Value': 'bill@example.com',
+                            },
+                            {
+                                'Type': 'MASTER_NAME',
+                                'Value': 'Master Account',
+                            },
+                        ],
+                        'Type': 'ORGANIZATION',
+                        'Value': 'o-exampleorgid',
+                    },
+                    {
+                        'Type': 'EMAIL',
+                        'Value': 'anika@example.com',
+                    },
+                    {
+                        'Type': 'NOTES',
+                        'Value': 'This is an invitation to Anika's account to join Bill's organization.',
+                    },
+                ],
+                'State': 'ACCEPTED',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

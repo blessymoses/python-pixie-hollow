@@ -1,0 +1,345 @@
+:doc:`SecurityHub <../../securityhub>` / Client / batch_get_security_controls
+
+***************************
+batch_get_security_controls
+***************************
+
+
+
+.. py:method:: SecurityHub.Client.batch_get_security_controls(**kwargs)
+
+  
+
+  Provides details about a batch of security controls for the current Amazon Web Services account and Amazon Web Services Region.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/securityhub-2018-10-26/BatchGetSecurityControls>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_security_controls(
+        SecurityControlIds=[
+            'string',
+        ]
+    )
+    
+  :type SecurityControlIds: list
+  :param SecurityControlIds: **[REQUIRED]** 
+
+    A list of security controls (identified with ``SecurityControlId``, ``SecurityControlArn``, or a mix of both parameters). The security control ID or Amazon Resource Name (ARN) is the same across standards.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'SecurityControls': [
+              {
+                  'SecurityControlId': 'string',
+                  'SecurityControlArn': 'string',
+                  'Title': 'string',
+                  'Description': 'string',
+                  'RemediationUrl': 'string',
+                  'SeverityRating': 'LOW'|'MEDIUM'|'HIGH'|'CRITICAL',
+                  'SecurityControlStatus': 'ENABLED'|'DISABLED',
+                  'UpdateStatus': 'READY'|'UPDATING',
+                  'Parameters': {
+                      'string': {
+                          'ValueType': 'DEFAULT'|'CUSTOM',
+                          'Value': {
+                              'Integer': 123,
+                              'IntegerList': [
+                                  123,
+                              ],
+                              'Double': 123.0,
+                              'String': 'string',
+                              'StringList': [
+                                  'string',
+                              ],
+                              'Boolean': True|False,
+                              'Enum': 'string',
+                              'EnumList': [
+                                  'string',
+                              ]
+                          }
+                      }
+                  },
+                  'LastUpdateReason': 'string'
+              },
+          ],
+          'UnprocessedIds': [
+              {
+                  'SecurityControlId': 'string',
+                  'ErrorCode': 'INVALID_INPUT'|'ACCESS_DENIED'|'NOT_FOUND'|'RESOURCE_NOT_FOUND'|'LIMIT_EXCEEDED',
+                  'ErrorReason': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **SecurityControls** *(list) --* 
+
+        An array that returns the identifier, Amazon Resource Name (ARN), and other details about a security control. The same information is returned whether the request includes ``SecurityControlId`` or ``SecurityControlArn``.
+
+        
+        
+
+        - *(dict) --* 
+
+          A security control in Security Hub describes a security best practice related to a specific resource.
+
+          
+          
+
+          - **SecurityControlId** *(string) --* 
+
+            The unique identifier of a security control across standards. Values for this field typically consist of an Amazon Web Services service name and a number, such as APIGateway.3.
+
+            
+          
+
+          - **SecurityControlArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) for a security control across standards, such as ``arn:aws:securityhub:eu-central-1:123456789012:security-control/S3.1``. This parameter doesn't mention a specific standard.
+
+            
+          
+
+          - **Title** *(string) --* 
+
+            The title of a security control.
+
+            
+          
+
+          - **Description** *(string) --* 
+
+            The description of a security control across standards. This typically summarizes how Security Hub evaluates the control and the conditions under which it produces a failed finding. This parameter doesn't reference a specific standard.
+
+            
+          
+
+          - **RemediationUrl** *(string) --* 
+
+            A link to Security Hub documentation that explains how to remediate a failed finding for a security control.
+
+            
+          
+
+          - **SeverityRating** *(string) --* 
+
+            The severity of a security control. For more information about how Security Hub determines control severity, see `Assigning severity to control findings <https://docs.aws.amazon.com/securityhub/latest/userguide/controls-findings-create-update.html#control-findings-severity>`__ in the *Security Hub User Guide*.
+
+            
+          
+
+          - **SecurityControlStatus** *(string) --* 
+
+            The enablement status of a security control in a specific standard.
+
+            
+          
+
+          - **UpdateStatus** *(string) --* 
+
+            Identifies whether customizable properties of a security control are reflected in Security Hub findings. A status of ``READY`` indicates that Security Hub uses the current control parameter values when running security checks of the control. A status of ``UPDATING`` indicates that all security checks might not use the current parameter values.
+
+            
+          
+
+          - **Parameters** *(dict) --* 
+
+            An object that identifies the name of a control parameter, its current value, and whether it has been customized.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(dict) --* 
+
+                An object that provides the current value of a security control parameter and identifies whether it has been customized.
+
+                
+                
+
+                - **ValueType** *(string) --* 
+
+                  Identifies whether a control parameter uses a custom user-defined value or subscribes to the default Security Hub behavior.
+
+                   
+
+                  When ``ValueType`` is set equal to ``DEFAULT``, the default behavior can be a specific Security Hub default value, or the default behavior can be to ignore a specific parameter. When ``ValueType`` is set equal to ``DEFAULT``, Security Hub ignores user-provided input for the ``Value`` field.
+
+                   
+
+                  When ``ValueType`` is set equal to ``CUSTOM``, the ``Value`` field can't be empty.
+
+                  
+                
+
+                - **Value** *(dict) --* 
+
+                  The current value of a control parameter.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``Integer``, ``IntegerList``, ``Double``, ``String``, ``StringList``, ``Boolean``, ``Enum``, ``EnumList``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **Integer** *(integer) --* 
+
+                    A control parameter that is an integer.
+
+                    
+                  
+
+                  - **IntegerList** *(list) --* 
+
+                    A control parameter that is a list of integers.
+
+                    
+                    
+
+                    - *(integer) --* 
+                
+                  
+
+                  - **Double** *(float) --* 
+
+                    A control parameter that is a double.
+
+                    
+                  
+
+                  - **String** *(string) --* 
+
+                    A control parameter that is a string.
+
+                    
+                  
+
+                  - **StringList** *(list) --* 
+
+                    A control parameter that is a list of strings.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **Boolean** *(boolean) --* 
+
+                    A control parameter that is a boolean.
+
+                    
+                  
+
+                  - **Enum** *(string) --* 
+
+                    A control parameter that is an enum.
+
+                    
+                  
+
+                  - **EnumList** *(list) --* 
+
+                    A control parameter that is a list of enums.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+              
+            
+        
+      
+          
+
+          - **LastUpdateReason** *(string) --* 
+
+            The most recent reason for updating the customizable properties of a security control. This differs from the ``UpdateReason`` field of the `BatchUpdateStandardsControlAssociations <https://docs.aws.amazon.com/securityhub/1.0/APIReference/API_BatchUpdateStandardsControlAssociations.html>`__ API, which tracks the reason for updating the enablement status of a control. This field accepts alphanumeric characters in addition to white spaces, dashes, and underscores.
+
+            
+      
+    
+      
+
+      - **UnprocessedIds** *(list) --* 
+
+        A security control (identified with ``SecurityControlId``, ``SecurityControlArn``, or a mix of both parameters) for which details cannot be returned.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides details about a security control for which a response couldn't be returned.
+
+          
+          
+
+          - **SecurityControlId** *(string) --* 
+
+            The control (identified with ``SecurityControlId``, ``SecurityControlArn``, or a mix of both parameters) for which a response couldn't be returned.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code for the unprocessed security control. The ``NOT_FOUND`` value has been deprecated and replaced by the ``RESOURCE_NOT_FOUND`` value.
+
+            
+          
+
+          - **ErrorReason** *(string) --* 
+
+            The reason why the security control was unprocessed.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SecurityHub.Client.exceptions.InternalException`
+
+  
+  *   :py:class:`SecurityHub.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`SecurityHub.Client.exceptions.InvalidAccessException`
+
+  
+  *   :py:class:`SecurityHub.Client.exceptions.InvalidInputException`
+
+  

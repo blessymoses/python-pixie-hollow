@@ -1,0 +1,382 @@
+:doc:`BedrockRuntime <../../bedrock-runtime>` / Client / invoke_model_with_response_stream
+
+*********************************
+invoke_model_with_response_stream
+*********************************
+
+
+
+.. py:method:: BedrockRuntime.Client.invoke_model_with_response_stream(**kwargs)
+
+  
+
+  Invoke the specified Amazon Bedrock model to run inference using the prompt and inference parameters provided in the request body. The response is returned in a stream.
+
+   
+
+  To see if a model supports streaming, call `GetFoundationModel <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_GetFoundationModel.html>`__ and check the ``responseStreamingSupported`` field in the response.
+
+   
+
+  .. note::
+
+    
+
+    The CLI doesn't support streaming operations in Amazon Bedrock, including ``InvokeModelWithResponseStream``.
+
+    
+
+   
+
+  For example code, see *Invoke model with streaming code example* in the *Amazon Bedrock User Guide*.
+
+   
+
+  This operation requires permissions to perform the ``bedrock:InvokeModelWithResponseStream`` action.
+
+   
+
+  .. warning::
+
+     
+
+    To deny all inference access to resources that you specify in the modelId field, you need to deny access to the ``bedrock:InvokeModel`` and ``bedrock:InvokeModelWithResponseStream`` actions. Doing this also denies access to the resource through the Converse API actions ( `Converse <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html>`__ and `ConverseStream <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html>`__). For more information see `Deny access for inference on specific models <https://docs.aws.amazon.com/bedrock/latest/userguide/security_iam_id-based-policy-examples.html#security_iam_id-based-policy-examples-deny-inference>`__.
+
+     
+
+   
+
+  For troubleshooting some of the common errors you might encounter when using the ``InvokeModelWithResponseStream`` API, see `Troubleshooting Amazon Bedrock API Error Codes <https://docs.aws.amazon.com/bedrock/latest/userguide/troubleshooting-api-error-codes.html>`__ in the Amazon Bedrock User Guide
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-runtime-2023-09-30/InvokeModelWithResponseStream>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.invoke_model_with_response_stream(
+        body=b'bytes'|file,
+        contentType='string',
+        accept='string',
+        modelId='string',
+        trace='ENABLED'|'DISABLED'|'ENABLED_FULL',
+        guardrailIdentifier='string',
+        guardrailVersion='string',
+        performanceConfigLatency='standard'|'optimized',
+        serviceTier='priority'|'default'|'flex'|'reserved'
+    )
+    
+  :type body: bytes or seekable file-like object
+  :param body: 
+
+    The prompt and inference parameters in the format specified in the ``contentType`` in the header. You must provide the body in JSON format. To see the format and content of the request and response bodies for different models, refer to `Inference parameters <https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html>`__. For more information, see `Run inference <https://docs.aws.amazon.com/bedrock/latest/userguide/api-methods-run.html>`__ in the Bedrock User Guide.
+
+    
+
+  
+  :type contentType: string
+  :param contentType: 
+
+    The MIME type of the input data in the request. You must specify ``application/json``.
+
+    
+
+  
+  :type accept: string
+  :param accept: 
+
+    The desired MIME type of the inference body in the response. The default value is ``application/json``.
+
+    
+
+  
+  :type modelId: string
+  :param modelId: **[REQUIRED]** 
+
+    The unique identifier of the model to invoke to run inference.
+
+     
+
+    The ``modelId`` to provide depends on the type of model or throughput that you use:
+
+     
+
+    
+    * If you use a base model, specify the model ID or its ARN. For a list of model IDs for base models, see `Amazon Bedrock base model IDs (on-demand throughput) <https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html#model-ids-arns>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use an inference profile, specify the inference profile ID or its ARN. For a list of inference profile IDs, see `Supported Regions and models for cross-region inference <https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference-support.html>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use a provisioned model, specify the ARN of the Provisioned Throughput. For more information, see `Run inference using a Provisioned Throughput <https://docs.aws.amazon.com/bedrock/latest/userguide/prov-thru-use.html>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use a custom model, specify the ARN of the custom model deployment (for on-demand inference) or the ARN of your provisioned model (for Provisioned Throughput). For more information, see `Use a custom model in Amazon Bedrock <https://docs.aws.amazon.com/bedrock/latest/userguide/model-customization-use.html>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use an `imported model <https://docs.aws.amazon.com/bedrock/latest/userguide/model-customization-import-model.html>`__, specify the ARN of the imported model. You can get the model ARN from a successful call to `CreateModelImportJob <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_CreateModelImportJob.html>`__ or from the Imported models page in the Amazon Bedrock console.
+    
+
+    
+
+  
+  :type trace: string
+  :param trace: 
+
+    Specifies whether to enable or disable the Bedrock trace. If enabled, you can see the full Bedrock trace.
+
+    
+
+  
+  :type guardrailIdentifier: string
+  :param guardrailIdentifier: 
+
+    The unique identifier of the guardrail that you want to use. If you don't provide a value, no guardrail is applied to the invocation.
+
+     
+
+    An error is thrown in the following situations.
+
+     
+
+    
+    * You don't provide a guardrail identifier but you specify the ``amazon-bedrock-guardrailConfig`` field in the request body.
+     
+    * You enable the guardrail but the ``contentType`` isn't ``application/json``.
+     
+    * You provide a guardrail identifier, but ``guardrailVersion`` isn't specified.
+    
+
+    
+
+  
+  :type guardrailVersion: string
+  :param guardrailVersion: 
+
+    The version number for the guardrail. The value can also be ``DRAFT``.
+
+    
+
+  
+  :type performanceConfigLatency: string
+  :param performanceConfigLatency: 
+
+    Model performance settings for the request.
+
+    
+
+  
+  :type serviceTier: string
+  :param serviceTier: 
+
+    Specifies the processing tier type used for serving the request.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+
+    The response of this operation contains an :class:`.EventStream` member. When iterated the :class:`.EventStream` will yield events based on the structure below, where only one of the top level keys will be present for any given event.
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'body': EventStream({
+              'chunk': {
+                  'bytes': b'bytes'
+              },
+              'internalServerException': {
+                  'message': 'string'
+              },
+              'modelStreamErrorException': {
+                  'message': 'string',
+                  'originalStatusCode': 123,
+                  'originalMessage': 'string'
+              },
+              'validationException': {
+                  'message': 'string'
+              },
+              'throttlingException': {
+                  'message': 'string'
+              },
+              'modelTimeoutException': {
+                  'message': 'string'
+              },
+              'serviceUnavailableException': {
+                  'message': 'string'
+              }
+          }),
+          'contentType': 'string',
+          'performanceConfigLatency': 'standard'|'optimized',
+          'serviceTier': 'priority'|'default'|'flex'|'reserved'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **body** (:class:`.EventStream`) -- 
+
+        Inference response from the model in the format specified by the ``contentType`` header. To see the format and content of this field for different models, refer to `Inference parameters <https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html>`__.
+
+        
+        
+
+        - **chunk** *(dict) --* 
+
+          Content included in the response.
+
+          
+          
+
+          - **bytes** *(bytes) --* 
+
+            Base64-encoded bytes of payload data.
+
+            
+      
+        
+
+        - **internalServerException** *(dict) --* 
+
+          An internal server error occurred. Retry your request.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **modelStreamErrorException** *(dict) --* 
+
+          An error occurred while streaming the response. Retry your request.
+
+          
+          
+
+          - **message** *(string) --* 
+          
+
+          - **originalStatusCode** *(integer) --* 
+
+            The original status code.
+
+            
+          
+
+          - **originalMessage** *(string) --* 
+
+            The original message.
+
+            
+      
+        
+
+        - **validationException** *(dict) --* 
+
+          Input validation failed. Check your request parameters and retry the request.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **throttlingException** *(dict) --* 
+
+          Your request was throttled because of service-wide limitations. Resubmit your request later or in a different region. You can also purchase `Provisioned Throughput <https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html>`__ to increase the rate or number of tokens you can process.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **modelTimeoutException** *(dict) --* 
+
+          The request took too long to process. Processing time exceeded the model timeout length.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **serviceUnavailableException** *(dict) --* 
+
+          The service isn't available. Try again later.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+    
+      
+
+      - **contentType** *(string) --* 
+
+        The MIME type of the inference result.
+
+        
+      
+
+      - **performanceConfigLatency** *(string) --* 
+
+        Model performance settings for the request.
+
+        
+      
+
+      - **serviceTier** *(string) --* 
+
+        Specifies the processing tier type used for serving the request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ModelTimeoutException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ModelStreamErrorException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ModelNotReadyException`
+
+  
+  *   :py:class:`BedrockRuntime.Client.exceptions.ModelErrorException`
+
+  

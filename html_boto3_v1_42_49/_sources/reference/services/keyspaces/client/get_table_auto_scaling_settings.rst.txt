@@ -1,0 +1,584 @@
+:doc:`Keyspaces <../../keyspaces>` / Client / get_table_auto_scaling_settings
+
+*******************************
+get_table_auto_scaling_settings
+*******************************
+
+
+
+.. py:method:: Keyspaces.Client.get_table_auto_scaling_settings(**kwargs)
+
+  
+
+  Returns auto scaling related settings of the specified table in JSON format. If the table is a multi-Region table, the Amazon Web Services Region specific auto scaling settings of the table are included.
+
+   
+
+  Amazon Keyspaces auto scaling helps you provision throughput capacity for variable workloads efficiently by increasing and decreasing your table's read and write capacity automatically in response to application traffic. For more information, see `Managing throughput capacity automatically with Amazon Keyspaces auto scaling <https://docs.aws.amazon.com/keyspaces/latest/devguide/autoscaling.html>`__ in the *Amazon Keyspaces Developer Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    ``GetTableAutoScalingSettings`` can't be used as an action in an IAM policy.
+
+     
+
+   
+
+  To define permissions for ``GetTableAutoScalingSettings``, you must allow the following two actions in the IAM policy statement's ``Action`` element:
+
+   
+
+  
+  * ``application-autoscaling:DescribeScalableTargets``
+   
+  * ``application-autoscaling:DescribeScalingPolicies``
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/keyspaces-2022-02-10/GetTableAutoScalingSettings>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_table_auto_scaling_settings(
+        keyspaceName='string',
+        tableName='string'
+    )
+    
+  :type keyspaceName: string
+  :param keyspaceName: **[REQUIRED]** 
+
+    The name of the keyspace.
+
+    
+
+  
+  :type tableName: string
+  :param tableName: **[REQUIRED]** 
+
+    The name of the table.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'keyspaceName': 'string',
+          'tableName': 'string',
+          'resourceArn': 'string',
+          'autoScalingSpecification': {
+              'writeCapacityAutoScaling': {
+                  'autoScalingDisabled': True|False,
+                  'minimumUnits': 123,
+                  'maximumUnits': 123,
+                  'scalingPolicy': {
+                      'targetTrackingScalingPolicyConfiguration': {
+                          'disableScaleIn': True|False,
+                          'scaleInCooldown': 123,
+                          'scaleOutCooldown': 123,
+                          'targetValue': 123.0
+                      }
+                  }
+              },
+              'readCapacityAutoScaling': {
+                  'autoScalingDisabled': True|False,
+                  'minimumUnits': 123,
+                  'maximumUnits': 123,
+                  'scalingPolicy': {
+                      'targetTrackingScalingPolicyConfiguration': {
+                          'disableScaleIn': True|False,
+                          'scaleInCooldown': 123,
+                          'scaleOutCooldown': 123,
+                          'targetValue': 123.0
+                      }
+                  }
+              }
+          },
+          'replicaSpecifications': [
+              {
+                  'region': 'string',
+                  'autoScalingSpecification': {
+                      'writeCapacityAutoScaling': {
+                          'autoScalingDisabled': True|False,
+                          'minimumUnits': 123,
+                          'maximumUnits': 123,
+                          'scalingPolicy': {
+                              'targetTrackingScalingPolicyConfiguration': {
+                                  'disableScaleIn': True|False,
+                                  'scaleInCooldown': 123,
+                                  'scaleOutCooldown': 123,
+                                  'targetValue': 123.0
+                              }
+                          }
+                      },
+                      'readCapacityAutoScaling': {
+                          'autoScalingDisabled': True|False,
+                          'minimumUnits': 123,
+                          'maximumUnits': 123,
+                          'scalingPolicy': {
+                              'targetTrackingScalingPolicyConfiguration': {
+                                  'disableScaleIn': True|False,
+                                  'scaleInCooldown': 123,
+                                  'scaleOutCooldown': 123,
+                                  'targetValue': 123.0
+                              }
+                          }
+                      }
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **keyspaceName** *(string) --* 
+
+        The name of the keyspace.
+
+        
+      
+
+      - **tableName** *(string) --* 
+
+        The name of the table.
+
+        
+      
+
+      - **resourceArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the table.
+
+        
+      
+
+      - **autoScalingSpecification** *(dict) --* 
+
+        The auto scaling settings of the table.
+
+        
+        
+
+        - **writeCapacityAutoScaling** *(dict) --* 
+
+          The auto scaling settings for the table's write capacity.
+
+          
+          
+
+          - **autoScalingDisabled** *(boolean) --* 
+
+            This optional parameter enables auto scaling for the table if set to ``false``.
+
+            
+          
+
+          - **minimumUnits** *(integer) --* 
+
+            The minimum level of throughput the table should always be ready to support. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+            
+          
+
+          - **maximumUnits** *(integer) --* 
+
+            Manage costs by specifying the maximum amount of throughput to provision. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+            
+          
+
+          - **scalingPolicy** *(dict) --* 
+
+            Amazon Keyspaces supports the ``target tracking`` auto scaling policy. With this policy, Amazon Keyspaces auto scaling ensures that the table's ratio of consumed to provisioned capacity stays at or near the target value that you specify. You define the target value as a percentage between 20 and 90.
+
+            
+            
+
+            - **targetTrackingScalingPolicyConfiguration** *(dict) --* 
+
+              Auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. A ``double`` between 20 and 90.
+
+              
+              
+
+              - **disableScaleIn** *(boolean) --* 
+
+                Specifies if ``scale-in`` is enabled.
+
+                 
+
+                When auto scaling automatically decreases capacity for a table, the table *scales in*. When scaling policies are set, they can't scale in the table lower than its minimum capacity.
+
+                
+              
+
+              - **scaleInCooldown** *(integer) --* 
+
+                Specifies a ``scale-in`` cool down period.
+
+                 
+
+                A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                
+              
+
+              - **scaleOutCooldown** *(integer) --* 
+
+                Specifies a scale out cool down period.
+
+                 
+
+                A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                
+              
+
+              - **targetValue** *(float) --* 
+
+                Specifies the target value for the target tracking auto scaling policy.
+
+                 
+
+                Amazon Keyspaces auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. This ensures that the ratio of consumed capacity to provisioned capacity stays at or near this value. You define ``targetValue`` as a percentage. A ``double`` between 20 and 90.
+
+                
+          
+        
+      
+        
+
+        - **readCapacityAutoScaling** *(dict) --* 
+
+          The auto scaling settings for the table's read capacity.
+
+          
+          
+
+          - **autoScalingDisabled** *(boolean) --* 
+
+            This optional parameter enables auto scaling for the table if set to ``false``.
+
+            
+          
+
+          - **minimumUnits** *(integer) --* 
+
+            The minimum level of throughput the table should always be ready to support. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+            
+          
+
+          - **maximumUnits** *(integer) --* 
+
+            Manage costs by specifying the maximum amount of throughput to provision. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+            
+          
+
+          - **scalingPolicy** *(dict) --* 
+
+            Amazon Keyspaces supports the ``target tracking`` auto scaling policy. With this policy, Amazon Keyspaces auto scaling ensures that the table's ratio of consumed to provisioned capacity stays at or near the target value that you specify. You define the target value as a percentage between 20 and 90.
+
+            
+            
+
+            - **targetTrackingScalingPolicyConfiguration** *(dict) --* 
+
+              Auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. A ``double`` between 20 and 90.
+
+              
+              
+
+              - **disableScaleIn** *(boolean) --* 
+
+                Specifies if ``scale-in`` is enabled.
+
+                 
+
+                When auto scaling automatically decreases capacity for a table, the table *scales in*. When scaling policies are set, they can't scale in the table lower than its minimum capacity.
+
+                
+              
+
+              - **scaleInCooldown** *(integer) --* 
+
+                Specifies a ``scale-in`` cool down period.
+
+                 
+
+                A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                
+              
+
+              - **scaleOutCooldown** *(integer) --* 
+
+                Specifies a scale out cool down period.
+
+                 
+
+                A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                
+              
+
+              - **targetValue** *(float) --* 
+
+                Specifies the target value for the target tracking auto scaling policy.
+
+                 
+
+                Amazon Keyspaces auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. This ensures that the ratio of consumed capacity to provisioned capacity stays at or near this value. You define ``targetValue`` as a percentage. A ``double`` between 20 and 90.
+
+                
+          
+        
+      
+    
+      
+
+      - **replicaSpecifications** *(list) --* 
+
+        The Amazon Web Services Region specific settings of a multi-Region table. Returns the settings for all Regions the table is replicated in.
+
+        
+        
+
+        - *(dict) --* 
+
+          The auto scaling settings of a multi-Region table in the specified Amazon Web Services Region.
+
+          
+          
+
+          - **region** *(string) --* 
+
+            The Amazon Web Services Region.
+
+            
+          
+
+          - **autoScalingSpecification** *(dict) --* 
+
+            The auto scaling settings for a multi-Region table in the specified Amazon Web Services Region.
+
+            
+            
+
+            - **writeCapacityAutoScaling** *(dict) --* 
+
+              The auto scaling settings for the table's write capacity.
+
+              
+              
+
+              - **autoScalingDisabled** *(boolean) --* 
+
+                This optional parameter enables auto scaling for the table if set to ``false``.
+
+                
+              
+
+              - **minimumUnits** *(integer) --* 
+
+                The minimum level of throughput the table should always be ready to support. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+                
+              
+
+              - **maximumUnits** *(integer) --* 
+
+                Manage costs by specifying the maximum amount of throughput to provision. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+                
+              
+
+              - **scalingPolicy** *(dict) --* 
+
+                Amazon Keyspaces supports the ``target tracking`` auto scaling policy. With this policy, Amazon Keyspaces auto scaling ensures that the table's ratio of consumed to provisioned capacity stays at or near the target value that you specify. You define the target value as a percentage between 20 and 90.
+
+                
+                
+
+                - **targetTrackingScalingPolicyConfiguration** *(dict) --* 
+
+                  Auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. A ``double`` between 20 and 90.
+
+                  
+                  
+
+                  - **disableScaleIn** *(boolean) --* 
+
+                    Specifies if ``scale-in`` is enabled.
+
+                     
+
+                    When auto scaling automatically decreases capacity for a table, the table *scales in*. When scaling policies are set, they can't scale in the table lower than its minimum capacity.
+
+                    
+                  
+
+                  - **scaleInCooldown** *(integer) --* 
+
+                    Specifies a ``scale-in`` cool down period.
+
+                     
+
+                    A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                    
+                  
+
+                  - **scaleOutCooldown** *(integer) --* 
+
+                    Specifies a scale out cool down period.
+
+                     
+
+                    A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                    
+                  
+
+                  - **targetValue** *(float) --* 
+
+                    Specifies the target value for the target tracking auto scaling policy.
+
+                     
+
+                    Amazon Keyspaces auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. This ensures that the ratio of consumed capacity to provisioned capacity stays at or near this value. You define ``targetValue`` as a percentage. A ``double`` between 20 and 90.
+
+                    
+              
+            
+          
+            
+
+            - **readCapacityAutoScaling** *(dict) --* 
+
+              The auto scaling settings for the table's read capacity.
+
+              
+              
+
+              - **autoScalingDisabled** *(boolean) --* 
+
+                This optional parameter enables auto scaling for the table if set to ``false``.
+
+                
+              
+
+              - **minimumUnits** *(integer) --* 
+
+                The minimum level of throughput the table should always be ready to support. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+                
+              
+
+              - **maximumUnits** *(integer) --* 
+
+                Manage costs by specifying the maximum amount of throughput to provision. The value must be between 1 and the max throughput per second quota for your account (40,000 by default).
+
+                
+              
+
+              - **scalingPolicy** *(dict) --* 
+
+                Amazon Keyspaces supports the ``target tracking`` auto scaling policy. With this policy, Amazon Keyspaces auto scaling ensures that the table's ratio of consumed to provisioned capacity stays at or near the target value that you specify. You define the target value as a percentage between 20 and 90.
+
+                
+                
+
+                - **targetTrackingScalingPolicyConfiguration** *(dict) --* 
+
+                  Auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. A ``double`` between 20 and 90.
+
+                  
+                  
+
+                  - **disableScaleIn** *(boolean) --* 
+
+                    Specifies if ``scale-in`` is enabled.
+
+                     
+
+                    When auto scaling automatically decreases capacity for a table, the table *scales in*. When scaling policies are set, they can't scale in the table lower than its minimum capacity.
+
+                    
+                  
+
+                  - **scaleInCooldown** *(integer) --* 
+
+                    Specifies a ``scale-in`` cool down period.
+
+                     
+
+                    A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                    
+                  
+
+                  - **scaleOutCooldown** *(integer) --* 
+
+                    Specifies a scale out cool down period.
+
+                     
+
+                    A cooldown period in seconds between scaling activities that lets the table stabilize before another scaling activity starts.
+
+                    
+                  
+
+                  - **targetValue** *(float) --* 
+
+                    Specifies the target value for the target tracking auto scaling policy.
+
+                     
+
+                    Amazon Keyspaces auto scaling scales up capacity automatically when traffic exceeds this target utilization rate, and then back down when it falls below the target. This ensures that the ratio of consumed capacity to provisioned capacity stays at or near this value. You define ``targetValue`` as a percentage. A ``double`` between 20 and 90.
+
+                    
+              
+            
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Keyspaces.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Keyspaces.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`Keyspaces.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Keyspaces.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Keyspaces.Client.exceptions.ResourceNotFoundException`
+
+  

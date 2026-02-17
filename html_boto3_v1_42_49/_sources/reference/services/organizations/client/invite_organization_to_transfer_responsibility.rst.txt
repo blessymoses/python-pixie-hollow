@@ -1,0 +1,417 @@
+:doc:`Organizations <../../organizations>` / Client / invite_organization_to_transfer_responsibility
+
+**********************************************
+invite_organization_to_transfer_responsibility
+**********************************************
+
+
+
+.. py:method:: Organizations.Client.invite_organization_to_transfer_responsibility(**kwargs)
+
+  
+
+  Sends an invitation to another organization's management account to designate your account with the specified responsibilities for their organization. The invitation is implemented as a  Handshake whose details are in the response.
+
+   
+
+  You can only call this operation from the management account.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/InviteOrganizationToTransferResponsibility>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.invite_organization_to_transfer_responsibility(
+        Type='BILLING',
+        Target={
+            'Id': 'string',
+            'Type': 'ACCOUNT'|'ORGANIZATION'|'EMAIL'
+        },
+        Notes='string',
+        StartTimestamp=datetime(2015, 1, 1),
+        SourceName='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type Type: string
+  :param Type: **[REQUIRED]** 
+
+    The type of responsibility you want to designate to your organization. Currently, only ``BILLING`` is supported.
+
+    
+
+  
+  :type Target: dict
+  :param Target: **[REQUIRED]** 
+
+    A ``HandshakeParty`` object. Contains details for the account you want to invite. Currently, only ``ACCOUNT`` and ``EMAIL`` are supported.
+
+    
+
+  
+    - **Id** *(string) --* **[REQUIRED]** 
+
+      ID for the participant: Acccount ID, organization ID, or email address.
+
+       
+
+      The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+      
+
+    
+    - **Type** *(string) --* **[REQUIRED]** 
+
+      The type of ID for the participant.
+
+      
+
+    
+  
+  :type Notes: string
+  :param Notes: 
+
+    Additional information that you want to include in the invitation.
+
+    
+
+  
+  :type StartTimestamp: datetime
+  :param StartTimestamp: **[REQUIRED]** 
+
+    Timestamp when the recipient will begin managing the specified responsibilities.
+
+    
+
+  
+  :type SourceName: string
+  :param SourceName: **[REQUIRED]** 
+
+    Name you want to assign to the transfer.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of tags that you want to attach to the transfer. For each tag in the list, you must specify both a tag key and a value. You can set the value to an empty string, but you can't set it to ``null``. For more information about tagging, see `Tagging Organizations resources <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_tagging.html>`__ in the Organizations User Guide.
+
+     
+
+    .. warning::
+
+       
+
+      Any tags in the request are checked for compliance with any applicable tag policies when the request is made. The request is rejected if the tags in the request don't match the requirements of the policy at that time. Tag policy compliance is **not** checked again when the invitation is accepted and the tags are actually attached to the transfer. That means that if the tag policy changes between the invitation and the acceptance, then that tags could potentially be non-compliant.
+
+       
+
+     
+
+    .. note::
+
+      
+
+      If any one of the tags is not valid or if you exceed the allowed number of tags for a transfer, then the entire request fails and invitations are not sent.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      A custom key-value pair associated with a resource within your organization.
+
+       
+
+      You can attach tags to any of the following organization resources.
+
+       
+
+      
+      * Amazon Web Services account
+       
+      * Organizational unit (OU)
+       
+      * Organization root
+       
+      * Policy
+      
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key identifier, or name, of the tag.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The string value that's associated with the key of the tag. You can set the value of a tag to an empty string, but you can't set the value of a tag to null.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Handshake': {
+              'Id': 'string',
+              'Arn': 'string',
+              'Parties': [
+                  {
+                      'Id': 'string',
+                      'Type': 'ACCOUNT'|'ORGANIZATION'|'EMAIL'
+                  },
+              ],
+              'State': 'REQUESTED'|'OPEN'|'CANCELED'|'ACCEPTED'|'DECLINED'|'EXPIRED',
+              'RequestedTimestamp': datetime(2015, 1, 1),
+              'ExpirationTimestamp': datetime(2015, 1, 1),
+              'Action': 'INVITE'|'ENABLE_ALL_FEATURES'|'APPROVE_ALL_FEATURES'|'ADD_ORGANIZATIONS_SERVICE_LINKED_ROLE'|'TRANSFER_RESPONSIBILITY',
+              'Resources': [
+                  {
+                      'Value': 'string',
+                      'Type': 'ACCOUNT'|'ORGANIZATION'|'ORGANIZATION_FEATURE_SET'|'EMAIL'|'MASTER_EMAIL'|'MASTER_NAME'|'NOTES'|'PARENT_HANDSHAKE'|'RESPONSIBILITY_TRANSFER'|'TRANSFER_START_TIMESTAMP'|'TRANSFER_TYPE'|'MANAGEMENT_ACCOUNT'|'MANAGEMENT_EMAIL'|'MANAGEMENT_NAME',
+                      'Resources': {'... recursive ...'}
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Handshake** *(dict) --* 
+
+        Contains details for a handshake. A handshake is the secure exchange of information between two Amazon Web Services accounts: a sender and a recipient.
+
+         
+
+        **Note:** Handshakes that are ``CANCELED``, ``ACCEPTED``, ``DECLINED``, or ``EXPIRED`` show up in lists for only 30 days after entering that state After that they are deleted.
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          ID for the handshake.
+
+           
+
+          The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+          
+        
+
+        - **Arn** *(string) --* 
+
+          Amazon Resource Name (ARN) for the handshake.
+
+           
+
+          For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+          
+        
+
+        - **Parties** *(list) --* 
+
+          An array of ``HandshakeParty`` objects. Contains details for participant in a handshake.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains details for a participant in a handshake.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              ID for the participant: Acccount ID, organization ID, or email address.
+
+               
+
+              The `regex pattern <http://wikipedia.org/wiki/regex>`__ for handshake ID string requires "h-" followed by from 8 to 32 lowercase letters or digits.
+
+              
+            
+
+            - **Type** *(string) --* 
+
+              The type of ID for the participant.
+
+              
+        
+      
+        
+
+        - **State** *(string) --* 
+
+          Current state for the handshake.
+
+           
+
+          
+          * **REQUESTED**: Handshake awaiting a response from the recipient.
+           
+          * **OPEN**: Handshake sent to multiple recipients and all recipients have responded. The sender can now complete the handshake action.
+           
+          * **CANCELED**: Handshake canceled by the sender.
+           
+          * **ACCEPTED**: Handshake accepted by the recipient.
+           
+          * **DECLINED**: Handshake declined by the recipient.
+           
+          * **EXPIRED**: Handshake has expired.
+          
+
+          
+        
+
+        - **RequestedTimestamp** *(datetime) --* 
+
+          Timestamp when the handshake request was made.
+
+          
+        
+
+        - **ExpirationTimestamp** *(datetime) --* 
+
+          Timestamp when the handshake expires.
+
+          
+        
+
+        - **Action** *(string) --* 
+
+          The type of handshake:
+
+           
+
+          
+          * **INVITE**: Handshake sent to a standalone account requesting that it to join the sender's organization.
+           
+          * **ENABLE_ALL_FEATURES**: Handshake sent to invited member accounts to enable all features for the organization.
+           
+          * **APPROVE_ALL_FEATURES**: Handshake sent to the management account when all invited member accounts have approved to enable all features.
+           
+          * **TRANSFER_RESPONSIBILITY**: Handshake sent to another organization's management account requesting that it designate the sender with the specified responsibilities for recipient's organization.
+          
+
+          
+        
+
+        - **Resources** *(list) --* 
+
+          An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains additional details for a handshake.
+
+            
+            
+
+            - **Value** *(string) --* 
+
+              Additional information for the handshake. The format of the value string must match the requirements of the specified type.
+
+              
+            
+
+            - **Type** *(string) --* 
+
+              The type of information being passed, specifying how the value is to be interpreted by the other party:
+
+               
+
+              
+              * **ACCOUNT**: ID for an Amazon Web Services account.
+               
+              * **ORGANIZATION**: ID for an organization.
+               
+              * **EMAIL**: Email address for the recipient.
+               
+              * **OWNER_EMAIL**: Email address for the sender.
+               
+              * **OWNER_NAME**: Name of the sender.
+               
+              * **NOTES**: Additional text included by the sender for the recipient.
+              
+
+              
+            
+
+            - **Resources** *(list) --* 
+
+              An array of ``HandshakeResource`` objects. When needed, contains additional details for a handshake. For example, the email address for the sender.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ConstraintViolationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.DuplicateHandshakeException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.HandshakeConstraintViolationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.UnsupportedAPIEndpointException`
+
+  

@@ -1,0 +1,190 @@
+:doc:`CustomerProfiles <../../customer-profiles>` / Client / get_auto_merging_preview
+
+************************
+get_auto_merging_preview
+************************
+
+
+
+.. py:method:: CustomerProfiles.Client.get_auto_merging_preview(**kwargs)
+
+  
+
+  Tests the auto-merging settings of your Identity Resolution Job without merging your data. It randomly selects a sample of matching groups from the existing matching results, and applies the automerging settings that you provided. You can then view the number of profiles in the sample, the number of matches, and the number of profiles identified to be merged. This enables you to evaluate the accuracy of the attributes in your matching list.
+
+   
+
+  You can't view which profiles are matched and would be merged.
+
+   
+
+  .. warning::
+
+     
+
+    We strongly recommend you use this API to do a dry run of the automerging process before running the Identity Resolution Job. Include **at least** two matching attributes. If your matching list includes too few attributes (such as only ``FirstName`` or only ``LastName``), there may be a large number of matches. This increases the chances of erroneous merges.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/customer-profiles-2020-08-15/GetAutoMergingPreview>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_auto_merging_preview(
+        DomainName='string',
+        Consolidation={
+            'MatchingAttributesList': [
+                [
+                    'string',
+                ],
+            ]
+        },
+        ConflictResolution={
+            'ConflictResolvingModel': 'RECENCY'|'SOURCE',
+            'SourceName': 'string'
+        },
+        MinAllowedConfidenceScoreForMerging=123.0
+    )
+    
+  :type DomainName: string
+  :param DomainName: **[REQUIRED]** 
+
+    The unique name of the domain.
+
+    
+
+  
+  :type Consolidation: dict
+  :param Consolidation: **[REQUIRED]** 
+
+    A list of matching attributes that represent matching criteria.
+
+    
+
+  
+    - **MatchingAttributesList** *(list) --* **[REQUIRED]** 
+
+      A list of matching criteria.
+
+      
+
+    
+      - *(list) --* 
+
+      
+        - *(string) --* 
+
+        
+    
+  
+  
+  :type ConflictResolution: dict
+  :param ConflictResolution: **[REQUIRED]** 
+
+    How the auto-merging process should resolve conflicts between different profiles.
+
+    
+
+  
+    - **ConflictResolvingModel** *(string) --* **[REQUIRED]** 
+
+      How the auto-merging process should resolve conflicts between different profiles.
+
+       
+
+      
+      * ``RECENCY``: Uses the data that was most recently updated.
+       
+      * ``SOURCE``: Uses the data from a specific source. For example, if a company has been aquired or two departments have merged, data from the specified source is used. If two duplicate profiles are from the same source, then ``RECENCY`` is used again.
+      
+
+      
+
+    
+    - **SourceName** *(string) --* 
+
+      The ``ObjectType`` name that is used to resolve profile merging conflicts when choosing ``SOURCE`` as the ``ConflictResolvingModel``.
+
+      
+
+    
+  
+  :type MinAllowedConfidenceScoreForMerging: float
+  :param MinAllowedConfidenceScoreForMerging: 
+
+    Minimum confidence score required for profiles within a matching group to be merged during the auto-merge process.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DomainName': 'string',
+          'NumberOfMatchesInSample': 123,
+          'NumberOfProfilesInSample': 123,
+          'NumberOfProfilesWillBeMerged': 123
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DomainName** *(string) --* 
+
+        The unique name of the domain.
+
+        
+      
+
+      - **NumberOfMatchesInSample** *(integer) --* 
+
+        The number of match groups in the domain that have been reviewed in this preview dry run.
+
+        
+      
+
+      - **NumberOfProfilesInSample** *(integer) --* 
+
+        The number of profiles found in this preview dry run.
+
+        
+      
+
+      - **NumberOfProfilesWillBeMerged** *(integer) --* 
+
+        The number of profiles that would be merged if this wasn't a preview dry run.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.InternalServerException`
+
+  

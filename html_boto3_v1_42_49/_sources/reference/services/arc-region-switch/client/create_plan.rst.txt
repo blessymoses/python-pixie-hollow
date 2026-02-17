@@ -1,0 +1,2629 @@
+:doc:`ARCRegionswitch <../../arc-region-switch>` / Client / create_plan
+
+***********
+create_plan
+***********
+
+
+
+.. py:method:: ARCRegionswitch.Client.create_plan(**kwargs)
+
+  
+
+  Creates a new Region switch plan. A plan defines the steps required to shift traffic from one Amazon Web Services Region to another.
+
+   
+
+  You must specify a name for the plan, the primary Region, and at least one additional Region. You can also provide a description, execution role, recovery time objective, associated alarms, triggers, and workflows that define the steps to execute during a Region switch.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/arc-region-switch-2022-07-26/CreatePlan>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_plan(
+        description='string',
+        workflows=[
+            {
+                'steps': [
+                    {
+                        'name': 'string',
+                        'description': 'string',
+                        'executionBlockConfiguration': {
+                            'customActionLambdaConfig': {
+                                'timeoutMinutes': 123,
+                                'lambdas': [
+                                    {
+                                        'crossAccountRole': 'string',
+                                        'externalId': 'string',
+                                        'arn': 'string'
+                                    },
+                                ],
+                                'retryIntervalMinutes': ...,
+                                'regionToRun': 'activatingRegion'|'deactivatingRegion',
+                                'ungraceful': {
+                                    'behavior': 'skip'
+                                }
+                            },
+                            'ec2AsgCapacityIncreaseConfig': {
+                                'timeoutMinutes': 123,
+                                'asgs': [
+                                    {
+                                        'crossAccountRole': 'string',
+                                        'externalId': 'string',
+                                        'arn': 'string'
+                                    },
+                                ],
+                                'ungraceful': {
+                                    'minimumSuccessPercentage': 123
+                                },
+                                'targetPercent': 123,
+                                'capacityMonitoringApproach': 'sampledMaxInLast24Hours'|'autoscalingMaxInLast24Hours'
+                            },
+                            'executionApprovalConfig': {
+                                'timeoutMinutes': 123,
+                                'approvalRole': 'string'
+                            },
+                            'arcRoutingControlConfig': {
+                                'timeoutMinutes': 123,
+                                'crossAccountRole': 'string',
+                                'externalId': 'string',
+                                'regionAndRoutingControls': {
+                                    'string': [
+                                        {
+                                            'routingControlArn': 'string',
+                                            'state': 'On'|'Off'
+                                        },
+                                    ]
+                                }
+                            },
+                            'globalAuroraConfig': {
+                                'timeoutMinutes': 123,
+                                'crossAccountRole': 'string',
+                                'externalId': 'string',
+                                'behavior': 'switchoverOnly'|'failover',
+                                'ungraceful': {
+                                    'ungraceful': 'failover'
+                                },
+                                'globalClusterIdentifier': 'string',
+                                'databaseClusterArns': [
+                                    'string',
+                                ]
+                            },
+                            'parallelConfig': {
+                                'steps': {'... recursive ...'}
+                            },
+                            'regionSwitchPlanConfig': {
+                                'crossAccountRole': 'string',
+                                'externalId': 'string',
+                                'arn': 'string'
+                            },
+                            'ecsCapacityIncreaseConfig': {
+                                'timeoutMinutes': 123,
+                                'services': [
+                                    {
+                                        'crossAccountRole': 'string',
+                                        'externalId': 'string',
+                                        'clusterArn': 'string',
+                                        'serviceArn': 'string'
+                                    },
+                                ],
+                                'ungraceful': {
+                                    'minimumSuccessPercentage': 123
+                                },
+                                'targetPercent': 123,
+                                'capacityMonitoringApproach': 'sampledMaxInLast24Hours'|'containerInsightsMaxInLast24Hours'
+                            },
+                            'eksResourceScalingConfig': {
+                                'timeoutMinutes': 123,
+                                'kubernetesResourceType': {
+                                    'apiVersion': 'string',
+                                    'kind': 'string'
+                                },
+                                'scalingResources': [
+                                    {
+                                        'string': {
+                                            'string': {
+                                                'namespace': 'string',
+                                                'name': 'string',
+                                                'hpaName': 'string'
+                                            }
+                                        }
+                                    },
+                                ],
+                                'eksClusters': [
+                                    {
+                                        'crossAccountRole': 'string',
+                                        'externalId': 'string',
+                                        'clusterArn': 'string'
+                                    },
+                                ],
+                                'ungraceful': {
+                                    'minimumSuccessPercentage': 123
+                                },
+                                'targetPercent': 123,
+                                'capacityMonitoringApproach': 'sampledMaxInLast24Hours'
+                            },
+                            'route53HealthCheckConfig': {
+                                'timeoutMinutes': 123,
+                                'crossAccountRole': 'string',
+                                'externalId': 'string',
+                                'hostedZoneId': 'string',
+                                'recordName': 'string',
+                                'recordSets': [
+                                    {
+                                        'recordSetIdentifier': 'string',
+                                        'region': 'string'
+                                    },
+                                ]
+                            },
+                            'documentDbConfig': {
+                                'timeoutMinutes': 123,
+                                'crossAccountRole': 'string',
+                                'externalId': 'string',
+                                'behavior': 'switchoverOnly'|'failover',
+                                'ungraceful': {
+                                    'ungraceful': 'failover'
+                                },
+                                'globalClusterIdentifier': 'string',
+                                'databaseClusterArns': [
+                                    'string',
+                                ]
+                            }
+                        },
+                        'executionBlockType': 'CustomActionLambda'|'ManualApproval'|'AuroraGlobalDatabase'|'EC2AutoScaling'|'ARCRoutingControl'|'ARCRegionSwitchPlan'|'Parallel'|'ECSServiceScaling'|'EKSResourceScaling'|'Route53HealthCheck'|'DocumentDb'
+                    },
+                ],
+                'workflowTargetAction': 'activate'|'deactivate',
+                'workflowTargetRegion': 'string',
+                'workflowDescription': 'string'
+            },
+        ],
+        executionRole='string',
+        recoveryTimeObjectiveMinutes=123,
+        associatedAlarms={
+            'string': {
+                'crossAccountRole': 'string',
+                'externalId': 'string',
+                'resourceIdentifier': 'string',
+                'alarmType': 'applicationHealth'|'trigger'
+            }
+        },
+        triggers=[
+            {
+                'description': 'string',
+                'targetRegion': 'string',
+                'action': 'activate'|'deactivate',
+                'conditions': [
+                    {
+                        'associatedAlarmName': 'string',
+                        'condition': 'red'|'green'
+                    },
+                ],
+                'minDelayMinutesBetweenExecutions': 123
+            },
+        ],
+        reportConfiguration={
+            'reportOutput': [
+                {
+                    's3Configuration': {
+                        'bucketPath': 'string',
+                        'bucketOwner': 'string'
+                    }
+                },
+            ]
+        },
+        name='string',
+        regions=[
+            'string',
+        ],
+        recoveryApproach='activeActive'|'activePassive',
+        primaryRegion='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type description: string
+  :param description: 
+
+    The description of a Region switch plan.
+
+    
+
+  
+  :type workflows: list
+  :param workflows: **[REQUIRED]** 
+
+    An array of workflows included in a Region switch plan.
+
+    
+
+  
+    - *(dict) --* 
+
+      Represents a workflow in a Region switch plan. A workflow defines a sequence of steps to execute during a Region switch.
+
+      
+
+    
+      - **steps** *(list) --* 
+
+        The steps that make up the workflow.
+
+        
+
+      
+        - *(dict) --* 
+
+          Represents a step in a Region switch plan workflow. Each step performs a specific action during the Region switch process.
+
+          
+
+        
+          - **name** *(string) --* **[REQUIRED]** 
+
+            The name of a step in a workflow.
+
+            
+
+          
+          - **description** *(string) --* 
+
+            The description of a step in a workflow.
+
+            
+
+          
+          - **executionBlockConfiguration** *(dict) --* **[REQUIRED]** 
+
+            The configuration for an execution block in a workflow.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``customActionLambdaConfig``, ``ec2AsgCapacityIncreaseConfig``, ``executionApprovalConfig``, ``arcRoutingControlConfig``, ``globalAuroraConfig``, ``parallelConfig``, ``regionSwitchPlanConfig``, ``ecsCapacityIncreaseConfig``, ``eksResourceScalingConfig``, ``route53HealthCheckConfig``, ``documentDbConfig``. 
+
+          
+            - **customActionLambdaConfig** *(dict) --* 
+
+              An Amazon Web Services Lambda execution block.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **lambdas** *(list) --* **[REQUIRED]** 
+
+                The Amazon Web Services Lambda functions for the execution block.
+
+                
+
+              
+                - *(dict) --* 
+
+                  Configuration for Amazon Web Services Lambda functions used in a Region switch plan.
+
+                  
+
+                
+                  - **crossAccountRole** *(string) --* 
+
+                    The cross account role for the configuration.
+
+                    
+
+                  
+                  - **externalId** *(string) --* 
+
+                    The external ID (secret key) for the configuration.
+
+                    
+
+                  
+                  - **arn** *(string) --* 
+
+                    The Amazon Resource Name (ARN) of the Lambda function.
+
+                    
+
+                  
+                
+            
+              - **retryIntervalMinutes** *(float) --* **[REQUIRED]** 
+
+                The retry interval specified.
+
+                
+
+              
+              - **regionToRun** *(string) --* **[REQUIRED]** 
+
+                The Amazon Web Services Region for the function to run in.
+
+                
+
+              
+              - **ungraceful** *(dict) --* 
+
+                The settings for ungraceful execution.
+
+                
+
+              
+                - **behavior** *(string) --* 
+
+                  The ungraceful behavior for a Lambda function, which must be set to ``skip``.
+
+                  
+
+                
+              
+            
+            - **ec2AsgCapacityIncreaseConfig** *(dict) --* 
+
+              An EC2 Auto Scaling group execution block.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **asgs** *(list) --* **[REQUIRED]** 
+
+                The EC2 Auto Scaling groups for the configuration.
+
+                
+
+              
+                - *(dict) --* 
+
+                  Configuration for an Amazon EC2 Auto Scaling group used in a Region switch plan.
+
+                  
+
+                
+                  - **crossAccountRole** *(string) --* 
+
+                    The cross account role for the configuration.
+
+                    
+
+                  
+                  - **externalId** *(string) --* 
+
+                    The external ID (secret key) for the configuration.
+
+                    
+
+                  
+                  - **arn** *(string) --* 
+
+                    The Amazon Resource Name (ARN) of the EC2 Auto Scaling group.
+
+                    
+
+                  
+                
+            
+              - **ungraceful** *(dict) --* 
+
+                The settings for ungraceful execution.
+
+                
+
+              
+                - **minimumSuccessPercentage** *(integer) --* **[REQUIRED]** 
+
+                  The minimum success percentage that you specify for EC2 Auto Scaling groups.
+
+                  
+
+                
+              
+              - **targetPercent** *(integer) --* 
+
+                The target percentage that you specify for EC2 Auto Scaling groups.
+
+                
+
+              
+              - **capacityMonitoringApproach** *(string) --* 
+
+                The monitoring approach that you specify EC2 Auto Scaling groups for the configuration.
+
+                
+
+              
+            
+            - **executionApprovalConfig** *(dict) --* 
+
+              A manual approval execution block.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **approvalRole** *(string) --* **[REQUIRED]** 
+
+                The IAM approval role for the configuration.
+
+                
+
+              
+            
+            - **arcRoutingControlConfig** *(dict) --* 
+
+              An ARC routing control execution block.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **crossAccountRole** *(string) --* 
+
+                The cross account role for the configuration.
+
+                
+
+              
+              - **externalId** *(string) --* 
+
+                The external ID (secret key) for the configuration.
+
+                
+
+              
+              - **regionAndRoutingControls** *(dict) --* **[REQUIRED]** 
+
+                The Region and ARC routing controls for the configuration.
+
+                
+
+              
+                - *(string) --* 
+
+                
+                  - *(list) --* 
+
+                  
+                    - *(dict) --* 
+
+                      Represents the state of an ARC routing control.
+
+                      
+
+                    
+                      - **routingControlArn** *(string) --* **[REQUIRED]** 
+
+                        The Amazon Resource Name (ARN) of a routing control.
+
+                        
+
+                      
+                      - **state** *(string) --* **[REQUIRED]** 
+
+                        The state of an ARC routing control, On or Off.
+
+                        
+
+                      
+                    
+                
+            
+          
+            
+            - **globalAuroraConfig** *(dict) --* 
+
+              An Aurora Global Database execution block.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **crossAccountRole** *(string) --* 
+
+                The cross account role for the configuration.
+
+                
+
+              
+              - **externalId** *(string) --* 
+
+                The external ID (secret key) for the configuration.
+
+                
+
+              
+              - **behavior** *(string) --* **[REQUIRED]** 
+
+                The behavior for a global database, that is, only allow switchover or also allow failover.
+
+                
+
+              
+              - **ungraceful** *(dict) --* 
+
+                The settings for ungraceful execution.
+
+                
+
+              
+                - **ungraceful** *(string) --* 
+
+                  The settings for ungraceful execution.
+
+                  
+
+                
+              
+              - **globalClusterIdentifier** *(string) --* **[REQUIRED]** 
+
+                The global cluster identifier for a global database.
+
+                
+
+              
+              - **databaseClusterArns** *(list) --* **[REQUIRED]** 
+
+                The database cluster Amazon Resource Names (ARNs) for a global database.
+
+                
+
+              
+                - *(string) --* 
+
+                
+            
+            
+            - **parallelConfig** *(dict) --* 
+
+              A parallel configuration execution block.
+
+              
+
+            
+              - **steps** *(list) --* 
+
+                The steps for a parallel execution block.
+
+                
+
+              
+            
+            - **regionSwitchPlanConfig** *(dict) --* 
+
+              A Region switch plan execution block.
+
+              
+
+            
+              - **crossAccountRole** *(string) --* 
+
+                The cross account role for the configuration.
+
+                
+
+              
+              - **externalId** *(string) --* 
+
+                The external ID (secret key) for the configuration.
+
+                
+
+              
+              - **arn** *(string) --* **[REQUIRED]** 
+
+                The Amazon Resource Name (ARN) of the plan configuration.
+
+                
+
+              
+            
+            - **ecsCapacityIncreaseConfig** *(dict) --* 
+
+              The capacity increase specified for the configuration.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **services** *(list) --* **[REQUIRED]** 
+
+                The services specified for the configuration.
+
+                
+
+              
+                - *(dict) --* 
+
+                  The service for a cross account role.
+
+                  
+
+                
+                  - **crossAccountRole** *(string) --* 
+
+                    The cross account role for a service.
+
+                    
+
+                  
+                  - **externalId** *(string) --* 
+
+                    The external ID (secret key) for the service.
+
+                    
+
+                  
+                  - **clusterArn** *(string) --* 
+
+                    The cluster Amazon Resource Name (ARN) for a service.
+
+                    
+
+                  
+                  - **serviceArn** *(string) --* 
+
+                    The Amazon Resource Name (ARN) for a service.
+
+                    
+
+                  
+                
+            
+              - **ungraceful** *(dict) --* 
+
+                The settings for ungraceful execution.
+
+                
+
+              
+                - **minimumSuccessPercentage** *(integer) --* **[REQUIRED]** 
+
+                  The minimum success percentage specified for the configuration.
+
+                  
+
+                
+              
+              - **targetPercent** *(integer) --* 
+
+                The target percentage specified for the configuration.
+
+                
+
+              
+              - **capacityMonitoringApproach** *(string) --* 
+
+                The monitoring approach specified for the configuration, for example, ``Most_Recent``.
+
+                
+
+              
+            
+            - **eksResourceScalingConfig** *(dict) --* 
+
+              An Amazon Web Services EKS resource scaling execution block.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **kubernetesResourceType** *(dict) --* **[REQUIRED]** 
+
+                The Kubernetes resource type for the configuration.
+
+                
+
+              
+                - **apiVersion** *(string) --* **[REQUIRED]** 
+
+                  The API version type for the Kubernetes resource.
+
+                  
+
+                
+                - **kind** *(string) --* **[REQUIRED]** 
+
+                  The kind for the Kubernetes resource.
+
+                  
+
+                
+              
+              - **scalingResources** *(list) --* 
+
+                The scaling resources for the configuration.
+
+                
+
+              
+                - *(dict) --* 
+
+                
+                  - *(string) --* 
+
+                  
+                    - *(dict) --* 
+
+                    
+                      - *(string) --* 
+
+                      
+                        - *(dict) --* 
+
+                          Defines a Kubernetes resource to scale in an Amazon EKS cluster.
+
+                          
+
+                        
+                          - **namespace** *(string) --* **[REQUIRED]** 
+
+                            The namespace for the Kubernetes resource.
+
+                            
+
+                          
+                          - **name** *(string) --* **[REQUIRED]** 
+
+                            The name for the Kubernetes resource.
+
+                            
+
+                          
+                          - **hpaName** *(string) --* 
+
+                            The hpaname for the Kubernetes resource.
+
+                            
+
+                          
+                        
+                  
+                
+              
+            
+            
+              - **eksClusters** *(list) --* 
+
+                The clusters for the configuration.
+
+                
+
+              
+                - *(dict) --* 
+
+                  The Amazon Web Services EKS cluster execution block configuration.
+
+                  
+
+                
+                  - **crossAccountRole** *(string) --* 
+
+                    The cross account role for the configuration.
+
+                    
+
+                  
+                  - **externalId** *(string) --* 
+
+                    The external ID (secret key) for the configuration.
+
+                    
+
+                  
+                  - **clusterArn** *(string) --* **[REQUIRED]** 
+
+                    The Amazon Resource Name (ARN) of an Amazon Web Services EKS cluster.
+
+                    
+
+                  
+                
+            
+              - **ungraceful** *(dict) --* 
+
+                The settings for ungraceful execution.
+
+                
+
+              
+                - **minimumSuccessPercentage** *(integer) --* **[REQUIRED]** 
+
+                  The minimum success percentage for the configuration.
+
+                  
+
+                
+              
+              - **targetPercent** *(integer) --* 
+
+                The target percentage for the configuration.
+
+                
+
+              
+              - **capacityMonitoringApproach** *(string) --* 
+
+                The monitoring approach for the configuration, that is, whether it was sampled in the last 24 hours or autoscaled in the last 24 hours.
+
+                
+
+              
+            
+            - **route53HealthCheckConfig** *(dict) --* 
+
+              The Amazon Route 53 health check configuration.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The Amazon Route 53 health check configuration time out (in minutes).
+
+                
+
+              
+              - **crossAccountRole** *(string) --* 
+
+                The cross account role for the configuration.
+
+                
+
+              
+              - **externalId** *(string) --* 
+
+                The external ID (secret key) for the configuration.
+
+                
+
+              
+              - **hostedZoneId** *(string) --* **[REQUIRED]** 
+
+                The Amazon Route 53 health check configuration hosted zone ID.
+
+                
+
+              
+              - **recordName** *(string) --* **[REQUIRED]** 
+
+                The Amazon Route 53 health check configuration record name.
+
+                
+
+              
+              - **recordSets** *(list) --* 
+
+                The Amazon Route 53 health check configuration record sets.
+
+                
+
+              
+                - *(dict) --* 
+
+                  The Amazon Route 53 record set.
+
+                  
+
+                
+                  - **recordSetIdentifier** *(string) --* 
+
+                    The Amazon Route 53 record set identifier.
+
+                    
+
+                  
+                  - **region** *(string) --* 
+
+                    The Amazon Route 53 record set Region.
+
+                    
+
+                  
+                
+            
+            
+            - **documentDbConfig** *(dict) --* 
+
+              Configuration for Amazon DocumentDB global clusters used in a Region switch plan.
+
+              
+
+            
+              - **timeoutMinutes** *(integer) --* 
+
+                The timeout value specified for the configuration.
+
+                
+
+              
+              - **crossAccountRole** *(string) --* 
+
+                The cross account role for the configuration.
+
+                
+
+              
+              - **externalId** *(string) --* 
+
+                The external ID (secret key) for the configuration.
+
+                
+
+              
+              - **behavior** *(string) --* **[REQUIRED]** 
+
+                The behavior for a global cluster, that is, only allow switchover or also allow failover.
+
+                
+
+              
+              - **ungraceful** *(dict) --* 
+
+                The settings for ungraceful execution.
+
+                
+
+              
+                - **ungraceful** *(string) --* 
+
+                  The settings for ungraceful execution.
+
+                  
+
+                
+              
+              - **globalClusterIdentifier** *(string) --* **[REQUIRED]** 
+
+                The global cluster identifier for a DocumentDB global cluster.
+
+                
+
+              
+              - **databaseClusterArns** *(list) --* **[REQUIRED]** 
+
+                The database cluster Amazon Resource Names (ARNs) for a DocumentDB global cluster.
+
+                
+
+              
+                - *(string) --* 
+
+                
+            
+            
+          
+          - **executionBlockType** *(string) --* **[REQUIRED]** 
+
+            The type of an execution block in a workflow.
+
+            
+
+          
+        
+    
+      - **workflowTargetAction** *(string) --* **[REQUIRED]** 
+
+        The action that the workflow performs. Valid values include ``activate`` and ``deactivate``.
+
+        
+
+      
+      - **workflowTargetRegion** *(string) --* 
+
+        The Amazon Web Services Region that the workflow targets.
+
+        
+
+      
+      - **workflowDescription** *(string) --* 
+
+        The description of the workflow.
+
+        
+
+      
+    
+
+  :type executionRole: string
+  :param executionRole: **[REQUIRED]** 
+
+    An execution role is a way to categorize a Region switch plan.
+
+    
+
+  
+  :type recoveryTimeObjectiveMinutes: integer
+  :param recoveryTimeObjectiveMinutes: 
+
+    Optionally, you can specify an recovery time objective for a Region switch plan, in minutes.
+
+    
+
+  
+  :type associatedAlarms: dict
+  :param associatedAlarms: 
+
+    The alarms associated with a Region switch plan.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(dict) --* 
+
+        An Amazon CloudWatch alarm associated with a Region switch plan. These alarms can be used to trigger automatic execution of the plan.
+
+        
+
+      
+        - **crossAccountRole** *(string) --* 
+
+          The cross account role for the configuration.
+
+          
+
+        
+        - **externalId** *(string) --* 
+
+          The external ID (secret key) for the configuration.
+
+          
+
+        
+        - **resourceIdentifier** *(string) --* **[REQUIRED]** 
+
+          The resource identifier for alarms that you associate with a plan.
+
+          
+
+        
+        - **alarmType** *(string) --* **[REQUIRED]** 
+
+          The alarm type for an associated alarm. An associated CloudWatch alarm can be an application health alarm or a trigger alarm.
+
+          
+
+        
+      
+
+
+  :type triggers: list
+  :param triggers: 
+
+    The triggers associated with a Region switch plan.
+
+    
+
+  
+    - *(dict) --* 
+
+      Defines a condition that can automatically trigger the execution of a Region switch plan.
+
+      
+
+    
+      - **description** *(string) --* 
+
+        The description for a trigger.
+
+        
+
+      
+      - **targetRegion** *(string) --* **[REQUIRED]** 
+
+        The Amazon Web Services Region for a trigger.
+
+        
+
+      
+      - **action** *(string) --* **[REQUIRED]** 
+
+        The action to perform when the trigger fires. Valid values include ``activate`` and ``deactivate``.
+
+        
+
+      
+      - **conditions** *(list) --* **[REQUIRED]** 
+
+        The conditions that must be met for the trigger to fire.
+
+        
+
+      
+        - *(dict) --* 
+
+          Defines a condition that must be met for a trigger to fire.
+
+          
+
+        
+          - **associatedAlarmName** *(string) --* **[REQUIRED]** 
+
+            The name of the CloudWatch alarm associated with the condition.
+
+            
+
+          
+          - **condition** *(string) --* **[REQUIRED]** 
+
+            The condition that must be met. Valid values include ``green`` and ``red``.
+
+            
+
+          
+        
+    
+      - **minDelayMinutesBetweenExecutions** *(integer) --* **[REQUIRED]** 
+
+        The minimum time, in minutes, that must elapse between automatic executions of the plan.
+
+        
+
+      
+    
+
+  :type reportConfiguration: dict
+  :param reportConfiguration: 
+
+    Configuration for automatic report generation for plan executions. When configured, Region switch automatically generates a report after each plan execution that includes execution events, plan configuration, and CloudWatch alarm states.
+
+    
+
+  
+    - **reportOutput** *(list) --* 
+
+      The output configuration for the report.
+
+      
+
+    
+      - *(dict) --* 
+
+        Configuration for report output destinations used in a Region switch plan.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``s3Configuration``. 
+
+      
+        - **s3Configuration** *(dict) --* 
+
+          Configuration for delivering reports to an Amazon S3 bucket.
+
+          
+
+        
+          - **bucketPath** *(string) --* 
+
+            The S3 bucket name and optional prefix where reports are stored. Format: bucket-name or bucket-name/prefix.
+
+            
+
+          
+          - **bucketOwner** *(string) --* 
+
+            The Amazon Web Services account ID that owns the S3 bucket. Required to ensure the bucket is still owned by the same expected owner at generation time.
+
+            
+
+          
+        
+      
+  
+  
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of a Region switch plan.
+
+    
+
+  
+  :type regions: list
+  :param regions: **[REQUIRED]** 
+
+    An array that specifies the Amazon Web Services Regions for a Region switch plan. Specify two Regions.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type recoveryApproach: string
+  :param recoveryApproach: **[REQUIRED]** 
+
+    The recovery approach for a Region switch plan, which can be active/active (activeActive) or active/passive (activePassive).
+
+    
+
+  
+  :type primaryRegion: string
+  :param primaryRegion: 
+
+    The primary Amazon Web Services Region for the application. This is the Region where the application normally runs before any Region switch occurs.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    The tags to apply to the Region switch plan.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'plan': {
+              'arn': 'string',
+              'description': 'string',
+              'workflows': [
+                  {
+                      'steps': [
+                          {
+                              'name': 'string',
+                              'description': 'string',
+                              'executionBlockConfiguration': {
+                                  'customActionLambdaConfig': {
+                                      'timeoutMinutes': 123,
+                                      'lambdas': [
+                                          {
+                                              'crossAccountRole': 'string',
+                                              'externalId': 'string',
+                                              'arn': 'string'
+                                          },
+                                      ],
+                                      'retryIntervalMinutes': ...,
+                                      'regionToRun': 'activatingRegion'|'deactivatingRegion',
+                                      'ungraceful': {
+                                          'behavior': 'skip'
+                                      }
+                                  },
+                                  'ec2AsgCapacityIncreaseConfig': {
+                                      'timeoutMinutes': 123,
+                                      'asgs': [
+                                          {
+                                              'crossAccountRole': 'string',
+                                              'externalId': 'string',
+                                              'arn': 'string'
+                                          },
+                                      ],
+                                      'ungraceful': {
+                                          'minimumSuccessPercentage': 123
+                                      },
+                                      'targetPercent': 123,
+                                      'capacityMonitoringApproach': 'sampledMaxInLast24Hours'|'autoscalingMaxInLast24Hours'
+                                  },
+                                  'executionApprovalConfig': {
+                                      'timeoutMinutes': 123,
+                                      'approvalRole': 'string'
+                                  },
+                                  'arcRoutingControlConfig': {
+                                      'timeoutMinutes': 123,
+                                      'crossAccountRole': 'string',
+                                      'externalId': 'string',
+                                      'regionAndRoutingControls': {
+                                          'string': [
+                                              {
+                                                  'routingControlArn': 'string',
+                                                  'state': 'On'|'Off'
+                                              },
+                                          ]
+                                      }
+                                  },
+                                  'globalAuroraConfig': {
+                                      'timeoutMinutes': 123,
+                                      'crossAccountRole': 'string',
+                                      'externalId': 'string',
+                                      'behavior': 'switchoverOnly'|'failover',
+                                      'ungraceful': {
+                                          'ungraceful': 'failover'
+                                      },
+                                      'globalClusterIdentifier': 'string',
+                                      'databaseClusterArns': [
+                                          'string',
+                                      ]
+                                  },
+                                  'parallelConfig': {
+                                      'steps': {'... recursive ...'}
+                                  },
+                                  'regionSwitchPlanConfig': {
+                                      'crossAccountRole': 'string',
+                                      'externalId': 'string',
+                                      'arn': 'string'
+                                  },
+                                  'ecsCapacityIncreaseConfig': {
+                                      'timeoutMinutes': 123,
+                                      'services': [
+                                          {
+                                              'crossAccountRole': 'string',
+                                              'externalId': 'string',
+                                              'clusterArn': 'string',
+                                              'serviceArn': 'string'
+                                          },
+                                      ],
+                                      'ungraceful': {
+                                          'minimumSuccessPercentage': 123
+                                      },
+                                      'targetPercent': 123,
+                                      'capacityMonitoringApproach': 'sampledMaxInLast24Hours'|'containerInsightsMaxInLast24Hours'
+                                  },
+                                  'eksResourceScalingConfig': {
+                                      'timeoutMinutes': 123,
+                                      'kubernetesResourceType': {
+                                          'apiVersion': 'string',
+                                          'kind': 'string'
+                                      },
+                                      'scalingResources': [
+                                          {
+                                              'string': {
+                                                  'string': {
+                                                      'namespace': 'string',
+                                                      'name': 'string',
+                                                      'hpaName': 'string'
+                                                  }
+                                              }
+                                          },
+                                      ],
+                                      'eksClusters': [
+                                          {
+                                              'crossAccountRole': 'string',
+                                              'externalId': 'string',
+                                              'clusterArn': 'string'
+                                          },
+                                      ],
+                                      'ungraceful': {
+                                          'minimumSuccessPercentage': 123
+                                      },
+                                      'targetPercent': 123,
+                                      'capacityMonitoringApproach': 'sampledMaxInLast24Hours'
+                                  },
+                                  'route53HealthCheckConfig': {
+                                      'timeoutMinutes': 123,
+                                      'crossAccountRole': 'string',
+                                      'externalId': 'string',
+                                      'hostedZoneId': 'string',
+                                      'recordName': 'string',
+                                      'recordSets': [
+                                          {
+                                              'recordSetIdentifier': 'string',
+                                              'region': 'string'
+                                          },
+                                      ]
+                                  },
+                                  'documentDbConfig': {
+                                      'timeoutMinutes': 123,
+                                      'crossAccountRole': 'string',
+                                      'externalId': 'string',
+                                      'behavior': 'switchoverOnly'|'failover',
+                                      'ungraceful': {
+                                          'ungraceful': 'failover'
+                                      },
+                                      'globalClusterIdentifier': 'string',
+                                      'databaseClusterArns': [
+                                          'string',
+                                      ]
+                                  }
+                              },
+                              'executionBlockType': 'CustomActionLambda'|'ManualApproval'|'AuroraGlobalDatabase'|'EC2AutoScaling'|'ARCRoutingControl'|'ARCRegionSwitchPlan'|'Parallel'|'ECSServiceScaling'|'EKSResourceScaling'|'Route53HealthCheck'|'DocumentDb'
+                          },
+                      ],
+                      'workflowTargetAction': 'activate'|'deactivate',
+                      'workflowTargetRegion': 'string',
+                      'workflowDescription': 'string'
+                  },
+              ],
+              'executionRole': 'string',
+              'recoveryTimeObjectiveMinutes': 123,
+              'associatedAlarms': {
+                  'string': {
+                      'crossAccountRole': 'string',
+                      'externalId': 'string',
+                      'resourceIdentifier': 'string',
+                      'alarmType': 'applicationHealth'|'trigger'
+                  }
+              },
+              'triggers': [
+                  {
+                      'description': 'string',
+                      'targetRegion': 'string',
+                      'action': 'activate'|'deactivate',
+                      'conditions': [
+                          {
+                              'associatedAlarmName': 'string',
+                              'condition': 'red'|'green'
+                          },
+                      ],
+                      'minDelayMinutesBetweenExecutions': 123
+                  },
+              ],
+              'reportConfiguration': {
+                  'reportOutput': [
+                      {
+                          's3Configuration': {
+                              'bucketPath': 'string',
+                              'bucketOwner': 'string'
+                          }
+                      },
+                  ]
+              },
+              'name': 'string',
+              'regions': [
+                  'string',
+              ],
+              'recoveryApproach': 'activeActive'|'activePassive',
+              'primaryRegion': 'string',
+              'owner': 'string',
+              'version': 'string',
+              'updatedAt': datetime(2015, 1, 1)
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **plan** *(dict) --* 
+
+        The details of the created Region switch plan.
+
+        
+        
+
+        - **arn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the plan.
+
+          
+        
+
+        - **description** *(string) --* 
+
+          The description for a plan.
+
+          
+        
+
+        - **workflows** *(list) --* 
+
+          The workflows for a plan.
+
+          
+          
+
+          - *(dict) --* 
+
+            Represents a workflow in a Region switch plan. A workflow defines a sequence of steps to execute during a Region switch.
+
+            
+            
+
+            - **steps** *(list) --* 
+
+              The steps that make up the workflow.
+
+              
+              
+
+              - *(dict) --* 
+
+                Represents a step in a Region switch plan workflow. Each step performs a specific action during the Region switch process.
+
+                
+                
+
+                - **name** *(string) --* 
+
+                  The name of a step in a workflow.
+
+                  
+                
+
+                - **description** *(string) --* 
+
+                  The description of a step in a workflow.
+
+                  
+                
+
+                - **executionBlockConfiguration** *(dict) --* 
+
+                  The configuration for an execution block in a workflow.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``customActionLambdaConfig``, ``ec2AsgCapacityIncreaseConfig``, ``executionApprovalConfig``, ``arcRoutingControlConfig``, ``globalAuroraConfig``, ``parallelConfig``, ``regionSwitchPlanConfig``, ``ecsCapacityIncreaseConfig``, ``eksResourceScalingConfig``, ``route53HealthCheckConfig``, ``documentDbConfig``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **customActionLambdaConfig** *(dict) --* 
+
+                    An Amazon Web Services Lambda execution block.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **lambdas** *(list) --* 
+
+                      The Amazon Web Services Lambda functions for the execution block.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        Configuration for Amazon Web Services Lambda functions used in a Region switch plan.
+
+                        
+                        
+
+                        - **crossAccountRole** *(string) --* 
+
+                          The cross account role for the configuration.
+
+                          
+                        
+
+                        - **externalId** *(string) --* 
+
+                          The external ID (secret key) for the configuration.
+
+                          
+                        
+
+                        - **arn** *(string) --* 
+
+                          The Amazon Resource Name (ARN) of the Lambda function.
+
+                          
+                    
+                  
+                    
+
+                    - **retryIntervalMinutes** *(float) --* 
+
+                      The retry interval specified.
+
+                      
+                    
+
+                    - **regionToRun** *(string) --* 
+
+                      The Amazon Web Services Region for the function to run in.
+
+                      
+                    
+
+                    - **ungraceful** *(dict) --* 
+
+                      The settings for ungraceful execution.
+
+                      
+                      
+
+                      - **behavior** *(string) --* 
+
+                        The ungraceful behavior for a Lambda function, which must be set to ``skip``.
+
+                        
+                  
+                
+                  
+
+                  - **ec2AsgCapacityIncreaseConfig** *(dict) --* 
+
+                    An EC2 Auto Scaling group execution block.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **asgs** *(list) --* 
+
+                      The EC2 Auto Scaling groups for the configuration.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        Configuration for an Amazon EC2 Auto Scaling group used in a Region switch plan.
+
+                        
+                        
+
+                        - **crossAccountRole** *(string) --* 
+
+                          The cross account role for the configuration.
+
+                          
+                        
+
+                        - **externalId** *(string) --* 
+
+                          The external ID (secret key) for the configuration.
+
+                          
+                        
+
+                        - **arn** *(string) --* 
+
+                          The Amazon Resource Name (ARN) of the EC2 Auto Scaling group.
+
+                          
+                    
+                  
+                    
+
+                    - **ungraceful** *(dict) --* 
+
+                      The settings for ungraceful execution.
+
+                      
+                      
+
+                      - **minimumSuccessPercentage** *(integer) --* 
+
+                        The minimum success percentage that you specify for EC2 Auto Scaling groups.
+
+                        
+                  
+                    
+
+                    - **targetPercent** *(integer) --* 
+
+                      The target percentage that you specify for EC2 Auto Scaling groups.
+
+                      
+                    
+
+                    - **capacityMonitoringApproach** *(string) --* 
+
+                      The monitoring approach that you specify EC2 Auto Scaling groups for the configuration.
+
+                      
+                
+                  
+
+                  - **executionApprovalConfig** *(dict) --* 
+
+                    A manual approval execution block.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **approvalRole** *(string) --* 
+
+                      The IAM approval role for the configuration.
+
+                      
+                
+                  
+
+                  - **arcRoutingControlConfig** *(dict) --* 
+
+                    An ARC routing control execution block.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **crossAccountRole** *(string) --* 
+
+                      The cross account role for the configuration.
+
+                      
+                    
+
+                    - **externalId** *(string) --* 
+
+                      The external ID (secret key) for the configuration.
+
+                      
+                    
+
+                    - **regionAndRoutingControls** *(dict) --* 
+
+                      The Region and ARC routing controls for the configuration.
+
+                      
+                      
+
+                      - *(string) --* 
+                        
+
+                        - *(list) --* 
+                          
+
+                          - *(dict) --* 
+
+                            Represents the state of an ARC routing control.
+
+                            
+                            
+
+                            - **routingControlArn** *(string) --* 
+
+                              The Amazon Resource Name (ARN) of a routing control.
+
+                              
+                            
+
+                            - **state** *(string) --* 
+
+                              The state of an ARC routing control, On or Off.
+
+                              
+                        
+                      
+                  
+                
+                
+                  
+
+                  - **globalAuroraConfig** *(dict) --* 
+
+                    An Aurora Global Database execution block.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **crossAccountRole** *(string) --* 
+
+                      The cross account role for the configuration.
+
+                      
+                    
+
+                    - **externalId** *(string) --* 
+
+                      The external ID (secret key) for the configuration.
+
+                      
+                    
+
+                    - **behavior** *(string) --* 
+
+                      The behavior for a global database, that is, only allow switchover or also allow failover.
+
+                      
+                    
+
+                    - **ungraceful** *(dict) --* 
+
+                      The settings for ungraceful execution.
+
+                      
+                      
+
+                      - **ungraceful** *(string) --* 
+
+                        The settings for ungraceful execution.
+
+                        
+                  
+                    
+
+                    - **globalClusterIdentifier** *(string) --* 
+
+                      The global cluster identifier for a global database.
+
+                      
+                    
+
+                    - **databaseClusterArns** *(list) --* 
+
+                      The database cluster Amazon Resource Names (ARNs) for a global database.
+
+                      
+                      
+
+                      - *(string) --* 
+                  
+                
+                  
+
+                  - **parallelConfig** *(dict) --* 
+
+                    A parallel configuration execution block.
+
+                    
+                    
+
+                    - **steps** *(list) --* 
+
+                      The steps for a parallel execution block.
+
+                      
+                
+                  
+
+                  - **regionSwitchPlanConfig** *(dict) --* 
+
+                    A Region switch plan execution block.
+
+                    
+                    
+
+                    - **crossAccountRole** *(string) --* 
+
+                      The cross account role for the configuration.
+
+                      
+                    
+
+                    - **externalId** *(string) --* 
+
+                      The external ID (secret key) for the configuration.
+
+                      
+                    
+
+                    - **arn** *(string) --* 
+
+                      The Amazon Resource Name (ARN) of the plan configuration.
+
+                      
+                
+                  
+
+                  - **ecsCapacityIncreaseConfig** *(dict) --* 
+
+                    The capacity increase specified for the configuration.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **services** *(list) --* 
+
+                      The services specified for the configuration.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        The service for a cross account role.
+
+                        
+                        
+
+                        - **crossAccountRole** *(string) --* 
+
+                          The cross account role for a service.
+
+                          
+                        
+
+                        - **externalId** *(string) --* 
+
+                          The external ID (secret key) for the service.
+
+                          
+                        
+
+                        - **clusterArn** *(string) --* 
+
+                          The cluster Amazon Resource Name (ARN) for a service.
+
+                          
+                        
+
+                        - **serviceArn** *(string) --* 
+
+                          The Amazon Resource Name (ARN) for a service.
+
+                          
+                    
+                  
+                    
+
+                    - **ungraceful** *(dict) --* 
+
+                      The settings for ungraceful execution.
+
+                      
+                      
+
+                      - **minimumSuccessPercentage** *(integer) --* 
+
+                        The minimum success percentage specified for the configuration.
+
+                        
+                  
+                    
+
+                    - **targetPercent** *(integer) --* 
+
+                      The target percentage specified for the configuration.
+
+                      
+                    
+
+                    - **capacityMonitoringApproach** *(string) --* 
+
+                      The monitoring approach specified for the configuration, for example, ``Most_Recent``.
+
+                      
+                
+                  
+
+                  - **eksResourceScalingConfig** *(dict) --* 
+
+                    An Amazon Web Services EKS resource scaling execution block.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **kubernetesResourceType** *(dict) --* 
+
+                      The Kubernetes resource type for the configuration.
+
+                      
+                      
+
+                      - **apiVersion** *(string) --* 
+
+                        The API version type for the Kubernetes resource.
+
+                        
+                      
+
+                      - **kind** *(string) --* 
+
+                        The kind for the Kubernetes resource.
+
+                        
+                  
+                    
+
+                    - **scalingResources** *(list) --* 
+
+                      The scaling resources for the configuration.
+
+                      
+                      
+
+                      - *(dict) --* 
+                        
+
+                        - *(string) --* 
+                          
+
+                          - *(dict) --* 
+                            
+
+                            - *(string) --* 
+                              
+
+                              - *(dict) --* 
+
+                                Defines a Kubernetes resource to scale in an Amazon EKS cluster.
+
+                                
+                                
+
+                                - **namespace** *(string) --* 
+
+                                  The namespace for the Kubernetes resource.
+
+                                  
+                                
+
+                                - **name** *(string) --* 
+
+                                  The name for the Kubernetes resource.
+
+                                  
+                                
+
+                                - **hpaName** *(string) --* 
+
+                                  The hpaname for the Kubernetes resource.
+
+                                  
+                            
+                        
+                      
+                    
+                  
+                  
+                    
+
+                    - **eksClusters** *(list) --* 
+
+                      The clusters for the configuration.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        The Amazon Web Services EKS cluster execution block configuration.
+
+                        
+                        
+
+                        - **crossAccountRole** *(string) --* 
+
+                          The cross account role for the configuration.
+
+                          
+                        
+
+                        - **externalId** *(string) --* 
+
+                          The external ID (secret key) for the configuration.
+
+                          
+                        
+
+                        - **clusterArn** *(string) --* 
+
+                          The Amazon Resource Name (ARN) of an Amazon Web Services EKS cluster.
+
+                          
+                    
+                  
+                    
+
+                    - **ungraceful** *(dict) --* 
+
+                      The settings for ungraceful execution.
+
+                      
+                      
+
+                      - **minimumSuccessPercentage** *(integer) --* 
+
+                        The minimum success percentage for the configuration.
+
+                        
+                  
+                    
+
+                    - **targetPercent** *(integer) --* 
+
+                      The target percentage for the configuration.
+
+                      
+                    
+
+                    - **capacityMonitoringApproach** *(string) --* 
+
+                      The monitoring approach for the configuration, that is, whether it was sampled in the last 24 hours or autoscaled in the last 24 hours.
+
+                      
+                
+                  
+
+                  - **route53HealthCheckConfig** *(dict) --* 
+
+                    The Amazon Route 53 health check configuration.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The Amazon Route 53 health check configuration time out (in minutes).
+
+                      
+                    
+
+                    - **crossAccountRole** *(string) --* 
+
+                      The cross account role for the configuration.
+
+                      
+                    
+
+                    - **externalId** *(string) --* 
+
+                      The external ID (secret key) for the configuration.
+
+                      
+                    
+
+                    - **hostedZoneId** *(string) --* 
+
+                      The Amazon Route 53 health check configuration hosted zone ID.
+
+                      
+                    
+
+                    - **recordName** *(string) --* 
+
+                      The Amazon Route 53 health check configuration record name.
+
+                      
+                    
+
+                    - **recordSets** *(list) --* 
+
+                      The Amazon Route 53 health check configuration record sets.
+
+                      
+                      
+
+                      - *(dict) --* 
+
+                        The Amazon Route 53 record set.
+
+                        
+                        
+
+                        - **recordSetIdentifier** *(string) --* 
+
+                          The Amazon Route 53 record set identifier.
+
+                          
+                        
+
+                        - **region** *(string) --* 
+
+                          The Amazon Route 53 record set Region.
+
+                          
+                    
+                  
+                
+                  
+
+                  - **documentDbConfig** *(dict) --* 
+
+                    Configuration for Amazon DocumentDB global clusters used in a Region switch plan.
+
+                    
+                    
+
+                    - **timeoutMinutes** *(integer) --* 
+
+                      The timeout value specified for the configuration.
+
+                      
+                    
+
+                    - **crossAccountRole** *(string) --* 
+
+                      The cross account role for the configuration.
+
+                      
+                    
+
+                    - **externalId** *(string) --* 
+
+                      The external ID (secret key) for the configuration.
+
+                      
+                    
+
+                    - **behavior** *(string) --* 
+
+                      The behavior for a global cluster, that is, only allow switchover or also allow failover.
+
+                      
+                    
+
+                    - **ungraceful** *(dict) --* 
+
+                      The settings for ungraceful execution.
+
+                      
+                      
+
+                      - **ungraceful** *(string) --* 
+
+                        The settings for ungraceful execution.
+
+                        
+                  
+                    
+
+                    - **globalClusterIdentifier** *(string) --* 
+
+                      The global cluster identifier for a DocumentDB global cluster.
+
+                      
+                    
+
+                    - **databaseClusterArns** *(list) --* 
+
+                      The database cluster Amazon Resource Names (ARNs) for a DocumentDB global cluster.
+
+                      
+                      
+
+                      - *(string) --* 
+                  
+                
+              
+                
+
+                - **executionBlockType** *(string) --* 
+
+                  The type of an execution block in a workflow.
+
+                  
+            
+          
+            
+
+            - **workflowTargetAction** *(string) --* 
+
+              The action that the workflow performs. Valid values include ``activate`` and ``deactivate``.
+
+              
+            
+
+            - **workflowTargetRegion** *(string) --* 
+
+              The Amazon Web Services Region that the workflow targets.
+
+              
+            
+
+            - **workflowDescription** *(string) --* 
+
+              The description of the workflow.
+
+              
+        
+      
+        
+
+        - **executionRole** *(string) --* 
+
+          The execution role for a plan.
+
+          
+        
+
+        - **recoveryTimeObjectiveMinutes** *(integer) --* 
+
+          The recovery time objective for a plan.
+
+          
+        
+
+        - **associatedAlarms** *(dict) --* 
+
+          The associated application health alarms for a plan.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(dict) --* 
+
+              An Amazon CloudWatch alarm associated with a Region switch plan. These alarms can be used to trigger automatic execution of the plan.
+
+              
+              
+
+              - **crossAccountRole** *(string) --* 
+
+                The cross account role for the configuration.
+
+                
+              
+
+              - **externalId** *(string) --* 
+
+                The external ID (secret key) for the configuration.
+
+                
+              
+
+              - **resourceIdentifier** *(string) --* 
+
+                The resource identifier for alarms that you associate with a plan.
+
+                
+              
+
+              - **alarmType** *(string) --* 
+
+                The alarm type for an associated alarm. An associated CloudWatch alarm can be an application health alarm or a trigger alarm.
+
+                
+          
+      
+    
+        
+
+        - **triggers** *(list) --* 
+
+          The triggers for a plan.
+
+          
+          
+
+          - *(dict) --* 
+
+            Defines a condition that can automatically trigger the execution of a Region switch plan.
+
+            
+            
+
+            - **description** *(string) --* 
+
+              The description for a trigger.
+
+              
+            
+
+            - **targetRegion** *(string) --* 
+
+              The Amazon Web Services Region for a trigger.
+
+              
+            
+
+            - **action** *(string) --* 
+
+              The action to perform when the trigger fires. Valid values include ``activate`` and ``deactivate``.
+
+              
+            
+
+            - **conditions** *(list) --* 
+
+              The conditions that must be met for the trigger to fire.
+
+              
+              
+
+              - *(dict) --* 
+
+                Defines a condition that must be met for a trigger to fire.
+
+                
+                
+
+                - **associatedAlarmName** *(string) --* 
+
+                  The name of the CloudWatch alarm associated with the condition.
+
+                  
+                
+
+                - **condition** *(string) --* 
+
+                  The condition that must be met. Valid values include ``green`` and ``red``.
+
+                  
+            
+          
+            
+
+            - **minDelayMinutesBetweenExecutions** *(integer) --* 
+
+              The minimum time, in minutes, that must elapse between automatic executions of the plan.
+
+              
+        
+      
+        
+
+        - **reportConfiguration** *(dict) --* 
+
+          The report configuration for a plan.
+
+          
+          
+
+          - **reportOutput** *(list) --* 
+
+            The output configuration for the report.
+
+            
+            
+
+            - *(dict) --* 
+
+              Configuration for report output destinations used in a Region switch plan.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``s3Configuration``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **s3Configuration** *(dict) --* 
+
+                Configuration for delivering reports to an Amazon S3 bucket.
+
+                
+                
+
+                - **bucketPath** *(string) --* 
+
+                  The S3 bucket name and optional prefix where reports are stored. Format: bucket-name or bucket-name/prefix.
+
+                  
+                
+
+                - **bucketOwner** *(string) --* 
+
+                  The Amazon Web Services account ID that owns the S3 bucket. Required to ensure the bucket is still owned by the same expected owner at generation time.
+
+                  
+            
+          
+        
+      
+        
+
+        - **name** *(string) --* 
+
+          The name for a plan.
+
+          
+        
+
+        - **regions** *(list) --* 
+
+          The Amazon Web Services Regions for a plan.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **recoveryApproach** *(string) --* 
+
+          The recovery approach for a Region switch plan, which can be active/active (activeActive) or active/passive (activePassive).
+
+          
+        
+
+        - **primaryRegion** *(string) --* 
+
+          The primary Region for a plan.
+
+          
+        
+
+        - **owner** *(string) --* 
+
+          The owner of a plan.
+
+          
+        
+
+        - **version** *(string) --* 
+
+          The version for the plan.
+
+          
+        
+
+        - **updatedAt** *(datetime) --* 
+
+          The timestamp when the plan was last updated.
+
+          
+    
+  

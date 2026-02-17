@@ -1,0 +1,297 @@
+:doc:`VerifiedPermissions <../../verifiedpermissions>` / Client / create_policy_store
+
+*******************
+create_policy_store
+*******************
+
+
+
+.. py:method:: VerifiedPermissions.Client.create_policy_store(**kwargs)
+
+  
+
+  Creates a policy store. A policy store is a container for policy resources.
+
+   
+
+  .. note::
+
+    
+
+    Although `Cedar supports multiple namespaces <https://docs.cedarpolicy.com/schema/schema.html#namespace>`__, Verified Permissions currently supports only one namespace per policy store.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    Verified Permissions is `eventually consistent <https://wikipedia.org/wiki/Eventual_consistency>`__ . It can take a few seconds for a new or changed element to propagate through the service and be visible in the results of other Verified Permissions operations.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicyStore>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_policy_store(
+        clientToken='string',
+        validationSettings={
+            'mode': 'OFF'|'STRICT'
+        },
+        description='string',
+        deletionProtection='ENABLED'|'DISABLED',
+        encryptionSettings={
+            'kmsEncryptionSettings': {
+                'key': 'string',
+                'encryptionContext': {
+                    'string': 'string'
+                }
+            },
+            'default': {}
+            
+        },
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type clientToken: string
+  :param clientToken: 
+
+    Specifies a unique, case-sensitive ID that you provide to ensure the idempotency of the request. This lets you safely retry the request without accidentally performing the same operation a second time. Passing the same value to a later call to an operation requires that you also pass the same value for all other parameters. We recommend that you use a `UUID type of value. <https://wikipedia.org/wiki/Universally_unique_identifier>`__.
+
+     
+
+    If you don't provide this value, then Amazon Web Services generates a random one for you.
+
+     
+
+    If you retry the operation with the same ``ClientToken``, but with different parameters, the retry fails with an ``ConflictException`` error.
+
+     
+
+    Verified Permissions recognizes a ``ClientToken`` for eight hours. After eight hours, the next request with the same parameters performs the operation again regardless of the value of ``ClientToken``.
+
+    This field is autopopulated if not provided.
+
+  
+  :type validationSettings: dict
+  :param validationSettings: **[REQUIRED]** 
+
+    Specifies the validation setting for this policy store.
+
+     
+
+    Currently, the only valid and required value is ``Mode``.
+
+     
+
+    .. warning::
+
+       
+
+      We recommend that you turn on ``STRICT`` mode only after you define a schema. If a schema doesn't exist, then ``STRICT`` mode causes any policy to fail validation, and Verified Permissions rejects the policy. You can turn off validation by using the `UpdatePolicyStore <https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_UpdatePolicyStore>`__. Then, when you have a schema defined, use `UpdatePolicyStore <https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_UpdatePolicyStore>`__ again to turn validation back on.
+
+      
+
+    
+
+  
+    - **mode** *(string) --* **[REQUIRED]** 
+
+      The validation mode currently configured for this policy store. The valid values are:
+
+       
+
+      
+      * **OFF** – Neither Verified Permissions nor Cedar perform any validation on policies. No validation errors are reported by either service.
+       
+      * **STRICT** – Requires a schema to be present in the policy store. Cedar performs validation on all submitted new or updated static policies and policy templates. Any that fail validation are rejected and Cedar doesn't store them in the policy store.
+      
+
+       
+
+      .. warning::
+
+         
+
+        If ``Mode=STRICT`` and the policy store doesn't contain a schema, Verified Permissions rejects all static policies and policy templates because there is no schema to validate against.
+
+         
+
+        To submit a static policy or policy template without a schema, you must turn off validation.
+
+        
+
+      
+
+    
+  
+  :type description: string
+  :param description: 
+
+    Descriptive text that you can provide to help with identification of the current policy store.
+
+    
+
+  
+  :type deletionProtection: string
+  :param deletionProtection: 
+
+    Specifies whether the policy store can be deleted. If enabled, the policy store can't be deleted.
+
+     
+
+    The default state is ``DISABLED``.
+
+    
+
+  
+  :type encryptionSettings: dict
+  :param encryptionSettings: 
+
+    Specifies the encryption settings used to encrypt the policy store and their child resources. Allows for the ability to use a customer owned KMS key for encryption of data.
+
+     
+
+    This is an optional field to be used when providing a customer-managed KMS key for encryption.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``kmsEncryptionSettings``, ``default``. 
+
+  
+    - **kmsEncryptionSettings** *(dict) --* 
+
+      The KMS encryption settings for this policy store to encrypt data with. It will contain the customer-managed KMS key, and a user-defined encryption context.
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        The customer-managed KMS key `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__, alias or ID to be used for encryption processes.
+
+         
+
+        Users can provide the full KMS key ARN, a KMS key alias, or a KMS key ID, but it will be mapped to the full KMS key ARN after policy store creation, and referenced when encrypting child resources.
+
+        
+
+      
+      - **encryptionContext** *(dict) --* 
+
+        User-defined, additional context to be added to encryption processes.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+    - **default** *(dict) --* 
+
+      This is the default encryption setting. The policy store uses an Amazon Web Services owned key for encrypting data.
+
+      
+
+    
+    
+  
+  :type tags: dict
+  :param tags: 
+
+    The list of key-value pairs to associate with the policy store.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'policyStoreId': 'string',
+          'arn': 'string',
+          'createdDate': datetime(2015, 1, 1),
+          'lastUpdatedDate': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **policyStoreId** *(string) --* 
+
+        The unique ID of the new policy store.
+
+        
+      
+
+      - **arn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the new policy store.
+
+        
+      
+
+      - **createdDate** *(datetime) --* 
+
+        The date and time the policy store was originally created.
+
+        
+      
+
+      - **lastUpdatedDate** *(datetime) --* 
+
+        The date and time the policy store was last updated.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.InternalServerException`
+
+  

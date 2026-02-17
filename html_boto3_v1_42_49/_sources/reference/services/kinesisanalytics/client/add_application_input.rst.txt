@@ -1,0 +1,395 @@
+:doc:`KinesisAnalytics <../../kinesisanalytics>` / Client / add_application_input
+
+*********************
+add_application_input
+*********************
+
+
+
+.. py:method:: KinesisAnalytics.Client.add_application_input(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This documentation is for version 1 of the Amazon Kinesis Data Analytics API, which only supports SQL applications. Version 2 of the API supports SQL and Java applications. For more information about version 2, see `Amazon Kinesis Data Analytics API V2 Documentation </kinesisanalytics/latest/apiv2/Welcome.html>`__.
+
+    
+
+   
+
+  Adds a streaming source to your Amazon Kinesis application. For conceptual information, see `Configuring Application Input <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/how-it-works-input.html>`__.
+
+   
+
+  You can add a streaming source either when you create an application or you can use this operation to add a streaming source after you create an application. For more information, see `CreateApplication <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_CreateApplication.html>`__.
+
+   
+
+  Any configuration update, including adding a streaming source using this operation, results in a new version of the application. You can use the `DescribeApplication <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_DescribeApplication.html>`__ operation to find the current application version.
+
+   
+
+  This operation requires permissions to perform the ``kinesisanalytics:AddApplicationInput`` action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kinesisanalytics-2015-08-14/AddApplicationInput>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.add_application_input(
+        ApplicationName='string',
+        CurrentApplicationVersionId=123,
+        Input={
+            'NamePrefix': 'string',
+            'InputProcessingConfiguration': {
+                'InputLambdaProcessor': {
+                    'ResourceARN': 'string',
+                    'RoleARN': 'string'
+                }
+            },
+            'KinesisStreamsInput': {
+                'ResourceARN': 'string',
+                'RoleARN': 'string'
+            },
+            'KinesisFirehoseInput': {
+                'ResourceARN': 'string',
+                'RoleARN': 'string'
+            },
+            'InputParallelism': {
+                'Count': 123
+            },
+            'InputSchema': {
+                'RecordFormat': {
+                    'RecordFormatType': 'JSON'|'CSV',
+                    'MappingParameters': {
+                        'JSONMappingParameters': {
+                            'RecordRowPath': 'string'
+                        },
+                        'CSVMappingParameters': {
+                            'RecordRowDelimiter': 'string',
+                            'RecordColumnDelimiter': 'string'
+                        }
+                    }
+                },
+                'RecordEncoding': 'string',
+                'RecordColumns': [
+                    {
+                        'Name': 'string',
+                        'Mapping': 'string',
+                        'SqlType': 'string'
+                    },
+                ]
+            }
+        }
+    )
+    
+  :type ApplicationName: string
+  :param ApplicationName: **[REQUIRED]** 
+
+    Name of your existing Amazon Kinesis Analytics application to which you want to add the streaming source.
+
+    
+
+  
+  :type CurrentApplicationVersionId: integer
+  :param CurrentApplicationVersionId: **[REQUIRED]** 
+
+    Current version of your Amazon Kinesis Analytics application. You can use the `DescribeApplication <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_DescribeApplication.html>`__ operation to find the current application version.
+
+    
+
+  
+  :type Input: dict
+  :param Input: **[REQUIRED]** 
+
+    The `Input <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_Input.html>`__ to add.
+
+    
+
+  
+    - **NamePrefix** *(string) --* **[REQUIRED]** 
+
+      Name prefix to use when creating an in-application stream. Suppose that you specify a prefix "MyInApplicationStream." Amazon Kinesis Analytics then creates one or more (as per the ``InputParallelism`` count you specified) in-application streams with names "MyInApplicationStream_001," "MyInApplicationStream_002," and so on.
+
+      
+
+    
+    - **InputProcessingConfiguration** *(dict) --* 
+
+      The `InputProcessingConfiguration <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_InputProcessingConfiguration.html>`__ for the input. An input processor transforms records as they are received from the stream, before the application's SQL code executes. Currently, the only input processing configuration available is `InputLambdaProcessor <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_InputLambdaProcessor.html>`__.
+
+      
+
+    
+      - **InputLambdaProcessor** *(dict) --* **[REQUIRED]** 
+
+        The `InputLambdaProcessor <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_InputLambdaProcessor.html>`__ that is used to preprocess the records in the stream before being processed by your application code.
+
+        
+
+      
+        - **ResourceARN** *(string) --* **[REQUIRED]** 
+
+          The ARN of the `AWS Lambda <https://docs.aws.amazon.com/lambda/>`__ function that operates on records in the stream.
+
+           
+
+          .. note::
+
+            
+
+            To specify an earlier version of the Lambda function than the latest, include the Lambda function version in the Lambda function ARN. For more information about Lambda ARNs, see `Example ARNs\: AWS Lambda </general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-lambda>`__
+
+            
+
+          
+
+        
+        - **RoleARN** *(string) --* **[REQUIRED]** 
+
+          The ARN of the IAM role that is used to access the AWS Lambda function.
+
+          
+
+        
+      
+    
+    - **KinesisStreamsInput** *(dict) --* 
+
+      If the streaming source is an Amazon Kinesis stream, identifies the stream's Amazon Resource Name (ARN) and an IAM role that enables Amazon Kinesis Analytics to access the stream on your behalf.
+
+       
+
+      Note: Either ``KinesisStreamsInput`` or ``KinesisFirehoseInput`` is required.
+
+      
+
+    
+      - **ResourceARN** *(string) --* **[REQUIRED]** 
+
+        ARN of the input Amazon Kinesis stream to read.
+
+        
+
+      
+      - **RoleARN** *(string) --* **[REQUIRED]** 
+
+        ARN of the IAM role that Amazon Kinesis Analytics can assume to access the stream on your behalf. You need to grant the necessary permissions to this role.
+
+        
+
+      
+    
+    - **KinesisFirehoseInput** *(dict) --* 
+
+      If the streaming source is an Amazon Kinesis Firehose delivery stream, identifies the delivery stream's ARN and an IAM role that enables Amazon Kinesis Analytics to access the stream on your behalf.
+
+       
+
+      Note: Either ``KinesisStreamsInput`` or ``KinesisFirehoseInput`` is required.
+
+      
+
+    
+      - **ResourceARN** *(string) --* **[REQUIRED]** 
+
+        ARN of the input delivery stream.
+
+        
+
+      
+      - **RoleARN** *(string) --* **[REQUIRED]** 
+
+        ARN of the IAM role that Amazon Kinesis Analytics can assume to access the stream on your behalf. You need to make sure that the role has the necessary permissions to access the stream.
+
+        
+
+      
+    
+    - **InputParallelism** *(dict) --* 
+
+      Describes the number of in-application streams to create.
+
+       
+
+      Data from your source is routed to these in-application input streams.
+
+       
+
+      (see `Configuring Application Input <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/how-it-works-input.html>`__.
+
+      
+
+    
+      - **Count** *(integer) --* 
+
+        Number of in-application streams to create. For more information, see `Limits <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/limits.html>`__.
+
+        
+
+      
+    
+    - **InputSchema** *(dict) --* **[REQUIRED]** 
+
+      Describes the format of the data in the streaming source, and how each data element maps to corresponding columns in the in-application stream that is being created.
+
+       
+
+      Also used to describe the format of the reference data source.
+
+      
+
+    
+      - **RecordFormat** *(dict) --* **[REQUIRED]** 
+
+        Specifies the format of the records on the streaming source.
+
+        
+
+      
+        - **RecordFormatType** *(string) --* **[REQUIRED]** 
+
+          The type of record format.
+
+          
+
+        
+        - **MappingParameters** *(dict) --* 
+
+          When configuring application input at the time of creating or updating an application, provides additional mapping information specific to the record format (such as JSON, CSV, or record fields delimited by some delimiter) on the streaming source.
+
+          
+
+        
+          - **JSONMappingParameters** *(dict) --* 
+
+            Provides additional mapping information when JSON is the record format on the streaming source.
+
+            
+
+          
+            - **RecordRowPath** *(string) --* **[REQUIRED]** 
+
+              Path to the top-level parent that contains the records.
+
+              
+
+            
+          
+          - **CSVMappingParameters** *(dict) --* 
+
+            Provides additional mapping information when the record format uses delimiters (for example, CSV).
+
+            
+
+          
+            - **RecordRowDelimiter** *(string) --* **[REQUIRED]** 
+
+              Row delimiter. For example, in a CSV format, *'\n'* is the typical row delimiter.
+
+              
+
+            
+            - **RecordColumnDelimiter** *(string) --* **[REQUIRED]** 
+
+              Column delimiter. For example, in a CSV format, a comma (",") is the typical column delimiter.
+
+              
+
+            
+          
+        
+      
+      - **RecordEncoding** *(string) --* 
+
+        Specifies the encoding of the records in the streaming source. For example, UTF-8.
+
+        
+
+      
+      - **RecordColumns** *(list) --* **[REQUIRED]** 
+
+        A list of ``RecordColumn`` objects.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes the mapping of each data element in the streaming source to the corresponding column in the in-application stream.
+
+           
+
+          Also used to describe the format of the reference data source.
+
+          
+
+        
+          - **Name** *(string) --* **[REQUIRED]** 
+
+            Name of the column created in the in-application input stream or reference table.
+
+            
+
+          
+          - **Mapping** *(string) --* 
+
+            Reference to the data element in the streaming input or the reference data source. This element is required if the `RecordFormatType <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_RecordFormat.html#analytics-Type-RecordFormat-RecordFormatTypel>`__ is ``JSON``.
+
+            
+
+          
+          - **SqlType** *(string) --* **[REQUIRED]** 
+
+            Type of column created in the in-application input stream or reference table.
+
+            
+
+          
+        
+    
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.InvalidArgumentException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.CodeValidationException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.UnsupportedOperationException`
+
+  

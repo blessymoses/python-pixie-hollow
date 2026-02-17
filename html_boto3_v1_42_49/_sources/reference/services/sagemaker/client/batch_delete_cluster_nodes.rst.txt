@@ -1,0 +1,235 @@
+:doc:`SageMaker <../../sagemaker>` / Client / batch_delete_cluster_nodes
+
+**************************
+batch_delete_cluster_nodes
+**************************
+
+
+
+.. py:method:: SageMaker.Client.batch_delete_cluster_nodes(**kwargs)
+
+  
+
+  Deletes specific nodes within a SageMaker HyperPod cluster. ``BatchDeleteClusterNodes`` accepts a cluster name and a list of node IDs.
+
+   
+
+  .. warning::
+
+     
+
+    
+    * To safeguard your work, back up your data to Amazon S3 or an FSx for Lustre file system before invoking the API on a worker node group. This will help prevent any potential data loss from the instance root volume. For more information about backup, see `Use the backup script provided by SageMaker HyperPod <https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-operate-cli-command.html#sagemaker-hyperpod-operate-cli-command-update-cluster-software-backup>`__.
+     
+    * If you want to invoke this API on an existing cluster, you'll first need to patch the cluster by running the `UpdateClusterSoftware API <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateClusterSoftware.html>`__. For more information about patching a cluster, see `Update the SageMaker HyperPod platform software of a cluster <https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-operate-cli-command.html#sagemaker-hyperpod-operate-cli-command-update-cluster-software>`__.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchDeleteClusterNodes>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_delete_cluster_nodes(
+        ClusterName='string',
+        NodeIds=[
+            'string',
+        ],
+        NodeLogicalIds=[
+            'string',
+        ]
+    )
+    
+  :type ClusterName: string
+  :param ClusterName: **[REQUIRED]** 
+
+    The name of the SageMaker HyperPod cluster from which to delete the specified nodes.
+
+    
+
+  
+  :type NodeIds: list
+  :param NodeIds: 
+
+    A list of node IDs to be deleted from the specified cluster.
+
+     
+
+    .. note::
+
+      
+
+      
+      * For SageMaker HyperPod clusters using the Slurm workload manager, you cannot remove instances that are configured as Slurm controller nodes.
+       
+      * If you need to delete more than 99 instances, contact `Support <http://aws.amazon.com/contact-us/>`__ for assistance.
+      
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type NodeLogicalIds: list
+  :param NodeLogicalIds: 
+
+    A list of ``NodeLogicalIds`` identifying the nodes to be deleted. You can specify up to 50 ``NodeLogicalIds``. You must specify either ``NodeLogicalIds``, ``InstanceIds``, or both, with a combined maximum of 50 identifiers.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Failed': [
+              {
+                  'Code': 'NodeIdNotFound'|'InvalidNodeStatus'|'NodeIdInUse',
+                  'Message': 'string',
+                  'NodeId': 'string'
+              },
+          ],
+          'Successful': [
+              'string',
+          ],
+          'FailedNodeLogicalIds': [
+              {
+                  'Code': 'NodeIdNotFound'|'InvalidNodeStatus'|'NodeIdInUse',
+                  'Message': 'string',
+                  'NodeLogicalId': 'string'
+              },
+          ],
+          'SuccessfulNodeLogicalIds': [
+              'string',
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Failed** *(list) --* 
+
+        A list of errors encountered when deleting the specified nodes.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents an error encountered when deleting a node from a SageMaker HyperPod cluster.
+
+          
+          
+
+          - **Code** *(string) --* 
+
+            The error code associated with the error encountered when deleting a node.
+
+             
+
+            The code provides information about the specific issue encountered, such as the node not being found, the node's status being invalid for deletion, or the node ID being in use by another process.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A message describing the error encountered when deleting a node.
+
+            
+          
+
+          - **NodeId** *(string) --* 
+
+            The ID of the node that encountered an error during the deletion process.
+
+            
+      
+    
+      
+
+      - **Successful** *(list) --* 
+
+        A list of node IDs that were successfully deleted from the specified cluster.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **FailedNodeLogicalIds** *(list) --* 
+
+        A list of ``NodeLogicalIds`` that could not be deleted, along with error information explaining why the deletion failed.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about an error that occurred when attempting to delete a node identified by its ``NodeLogicalId``.
+
+          
+          
+
+          - **Code** *(string) --* 
+
+            The error code associated with the failure. Possible values include ``NodeLogicalIdNotFound``, ``InvalidNodeStatus``, and ``InternalError``.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A descriptive message providing additional details about the error.
+
+            
+          
+
+          - **NodeLogicalId** *(string) --* 
+
+            The ``NodeLogicalId`` of the node that could not be deleted.
+
+            
+      
+    
+      
+
+      - **SuccessfulNodeLogicalIds** *(list) --* 
+
+        A list of ``NodeLogicalIds`` that were successfully deleted from the cluster.
+
+        
+        
+
+        - *(string) --* 
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SageMaker.Client.exceptions.ResourceNotFound`
+
+  

@@ -1,0 +1,1054 @@
+:doc:`CodeDeploy <../../codedeploy>` / Client / batch_get_deployment_targets
+
+****************************
+batch_get_deployment_targets
+****************************
+
+
+
+.. py:method:: CodeDeploy.Client.batch_get_deployment_targets(**kwargs)
+
+  
+
+  Returns an array of one or more targets associated with a deployment. This method works with all compute types and should be used instead of the deprecated ``BatchGetDeploymentInstances``. The maximum number of targets that can be returned is 25.
+
+   
+
+  The type of targets returned depends on the deployment's compute platform or deployment method:
+
+   
+
+  
+  * **EC2/On-premises**: Information about Amazon EC2 instance targets.
+   
+  * **Lambda**: Information about Lambda functions targets.
+   
+  * **Amazon ECS**: Information about Amazon ECS service targets.
+   
+  * **CloudFormation**: Information about targets of blue/green deployments initiated by a CloudFormation stack update.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codedeploy-2014-10-06/BatchGetDeploymentTargets>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_deployment_targets(
+        deploymentId='string',
+        targetIds=[
+            'string',
+        ]
+    )
+    
+  :type deploymentId: string
+  :param deploymentId: **[REQUIRED]** 
+
+    The unique ID of a deployment.
+
+    
+
+  
+  :type targetIds: list
+  :param targetIds: **[REQUIRED]** 
+
+    The unique IDs of the deployment targets. The compute platform of the deployment determines the type of the targets and their formats. The maximum number of deployment target IDs you can specify is 25.
+
+     
+
+    
+    * For deployments that use the EC2/On-premises compute platform, the target IDs are Amazon EC2 or on-premises instances IDs, and their target type is ``instanceTarget``.
+     
+    * For deployments that use the Lambda compute platform, the target IDs are the names of Lambda functions, and their target type is ``instanceTarget``.
+     
+    * For deployments that use the Amazon ECS compute platform, the target IDs are pairs of Amazon ECS clusters and services specified using the format ``<clustername>:<servicename>``. Their target type is ``ecsTarget``.
+     
+    * For deployments that are deployed with CloudFormation, the target IDs are CloudFormation stack IDs. Their target type is ``cloudFormationTarget``.
+    
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'deploymentTargets': [
+              {
+                  'deploymentTargetType': 'InstanceTarget'|'LambdaTarget'|'ECSTarget'|'CloudFormationTarget',
+                  'instanceTarget': {
+                      'deploymentId': 'string',
+                      'targetId': 'string',
+                      'targetArn': 'string',
+                      'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'|'Ready',
+                      'lastUpdatedAt': datetime(2015, 1, 1),
+                      'lifecycleEvents': [
+                          {
+                              'lifecycleEventName': 'string',
+                              'diagnostics': {
+                                  'errorCode': 'Success'|'ScriptMissing'|'ScriptNotExecutable'|'ScriptTimedOut'|'ScriptFailed'|'UnknownError',
+                                  'scriptName': 'string',
+                                  'message': 'string',
+                                  'logTail': 'string'
+                              },
+                              'startTime': datetime(2015, 1, 1),
+                              'endTime': datetime(2015, 1, 1),
+                              'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'
+                          },
+                      ],
+                      'instanceLabel': 'Blue'|'Green'
+                  },
+                  'lambdaTarget': {
+                      'deploymentId': 'string',
+                      'targetId': 'string',
+                      'targetArn': 'string',
+                      'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'|'Ready',
+                      'lastUpdatedAt': datetime(2015, 1, 1),
+                      'lifecycleEvents': [
+                          {
+                              'lifecycleEventName': 'string',
+                              'diagnostics': {
+                                  'errorCode': 'Success'|'ScriptMissing'|'ScriptNotExecutable'|'ScriptTimedOut'|'ScriptFailed'|'UnknownError',
+                                  'scriptName': 'string',
+                                  'message': 'string',
+                                  'logTail': 'string'
+                              },
+                              'startTime': datetime(2015, 1, 1),
+                              'endTime': datetime(2015, 1, 1),
+                              'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'
+                          },
+                      ],
+                      'lambdaFunctionInfo': {
+                          'functionName': 'string',
+                          'functionAlias': 'string',
+                          'currentVersion': 'string',
+                          'targetVersion': 'string',
+                          'targetVersionWeight': 123.0
+                      }
+                  },
+                  'ecsTarget': {
+                      'deploymentId': 'string',
+                      'targetId': 'string',
+                      'targetArn': 'string',
+                      'lastUpdatedAt': datetime(2015, 1, 1),
+                      'lifecycleEvents': [
+                          {
+                              'lifecycleEventName': 'string',
+                              'diagnostics': {
+                                  'errorCode': 'Success'|'ScriptMissing'|'ScriptNotExecutable'|'ScriptTimedOut'|'ScriptFailed'|'UnknownError',
+                                  'scriptName': 'string',
+                                  'message': 'string',
+                                  'logTail': 'string'
+                              },
+                              'startTime': datetime(2015, 1, 1),
+                              'endTime': datetime(2015, 1, 1),
+                              'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'
+                          },
+                      ],
+                      'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'|'Ready',
+                      'taskSetsInfo': [
+                          {
+                              'identifer': 'string',
+                              'desiredCount': 123,
+                              'pendingCount': 123,
+                              'runningCount': 123,
+                              'status': 'string',
+                              'trafficWeight': 123.0,
+                              'targetGroup': {
+                                  'name': 'string'
+                              },
+                              'taskSetLabel': 'Blue'|'Green'
+                          },
+                      ]
+                  },
+                  'cloudFormationTarget': {
+                      'deploymentId': 'string',
+                      'targetId': 'string',
+                      'lastUpdatedAt': datetime(2015, 1, 1),
+                      'lifecycleEvents': [
+                          {
+                              'lifecycleEventName': 'string',
+                              'diagnostics': {
+                                  'errorCode': 'Success'|'ScriptMissing'|'ScriptNotExecutable'|'ScriptTimedOut'|'ScriptFailed'|'UnknownError',
+                                  'scriptName': 'string',
+                                  'message': 'string',
+                                  'logTail': 'string'
+                              },
+                              'startTime': datetime(2015, 1, 1),
+                              'endTime': datetime(2015, 1, 1),
+                              'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'
+                          },
+                      ],
+                      'status': 'Pending'|'InProgress'|'Succeeded'|'Failed'|'Skipped'|'Unknown'|'Ready',
+                      'resourceType': 'string',
+                      'targetVersionWeight': 123.0
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **deploymentTargets** *(list) --* 
+
+        A list of target objects for a deployment. Each target object contains details about the target, such as its status and lifecycle events. The type of the target objects depends on the deployment' compute platform.
+
+         
+
+        
+        * **EC2/On-premises**: Each target object is an Amazon EC2 or on-premises instance.
+         
+        * **Lambda**: The target object is a specific version of an Lambda function.
+         
+        * **Amazon ECS**: The target object is an Amazon ECS service.
+         
+        * **CloudFormation**: The target object is an CloudFormation blue/green deployment.
+        
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about the deployment target.
+
+          
+          
+
+          - **deploymentTargetType** *(string) --* 
+
+            The deployment type that is specific to the deployment's compute platform or deployments initiated by a CloudFormation stack update.
+
+            
+          
+
+          - **instanceTarget** *(dict) --* 
+
+            Information about the target for a deployment that uses the EC2/On-premises compute platform.
+
+            
+            
+
+            - **deploymentId** *(string) --* 
+
+              The unique ID of a deployment.
+
+              
+            
+
+            - **targetId** *(string) --* 
+
+              The unique ID of a deployment target that has a type of ``instanceTarget``.
+
+              
+            
+
+            - **targetArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the target.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The status an EC2/On-premises deployment's target instance.
+
+              
+            
+
+            - **lastUpdatedAt** *(datetime) --* 
+
+              The date and time when the target instance was updated by a deployment.
+
+              
+            
+
+            - **lifecycleEvents** *(list) --* 
+
+              The lifecycle events of the deployment to this target instance.
+
+              
+              
+
+              - *(dict) --* 
+
+                Information about a deployment lifecycle event.
+
+                
+                
+
+                - **lifecycleEventName** *(string) --* 
+
+                  The deployment lifecycle event name, such as ``ApplicationStop``, ``BeforeInstall``, ``AfterInstall``, ``ApplicationStart``, or ``ValidateService``.
+
+                  
+                
+
+                - **diagnostics** *(dict) --* 
+
+                  Diagnostic information about the deployment lifecycle event.
+
+                  
+                  
+
+                  - **errorCode** *(string) --* 
+
+                    The associated error code:
+
+                     
+
+                    
+                    * Success: The specified script ran.
+                     
+                    * ScriptMissing: The specified script was not found in the specified location.
+                     
+                    * ScriptNotExecutable: The specified script is not a recognized executable file type.
+                     
+                    * ScriptTimedOut: The specified script did not finish running in the specified time period.
+                     
+                    * ScriptFailed: The specified script failed to run as expected.
+                     
+                    * UnknownError: The specified script did not run for an unknown reason.
+                    
+
+                    
+                  
+
+                  - **scriptName** *(string) --* 
+
+                    The name of the script.
+
+                    
+                  
+
+                  - **message** *(string) --* 
+
+                    The message associated with the error.
+
+                    
+                  
+
+                  - **logTail** *(string) --* 
+
+                    The last portion of the diagnostic log.
+
+                     
+
+                    If available, CodeDeploy returns up to the last 4 KB of the diagnostic log.
+
+                    
+              
+                
+
+                - **startTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event started.
+
+                  
+                
+
+                - **endTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event ended.
+
+                  
+                
+
+                - **status** *(string) --* 
+
+                  The deployment lifecycle event status:
+
+                   
+
+                  
+                  * Pending: The deployment lifecycle event is pending.
+                   
+                  * InProgress: The deployment lifecycle event is in progress.
+                   
+                  * Succeeded: The deployment lifecycle event ran successfully.
+                   
+                  * Failed: The deployment lifecycle event has failed.
+                   
+                  * Skipped: The deployment lifecycle event has been skipped.
+                   
+                  * Unknown: The deployment lifecycle event is unknown.
+                  
+
+                  
+            
+          
+            
+
+            - **instanceLabel** *(string) --* 
+
+              A label that identifies whether the instance is an original target ( ``BLUE``) or a replacement target ( ``GREEN``).
+
+              
+        
+          
+
+          - **lambdaTarget** *(dict) --* 
+
+            Information about the target for a deployment that uses the Lambda compute platform.
+
+            
+            
+
+            - **deploymentId** *(string) --* 
+
+              The unique ID of a deployment.
+
+              
+            
+
+            - **targetId** *(string) --* 
+
+              The unique ID of a deployment target that has a type of ``lambdaTarget``.
+
+              
+            
+
+            - **targetArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the target.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The status an Lambda deployment's target Lambda function.
+
+              
+            
+
+            - **lastUpdatedAt** *(datetime) --* 
+
+              The date and time when the target Lambda function was updated by a deployment.
+
+              
+            
+
+            - **lifecycleEvents** *(list) --* 
+
+              The lifecycle events of the deployment to this target Lambda function.
+
+              
+              
+
+              - *(dict) --* 
+
+                Information about a deployment lifecycle event.
+
+                
+                
+
+                - **lifecycleEventName** *(string) --* 
+
+                  The deployment lifecycle event name, such as ``ApplicationStop``, ``BeforeInstall``, ``AfterInstall``, ``ApplicationStart``, or ``ValidateService``.
+
+                  
+                
+
+                - **diagnostics** *(dict) --* 
+
+                  Diagnostic information about the deployment lifecycle event.
+
+                  
+                  
+
+                  - **errorCode** *(string) --* 
+
+                    The associated error code:
+
+                     
+
+                    
+                    * Success: The specified script ran.
+                     
+                    * ScriptMissing: The specified script was not found in the specified location.
+                     
+                    * ScriptNotExecutable: The specified script is not a recognized executable file type.
+                     
+                    * ScriptTimedOut: The specified script did not finish running in the specified time period.
+                     
+                    * ScriptFailed: The specified script failed to run as expected.
+                     
+                    * UnknownError: The specified script did not run for an unknown reason.
+                    
+
+                    
+                  
+
+                  - **scriptName** *(string) --* 
+
+                    The name of the script.
+
+                    
+                  
+
+                  - **message** *(string) --* 
+
+                    The message associated with the error.
+
+                    
+                  
+
+                  - **logTail** *(string) --* 
+
+                    The last portion of the diagnostic log.
+
+                     
+
+                    If available, CodeDeploy returns up to the last 4 KB of the diagnostic log.
+
+                    
+              
+                
+
+                - **startTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event started.
+
+                  
+                
+
+                - **endTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event ended.
+
+                  
+                
+
+                - **status** *(string) --* 
+
+                  The deployment lifecycle event status:
+
+                   
+
+                  
+                  * Pending: The deployment lifecycle event is pending.
+                   
+                  * InProgress: The deployment lifecycle event is in progress.
+                   
+                  * Succeeded: The deployment lifecycle event ran successfully.
+                   
+                  * Failed: The deployment lifecycle event has failed.
+                   
+                  * Skipped: The deployment lifecycle event has been skipped.
+                   
+                  * Unknown: The deployment lifecycle event is unknown.
+                  
+
+                  
+            
+          
+            
+
+            - **lambdaFunctionInfo** *(dict) --* 
+
+              A ``LambdaFunctionInfo`` object that describes a target Lambda function.
+
+              
+              
+
+              - **functionName** *(string) --* 
+
+                The name of a Lambda function.
+
+                
+              
+
+              - **functionAlias** *(string) --* 
+
+                The alias of a Lambda function. For more information, see `Lambda Function Aliases <https://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html>`__ in the *Lambda Developer Guide*.
+
+                
+              
+
+              - **currentVersion** *(string) --* 
+
+                The version of a Lambda function that production traffic points to.
+
+                
+              
+
+              - **targetVersion** *(string) --* 
+
+                The version of a Lambda function that production traffic points to after the Lambda function is deployed.
+
+                
+              
+
+              - **targetVersionWeight** *(float) --* 
+
+                The percentage of production traffic that the target version of a Lambda function receives.
+
+                
+          
+        
+          
+
+          - **ecsTarget** *(dict) --* 
+
+            Information about the target for a deployment that uses the Amazon ECS compute platform.
+
+            
+            
+
+            - **deploymentId** *(string) --* 
+
+              The unique ID of a deployment.
+
+              
+            
+
+            - **targetId** *(string) --* 
+
+              The unique ID of a deployment target that has a type of ``ecsTarget``.
+
+              
+            
+
+            - **targetArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the target.
+
+              
+            
+
+            - **lastUpdatedAt** *(datetime) --* 
+
+              The date and time when the target Amazon ECS application was updated by a deployment.
+
+              
+            
+
+            - **lifecycleEvents** *(list) --* 
+
+              The lifecycle events of the deployment to this target Amazon ECS application.
+
+              
+              
+
+              - *(dict) --* 
+
+                Information about a deployment lifecycle event.
+
+                
+                
+
+                - **lifecycleEventName** *(string) --* 
+
+                  The deployment lifecycle event name, such as ``ApplicationStop``, ``BeforeInstall``, ``AfterInstall``, ``ApplicationStart``, or ``ValidateService``.
+
+                  
+                
+
+                - **diagnostics** *(dict) --* 
+
+                  Diagnostic information about the deployment lifecycle event.
+
+                  
+                  
+
+                  - **errorCode** *(string) --* 
+
+                    The associated error code:
+
+                     
+
+                    
+                    * Success: The specified script ran.
+                     
+                    * ScriptMissing: The specified script was not found in the specified location.
+                     
+                    * ScriptNotExecutable: The specified script is not a recognized executable file type.
+                     
+                    * ScriptTimedOut: The specified script did not finish running in the specified time period.
+                     
+                    * ScriptFailed: The specified script failed to run as expected.
+                     
+                    * UnknownError: The specified script did not run for an unknown reason.
+                    
+
+                    
+                  
+
+                  - **scriptName** *(string) --* 
+
+                    The name of the script.
+
+                    
+                  
+
+                  - **message** *(string) --* 
+
+                    The message associated with the error.
+
+                    
+                  
+
+                  - **logTail** *(string) --* 
+
+                    The last portion of the diagnostic log.
+
+                     
+
+                    If available, CodeDeploy returns up to the last 4 KB of the diagnostic log.
+
+                    
+              
+                
+
+                - **startTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event started.
+
+                  
+                
+
+                - **endTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event ended.
+
+                  
+                
+
+                - **status** *(string) --* 
+
+                  The deployment lifecycle event status:
+
+                   
+
+                  
+                  * Pending: The deployment lifecycle event is pending.
+                   
+                  * InProgress: The deployment lifecycle event is in progress.
+                   
+                  * Succeeded: The deployment lifecycle event ran successfully.
+                   
+                  * Failed: The deployment lifecycle event has failed.
+                   
+                  * Skipped: The deployment lifecycle event has been skipped.
+                   
+                  * Unknown: The deployment lifecycle event is unknown.
+                  
+
+                  
+            
+          
+            
+
+            - **status** *(string) --* 
+
+              The status an Amazon ECS deployment's target ECS application.
+
+              
+            
+
+            - **taskSetsInfo** *(list) --* 
+
+              The ``ECSTaskSet`` objects associated with the ECS target.
+
+              
+              
+
+              - *(dict) --* 
+
+                Information about a set of Amazon ECS tasks in an CodeDeploy deployment. An Amazon ECS task set includes details such as the desired number of tasks, how many tasks are running, and whether the task set serves production traffic. An CodeDeploy application that uses the Amazon ECS compute platform deploys a containerized application in an Amazon ECS service as a task set.
+
+                
+                
+
+                - **identifer** *(string) --* 
+
+                  A unique ID of an ``ECSTaskSet``.
+
+                  
+                
+
+                - **desiredCount** *(integer) --* 
+
+                  The number of tasks in a task set. During a deployment that uses the Amazon ECS compute type, CodeDeploy instructs Amazon ECS to create a new task set and uses this value to determine how many tasks to create. After the updated task set is created, CodeDeploy shifts traffic to the new task set.
+
+                  
+                
+
+                - **pendingCount** *(integer) --* 
+
+                  The number of tasks in the task set that are in the ``PENDING`` status during an Amazon ECS deployment. A task in the ``PENDING`` state is preparing to enter the ``RUNNING`` state. A task set enters the ``PENDING`` status when it launches for the first time, or when it is restarted after being in the ``STOPPED`` state.
+
+                  
+                
+
+                - **runningCount** *(integer) --* 
+
+                  The number of tasks in the task set that are in the ``RUNNING`` status during an Amazon ECS deployment. A task in the ``RUNNING`` state is running and ready for use.
+
+                  
+                
+
+                - **status** *(string) --* 
+
+                  The status of the task set. There are three valid task set statuses:
+
+                   
+
+                  
+                  * ``PRIMARY``: Indicates the task set is serving production traffic.
+                   
+                  * ``ACTIVE``: Indicates the task set is not serving production traffic.
+                   
+                  * ``DRAINING``: Indicates the tasks in the task set are being stopped and their corresponding targets are being deregistered from their target group.
+                  
+
+                  
+                
+
+                - **trafficWeight** *(float) --* 
+
+                  The percentage of traffic served by this task set.
+
+                  
+                
+
+                - **targetGroup** *(dict) --* 
+
+                  The target group associated with the task set. The target group is used by CodeDeploy to manage traffic to a task set.
+
+                  
+                  
+
+                  - **name** *(string) --* 
+
+                    For blue/green deployments, the name of the target group that instances in the original environment are deregistered from, and instances in the replacement environment are registered with. For in-place deployments, the name of the target group that instances are deregistered from, so they are not serving traffic during a deployment, and then re-registered with after the deployment is complete.
+
+                    
+              
+                
+
+                - **taskSetLabel** *(string) --* 
+
+                  A label that identifies whether the ECS task set is an original target ( ``BLUE``) or a replacement target ( ``GREEN``).
+
+                  
+            
+          
+        
+          
+
+          - **cloudFormationTarget** *(dict) --* 
+
+            Information about the target to be updated by an CloudFormation blue/green deployment. This target type is used for all deployments initiated by a CloudFormation stack update.
+
+            
+            
+
+            - **deploymentId** *(string) --* 
+
+              The unique ID of an CloudFormation blue/green deployment.
+
+              
+            
+
+            - **targetId** *(string) --* 
+
+              The unique ID of a deployment target that has a type of  ``CloudFormationTarget``.
+
+              
+            
+
+            - **lastUpdatedAt** *(datetime) --* 
+
+              The date and time when the target application was updated by an CloudFormation blue/green deployment.
+
+              
+            
+
+            - **lifecycleEvents** *(list) --* 
+
+              The lifecycle events of the CloudFormation blue/green deployment to this target application.
+
+              
+              
+
+              - *(dict) --* 
+
+                Information about a deployment lifecycle event.
+
+                
+                
+
+                - **lifecycleEventName** *(string) --* 
+
+                  The deployment lifecycle event name, such as ``ApplicationStop``, ``BeforeInstall``, ``AfterInstall``, ``ApplicationStart``, or ``ValidateService``.
+
+                  
+                
+
+                - **diagnostics** *(dict) --* 
+
+                  Diagnostic information about the deployment lifecycle event.
+
+                  
+                  
+
+                  - **errorCode** *(string) --* 
+
+                    The associated error code:
+
+                     
+
+                    
+                    * Success: The specified script ran.
+                     
+                    * ScriptMissing: The specified script was not found in the specified location.
+                     
+                    * ScriptNotExecutable: The specified script is not a recognized executable file type.
+                     
+                    * ScriptTimedOut: The specified script did not finish running in the specified time period.
+                     
+                    * ScriptFailed: The specified script failed to run as expected.
+                     
+                    * UnknownError: The specified script did not run for an unknown reason.
+                    
+
+                    
+                  
+
+                  - **scriptName** *(string) --* 
+
+                    The name of the script.
+
+                    
+                  
+
+                  - **message** *(string) --* 
+
+                    The message associated with the error.
+
+                    
+                  
+
+                  - **logTail** *(string) --* 
+
+                    The last portion of the diagnostic log.
+
+                     
+
+                    If available, CodeDeploy returns up to the last 4 KB of the diagnostic log.
+
+                    
+              
+                
+
+                - **startTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event started.
+
+                  
+                
+
+                - **endTime** *(datetime) --* 
+
+                  A timestamp that indicates when the deployment lifecycle event ended.
+
+                  
+                
+
+                - **status** *(string) --* 
+
+                  The deployment lifecycle event status:
+
+                   
+
+                  
+                  * Pending: The deployment lifecycle event is pending.
+                   
+                  * InProgress: The deployment lifecycle event is in progress.
+                   
+                  * Succeeded: The deployment lifecycle event ran successfully.
+                   
+                  * Failed: The deployment lifecycle event has failed.
+                   
+                  * Skipped: The deployment lifecycle event has been skipped.
+                   
+                  * Unknown: The deployment lifecycle event is unknown.
+                  
+
+                  
+            
+          
+            
+
+            - **status** *(string) --* 
+
+              The status of an CloudFormation blue/green deployment's target application.
+
+              
+            
+
+            - **resourceType** *(string) --* 
+
+              The resource type for the CloudFormation blue/green deployment.
+
+              
+            
+
+            - **targetVersionWeight** *(float) --* 
+
+              The percentage of production traffic that the target version of an CloudFormation blue/green deployment receives.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidDeploymentIdException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.DeploymentIdRequiredException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.DeploymentDoesNotExistException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.DeploymentNotStartedException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.DeploymentTargetIdRequiredException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidDeploymentTargetIdException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.DeploymentTargetDoesNotExistException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.DeploymentTargetListSizeExceededException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InstanceDoesNotExistException`
+
+  

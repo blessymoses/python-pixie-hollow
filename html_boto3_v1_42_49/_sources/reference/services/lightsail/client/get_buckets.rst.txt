@@ -1,0 +1,733 @@
+:doc:`Lightsail <../../lightsail>` / Client / get_buckets
+
+***********
+get_buckets
+***********
+
+
+
+.. py:method:: Lightsail.Client.get_buckets(**kwargs)
+
+  
+
+  Returns information about one or more Amazon Lightsail buckets. The information returned includes the synchronization status of the Amazon Simple Storage Service (Amazon S3) account-level block public access feature for your Lightsail buckets.
+
+   
+
+  For more information about buckets, see `Buckets in Amazon Lightsail <https://docs.aws.amazon.com/lightsail/latest/userguide/buckets-in-amazon-lightsail>`__ in the *Amazon Lightsail Developer Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/GetBuckets>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_buckets(
+        bucketName='string',
+        pageToken='string',
+        includeConnectedResources=True|False,
+        includeCors=True|False
+    )
+    
+  :type bucketName: string
+  :param bucketName: 
+
+    The name of the bucket for which to return information.
+
+     
+
+    When omitted, the response includes all of your buckets in the Amazon Web Services Region where the request is made.
+
+    
+
+  
+  :type pageToken: string
+  :param pageToken: 
+
+    The token to advance to the next page of results from your request.
+
+     
+
+    To get a page token, perform an initial ``GetBuckets`` request. If your results are paginated, the response will return a next page token that you can specify as the page token in a subsequent request.
+
+    
+
+  
+  :type includeConnectedResources: boolean
+  :param includeConnectedResources: 
+
+    A Boolean value that indicates whether to include Lightsail instances that were given access to the bucket using the `SetResourceAccessForBucket <https://docs.aws.amazon.com/lightsail/2016-11-28/api-reference/API_SetResourceAccessForBucket.html>`__ action.
+
+    
+
+  
+  :type includeCors: boolean
+  :param includeCors: 
+
+    A Boolean value that indicates whether to include Lightsail bucket CORS configuration in the response. For more information, see `Configuring cross-origin resource sharing (CORS) <https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html>`__.
+
+     
+
+    .. note::
+
+      
+
+      This parameter is only supported when getting a single bucket with ``bucketName`` specified. The default value for this parameter is ``False``.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'buckets': [
+              {
+                  'resourceType': 'string',
+                  'accessRules': {
+                      'getObject': 'public'|'private',
+                      'allowPublicOverrides': True|False
+                  },
+                  'arn': 'string',
+                  'bundleId': 'string',
+                  'createdAt': datetime(2015, 1, 1),
+                  'url': 'string',
+                  'location': {
+                      'availabilityZone': 'string',
+                      'regionName': 'us-east-1'|'us-east-2'|'us-west-1'|'us-west-2'|'eu-west-1'|'eu-west-2'|'eu-west-3'|'eu-central-1'|'ca-central-1'|'ap-south-1'|'ap-southeast-1'|'ap-southeast-2'|'ap-northeast-1'|'ap-northeast-2'|'eu-north-1'|'ap-southeast-3'
+                  },
+                  'name': 'string',
+                  'supportCode': 'string',
+                  'tags': [
+                      {
+                          'key': 'string',
+                          'value': 'string'
+                      },
+                  ],
+                  'objectVersioning': 'string',
+                  'ableToUpdateBundle': True|False,
+                  'readonlyAccessAccounts': [
+                      'string',
+                  ],
+                  'resourcesReceivingAccess': [
+                      {
+                          'name': 'string',
+                          'resourceType': 'string'
+                      },
+                  ],
+                  'state': {
+                      'code': 'string',
+                      'message': 'string'
+                  },
+                  'accessLogConfig': {
+                      'enabled': True|False,
+                      'destination': 'string',
+                      'prefix': 'string'
+                  },
+                  'cors': {
+                      'rules': [
+                          {
+                              'id': 'string',
+                              'allowedMethods': [
+                                  'string',
+                              ],
+                              'allowedOrigins': [
+                                  'string',
+                              ],
+                              'allowedHeaders': [
+                                  'string',
+                              ],
+                              'exposeHeaders': [
+                                  'string',
+                              ],
+                              'maxAgeSeconds': 123
+                          },
+                      ]
+                  }
+              },
+          ],
+          'nextPageToken': 'string',
+          'accountLevelBpaSync': {
+              'status': 'InSync'|'Failed'|'NeverSynced'|'Defaulted',
+              'lastSyncedAt': datetime(2015, 1, 1),
+              'message': 'DEFAULTED_FOR_SLR_MISSING'|'SYNC_ON_HOLD'|'DEFAULTED_FOR_SLR_MISSING_ON_HOLD'|'Unknown',
+              'bpaImpactsLightsail': True|False
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **buckets** *(list) --* 
+
+        An array of objects that describe buckets.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes an Amazon Lightsail bucket.
+
+          
+          
+
+          - **resourceType** *(string) --* 
+
+            The Lightsail resource type of the bucket.
+
+            
+          
+
+          - **accessRules** *(dict) --* 
+
+            An object that describes the access rules of the bucket.
+
+            
+            
+
+            - **getObject** *(string) --* 
+
+              Specifies the anonymous access to all objects in a bucket.
+
+               
+
+              The following options can be specified:
+
+               
+
+              
+              * ``public`` - Sets all objects in the bucket to public (read-only), making them readable by anyone in the world. If the ``getObject`` value is set to ``public``, then all objects in the bucket default to public regardless of the ``allowPublicOverrides`` value.
+               
+              * ``private`` - Sets all objects in the bucket to private, making them readable only by you or anyone you give access to. If the ``getObject`` value is set to ``private``, and the ``allowPublicOverrides`` value is set to ``true``, then all objects in the bucket default to private unless they are configured with a ``public-read`` ACL. Individual objects with a ``public-read`` ACL are readable by anyone in the world.
+              
+
+              
+            
+
+            - **allowPublicOverrides** *(boolean) --* 
+
+              A Boolean value that indicates whether the access control list (ACL) permissions that are applied to individual objects override the ``getObject`` option that is currently specified.
+
+               
+
+              When this is true, you can use the `PutObjectAcl <https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObjectAcl.html>`__ Amazon S3 API action to set individual objects to public (read-only) using the ``public-read`` ACL, or to private using the ``private`` ACL.
+
+              
+        
+          
+
+          - **arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the bucket.
+
+            
+          
+
+          - **bundleId** *(string) --* 
+
+            The ID of the bundle currently applied to the bucket.
+
+             
+
+            A bucket bundle specifies the monthly cost, storage space, and data transfer quota for a bucket.
+
+             
+
+            Use the `UpdateBucketBundle <https://docs.aws.amazon.com/lightsail/2016-11-28/api-reference/API_UpdateBucketBundle.html>`__ action to change the bundle of a bucket.
+
+            
+          
+
+          - **createdAt** *(datetime) --* 
+
+            The timestamp when the distribution was created.
+
+            
+          
+
+          - **url** *(string) --* 
+
+            The URL of the bucket.
+
+            
+          
+
+          - **location** *(dict) --* 
+
+            An object that describes the location of the bucket, such as the Amazon Web Services Region and Availability Zone.
+
+            
+            
+
+            - **availabilityZone** *(string) --* 
+
+              The Availability Zone. Follows the format ``us-east-2a`` (case-sensitive).
+
+              
+            
+
+            - **regionName** *(string) --* 
+
+              The Amazon Web Services Region name.
+
+              
+        
+          
+
+          - **name** *(string) --* 
+
+            The name of the bucket.
+
+            
+          
+
+          - **supportCode** *(string) --* 
+
+            The support code for a bucket. Include this code in your email to support when you have questions about a Lightsail bucket. This code enables our support team to look up your Lightsail information more easily.
+
+            
+          
+
+          - **tags** *(list) --* 
+
+            The tag keys and optional values for the bucket. For more information, see `Tags in Amazon Lightsail <https://lightsail.aws.amazon.com/ls/docs/en/articles/amazon-lightsail-tags>`__ in the *Amazon Lightsail Developer Guide*.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes a tag key and optional value assigned to an Amazon Lightsail resource.
+
+               
+
+              For more information about tags in Lightsail, see the `Amazon Lightsail Developer Guide <https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-tags>`__.
+
+              
+              
+
+              - **key** *(string) --* 
+
+                The key of the tag.
+
+                 
+
+                Constraints: Tag keys accept a maximum of 128 letters, numbers, spaces in UTF-8, or the following characters: + - = . _ : / @
+
+                
+              
+
+              - **value** *(string) --* 
+
+                The value of the tag.
+
+                 
+
+                Constraints: Tag values accept a maximum of 256 letters, numbers, spaces in UTF-8, or the following characters: + - = . _ : / @
+
+                
+          
+        
+          
+
+          - **objectVersioning** *(string) --* 
+
+            Indicates whether object versioning is enabled for the bucket.
+
+             
+
+            The following options can be configured:
+
+             
+
+            
+            * ``Enabled`` - Object versioning is enabled.
+             
+            * ``Suspended`` - Object versioning was previously enabled but is currently suspended. Existing object versions are retained.
+             
+            * ``NeverEnabled`` - Object versioning has never been enabled.
+            
+
+            
+          
+
+          - **ableToUpdateBundle** *(boolean) --* 
+
+            Indicates whether the bundle that is currently applied to a bucket can be changed to another bundle.
+
+             
+
+            You can update a bucket's bundle only one time within a monthly Amazon Web Services billing cycle.
+
+             
+
+            Use the `UpdateBucketBundle <https://docs.aws.amazon.com/lightsail/2016-11-28/api-reference/API_UpdateBucketBundle.html>`__ action to change a bucket's bundle.
+
+            
+          
+
+          - **readonlyAccessAccounts** *(list) --* 
+
+            An array of strings that specify the Amazon Web Services account IDs that have read-only access to the bucket.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **resourcesReceivingAccess** *(list) --* 
+
+            An array of objects that describe Lightsail instances that have access to the bucket.
+
+             
+
+            Use the `SetResourceAccessForBucket <https://docs.aws.amazon.com/lightsail/2016-11-28/api-reference/API_SetResourceAccessForBucket.html>`__ action to update the instances that have access to a bucket.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes an Amazon Lightsail instance that has access to a Lightsail bucket.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the Lightsail instance.
+
+                
+              
+
+              - **resourceType** *(string) --* 
+
+                The Lightsail resource type (for example, ``Instance``).
+
+                
+          
+        
+          
+
+          - **state** *(dict) --* 
+
+            An object that describes the state of the bucket.
+
+            
+            
+
+            - **code** *(string) --* 
+
+              The state code of the bucket.
+
+               
+
+              The following codes are possible:
+
+               
+
+              
+              * ``OK`` - The bucket is in a running state.
+               
+              * ``Unknown`` - Creation of the bucket might have timed-out. You might want to delete the bucket and create a new one.
+              
+
+              
+            
+
+            - **message** *(string) --* 
+
+              A message that describes the state of the bucket.
+
+              
+        
+          
+
+          - **accessLogConfig** *(dict) --* 
+
+            An object that describes the access log configuration for the bucket.
+
+            
+            
+
+            - **enabled** *(boolean) --* 
+
+              A Boolean value that indicates whether bucket access logging is enabled for the bucket.
+
+              
+            
+
+            - **destination** *(string) --* 
+
+              The name of the bucket where the access logs are saved. The destination can be a Lightsail bucket in the same account, and in the same Amazon Web Services Region as the source bucket.
+
+               
+
+              .. note::
+
+                
+
+                This parameter is required when enabling the access log for a bucket, and should be omitted when disabling the access log.
+
+                
+
+              
+            
+
+            - **prefix** *(string) --* 
+
+              The optional object prefix for the bucket access log.
+
+               
+
+              The prefix is an optional addition to the object key that organizes your access log files in the destination bucket. For example, if you specify a ``logs/`` prefix, then each log object will begin with the ``logs/`` prefix in its key (for example, ``logs/2021-11-01-21-32-16-E568B2907131C0C0``).
+
+               
+
+              .. note::
+
+                
+
+                This parameter can be optionally specified when enabling the access log for a bucket, and should be omitted when disabling the access log.
+
+                
+
+              
+        
+          
+
+          - **cors** *(dict) --* 
+
+            An array of cross-origin resource sharing (CORS) rules that identify origins and the HTTP methods that can be executed on your bucket. This field is only included in the response when CORS configuration is requested or when updating CORS configuration. For more information, see `Configuring cross-origin resource sharing (CORS) <https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html>`__.
+
+            
+            
+
+            - **rules** *(list) --* 
+
+              A set of origins and methods (cross-origin access that you want to allow). You can add up to 20 rules to the configuration. The total size is limited to 64 KB.
+
+              
+              
+
+              - *(dict) --* 
+
+                Describes a cross-origin resource sharing (CORS) rule for a Lightsail bucket. CORS rules specify which origins are allowed to access the bucket, which HTTP methods are allowed, and other access control information. For more information, see `Configuring cross-origin resource sharing (CORS) <https://docs.aws.amazon.com/lightsail/latest/userguide/configure-cors.html>`__.
+
+                
+                
+
+                - **id** *(string) --* 
+
+                  A unique identifier for the CORS rule. The ID value can be up to 255 characters long. The IDs help you find a rule in the configuration.
+
+                  
+                
+
+                - **allowedMethods** *(list) --* 
+
+                  The HTTP methods that are allowed when accessing the bucket from the specified origin. Each CORS rule must identify at least one origin and one method.
+
+                   
+
+                  You can use the following HTTP methods:
+
+                   
+
+                  
+                  * ``GET`` - Retrieves data from the server, such as downloading files or viewing content.
+                   
+                  * ``PUT`` - Uploads or replaces data on the server, such as uploading new files.
+                   
+                  * ``POST`` - Sends data to the server for processing, such as submitting forms or creating new resources.
+                   
+                  * ``DELETE`` - Removes data from the server, such as deleting files or resources.
+                   
+                  * ``HEAD`` - Retrieves only the headers from the server without the actual content, useful for checking if a resource exists.
+                  
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **allowedOrigins** *(list) --* 
+
+                  One or more origins you want customers to be able to access the bucket from. Each CORS rule must identify at least one origin and one method.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **allowedHeaders** *(list) --* 
+
+                  Headers that are specified in the ``Access-Control-Request-Headers`` header. These headers are allowed in a preflight ``OPTIONS`` request. In response to any preflight ``OPTIONS`` request, Amazon S3 returns any requested headers that are allowed.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **exposeHeaders** *(list) --* 
+
+                  One or more headers in the response that you want customers to be able to access from their applications (for example, from a JavaScript ``XMLHttpRequest`` object).
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **maxAgeSeconds** *(integer) --* 
+
+                  The time in seconds that your browser is to cache the preflight response for the specified resource. A CORS rule can have only one ``maxAgeSeconds`` element.
+
+                  
+            
+          
+        
+      
+    
+      
+
+      - **nextPageToken** *(string) --* 
+
+        The token to advance to the next page of results from your request.
+
+         
+
+        A next page token is not returned if there are no more results to display.
+
+         
+
+        To get the next page of results, perform another ``GetBuckets`` request and specify the next page token using the ``pageToken`` parameter.
+
+        
+      
+
+      - **accountLevelBpaSync** *(dict) --* 
+
+        An object that describes the synchronization status of the Amazon S3 account-level block public access feature for your Lightsail buckets.
+
+         
+
+        For more information about this feature and how it affects Lightsail buckets, see `Block public access for buckets in Amazon Lightsail <https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-block-public-access-for-buckets>`__.
+
+        
+        
+
+        - **status** *(string) --* 
+
+          The status of the account-level BPA synchronization.
+
+           
+
+          The following statuses are possible:
+
+           
+
+          
+          * ``InSync`` - Account-level BPA is synchronized. The Amazon S3 account-level BPA configuration applies to your Lightsail buckets.
+           
+          * ``NeverSynced`` - Synchronization has not yet happened. The Amazon S3 account-level BPA configuration does not apply to your Lightsail buckets.
+           
+          * ``Failed`` - Synchronization failed. The Amazon S3 account-level BPA configuration does not apply to your Lightsail buckets.
+           
+          * ``Defaulted`` - Synchronization failed and account-level BPA for your Lightsail buckets is defaulted to *active*.
+          
+
+           
+
+          .. note::
+
+            
+
+            You might need to complete further actions if the status is ``Failed`` or ``Defaulted``. The ``message`` parameter provides more information for those statuses.
+
+            
+
+          
+        
+
+        - **lastSyncedAt** *(datetime) --* 
+
+          The timestamp of when the account-level BPA configuration was last synchronized. This value is null when the account-level BPA configuration has not been synchronized.
+
+          
+        
+
+        - **message** *(string) --* 
+
+          A message that provides a reason for a ``Failed`` or ``Defaulted`` synchronization status.
+
+           
+
+          The following messages are possible:
+
+           
+
+          
+          * ``SYNC_ON_HOLD`` - The synchronization has not yet happened. This status message occurs immediately after you create your first Lightsail bucket. This status message should change after the first synchronization happens, approximately 1 hour after the first bucket is created.
+           
+          * ``DEFAULTED_FOR_SLR_MISSING`` - The synchronization failed because the required service-linked role is missing from your Amazon Web Services account. The account-level BPA configuration for your Lightsail buckets is defaulted to *active* until the synchronization can occur. This means that all your buckets are private and not publicly accessible. For more information about how to create the required service-linked role to allow synchronization, see `Using Service-Linked Roles for Amazon Lightsail <https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-using-service-linked-roles>`__ in the *Amazon Lightsail Developer Guide*.
+           
+          * ``DEFAULTED_FOR_SLR_MISSING_ON_HOLD`` - The synchronization failed because the required service-linked role is missing from your Amazon Web Services account. Account-level BPA is not yet configured for your Lightsail buckets. Therefore, only the bucket access permissions and individual object access permissions apply to your Lightsail buckets. For more information about how to create the required service-linked role to allow synchronization, see `Using Service-Linked Roles for Amazon Lightsail <https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-using-service-linked-roles>`__ in the *Amazon Lightsail Developer Guide*.
+           
+          * ``Unknown`` - The reason that synchronization failed is unknown. Contact Amazon Web Services Support for more information.
+          
+
+          
+        
+
+        - **bpaImpactsLightsail** *(boolean) --* 
+
+          A Boolean value that indicates whether account-level block public access is affecting your Lightsail buckets.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Lightsail.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.UnauthenticatedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.RegionSetupInProgressException`
+
+  

@@ -1,0 +1,474 @@
+:doc:`Bedrock <../../bedrock>` / Paginator / ListModelInvocationJobs
+
+***********************
+ListModelInvocationJobs
+***********************
+
+
+
+.. py:class:: Bedrock.Paginator.ListModelInvocationJobs
+
+  ::
+
+    
+    paginator = client.get_paginator('list_model_invocation_jobs')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`Bedrock.Client.list_model_invocation_jobs`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-2023-04-20/ListModelInvocationJobs>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          submitTimeAfter=datetime(2015, 1, 1),
+          submitTimeBefore=datetime(2015, 1, 1),
+          statusEquals='Submitted'|'InProgress'|'Completed'|'Failed'|'Stopping'|'Stopped'|'PartiallyCompleted'|'Expired'|'Validating'|'Scheduled',
+          nameContains='string',
+          sortBy='CreationTime',
+          sortOrder='Ascending'|'Descending',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type submitTimeAfter: datetime
+    :param submitTimeAfter: 
+
+      Specify a time to filter for batch inference jobs that were submitted after the time you specify.
+
+      
+
+    
+    :type submitTimeBefore: datetime
+    :param submitTimeBefore: 
+
+      Specify a time to filter for batch inference jobs that were submitted before the time you specify.
+
+      
+
+    
+    :type statusEquals: string
+    :param statusEquals: 
+
+      Specify a status to filter for batch inference jobs whose statuses match the string you specify.
+
+       
+
+      The following statuses are possible:
+
+       
+
+      
+      * Submitted – This job has been submitted to a queue for validation.
+       
+      * Validating – This job is being validated for the requirements described in `Format and upload your batch inference data <https://docs.aws.amazon.com/bedrock/latest/userguide/batch-inference-data.html>`__. The criteria include the following: 
+
+        
+        * Your IAM service role has access to the Amazon S3 buckets containing your files.
+         
+        * Your files are .jsonl files and each individual record is a JSON object in the correct format. Note that validation doesn't check if the ``modelInput`` value matches the request body for the model.
+         
+        * Your files fulfill the requirements for file size and number of records. For more information, see `Quotas for Amazon Bedrock <https://docs.aws.amazon.com/bedrock/latest/userguide/quotas.html>`__.
+        
+
+      
+       
+      * Scheduled – This job has been validated and is now in a queue. The job will automatically start when it reaches its turn.
+       
+      * Expired – This job timed out because it was scheduled but didn't begin before the set timeout duration. Submit a new job request.
+       
+      * InProgress – This job has begun. You can start viewing the results in the output S3 location.
+       
+      * Completed – This job has successfully completed. View the output files in the output S3 location.
+       
+      * PartiallyCompleted – This job has partially completed. Not all of your records could be processed in time. View the output files in the output S3 location.
+       
+      * Failed – This job has failed. Check the failure message for any further details. For further assistance, reach out to the `Amazon Web Services Support Center <https://console.aws.amazon.com/support/home/>`__.
+       
+      * Stopped – This job was stopped by a user.
+       
+      * Stopping – This job is being stopped by a user.
+      
+
+      
+
+    
+    :type nameContains: string
+    :param nameContains: 
+
+      Specify a string to filter for batch inference jobs whose names contain the string.
+
+      
+
+    
+    :type sortBy: string
+    :param sortBy: 
+
+      An attribute by which to sort the results.
+
+      
+
+    
+    :type sortOrder: string
+    :param sortOrder: 
+
+      Specifies whether to sort the results by ascending or descending order.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'invocationJobSummaries': [
+                {
+                    'jobArn': 'string',
+                    'jobName': 'string',
+                    'modelId': 'string',
+                    'clientRequestToken': 'string',
+                    'roleArn': 'string',
+                    'status': 'Submitted'|'InProgress'|'Completed'|'Failed'|'Stopping'|'Stopped'|'PartiallyCompleted'|'Expired'|'Validating'|'Scheduled',
+                    'message': 'string',
+                    'submitTime': datetime(2015, 1, 1),
+                    'lastModifiedTime': datetime(2015, 1, 1),
+                    'endTime': datetime(2015, 1, 1),
+                    'inputDataConfig': {
+                        's3InputDataConfig': {
+                            's3InputFormat': 'JSONL',
+                            's3Uri': 'string',
+                            's3BucketOwner': 'string'
+                        }
+                    },
+                    'outputDataConfig': {
+                        's3OutputDataConfig': {
+                            's3Uri': 'string',
+                            's3EncryptionKeyId': 'string',
+                            's3BucketOwner': 'string'
+                        }
+                    },
+                    'vpcConfig': {
+                        'subnetIds': [
+                            'string',
+                        ],
+                        'securityGroupIds': [
+                            'string',
+                        ]
+                    },
+                    'timeoutDurationInHours': 123,
+                    'jobExpirationTime': datetime(2015, 1, 1)
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **invocationJobSummaries** *(list) --* 
+
+          A list of items, each of which contains a summary about a batch inference job.
+
+          
+          
+
+          - *(dict) --* 
+
+            A summary of a batch inference job.
+
+            
+            
+
+            - **jobArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the batch inference job.
+
+              
+            
+
+            - **jobName** *(string) --* 
+
+              The name of the batch inference job.
+
+              
+            
+
+            - **modelId** *(string) --* 
+
+              The unique identifier of the foundation model used for model inference.
+
+              
+            
+
+            - **clientRequestToken** *(string) --* 
+
+              A unique, case-sensitive identifier to ensure that the API request completes no more than one time. If this token matches a previous request, Amazon Bedrock ignores the request, but does not return an error. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__.
+
+              
+            
+
+            - **roleArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the service role with permissions to carry out and manage batch inference. You can use the console to create a default service role or follow the steps at `Create a service role for batch inference <https://docs.aws.amazon.com/bedrock/latest/userguide/batch-iam-sr.html>`__.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The status of the batch inference job.
+
+               
+
+              The following statuses are possible:
+
+               
+
+              
+              * Submitted – This job has been submitted to a queue for validation.
+               
+              * Validating – This job is being validated for the requirements described in `Format and upload your batch inference data <https://docs.aws.amazon.com/bedrock/latest/userguide/batch-inference-data.html>`__. The criteria include the following: 
+
+                
+                * Your IAM service role has access to the Amazon S3 buckets containing your files.
+                 
+                * Your files are .jsonl files and each individual record is a JSON object in the correct format. Note that validation doesn't check if the ``modelInput`` value matches the request body for the model.
+                 
+                * Your files fulfill the requirements for file size and number of records. For more information, see `Quotas for Amazon Bedrock <https://docs.aws.amazon.com/bedrock/latest/userguide/quotas.html>`__.
+                
+
+              
+               
+              * Scheduled – This job has been validated and is now in a queue. The job will automatically start when it reaches its turn.
+               
+              * Expired – This job timed out because it was scheduled but didn't begin before the set timeout duration. Submit a new job request.
+               
+              * InProgress – This job has begun. You can start viewing the results in the output S3 location.
+               
+              * Completed – This job has successfully completed. View the output files in the output S3 location.
+               
+              * PartiallyCompleted – This job has partially completed. Not all of your records could be processed in time. View the output files in the output S3 location.
+               
+              * Failed – This job has failed. Check the failure message for any further details. For further assistance, reach out to the `Amazon Web Services Support Center <https://console.aws.amazon.com/support/home/>`__.
+               
+              * Stopped – This job was stopped by a user.
+               
+              * Stopping – This job is being stopped by a user.
+              
+
+              
+            
+
+            - **message** *(string) --* 
+
+              If the batch inference job failed, this field contains a message describing why the job failed.
+
+              
+            
+
+            - **submitTime** *(datetime) --* 
+
+              The time at which the batch inference job was submitted.
+
+              
+            
+
+            - **lastModifiedTime** *(datetime) --* 
+
+              The time at which the batch inference job was last modified.
+
+              
+            
+
+            - **endTime** *(datetime) --* 
+
+              The time at which the batch inference job ended.
+
+              
+            
+
+            - **inputDataConfig** *(dict) --* 
+
+              Details about the location of the input to the batch inference job.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``s3InputDataConfig``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **s3InputDataConfig** *(dict) --* 
+
+                Contains the configuration of the S3 location of the input data.
+
+                
+                
+
+                - **s3InputFormat** *(string) --* 
+
+                  The format of the input data.
+
+                  
+                
+
+                - **s3Uri** *(string) --* 
+
+                  The S3 location of the input data.
+
+                  
+                
+
+                - **s3BucketOwner** *(string) --* 
+
+                  The ID of the Amazon Web Services account that owns the S3 bucket containing the input data.
+
+                  
+            
+          
+            
+
+            - **outputDataConfig** *(dict) --* 
+
+              Details about the location of the output of the batch inference job.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``s3OutputDataConfig``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **s3OutputDataConfig** *(dict) --* 
+
+                Contains the configuration of the S3 location of the output data.
+
+                
+                
+
+                - **s3Uri** *(string) --* 
+
+                  The S3 location of the output data.
+
+                  
+                
+
+                - **s3EncryptionKeyId** *(string) --* 
+
+                  The unique identifier of the key that encrypts the S3 location of the output data.
+
+                  
+                
+
+                - **s3BucketOwner** *(string) --* 
+
+                  The ID of the Amazon Web Services account that owns the S3 bucket containing the output data.
+
+                  
+            
+          
+            
+
+            - **vpcConfig** *(dict) --* 
+
+              The configuration of the Virtual Private Cloud (VPC) for the data in the batch inference job. For more information, see `Protect batch inference jobs using a VPC <https://docs.aws.amazon.com/bedrock/latest/userguide/batch-vpc>`__.
+
+              
+              
+
+              - **subnetIds** *(list) --* 
+
+                An array of IDs for each subnet in the VPC to use.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **securityGroupIds** *(list) --* 
+
+                An array of IDs for each security group in the VPC to use.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+            
+
+            - **timeoutDurationInHours** *(integer) --* 
+
+              The number of hours after which the batch inference job was set to time out.
+
+              
+            
+
+            - **jobExpirationTime** *(datetime) --* 
+
+              The time at which the batch inference job times or timed out.
+
+              
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

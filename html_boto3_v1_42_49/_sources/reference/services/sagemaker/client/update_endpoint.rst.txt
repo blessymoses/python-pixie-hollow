@@ -1,0 +1,426 @@
+:doc:`SageMaker <../../sagemaker>` / Client / update_endpoint
+
+***************
+update_endpoint
+***************
+
+
+
+.. py:method:: SageMaker.Client.update_endpoint(**kwargs)
+
+  
+
+  Deploys the ``EndpointConfig`` specified in the request to a new fleet of instances. SageMaker shifts endpoint traffic to the new instances with the updated endpoint configuration and then deletes the old instances using the previous ``EndpointConfig`` (there is no availability loss). For more information about how to control the update and traffic shifting process, see `Update models in production <https://docs.aws.amazon.com/sagemaker/latest/dg/deployment-guardrails.html>`__.
+
+   
+
+  When SageMaker receives the request, it sets the endpoint status to ``Updating``. After updating the endpoint, it sets the status to ``InService``. To check the status of an endpoint, use the `DescribeEndpoint <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_DescribeEndpoint.html>`__ API.
+
+   
+
+  .. note::
+
+    
+
+    You must not delete an ``EndpointConfig`` in use by an endpoint that is live or while the ``UpdateEndpoint`` or ``CreateEndpoint`` operations are being performed on the endpoint. To update an endpoint, you must create a new ``EndpointConfig``.
+
+     
+
+    If you delete the ``EndpointConfig`` of an endpoint that is active or being created or updated you may lose visibility into the instance type the endpoint is using. The endpoint must be deleted in order to stop incurring charges.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateEndpoint>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_endpoint(
+        EndpointName='string',
+        EndpointConfigName='string',
+        RetainAllVariantProperties=True|False,
+        ExcludeRetainedVariantProperties=[
+            {
+                'VariantPropertyType': 'DesiredInstanceCount'|'DesiredWeight'|'DataCaptureConfig'
+            },
+        ],
+        DeploymentConfig={
+            'BlueGreenUpdatePolicy': {
+                'TrafficRoutingConfiguration': {
+                    'Type': 'ALL_AT_ONCE'|'CANARY'|'LINEAR',
+                    'WaitIntervalInSeconds': 123,
+                    'CanarySize': {
+                        'Type': 'INSTANCE_COUNT'|'CAPACITY_PERCENT',
+                        'Value': 123
+                    },
+                    'LinearStepSize': {
+                        'Type': 'INSTANCE_COUNT'|'CAPACITY_PERCENT',
+                        'Value': 123
+                    }
+                },
+                'TerminationWaitInSeconds': 123,
+                'MaximumExecutionTimeoutInSeconds': 123
+            },
+            'RollingUpdatePolicy': {
+                'MaximumBatchSize': {
+                    'Type': 'INSTANCE_COUNT'|'CAPACITY_PERCENT',
+                    'Value': 123
+                },
+                'WaitIntervalInSeconds': 123,
+                'MaximumExecutionTimeoutInSeconds': 123,
+                'RollbackMaximumBatchSize': {
+                    'Type': 'INSTANCE_COUNT'|'CAPACITY_PERCENT',
+                    'Value': 123
+                }
+            },
+            'AutoRollbackConfiguration': {
+                'Alarms': [
+                    {
+                        'AlarmName': 'string'
+                    },
+                ]
+            }
+        },
+        RetainDeploymentConfig=True|False
+    )
+    
+  :type EndpointName: string
+  :param EndpointName: **[REQUIRED]** 
+
+    The name of the endpoint whose configuration you want to update.
+
+    
+
+  
+  :type EndpointConfigName: string
+  :param EndpointConfigName: **[REQUIRED]** 
+
+    The name of the new endpoint configuration.
+
+    
+
+  
+  :type RetainAllVariantProperties: boolean
+  :param RetainAllVariantProperties: 
+
+    When updating endpoint resources, enables or disables the retention of `variant properties <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VariantProperty.html>`__, such as the instance count or the variant weight. To retain the variant properties of an endpoint when updating it, set ``RetainAllVariantProperties`` to ``true``. To use the variant properties specified in a new ``EndpointConfig`` call when updating an endpoint, set ``RetainAllVariantProperties`` to ``false``. The default is ``false``.
+
+    
+
+  
+  :type ExcludeRetainedVariantProperties: list
+  :param ExcludeRetainedVariantProperties: 
+
+    When you are updating endpoint resources with ``RetainAllVariantProperties``, whose value is set to ``true``, ``ExcludeRetainedVariantProperties`` specifies the list of type `VariantProperty <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_VariantProperty.html>`__ to override with the values provided by ``EndpointConfig``. If you don't specify a value for ``ExcludeRetainedVariantProperties``, no variant properties are overridden.
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies a production variant property type for an Endpoint.
+
+       
+
+      If you are updating an endpoint with the ``RetainAllVariantProperties`` option of `UpdateEndpointInput <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpoint.html>`__ set to ``true``, the ``VariantProperty`` objects listed in the ``ExcludeRetainedVariantProperties`` parameter of `UpdateEndpointInput <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_UpdateEndpoint.html>`__ override the existing variant properties of the endpoint.
+
+      
+
+    
+      - **VariantPropertyType** *(string) --* **[REQUIRED]** 
+
+        The type of variant property. The supported values are:
+
+         
+
+        
+        * ``DesiredInstanceCount``: Overrides the existing variant instance counts using the ``InitialInstanceCount`` values in the ``ProductionVariants`` of `CreateEndpointConfig <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpointConfig.html>`__.
+         
+        * ``DesiredWeight``: Overrides the existing variant weights using the ``InitialVariantWeight`` values in the ``ProductionVariants`` of `CreateEndpointConfig <https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_CreateEndpointConfig.html>`__.
+         
+        * ``DataCaptureConfig``: (Not currently supported.)
+        
+
+        
+
+      
+    
+
+  :type DeploymentConfig: dict
+  :param DeploymentConfig: 
+
+    The deployment configuration for an endpoint, which contains the desired deployment strategy and rollback configurations.
+
+    
+
+  
+    - **BlueGreenUpdatePolicy** *(dict) --* 
+
+      Update policy for a blue/green deployment. If this update policy is specified, SageMaker creates a new fleet during the deployment while maintaining the old fleet. SageMaker flips traffic to the new fleet according to the specified traffic routing configuration. Only one update policy should be used in the deployment configuration. If no update policy is specified, SageMaker uses a blue/green deployment strategy with all at once traffic shifting by default.
+
+      
+
+    
+      - **TrafficRoutingConfiguration** *(dict) --* **[REQUIRED]** 
+
+        Defines the traffic routing strategy to shift traffic from the old fleet to the new fleet during an endpoint deployment.
+
+        
+
+      
+        - **Type** *(string) --* **[REQUIRED]** 
+
+          Traffic routing strategy type.
+
+           
+
+          
+          * ``ALL_AT_ONCE``: Endpoint traffic shifts to the new fleet in a single step.
+           
+          * ``CANARY``: Endpoint traffic shifts to the new fleet in two steps. The first step is the canary, which is a small portion of the traffic. The second step is the remainder of the traffic.
+           
+          * ``LINEAR``: Endpoint traffic shifts to the new fleet in n steps of a configurable size.
+          
+
+          
+
+        
+        - **WaitIntervalInSeconds** *(integer) --* **[REQUIRED]** 
+
+          The waiting time (in seconds) between incremental steps to turn on traffic on the new endpoint fleet.
+
+          
+
+        
+        - **CanarySize** *(dict) --* 
+
+          Batch size for the first step to turn on traffic on the new endpoint fleet. ``Value`` must be less than or equal to 50% of the variant's total instance count.
+
+          
+
+        
+          - **Type** *(string) --* **[REQUIRED]** 
+
+            Specifies the endpoint capacity type.
+
+             
+
+            
+            * ``INSTANCE_COUNT``: The endpoint activates based on the number of instances.
+             
+            * ``CAPACITY_PERCENT``: The endpoint activates based on the specified percentage of capacity.
+            
+
+            
+
+          
+          - **Value** *(integer) --* **[REQUIRED]** 
+
+            Defines the capacity size, either as a number of instances or a capacity percentage.
+
+            
+
+          
+        
+        - **LinearStepSize** *(dict) --* 
+
+          Batch size for each step to turn on traffic on the new endpoint fleet. ``Value`` must be 10-50% of the variant's total instance count.
+
+          
+
+        
+          - **Type** *(string) --* **[REQUIRED]** 
+
+            Specifies the endpoint capacity type.
+
+             
+
+            
+            * ``INSTANCE_COUNT``: The endpoint activates based on the number of instances.
+             
+            * ``CAPACITY_PERCENT``: The endpoint activates based on the specified percentage of capacity.
+            
+
+            
+
+          
+          - **Value** *(integer) --* **[REQUIRED]** 
+
+            Defines the capacity size, either as a number of instances or a capacity percentage.
+
+            
+
+          
+        
+      
+      - **TerminationWaitInSeconds** *(integer) --* 
+
+        Additional waiting time in seconds after the completion of an endpoint deployment before terminating the old endpoint fleet. Default is 0.
+
+        
+
+      
+      - **MaximumExecutionTimeoutInSeconds** *(integer) --* 
+
+        Maximum execution timeout for the deployment. Note that the timeout value should be larger than the total waiting time specified in ``TerminationWaitInSeconds`` and ``WaitIntervalInSeconds``.
+
+        
+
+      
+    
+    - **RollingUpdatePolicy** *(dict) --* 
+
+      Specifies a rolling deployment strategy for updating a SageMaker endpoint.
+
+      
+
+    
+      - **MaximumBatchSize** *(dict) --* **[REQUIRED]** 
+
+        Batch size for each rolling step to provision capacity and turn on traffic on the new endpoint fleet, and terminate capacity on the old endpoint fleet. Value must be between 5% to 50% of the variant's total instance count.
+
+        
+
+      
+        - **Type** *(string) --* **[REQUIRED]** 
+
+          Specifies the endpoint capacity type.
+
+           
+
+          
+          * ``INSTANCE_COUNT``: The endpoint activates based on the number of instances.
+           
+          * ``CAPACITY_PERCENT``: The endpoint activates based on the specified percentage of capacity.
+          
+
+          
+
+        
+        - **Value** *(integer) --* **[REQUIRED]** 
+
+          Defines the capacity size, either as a number of instances or a capacity percentage.
+
+          
+
+        
+      
+      - **WaitIntervalInSeconds** *(integer) --* **[REQUIRED]** 
+
+        The length of the baking period, during which SageMaker monitors alarms for each batch on the new fleet.
+
+        
+
+      
+      - **MaximumExecutionTimeoutInSeconds** *(integer) --* 
+
+        The time limit for the total deployment. Exceeding this limit causes a timeout.
+
+        
+
+      
+      - **RollbackMaximumBatchSize** *(dict) --* 
+
+        Batch size for rollback to the old endpoint fleet. Each rolling step to provision capacity and turn on traffic on the old endpoint fleet, and terminate capacity on the new endpoint fleet. If this field is absent, the default value will be set to 100% of total capacity which means to bring up the whole capacity of the old fleet at once during rollback.
+
+        
+
+      
+        - **Type** *(string) --* **[REQUIRED]** 
+
+          Specifies the endpoint capacity type.
+
+           
+
+          
+          * ``INSTANCE_COUNT``: The endpoint activates based on the number of instances.
+           
+          * ``CAPACITY_PERCENT``: The endpoint activates based on the specified percentage of capacity.
+          
+
+          
+
+        
+        - **Value** *(integer) --* **[REQUIRED]** 
+
+          Defines the capacity size, either as a number of instances or a capacity percentage.
+
+          
+
+        
+      
+    
+    - **AutoRollbackConfiguration** *(dict) --* 
+
+      Automatic rollback configuration for handling endpoint deployment failures and recovery.
+
+      
+
+    
+      - **Alarms** *(list) --* 
+
+        List of CloudWatch alarms in your account that are configured to monitor metrics on an endpoint. If any alarms are tripped during a deployment, SageMaker rolls back the deployment.
+
+        
+
+      
+        - *(dict) --* 
+
+          An Amazon CloudWatch alarm configured to monitor metrics on an endpoint.
+
+          
+
+        
+          - **AlarmName** *(string) --* 
+
+            The name of a CloudWatch alarm in your account.
+
+            
+
+          
+        
+    
+    
+  
+  :type RetainDeploymentConfig: boolean
+  :param RetainDeploymentConfig: 
+
+    Specifies whether to reuse the last deployment configuration. The default value is false (the configuration is not reused).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'EndpointArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **EndpointArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the endpoint.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SageMaker.Client.exceptions.ResourceLimitExceeded`
+
+  

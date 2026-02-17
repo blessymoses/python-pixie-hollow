@@ -1,0 +1,923 @@
+:doc:`AgentsforBedrock <../../bedrock-agent>` / Client / update_agent
+
+************
+update_agent
+************
+
+
+
+.. py:method:: AgentsforBedrock.Client.update_agent(**kwargs)
+
+  
+
+  Updates the configuration of an agent.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-2023-06-05/UpdateAgent>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_agent(
+        agentId='string',
+        agentName='string',
+        instruction='string',
+        foundationModel='string',
+        description='string',
+        orchestrationType='DEFAULT'|'CUSTOM_ORCHESTRATION',
+        customOrchestration={
+            'executor': {
+                'lambda': 'string'
+            }
+        },
+        idleSessionTTLInSeconds=123,
+        agentResourceRoleArn='string',
+        customerEncryptionKeyArn='string',
+        promptOverrideConfiguration={
+            'promptConfigurations': [
+                {
+                    'promptType': 'PRE_PROCESSING'|'ORCHESTRATION'|'POST_PROCESSING'|'KNOWLEDGE_BASE_RESPONSE_GENERATION'|'MEMORY_SUMMARIZATION',
+                    'promptCreationMode': 'DEFAULT'|'OVERRIDDEN',
+                    'promptState': 'ENABLED'|'DISABLED',
+                    'basePromptTemplate': 'string',
+                    'inferenceConfiguration': {
+                        'temperature': ...,
+                        'topP': ...,
+                        'topK': 123,
+                        'maximumLength': 123,
+                        'stopSequences': [
+                            'string',
+                        ]
+                    },
+                    'parserMode': 'DEFAULT'|'OVERRIDDEN',
+                    'foundationModel': 'string',
+                    'additionalModelRequestFields': {...}|[...]|123|123.4|'string'|True|None
+                },
+            ],
+            'overrideLambda': 'string'
+        },
+        guardrailConfiguration={
+            'guardrailIdentifier': 'string',
+            'guardrailVersion': 'string'
+        },
+        memoryConfiguration={
+            'enabledMemoryTypes': [
+                'SESSION_SUMMARY',
+            ],
+            'storageDays': 123,
+            'sessionSummaryConfiguration': {
+                'maxRecentSessions': 123
+            }
+        },
+        agentCollaboration='SUPERVISOR'|'SUPERVISOR_ROUTER'|'DISABLED'
+    )
+    
+  :type agentId: string
+  :param agentId: **[REQUIRED]** 
+
+    The unique identifier of the agent.
+
+    
+
+  
+  :type agentName: string
+  :param agentName: **[REQUIRED]** 
+
+    Specifies a new name for the agent.
+
+    
+
+  
+  :type instruction: string
+  :param instruction: 
+
+    Specifies new instructions that tell the agent what it should do and how it should interact with users.
+
+    
+
+  
+  :type foundationModel: string
+  :param foundationModel: **[REQUIRED]** 
+
+    The identifier for the model that you want to be used for orchestration by the agent you create.
+
+     
+
+    The ``modelId`` to provide depends on the type of model or throughput that you use:
+
+     
+
+    
+    * If you use a base model, specify the model ID or its ARN. For a list of model IDs for base models, see `Amazon Bedrock base model IDs (on-demand throughput) <https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html#model-ids-arns>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use an inference profile, specify the inference profile ID or its ARN. For a list of inference profile IDs, see `Supported Regions and models for cross-region inference <https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference-support.html>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use a provisioned model, specify the ARN of the Provisioned Throughput. For more information, see `Run inference using a Provisioned Throughput <https://docs.aws.amazon.com/bedrock/latest/userguide/prov-thru-use.html>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use a custom model, first purchase Provisioned Throughput for it. Then specify the ARN of the resulting provisioned model. For more information, see `Use a custom model in Amazon Bedrock <https://docs.aws.amazon.com/bedrock/latest/userguide/model-customization-use.html>`__ in the Amazon Bedrock User Guide.
+     
+    * If you use an `imported model <https://docs.aws.amazon.com/bedrock/latest/userguide/model-customization-import-model.html>`__, specify the ARN of the imported model. You can get the model ARN from a successful call to `CreateModelImportJob <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_CreateModelImportJob.html>`__ or from the Imported models page in the Amazon Bedrock console.
+    
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    Specifies a new description of the agent.
+
+    
+
+  
+  :type orchestrationType: string
+  :param orchestrationType: 
+
+    Specifies the type of orchestration strategy for the agent. This is set to ``DEFAULT`` orchestration type, by default.
+
+    
+
+  
+  :type customOrchestration: dict
+  :param customOrchestration: 
+
+    Contains details of the custom orchestration configured for the agent.
+
+    
+
+  
+    - **executor** *(dict) --* 
+
+      The structure of the executor invoking the actions in custom orchestration.
+
+      .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``lambda``. 
+
+    
+      - **lambda** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the Lambda function containing the business logic that is carried out upon invoking the action.
+
+        
+
+      
+    
+  
+  :type idleSessionTTLInSeconds: integer
+  :param idleSessionTTLInSeconds: 
+
+    The number of seconds for which Amazon Bedrock keeps information about a user's conversation with the agent.
+
+     
+
+    A user interaction remains active for the amount of time specified. If no conversation occurs during this time, the session expires and Amazon Bedrock deletes any data provided before the timeout.
+
+    
+
+  
+  :type agentResourceRoleArn: string
+  :param agentResourceRoleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the IAM role with permissions to invoke API operations on the agent.
+
+    
+
+  
+  :type customerEncryptionKeyArn: string
+  :param customerEncryptionKeyArn: 
+
+    The Amazon Resource Name (ARN) of the KMS key with which to encrypt the agent.
+
+    
+
+  
+  :type promptOverrideConfiguration: dict
+  :param promptOverrideConfiguration: 
+
+    Contains configurations to override prompts in different parts of an agent sequence. For more information, see `Advanced prompts <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts.html>`__.
+
+    
+
+  
+    - **promptConfigurations** *(list) --* **[REQUIRED]** 
+
+      Contains configurations to override a prompt template in one part of an agent sequence. For more information, see `Advanced prompts <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts.html>`__.
+
+      
+
+    
+      - *(dict) --* 
+
+        Contains configurations to override a prompt template in one part of an agent sequence. For more information, see `Advanced prompts <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts.html>`__.
+
+        
+
+      
+        - **promptType** *(string) --* 
+
+          The step in the agent sequence that this prompt configuration applies to.
+
+          
+
+        
+        - **promptCreationMode** *(string) --* 
+
+          Specifies whether to override the default prompt template for this ``promptType``. Set this value to ``OVERRIDDEN`` to use the prompt that you provide in the ``basePromptTemplate``. If you leave it as ``DEFAULT``, the agent uses a default prompt template.
+
+          
+
+        
+        - **promptState** *(string) --* 
+
+          Specifies whether to allow the agent to carry out the step specified in the ``promptType``. If you set this value to ``DISABLED``, the agent skips that step. The default state for each ``promptType`` is as follows.
+
+           
+
+          
+          * ``PRE_PROCESSING`` – ``DISABLED``
+           
+          * ``ORCHESTRATION`` – ``ENABLED``
+           
+          * ``KNOWLEDGE_BASE_RESPONSE_GENERATION`` – ``ENABLED``
+           
+          * ``POST_PROCESSING`` – ``DISABLED``
+          
+
+          
+
+        
+        - **basePromptTemplate** *(string) --* 
+
+          Defines the prompt template with which to replace the default prompt template. You can use placeholder variables in the base prompt template to customize the prompt. For more information, see `Prompt template placeholder variables <https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-placeholders.html>`__. For more information, see `Configure the prompt templates <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts-configure.html>`__.
+
+          
+
+        
+        - **inferenceConfiguration** *(dict) --* 
+
+          Contains inference parameters to use when the agent invokes a foundation model in the part of the agent sequence defined by the ``promptType``. For more information, see `Inference parameters for foundation models <https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html>`__.
+
+          
+
+        
+          - **temperature** *(float) --* 
+
+            The likelihood of the model selecting higher-probability options while generating a response. A lower value makes the model more likely to choose higher-probability options, while a higher value makes the model more likely to choose lower-probability options.
+
+            
+
+          
+          - **topP** *(float) --* 
+
+            While generating a response, the model determines the probability of the following token at each point of generation. The value that you set for ``Top P`` determines the number of most-likely candidates from which the model chooses the next token in the sequence. For example, if you set ``topP`` to 0.8, the model only selects the next token from the top 80% of the probability distribution of next tokens.
+
+            
+
+          
+          - **topK** *(integer) --* 
+
+            While generating a response, the model determines the probability of the following token at each point of generation. The value that you set for ``topK`` is the number of most-likely candidates from which the model chooses the next token in the sequence. For example, if you set ``topK`` to 50, the model selects the next token from among the top 50 most likely choices.
+
+            
+
+          
+          - **maximumLength** *(integer) --* 
+
+            The maximum number of tokens to allow in the generated response.
+
+            
+
+          
+          - **stopSequences** *(list) --* 
+
+            A list of stop sequences. A stop sequence is a sequence of characters that causes the model to stop generating the response.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+        - **parserMode** *(string) --* 
+
+          Specifies whether to override the default parser Lambda function when parsing the raw foundation model output in the part of the agent sequence defined by the ``promptType``. If you set the field as ``OVERRIDDEN``, the ``overrideLambda`` field in the `PromptOverrideConfiguration <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_PromptOverrideConfiguration.html>`__ must be specified with the ARN of a Lambda function.
+
+          
+
+        
+        - **foundationModel** *(string) --* 
+
+          The agent's foundation model.
+
+          
+
+        
+        - **additionalModelRequestFields** (:ref:`document<document>`) -- 
+
+          If the Converse or ConverseStream operations support the model, ``additionalModelRequestFields`` contains additional inference parameters, beyond the base set of inference parameters in the ``inferenceConfiguration`` field.
+
+           
+
+          For more information, see *Inference request parameters and response fields for foundation models* in the Amazon Bedrock user guide.
+
+          
+
+        
+      
+  
+    - **overrideLambda** *(string) --* 
+
+      The ARN of the Lambda function to use when parsing the raw foundation model output in parts of the agent sequence. If you specify this field, at least one of the ``promptConfigurations`` must contain a ``parserMode`` value that is set to ``OVERRIDDEN``. For more information, see `Parser Lambda function in Amazon Bedrock Agents <https://docs.aws.amazon.com/bedrock/latest/userguide/lambda-parser.html>`__.
+
+      
+
+    
+  
+  :type guardrailConfiguration: dict
+  :param guardrailConfiguration: 
+
+    The unique Guardrail configuration assigned to the agent when it is updated.
+
+    
+
+  
+    - **guardrailIdentifier** *(string) --* 
+
+      The unique identifier of the guardrail.
+
+      
+
+    
+    - **guardrailVersion** *(string) --* 
+
+      The version of the guardrail.
+
+      
+
+    
+  
+  :type memoryConfiguration: dict
+  :param memoryConfiguration: 
+
+    Specifies the new memory configuration for the agent.
+
+    
+
+  
+    - **enabledMemoryTypes** *(list) --* **[REQUIRED]** 
+
+      The type of memory that is stored.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **storageDays** *(integer) --* 
+
+      The number of days the agent is configured to retain the conversational context.
+
+      
+
+    
+    - **sessionSummaryConfiguration** *(dict) --* 
+
+      Contains the configuration for SESSION_SUMMARY memory type enabled for the agent.
+
+      
+
+    
+      - **maxRecentSessions** *(integer) --* 
+
+        Maximum number of recent session summaries to include in the agent's prompt context.
+
+        
+
+      
+    
+  
+  :type agentCollaboration: string
+  :param agentCollaboration: 
+
+    The agent's collaboration role.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'agent': {
+              'agentId': 'string',
+              'agentName': 'string',
+              'agentArn': 'string',
+              'agentVersion': 'string',
+              'clientToken': 'string',
+              'instruction': 'string',
+              'agentStatus': 'CREATING'|'PREPARING'|'PREPARED'|'NOT_PREPARED'|'DELETING'|'FAILED'|'VERSIONING'|'UPDATING',
+              'foundationModel': 'string',
+              'description': 'string',
+              'orchestrationType': 'DEFAULT'|'CUSTOM_ORCHESTRATION',
+              'customOrchestration': {
+                  'executor': {
+                      'lambda': 'string'
+                  }
+              },
+              'idleSessionTTLInSeconds': 123,
+              'agentResourceRoleArn': 'string',
+              'customerEncryptionKeyArn': 'string',
+              'createdAt': datetime(2015, 1, 1),
+              'updatedAt': datetime(2015, 1, 1),
+              'preparedAt': datetime(2015, 1, 1),
+              'failureReasons': [
+                  'string',
+              ],
+              'recommendedActions': [
+                  'string',
+              ],
+              'promptOverrideConfiguration': {
+                  'promptConfigurations': [
+                      {
+                          'promptType': 'PRE_PROCESSING'|'ORCHESTRATION'|'POST_PROCESSING'|'KNOWLEDGE_BASE_RESPONSE_GENERATION'|'MEMORY_SUMMARIZATION',
+                          'promptCreationMode': 'DEFAULT'|'OVERRIDDEN',
+                          'promptState': 'ENABLED'|'DISABLED',
+                          'basePromptTemplate': 'string',
+                          'inferenceConfiguration': {
+                              'temperature': ...,
+                              'topP': ...,
+                              'topK': 123,
+                              'maximumLength': 123,
+                              'stopSequences': [
+                                  'string',
+                              ]
+                          },
+                          'parserMode': 'DEFAULT'|'OVERRIDDEN',
+                          'foundationModel': 'string',
+                          'additionalModelRequestFields': {...}|[...]|123|123.4|'string'|True|None
+                      },
+                  ],
+                  'overrideLambda': 'string'
+              },
+              'guardrailConfiguration': {
+                  'guardrailIdentifier': 'string',
+                  'guardrailVersion': 'string'
+              },
+              'memoryConfiguration': {
+                  'enabledMemoryTypes': [
+                      'SESSION_SUMMARY',
+                  ],
+                  'storageDays': 123,
+                  'sessionSummaryConfiguration': {
+                      'maxRecentSessions': 123
+                  }
+              },
+              'agentCollaboration': 'SUPERVISOR'|'SUPERVISOR_ROUTER'|'DISABLED'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **agent** *(dict) --* 
+
+        Contains details about the agent that was updated.
+
+        
+        
+
+        - **agentId** *(string) --* 
+
+          The unique identifier of the agent.
+
+          
+        
+
+        - **agentName** *(string) --* 
+
+          The name of the agent.
+
+          
+        
+
+        - **agentArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the agent.
+
+          
+        
+
+        - **agentVersion** *(string) --* 
+
+          The version of the agent.
+
+          
+        
+
+        - **clientToken** *(string) --* 
+
+          A unique, case-sensitive identifier to ensure that the API request completes no more than one time. If this token matches a previous request, Amazon Bedrock ignores the request, but does not return an error. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__.
+
+          
+        
+
+        - **instruction** *(string) --* 
+
+          Instructions that tell the agent what it should do and how it should interact with users.
+
+          
+        
+
+        - **agentStatus** *(string) --* 
+
+          The status of the agent and whether it is ready for use. The following statuses are possible:
+
+           
+
+          
+          * CREATING – The agent is being created.
+           
+          * PREPARING – The agent is being prepared.
+           
+          * PREPARED – The agent is prepared and ready to be invoked.
+           
+          * NOT_PREPARED – The agent has been created but not yet prepared.
+           
+          * FAILED – The agent API operation failed.
+           
+          * UPDATING – The agent is being updated.
+           
+          * DELETING – The agent is being deleted.
+          
+
+          
+        
+
+        - **foundationModel** *(string) --* 
+
+          The foundation model used for orchestration by the agent.
+
+          
+        
+
+        - **description** *(string) --* 
+
+          The description of the agent.
+
+          
+        
+
+        - **orchestrationType** *(string) --* 
+
+          Specifies the orchestration strategy for the agent.
+
+          
+        
+
+        - **customOrchestration** *(dict) --* 
+
+          Contains custom orchestration configurations for the agent.
+
+          
+          
+
+          - **executor** *(dict) --* 
+
+            The structure of the executor invoking the actions in custom orchestration.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``lambda``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **lambda** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the Lambda function containing the business logic that is carried out upon invoking the action.
+
+              
+        
+      
+        
+
+        - **idleSessionTTLInSeconds** *(integer) --* 
+
+          The number of seconds for which Amazon Bedrock keeps information about a user's conversation with the agent.
+
+           
+
+          A user interaction remains active for the amount of time specified. If no conversation occurs during this time, the session expires and Amazon Bedrock deletes any data provided before the timeout.
+
+          
+        
+
+        - **agentResourceRoleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the IAM role with permissions to invoke API operations on the agent.
+
+          
+        
+
+        - **customerEncryptionKeyArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the KMS key that encrypts the agent.
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The time at which the agent was created.
+
+          
+        
+
+        - **updatedAt** *(datetime) --* 
+
+          The time at which the agent was last updated.
+
+          
+        
+
+        - **preparedAt** *(datetime) --* 
+
+          The time at which the agent was last prepared.
+
+          
+        
+
+        - **failureReasons** *(list) --* 
+
+          Contains reasons that the agent-related API that you invoked failed.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **recommendedActions** *(list) --* 
+
+          Contains recommended actions to take for the agent-related API that you invoked to succeed.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **promptOverrideConfiguration** *(dict) --* 
+
+          Contains configurations to override prompt templates in different parts of an agent sequence. For more information, see `Advanced prompts <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts.html>`__.
+
+          
+          
+
+          - **promptConfigurations** *(list) --* 
+
+            Contains configurations to override a prompt template in one part of an agent sequence. For more information, see `Advanced prompts <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts.html>`__.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains configurations to override a prompt template in one part of an agent sequence. For more information, see `Advanced prompts <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts.html>`__.
+
+              
+              
+
+              - **promptType** *(string) --* 
+
+                The step in the agent sequence that this prompt configuration applies to.
+
+                
+              
+
+              - **promptCreationMode** *(string) --* 
+
+                Specifies whether to override the default prompt template for this ``promptType``. Set this value to ``OVERRIDDEN`` to use the prompt that you provide in the ``basePromptTemplate``. If you leave it as ``DEFAULT``, the agent uses a default prompt template.
+
+                
+              
+
+              - **promptState** *(string) --* 
+
+                Specifies whether to allow the agent to carry out the step specified in the ``promptType``. If you set this value to ``DISABLED``, the agent skips that step. The default state for each ``promptType`` is as follows.
+
+                 
+
+                
+                * ``PRE_PROCESSING`` – ``DISABLED``
+                 
+                * ``ORCHESTRATION`` – ``ENABLED``
+                 
+                * ``KNOWLEDGE_BASE_RESPONSE_GENERATION`` – ``ENABLED``
+                 
+                * ``POST_PROCESSING`` – ``DISABLED``
+                
+
+                
+              
+
+              - **basePromptTemplate** *(string) --* 
+
+                Defines the prompt template with which to replace the default prompt template. You can use placeholder variables in the base prompt template to customize the prompt. For more information, see `Prompt template placeholder variables <https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-placeholders.html>`__. For more information, see `Configure the prompt templates <https://docs.aws.amazon.com/bedrock/latest/userguide/advanced-prompts-configure.html>`__.
+
+                
+              
+
+              - **inferenceConfiguration** *(dict) --* 
+
+                Contains inference parameters to use when the agent invokes a foundation model in the part of the agent sequence defined by the ``promptType``. For more information, see `Inference parameters for foundation models <https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html>`__.
+
+                
+                
+
+                - **temperature** *(float) --* 
+
+                  The likelihood of the model selecting higher-probability options while generating a response. A lower value makes the model more likely to choose higher-probability options, while a higher value makes the model more likely to choose lower-probability options.
+
+                  
+                
+
+                - **topP** *(float) --* 
+
+                  While generating a response, the model determines the probability of the following token at each point of generation. The value that you set for ``Top P`` determines the number of most-likely candidates from which the model chooses the next token in the sequence. For example, if you set ``topP`` to 0.8, the model only selects the next token from the top 80% of the probability distribution of next tokens.
+
+                  
+                
+
+                - **topK** *(integer) --* 
+
+                  While generating a response, the model determines the probability of the following token at each point of generation. The value that you set for ``topK`` is the number of most-likely candidates from which the model chooses the next token in the sequence. For example, if you set ``topK`` to 50, the model selects the next token from among the top 50 most likely choices.
+
+                  
+                
+
+                - **maximumLength** *(integer) --* 
+
+                  The maximum number of tokens to allow in the generated response.
+
+                  
+                
+
+                - **stopSequences** *(list) --* 
+
+                  A list of stop sequences. A stop sequence is a sequence of characters that causes the model to stop generating the response.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+              
+
+              - **parserMode** *(string) --* 
+
+                Specifies whether to override the default parser Lambda function when parsing the raw foundation model output in the part of the agent sequence defined by the ``promptType``. If you set the field as ``OVERRIDDEN``, the ``overrideLambda`` field in the `PromptOverrideConfiguration <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_PromptOverrideConfiguration.html>`__ must be specified with the ARN of a Lambda function.
+
+                
+              
+
+              - **foundationModel** *(string) --* 
+
+                The agent's foundation model.
+
+                
+              
+
+              - **additionalModelRequestFields** (:ref:`document<document>`) -- 
+
+                If the Converse or ConverseStream operations support the model, ``additionalModelRequestFields`` contains additional inference parameters, beyond the base set of inference parameters in the ``inferenceConfiguration`` field.
+
+                 
+
+                For more information, see *Inference request parameters and response fields for foundation models* in the Amazon Bedrock user guide.
+
+                
+          
+        
+          
+
+          - **overrideLambda** *(string) --* 
+
+            The ARN of the Lambda function to use when parsing the raw foundation model output in parts of the agent sequence. If you specify this field, at least one of the ``promptConfigurations`` must contain a ``parserMode`` value that is set to ``OVERRIDDEN``. For more information, see `Parser Lambda function in Amazon Bedrock Agents <https://docs.aws.amazon.com/bedrock/latest/userguide/lambda-parser.html>`__.
+
+            
+      
+        
+
+        - **guardrailConfiguration** *(dict) --* 
+
+          Details about the guardrail associated with the agent.
+
+          
+          
+
+          - **guardrailIdentifier** *(string) --* 
+
+            The unique identifier of the guardrail.
+
+            
+          
+
+          - **guardrailVersion** *(string) --* 
+
+            The version of the guardrail.
+
+            
+      
+        
+
+        - **memoryConfiguration** *(dict) --* 
+
+          Contains memory configuration for the agent.
+
+          
+          
+
+          - **enabledMemoryTypes** *(list) --* 
+
+            The type of memory that is stored.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **storageDays** *(integer) --* 
+
+            The number of days the agent is configured to retain the conversational context.
+
+            
+          
+
+          - **sessionSummaryConfiguration** *(dict) --* 
+
+            Contains the configuration for SESSION_SUMMARY memory type enabled for the agent.
+
+            
+            
+
+            - **maxRecentSessions** *(integer) --* 
+
+              Maximum number of recent session summaries to include in the agent's prompt context.
+
+              
+        
+      
+        
+
+        - **agentCollaboration** *(string) --* 
+
+          The agent's collaboration settings.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ServiceQuotaExceededException`
+
+  

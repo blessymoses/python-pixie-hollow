@@ -1,0 +1,338 @@
+:doc:`KMS <../../kms>` / Client / list_retirable_grants
+
+*********************
+list_retirable_grants
+*********************
+
+
+
+.. py:method:: KMS.Client.list_retirable_grants(**kwargs)
+
+  
+
+  Returns information about all grants in the Amazon Web Services account and Region that have the specified retiring principal.
+
+   
+
+  You can specify any principal in your Amazon Web Services account. The grants that are returned include grants for KMS keys in your Amazon Web Services account and other Amazon Web Services accounts. You might use this operation to determine which grants you may retire. To retire a grant, use the  RetireGrant operation.
+
+   
+
+  For detailed information about grants, including grant terminology, see `Grants in KMS <https://docs.aws.amazon.com/kms/latest/developerguide/grants.html>`__ in the *Key Management Service Developer Guide* . For examples of creating grants in several programming languages, see `Use CreateGrant with an Amazon Web Services SDK or CLI <https://docs.aws.amazon.com/kms/latest/developerguide/example_kms_CreateGrant_section.html>`__.
+
+   
+
+  **Cross-account use**: You must specify a principal in your Amazon Web Services account. This operation returns a list of grants where the retiring principal specified in the ``ListRetirableGrants`` request is the same retiring principal on the grant. This can include grants on KMS keys owned by other Amazon Web Services accounts, but you do not need ``kms:ListRetirableGrants`` permission (or any other additional permission) in any Amazon Web Services account other than your own.
+
+   
+
+  **Required permissions**: `kms\:ListRetirableGrants <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (IAM policy) in your Amazon Web Services account.
+
+   
+
+  .. note::
+
+    
+
+    KMS authorizes ``ListRetirableGrants`` requests by evaluating the caller account's kms:ListRetirableGrants permissions. The authorized resource in ``ListRetirableGrants`` calls is the retiring principal specified in the request. KMS does not evaluate the caller's permissions to verify their access to any KMS keys or grants that might be returned by the ``ListRetirableGrants`` call.
+
+    
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  CreateGrant
+   
+  *  ListGrants
+   
+  *  RetireGrant
+   
+  *  RevokeGrant
+  
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ListRetirableGrants>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_retirable_grants(
+        Limit=123,
+        Marker='string',
+        RetiringPrincipal='string'
+    )
+    
+  :type Limit: integer
+  :param Limit: 
+
+    Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not return more than the specified number of items, but it might return fewer.
+
+     
+
+    This value is optional. If you include a value, it must be between 1 and 100, inclusive. If you do not include a value, it defaults to 50.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    Use this parameter in a subsequent request after you receive a response with truncated results. Set it to the value of ``NextMarker`` from the truncated response you just received.
+
+    
+
+  
+  :type RetiringPrincipal: string
+  :param RetiringPrincipal: **[REQUIRED]** 
+
+    The retiring principal for which to list grants. Enter a principal in your Amazon Web Services account.
+
+     
+
+    To specify the retiring principal, use the `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM users, IAM roles, federated users, and assumed role users. For help with the ARN syntax for a principal, see `IAM ARNs <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns>`__ in the *Identity and Access Management User Guide* .
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Grants': [
+              {
+                  'KeyId': 'string',
+                  'GrantId': 'string',
+                  'Name': 'string',
+                  'CreationDate': datetime(2015, 1, 1),
+                  'GranteePrincipal': 'string',
+                  'RetiringPrincipal': 'string',
+                  'IssuingAccount': 'string',
+                  'Operations': [
+                      'Decrypt'|'Encrypt'|'GenerateDataKey'|'GenerateDataKeyWithoutPlaintext'|'ReEncryptFrom'|'ReEncryptTo'|'Sign'|'Verify'|'GetPublicKey'|'CreateGrant'|'RetireGrant'|'DescribeKey'|'GenerateDataKeyPair'|'GenerateDataKeyPairWithoutPlaintext'|'GenerateMac'|'VerifyMac'|'DeriveSharedSecret',
+                  ],
+                  'Constraints': {
+                      'EncryptionContextSubset': {
+                          'string': 'string'
+                      },
+                      'EncryptionContextEquals': {
+                          'string': 'string'
+                      }
+                  }
+              },
+          ],
+          'NextMarker': 'string',
+          'Truncated': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Grants** *(list) --* 
+
+        A list of grants.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about a grant.
+
+          
+          
+
+          - **KeyId** *(string) --* 
+
+            The unique identifier for the KMS key to which the grant applies.
+
+            
+          
+
+          - **GrantId** *(string) --* 
+
+            The unique identifier for the grant.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The friendly name that identifies the grant. If a name was provided in the  CreateGrant request, that name is returned. Otherwise this value is null.
+
+            
+          
+
+          - **CreationDate** *(datetime) --* 
+
+            The date and time when the grant was created.
+
+            
+          
+
+          - **GranteePrincipal** *(string) --* 
+
+            The identity that gets the permissions in the grant.
+
+             
+
+            The ``GranteePrincipal`` field in the ``ListGrants`` response usually contains the user or role designated as the grantee principal in the grant. However, when the grantee principal in the grant is an Amazon Web Services service, the ``GranteePrincipal`` field contains the `service principal <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services>`__, which might represent several different grantee principals.
+
+            
+          
+
+          - **RetiringPrincipal** *(string) --* 
+
+            The principal that can retire the grant.
+
+            
+          
+
+          - **IssuingAccount** *(string) --* 
+
+            The Amazon Web Services account under which the grant was issued.
+
+            
+          
+
+          - **Operations** *(list) --* 
+
+            The list of operations permitted by the grant.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **Constraints** *(dict) --* 
+
+            A list of key-value pairs that must be present in the encryption context of certain subsequent operations that the grant allows.
+
+            
+            
+
+            - **EncryptionContextSubset** *(dict) --* 
+
+              A list of key-value pairs that must be included in the encryption context of the `cryptographic operation <https://docs.aws.amazon.com/kms/latest/developerguide/kms-cryptography.html#cryptographic-operations>`__ request. The grant allows the cryptographic operation only when the encryption context in the request includes the key-value pairs specified in this constraint, although it can include additional key-value pairs.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **EncryptionContextEquals** *(dict) --* 
+
+              A list of key-value pairs that must match the encryption context in the `cryptographic operation <https://docs.aws.amazon.com/kms/latest/developerguide/kms-cryptography.html#cryptographic-operations>`__ request. The grant allows the operation only when the encryption context in the request is the same as the encryption context specified in this constraint.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+        
+      
+    
+      
+
+      - **NextMarker** *(string) --* 
+
+        When ``Truncated`` is true, this element is present and contains the value to use for the ``Marker`` parameter in a subsequent request.
+
+        
+      
+
+      - **Truncated** *(boolean) --* 
+
+        A flag that indicates whether there are more items in the list. When this value is true, the list in this response is truncated. To get more items, pass the value of the ``NextMarker`` element in this response to the ``Marker`` parameter in a subsequent request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.DependencyTimeoutException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidMarkerException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidArnException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+
+  **Examples**
+
+  The following example lists the grants that the specified principal (identity) can retire.
+  ::
+
+    response = client.list_retirable_grants(
+        # The retiring principal whose grants you want to list. Use the Amazon Resource Name (ARN) of a principal such as an AWS account (root), IAM user, federated user, or assumed role user.
+        RetiringPrincipal='arn:aws:iam::111122223333:role/ExampleRole',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        # A list of grants that the specified principal can retire.
+        'Grants': [
+            {
+                'CreationDate': datetime(2016, 12, 7, 11, 9, 35, 2, 342, 0),
+                'GrantId': '0c237476b39f8bc44e45212e08498fbe3151305030726c0590dd8d3e9f3d6a60',
+                'GranteePrincipal': 'arn:aws:iam::111122223333:role/ExampleRole',
+                'IssuingAccount': 'arn:aws:iam::444455556666:root',
+                'KeyId': 'arn:aws:kms:us-east-2:444455556666:key/1234abcd-12ab-34cd-56ef-1234567890ab',
+                'Operations': [
+                    'Decrypt',
+                    'Encrypt',
+                ],
+                'RetiringPrincipal': 'arn:aws:iam::111122223333:role/ExampleRole',
+            },
+        ],
+        # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
+        'Truncated': False,
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

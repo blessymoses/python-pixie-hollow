@@ -1,0 +1,364 @@
+:doc:`Batch <../../batch>` / Client / list_service_jobs
+
+*****************
+list_service_jobs
+*****************
+
+
+
+.. py:method:: Batch.Client.list_service_jobs(**kwargs)
+
+  
+
+  Returns a list of service jobs for a specified job queue.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/ListServiceJobs>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_service_jobs(
+        jobQueue='string',
+        jobStatus='SUBMITTED'|'PENDING'|'RUNNABLE'|'SCHEDULED'|'STARTING'|'RUNNING'|'SUCCEEDED'|'FAILED',
+        maxResults=123,
+        nextToken='string',
+        filters=[
+            {
+                'name': 'string',
+                'values': [
+                    'string',
+                ]
+            },
+        ]
+    )
+    
+  :type jobQueue: string
+  :param jobQueue: 
+
+    The name or ARN of the job queue with which to list service jobs.
+
+    
+
+  
+  :type jobStatus: string
+  :param jobStatus: 
+
+    The job status used to filter service jobs in the specified queue. If the ``filters`` parameter is specified, the ``jobStatus`` parameter is ignored and jobs with any status are returned. The exception is the ``SHARE_IDENTIFIER`` filter and ``jobStatus`` can be used together. If you don't specify a status, only ``RUNNING`` jobs are returned.
+
+     
+
+    .. note::
+
+      
+
+      The ``SHARE_IDENTIFIER`` filter and the ``jobStatus`` field can be used together to filter results.
+
+      
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of results returned by ``ListServiceJobs`` in paginated output. When this parameter is used, ``ListServiceJobs`` only returns ``maxResults`` results in a single page and a ``nextToken`` response element. The remaining results of the initial request can be seen by sending another ``ListServiceJobs`` request with the returned ``nextToken`` value. This value can be between 1 and 100. If this parameter isn't used, then ``ListServiceJobs`` returns up to 100 results and a ``nextToken`` value if applicable.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The ``nextToken`` value returned from a previous paginated ``ListServiceJobs`` request where ``maxResults`` was used and the results exceeded the value of that parameter. Pagination continues from the end of the previous results that returned the ``nextToken`` value. This value is ``null`` when there are no more results to return.
+
+     
+
+    .. note::
+
+      
+
+      Treat this token as an opaque identifier that's only used to retrieve the next items in a list and not for other programmatic purposes.
+
+      
+
+    
+
+  
+  :type filters: list
+  :param filters: 
+
+    The filter to apply to the query. Only one filter can be used at a time. When the filter is used, ``jobStatus`` is ignored with the exception that ``SHARE_IDENTIFIER`` and ``jobStatus`` can be used together. The results are sorted by the ``createdAt`` field, with the most recent jobs being first.
+
+     
+
+    .. note::
+
+      
+
+      The ``SHARE_IDENTIFIER`` filter and the ``jobStatus`` field can be used together to filter results.
+
+      
+
+      JOB_NAME  
+
+    The value of the filter is a case-insensitive match for the job name. If the value ends with an asterisk (*), the filter matches any job name that begins with the string before the '*'. This corresponds to the ``jobName`` value. For example, ``test1`` matches both ``Test1`` and ``test1``, and ``test1*`` matches both ``test1`` and ``Test10``. When the ``JOB_NAME`` filter is used, the results are grouped by the job name and version.
+
+      BEFORE_CREATED_AT  
+
+    The value for the filter is the time that's before the job was created. This corresponds to the ``createdAt`` value. The value is a string representation of the number of milliseconds since 00:00:00 UTC (midnight) on January 1, 1970.
+
+      AFTER_CREATED_AT  
+
+    The value for the filter is the time that's after the job was created. This corresponds to the ``createdAt`` value. The value is a string representation of the number of milliseconds since 00:00:00 UTC (midnight) on January 1, 1970.
+
+      SHARE_IDENTIFIER  
+
+    The value for the filter is the fairshare scheduling share identifier.
+
+    
+
+  
+    - *(dict) --* 
+
+      A filter name and value pair that's used to return a more specific list of results from a ``ListJobs`` or ``ListJobsByConsumableResource`` API operation.
+
+      
+
+    
+      - **name** *(string) --* 
+
+        The name of the filter. Filter names are case sensitive.
+
+        
+
+      
+      - **values** *(list) --* 
+
+        The filter values.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobSummaryList': [
+              {
+                  'latestAttempt': {
+                      'serviceResourceId': {
+                          'name': 'TrainingJobArn',
+                          'value': 'string'
+                      }
+                  },
+                  'capacityUsage': [
+                      {
+                          'capacityUnit': 'string',
+                          'quantity': 123.0
+                      },
+                  ],
+                  'createdAt': 123,
+                  'jobArn': 'string',
+                  'jobId': 'string',
+                  'jobName': 'string',
+                  'scheduledAt': 123,
+                  'serviceJobType': 'SAGEMAKER_TRAINING',
+                  'shareIdentifier': 'string',
+                  'status': 'SUBMITTED'|'PENDING'|'RUNNABLE'|'SCHEDULED'|'STARTING'|'RUNNING'|'SUCCEEDED'|'FAILED',
+                  'statusReason': 'string',
+                  'startedAt': 123,
+                  'stoppedAt': 123
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobSummaryList** *(list) --* 
+
+        A list of service job summaries.
+
+        
+        
+
+        - *(dict) --* 
+
+          Summary information about a service job.
+
+          
+          
+
+          - **latestAttempt** *(dict) --* 
+
+            Information about the latest attempt for the service job.
+
+            
+            
+
+            - **serviceResourceId** *(dict) --* 
+
+              The service resource identifier associated with the service job attempt.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the resource identifier.
+
+                
+              
+
+              - **value** *(string) --* 
+
+                The value of the resource identifier.
+
+                
+          
+        
+          
+
+          - **capacityUsage** *(list) --* 
+
+            The capacity usage information for this service job, including the unit of measure and quantity of resources being used.
+
+            
+            
+
+            - *(dict) --* 
+
+              The capacity usage for a service job, including the unit of measure and quantity of resources being used.
+
+              
+              
+
+              - **capacityUnit** *(string) --* 
+
+                The unit of measure for the service job capacity usage. For service jobs, this is ``NUM_INSTANCES``.
+
+                
+              
+
+              - **quantity** *(float) --* 
+
+                The quantity of capacity being used by the service job, measured in the units specified by ``capacityUnit``.
+
+                
+          
+        
+          
+
+          - **createdAt** *(integer) --* 
+
+            The Unix timestamp (in milliseconds) for when the service job was created.
+
+            
+          
+
+          - **jobArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the service job.
+
+            
+          
+
+          - **jobId** *(string) --* 
+
+            The job ID for the service job.
+
+            
+          
+
+          - **jobName** *(string) --* 
+
+            The name of the service job.
+
+            
+          
+
+          - **scheduledAt** *(integer) --* 
+
+            The Unix timestamp (in milliseconds) for when the service job was scheduled for execution.
+
+            
+          
+
+          - **serviceJobType** *(string) --* 
+
+            The type of service job. For SageMaker Training jobs, this value is ``SAGEMAKER_TRAINING``.
+
+            
+          
+
+          - **shareIdentifier** *(string) --* 
+
+            The share identifier for the job.
+
+            
+          
+
+          - **status** *(string) --* 
+
+            The current status of the service job.
+
+            
+          
+
+          - **statusReason** *(string) --* 
+
+            A short string to provide more details on the current status of the service job.
+
+            
+          
+
+          - **startedAt** *(integer) --* 
+
+            The Unix timestamp (in milliseconds) for when the service job was started.
+
+            
+          
+
+          - **stoppedAt** *(integer) --* 
+
+            The Unix timestamp (in milliseconds) for when the service job stopped running.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The ``nextToken`` value to include in a future ``ListServiceJobs`` request. When the results of a ``ListServiceJobs`` request exceed ``maxResults``, this value can be used to retrieve the next page of results. This value is ``null`` when there are no more results to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Batch.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`Batch.Client.exceptions.ServerException`
+
+  

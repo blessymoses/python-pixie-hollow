@@ -1,0 +1,287 @@
+:doc:`CloudFormation <../../cloudformation>` / Paginator / ListStackSets
+
+*************
+ListStackSets
+*************
+
+
+
+.. py:class:: CloudFormation.Paginator.ListStackSets
+
+  ::
+
+    
+    paginator = client.get_paginator('list_stack_sets')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`CloudFormation.Client.list_stack_sets`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/ListStackSets>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          Status='ACTIVE'|'DELETED',
+          CallAs='SELF'|'DELEGATED_ADMIN',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type Status: string
+    :param Status: 
+
+      The status of the StackSets that you want to get summary information about.
+
+      
+
+    
+    :type CallAs: string
+    :param CallAs: 
+
+      [Service-managed permissions] Specifies whether you are acting as an account administrator in the management account or as a delegated administrator in a member account.
+
+       
+
+      By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+       
+
+      
+      * If you are signed in to the management account, specify ``SELF``.
+       
+      * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+      
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'Summaries': [
+                {
+                    'StackSetName': 'string',
+                    'StackSetId': 'string',
+                    'Description': 'string',
+                    'Status': 'ACTIVE'|'DELETED',
+                    'AutoDeployment': {
+                        'Enabled': True|False,
+                        'RetainStacksOnAccountRemoval': True|False,
+                        'DependsOn': [
+                            'string',
+                        ]
+                    },
+                    'PermissionModel': 'SERVICE_MANAGED'|'SELF_MANAGED',
+                    'DriftStatus': 'DRIFTED'|'IN_SYNC'|'UNKNOWN'|'NOT_CHECKED',
+                    'LastDriftCheckTimestamp': datetime(2015, 1, 1),
+                    'ManagedExecution': {
+                        'Active': True|False
+                    }
+                },
+            ],
+            
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **Summaries** *(list) --* 
+
+          A list of ``StackSetSummary`` structures that contain information about the user's StackSets.
+
+          
+          
+
+          - *(dict) --* 
+
+            The structures that contain summary information about the specified StackSet.
+
+            
+            
+
+            - **StackSetName** *(string) --* 
+
+              The name of the StackSet.
+
+              
+            
+
+            - **StackSetId** *(string) --* 
+
+              The ID of the StackSet.
+
+              
+            
+
+            - **Description** *(string) --* 
+
+              A description of the StackSet that you specify when the StackSet is created or updated.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The status of the StackSet.
+
+              
+            
+
+            - **AutoDeployment** *(dict) --* 
+
+              [Service-managed permissions] Describes whether StackSets automatically deploys to Organizations accounts that are added to a target organizational unit (OU).
+
+              
+              
+
+              - **Enabled** *(boolean) --* 
+
+                If set to ``true``, StackSets automatically deploys additional stack instances to Organizations accounts that are added to a target organization or organizational unit (OU) in the specified Regions. If an account is removed from a target organization or OU, StackSets deletes stack instances from the account in the specified Regions.
+
+                
+              
+
+              - **RetainStacksOnAccountRemoval** *(boolean) --* 
+
+                If set to ``true``, stack resources are retained when an account is removed from a target organization or OU. If set to ``false``, stack resources are deleted. Specify only if ``Enabled`` is set to ``True``.
+
+                
+              
+
+              - **DependsOn** *(list) --* 
+
+                A list of StackSet ARNs that this StackSet depends on for auto-deployment operations. When auto-deployment is triggered, operations will be sequenced to ensure all dependencies complete successfully before this StackSet's operation begins.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+            
+
+            - **PermissionModel** *(string) --* 
+
+              Describes how the IAM roles required for StackSet operations are created.
+
+               
+
+              
+              * With ``self-managed`` permissions, you must create the administrator and execution roles required to deploy to target accounts. For more information, see `Grant self-managed permissions <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs-self-managed.html>`__.
+               
+              * With ``service-managed`` permissions, StackSets automatically creates the IAM roles required to deploy to accounts managed by Organizations. For more information, see `Activate trusted access for StackSets with Organizations <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-activate-trusted-access.html>`__.
+              
+
+              
+            
+
+            - **DriftStatus** *(string) --* 
+
+              Status of the StackSet's actual configuration compared to its expected template and parameter configuration.
+
+               
+
+              
+              * ``DRIFTED``: One or more of the stack instances belonging to the StackSet differs from the expected template and parameter configuration. A stack instance is considered to have drifted if one or more of the resources in the associated stack have drifted.
+               
+              * ``NOT_CHECKED``: CloudFormation hasn't checked the StackSet for drift.
+               
+              * ``IN_SYNC``: All the stack instances belonging to the StackSet match the expected template and parameter configuration.
+               
+              * ``UNKNOWN``: This value is reserved for future use.
+              
+
+              
+            
+
+            - **LastDriftCheckTimestamp** *(datetime) --* 
+
+              Most recent time when CloudFormation performed a drift detection operation on the StackSet. This value will be ``NULL`` for any StackSet that drift detection hasn't yet been performed on.
+
+              
+            
+
+            - **ManagedExecution** *(dict) --* 
+
+              Describes whether StackSets performs non-conflicting operations concurrently and queues conflicting operations.
+
+              
+              
+
+              - **Active** *(boolean) --* 
+
+                When ``true``, CloudFormation performs non-conflicting operations concurrently and queues conflicting operations. After conflicting operations finish, CloudFormation starts queued operations in request order.
+
+                 
+
+                .. note::
+
+                  
+
+                  If there are already running or queued operations, CloudFormation queues all incoming operations even if they are non-conflicting.
+
+                   
+
+                  You can't modify your StackSet's execution configuration while there are running or queued operations for that StackSet.
+
+                  
+
+                 
+
+                When ``false`` (default), StackSets performs one operation at a time in request order.
+
+                
+          
+        
+      
+    

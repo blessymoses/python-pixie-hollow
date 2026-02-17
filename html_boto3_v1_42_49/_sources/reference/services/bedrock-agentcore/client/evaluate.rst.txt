@@ -1,0 +1,312 @@
+:doc:`BedrockAgentCore <../../bedrock-agentcore>` / Client / evaluate
+
+********
+evaluate
+********
+
+
+
+.. py:method:: BedrockAgentCore.Client.evaluate(**kwargs)
+
+  
+
+  Performs on-demand evaluation of agent traces using a specified evaluator. This synchronous API accepts traces in OpenTelemetry format and returns immediate scoring results with detailed explanations.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agentcore-2024-02-28/Evaluate>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.evaluate(
+        evaluatorId='string',
+        evaluationInput={
+            'sessionSpans': [
+                {...}|[...]|123|123.4|'string'|True|None,
+            ]
+        },
+        evaluationTarget={
+            'spanIds': [
+                'string',
+            ],
+            'traceIds': [
+                'string',
+            ]
+        }
+    )
+    
+  :type evaluatorId: string
+  :param evaluatorId: **[REQUIRED]** 
+
+    The unique identifier of the evaluator to use for scoring. Can be a built-in evaluator (e.g., ``Builtin.Helpfulness``, ``Builtin.Correctness``) or a custom evaluator ARN created through the control plane API.
+
+    
+
+  
+  :type evaluationInput: dict
+  :param evaluationInput: **[REQUIRED]** 
+
+    The input data containing agent session spans to be evaluated. Includes a list of spans in OpenTelemetry format from supported frameworks like Strands (AgentCore Runtime) or LangGraph with OpenInference instrumentation.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``sessionSpans``. 
+
+  
+    - **sessionSpans** *(list) --* 
+
+      The collection of spans representing agent execution traces within a session. Each span contains detailed information about tool calls, model interactions, and other agent activities that can be evaluated for quality and performance.
+
+      
+
+    
+      - (:ref:`document<document>`) -- 
+
+      
+  
+  
+  :type evaluationTarget: dict
+  :param evaluationTarget: 
+
+    The specific trace or span IDs to evaluate within the provided input. Allows targeting evaluation at different levels: individual tool calls, single request-response interactions (traces), or entire conversation sessions.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``spanIds``, ``traceIds``. 
+
+  
+    - **spanIds** *(list) --* 
+
+      The list of specific span IDs to evaluate within the provided traces. Used to target evaluation at individual tool calls or specific operations within the agent's execution flow.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **traceIds** *(list) --* 
+
+      The list of trace IDs to evaluate, representing complete request-response interactions. Used to evaluate entire conversation turns or specific agent interactions within a session.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'evaluationResults': [
+              {
+                  'evaluatorArn': 'string',
+                  'evaluatorId': 'string',
+                  'evaluatorName': 'string',
+                  'explanation': 'string',
+                  'context': {
+                      'spanContext': {
+                          'sessionId': 'string',
+                          'traceId': 'string',
+                          'spanId': 'string'
+                      }
+                  },
+                  'value': 123.0,
+                  'label': 'string',
+                  'tokenUsage': {
+                      'inputTokens': 123,
+                      'outputTokens': 123,
+                      'totalTokens': 123
+                  },
+                  'errorMessage': 'string',
+                  'errorCode': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **evaluationResults** *(list) --* 
+
+        The detailed evaluation results containing scores, explanations, and metadata. Includes the evaluator information, numerical or categorical ratings based on the evaluator's rating scale, and token usage statistics for the evaluation process.
+
+        
+        
+
+        - *(dict) --* 
+
+          The comprehensive result of an evaluation containing the score, explanation, evaluator metadata, and execution details. Provides both quantitative ratings and qualitative insights about agent performance.
+
+          
+          
+
+          - **evaluatorArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the evaluator used to generate this result. For custom evaluators, this is the full ARN; for built-in evaluators, this follows the pattern ``Builtin.{EvaluatorName}``.
+
+            
+          
+
+          - **evaluatorId** *(string) --* 
+
+            The unique identifier of the evaluator that produced this result. This matches the ``evaluatorId`` provided in the evaluation request and can be used to identify which evaluator generated specific results.
+
+            
+          
+
+          - **evaluatorName** *(string) --* 
+
+            The human-readable name of the evaluator used for this evaluation. For built-in evaluators, this is the descriptive name (e.g., "Helpfulness", "Correctness"); for custom evaluators, this is the user-defined name.
+
+            
+          
+
+          - **explanation** *(string) --* 
+
+            The detailed explanation provided by the evaluator describing the reasoning behind the assigned score. This qualitative feedback helps understand why specific ratings were given and provides actionable insights for improvement.
+
+            
+          
+
+          - **context** *(dict) --* 
+
+            The contextual information associated with this evaluation result, including span context details that identify the specific traces and sessions that were evaluated.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``spanContext``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **spanContext** *(dict) --* 
+
+              The span context information that uniquely identifies the trace and span being evaluated, including session ID, trace ID, and span ID for precise targeting within the agent's execution flow.
+
+              
+              
+
+              - **sessionId** *(string) --* 
+
+                The unique identifier of the session containing this span. Sessions represent complete conversation flows and are detected using configurable ``SessionTimeoutMinutes`` (default 15 minutes).
+
+                
+              
+
+              - **traceId** *(string) --* 
+
+                The unique identifier of the trace containing this span. Traces represent individual request-response interactions within a session and group related spans together.
+
+                
+              
+
+              - **spanId** *(string) --* 
+
+                The unique identifier of the specific span being referenced. Spans represent individual operations like tool calls, model invocations, or other discrete actions within the agent's execution.
+
+                
+          
+        
+          
+
+          - **value** *(float) --* 
+
+            The numerical score assigned by the evaluator according to its configured rating scale. For numerical scales, this is a decimal value within the defined range. This field is not allowed for categorical scales.
+
+            
+          
+
+          - **label** *(string) --* 
+
+            The categorical label assigned by the evaluator when using a categorical rating scale. This provides a human-readable description of the evaluation result (e.g., "Excellent", "Good", "Poor") corresponding to the numerical value. For numerical scales, this field is optional and provides a natural language explanation of what the value means (e.g., value 0.5 = "Somewhat Helpful").
+
+            
+          
+
+          - **tokenUsage** *(dict) --* 
+
+            The token consumption statistics for this evaluation, including input tokens, output tokens, and total tokens used by the underlying language model during the evaluation process.
+
+            
+            
+
+            - **inputTokens** *(integer) --* 
+
+              The number of tokens consumed for input processing during the evaluation. Includes tokens from the evaluation prompt, agent traces, and any additional context provided to the evaluator model.
+
+              
+            
+
+            - **outputTokens** *(integer) --* 
+
+              The number of tokens generated by the evaluator model in its response. Includes tokens for the score, explanation, and any additional output produced during the evaluation process.
+
+              
+            
+
+            - **totalTokens** *(integer) --* 
+
+              The total number of tokens consumed during the evaluation, calculated as the sum of input and output tokens. Used for cost calculation and rate limiting within the service limits.
+
+              
+        
+          
+
+          - **errorMessage** *(string) --* 
+
+            The error message describing what went wrong if the evaluation failed. Provides detailed information about evaluation failures to help diagnose and resolve issues with evaluator configuration or input data.
+
+            
+          
+
+          - **errorCode** *(string) --* 
+
+            The error code indicating the type of failure that occurred during evaluation. Used to programmatically identify and handle different categories of evaluation errors.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.DuplicateIdException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.InternalServerException`
+
+  

@@ -1,0 +1,150 @@
+:doc:`DynamoDBStreams <../../dynamodbstreams>` / Client / get_shard_iterator
+
+******************
+get_shard_iterator
+******************
+
+
+
+.. py:method:: DynamoDBStreams.Client.get_shard_iterator(**kwargs)
+
+  
+
+  Returns a shard iterator. A shard iterator provides information about how to retrieve the stream records from within a shard. Use the shard iterator in a subsequent ``GetRecords`` request to read the stream records from the shard.
+
+   
+
+  .. note::
+
+    
+
+    A shard iterator expires 15 minutes after it is returned to the requester.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/streams-dynamodb-2012-08-10/GetShardIterator>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_shard_iterator(
+        StreamArn='string',
+        ShardId='string',
+        ShardIteratorType='TRIM_HORIZON'|'LATEST'|'AT_SEQUENCE_NUMBER'|'AFTER_SEQUENCE_NUMBER',
+        SequenceNumber='string'
+    )
+    
+  :type StreamArn: string
+  :param StreamArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) for the stream.
+
+    
+
+  
+  :type ShardId: string
+  :param ShardId: **[REQUIRED]** 
+
+    The identifier of the shard. The iterator will be returned for this shard ID.
+
+    
+
+  
+  :type ShardIteratorType: string
+  :param ShardIteratorType: **[REQUIRED]** 
+
+    Determines how the shard iterator is used to start reading stream records from the shard:
+
+     
+
+    
+    * ``AT_SEQUENCE_NUMBER`` - Start reading exactly from the position denoted by a specific sequence number.
+     
+    * ``AFTER_SEQUENCE_NUMBER`` - Start reading right after the position denoted by a specific sequence number.
+     
+    * ``TRIM_HORIZON`` - Start reading at the last (untrimmed) stream record, which is the oldest record in the shard. In DynamoDB Streams, there is a 24 hour limit on data retention. Stream records whose age exceeds this limit are subject to removal (trimming) from the stream.
+     
+    * ``LATEST`` - Start reading just after the most recent stream record in the shard, so that you always read the most recent data in the shard.
+    
+
+    
+
+  
+  :type SequenceNumber: string
+  :param SequenceNumber: 
+
+    The sequence number of a stream record in the shard from which to start reading.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ShardIterator': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the output of a ``GetShardIterator`` operation.
+
+      
+      
+
+      - **ShardIterator** *(string) --* 
+
+        The position in the shard from which to start reading stream records sequentially. A shard iterator specifies this position using the sequence number of a stream record in a shard.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`DynamoDBStreams.Client.exceptions.TrimmedDataAccessException`
+
+  
+
+  **Examples**
+
+  The following example returns a shard iterator for the provided stream ARN and shard ID.
+  ::
+
+    response = client.get_shard_iterator(
+        ShardId='00000001414576573621-f55eea83',
+        ShardIteratorType='TRIM_HORIZON',
+        StreamArn='arn:aws:dynamodb:us-west-2:111122223333:table/Forum/stream/2015-05-20T20:51:10.252',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ShardIterator': 'arn:aws:dynamodb:us-west-2:111122223333:table/Forum/stream/2015-05-20T20:51:10.252|1|AAAAAAAAAAEvJp6D+zaQ...  <remaining characters omitted> ...',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

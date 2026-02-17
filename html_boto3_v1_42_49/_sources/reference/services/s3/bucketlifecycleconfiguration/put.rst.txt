@@ -1,0 +1,705 @@
+:doc:`BucketLifecycleConfiguration <index>` / Action / put
+
+***
+put
+***
+
+
+
+.. py:method:: S3.BucketLifecycleConfiguration.put(**kwargs)
+
+  
+
+  Creates a new lifecycle configuration for the bucket or replaces an existing lifecycle configuration. Keep in mind that this will overwrite an existing lifecycle configuration, so if you want to retain any configuration details, they must be included in the new lifecycle configuration. For information about lifecycle configuration, see `Managing your storage lifecycle <https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    Bucket lifecycle configuration now supports specifying a lifecycle rule using an object key name prefix, one or more object tags, object size, or any combination of these. Accordingly, this section describes the latest API. The previous version of the API supported filtering based only on an object key name prefix, which is supported for backward compatibility. For the related API description, see `PutBucketLifecycle <https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLifecycle.html>`__.
+
+    
+
+    Rules  
+
+  You specify the lifecycle configuration in your request body. The lifecycle configuration is specified as XML consisting of one or more rules. An Amazon S3 Lifecycle configuration can have up to 1,000 rules. This limit is not adjustable.
+
+   
+
+  Bucket lifecycle configuration supports specifying a lifecycle rule using an object key name prefix, one or more object tags, object size, or any combination of these. Accordingly, this section describes the latest API. The previous version of the API supported filtering based only on an object key name prefix, which is supported for backward compatibility for general purpose buckets. For the related API description, see `PutBucketLifecycle <https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLifecycle.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    Lifecyle configurations for directory buckets only support expiring objects and cancelling multipart uploads. Expiring of versioned objects,transitions and tag filters are not supported.
+
+    
+
+   
+
+  A lifecycle rule consists of the following:
+
+   
+
+  
+  * A filter identifying a subset of objects to which the rule applies. The filter can be based on a key name prefix, object tags, object size, or any combination of these.
+   
+  * A status indicating whether the rule is in effect.
+   
+  * One or more lifecycle transition and expiration actions that you want Amazon S3 to perform on the objects identified by the filter. If the state of your bucket is versioning-enabled or versioning-suspended, you can have many versions of the same object (one current version and zero or more noncurrent versions). Amazon S3 provides predefined actions that you can specify for current and noncurrent object versions.
+  
+
+   
+
+  For more information, see `Object Lifecycle Management <https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html>`__ and `Lifecycle Configuration Elements <https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html>`__.
+
+    Permissions  
+
+  
+  * **General purpose bucket permissions** - By default, all Amazon S3 resources are private, including buckets, objects, and related subresources (for example, lifecycle configuration and website configuration). Only the resource owner (that is, the Amazon Web Services account that created it) can access the resource. The resource owner can optionally grant access permissions to others by writing an access policy. For this operation, a user must have the ``s3:PutLifecycleConfiguration`` permission. You can also explicitly deny permissions. An explicit deny also supersedes any other permissions. If you want to block users or accounts from removing or deleting objects from your bucket, you must deny them permissions for the following actions: 
+
+    
+    * ``s3:DeleteObject``
+     
+    * ``s3:DeleteObjectVersion``
+     
+    * ``s3:PutLifecycleConfiguration`` For more information about permissions, see `Managing Access Permissions to Your Amazon S3 Resources <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-access-control.html>`__.
+    
+
+  
+  
+
+   
+
+  
+  * **Directory bucket permissions** - You must have the ``s3express:PutLifecycleConfiguration`` permission in an IAM identity-based policy to use this operation. Cross-account access to this API operation isn't supported. The resource owner can optionally grant access permissions to others by creating a role or user for them as long as they are within the same account as the owner and resource. For more information about directory bucket policies and permissions, see `Authorizing Regional endpoint APIs with IAM <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-security-iam.html>`__ in the *Amazon S3 User Guide*. 
+
+  .. note::
+
+    **Directory buckets** - For directory buckets, you must make requests for this API operation to the Regional endpoint. These endpoints support path-style requests in the format ``https://s3express-control.region-code.amazonaws.com/bucket-name ``. Virtual-hosted-style requests aren't supported. For more information about endpoints in Availability Zones, see `Regional and Zonal endpoints for directory buckets in Availability Zones <https://docs.aws.amazon.com/AmazonS3/latest/userguide/endpoint-directory-buckets-AZ.html>`__ in the *Amazon S3 User Guide*. For more information about endpoints in Local Zones, see `Concepts for directory buckets in Local Zones <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-lzs-for-directory-buckets.html>`__ in the *Amazon S3 User Guide*.
+
+  
+  
+
+    HTTP Host header syntax  
+
+  **Directory buckets** - The HTTP Host header syntax is ``s3express-control.region.amazonaws.com``.
+
+   
+
+  The following operations are related to ``PutBucketLifecycleConfiguration``:
+
+   
+
+  
+  * `GetBucketLifecycleConfiguration <https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLifecycleConfiguration.html>`__
+   
+  * `DeleteBucketLifecycle <https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucketLifecycle.html>`__
+  
+
+     
+
+  .. warning::
+
+     
+
+    You must URL encode any signed header values that contain spaces. For example, if your header value is ``my file.txt``, containing two spaces after ``my``, you must URL encode this value to ``my%20%20file.txt``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/PutBucketLifecycleConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = bucket_lifecycle_configuration.put(
+        ChecksumAlgorithm='CRC32'|'CRC32C'|'SHA1'|'SHA256'|'CRC64NVME',
+        LifecycleConfiguration={
+            'Rules': [
+                {
+                    'Expiration': {
+                        'Date': datetime(2015, 1, 1),
+                        'Days': 123,
+                        'ExpiredObjectDeleteMarker': True|False
+                    },
+                    'ID': 'string',
+                    'Prefix': 'string',
+                    'Filter': {
+                        'Prefix': 'string',
+                        'Tag': {
+                            'Key': 'string',
+                            'Value': 'string'
+                        },
+                        'ObjectSizeGreaterThan': 123,
+                        'ObjectSizeLessThan': 123,
+                        'And': {
+                            'Prefix': 'string',
+                            'Tags': [
+                                {
+                                    'Key': 'string',
+                                    'Value': 'string'
+                                },
+                            ],
+                            'ObjectSizeGreaterThan': 123,
+                            'ObjectSizeLessThan': 123
+                        }
+                    },
+                    'Status': 'Enabled'|'Disabled',
+                    'Transitions': [
+                        {
+                            'Date': datetime(2015, 1, 1),
+                            'Days': 123,
+                            'StorageClass': 'GLACIER'|'STANDARD_IA'|'ONEZONE_IA'|'INTELLIGENT_TIERING'|'DEEP_ARCHIVE'|'GLACIER_IR'
+                        },
+                    ],
+                    'NoncurrentVersionTransitions': [
+                        {
+                            'NoncurrentDays': 123,
+                            'StorageClass': 'GLACIER'|'STANDARD_IA'|'ONEZONE_IA'|'INTELLIGENT_TIERING'|'DEEP_ARCHIVE'|'GLACIER_IR',
+                            'NewerNoncurrentVersions': 123
+                        },
+                    ],
+                    'NoncurrentVersionExpiration': {
+                        'NoncurrentDays': 123,
+                        'NewerNoncurrentVersions': 123
+                    },
+                    'AbortIncompleteMultipartUpload': {
+                        'DaysAfterInitiation': 123
+                    }
+                },
+            ]
+        },
+        ExpectedBucketOwner='string',
+        TransitionDefaultMinimumObjectSize='varies_by_storage_class'|'all_storage_classes_128K'
+    )
+    
+  :type ChecksumAlgorithm: string
+  :param ChecksumAlgorithm: 
+
+    Indicates the algorithm used to create the checksum for the request when you use the SDK. This header will not provide any additional functionality if you don't use the SDK. When you send this header, there must be a corresponding ``x-amz-checksum`` or ``x-amz-trailer`` header sent. Otherwise, Amazon S3 fails the request with the HTTP status code ``400 Bad Request``. For more information, see `Checking object integrity <https://docs.aws.amazon.com/AmazonS3/latest/userguide/checking-object-integrity.html>`__ in the *Amazon S3 User Guide*.
+
+     
+
+    If you provide an individual checksum, Amazon S3 ignores any provided ``ChecksumAlgorithm`` parameter.
+
+    
+
+  
+  :type LifecycleConfiguration: dict
+  :param LifecycleConfiguration: 
+
+    Container for lifecycle rules. You can add as many as 1,000 rules.
+
+    
+
+  
+    - **Rules** *(list) --* **[REQUIRED]** 
+
+      A lifecycle rule for individual objects in an Amazon S3 bucket.
+
+      
+
+    
+      - *(dict) --* 
+
+        A lifecycle rule for individual objects in an Amazon S3 bucket.
+
+         
+
+        For more information see, `Managing your storage lifecycle <https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html>`__ in the *Amazon S3 User Guide*.
+
+        
+
+      
+        - **Expiration** *(dict) --* 
+
+          Specifies the expiration for the lifecycle of the object in the form of date, days and, whether the object has a delete marker.
+
+          
+
+        
+          - **Date** *(datetime) --* 
+
+            Indicates at what date the object is to be moved or deleted. The date value must conform to the ISO 8601 format. The time is always midnight UTC.
+
+             
+
+            .. note::
+
+              
+
+              This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+              
+
+            
+
+          
+          - **Days** *(integer) --* 
+
+            Indicates the lifetime, in days, of the objects that are subject to the rule. The value must be a non-zero positive integer.
+
+            
+
+          
+          - **ExpiredObjectDeleteMarker** *(boolean) --* 
+
+            Indicates whether Amazon S3 will remove a delete marker with no noncurrent versions. If set to true, the delete marker will be expired; if set to false the policy takes no action. This cannot be specified with Days or Date in a Lifecycle Expiration Policy.
+
+             
+
+            .. note::
+
+              
+
+              This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+              
+
+            
+
+          
+        
+        - **ID** *(string) --* 
+
+          Unique identifier for the rule. The value cannot be longer than 255 characters.
+
+          
+
+        
+        - **Prefix** *(string) --* 
+
+          The general purpose bucket prefix that identifies one or more objects to which the rule applies. We recommend using ``Filter`` instead of ``Prefix`` for new PUTs. Previous configurations where a prefix is defined will continue to operate as before.
+
+           
+
+          .. warning::
+
+             
+
+            Replacement must be made for object keys containing special characters (such as carriage returns) when using XML requests. For more information, see `XML related object key constraints <https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html#object-key-xml-related-constraints>`__.
+
+            
+
+          
+
+        
+        - **Filter** *(dict) --* 
+
+          The ``Filter`` is used to identify objects that a Lifecycle Rule applies to. A ``Filter`` must have exactly one of ``Prefix``, ``Tag``, ``ObjectSizeGreaterThan``, ``ObjectSizeLessThan``, or ``And`` specified. ``Filter`` is required if the ``LifecycleRule`` does not contain a ``Prefix`` element.
+
+           
+
+          For more information about ``Tag`` filters, see `Adding filters to Lifecycle rules <https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-filters.html>`__ in the *Amazon S3 User Guide*.
+
+           
+
+          .. note::
+
+            
+
+            ``Tag`` filters are not supported for directory buckets.
+
+            
+
+          
+
+        
+          - **Prefix** *(string) --* 
+
+            Prefix identifying one or more objects to which the rule applies.
+
+             
+
+            .. warning::
+
+               
+
+              Replacement must be made for object keys containing special characters (such as carriage returns) when using XML requests. For more information, see `XML related object key constraints <https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html#object-key-xml-related-constraints>`__.
+
+              
+
+            
+
+          
+          - **Tag** *(dict) --* 
+
+            This tag must exist in the object's tag set in order for the rule to apply.
+
+             
+
+            .. note::
+
+              
+
+              This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+              
+
+            
+
+          
+            - **Key** *(string) --* **[REQUIRED]** 
+
+              Name of the object key.
+
+              
+
+            
+            - **Value** *(string) --* **[REQUIRED]** 
+
+              Value of the tag.
+
+              
+
+            
+          
+          - **ObjectSizeGreaterThan** *(integer) --* 
+
+            Minimum object size to which the rule applies.
+
+            
+
+          
+          - **ObjectSizeLessThan** *(integer) --* 
+
+            Maximum object size to which the rule applies.
+
+            
+
+          
+          - **And** *(dict) --* 
+
+            This is used in a Lifecycle Rule Filter to apply a logical AND to two or more predicates. The Lifecycle Rule will apply to any object matching all of the predicates configured inside the And operator.
+
+            
+
+          
+            - **Prefix** *(string) --* 
+
+              Prefix identifying one or more objects to which the rule applies.
+
+              
+
+            
+            - **Tags** *(list) --* 
+
+              All of these tags must exist in the object's tag set in order for the rule to apply.
+
+              
+
+            
+              - *(dict) --* 
+
+                A container of a key value name pair.
+
+                
+
+              
+                - **Key** *(string) --* **[REQUIRED]** 
+
+                  Name of the object key.
+
+                  
+
+                
+                - **Value** *(string) --* **[REQUIRED]** 
+
+                  Value of the tag.
+
+                  
+
+                
+              
+          
+            - **ObjectSizeGreaterThan** *(integer) --* 
+
+              Minimum object size to which the rule applies.
+
+              
+
+            
+            - **ObjectSizeLessThan** *(integer) --* 
+
+              Maximum object size to which the rule applies.
+
+              
+
+            
+          
+        
+        - **Status** *(string) --* **[REQUIRED]** 
+
+          If 'Enabled', the rule is currently being applied. If 'Disabled', the rule is not currently being applied.
+
+          
+
+        
+        - **Transitions** *(list) --* 
+
+          Specifies when an Amazon S3 object transitions to a specified storage class.
+
+           
+
+          .. note::
+
+            
+
+            This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+            
+
+          
+
+        
+          - *(dict) --* 
+
+            Specifies when an object transitions to a specified storage class. For more information about Amazon S3 lifecycle configuration rules, see `Transitioning Objects Using Amazon S3 Lifecycle <https://docs.aws.amazon.com/AmazonS3/latest/dev/lifecycle-transition-general-considerations.html>`__ in the *Amazon S3 User Guide*.
+
+            
+
+          
+            - **Date** *(datetime) --* 
+
+              Indicates when objects are transitioned to the specified storage class. The date value must be in ISO 8601 format. The time is always midnight UTC.
+
+              
+
+            
+            - **Days** *(integer) --* 
+
+              Indicates the number of days after creation when objects are transitioned to the specified storage class. If the specified storage class is ``INTELLIGENT_TIERING``, ``GLACIER_IR``, ``GLACIER``, or ``DEEP_ARCHIVE``, valid values are ``0`` or positive integers. If the specified storage class is ``STANDARD_IA`` or ``ONEZONE_IA``, valid values are positive integers greater than ``30``. Be aware that some storage classes have a minimum storage duration and that you're charged for transitioning objects before their minimum storage duration. For more information, see `Constraints and considerations for transitions <https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html#lifecycle-configuration-constraints>`__ in the *Amazon S3 User Guide*.
+
+              
+
+            
+            - **StorageClass** *(string) --* 
+
+              The storage class to which you want the object to transition.
+
+              
+
+            
+          
+      
+        - **NoncurrentVersionTransitions** *(list) --* 
+
+          Specifies the transition rule for the lifecycle rule that describes when noncurrent objects transition to a specific storage class. If your bucket is versioning-enabled (or versioning is suspended), you can set this action to request that Amazon S3 transition noncurrent object versions to a specific storage class at a set period in the object's lifetime.
+
+           
+
+          .. note::
+
+            
+
+            This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+            
+
+          
+
+        
+          - *(dict) --* 
+
+            Container for the transition rule that describes when noncurrent objects transition to the ``STANDARD_IA``, ``ONEZONE_IA``, ``INTELLIGENT_TIERING``, ``GLACIER_IR``, ``GLACIER``, or ``DEEP_ARCHIVE`` storage class. If your bucket is versioning-enabled (or versioning is suspended), you can set this action to request that Amazon S3 transition noncurrent object versions to the ``STANDARD_IA``, ``ONEZONE_IA``, ``INTELLIGENT_TIERING``, ``GLACIER_IR``, ``GLACIER``, or ``DEEP_ARCHIVE`` storage class at a specific period in the object's lifetime.
+
+            
+
+          
+            - **NoncurrentDays** *(integer) --* 
+
+              Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For information about the noncurrent days calculations, see `How Amazon S3 Calculates How Long an Object Has Been Noncurrent <https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations>`__ in the *Amazon S3 User Guide*.
+
+              
+
+            
+            - **StorageClass** *(string) --* 
+
+              The class of storage used to store the object.
+
+              
+
+            
+            - **NewerNoncurrentVersions** *(integer) --* 
+
+              Specifies how many noncurrent versions Amazon S3 will retain in the same storage class before transitioning objects. You can specify up to 100 noncurrent versions to retain. Amazon S3 will transition any additional noncurrent versions beyond the specified number to retain. For more information about noncurrent versions, see `Lifecycle configuration elements <https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html>`__ in the *Amazon S3 User Guide*.
+
+              
+
+            
+          
+      
+        - **NoncurrentVersionExpiration** *(dict) --* 
+
+          Specifies when noncurrent object versions expire. Upon expiration, Amazon S3 permanently deletes the noncurrent object versions. You set this lifecycle configuration action on a bucket that has versioning enabled (or suspended) to request that Amazon S3 delete noncurrent object versions at a specific period in the object's lifetime.
+
+           
+
+          .. note::
+
+            
+
+            This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+            
+
+          
+
+        
+          - **NoncurrentDays** *(integer) --* 
+
+            Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. The value must be a non-zero positive integer. For information about the noncurrent days calculations, see `How Amazon S3 Calculates When an Object Became Noncurrent <https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations>`__ in the *Amazon S3 User Guide*.
+
+             
+
+            .. note::
+
+              
+
+              This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+              
+
+            
+
+          
+          - **NewerNoncurrentVersions** *(integer) --* 
+
+            Specifies how many noncurrent versions Amazon S3 will retain. You can specify up to 100 noncurrent versions to retain. Amazon S3 will permanently delete any additional noncurrent versions beyond the specified number to retain. For more information about noncurrent versions, see `Lifecycle configuration elements <https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html>`__ in the *Amazon S3 User Guide*.
+
+             
+
+            .. note::
+
+              
+
+              This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+              
+
+            
+
+          
+        
+        - **AbortIncompleteMultipartUpload** *(dict) --* 
+
+          Specifies the days since the initiation of an incomplete multipart upload that Amazon S3 will wait before permanently removing all parts of the upload. For more information, see `Aborting Incomplete Multipart Uploads Using a Bucket Lifecycle Configuration <https://docs.aws.amazon.com/AmazonS3/latest/dev/mpuoverview.html#mpu-abort-incomplete-mpu-lifecycle-config>`__ in the *Amazon S3 User Guide*.
+
+          
+
+        
+          - **DaysAfterInitiation** *(integer) --* 
+
+            Specifies the number of days after which Amazon S3 aborts an incomplete multipart upload.
+
+            
+
+          
+        
+      
+  
+  
+  :type ExpectedBucketOwner: string
+  :param ExpectedBucketOwner: 
+
+    The account ID of the expected bucket owner. If the account ID that you provide does not match the actual owner of the bucket, the request fails with the HTTP status code ``403 Forbidden`` (access denied).
+
+     
+
+    .. note::
+
+      
+
+      This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+      
+
+    
+
+  
+  :type TransitionDefaultMinimumObjectSize: string
+  :param TransitionDefaultMinimumObjectSize: 
+
+    Indicates which default minimum object size behavior is applied to the lifecycle configuration.
+
+     
+
+    .. note::
+
+      
+
+      This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+      
+
+     
+
+    
+    * ``all_storage_classes_128K`` - Objects smaller than 128 KB will not transition to any storage class by default.
+     
+    * ``varies_by_storage_class`` - Objects smaller than 128 KB will transition to Glacier Flexible Retrieval or Glacier Deep Archive storage classes. By default, all other storage classes will prevent transitions smaller than 128 KB.
+    
+
+     
+
+    To customize the minimum object size for any transition you can add a filter that specifies a custom ``ObjectSizeGreaterThan`` or ``ObjectSizeLessThan`` in the body of your transition rule. Custom filters always take precedence over the default transition behavior.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'TransitionDefaultMinimumObjectSize': 'varies_by_storage_class'|'all_storage_classes_128K'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **TransitionDefaultMinimumObjectSize** *(string) --* 
+
+        Indicates which default minimum object size behavior is applied to the lifecycle configuration.
+
+         
+
+        .. note::
+
+          
+
+          This parameter applies to general purpose buckets only. It is not supported for directory bucket lifecycle configurations.
+
+          
+
+         
+
+        
+        * ``all_storage_classes_128K`` - Objects smaller than 128 KB will not transition to any storage class by default.
+         
+        * ``varies_by_storage_class`` - Objects smaller than 128 KB will transition to Glacier Flexible Retrieval or Glacier Deep Archive storage classes. By default, all other storage classes will prevent transitions smaller than 128 KB.
+        
+
+         
+
+        To customize the minimum object size for any transition you can add a filter that specifies a custom ``ObjectSizeGreaterThan`` or ``ObjectSizeLessThan`` in the body of your transition rule. Custom filters always take precedence over the default transition behavior.
+
+        
+  

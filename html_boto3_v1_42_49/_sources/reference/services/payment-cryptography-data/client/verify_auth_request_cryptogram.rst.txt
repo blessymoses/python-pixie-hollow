@@ -1,0 +1,379 @@
+:doc:`PaymentCryptographyDataPlane <../../payment-cryptography-data>` / Client / verify_auth_request_cryptogram
+
+******************************
+verify_auth_request_cryptogram
+******************************
+
+
+
+.. py:method:: PaymentCryptographyDataPlane.Client.verify_auth_request_cryptogram(**kwargs)
+
+  
+
+  Verifies Authorization Request Cryptogram (ARQC) for a EMV chip payment card authorization. For more information, see `Verify auth request cryptogram <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/data-operations.verifyauthrequestcryptogram.html>`__ in the *Amazon Web Services Payment Cryptography User Guide*.
+
+   
+
+  ARQC generation is done outside of Amazon Web Services Payment Cryptography and is typically generated on a point of sale terminal for an EMV chip card to obtain payment authorization during transaction time. For ARQC verification, you must first import the ARQC generated outside of Amazon Web Services Payment Cryptography by calling `ImportKey <https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html>`__. This operation uses the imported ARQC and an major encryption key (DUKPT) created by calling `CreateKey <https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html>`__ to either provide a boolean ARQC verification result or provide an APRC (Authorization Response Cryptogram) response using Method 1 or Method 2. The ``ARPC_METHOD_1`` uses ``AuthResponseCode`` to generate ARPC and ``ARPC_METHOD_2`` uses ``CardStatusUpdate`` to generate ARPC.
+
+   
+
+  For information about valid keys for this operation, see `Understanding key attributes <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html>`__ and `Key types for specific data operations <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html>`__ in the *Amazon Web Services Payment Cryptography User Guide*.
+
+   
+
+  **Cross-account use**: This operation can't be used across different Amazon Web Services accounts.
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  VerifyCardValidationData
+   
+  *  VerifyPinData
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-data-2022-02-03/VerifyAuthRequestCryptogram>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.verify_auth_request_cryptogram(
+        KeyIdentifier='string',
+        TransactionData='string',
+        AuthRequestCryptogram='string',
+        MajorKeyDerivationMode='EMV_OPTION_A'|'EMV_OPTION_B',
+        SessionKeyDerivationAttributes={
+            'EmvCommon': {
+                'PrimaryAccountNumber': 'string',
+                'PanSequenceNumber': 'string',
+                'ApplicationTransactionCounter': 'string'
+            },
+            'Mastercard': {
+                'PrimaryAccountNumber': 'string',
+                'PanSequenceNumber': 'string',
+                'ApplicationTransactionCounter': 'string',
+                'UnpredictableNumber': 'string'
+            },
+            'Emv2000': {
+                'PrimaryAccountNumber': 'string',
+                'PanSequenceNumber': 'string',
+                'ApplicationTransactionCounter': 'string'
+            },
+            'Amex': {
+                'PrimaryAccountNumber': 'string',
+                'PanSequenceNumber': 'string'
+            },
+            'Visa': {
+                'PrimaryAccountNumber': 'string',
+                'PanSequenceNumber': 'string'
+            }
+        },
+        AuthResponseAttributes={
+            'ArpcMethod1': {
+                'AuthResponseCode': 'string'
+            },
+            'ArpcMethod2': {
+                'CardStatusUpdate': 'string',
+                'ProprietaryAuthenticationData': 'string'
+            }
+        }
+    )
+    
+  :type KeyIdentifier: string
+  :param KeyIdentifier: **[REQUIRED]** 
+
+    The ``keyARN`` of the major encryption key that Amazon Web Services Payment Cryptography uses for ARQC verification.
+
+    
+
+  
+  :type TransactionData: string
+  :param TransactionData: **[REQUIRED]** 
+
+    The transaction data that Amazon Web Services Payment Cryptography uses for ARQC verification. The same transaction is used for ARQC generation outside of Amazon Web Services Payment Cryptography.
+
+    
+
+  
+  :type AuthRequestCryptogram: string
+  :param AuthRequestCryptogram: **[REQUIRED]** 
+
+    The auth request cryptogram imported into Amazon Web Services Payment Cryptography for ARQC verification using a major encryption key and transaction data.
+
+    
+
+  
+  :type MajorKeyDerivationMode: string
+  :param MajorKeyDerivationMode: **[REQUIRED]** 
+
+    The method to use when deriving the major encryption key for ARQC verification within Amazon Web Services Payment Cryptography. The same key derivation mode was used for ARQC generation outside of Amazon Web Services Payment Cryptography.
+
+    
+
+  
+  :type SessionKeyDerivationAttributes: dict
+  :param SessionKeyDerivationAttributes: **[REQUIRED]** 
+
+    The attributes and values to use for deriving a session key for ARQC verification within Amazon Web Services Payment Cryptography. The same attributes were used for ARQC generation outside of Amazon Web Services Payment Cryptography.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``EmvCommon``, ``Mastercard``, ``Emv2000``, ``Amex``, ``Visa``. 
+
+  
+    - **EmvCommon** *(dict) --* 
+
+      Parameters to derive session key for an Emv common payment card for ARQC verification.
+
+      
+
+    
+      - **PrimaryAccountNumber** *(string) --* **[REQUIRED]** 
+
+        The Primary Account Number (PAN) of the cardholder. A PAN is a unique identifier for a payment credit or debit card and associates the card to a specific account holder.
+
+        
+
+      
+      - **PanSequenceNumber** *(string) --* **[REQUIRED]** 
+
+        A number that identifies and differentiates payment cards with the same Primary Account Number (PAN).
+
+        
+
+      
+      - **ApplicationTransactionCounter** *(string) --* **[REQUIRED]** 
+
+        The transaction counter that is provided by the terminal during transaction processing.
+
+        
+
+      
+    
+    - **Mastercard** *(dict) --* 
+
+      Parameters to derive session key for a Mastercard payment card for ARQC verification.
+
+      
+
+    
+      - **PrimaryAccountNumber** *(string) --* **[REQUIRED]** 
+
+        The Primary Account Number (PAN) of the cardholder. A PAN is a unique identifier for a payment credit or debit card and associates the card to a specific account holder.
+
+        
+
+      
+      - **PanSequenceNumber** *(string) --* **[REQUIRED]** 
+
+        A number that identifies and differentiates payment cards with the same Primary Account Number (PAN).
+
+        
+
+      
+      - **ApplicationTransactionCounter** *(string) --* **[REQUIRED]** 
+
+        The transaction counter that is provided by the terminal during transaction processing.
+
+        
+
+      
+      - **UnpredictableNumber** *(string) --* **[REQUIRED]** 
+
+        A random number generated by the issuer.
+
+        
+
+      
+    
+    - **Emv2000** *(dict) --* 
+
+      Parameters to derive session key for an Emv2000 payment card for ARQC verification.
+
+      
+
+    
+      - **PrimaryAccountNumber** *(string) --* **[REQUIRED]** 
+
+        The Primary Account Number (PAN) of the cardholder. A PAN is a unique identifier for a payment credit or debit card and associates the card to a specific account holder.
+
+        
+
+      
+      - **PanSequenceNumber** *(string) --* **[REQUIRED]** 
+
+        A number that identifies and differentiates payment cards with the same Primary Account Number (PAN).
+
+        
+
+      
+      - **ApplicationTransactionCounter** *(string) --* **[REQUIRED]** 
+
+        The transaction counter that is provided by the terminal during transaction processing.
+
+        
+
+      
+    
+    - **Amex** *(dict) --* 
+
+      Parameters to derive session key for an Amex payment card for ARQC verification.
+
+      
+
+    
+      - **PrimaryAccountNumber** *(string) --* **[REQUIRED]** 
+
+        The Primary Account Number (PAN) of the cardholder. A PAN is a unique identifier for a payment credit or debit card and associates the card to a specific account holder.
+
+        
+
+      
+      - **PanSequenceNumber** *(string) --* **[REQUIRED]** 
+
+        A number that identifies and differentiates payment cards with the same Primary Account Number (PAN).
+
+        
+
+      
+    
+    - **Visa** *(dict) --* 
+
+      Parameters to derive session key for a Visa payment cardfor ARQC verification.
+
+      
+
+    
+      - **PrimaryAccountNumber** *(string) --* **[REQUIRED]** 
+
+        The Primary Account Number (PAN) of the cardholder. A PAN is a unique identifier for a payment credit or debit card and associates the card to a specific account holder.
+
+        
+
+      
+      - **PanSequenceNumber** *(string) --* **[REQUIRED]** 
+
+        A number that identifies and differentiates payment cards with the same Primary Account Number (PAN).
+
+        
+
+      
+    
+  
+  :type AuthResponseAttributes: dict
+  :param AuthResponseAttributes: 
+
+    The attributes and values for auth request cryptogram verification. These parameters are required in case using ARPC Method 1 or Method 2 for ARQC verification.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``ArpcMethod1``, ``ArpcMethod2``. 
+
+  
+    - **ArpcMethod1** *(dict) --* 
+
+      Parameters that are required for ARPC response generation using method1 after ARQC verification is successful.
+
+      
+
+    
+      - **AuthResponseCode** *(string) --* **[REQUIRED]** 
+
+        The auth code used to calculate APRC after ARQC verification is successful. This is the same auth code used for ARQC generation outside of Amazon Web Services Payment Cryptography.
+
+        
+
+      
+    
+    - **ArpcMethod2** *(dict) --* 
+
+      Parameters that are required for ARPC response generation using method2 after ARQC verification is successful.
+
+      
+
+    
+      - **CardStatusUpdate** *(string) --* **[REQUIRED]** 
+
+        The data indicating whether the issuer approves or declines an online transaction using an EMV chip card.
+
+        
+
+      
+      - **ProprietaryAuthenticationData** *(string) --* 
+
+        The proprietary authentication data used by issuer for communication during online transaction using an EMV chip card.
+
+        
+
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'KeyArn': 'string',
+          'KeyCheckValue': 'string',
+          'AuthResponseValue': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **KeyArn** *(string) --* 
+
+        The ``keyARN`` of the major encryption key that Amazon Web Services Payment Cryptography uses for ARQC verification.
+
+        
+      
+
+      - **KeyCheckValue** *(string) --* 
+
+        The key check value (KCV) of the encryption key. The KCV is used to check if all parties holding a given key have the same key or to detect that a key has changed.
+
+         
+
+        Amazon Web Services Payment Cryptography computes the KCV according to the CMAC specification.
+
+        
+      
+
+      - **AuthResponseValue** *(string) --* 
+
+        The result for ARQC verification or ARPC generation within Amazon Web Services Payment Cryptography.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.VerificationFailedException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.InternalServerException`
+
+  

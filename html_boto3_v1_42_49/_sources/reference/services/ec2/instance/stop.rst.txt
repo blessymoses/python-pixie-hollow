@@ -1,0 +1,273 @@
+:doc:`Instance <index>` / Action / stop
+
+****
+stop
+****
+
+
+
+.. py:method:: EC2.Instance.stop(**kwargs)
+
+  
+
+  Stops an Amazon EBS-backed instance. You can restart your instance at any time using the `StartInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_StartInstances.html>`__ API. For more information, see `Stop and start Amazon EC2 instances <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Stop_Start.html>`__ in the *Amazon EC2 User Guide*.
+
+   
+
+  When you stop or hibernate an instance, we shut it down. By default, this includes a graceful operating system (OS) shutdown. To bypass the graceful shutdown, use the ``skipOsShutdown`` parameter; however, this might risk data integrity.
+
+   
+
+  You can use the StopInstances operation together with the ``Hibernate`` parameter to hibernate an instance if the instance is `enabled for hibernation <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enabling-hibernation.html>`__ and meets the `hibernation prerequisites <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/hibernating-prerequisites.html>`__. Stopping an instance doesn't preserve data stored in RAM, while hibernation does. If hibernation fails, a normal shutdown occurs. For more information, see `Hibernate your Amazon EC2 instance <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Hibernate.html>`__ in the *Amazon EC2 User Guide*.
+
+   
+
+  If your instance appears stuck in the ``stopping`` state, there might be an issue with the underlying host computer. You can use the StopInstances operation together with the Force parameter to force stop your instance. For more information, see `Troubleshoot Amazon EC2 instance stop issues <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesStopping.html>`__ in the *Amazon EC2 User Guide*.
+
+   
+
+  Stopping and hibernating an instance differs from rebooting or terminating it. For example, a stopped or hibernated instance retains its root volume and any data volumes, unlike terminated instances where these volumes are automatically deleted. For more information about the differences between stopping, hibernating, rebooting, and terminating instances, see `Amazon EC2 instance state changes <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html>`__ in the *Amazon EC2 User Guide*.
+
+   
+
+  We don't charge for instance usage or data transfer fees when an instance is stopped. However, the root volume and any data volumes remain and continue to persist your data, and you're charged for volume usage. Every time you start your instance, Amazon EC2 charges a one-minute minimum for instance usage, followed by per-second billing.
+
+   
+
+  You can't stop or hibernate instance store-backed instances.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/StopInstances>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = instance.stop(
+        Hibernate=True|False,
+        SkipOsShutdown=True|False,
+        DryRun=True|False,
+        Force=True|False
+    )
+    
+  :type Hibernate: boolean
+  :param Hibernate: 
+
+    Hibernates the instance if the instance was enabled for hibernation at launch. If the instance cannot hibernate successfully, a normal shutdown occurs. For more information, see `Hibernate your Amazon EC2 instance <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Hibernate.html>`__ in the *Amazon EC2 User Guide*.
+
+     
+
+    Default: ``false``
+
+    
+
+  
+  :type SkipOsShutdown: boolean
+  :param SkipOsShutdown: 
+
+    Specifies whether to bypass the graceful OS shutdown process when the instance is stopped.
+
+     
+
+    .. warning::
+
+       
+
+      Bypassing the graceful OS shutdown might result in data loss or corruption (for example, memory contents not flushed to disk or loss of in-flight IOs) or skipped shutdown scripts.
+
+       
+
+     
+
+    Default: ``false``
+
+    
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the operation, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type Force: boolean
+  :param Force: 
+
+    Forces the instance to stop. The instance will first attempt a graceful shutdown, which includes flushing file system caches and metadata. If the graceful shutdown fails to complete within the timeout period, the instance shuts down forcibly without flushing the file system caches and metadata.
+
+     
+
+    After using this option, you must perform file system check and repair procedures. This option is not recommended for Windows instances. For more information, see `Troubleshoot Amazon EC2 instance stop issues <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesStopping.html>`__ in the *Amazon EC2 User Guide*.
+
+     
+
+    Default: ``false``
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'StoppingInstances': [
+              {
+                  'InstanceId': 'string',
+                  'CurrentState': {
+                      'Code': 123,
+                      'Name': 'pending'|'running'|'shutting-down'|'terminated'|'stopping'|'stopped'
+                  },
+                  'PreviousState': {
+                      'Code': 123,
+                      'Name': 'pending'|'running'|'shutting-down'|'terminated'|'stopping'|'stopped'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **StoppingInstances** *(list) --* 
+
+        Information about the stopped instances.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes an instance state change.
+
+          
+          
+
+          - **InstanceId** *(string) --* 
+
+            The ID of the instance.
+
+            
+          
+
+          - **CurrentState** *(dict) --* 
+
+            The current state of the instance.
+
+            
+            
+
+            - **Code** *(integer) --* 
+
+              The state of the instance as a 16-bit unsigned integer.
+
+               
+
+              The high byte is all of the bits between 2^8 and (2^16)-1, which equals decimal values between 256 and 65,535. These numerical values are used for internal purposes and should be ignored.
+
+               
+
+              The low byte is all of the bits between 2^0 and (2^8)-1, which equals decimal values between 0 and 255.
+
+               
+
+              The valid values for instance-state-code will all be in the range of the low byte and they are:
+
+               
+
+              
+              * ``0`` : ``pending``
+               
+              * ``16`` : ``running``
+               
+              * ``32`` : ``shutting-down``
+               
+              * ``48`` : ``terminated``
+               
+              * ``64`` : ``stopping``
+               
+              * ``80`` : ``stopped``
+              
+
+               
+
+              You can ignore the high byte value by zeroing out all of the bits above 2^8 or 256 in decimal.
+
+              
+            
+
+            - **Name** *(string) --* 
+
+              The current state of the instance.
+
+              
+        
+          
+
+          - **PreviousState** *(dict) --* 
+
+            The previous state of the instance.
+
+            
+            
+
+            - **Code** *(integer) --* 
+
+              The state of the instance as a 16-bit unsigned integer.
+
+               
+
+              The high byte is all of the bits between 2^8 and (2^16)-1, which equals decimal values between 256 and 65,535. These numerical values are used for internal purposes and should be ignored.
+
+               
+
+              The low byte is all of the bits between 2^0 and (2^8)-1, which equals decimal values between 0 and 255.
+
+               
+
+              The valid values for instance-state-code will all be in the range of the low byte and they are:
+
+               
+
+              
+              * ``0`` : ``pending``
+               
+              * ``16`` : ``running``
+               
+              * ``32`` : ``shutting-down``
+               
+              * ``48`` : ``terminated``
+               
+              * ``64`` : ``stopping``
+               
+              * ``80`` : ``stopped``
+              
+
+               
+
+              You can ignore the high byte value by zeroing out all of the bits above 2^8 or 256 in decimal.
+
+              
+            
+
+            - **Name** *(string) --* 
+
+              The current state of the instance.
+
+              
+        
+      
+    
+  

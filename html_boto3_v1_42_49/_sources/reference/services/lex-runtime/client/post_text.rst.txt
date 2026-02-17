@@ -1,0 +1,738 @@
+:doc:`LexRuntimeService <../../lex-runtime>` / Client / post_text
+
+*********
+post_text
+*********
+
+
+
+.. py:method:: LexRuntimeService.Client.post_text(**kwargs)
+
+  
+
+  Sends user input to Amazon Lex. Client applications can use this API to send requests to Amazon Lex at runtime. Amazon Lex then interprets the user input using the machine learning model it built for the bot.
+
+   
+
+  In response, Amazon Lex returns the next ``message`` to convey to the user an optional ``responseCard`` to display. Consider the following example messages:
+
+   
+
+  
+  * For a user input "I would like a pizza", Amazon Lex might return a response with a message eliciting slot data (for example, PizzaSize): "What size pizza would you like?"
+   
+  * After the user provides all of the pizza order information, Amazon Lex might return a response with a message to obtain user confirmation "Proceed with the pizza order?".
+   
+  * After the user replies to a confirmation prompt with a "yes", Amazon Lex might return a conclusion statement: "Thank you, your cheese pizza has been ordered.".
+  
+
+   
+
+  Not all Amazon Lex messages require a user response. For example, a conclusion statement does not require a response. Some messages require only a "yes" or "no" user response. In addition to the ``message``, Amazon Lex provides additional context about the message in the response that you might use to enhance client behavior, for example, to display the appropriate client user interface. These are the ``slotToElicit``, ``dialogState``, ``intentName``, and ``slots`` fields in the response. Consider the following examples:
+
+   
+
+  
+  * If the message is to elicit slot data, Amazon Lex returns the following context information: 
+
+    
+    * ``dialogState`` set to ElicitSlot
+     
+    * ``intentName`` set to the intent name in the current context
+     
+    * ``slotToElicit`` set to the slot name for which the ``message`` is eliciting information
+     
+    * ``slots`` set to a map of slots, configured for the intent, with currently known values
+    
+
+  
+   
+  * If the message is a confirmation prompt, the ``dialogState`` is set to ConfirmIntent and ``SlotToElicit`` is set to null.
+   
+  * If the message is a clarification prompt (configured for the intent) that indicates that user intent is not understood, the ``dialogState`` is set to ElicitIntent and ``slotToElicit`` is set to null.
+  
+
+   
+
+  In addition, Amazon Lex also returns your application-specific ``sessionAttributes``. For more information, see `Managing Conversation Context <https://docs.aws.amazon.com/lex/latest/dg/context-mgmt.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/runtime.lex-2016-11-28/PostText>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.post_text(
+        botName='string',
+        botAlias='string',
+        userId='string',
+        sessionAttributes={
+            'string': 'string'
+        },
+        requestAttributes={
+            'string': 'string'
+        },
+        inputText='string',
+        activeContexts=[
+            {
+                'name': 'string',
+                'timeToLive': {
+                    'timeToLiveInSeconds': 123,
+                    'turnsToLive': 123
+                },
+                'parameters': {
+                    'string': 'string'
+                }
+            },
+        ]
+    )
+    
+  :type botName: string
+  :param botName: **[REQUIRED]** 
+
+    The name of the Amazon Lex bot.
+
+    
+
+  
+  :type botAlias: string
+  :param botAlias: **[REQUIRED]** 
+
+    The alias of the Amazon Lex bot.
+
+    
+
+  
+  :type userId: string
+  :param userId: **[REQUIRED]** 
+
+    The ID of the client application user. Amazon Lex uses this to identify a user's conversation with your bot. At runtime, each request must contain the ``userID`` field.
+
+     
+
+    To decide the user ID to use for your application, consider the following factors.
+
+     
+
+    
+    * The ``userID`` field must not contain any personally identifiable information of the user, for example, name, personal identification numbers, or other end user personal information.
+     
+    * If you want a user to start a conversation on one device and continue on another device, use a user-specific identifier.
+     
+    * If you want the same user to be able to have two independent conversations on two different devices, choose a device-specific identifier.
+     
+    * A user can't have two independent conversations with two different versions of the same bot. For example, a user can't have a conversation with the PROD and BETA versions of the same bot. If you anticipate that a user will need to have conversation with two different versions, for example, while testing, include the bot alias in the user ID to separate the two conversations.
+    
+
+    
+
+  
+  :type sessionAttributes: dict
+  :param sessionAttributes: 
+
+    Application-specific information passed between Amazon Lex and a client application.
+
+     
+
+    For more information, see `Setting Session Attributes <https://docs.aws.amazon.com/lex/latest/dg/context-mgmt.html#context-mgmt-session-attribs>`__.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type requestAttributes: dict
+  :param requestAttributes: 
+
+    Request-specific information passed between Amazon Lex and a client application.
+
+     
+
+    The namespace ``x-amz-lex:`` is reserved for special attributes. Don't create any request attributes with the prefix ``x-amz-lex:``.
+
+     
+
+    For more information, see `Setting Request Attributes <https://docs.aws.amazon.com/lex/latest/dg/context-mgmt.html#context-mgmt-request-attribs>`__.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type inputText: string
+  :param inputText: **[REQUIRED]** 
+
+    The text that the user entered (Amazon Lex interprets this text).
+
+    
+
+  
+  :type activeContexts: list
+  :param activeContexts: 
+
+    A list of contexts active for the request. A context can be activated when a previous intent is fulfilled, or by including the context in the request,
+
+     
+
+    If you don't specify a list of contexts, Amazon Lex will use the current list of contexts for the session. If you specify an empty list, all contexts for the session are cleared.
+
+    
+
+  
+    - *(dict) --* 
+
+      A context is a variable that contains information about the current state of the conversation between a user and Amazon Lex. Context can be set automatically by Amazon Lex when an intent is fulfilled, or it can be set at runtime using the ``PutContent``, ``PutText``, or ``PutSession`` operation.
+
+      
+
+    
+      - **name** *(string) --* **[REQUIRED]** 
+
+        The name of the context.
+
+        
+
+      
+      - **timeToLive** *(dict) --* **[REQUIRED]** 
+
+        The length of time or number of turns that a context remains active.
+
+        
+
+      
+        - **timeToLiveInSeconds** *(integer) --* 
+
+          The number of seconds that the context should be active after it is first sent in a ``PostContent`` or ``PostText`` response. You can set the value between 5 and 86,400 seconds (24 hours).
+
+          
+
+        
+        - **turnsToLive** *(integer) --* 
+
+          The number of conversation turns that the context should be active. A conversation turn is one ``PostContent`` or ``PostText`` request and the corresponding response from Amazon Lex.
+
+          
+
+        
+      
+      - **parameters** *(dict) --* **[REQUIRED]** 
+
+        State variables for the current context. You can use these values as default values for slots in subsequent events.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'intentName': 'string',
+          'nluIntentConfidence': {
+              'score': 123.0
+          },
+          'alternativeIntents': [
+              {
+                  'intentName': 'string',
+                  'nluIntentConfidence': {
+                      'score': 123.0
+                  },
+                  'slots': {
+                      'string': 'string'
+                  }
+              },
+          ],
+          'slots': {
+              'string': 'string'
+          },
+          'sessionAttributes': {
+              'string': 'string'
+          },
+          'message': 'string',
+          'sentimentResponse': {
+              'sentimentLabel': 'string',
+              'sentimentScore': 'string'
+          },
+          'messageFormat': 'PlainText'|'CustomPayload'|'SSML'|'Composite',
+          'dialogState': 'ElicitIntent'|'ConfirmIntent'|'ElicitSlot'|'Fulfilled'|'ReadyForFulfillment'|'Failed',
+          'slotToElicit': 'string',
+          'responseCard': {
+              'version': 'string',
+              'contentType': 'application/vnd.amazonaws.card.generic',
+              'genericAttachments': [
+                  {
+                      'title': 'string',
+                      'subTitle': 'string',
+                      'attachmentLinkUrl': 'string',
+                      'imageUrl': 'string',
+                      'buttons': [
+                          {
+                              'text': 'string',
+                              'value': 'string'
+                          },
+                      ]
+                  },
+              ]
+          },
+          'sessionId': 'string',
+          'botVersion': 'string',
+          'activeContexts': [
+              {
+                  'name': 'string',
+                  'timeToLive': {
+                      'timeToLiveInSeconds': 123,
+                      'turnsToLive': 123
+                  },
+                  'parameters': {
+                      'string': 'string'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **intentName** *(string) --* 
+
+        The current user intent that Amazon Lex is aware of.
+
+        
+      
+
+      - **nluIntentConfidence** *(dict) --* 
+
+        Provides a score that indicates how confident Amazon Lex is that the returned intent is the one that matches the user's intent. The score is between 0.0 and 1.0. For more information, see `Confidence Scores <https://docs.aws.amazon.com/lex/latest/dg/confidence-scores.html>`__.
+
+         
+
+        The score is a relative score, not an absolute score. The score may change based on improvements to Amazon Lex.
+
+        
+        
+
+        - **score** *(float) --* 
+
+          A score that indicates how confident Amazon Lex is that an intent satisfies the user's intent. Ranges between 0.00 and 1.00. Higher scores indicate higher confidence.
+
+          
+    
+      
+
+      - **alternativeIntents** *(list) --* 
+
+        One to four alternative intents that may be applicable to the user's intent.
+
+         
+
+        Each alternative includes a score that indicates how confident Amazon Lex is that the intent matches the user's intent. The intents are sorted by the confidence score.
+
+        
+        
+
+        - *(dict) --* 
+
+          An intent that Amazon Lex suggests satisfies the user's intent. Includes the name of the intent, the confidence that Amazon Lex has that the user's intent is satisfied, and the slots defined for the intent.
+
+          
+          
+
+          - **intentName** *(string) --* 
+
+            The name of the intent that Amazon Lex suggests satisfies the user's intent.
+
+            
+          
+
+          - **nluIntentConfidence** *(dict) --* 
+
+            Indicates how confident Amazon Lex is that an intent satisfies the user's intent.
+
+            
+            
+
+            - **score** *(float) --* 
+
+              A score that indicates how confident Amazon Lex is that an intent satisfies the user's intent. Ranges between 0.00 and 1.00. Higher scores indicate higher confidence.
+
+              
+        
+          
+
+          - **slots** *(dict) --* 
+
+            The slot and slot values associated with the predicted intent.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+      
+
+      - **slots** *(dict) --* 
+
+        The intent slots that Amazon Lex detected from the user input in the conversation.
+
+         
+
+        Amazon Lex creates a resolution list containing likely values for a slot. The value that it returns is determined by the ``valueSelectionStrategy`` selected when the slot type was created or updated. If ``valueSelectionStrategy`` is set to ``ORIGINAL_VALUE``, the value provided by the user is returned, if the user value is similar to the slot values. If ``valueSelectionStrategy`` is set to ``TOP_RESOLUTION`` Amazon Lex returns the first value in the resolution list or, if there is no resolution list, null. If you don't specify a ``valueSelectionStrategy``, the default is ``ORIGINAL_VALUE``.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **sessionAttributes** *(dict) --* 
+
+        A map of key-value pairs representing the session-specific context information.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **message** *(string) --* 
+
+        The message to convey to the user. The message can come from the bot's configuration or from a Lambda function.
+
+         
+
+        If the intent is not configured with a Lambda function, or if the Lambda function returned ``Delegate`` as the ``dialogAction.type`` its response, Amazon Lex decides on the next course of action and selects an appropriate message from the bot's configuration based on the current interaction context. For example, if Amazon Lex isn't able to understand user input, it uses a clarification prompt message.
+
+         
+
+        When you create an intent you can assign messages to groups. When messages are assigned to groups Amazon Lex returns one message from each group in the response. The message field is an escaped JSON string containing the messages. For more information about the structure of the JSON string returned, see  msg-prompts-formats.
+
+         
+
+        If the Lambda function returns a message, Amazon Lex passes it to the client in its response.
+
+        
+      
+
+      - **sentimentResponse** *(dict) --* 
+
+        The sentiment expressed in and utterance.
+
+         
+
+        When the bot is configured to send utterances to Amazon Comprehend for sentiment analysis, this field contains the result of the analysis.
+
+        
+        
+
+        - **sentimentLabel** *(string) --* 
+
+          The inferred sentiment that Amazon Comprehend has the highest confidence in.
+
+          
+        
+
+        - **sentimentScore** *(string) --* 
+
+          The likelihood that the sentiment was correctly inferred.
+
+          
+    
+      
+
+      - **messageFormat** *(string) --* 
+
+        The format of the response message. One of the following values:
+
+         
+
+        
+        * ``PlainText`` - The message contains plain UTF-8 text.
+         
+        * ``CustomPayload`` - The message is a custom format defined by the Lambda function.
+         
+        * ``SSML`` - The message contains text formatted for voice output.
+         
+        * ``Composite`` - The message contains an escaped JSON object containing one or more messages from the groups that messages were assigned to when the intent was created.
+        
+
+        
+      
+
+      - **dialogState** *(string) --* 
+
+        Identifies the current state of the user interaction. Amazon Lex returns one of the following values as ``dialogState``. The client can optionally use this information to customize the user interface.
+
+         
+
+        
+        * ``ElicitIntent`` - Amazon Lex wants to elicit user intent. For example, a user might utter an intent ("I want to order a pizza"). If Amazon Lex cannot infer the user intent from this utterance, it will return this dialogState.
+         
+        * ``ConfirmIntent`` - Amazon Lex is expecting a "yes" or "no" response. For example, Amazon Lex wants user confirmation before fulfilling an intent. Instead of a simple "yes" or "no," a user might respond with additional information. For example, "yes, but make it thick crust pizza" or "no, I want to order a drink". Amazon Lex can process such additional information (in these examples, update the crust type slot value, or change intent from OrderPizza to OrderDrink).
+         
+        * ``ElicitSlot`` - Amazon Lex is expecting a slot value for the current intent. For example, suppose that in the response Amazon Lex sends this message: "What size pizza would you like?". A user might reply with the slot value (e.g., "medium"). The user might also provide additional information in the response (e.g., "medium thick crust pizza"). Amazon Lex can process such additional information appropriately.
+         
+        * ``Fulfilled`` - Conveys that the Lambda function configured for the intent has successfully fulfilled the intent.
+         
+        * ``ReadyForFulfillment`` - Conveys that the client has to fulfill the intent.
+         
+        * ``Failed`` - Conveys that the conversation with the user failed. This can happen for various reasons including that the user did not provide an appropriate response to prompts from the service (you can configure how many times Amazon Lex can prompt a user for specific information), or the Lambda function failed to fulfill the intent.
+        
+
+        
+      
+
+      - **slotToElicit** *(string) --* 
+
+        If the ``dialogState`` value is ``ElicitSlot``, returns the name of the slot for which Amazon Lex is eliciting a value.
+
+        
+      
+
+      - **responseCard** *(dict) --* 
+
+        Represents the options that the user has to respond to the current prompt. Response Card can come from the bot configuration (in the Amazon Lex console, choose the settings button next to a slot) or from a code hook (Lambda function).
+
+        
+        
+
+        - **version** *(string) --* 
+
+          The version of the response card format.
+
+          
+        
+
+        - **contentType** *(string) --* 
+
+          The content type of the response.
+
+          
+        
+
+        - **genericAttachments** *(list) --* 
+
+          An array of attachment objects representing options.
+
+          
+          
+
+          - *(dict) --* 
+
+            Represents an option rendered to the user when a prompt is shown. It could be an image, a button, a link, or text.
+
+            
+            
+
+            - **title** *(string) --* 
+
+              The title of the option.
+
+              
+            
+
+            - **subTitle** *(string) --* 
+
+              The subtitle shown below the title.
+
+              
+            
+
+            - **attachmentLinkUrl** *(string) --* 
+
+              The URL of an attachment to the response card.
+
+              
+            
+
+            - **imageUrl** *(string) --* 
+
+              The URL of an image that is displayed to the user.
+
+              
+            
+
+            - **buttons** *(list) --* 
+
+              The list of options to show to the user.
+
+              
+              
+
+              - *(dict) --* 
+
+                Represents an option to be shown on the client platform (Facebook, Slack, etc.)
+
+                
+                
+
+                - **text** *(string) --* 
+
+                  Text that is visible to the user on the button.
+
+                  
+                
+
+                - **value** *(string) --* 
+
+                  The value sent to Amazon Lex when a user chooses the button. For example, consider button text "NYC." When the user chooses the button, the value sent can be "New York City."
+
+                  
+            
+          
+        
+      
+    
+      
+
+      - **sessionId** *(string) --* 
+
+        A unique identifier for the session.
+
+        
+      
+
+      - **botVersion** *(string) --* 
+
+        The version of the bot that responded to the conversation. You can use this information to help determine if one version of a bot is performing better than another version.
+
+        
+      
+
+      - **activeContexts** *(list) --* 
+
+        A list of active contexts for the session. A context can be set when an intent is fulfilled or by calling the ``PostContent``, ``PostText``, or ``PutSession`` operation.
+
+         
+
+        You can use a context to control the intents that can follow up an intent, or to modify the operation of your application.
+
+        
+        
+
+        - *(dict) --* 
+
+          A context is a variable that contains information about the current state of the conversation between a user and Amazon Lex. Context can be set automatically by Amazon Lex when an intent is fulfilled, or it can be set at runtime using the ``PutContent``, ``PutText``, or ``PutSession`` operation.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the context.
+
+            
+          
+
+          - **timeToLive** *(dict) --* 
+
+            The length of time or number of turns that a context remains active.
+
+            
+            
+
+            - **timeToLiveInSeconds** *(integer) --* 
+
+              The number of seconds that the context should be active after it is first sent in a ``PostContent`` or ``PostText`` response. You can set the value between 5 and 86,400 seconds (24 hours).
+
+              
+            
+
+            - **turnsToLive** *(integer) --* 
+
+              The number of conversation turns that the context should be active. A conversation turn is one ``PostContent`` or ``PostText`` request and the corresponding response from Amazon Lex.
+
+              
+        
+          
+
+          - **parameters** *(dict) --* 
+
+            State variables for the current context. You can use these values as default values for slots in subsequent events.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.DependencyFailedException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.BadGatewayException`
+
+  
+  *   :py:class:`LexRuntimeService.Client.exceptions.LoopDetectedException`
+
+  

@@ -1,0 +1,560 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / describe_stack_set_operation
+
+****************************
+describe_stack_set_operation
+****************************
+
+
+
+.. py:method:: CloudFormation.Client.describe_stack_set_operation(**kwargs)
+
+  
+
+  Returns the description of the specified StackSet operation.
+
+   
+
+  .. note::
+
+    
+
+    This API provides *strongly consistent* reads meaning it will always return the most up-to-date data.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/DescribeStackSetOperation>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_stack_set_operation(
+        StackSetName='string',
+        OperationId='string',
+        CallAs='SELF'|'DELEGATED_ADMIN'
+    )
+    
+  :type StackSetName: string
+  :param StackSetName: **[REQUIRED]** 
+
+    The name or the unique stack ID of the StackSet for the stack operation.
+
+    
+
+  
+  :type OperationId: string
+  :param OperationId: **[REQUIRED]** 
+
+    The unique ID of the StackSet operation.
+
+    
+
+  
+  :type CallAs: string
+  :param CallAs: 
+
+    [Service-managed permissions] Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account.
+
+     
+
+    By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+     
+
+    
+    * If you are signed in to the management account, specify ``SELF``.
+     
+    * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'StackSetOperation': {
+              'OperationId': 'string',
+              'StackSetId': 'string',
+              'Action': 'CREATE'|'UPDATE'|'DELETE'|'DETECT_DRIFT',
+              'Status': 'RUNNING'|'SUCCEEDED'|'FAILED'|'STOPPING'|'STOPPED'|'QUEUED',
+              'OperationPreferences': {
+                  'RegionConcurrencyType': 'SEQUENTIAL'|'PARALLEL',
+                  'RegionOrder': [
+                      'string',
+                  ],
+                  'FailureToleranceCount': 123,
+                  'FailureTolerancePercentage': 123,
+                  'MaxConcurrentCount': 123,
+                  'MaxConcurrentPercentage': 123,
+                  'ConcurrencyMode': 'STRICT_FAILURE_TOLERANCE'|'SOFT_FAILURE_TOLERANCE'
+              },
+              'RetainStacks': True|False,
+              'AdministrationRoleARN': 'string',
+              'ExecutionRoleName': 'string',
+              'CreationTimestamp': datetime(2015, 1, 1),
+              'EndTimestamp': datetime(2015, 1, 1),
+              'DeploymentTargets': {
+                  'Accounts': [
+                      'string',
+                  ],
+                  'AccountsUrl': 'string',
+                  'OrganizationalUnitIds': [
+                      'string',
+                  ],
+                  'AccountFilterType': 'NONE'|'INTERSECTION'|'DIFFERENCE'|'UNION'
+              },
+              'StackSetDriftDetectionDetails': {
+                  'DriftStatus': 'DRIFTED'|'IN_SYNC'|'NOT_CHECKED',
+                  'DriftDetectionStatus': 'COMPLETED'|'FAILED'|'PARTIAL_SUCCESS'|'IN_PROGRESS'|'STOPPED',
+                  'LastDriftCheckTimestamp': datetime(2015, 1, 1),
+                  'TotalStackInstancesCount': 123,
+                  'DriftedStackInstancesCount': 123,
+                  'InSyncStackInstancesCount': 123,
+                  'InProgressStackInstancesCount': 123,
+                  'FailedStackInstancesCount': 123
+              },
+              'StatusReason': 'string',
+              'StatusDetails': {
+                  'FailedStackInstancesCount': 123
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **StackSetOperation** *(dict) --* 
+
+        The specified StackSet operation.
+
+        
+        
+
+        - **OperationId** *(string) --* 
+
+          The unique ID of a StackSet operation.
+
+          
+        
+
+        - **StackSetId** *(string) --* 
+
+          The ID of the StackSet.
+
+          
+        
+
+        - **Action** *(string) --* 
+
+          The type of StackSet operation: ``CREATE``, ``UPDATE``, or ``DELETE``. Create and delete operations affect only the specified stack instances that are associated with the specified StackSet. Update operations affect both the StackSet itself, in addition to *all* associated stack instances.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The status of the operation.
+
+           
+
+          
+          * ``FAILED``: The operation exceeded the specified failure tolerance. The failure tolerance value that you've set for an operation is applied for each Region during stack create and update operations. If the number of failed stacks within a Region exceeds the failure tolerance, the status of the operation in the Region is set to ``FAILED``. This in turn sets the status of the operation as a whole to ``FAILED``, and CloudFormation cancels the operation in any remaining Regions.
+           
+          * ``QUEUED``: [Service-managed permissions] For automatic deployments that require a sequence of operations, the operation is queued to be performed. For more information, see the `StackSets status codes <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html#stackset-status-codes>`__ in the *CloudFormation User Guide*.
+           
+          * ``RUNNING``: The operation is currently being performed.
+           
+          * ``STOPPED``: The user has canceled the operation.
+           
+          * ``STOPPING``: The operation is in the process of stopping, at user request.
+           
+          * ``SUCCEEDED``: The operation completed creating or updating all the specified stacks without exceeding the failure tolerance for the operation.
+          
+
+          
+        
+
+        - **OperationPreferences** *(dict) --* 
+
+          The preferences for how CloudFormation performs this StackSet operation.
+
+          
+          
+
+          - **RegionConcurrencyType** *(string) --* 
+
+            The concurrency type of deploying StackSets operations in Regions, could be in parallel or one Region at a time.
+
+            
+          
+
+          - **RegionOrder** *(list) --* 
+
+            The order of the Regions where you want to perform the stack operation.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **FailureToleranceCount** *(integer) --* 
+
+            The number of accounts per Region this operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+             
+
+            You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+             
+
+            By default, ``0`` is specified.
+
+            
+          
+
+          - **FailureTolerancePercentage** *(integer) --* 
+
+            The percentage of accounts per Region this stack operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+             
+
+            When calculating the number of accounts based on the specified percentage, CloudFormation rounds *down* to the next whole number.
+
+             
+
+            You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+             
+
+            By default, ``0`` is specified.
+
+            
+          
+
+          - **MaxConcurrentCount** *(integer) --* 
+
+            The maximum number of accounts in which to perform this operation at one time. This can depend on the value of ``FailureToleranceCount`` depending on your ``ConcurrencyMode``. ``MaxConcurrentCount`` is at most one more than the ``FailureToleranceCount`` if you're using ``STRICT_FAILURE_TOLERANCE``.
+
+             
+
+            Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+             
+
+            You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+             
+
+            By default, ``1`` is specified.
+
+            
+          
+
+          - **MaxConcurrentPercentage** *(integer) --* 
+
+            The maximum percentage of accounts in which to perform this operation at one time.
+
+             
+
+            When calculating the number of accounts based on the specified percentage, CloudFormation rounds down to the next whole number. This is true except in cases where rounding down would result is zero. In this case, CloudFormation sets the number as one instead.
+
+             
+
+            Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+             
+
+            You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+             
+
+            By default, ``1`` is specified.
+
+            
+          
+
+          - **ConcurrencyMode** *(string) --* 
+
+            Specifies how the concurrency level behaves during the operation execution.
+
+             
+
+            
+            * ``STRICT_FAILURE_TOLERANCE``: This option dynamically lowers the concurrency level to ensure the number of failed accounts never exceeds the value of ``FailureToleranceCount`` +1. The initial actual concurrency is set to the lower of either the value of the ``MaxConcurrentCount``, or the value of ``FailureToleranceCount`` +1. The actual concurrency is then reduced proportionally by the number of failures. This is the default behavior. If failure tolerance or Maximum concurrent accounts are set to percentages, the behavior is similar.
+             
+            * ``SOFT_FAILURE_TOLERANCE``: This option decouples ``FailureToleranceCount`` from the actual concurrency. This allows StackSet operations to run at the concurrency level set by the ``MaxConcurrentCount`` value, or ``MaxConcurrentPercentage``, regardless of the number of failures.
+            
+
+            
+      
+        
+
+        - **RetainStacks** *(boolean) --* 
+
+          For StackSet operations of action type ``DELETE``, specifies whether to remove the stack instances from the specified StackSet, but doesn't delete the stacks. You can't re-associate a retained stack, or add an existing, saved stack to a new StackSet.
+
+          
+        
+
+        - **AdministrationRoleARN** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the IAM role used to perform this StackSet operation.
+
+           
+
+          Use customized administrator roles to control which users or groups can manage specific StackSets within the same administrator account. For more information, see `Grant self-managed permissions <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs-self-managed.html>`__ in the *CloudFormation User Guide*.
+
+          
+        
+
+        - **ExecutionRoleName** *(string) --* 
+
+          The name of the IAM execution role used to create or update the StackSet.
+
+           
+
+          Use customized execution roles to control which stack resources users and groups can include in their StackSets.
+
+          
+        
+
+        - **CreationTimestamp** *(datetime) --* 
+
+          The time at which the operation was initiated. Note that the creation times for the stack set operation might differ from the creation time of the individual stacks themselves. This is because CloudFormation needs to perform preparatory work for the operation, such as dispatching the work to the requested Regions, before actually creating the first stacks.
+
+          
+        
+
+        - **EndTimestamp** *(datetime) --* 
+
+          The time at which the StackSet operation ended, across all accounts and Regions specified. Note that this doesn't necessarily mean that the StackSet operation was successful, or even attempted, in each account or Region.
+
+          
+        
+
+        - **DeploymentTargets** *(dict) --* 
+
+          The Organizations accounts affected by the stack operation. Valid only if the StackSet uses service-managed permissions.
+
+          
+          
+
+          - **Accounts** *(list) --* 
+
+            The Amazon Web Services account IDs where you want to perform stack operations. How these accounts are used depends on the ``AccountFilterType`` property.
+
+             
+
+            If you have many account numbers, you can provide those accounts using the ``AccountsUrl`` property instead.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **AccountsUrl** *(string) --* 
+
+            The Amazon S3 URL path to a file that contains a list of Amazon Web Services account IDs. The file format must be either ``.csv`` or ``.txt``, and the data can be comma-separated or new-line-separated. There is currently a 10MB limit for the data (approximately 800,000 accounts).
+
+             
+
+            This property serves the same purpose as ``Accounts`` but allows you to specify a large number of accounts.
+
+            
+          
+
+          - **OrganizationalUnitIds** *(list) --* 
+
+            The organization root ID or organizational unit (OU) IDs where you want to perform stack operations. CloudFormation will perform operations on accounts within these OUs and their child OUs.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **AccountFilterType** *(string) --* 
+
+            Refines which accounts will have stack operations performed on them by specifying how to use the ``Accounts`` and ``OrganizationalUnitIds`` properties together.
+
+             
+
+            The following values determine how CloudFormation selects target accounts:
+
+             
+
+            
+            * ``INTERSECTION``: Performs stack operations only on specific individual accounts within the selected OUs. Only accounts that are both specified in the ``Accounts`` property and belong to the specified OUs will be targeted.
+             
+            * ``DIFFERENCE``: Performs stack operations on all accounts in the selected OUs except for specific accounts listed in the ``Accounts`` property. This enables you to exclude certain accounts within an OU, such as suspended accounts.
+             
+            * ``UNION``: Performs stack operations on the specified OUs plus additional individual accounts listed in the ``Accounts`` property. This is the default value if ``AccountFilterType`` is not provided. This lets you target an entire OU and individual accounts from a different OU in one request. Note that ``UNION`` is not supported for ``CreateStackInstances`` operations.
+             
+            * ``NONE``: Performs stack operations on all accounts in the specified organizational units (OUs).
+            
+
+            
+      
+        
+
+        - **StackSetDriftDetectionDetails** *(dict) --* 
+
+          Detailed information about the drift status of the StackSet. This includes information about drift operations currently being performed on the StackSet.
+
+           
+
+          This information will only be present for StackSet operations whose ``Action`` type is ``DETECT_DRIFT``.
+
+           
+
+          For more information, see `Performing drift detection on CloudFormation StackSets <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-drift.html>`__ in the *CloudFormation User Guide*.
+
+          
+          
+
+          - **DriftStatus** *(string) --* 
+
+            Status of the StackSet's actual configuration compared to its expected template and parameter configuration.
+
+             
+
+            
+            * ``DRIFTED``: One or more of the stack instances belonging to the StackSet differs from the expected template and parameter configuration. A stack instance is considered to have drifted if one or more of the resources in the associated stack have drifted.
+             
+            * ``NOT_CHECKED``: CloudFormation hasn't checked the StackSet for drift.
+             
+            * ``IN_SYNC``: All of the stack instances belonging to the StackSet stack match the expected template and parameter configuration.
+            
+
+            
+          
+
+          - **DriftDetectionStatus** *(string) --* 
+
+            The status of the StackSet drift detection operation.
+
+             
+
+            
+            * ``COMPLETED``: The drift detection operation completed without failing on any stack instances.
+             
+            * ``FAILED``: The drift detection operation exceeded the specified failure tolerance.
+             
+            * ``PARTIAL_SUCCESS``: The drift detection operation completed without exceeding the failure tolerance for the operation.
+             
+            * ``IN_PROGRESS``: The drift detection operation is currently being performed.
+             
+            * ``STOPPED``: The user has canceled the drift detection operation.
+            
+
+            
+          
+
+          - **LastDriftCheckTimestamp** *(datetime) --* 
+
+            Most recent time when CloudFormation performed a drift detection operation on the StackSet. This value will be ``NULL`` for any StackSet that drift detection hasn't yet been performed on.
+
+            
+          
+
+          - **TotalStackInstancesCount** *(integer) --* 
+
+            The total number of stack instances belonging to this StackSet.
+
+             
+
+            The total number of stack instances is equal to the total of:
+
+             
+
+            
+            * Stack instances that match the StackSet configuration.
+             
+            * Stack instances that have drifted from the StackSet configuration.
+             
+            * Stack instances where the drift detection operation has failed.
+             
+            * Stack instances currently being checked for drift.
+            
+
+            
+          
+
+          - **DriftedStackInstancesCount** *(integer) --* 
+
+            The number of stack instances that have drifted from the expected template and parameter configuration of the StackSet. A stack instance is considered to have drifted if one or more of the resources in the associated stack don't match their expected configuration.
+
+            
+          
+
+          - **InSyncStackInstancesCount** *(integer) --* 
+
+            The number of stack instances which match the expected template and parameter configuration of the StackSet.
+
+            
+          
+
+          - **InProgressStackInstancesCount** *(integer) --* 
+
+            The number of stack instances that are currently being checked for drift.
+
+            
+          
+
+          - **FailedStackInstancesCount** *(integer) --* 
+
+            The number of stack instances for which the drift detection operation failed.
+
+            
+      
+        
+
+        - **StatusReason** *(string) --* 
+
+          The status of the operation in details.
+
+          
+        
+
+        - **StatusDetails** *(dict) --* 
+
+          Detailed information about the StackSet operation.
+
+          
+          
+
+          - **FailedStackInstancesCount** *(integer) --* 
+
+            The number of stack instances for which the StackSet operation failed.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackSetNotFoundException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationNotFoundException`
+
+  

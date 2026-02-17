@@ -1,0 +1,170 @@
+:doc:`SecretsManager <../../secretsmanager>` / Client / put_resource_policy
+
+*******************
+put_resource_policy
+*******************
+
+
+
+.. py:method:: SecretsManager.Client.put_resource_policy(**kwargs)
+
+  
+
+  Attaches a resource-based permission policy to a secret. A resource-based policy is optional. For more information, see `Authentication and access control for Secrets Manager <https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html>`__
+
+   
+
+  For information about attaching a policy in the console, see `Attach a permissions policy to a secret <https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_resource-based-policies.html>`__.
+
+   
+
+  Secrets Manager generates a CloudTrail log entry when you call this action. Do not include sensitive information in request parameters because it might be logged. For more information, see `Logging Secrets Manager events with CloudTrail <https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieve-ct-entries.html>`__.
+
+   
+
+  **Required permissions:** ``secretsmanager:PutResourcePolicy``. For more information, see `IAM policy actions for Secrets Manager <https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_iam-permissions.html#reference_iam-permissions_actions>`__ and `Authentication and access control in Secrets Manager <https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/secretsmanager-2017-10-17/PutResourcePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_resource_policy(
+        SecretId='string',
+        ResourcePolicy='string',
+        BlockPublicPolicy=True|False
+    )
+    
+  :type SecretId: string
+  :param SecretId: **[REQUIRED]** 
+
+    The ARN or name of the secret to attach the resource-based policy.
+
+     
+
+    For an ARN, we recommend that you specify a complete ARN rather than a partial ARN. See `Finding a secret from a partial ARN <https://docs.aws.amazon.com/secretsmanager/latest/userguide/troubleshoot.html#ARN_secretnamehyphen>`__.
+
+    
+
+  
+  :type ResourcePolicy: string
+  :param ResourcePolicy: **[REQUIRED]** 
+
+    A JSON-formatted string for an Amazon Web Services resource-based policy. For example policies, see `Permissions policy examples <https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_examples.html>`__.
+
+    
+
+  
+  :type BlockPublicPolicy: boolean
+  :param BlockPublicPolicy: 
+
+    Specifies whether to block resource-based policies that allow broad access to the secret, for example those that use a wildcard for the principal. By default, public policies aren't blocked.
+
+     
+
+    .. warning::
+
+       
+
+      Resource policy validation and the BlockPublicPolicy parameter help protect your resources by preventing public access from being granted through the resource policies that are directly attached to your secrets. In addition to using these features, carefully inspect the following policies to confirm that they do not grant public access:
+
+       
+
+      
+      * Identity-based policies attached to associated Amazon Web Services principals (for example, IAM roles)
+       
+      * Resource-based policies attached to associated Amazon Web Services resources (for example, Key Management Service (KMS) keys)
+      
+
+       
+
+      To review permissions to your secrets, see `Determine who has permissions to your secrets <https://docs.aws.amazon.com/secretsmanager/latest/userguide/determine-acccess_examine-iam-policies.html>`__.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ARN': 'string',
+          'Name': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ARN** *(string) --* 
+
+        The ARN of the secret.
+
+        
+      
+
+      - **Name** *(string) --* 
+
+        The name of the secret.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SecretsManager.Client.exceptions.MalformedPolicyDocumentException`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.InternalServiceError`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`SecretsManager.Client.exceptions.PublicPolicyException`
+
+  
+
+  **Examples**
+
+  The following example shows how to add a resource-based policy to a secret.
+  ::
+
+    response = client.put_resource_policy(
+        ResourcePolicy='{\n"Version":"2012-10-17",\n"Statement":[{\n"Effect":"Allow",\n"Principal":{\n"AWS":"arn:aws:iam::123456789012:root"\n},\n"Action":"secretsmanager:GetSecretValue",\n"Resource":"*"\n}]\n}',
+        SecretId='MyTestDatabaseSecret',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ARN': 'arn:aws:secretsmanager:us-west-2:123456789012:secret:MyTestDatabaseSecret-a1b2c3',
+        'Name': 'MyTestDatabaseSecret',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

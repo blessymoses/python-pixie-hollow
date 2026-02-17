@@ -1,0 +1,372 @@
+:doc:`AccessAnalyzer <../../accessanalyzer>` / Client / validate_policy
+
+***************
+validate_policy
+***************
+
+
+
+.. py:method:: AccessAnalyzer.Client.validate_policy(**kwargs)
+
+  
+
+  Requests the validation of a policy and returns a list of findings. The findings help you identify issues and provide actionable recommendations to resolve the issue and enable you to author functional policies that meet security best practices.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/accessanalyzer-2019-11-01/ValidatePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.validate_policy(
+        locale='DE'|'EN'|'ES'|'FR'|'IT'|'JA'|'KO'|'PT_BR'|'ZH_CN'|'ZH_TW',
+        maxResults=123,
+        nextToken='string',
+        policyDocument='string',
+        policyType='IDENTITY_POLICY'|'RESOURCE_POLICY'|'SERVICE_CONTROL_POLICY'|'RESOURCE_CONTROL_POLICY',
+        validatePolicyResourceType='AWS::S3::Bucket'|'AWS::S3::AccessPoint'|'AWS::S3::MultiRegionAccessPoint'|'AWS::S3ObjectLambda::AccessPoint'|'AWS::IAM::AssumeRolePolicyDocument'|'AWS::DynamoDB::Table'
+    )
+    
+  :type locale: string
+  :param locale: 
+
+    The locale to use for localizing the findings.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of results to return in the response.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    A token used for pagination of results returned.
+
+    
+
+  
+  :type policyDocument: string
+  :param policyDocument: **[REQUIRED]** 
+
+    The JSON policy document to use as the content for the policy.
+
+    
+
+  
+  :type policyType: string
+  :param policyType: **[REQUIRED]** 
+
+    The type of policy to validate. Identity policies grant permissions to IAM principals. Identity policies include managed and inline policies for IAM roles, users, and groups.
+
+     
+
+    Resource policies grant permissions on Amazon Web Services resources. Resource policies include trust policies for IAM roles and bucket policies for Amazon S3 buckets. You can provide a generic input such as identity policy or resource policy or a specific input such as managed policy or Amazon S3 bucket policy.
+
+     
+
+    Service control policies (SCPs) are a type of organization policy attached to an Amazon Web Services organization, organizational unit (OU), or an account.
+
+    
+
+  
+  :type validatePolicyResourceType: string
+  :param validatePolicyResourceType: 
+
+    The type of resource to attach to your resource policy. Specify a value for the policy validation resource type only if the policy type is ``RESOURCE_POLICY``. For example, to validate a resource policy to attach to an Amazon S3 bucket, you can choose ``AWS::S3::Bucket`` for the policy validation resource type.
+
+     
+
+    For resource types not supported as valid values, IAM Access Analyzer runs policy checks that apply to all resource policies. For example, to validate a resource policy to attach to a KMS key, do not specify a value for the policy validation resource type and IAM Access Analyzer will run policy checks that apply to all resource policies.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'findings': [
+              {
+                  'findingDetails': 'string',
+                  'findingType': 'ERROR'|'SECURITY_WARNING'|'SUGGESTION'|'WARNING',
+                  'issueCode': 'string',
+                  'learnMoreLink': 'string',
+                  'locations': [
+                      {
+                          'path': [
+                              {
+                                  'index': 123,
+                                  'key': 'string',
+                                  'substring': {
+                                      'start': 123,
+                                      'length': 123
+                                  },
+                                  'value': 'string'
+                              },
+                          ],
+                          'span': {
+                              'start': {
+                                  'line': 123,
+                                  'column': 123,
+                                  'offset': 123
+                              },
+                              'end': {
+                                  'line': 123,
+                                  'column': 123,
+                                  'offset': 123
+                              }
+                          }
+                      },
+                  ]
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **findings** *(list) --* 
+
+        The list of findings in a policy returned by IAM Access Analyzer based on its suite of policy checks.
+
+        
+        
+
+        - *(dict) --* 
+
+          A finding in a policy. Each finding is an actionable recommendation that can be used to improve the policy.
+
+          
+          
+
+          - **findingDetails** *(string) --* 
+
+            A localized message that explains the finding and provides guidance on how to address it.
+
+            
+          
+
+          - **findingType** *(string) --* 
+
+            The impact of the finding.
+
+             
+
+            Security warnings report when the policy allows access that we consider overly permissive.
+
+             
+
+            Errors report when a part of the policy is not functional.
+
+             
+
+            Warnings report non-security issues when a policy does not conform to policy writing best practices.
+
+             
+
+            Suggestions recommend stylistic improvements in the policy that do not impact access.
+
+            
+          
+
+          - **issueCode** *(string) --* 
+
+            The issue code provides an identifier of the issue associated with this finding.
+
+            
+          
+
+          - **learnMoreLink** *(string) --* 
+
+            A link to additional documentation about the type of finding.
+
+            
+          
+
+          - **locations** *(list) --* 
+
+            The list of locations in the policy document that are related to the finding. The issue code provides a summary of an issue identified by the finding.
+
+            
+            
+
+            - *(dict) --* 
+
+              A location in a policy that is represented as a path through the JSON representation and a corresponding span.
+
+              
+              
+
+              - **path** *(list) --* 
+
+                A path in a policy, represented as a sequence of path elements.
+
+                
+                
+
+                - *(dict) --* 
+
+                  A single element in a path through the JSON representation of a policy.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``index``, ``key``, ``substring``, ``value``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **index** *(integer) --* 
+
+                    Refers to an index in a JSON array.
+
+                    
+                  
+
+                  - **key** *(string) --* 
+
+                    Refers to a key in a JSON object.
+
+                    
+                  
+
+                  - **substring** *(dict) --* 
+
+                    Refers to a substring of a literal string in a JSON object.
+
+                    
+                    
+
+                    - **start** *(integer) --* 
+
+                      The start index of the substring, starting from 0.
+
+                      
+                    
+
+                    - **length** *(integer) --* 
+
+                      The length of the substring.
+
+                      
+                
+                  
+
+                  - **value** *(string) --* 
+
+                    Refers to the value associated with a given key in a JSON object.
+
+                    
+              
+            
+              
+
+              - **span** *(dict) --* 
+
+                A span in a policy.
+
+                
+                
+
+                - **start** *(dict) --* 
+
+                  The start position of the span (inclusive).
+
+                  
+                  
+
+                  - **line** *(integer) --* 
+
+                    The line of the position, starting from 1.
+
+                    
+                  
+
+                  - **column** *(integer) --* 
+
+                    The column of the position, starting from 0.
+
+                    
+                  
+
+                  - **offset** *(integer) --* 
+
+                    The offset within the policy that corresponds to the position, starting from 0.
+
+                    
+              
+                
+
+                - **end** *(dict) --* 
+
+                  The end position of the span (exclusive).
+
+                  
+                  
+
+                  - **line** *(integer) --* 
+
+                    The line of the position, starting from 1.
+
+                    
+                  
+
+                  - **column** *(integer) --* 
+
+                    The column of the position, starting from 0.
+
+                    
+                  
+
+                  - **offset** *(integer) --* 
+
+                    The offset within the policy that corresponds to the position, starting from 0.
+
+                    
+              
+            
+          
+        
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        A token used for pagination of results returned.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AccessAnalyzer.Client.exceptions.AccessDeniedException`
+
+  

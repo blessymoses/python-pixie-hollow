@@ -1,0 +1,207 @@
+:doc:`CustomerProfiles <../../customer-profiles>` / Client / get_matches
+
+***********
+get_matches
+***********
+
+
+
+.. py:method:: CustomerProfiles.Client.get_matches(**kwargs)
+
+  
+
+  Before calling this API, use `CreateDomain <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_CreateDomain.html>`__ or `UpdateDomain <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_UpdateDomain.html>`__ to enable identity resolution: set ``Matching`` to true.
+
+   
+
+  GetMatches returns potentially matching profiles, based on the results of the latest run of a machine learning process.
+
+   
+
+  .. warning::
+
+     
+
+    The process of matching duplicate profiles. If ``Matching`` = ``true``, Amazon Connect Customer Profiles starts a weekly batch process called Identity Resolution Job. If you do not specify a date and time for Identity Resolution Job to run, by default it runs every Saturday at 12AM UTC to detect duplicate profiles in your domains.
+
+     
+
+    After the Identity Resolution Job completes, use the `GetMatches <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_GetMatches.html>`__ API to return and review the results. Or, if you have configured ``ExportingConfig`` in the ``MatchingRequest``, you can download the results from S3.
+
+     
+
+   
+
+  Amazon Connect uses the following profile attributes to identify matches:
+
+   
+
+  
+  * PhoneNumber
+   
+  * HomePhoneNumber
+   
+  * BusinessPhoneNumber
+   
+  * MobilePhoneNumber
+   
+  * EmailAddress
+   
+  * PersonalEmailAddress
+   
+  * BusinessEmailAddress
+   
+  * FullName
+  
+
+   
+
+  For example, two or more profiles—with spelling mistakes such as **John Doe** and **Jhn Doe**, or different casing email addresses such as **JOHN_DOE@ANYCOMPANY.COM** and **johndoe@anycompany.com**, or different phone number formats such as **555-010-0000** and **+1-555-010-0000**—can be detected as belonging to the same customer **John Doe** and merged into a unified profile.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/customer-profiles-2020-08-15/GetMatches>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_matches(
+        NextToken='string',
+        MaxResults=123,
+        DomainName='string'
+    )
+    
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of results. Use the value returned in the previous response in the next request to retrieve the next set of results.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of results to return per page.
+
+    
+
+  
+  :type DomainName: string
+  :param DomainName: **[REQUIRED]** 
+
+    The unique name of the domain.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'NextToken': 'string',
+          'MatchGenerationDate': datetime(2015, 1, 1),
+          'PotentialMatches': 123,
+          'Matches': [
+              {
+                  'MatchId': 'string',
+                  'ProfileIds': [
+                      'string',
+                  ],
+                  'ConfidenceScore': 123.0
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **NextToken** *(string) --* 
+
+        If there are additional results, this is the token for the next set of results.
+
+        
+      
+
+      - **MatchGenerationDate** *(datetime) --* 
+
+        The timestamp this version of Match Result generated.
+
+        
+      
+
+      - **PotentialMatches** *(integer) --* 
+
+        The number of potential matches found.
+
+        
+      
+
+      - **Matches** *(list) --* 
+
+        The list of matched profiles for this instance.
+
+        
+        
+
+        - *(dict) --* 
+
+          The Match group object.
+
+          
+          
+
+          - **MatchId** *(string) --* 
+
+            The unique identifiers for this group of profiles that match.
+
+            
+          
+
+          - **ProfileIds** *(list) --* 
+
+            A list of identifiers for profiles that match.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **ConfidenceScore** *(float) --* 
+
+            A number between 0 and 1, where a higher score means higher similarity. Examining match confidence scores lets you distinguish between groups of similar records in which the system is highly confident (which you may decide to merge), groups of similar records about which the system is uncertain (which you may decide to have reviewed by a human), and groups of similar records that the system deems to be unlikely (which you may decide to reject). Given confidence scores vary as per the data input, it should not be used an absolute measure of matching quality.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.InternalServerException`
+
+  

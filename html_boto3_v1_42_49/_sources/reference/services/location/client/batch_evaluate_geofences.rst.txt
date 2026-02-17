@@ -1,0 +1,264 @@
+:doc:`LocationService <../../location>` / Client / batch_evaluate_geofences
+
+************************
+batch_evaluate_geofences
+************************
+
+
+
+.. py:method:: LocationService.Client.batch_evaluate_geofences(**kwargs)
+
+  
+
+  Evaluates device positions against the geofence geometries from a given geofence collection.
+
+   
+
+  This operation always returns an empty response because geofences are asynchronously evaluated. The evaluation determines if the device has entered or exited a geofenced area, and then publishes one of the following events to Amazon EventBridge:
+
+   
+
+  
+  * ``ENTER`` if Amazon Location determines that the tracked device has entered a geofenced area.
+   
+  * ``EXIT`` if Amazon Location determines that the tracked device has exited a geofenced area.
+  
+
+   
+
+  .. note::
+
+    
+
+    The last geofence that a device was observed within is tracked for 30 days after the most recent device position update.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    Geofence evaluation uses the given device position. It does not account for the optional ``Accuracy`` of a ``DevicePositionUpdate``.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    The ``DeviceID`` is used as a string to represent the device. You do not need to have a ``Tracker`` associated with the ``DeviceID``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/BatchEvaluateGeofences>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_evaluate_geofences(
+        CollectionName='string',
+        DevicePositionUpdates=[
+            {
+                'DeviceId': 'string',
+                'SampleTime': datetime(2015, 1, 1),
+                'Position': [
+                    123.0,
+                ],
+                'Accuracy': {
+                    'Horizontal': 123.0
+                },
+                'PositionProperties': {
+                    'string': 'string'
+                }
+            },
+        ]
+    )
+    
+  :type CollectionName: string
+  :param CollectionName: **[REQUIRED]** 
+
+    The geofence collection used in evaluating the position of devices against its geofences.
+
+    
+
+  
+  :type DevicePositionUpdates: list
+  :param DevicePositionUpdates: **[REQUIRED]** 
+
+    Contains device details for each device to be evaluated against the given geofence collection.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains the position update details for a device.
+
+      
+
+    
+      - **DeviceId** *(string) --* **[REQUIRED]** 
+
+        The device associated to the position update.
+
+        
+
+      
+      - **SampleTime** *(datetime) --* **[REQUIRED]** 
+
+        The timestamp at which the device's position was determined. Uses `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``
+
+        
+
+      
+      - **Position** *(list) --* **[REQUIRED]** 
+
+        The latest device position defined in `WGS 84 <https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84>`__ format: ``[X or longitude, Y or latitude]``.
+
+        
+
+      
+        - *(float) --* 
+
+        
+    
+      - **Accuracy** *(dict) --* 
+
+        The accuracy of the device position.
+
+        
+
+      
+        - **Horizontal** *(float) --* **[REQUIRED]** 
+
+          Estimated maximum distance, in meters, between the measured position and the true position of a device, along the Earth's surface.
+
+          
+
+        
+      
+      - **PositionProperties** *(dict) --* 
+
+        Associates one of more properties with the position update. A property is a key-value pair stored with the position update and added to any geofence event the update may trigger.
+
+         
+
+        Format: ``"key" : "value"``
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Errors': [
+              {
+                  'DeviceId': 'string',
+                  'SampleTime': datetime(2015, 1, 1),
+                  'Error': {
+                      'Code': 'AccessDeniedError'|'ConflictError'|'InternalServerError'|'ResourceNotFoundError'|'ThrottlingError'|'ValidationError',
+                      'Message': 'string'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Errors** *(list) --* 
+
+        Contains error details for each device that failed to evaluate its position against the given geofence collection.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains error details for each device that failed to evaluate its position against the geofences in a given geofence collection.
+
+          
+          
+
+          - **DeviceId** *(string) --* 
+
+            The device associated with the position evaluation error.
+
+            
+          
+
+          - **SampleTime** *(datetime) --* 
+
+            Specifies a timestamp for when the error occurred in `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``
+
+            
+          
+
+          - **Error** *(dict) --* 
+
+            Contains details associated to the batch error.
+
+            
+            
+
+            - **Code** *(string) --* 
+
+              The error code associated with the batch request error.
+
+              
+            
+
+            - **Message** *(string) --* 
+
+              A message with the reason for the batch request error.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`LocationService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ThrottlingException`
+
+  

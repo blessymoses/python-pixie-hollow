@@ -1,0 +1,322 @@
+:doc:`ServiceCatalog <../../servicecatalog>` / Client / create_provisioning_artifact
+
+****************************
+create_provisioning_artifact
+****************************
+
+
+
+.. py:method:: ServiceCatalog.Client.create_provisioning_artifact(**kwargs)
+
+  
+
+  Creates a provisioning artifact (also known as a version) for the specified product.
+
+   
+
+  You cannot create a provisioning artifact for a product that was shared with you.
+
+   
+
+  The user or role that performs this operation must have the ``cloudformation:GetTemplate`` IAM policy permission. This policy permission is required when using the ``ImportFromPhysicalId`` template source in the information data section.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/servicecatalog-2015-12-10/CreateProvisioningArtifact>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_provisioning_artifact(
+        AcceptLanguage='string',
+        ProductId='string',
+        Parameters={
+            'Name': 'string',
+            'Description': 'string',
+            'Info': {
+                'string': 'string'
+            },
+            'Type': 'CLOUD_FORMATION_TEMPLATE'|'MARKETPLACE_AMI'|'MARKETPLACE_CAR'|'TERRAFORM_OPEN_SOURCE'|'TERRAFORM_CLOUD'|'EXTERNAL',
+            'DisableTemplateValidation': True|False
+        },
+        IdempotencyToken='string'
+    )
+    
+  :type AcceptLanguage: string
+  :param AcceptLanguage: 
+
+    The language code.
+
+     
+
+    
+    * ``jp`` - Japanese
+     
+    * ``zh`` - Chinese
+    
+
+    
+
+  
+  :type ProductId: string
+  :param ProductId: **[REQUIRED]** 
+
+    The product identifier.
+
+    
+
+  
+  :type Parameters: dict
+  :param Parameters: **[REQUIRED]** 
+
+    The configuration for the provisioning artifact.
+
+    
+
+  
+    - **Name** *(string) --* 
+
+      The name of the provisioning artifact (for example, v1 v2beta). No spaces are allowed.
+
+      
+
+    
+    - **Description** *(string) --* 
+
+      The description of the provisioning artifact, including how it differs from the previous provisioning artifact.
+
+      
+
+    
+    - **Info** *(dict) --* 
+
+      Specify the template source with one of the following options, but not both. Keys accepted: [ ``LoadTemplateFromURL``, ``ImportFromPhysicalId`` ]
+
+       
+
+      The URL of the CloudFormation template in Amazon S3 or GitHub in JSON format. Specify the URL in JSON format as follows:
+
+       
+
+      ``"LoadTemplateFromURL": "https://s3.amazonaws.com/cf-templates-ozkq9d3hgiq2-us-east-1/..."``
+
+       
+
+      ``ImportFromPhysicalId``: The physical id of the resource that contains the template. Currently only supports CloudFormation stack arn. Specify the physical id in JSON format as follows: ``ImportFromPhysicalId: “arn:aws:cloudformation:[us-east-1]:[accountId]:stack/[StackName]/[resourceId]``
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+    - **Type** *(string) --* 
+
+      The type of provisioning artifact.
+
+       
+
+      
+      * ``CLOUD_FORMATION_TEMPLATE`` - CloudFormation template
+       
+      * ``TERRAFORM_OPEN_SOURCE`` - Terraform Open Source configuration file
+       
+      * ``TERRAFORM_CLOUD`` - Terraform Cloud configuration file
+       
+      * ``EXTERNAL`` - External configuration file
+      
+
+      
+
+    
+    - **DisableTemplateValidation** *(boolean) --* 
+
+      If set to true, Service Catalog stops validating the specified provisioning artifact even if it is invalid.
+
+       
+
+      Service Catalog does not support template validation for the ``TERRAFORM_OS`` product type.
+
+      
+
+    
+  
+  :type IdempotencyToken: string
+  :param IdempotencyToken: **[REQUIRED]** 
+
+    A unique identifier that you provide to ensure idempotency. If multiple requests differ only by the idempotency token, the same response is returned for each repeated request.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ProvisioningArtifactDetail': {
+              'Id': 'string',
+              'Name': 'string',
+              'Description': 'string',
+              'Type': 'CLOUD_FORMATION_TEMPLATE'|'MARKETPLACE_AMI'|'MARKETPLACE_CAR'|'TERRAFORM_OPEN_SOURCE'|'TERRAFORM_CLOUD'|'EXTERNAL',
+              'CreatedTime': datetime(2015, 1, 1),
+              'Active': True|False,
+              'Guidance': 'DEFAULT'|'DEPRECATED',
+              'SourceRevision': 'string'
+          },
+          'Info': {
+              'string': 'string'
+          },
+          'Status': 'AVAILABLE'|'CREATING'|'FAILED'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ProvisioningArtifactDetail** *(dict) --* 
+
+        Information about the provisioning artifact.
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          The identifier of the provisioning artifact.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          The name of the provisioning artifact.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          The description of the provisioning artifact.
+
+          
+        
+
+        - **Type** *(string) --* 
+
+          The type of provisioning artifact.
+
+           
+
+          
+          * ``CLOUD_FORMATION_TEMPLATE`` - CloudFormation template
+           
+          * ``TERRAFORM_OPEN_SOURCE`` - Terraform Open Source configuration file
+           
+          * ``TERRAFORM_CLOUD`` - Terraform Cloud configuration file
+           
+          * ``EXTERNAL`` - External configuration file
+          
+
+          
+        
+
+        - **CreatedTime** *(datetime) --* 
+
+          The UTC time stamp of the creation time.
+
+          
+        
+
+        - **Active** *(boolean) --* 
+
+          Indicates whether the product version is active.
+
+          
+        
+
+        - **Guidance** *(string) --* 
+
+          Information set by the administrator to provide guidance to end users about which provisioning artifacts to use.
+
+          
+        
+
+        - **SourceRevision** *(string) --* 
+
+          Specifies the revision of the external artifact that was used to automatically sync the Service Catalog product and create the provisioning artifact. Service Catalog includes this response parameter as a high level field to the existing ``ProvisioningArtifactDetail`` type, which is returned as part of the response for ``CreateProduct``, ``UpdateProduct``, ``DescribeProductAsAdmin``, ``DescribeProvisioningArtifact``, ``ListProvisioningArtifact``, and ``UpdateProvisioningArticat`` APIs.
+
+           
+
+          This field only exists for Repo-Synced products.
+
+          
+    
+      
+
+      - **Info** *(dict) --* 
+
+        Specify the template source with one of the following options, but not both. Keys accepted: [ ``LoadTemplateFromURL``, ``ImportFromPhysicalId`` ].
+
+         
+
+        Use the URL of the CloudFormation template in Amazon S3 or GitHub in JSON format.
+
+         
+
+        ``LoadTemplateFromURL``
+
+         
+
+        Use the URL of the CloudFormation template in Amazon S3 or GitHub in JSON format.
+
+         
+
+        ``ImportFromPhysicalId``
+
+         
+
+        Use the physical id of the resource that contains the template; currently supports CloudFormation stack ARN.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **Status** *(string) --* 
+
+        The status of the current request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.InvalidParametersException`
+
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.LimitExceededException`
+
+  

@@ -1,0 +1,690 @@
+:doc:`ECS <../../ecs>` / Client / update_container_agent
+
+**********************
+update_container_agent
+**********************
+
+
+
+.. py:method:: ECS.Client.update_container_agent(**kwargs)
+
+  
+
+  Updates the Amazon ECS container agent on a specified container instance. Updating the Amazon ECS container agent doesn't interrupt running tasks or services on the container instance. The process for updating the agent differs depending on whether your container instance was launched with the Amazon ECS-optimized AMI or another operating system.
+
+   
+
+  .. note::
+
+    
+
+    The ``UpdateContainerAgent`` API isn't supported for container instances using the Amazon ECS-optimized Amazon Linux 2 (arm64) AMI. To update the container agent, you can update the ``ecs-init`` package. This updates the agent. For more information, see `Updating the Amazon ECS container agent <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/agent-update-ecs-ami.html>`__ in the *Amazon Elastic Container Service Developer Guide*.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    Agent updates with the ``UpdateContainerAgent`` API operation do not apply to Windows container instances. We recommend that you launch new container instances to update the agent version in your Windows clusters.
+
+    
+
+   
+
+  The ``UpdateContainerAgent`` API requires an Amazon ECS-optimized AMI or Amazon Linux AMI with the ``ecs-init`` service installed and running. For help updating the Amazon ECS container agent on other operating systems, see `Manually updating the Amazon ECS container agent <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-update.html#manually_update_agent>`__ in the *Amazon Elastic Container Service Developer Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/UpdateContainerAgent>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_container_agent(
+        cluster='string',
+        containerInstance='string'
+    )
+    
+  :type cluster: string
+  :param cluster: 
+
+    The short name or full Amazon Resource Name (ARN) of the cluster that your container instance is running on. If you do not specify a cluster, the default cluster is assumed.
+
+    
+
+  
+  :type containerInstance: string
+  :param containerInstance: **[REQUIRED]** 
+
+    The container instance ID or full ARN entries for the container instance where you would like to update the Amazon ECS container agent.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'containerInstance': {
+              'containerInstanceArn': 'string',
+              'ec2InstanceId': 'string',
+              'capacityProviderName': 'string',
+              'version': 123,
+              'versionInfo': {
+                  'agentVersion': 'string',
+                  'agentHash': 'string',
+                  'dockerVersion': 'string'
+              },
+              'remainingResources': [
+                  {
+                      'name': 'string',
+                      'type': 'string',
+                      'doubleValue': 123.0,
+                      'longValue': 123,
+                      'integerValue': 123,
+                      'stringSetValue': [
+                          'string',
+                      ]
+                  },
+              ],
+              'registeredResources': [
+                  {
+                      'name': 'string',
+                      'type': 'string',
+                      'doubleValue': 123.0,
+                      'longValue': 123,
+                      'integerValue': 123,
+                      'stringSetValue': [
+                          'string',
+                      ]
+                  },
+              ],
+              'status': 'string',
+              'statusReason': 'string',
+              'agentConnected': True|False,
+              'runningTasksCount': 123,
+              'pendingTasksCount': 123,
+              'agentUpdateStatus': 'PENDING'|'STAGING'|'STAGED'|'UPDATING'|'UPDATED'|'FAILED',
+              'attributes': [
+                  {
+                      'name': 'string',
+                      'value': 'string',
+                      'targetType': 'container-instance',
+                      'targetId': 'string'
+                  },
+              ],
+              'registeredAt': datetime(2015, 1, 1),
+              'attachments': [
+                  {
+                      'id': 'string',
+                      'type': 'string',
+                      'status': 'string',
+                      'details': [
+                          {
+                              'name': 'string',
+                              'value': 'string'
+                          },
+                      ]
+                  },
+              ],
+              'tags': [
+                  {
+                      'key': 'string',
+                      'value': 'string'
+                  },
+              ],
+              'healthStatus': {
+                  'overallStatus': 'OK'|'IMPAIRED'|'INSUFFICIENT_DATA'|'INITIALIZING',
+                  'details': [
+                      {
+                          'type': 'CONTAINER_RUNTIME',
+                          'status': 'OK'|'IMPAIRED'|'INSUFFICIENT_DATA'|'INITIALIZING',
+                          'lastUpdated': datetime(2015, 1, 1),
+                          'lastStatusChange': datetime(2015, 1, 1)
+                      },
+                  ]
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **containerInstance** *(dict) --* 
+
+        The container instance that the container agent was updated for.
+
+        
+        
+
+        - **containerInstanceArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the container instance. For more information about the ARN format, see `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-account-settings.html#ecs-resource-ids>`__ in the *Amazon ECS Developer Guide*.
+
+          
+        
+
+        - **ec2InstanceId** *(string) --* 
+
+          The ID of the container instance. For Amazon EC2 instances, this value is the Amazon EC2 instance ID. For external instances, this value is the Amazon Web Services Systems Manager managed instance ID.
+
+          
+        
+
+        - **capacityProviderName** *(string) --* 
+
+          The capacity provider that's associated with the container instance.
+
+          
+        
+
+        - **version** *(integer) --* 
+
+          The version counter for the container instance. Every time a container instance experiences a change that triggers a CloudWatch event, the version counter is incremented. If you're replicating your Amazon ECS container instance state with CloudWatch Events, you can compare the version of a container instance reported by the Amazon ECS APIs with the version reported in CloudWatch Events for the container instance (inside the ``detail`` object) to verify that the version in your event stream is current.
+
+          
+        
+
+        - **versionInfo** *(dict) --* 
+
+          The version information for the Amazon ECS container agent and Docker daemon running on the container instance.
+
+          
+          
+
+          - **agentVersion** *(string) --* 
+
+            The version number of the Amazon ECS container agent.
+
+            
+          
+
+          - **agentHash** *(string) --* 
+
+            The Git commit hash for the Amazon ECS container agent build on the `amazon-ecs-agent <https://github.com/aws/amazon-ecs-agent>`__ GitHub repository.
+
+            
+          
+
+          - **dockerVersion** *(string) --* 
+
+            The Docker version that's running on the container instance.
+
+            
+      
+        
+
+        - **remainingResources** *(list) --* 
+
+          For CPU and memory resource types, this parameter describes the remaining CPU and memory that wasn't already allocated to tasks and is therefore available for new tasks. For port resource types, this parameter describes the ports that were reserved by the Amazon ECS container agent (at instance registration time) and any task containers that have reserved port mappings on the host (with the ``host`` or ``bridge`` network mode). Any port that's not specified here is available for new tasks.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes the resources available for a container instance.
+
+            
+            
+
+            - **name** *(string) --* 
+
+              The name of the resource, such as ``CPU``, ``MEMORY``, ``PORTS``, ``PORTS_UDP``, or a user-defined resource.
+
+              
+            
+
+            - **type** *(string) --* 
+
+              The type of the resource. Valid values: ``INTEGER``, ``DOUBLE``, ``LONG``, or ``STRINGSET``.
+
+              
+            
+
+            - **doubleValue** *(float) --* 
+
+              When the ``doubleValue`` type is set, the value of the resource must be a double precision floating-point type.
+
+              
+            
+
+            - **longValue** *(integer) --* 
+
+              When the ``longValue`` type is set, the value of the resource must be an extended precision floating-point type.
+
+              
+            
+
+            - **integerValue** *(integer) --* 
+
+              When the ``integerValue`` type is set, the value of the resource must be an integer.
+
+              
+            
+
+            - **stringSetValue** *(list) --* 
+
+              When the ``stringSetValue`` type is set, the value of the resource must be a string type.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **registeredResources** *(list) --* 
+
+          For CPU and memory resource types, this parameter describes the amount of each resource that was available on the container instance when the container agent registered it with Amazon ECS. This value represents the total amount of CPU and memory that can be allocated on this container instance to tasks. For port resource types, this parameter describes the ports that were reserved by the Amazon ECS container agent when it registered the container instance with Amazon ECS.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes the resources available for a container instance.
+
+            
+            
+
+            - **name** *(string) --* 
+
+              The name of the resource, such as ``CPU``, ``MEMORY``, ``PORTS``, ``PORTS_UDP``, or a user-defined resource.
+
+              
+            
+
+            - **type** *(string) --* 
+
+              The type of the resource. Valid values: ``INTEGER``, ``DOUBLE``, ``LONG``, or ``STRINGSET``.
+
+              
+            
+
+            - **doubleValue** *(float) --* 
+
+              When the ``doubleValue`` type is set, the value of the resource must be a double precision floating-point type.
+
+              
+            
+
+            - **longValue** *(integer) --* 
+
+              When the ``longValue`` type is set, the value of the resource must be an extended precision floating-point type.
+
+              
+            
+
+            - **integerValue** *(integer) --* 
+
+              When the ``integerValue`` type is set, the value of the resource must be an integer.
+
+              
+            
+
+            - **stringSetValue** *(list) --* 
+
+              When the ``stringSetValue`` type is set, the value of the resource must be a string type.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **status** *(string) --* 
+
+          The status of the container instance. The valid values are ``REGISTERING``, ``REGISTRATION_FAILED``, ``ACTIVE``, ``INACTIVE``, ``DEREGISTERING``, or ``DRAINING``.
+
+           
+
+          If your account has opted in to the ``awsvpcTrunking`` account setting, then any newly registered container instance will transition to a ``REGISTERING`` status while the trunk elastic network interface is provisioned for the instance. If the registration fails, the instance will transition to a ``REGISTRATION_FAILED`` status. You can describe the container instance and see the reason for failure in the ``statusReason`` parameter. Once the container instance is terminated, the instance transitions to a ``DEREGISTERING`` status while the trunk elastic network interface is deprovisioned. The instance then transitions to an ``INACTIVE`` status.
+
+           
+
+          The ``ACTIVE`` status indicates that the container instance can accept tasks. The ``DRAINING`` indicates that new tasks aren't placed on the container instance and any service tasks running on the container instance are removed if possible. For more information, see `Container instance draining <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-draining.html>`__ in the *Amazon Elastic Container Service Developer Guide*.
+
+          
+        
+
+        - **statusReason** *(string) --* 
+
+          The reason that the container instance reached its current status.
+
+          
+        
+
+        - **agentConnected** *(boolean) --* 
+
+          This parameter returns ``true`` if the agent is connected to Amazon ECS. An instance with an agent that may be unhealthy or stopped return ``false``. Only instances connected to an agent can accept task placement requests.
+
+          
+        
+
+        - **runningTasksCount** *(integer) --* 
+
+          The number of tasks on the container instance that have a desired status ( ``desiredStatus``) of ``RUNNING``.
+
+          
+        
+
+        - **pendingTasksCount** *(integer) --* 
+
+          The number of tasks on the container instance that are in the ``PENDING`` status.
+
+          
+        
+
+        - **agentUpdateStatus** *(string) --* 
+
+          The status of the most recent agent update. If an update wasn't ever requested, this value is ``NULL``.
+
+          
+        
+
+        - **attributes** *(list) --* 
+
+          The attributes set for the container instance, either by the Amazon ECS container agent at instance registration or manually with the `PutAttributes <https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_PutAttributes.html>`__ operation.
+
+          
+          
+
+          - *(dict) --* 
+
+            An attribute is a name-value pair that's associated with an Amazon ECS object. Use attributes to extend the Amazon ECS data model by adding custom metadata to your resources. For more information, see `Attributes <https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-placement-constraints.html#attributes>`__ in the *Amazon Elastic Container Service Developer Guide*.
+
+            
+            
+
+            - **name** *(string) --* 
+
+              The name of the attribute. The ``name`` must contain between 1 and 128 characters. The name may contain letters (uppercase and lowercase), numbers, hyphens (-), underscores (_), forward slashes (/), back slashes (\), or periods (.).
+
+              
+            
+
+            - **value** *(string) --* 
+
+              The value of the attribute. The ``value`` must contain between 1 and 128 characters. It can contain letters (uppercase and lowercase), numbers, hyphens (-), underscores (_), periods (.), at signs (@), forward slashes (/), back slashes (\), colons (:), or spaces. The value can't start or end with a space.
+
+              
+            
+
+            - **targetType** *(string) --* 
+
+              The type of the target to attach the attribute with. This parameter is required if you use the short form ID for a resource instead of the full ARN.
+
+              
+            
+
+            - **targetId** *(string) --* 
+
+              The ID of the target. You can specify the short form ID for a resource or the full Amazon Resource Name (ARN).
+
+              
+        
+      
+        
+
+        - **registeredAt** *(datetime) --* 
+
+          The Unix timestamp for the time when the container instance was registered.
+
+          
+        
+
+        - **attachments** *(list) --* 
+
+          The resources attached to a container instance, such as an elastic network interface.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing a container instance or task attachment.
+
+            
+            
+
+            - **id** *(string) --* 
+
+              The unique identifier for the attachment.
+
+              
+            
+
+            - **type** *(string) --* 
+
+              The type of the attachment, such as ``ElasticNetworkInterface``, ``Service Connect``, and ``AmazonElasticBlockStorage``.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The status of the attachment. Valid values are ``PRECREATED``, ``CREATED``, ``ATTACHING``, ``ATTACHED``, ``DETACHING``, ``DETACHED``, ``DELETED``, and ``FAILED``.
+
+              
+            
+
+            - **details** *(list) --* 
+
+              Details of the attachment.
+
+               
+
+              For elastic network interfaces, this includes the network interface ID, the MAC address, the subnet ID, and the private IPv4 address.
+
+               
+
+              For Service Connect services, this includes ``portName``, ``clientAliases``, ``discoveryName``, and ``ingressPortOverride``.
+
+               
+
+              For Elastic Block Storage, this includes ``roleArn``, ``deleteOnTermination``, ``volumeName``, ``volumeId``, and ``statusReason`` (only when the attachment fails to create or attach).
+
+              
+              
+
+              - *(dict) --* 
+
+                A key-value pair object.
+
+                
+                
+
+                - **name** *(string) --* 
+
+                  The name of the key-value pair. For environment variables, this is the name of the environment variable.
+
+                  
+                
+
+                - **value** *(string) --* 
+
+                  The value of the key-value pair. For environment variables, this is the value of the environment variable.
+
+                  
+            
+          
+        
+      
+        
+
+        - **tags** *(list) --* 
+
+          The metadata that you apply to the container instance to help you categorize and organize them. Each tag consists of a key and an optional value. You define both.
+
+           
+
+          The following basic restrictions apply to tags:
+
+           
+
+          
+          * Maximum number of tags per resource - 50
+           
+          * For each resource, each tag key must be unique, and each tag key can have only one value.
+           
+          * Maximum key length - 128 Unicode characters in UTF-8
+           
+          * Maximum value length - 256 Unicode characters in UTF-8
+           
+          * If your tagging schema is used across multiple services and resources, remember that other services may have restrictions on allowed characters. Generally allowed characters are: letters, numbers, and spaces representable in UTF-8, and the following characters: + - = . _ : / @.
+           
+          * Tag keys and values are case-sensitive.
+           
+          * Do not use ``aws:``, ``AWS:``, or any upper or lowercase combination of such as a prefix for either keys or values as it is reserved for Amazon Web Services use. You cannot edit or delete tag keys or values with this prefix. Tags with this prefix do not count against your tags per resource limit.
+          
+
+          
+          
+
+          - *(dict) --* 
+
+            The metadata that you apply to a resource to help you categorize and organize them. Each tag consists of a key and an optional value. You define them.
+
+             
+
+            The following basic restrictions apply to tags:
+
+             
+
+            
+            * Maximum number of tags per resource - 50
+             
+            * For each resource, each tag key must be unique, and each tag key can have only one value.
+             
+            * Maximum key length - 128 Unicode characters in UTF-8
+             
+            * Maximum value length - 256 Unicode characters in UTF-8
+             
+            * If your tagging schema is used across multiple services and resources, remember that other services may have restrictions on allowed characters. Generally allowed characters are: letters, numbers, and spaces representable in UTF-8, and the following characters: + - = . _ : / @.
+             
+            * Tag keys and values are case-sensitive.
+             
+            * Do not use ``aws:``, ``AWS:``, or any upper or lowercase combination of such as a prefix for either keys or values as it is reserved for Amazon Web Services use. You cannot edit or delete tag keys or values with this prefix. Tags with this prefix do not count against your tags per resource limit.
+            
+
+            
+            
+
+            - **key** *(string) --* 
+
+              One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+              
+            
+
+            - **value** *(string) --* 
+
+              The optional part of a key-value pair that make up a tag. A ``value`` acts as a descriptor within a tag category (key).
+
+              
+        
+      
+        
+
+        - **healthStatus** *(dict) --* 
+
+          An object representing the health status of the container instance.
+
+          
+          
+
+          - **overallStatus** *(string) --* 
+
+            The overall health status of the container instance. This is an aggregate status of all container instance health checks.
+
+            
+          
+
+          - **details** *(list) --* 
+
+            An array of objects representing the details of the container instance health status.
+
+            
+            
+
+            - *(dict) --* 
+
+              An object representing the result of a container instance health status check.
+
+              
+              
+
+              - **type** *(string) --* 
+
+                The type of container instance health status that was verified.
+
+                
+              
+
+              - **status** *(string) --* 
+
+                The container instance health status.
+
+                
+              
+
+              - **lastUpdated** *(datetime) --* 
+
+                The Unix timestamp for when the container instance health status was last updated.
+
+                
+              
+
+              - **lastStatusChange** *(datetime) --* 
+
+                The Unix timestamp for when the container instance health status last changed.
+
+                
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ECS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.ClusterNotFoundException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.UpdateInProgressException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.NoUpdateAvailableException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.MissingVersionException`
+
+  

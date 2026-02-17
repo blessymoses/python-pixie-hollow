@@ -1,0 +1,440 @@
+:doc:`WAF <../../waf>` / Client / create_size_constraint_set
+
+**************************
+create_size_constraint_set
+**************************
+
+
+
+.. py:method:: WAF.Client.create_size_constraint_set(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This is **AWS WAF Classic** documentation. For more information, see `AWS WAF Classic <https://docs.aws.amazon.com/waf/latest/developerguide/classic-waf-chapter.html>`__ in the developer guide.
+
+     
+
+    **For the latest version of AWS WAF**, use the AWS WAFV2 API and see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html>`__. With the latest version, AWS WAF has a single set of endpoints for regional and global use.
+
+    
+
+   
+
+  Creates a ``SizeConstraintSet``. You then use  UpdateSizeConstraintSet to identify the part of a web request that you want AWS WAF to check for length, such as the length of the ``User-Agent`` header or the length of the query string. For example, you can create a ``SizeConstraintSet`` that matches any requests that have a query string that is longer than 100 bytes. You can then configure AWS WAF to reject those requests.
+
+   
+
+  To create and configure a ``SizeConstraintSet``, perform the following steps:
+
+   
+
+   
+  * Use  GetChangeToken to get the change token that you provide in the ``ChangeToken`` parameter of a ``CreateSizeConstraintSet`` request.
+   
+  * Submit a ``CreateSizeConstraintSet`` request.
+   
+  * Use ``GetChangeToken`` to get the change token that you provide in the ``ChangeToken`` parameter of an ``UpdateSizeConstraintSet`` request.
+   
+  * Submit an  UpdateSizeConstraintSet request to specify the part of the request that you want AWS WAF to inspect (for example, the header or the URI) and the value that you want AWS WAF to watch for.
+   
+
+   
+
+  For more information about how to use the AWS WAF API to allow or block HTTP requests, see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/waf-2015-08-24/CreateSizeConstraintSet>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_size_constraint_set(
+        Name='string',
+        ChangeToken='string'
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A friendly name or description of the  SizeConstraintSet. You can't change ``Name`` after you create a ``SizeConstraintSet``.
+
+    
+
+  
+  :type ChangeToken: string
+  :param ChangeToken: **[REQUIRED]** 
+
+    The value returned by the most recent call to  GetChangeToken.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'SizeConstraintSet': {
+              'SizeConstraintSetId': 'string',
+              'Name': 'string',
+              'SizeConstraints': [
+                  {
+                      'FieldToMatch': {
+                          'Type': 'URI'|'QUERY_STRING'|'HEADER'|'METHOD'|'BODY'|'SINGLE_QUERY_ARG'|'ALL_QUERY_ARGS',
+                          'Data': 'string'
+                      },
+                      'TextTransformation': 'NONE'|'COMPRESS_WHITE_SPACE'|'HTML_ENTITY_DECODE'|'LOWERCASE'|'CMD_LINE'|'URL_DECODE',
+                      'ComparisonOperator': 'EQ'|'NE'|'LE'|'LT'|'GE'|'GT',
+                      'Size': 123
+                  },
+              ]
+          },
+          'ChangeToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **SizeConstraintSet** *(dict) --* 
+
+        A  SizeConstraintSet that contains no ``SizeConstraint`` objects.
+
+        
+        
+
+        - **SizeConstraintSetId** *(string) --* 
+
+          A unique identifier for a ``SizeConstraintSet``. You use ``SizeConstraintSetId`` to get information about a ``SizeConstraintSet`` (see  GetSizeConstraintSet), update a ``SizeConstraintSet`` (see  UpdateSizeConstraintSet), insert a ``SizeConstraintSet`` into a ``Rule`` or delete one from a ``Rule`` (see  UpdateRule), and delete a ``SizeConstraintSet`` from AWS WAF (see  DeleteSizeConstraintSet).
+
+           
+
+          ``SizeConstraintSetId`` is returned by  CreateSizeConstraintSet and by  ListSizeConstraintSets.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          The name, if any, of the ``SizeConstraintSet``.
+
+          
+        
+
+        - **SizeConstraints** *(list) --* 
+
+          Specifies the parts of web requests that you want to inspect the size of.
+
+          
+          
+
+          - *(dict) --* 
+
+            .. note::
+
+              
+
+              This is **AWS WAF Classic** documentation. For more information, see `AWS WAF Classic <https://docs.aws.amazon.com/waf/latest/developerguide/classic-waf-chapter.html>`__ in the developer guide.
+
+               
+
+              **For the latest version of AWS WAF**, use the AWS WAFV2 API and see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html>`__. With the latest version, AWS WAF has a single set of endpoints for regional and global use.
+
+              
+
+             
+
+            Specifies a constraint on the size of a part of the web request. AWS WAF uses the ``Size``, ``ComparisonOperator``, and ``FieldToMatch`` to build an expression in the form of " ``Size`` ``ComparisonOperator`` size in bytes of ``FieldToMatch``". If that expression is true, the ``SizeConstraint`` is considered to match.
+
+            
+            
+
+            - **FieldToMatch** *(dict) --* 
+
+              Specifies where in a web request to look for the size constraint.
+
+              
+              
+
+              - **Type** *(string) --* 
+
+                The part of the web request that you want AWS WAF to search for a specified string. Parts of a request that you can search include the following:
+
+                 
+
+                
+                * ``HEADER``: A specified request header, for example, the value of the ``User-Agent`` or ``Referer`` header. If you choose ``HEADER`` for the type, specify the name of the header in ``Data``.
+                 
+                * ``METHOD``: The HTTP method, which indicated the type of operation that the request is asking the origin to perform. Amazon CloudFront supports the following methods: ``DELETE``, ``GET``, ``HEAD``, ``OPTIONS``, ``PATCH``, ``POST``, and ``PUT``.
+                 
+                * ``QUERY_STRING``: A query string, which is the part of a URL that appears after a ``?`` character, if any.
+                 
+                * ``URI``: The part of a web request that identifies a resource, for example, ``/images/daily-ad.jpg``.
+                 
+                * ``BODY``: The part of a request that contains any additional data that you want to send to your web server as the HTTP request body, such as data from a form. The request body immediately follows the request headers. Note that only the first ``8192`` bytes of the request body are forwarded to AWS WAF for inspection. To allow or block requests based on the length of the body, you can create a size constraint set. For more information, see  CreateSizeConstraintSet.
+                 
+                * ``SINGLE_QUERY_ARG``: The parameter in the query string that you will inspect, such as *UserName* or *SalesRegion*. The maximum length for ``SINGLE_QUERY_ARG`` is 30 characters.
+                 
+                * ``ALL_QUERY_ARGS``: Similar to ``SINGLE_QUERY_ARG``, but rather than inspecting a single parameter, AWS WAF will inspect all parameters within the query for the value or regex pattern that you specify in ``TargetString``.
+                
+
+                
+              
+
+              - **Data** *(string) --* 
+
+                When the value of ``Type`` is ``HEADER``, enter the name of the header that you want AWS WAF to search, for example, ``User-Agent`` or ``Referer``. The name of the header is not case sensitive.
+
+                 
+
+                When the value of ``Type`` is ``SINGLE_QUERY_ARG``, enter the name of the parameter that you want AWS WAF to search, for example, ``UserName`` or ``SalesRegion``. The parameter name is not case sensitive.
+
+                 
+
+                If the value of ``Type`` is any other value, omit ``Data``.
+
+                
+          
+            
+
+            - **TextTransformation** *(string) --* 
+
+              Text transformations eliminate some of the unusual formatting that attackers use in web requests in an effort to bypass AWS WAF. If you specify a transformation, AWS WAF performs the transformation on ``FieldToMatch`` before inspecting it for a match.
+
+               
+
+              You can only specify a single type of TextTransformation.
+
+               
+
+              Note that if you choose ``BODY`` for the value of ``Type``, you must choose ``NONE`` for ``TextTransformation`` because CloudFront forwards only the first 8192 bytes for inspection.
+
+               
+
+              **NONE**
+
+               
+
+              Specify ``NONE`` if you don't want to perform any text transformations.
+
+               
+
+              **CMD_LINE**
+
+               
+
+              When you're concerned that attackers are injecting an operating system command line command and using unusual formatting to disguise some or all of the command, use this option to perform the following transformations:
+
+               
+
+              
+              * Delete the following characters: \ " ' ^
+               
+              * Delete spaces before the following characters: / (
+               
+              * Replace the following characters with a space: , ;
+               
+              * Replace multiple spaces with one space
+               
+              * Convert uppercase letters (A-Z) to lowercase (a-z)
+              
+
+               
+
+              **COMPRESS_WHITE_SPACE**
+
+               
+
+              Use this option to replace the following characters with a space character (decimal 32):
+
+               
+
+              
+              * \f, formfeed, decimal 12
+               
+              * \t, tab, decimal 9
+               
+              * \n, newline, decimal 10
+               
+              * \r, carriage return, decimal 13
+               
+              * \v, vertical tab, decimal 11
+               
+              * non-breaking space, decimal 160
+              
+
+               
+
+              ``COMPRESS_WHITE_SPACE`` also replaces multiple spaces with one space.
+
+               
+
+              **HTML_ENTITY_DECODE**
+
+               
+
+              Use this option to replace HTML-encoded characters with unencoded characters. ``HTML_ENTITY_DECODE`` performs the following operations:
+
+               
+
+              
+              * Replaces ``(ampersand)quot;`` with ``"``
+               
+              * Replaces ``(ampersand)nbsp;`` with a non-breaking space, decimal 160
+               
+              * Replaces ``(ampersand)lt;`` with a "less than" symbol
+               
+              * Replaces ``(ampersand)gt;`` with ``>``
+               
+              * Replaces characters that are represented in hexadecimal format, ``(ampersand)#xhhhh;``, with the corresponding characters
+               
+              * Replaces characters that are represented in decimal format, ``(ampersand)#nnnn;``, with the corresponding characters
+              
+
+               
+
+              **LOWERCASE**
+
+               
+
+              Use this option to convert uppercase letters (A-Z) to lowercase (a-z).
+
+               
+
+              **URL_DECODE**
+
+               
+
+              Use this option to decode a URL-encoded value.
+
+              
+            
+
+            - **ComparisonOperator** *(string) --* 
+
+              The type of comparison you want AWS WAF to perform. AWS WAF uses this in combination with the provided ``Size`` and ``FieldToMatch`` to build an expression in the form of " ``Size`` ``ComparisonOperator`` size in bytes of ``FieldToMatch``". If that expression is true, the ``SizeConstraint`` is considered to match.
+
+               
+
+              **EQ**: Used to test if the ``Size`` is equal to the size of the ``FieldToMatch``
+
+               
+
+              **NE**: Used to test if the ``Size`` is not equal to the size of the ``FieldToMatch``
+
+               
+
+              **LE**: Used to test if the ``Size`` is less than or equal to the size of the ``FieldToMatch``
+
+               
+
+              **LT**: Used to test if the ``Size`` is strictly less than the size of the ``FieldToMatch``
+
+               
+
+              **GE**: Used to test if the ``Size`` is greater than or equal to the size of the ``FieldToMatch``
+
+               
+
+              **GT**: Used to test if the ``Size`` is strictly greater than the size of the ``FieldToMatch``
+
+              
+            
+
+            - **Size** *(integer) --* 
+
+              The size in bytes that you want AWS WAF to compare against the size of the specified ``FieldToMatch``. AWS WAF uses this in combination with ``ComparisonOperator`` and ``FieldToMatch`` to build an expression in the form of " ``Size`` ``ComparisonOperator`` size in bytes of ``FieldToMatch``". If that expression is true, the ``SizeConstraint`` is considered to match.
+
+               
+
+              Valid values for size are 0 - 21474836480 bytes (0 - 20 GB).
+
+               
+
+              If you specify ``URI`` for the value of ``Type``, the / in the URI counts as one character. For example, the URI ``/logo.jpg`` is nine characters long.
+
+              
+        
+      
+    
+      
+
+      - **ChangeToken** *(string) --* 
+
+        The ``ChangeToken`` that you used to submit the ``CreateSizeConstraintSet`` request. You can also use this value to query the status of the request. For more information, see  GetChangeTokenStatus.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`WAF.Client.exceptions.WAFStaleDataException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFInternalErrorException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFInvalidAccountException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFDisallowedNameException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFInvalidParameterException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFLimitsExceededException`
+
+  
+
+  **Examples**
+
+  The following example creates size constraint set named MySampleSizeConstraintSet.
+  ::
+
+    response = client.create_size_constraint_set(
+        ChangeToken='abcd12f2-46da-4fdb-b8d5-fbd4c466928f',
+        Name='MySampleSizeConstraintSet',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ChangeToken': 'abcd12f2-46da-4fdb-b8d5-fbd4c466928f',
+        'SizeConstraintSet': {
+            'Name': 'MySampleSizeConstraintSet',
+            'SizeConstraintSetId': 'example1ds3t-46da-4fdb-b8d5-abc321j569j5',
+            'SizeConstraints': [
+                {
+                    'ComparisonOperator': 'GT',
+                    'FieldToMatch': {
+                        'Type': 'QUERY_STRING',
+                    },
+                    'Size': 0,
+                    'TextTransformation': 'NONE',
+                },
+            ],
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

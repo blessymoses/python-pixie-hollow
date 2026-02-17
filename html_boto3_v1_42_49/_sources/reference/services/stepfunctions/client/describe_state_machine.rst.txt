@@ -1,0 +1,394 @@
+:doc:`SFN <../../stepfunctions>` / Client / describe_state_machine
+
+**********************
+describe_state_machine
+**********************
+
+
+
+.. py:method:: SFN.Client.describe_state_machine(**kwargs)
+
+  
+
+  Provides information about a state machine's definition, its IAM role Amazon Resource Name (ARN), and configuration.
+
+   
+
+  A qualified state machine ARN can either refer to a *Distributed Map state* defined within a state machine, a version ARN, or an alias ARN.
+
+   
+
+  The following are some examples of qualified and unqualified state machine ARNs:
+
+   
+
+  
+  * The following qualified state machine ARN refers to a *Distributed Map state* with a label ``mapStateLabel`` in a state machine named ``myStateMachine``. ``arn:partition:states:region:account-id:stateMachine:myStateMachine/mapStateLabel`` 
+
+  .. note::
+
+    If you provide a qualified state machine ARN that refers to a *Distributed Map state*, the request fails with ``ValidationException``.
+
+  
+   
+  * The following qualified state machine ARN refers to an alias named ``PROD``. ``arn:<partition>:states:<region>:<account-id>:stateMachine:<myStateMachine:PROD>`` 
+
+  .. note::
+
+    If you provide a qualified state machine ARN that refers to a version ARN or an alias ARN, the request starts execution for that version or alias.
+
+  
+   
+  * The following unqualified state machine ARN refers to a state machine named ``myStateMachine``. ``arn:<partition>:states:<region>:<account-id>:stateMachine:<myStateMachine>``
+  
+
+   
+
+  This API action returns the details for a state machine version if the ``stateMachineArn`` you specify is a state machine version ARN.
+
+   
+
+  .. note::
+
+    
+
+    This operation is eventually consistent. The results are best effort and may not reflect very recent updates and changes.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/DescribeStateMachine>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_state_machine(
+        stateMachineArn='string',
+        includedData='ALL_DATA'|'METADATA_ONLY'
+    )
+    
+  :type stateMachineArn: string
+  :param stateMachineArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the state machine for which you want the information.
+
+     
+
+    If you specify a state machine version ARN, this API returns details about that version. The version ARN is a combination of state machine ARN and the version number separated by a colon (:). For example, ``stateMachineARN:1``.
+
+    
+
+  
+  :type includedData: string
+  :param includedData: 
+
+    If your state machine definition is encrypted with a KMS key, callers must have ``kms:Decrypt`` permission to decrypt the definition. Alternatively, you can call the API with ``includedData = METADATA_ONLY`` to get a successful response without the encrypted definition.
+
+     
+
+    .. note::
+
+      
+
+      When calling a labelled ARN for an encrypted state machine, the ``includedData = METADATA_ONLY`` parameter will not apply because Step Functions needs to decrypt the entire state machine definition to get the Distributed Map state’s definition. In this case, the API caller needs to have ``kms:Decrypt`` permission.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'stateMachineArn': 'string',
+          'name': 'string',
+          'status': 'ACTIVE'|'DELETING',
+          'definition': 'string',
+          'roleArn': 'string',
+          'type': 'STANDARD'|'EXPRESS',
+          'creationDate': datetime(2015, 1, 1),
+          'loggingConfiguration': {
+              'level': 'ALL'|'ERROR'|'FATAL'|'OFF',
+              'includeExecutionData': True|False,
+              'destinations': [
+                  {
+                      'cloudWatchLogsLogGroup': {
+                          'logGroupArn': 'string'
+                      }
+                  },
+              ]
+          },
+          'tracingConfiguration': {
+              'enabled': True|False
+          },
+          'label': 'string',
+          'revisionId': 'string',
+          'description': 'string',
+          'encryptionConfiguration': {
+              'kmsKeyId': 'string',
+              'kmsDataKeyReusePeriodSeconds': 123,
+              'type': 'AWS_OWNED_KEY'|'CUSTOMER_MANAGED_KMS_KEY'
+          },
+          'variableReferences': {
+              'string': [
+                  'string',
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **stateMachineArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) that identifies the state machine.
+
+         
+
+        If you specified a state machine version ARN in your request, the API returns the version ARN. The version ARN is a combination of state machine ARN and the version number separated by a colon (:). For example, ``stateMachineARN:1``.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The name of the state machine.
+
+         
+
+        A name must *not* contain:
+
+         
+
+        
+        * white space
+         
+        * brackets ``< > { } [ ]``
+         
+        * wildcard characters ``? *``
+         
+        * special characters ``" # % \ ^ | ~ ` $ & , ; : /``
+         
+        * control characters ( ``U+0000-001F``, ``U+007F-009F``, ``U+FFFE-FFFF``)
+         
+        * surrogates ( ``U+D800-DFFF``)
+         
+        * invalid characters ( `` U+10FFFF``)
+        
+
+         
+
+        To enable logging with CloudWatch Logs, the name should only contain 0-9, A-Z, a-z, - and _.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The current status of the state machine.
+
+        
+      
+
+      - **definition** *(string) --* 
+
+        The Amazon States Language definition of the state machine. See `Amazon States Language <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-amazon-states-language.html>`__.
+
+         
+
+        If called with ``includedData = METADATA_ONLY``, the returned definition will be ``{}``.
+
+        
+      
+
+      - **roleArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the IAM role used when creating this state machine. (The IAM role maintains security by granting Step Functions access to Amazon Web Services resources.)
+
+        
+      
+
+      - **type** *(string) --* 
+
+        The ``type`` of the state machine ( ``STANDARD`` or ``EXPRESS``).
+
+        
+      
+
+      - **creationDate** *(datetime) --* 
+
+        The date the state machine is created.
+
+         
+
+        For a state machine version, ``creationDate`` is the date the version was created.
+
+        
+      
+
+      - **loggingConfiguration** *(dict) --* 
+
+        The ``LoggingConfiguration`` data type is used to set CloudWatch Logs options.
+
+        
+        
+
+        - **level** *(string) --* 
+
+          Defines which category of execution history events are logged.
+
+          
+        
+
+        - **includeExecutionData** *(boolean) --* 
+
+          Determines whether execution data is included in your log. When set to ``false``, data is excluded.
+
+          
+        
+
+        - **destinations** *(list) --* 
+
+          An array of objects that describes where your execution history events will be logged. Limited to size 1. Required, if your log level is not set to ``OFF``.
+
+          
+          
+
+          - *(dict) --* 
+            
+
+            - **cloudWatchLogsLogGroup** *(dict) --* 
+
+              An object describing a CloudWatch log group. For more information, see `AWS\:\:Logs\:\:LogGroup <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html>`__ in the CloudFormation User Guide.
+
+              
+              
+
+              - **logGroupArn** *(string) --* 
+
+                The ARN of the the CloudWatch log group to which you want your logs emitted to. The ARN must end with ``:*``
+
+                
+          
+        
+      
+    
+      
+
+      - **tracingConfiguration** *(dict) --* 
+
+        Selects whether X-Ray tracing is enabled.
+
+        
+        
+
+        - **enabled** *(boolean) --* 
+
+          When set to ``true``, X-Ray tracing is enabled.
+
+          
+    
+      
+
+      - **label** *(string) --* 
+
+        A user-defined or an auto-generated string that identifies a ``Map`` state. This parameter is present only if the ``stateMachineArn`` specified in input is a qualified state machine ARN.
+
+        
+      
+
+      - **revisionId** *(string) --* 
+
+        The revision identifier for the state machine.
+
+         
+
+        Use the ``revisionId`` parameter to compare between versions of a state machine configuration used for executions without performing a diff of the properties, such as ``definition`` and ``roleArn``.
+
+        
+      
+
+      - **description** *(string) --* 
+
+        The description of the state machine version.
+
+        
+      
+
+      - **encryptionConfiguration** *(dict) --* 
+
+        Settings to configure server-side encryption.
+
+        
+        
+
+        - **kmsKeyId** *(string) --* 
+
+          An alias, alias ARN, key ID, or key ARN of a symmetric encryption KMS key to encrypt data. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN or alias ARN.
+
+          
+        
+
+        - **kmsDataKeyReusePeriodSeconds** *(integer) --* 
+
+          Maximum duration that Step Functions will reuse data keys. When the period expires, Step Functions will call ``GenerateDataKey``. Only applies to customer managed keys.
+
+          
+        
+
+        - **type** *(string) --* 
+
+          Encryption type
+
+          
+    
+      
+
+      - **variableReferences** *(dict) --* 
+
+        A map of **state name** to a list of variables referenced by that state. States that do not use variable references will not be shown in the response.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(list) --* 
+            
+
+            - *(string) --* 
+        
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidArn`
+
+  
+  *   :py:class:`SFN.Client.exceptions.StateMachineDoesNotExist`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsAccessDeniedException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsInvalidStateException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsThrottlingException`
+
+  

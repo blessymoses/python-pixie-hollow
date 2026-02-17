@@ -1,0 +1,970 @@
+:doc:`LexModelBuildingService <../../lex-models>` / Client / put_bot
+
+*******
+put_bot
+*******
+
+
+
+.. py:method:: LexModelBuildingService.Client.put_bot(**kwargs)
+
+  
+
+  Creates an Amazon Lex conversational bot or replaces an existing bot. When you create or update a bot you are only required to specify a name, a locale, and whether the bot is directed toward children under age 13. You can use this to add intents later, or to remove intents from an existing bot. When you create a bot with the minimum information, the bot is created or updated but Amazon Lex returns the  response ``FAILED``. You can build the bot after you add one or more intents. For more information about Amazon Lex bots, see  how-it-works.
+
+   
+
+  If you specify the name of an existing bot, the fields in the request replace the existing values in the ``$LATEST`` version of the bot. Amazon Lex removes any fields that you don't provide values for in the request, except for the ``idleTTLInSeconds`` and ``privacySettings`` fields, which are set to their default values. If you don't specify values for required fields, Amazon Lex throws an exception.
+
+   
+
+  This operation requires permissions for the ``lex:PutBot`` action. For more information, see  security-iam.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lex-models-2017-04-19/PutBot>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_bot(
+        name='string',
+        description='string',
+        intents=[
+            {
+                'intentName': 'string',
+                'intentVersion': 'string'
+            },
+        ],
+        enableModelImprovements=True|False,
+        nluIntentConfidenceThreshold=123.0,
+        clarificationPrompt={
+            'messages': [
+                {
+                    'contentType': 'PlainText'|'SSML'|'CustomPayload',
+                    'content': 'string',
+                    'groupNumber': 123
+                },
+            ],
+            'maxAttempts': 123,
+            'responseCard': 'string'
+        },
+        abortStatement={
+            'messages': [
+                {
+                    'contentType': 'PlainText'|'SSML'|'CustomPayload',
+                    'content': 'string',
+                    'groupNumber': 123
+                },
+            ],
+            'responseCard': 'string'
+        },
+        idleSessionTTLInSeconds=123,
+        voiceId='string',
+        checksum='string',
+        processBehavior='SAVE'|'BUILD',
+        locale='de-DE'|'en-AU'|'en-GB'|'en-IN'|'en-US'|'es-419'|'es-ES'|'es-US'|'fr-FR'|'fr-CA'|'it-IT'|'ja-JP'|'ko-KR',
+        childDirected=True|False,
+        detectSentiment=True|False,
+        createVersion=True|False,
+        tags=[
+            {
+                'key': 'string',
+                'value': 'string'
+            },
+        ]
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the bot. The name is *not* case sensitive.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    A description of the bot.
+
+    
+
+  
+  :type intents: list
+  :param intents: 
+
+    An array of ``Intent`` objects. Each intent represents a command that a user can express. For example, a pizza ordering bot might support an OrderPizza intent. For more information, see  how-it-works.
+
+    
+
+  
+    - *(dict) --* 
+
+      Identifies the specific version of an intent.
+
+      
+
+    
+      - **intentName** *(string) --* **[REQUIRED]** 
+
+        The name of the intent.
+
+        
+
+      
+      - **intentVersion** *(string) --* **[REQUIRED]** 
+
+        The version of the intent.
+
+        
+
+      
+    
+
+  :type enableModelImprovements: boolean
+  :param enableModelImprovements: 
+
+    Set to ``true`` to enable access to natural language understanding improvements.
+
+     
+
+    When you set the ``enableModelImprovements`` parameter to ``true`` you can use the ``nluIntentConfidenceThreshold`` parameter to configure confidence scores. For more information, see `Confidence Scores <https://docs.aws.amazon.com/lex/latest/dg/confidence-scores.html>`__.
+
+     
+
+    You can only set the ``enableModelImprovements`` parameter in certain Regions. If you set the parameter to ``true``, your bot has access to accuracy improvements.
+
+     
+
+    The Regions where you can set the ``enableModelImprovements`` parameter to ``true`` are:
+
+     
+
+    
+    * US East (N. Virginia) (us-east-1)
+     
+    * US West (Oregon) (us-west-2)
+     
+    * Asia Pacific (Sydney) (ap-southeast-2)
+     
+    * EU (Ireland) (eu-west-1)
+    
+
+     
+
+    In other Regions, the ``enableModelImprovements`` parameter is set to ``true`` by default. In these Regions setting the parameter to ``false`` throws a ``ValidationException`` exception.
+
+    
+
+  
+  :type nluIntentConfidenceThreshold: float
+  :param nluIntentConfidenceThreshold: 
+
+    Determines the threshold where Amazon Lex will insert the ``AMAZON.FallbackIntent``, ``AMAZON.KendraSearchIntent``, or both when returning alternative intents in a `PostContent <https://docs.aws.amazon.com/lex/latest/dg/API_runtime_PostContent.html>`__ or `PostText <https://docs.aws.amazon.com/lex/latest/dg/API_runtime_PostText.html>`__ response. ``AMAZON.FallbackIntent`` and ``AMAZON.KendraSearchIntent`` are only inserted if they are configured for the bot.
+
+     
+
+    You must set the ``enableModelImprovements`` parameter to ``true`` to use confidence scores in the following regions.
+
+     
+
+    
+    * US East (N. Virginia) (us-east-1)
+     
+    * US West (Oregon) (us-west-2)
+     
+    * Asia Pacific (Sydney) (ap-southeast-2)
+     
+    * EU (Ireland) (eu-west-1)
+    
+
+     
+
+    In other Regions, the ``enableModelImprovements`` parameter is set to ``true`` by default.
+
+     
+
+    For example, suppose a bot is configured with the confidence threshold of 0.80 and the ``AMAZON.FallbackIntent``. Amazon Lex returns three alternative intents with the following confidence scores: IntentA (0.70), IntentB (0.60), IntentC (0.50). The response from the ``PostText`` operation would be:
+
+     
+
+    
+    * AMAZON.FallbackIntent
+     
+    * IntentA
+     
+    * IntentB
+     
+    * IntentC
+    
+
+    
+
+  
+  :type clarificationPrompt: dict
+  :param clarificationPrompt: 
+
+    When Amazon Lex doesn't understand the user's intent, it uses this message to get clarification. To specify how many times Amazon Lex should repeat the clarification prompt, use the ``maxAttempts`` field. If Amazon Lex still doesn't understand, it sends the message in the ``abortStatement`` field.
+
+     
+
+    When you create a clarification prompt, make sure that it suggests the correct response from the user. for example, for a bot that orders pizza and drinks, you might create this clarification prompt: "What would you like to do? You can say 'Order a pizza' or 'Order a drink.'"
+
+     
+
+    If you have defined a fallback intent, it will be invoked if the clarification prompt is repeated the number of times defined in the ``maxAttempts`` field. For more information, see `AMAZON.FallbackIntent <https://docs.aws.amazon.com/lex/latest/dg/built-in-intent-fallback.html>`__.
+
+     
+
+    If you don't define a clarification prompt, at runtime Amazon Lex will return a 400 Bad Request exception in three cases:
+
+     
+
+    
+    * Follow-up prompt - When the user responds to a follow-up prompt but does not provide an intent. For example, in response to a follow-up prompt that says "Would you like anything else today?" the user says "Yes." Amazon Lex will return a 400 Bad Request exception because it does not have a clarification prompt to send to the user to get an intent.
+     
+    * Lambda function - When using a Lambda function, you return an ``ElicitIntent`` dialog type. Since Amazon Lex does not have a clarification prompt to get an intent from the user, it returns a 400 Bad Request exception.
+     
+    * PutSession operation - When using the ``PutSession`` operation, you send an ``ElicitIntent`` dialog type. Since Amazon Lex does not have a clarification prompt to get an intent from the user, it returns a 400 Bad Request exception.
+    
+
+    
+
+  
+    - **messages** *(list) --* **[REQUIRED]** 
+
+      An array of objects, each of which provides a message string and its type. You can specify the message string in plain text or in Speech Synthesis Markup Language (SSML).
+
+      
+
+    
+      - *(dict) --* 
+
+        The message object that provides the message text and its type.
+
+        
+
+      
+        - **contentType** *(string) --* **[REQUIRED]** 
+
+          The content type of the message string.
+
+          
+
+        
+        - **content** *(string) --* **[REQUIRED]** 
+
+          The text of the message.
+
+          
+
+        
+        - **groupNumber** *(integer) --* 
+
+          Identifies the message group that the message belongs to. When a group is assigned to a message, Amazon Lex returns one message from each group in the response.
+
+          
+
+        
+      
+  
+    - **maxAttempts** *(integer) --* **[REQUIRED]** 
+
+      The number of times to prompt the user for information.
+
+      
+
+    
+    - **responseCard** *(string) --* 
+
+      A response card. Amazon Lex uses this prompt at runtime, in the ``PostText`` API response. It substitutes session attributes and slot values for placeholders in the response card. For more information, see  ex-resp-card.
+
+      
+
+    
+  
+  :type abortStatement: dict
+  :param abortStatement: 
+
+    When Amazon Lex can't understand the user's input in context, it tries to elicit the information a few times. After that, Amazon Lex sends the message defined in ``abortStatement`` to the user, and then cancels the conversation. To set the number of retries, use the ``valueElicitationPrompt`` field for the slot type.
+
+     
+
+    For example, in a pizza ordering bot, Amazon Lex might ask a user "What type of crust would you like?" If the user's response is not one of the expected responses (for example, "thin crust, "deep dish," etc.), Amazon Lex tries to elicit a correct response a few more times.
+
+     
+
+    For example, in a pizza ordering application, ``OrderPizza`` might be one of the intents. This intent might require the ``CrustType`` slot. You specify the ``valueElicitationPrompt`` field when you create the ``CrustType`` slot.
+
+     
+
+    If you have defined a fallback intent the cancel statement will not be sent to the user, the fallback intent is used instead. For more information, see `AMAZON.FallbackIntent <https://docs.aws.amazon.com/lex/latest/dg/built-in-intent-fallback.html>`__.
+
+    
+
+  
+    - **messages** *(list) --* **[REQUIRED]** 
+
+      A collection of message objects.
+
+      
+
+    
+      - *(dict) --* 
+
+        The message object that provides the message text and its type.
+
+        
+
+      
+        - **contentType** *(string) --* **[REQUIRED]** 
+
+          The content type of the message string.
+
+          
+
+        
+        - **content** *(string) --* **[REQUIRED]** 
+
+          The text of the message.
+
+          
+
+        
+        - **groupNumber** *(integer) --* 
+
+          Identifies the message group that the message belongs to. When a group is assigned to a message, Amazon Lex returns one message from each group in the response.
+
+          
+
+        
+      
+  
+    - **responseCard** *(string) --* 
+
+      At runtime, if the client is using the `PostText <http://docs.aws.amazon.com/lex/latest/dg/API_runtime_PostText.html>`__ API, Amazon Lex includes the response card in the response. It substitutes all of the session attributes and slot values for placeholders in the response card.
+
+      
+
+    
+  
+  :type idleSessionTTLInSeconds: integer
+  :param idleSessionTTLInSeconds: 
+
+    The maximum time in seconds that Amazon Lex retains the data gathered in a conversation.
+
+     
+
+    A user interaction session remains active for the amount of time specified. If no conversation occurs during this time, the session expires and Amazon Lex deletes any data provided before the timeout.
+
+     
+
+    For example, suppose that a user chooses the OrderPizza intent, but gets sidetracked halfway through placing an order. If the user doesn't complete the order within the specified time, Amazon Lex discards the slot information that it gathered, and the user must start over.
+
+     
+
+    If you don't include the ``idleSessionTTLInSeconds`` element in a ``PutBot`` operation request, Amazon Lex uses the default value. This is also true if the request replaces an existing bot.
+
+     
+
+    The default is 300 seconds (5 minutes).
+
+    
+
+  
+  :type voiceId: string
+  :param voiceId: 
+
+    The Amazon Polly voice ID that you want Amazon Lex to use for voice interactions with the user. The locale configured for the voice must match the locale of the bot. For more information, see `Voices in Amazon Polly <https://docs.aws.amazon.com/polly/latest/dg/voicelist.html>`__ in the *Amazon Polly Developer Guide*.
+
+    
+
+  
+  :type checksum: string
+  :param checksum: 
+
+    Identifies a specific revision of the ``$LATEST`` version.
+
+     
+
+    When you create a new bot, leave the ``checksum`` field blank. If you specify a checksum you get a ``BadRequestException`` exception.
+
+     
+
+    When you want to update a bot, set the ``checksum`` field to the checksum of the most recent revision of the ``$LATEST`` version. If you don't specify the ``checksum`` field, or if the checksum does not match the ``$LATEST`` version, you get a ``PreconditionFailedException`` exception.
+
+    
+
+  
+  :type processBehavior: string
+  :param processBehavior: 
+
+    If you set the ``processBehavior`` element to ``BUILD``, Amazon Lex builds the bot so that it can be run. If you set the element to ``SAVE`` Amazon Lex saves the bot, but doesn't build it.
+
+     
+
+    If you don't specify this value, the default value is ``BUILD``.
+
+    
+
+  
+  :type locale: string
+  :param locale: **[REQUIRED]** 
+
+    Specifies the target locale for the bot. Any intent used in the bot must be compatible with the locale of the bot.
+
+     
+
+    The default is ``en-US``.
+
+    
+
+  
+  :type childDirected: boolean
+  :param childDirected: **[REQUIRED]** 
+
+    For each Amazon Lex bot created with the Amazon Lex Model Building Service, you must specify whether your use of Amazon Lex is related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to the Children's Online Privacy Protection Act (COPPA) by specifying ``true`` or ``false`` in the ``childDirected`` field. By specifying ``true`` in the ``childDirected`` field, you confirm that your use of Amazon Lex **is** related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to COPPA. By specifying ``false`` in the ``childDirected`` field, you confirm that your use of Amazon Lex **is not** related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to COPPA. You may not specify a default value for the ``childDirected`` field that does not accurately reflect whether your use of Amazon Lex is related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to COPPA.
+
+     
+
+    If your use of Amazon Lex relates to a website, program, or other application that is directed in whole or in part, to children under age 13, you must obtain any required verifiable parental consent under COPPA. For information regarding the use of Amazon Lex in connection with websites, programs, or other applications that are directed or targeted, in whole or in part, to children under age 13, see the `Amazon Lex FAQ. <https://aws.amazon.com/lex/faqs#data-security>`__
+
+    
+
+  
+  :type detectSentiment: boolean
+  :param detectSentiment: 
+
+    When set to ``true`` user utterances are sent to Amazon Comprehend for sentiment analysis. If you don't specify ``detectSentiment``, the default is ``false``.
+
+    
+
+  
+  :type createVersion: boolean
+  :param createVersion: 
+
+    When set to ``true`` a new numbered version of the bot is created. This is the same as calling the ``CreateBotVersion`` operation. If you don't specify ``createVersion``, the default is ``false``.
+
+    
+
+  
+  :type tags: list
+  :param tags: 
+
+    A list of tags to add to the bot. You can only add tags when you create a bot, you can't use the ``PutBot`` operation to update the tags on a bot. To update tags, use the ``TagResource`` operation.
+
+    
+
+  
+    - *(dict) --* 
+
+      A list of key/value pairs that identify a bot, bot alias, or bot channel. Tag keys and values can consist of Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @.
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        The key for the tag. Keys are not case-sensitive and must be unique.
+
+        
+
+      
+      - **value** *(string) --* **[REQUIRED]** 
+
+        The value associated with a key. The value may be an empty string but it can't be null.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'name': 'string',
+          'description': 'string',
+          'intents': [
+              {
+                  'intentName': 'string',
+                  'intentVersion': 'string'
+              },
+          ],
+          'enableModelImprovements': True|False,
+          'nluIntentConfidenceThreshold': 123.0,
+          'clarificationPrompt': {
+              'messages': [
+                  {
+                      'contentType': 'PlainText'|'SSML'|'CustomPayload',
+                      'content': 'string',
+                      'groupNumber': 123
+                  },
+              ],
+              'maxAttempts': 123,
+              'responseCard': 'string'
+          },
+          'abortStatement': {
+              'messages': [
+                  {
+                      'contentType': 'PlainText'|'SSML'|'CustomPayload',
+                      'content': 'string',
+                      'groupNumber': 123
+                  },
+              ],
+              'responseCard': 'string'
+          },
+          'status': 'BUILDING'|'READY'|'READY_BASIC_TESTING'|'FAILED'|'NOT_BUILT',
+          'failureReason': 'string',
+          'lastUpdatedDate': datetime(2015, 1, 1),
+          'createdDate': datetime(2015, 1, 1),
+          'idleSessionTTLInSeconds': 123,
+          'voiceId': 'string',
+          'checksum': 'string',
+          'version': 'string',
+          'locale': 'de-DE'|'en-AU'|'en-GB'|'en-IN'|'en-US'|'es-419'|'es-ES'|'es-US'|'fr-FR'|'fr-CA'|'it-IT'|'ja-JP'|'ko-KR',
+          'childDirected': True|False,
+          'createVersion': True|False,
+          'detectSentiment': True|False,
+          'tags': [
+              {
+                  'key': 'string',
+                  'value': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **name** *(string) --* 
+
+        The name of the bot.
+
+        
+      
+
+      - **description** *(string) --* 
+
+        A description of the bot.
+
+        
+      
+
+      - **intents** *(list) --* 
+
+        An array of ``Intent`` objects. For more information, see  PutBot.
+
+        
+        
+
+        - *(dict) --* 
+
+          Identifies the specific version of an intent.
+
+          
+          
+
+          - **intentName** *(string) --* 
+
+            The name of the intent.
+
+            
+          
+
+          - **intentVersion** *(string) --* 
+
+            The version of the intent.
+
+            
+      
+    
+      
+
+      - **enableModelImprovements** *(boolean) --* 
+
+        Indicates whether the bot uses accuracy improvements. ``true`` indicates that the bot is using the improvements, otherwise, ``false``.
+
+        
+      
+
+      - **nluIntentConfidenceThreshold** *(float) --* 
+
+        The score that determines where Amazon Lex inserts the ``AMAZON.FallbackIntent``, ``AMAZON.KendraSearchIntent``, or both when returning alternative intents in a `PostContent <https://docs.aws.amazon.com/lex/latest/dg/API_runtime_PostContent.html>`__ or `PostText <https://docs.aws.amazon.com/lex/latest/dg/API_runtime_PostText.html>`__ response. ``AMAZON.FallbackIntent`` is inserted if the confidence score for all intents is below this value. ``AMAZON.KendraSearchIntent`` is only inserted if it is configured for the bot.
+
+        
+      
+
+      - **clarificationPrompt** *(dict) --* 
+
+        The prompts that Amazon Lex uses when it doesn't understand the user's intent. For more information, see  PutBot.
+
+        
+        
+
+        - **messages** *(list) --* 
+
+          An array of objects, each of which provides a message string and its type. You can specify the message string in plain text or in Speech Synthesis Markup Language (SSML).
+
+          
+          
+
+          - *(dict) --* 
+
+            The message object that provides the message text and its type.
+
+            
+            
+
+            - **contentType** *(string) --* 
+
+              The content type of the message string.
+
+              
+            
+
+            - **content** *(string) --* 
+
+              The text of the message.
+
+              
+            
+
+            - **groupNumber** *(integer) --* 
+
+              Identifies the message group that the message belongs to. When a group is assigned to a message, Amazon Lex returns one message from each group in the response.
+
+              
+        
+      
+        
+
+        - **maxAttempts** *(integer) --* 
+
+          The number of times to prompt the user for information.
+
+          
+        
+
+        - **responseCard** *(string) --* 
+
+          A response card. Amazon Lex uses this prompt at runtime, in the ``PostText`` API response. It substitutes session attributes and slot values for placeholders in the response card. For more information, see  ex-resp-card.
+
+          
+    
+      
+
+      - **abortStatement** *(dict) --* 
+
+        The message that Amazon Lex uses to cancel a conversation. For more information, see  PutBot.
+
+        
+        
+
+        - **messages** *(list) --* 
+
+          A collection of message objects.
+
+          
+          
+
+          - *(dict) --* 
+
+            The message object that provides the message text and its type.
+
+            
+            
+
+            - **contentType** *(string) --* 
+
+              The content type of the message string.
+
+              
+            
+
+            - **content** *(string) --* 
+
+              The text of the message.
+
+              
+            
+
+            - **groupNumber** *(integer) --* 
+
+              Identifies the message group that the message belongs to. When a group is assigned to a message, Amazon Lex returns one message from each group in the response.
+
+              
+        
+      
+        
+
+        - **responseCard** *(string) --* 
+
+          At runtime, if the client is using the `PostText <http://docs.aws.amazon.com/lex/latest/dg/API_runtime_PostText.html>`__ API, Amazon Lex includes the response card in the response. It substitutes all of the session attributes and slot values for placeholders in the response card.
+
+          
+    
+      
+
+      - **status** *(string) --* 
+
+        When you send a request to create a bot with ``processBehavior`` set to ``BUILD``, Amazon Lex sets the ``status`` response element to ``BUILDING``.
+
+         
+
+        In the ``READY_BASIC_TESTING`` state you can test the bot with user inputs that exactly match the utterances configured for the bot's intents and values in the slot types.
+
+         
+
+        If Amazon Lex can't build the bot, Amazon Lex sets ``status`` to ``FAILED``. Amazon Lex returns the reason for the failure in the ``failureReason`` response element.
+
+         
+
+        When you set ``processBehavior`` to ``SAVE``, Amazon Lex sets the status code to ``NOT BUILT``.
+
+         
+
+        When the bot is in the ``READY`` state you can test and publish the bot.
+
+        
+      
+
+      - **failureReason** *(string) --* 
+
+        If ``status`` is ``FAILED``, Amazon Lex provides the reason that it failed to build the bot.
+
+        
+      
+
+      - **lastUpdatedDate** *(datetime) --* 
+
+        The date that the bot was updated. When you create a resource, the creation date and last updated date are the same.
+
+        
+      
+
+      - **createdDate** *(datetime) --* 
+
+        The date that the bot was created.
+
+        
+      
+
+      - **idleSessionTTLInSeconds** *(integer) --* 
+
+        The maximum length of time that Amazon Lex retains the data gathered in a conversation. For more information, see  PutBot.
+
+        
+      
+
+      - **voiceId** *(string) --* 
+
+        The Amazon Polly voice ID that Amazon Lex uses for voice interaction with the user. For more information, see  PutBot.
+
+        
+      
+
+      - **checksum** *(string) --* 
+
+        Checksum of the bot that you created.
+
+        
+      
+
+      - **version** *(string) --* 
+
+        The version of the bot. For a new bot, the version is always ``$LATEST``.
+
+        
+      
+
+      - **locale** *(string) --* 
+
+        The target locale for the bot.
+
+        
+      
+
+      - **childDirected** *(boolean) --* 
+
+        For each Amazon Lex bot created with the Amazon Lex Model Building Service, you must specify whether your use of Amazon Lex is related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to the Children's Online Privacy Protection Act (COPPA) by specifying ``true`` or ``false`` in the ``childDirected`` field. By specifying ``true`` in the ``childDirected`` field, you confirm that your use of Amazon Lex **is** related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to COPPA. By specifying ``false`` in the ``childDirected`` field, you confirm that your use of Amazon Lex **is not** related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to COPPA. You may not specify a default value for the ``childDirected`` field that does not accurately reflect whether your use of Amazon Lex is related to a website, program, or other application that is directed or targeted, in whole or in part, to children under age 13 and subject to COPPA.
+
+         
+
+        If your use of Amazon Lex relates to a website, program, or other application that is directed in whole or in part, to children under age 13, you must obtain any required verifiable parental consent under COPPA. For information regarding the use of Amazon Lex in connection with websites, programs, or other applications that are directed or targeted, in whole or in part, to children under age 13, see the `Amazon Lex FAQ. <https://aws.amazon.com/lex/faqs#data-security>`__
+
+        
+      
+
+      - **createVersion** *(boolean) --* 
+
+        ``True`` if a new version of the bot was created. If the ``createVersion`` field was not specified in the request, the ``createVersion`` field is set to false in the response.
+
+        
+      
+
+      - **detectSentiment** *(boolean) --* 
+
+        ``true`` if the bot is configured to send user utterances to Amazon Comprehend for sentiment analysis. If the ``detectSentiment`` field was not specified in the request, the ``detectSentiment`` field is ``false`` in the response.
+
+        
+      
+
+      - **tags** *(list) --* 
+
+        A list of tags associated with the bot.
+
+        
+        
+
+        - *(dict) --* 
+
+          A list of key/value pairs that identify a bot, bot alias, or bot channel. Tag keys and values can consist of Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @.
+
+          
+          
+
+          - **key** *(string) --* 
+
+            The key for the tag. Keys are not case-sensitive and must be unique.
+
+            
+          
+
+          - **value** *(string) --* 
+
+            The value associated with a key. The value may be an empty string but it can't be null.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`LexModelBuildingService.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`LexModelBuildingService.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`LexModelBuildingService.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`LexModelBuildingService.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`LexModelBuildingService.Client.exceptions.PreconditionFailedException`
+
+  
+
+  **Examples**
+
+  This example shows how to create a bot for ordering pizzas.
+  ::
+
+    response = client.put_bot(
+        name='DocOrderPizzaBot',
+        abortStatement={
+            'messages': [
+                {
+                    'content': 'I don't understand. Can you try again?',
+                    'contentType': 'PlainText',
+                },
+                {
+                    'content': 'I'm sorry, I don't understand.',
+                    'contentType': 'PlainText',
+                },
+            ],
+        },
+        childDirected=True,
+        clarificationPrompt={
+            'maxAttempts': 1,
+            'messages': [
+                {
+                    'content': 'I'm sorry, I didn't hear that. Can you repeat what you just said?',
+                    'contentType': 'PlainText',
+                },
+                {
+                    'content': 'Can you say that again?',
+                    'contentType': 'PlainText',
+                },
+            ],
+        },
+        description='Orders a pizza from a local pizzeria.',
+        idleSessionTTLInSeconds=300,
+        intents=[
+            {
+                'intentName': 'DocOrderPizza',
+                'intentVersion': '$LATEST',
+            },
+        ],
+        locale='en-US',
+        processBehavior='SAVE',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'version': '$LATEST',
+        'name': 'DocOrderPizzaBot',
+        'abortStatement': {
+            'messages': [
+                {
+                    'content': 'I don't understand. Can you try again?',
+                    'contentType': 'PlainText',
+                },
+                {
+                    'content': 'I'm sorry, I don't understand.',
+                    'contentType': 'PlainText',
+                },
+            ],
+        },
+        'checksum': '20172ee3-fa06-49b2-bbc5-667c090303e9',
+        'childDirected': True,
+        'clarificationPrompt': {
+            'maxAttempts': 1,
+            'messages': [
+                {
+                    'content': 'I'm sorry, I didn't hear that. Can you repeate what you just said?',
+                    'contentType': 'PlainText',
+                },
+                {
+                    'content': 'Can you say that again?',
+                    'contentType': 'PlainText',
+                },
+            ],
+        },
+        'createdDate': 1494360160.133,
+        'description': 'Orders a pizza from a local pizzeria.',
+        'idleSessionTTLInSeconds': 300,
+        'intents': [
+            {
+                'intentName': 'DocOrderPizza',
+                'intentVersion': '$LATEST',
+            },
+        ],
+        'lastUpdatedDate': 1494360160.133,
+        'locale': 'en-US',
+        'status': 'NOT_BUILT',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

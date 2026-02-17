@@ -1,0 +1,1000 @@
+:doc:`IoT <../../iot>` / Client / update_security_profile
+
+***********************
+update_security_profile
+***********************
+
+
+
+.. py:method:: IoT.Client.update_security_profile(**kwargs)
+
+  
+
+  Updates a Device Defender security profile.
+
+   
+
+  Requires permission to access the `UpdateSecurityProfile <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions>`__ action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iot-2015-05-28/UpdateSecurityProfile>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_security_profile(
+        securityProfileName='string',
+        securityProfileDescription='string',
+        behaviors=[
+            {
+                'name': 'string',
+                'metric': 'string',
+                'metricDimension': {
+                    'dimensionName': 'string',
+                    'operator': 'IN'|'NOT_IN'
+                },
+                'criteria': {
+                    'comparisonOperator': 'less-than'|'less-than-equals'|'greater-than'|'greater-than-equals'|'in-cidr-set'|'not-in-cidr-set'|'in-port-set'|'not-in-port-set'|'in-set'|'not-in-set',
+                    'value': {
+                        'count': 123,
+                        'cidrs': [
+                            'string',
+                        ],
+                        'ports': [
+                            123,
+                        ],
+                        'number': 123.0,
+                        'numbers': [
+                            123.0,
+                        ],
+                        'strings': [
+                            'string',
+                        ]
+                    },
+                    'durationSeconds': 123,
+                    'consecutiveDatapointsToAlarm': 123,
+                    'consecutiveDatapointsToClear': 123,
+                    'statisticalThreshold': {
+                        'statistic': 'string'
+                    },
+                    'mlDetectionConfig': {
+                        'confidenceLevel': 'LOW'|'MEDIUM'|'HIGH'
+                    }
+                },
+                'suppressAlerts': True|False,
+                'exportMetric': True|False
+            },
+        ],
+        alertTargets={
+            'string': {
+                'alertTargetArn': 'string',
+                'roleArn': 'string'
+            }
+        },
+        additionalMetricsToRetain=[
+            'string',
+        ],
+        additionalMetricsToRetainV2=[
+            {
+                'metric': 'string',
+                'metricDimension': {
+                    'dimensionName': 'string',
+                    'operator': 'IN'|'NOT_IN'
+                },
+                'exportMetric': True|False
+            },
+        ],
+        deleteBehaviors=True|False,
+        deleteAlertTargets=True|False,
+        deleteAdditionalMetricsToRetain=True|False,
+        expectedVersion=123,
+        metricsExportConfig={
+            'mqttTopic': 'string',
+            'roleArn': 'string'
+        },
+        deleteMetricsExportConfig=True|False
+    )
+    
+  :type securityProfileName: string
+  :param securityProfileName: **[REQUIRED]** 
+
+    The name of the security profile you want to update.
+
+    
+
+  
+  :type securityProfileDescription: string
+  :param securityProfileDescription: 
+
+    A description of the security profile.
+
+    
+
+  
+  :type behaviors: list
+  :param behaviors: 
+
+    Specifies the behaviors that, when violated by a device (thing), cause an alert.
+
+    
+
+  
+    - *(dict) --* 
+
+      A Device Defender security profile behavior.
+
+      
+
+    
+      - **name** *(string) --* **[REQUIRED]** 
+
+        The name you've given to the behavior.
+
+        
+
+      
+      - **metric** *(string) --* 
+
+        What is measured by the behavior.
+
+        
+
+      
+      - **metricDimension** *(dict) --* 
+
+        The dimension for a metric in your behavior. For example, using a ``TOPIC_FILTER`` dimension, you can narrow down the scope of the metric to only MQTT topics where the name matches the pattern specified in the dimension. This can't be used with custom metrics.
+
+        
+
+      
+        - **dimensionName** *(string) --* **[REQUIRED]** 
+
+          A unique identifier for the dimension.
+
+          
+
+        
+        - **operator** *(string) --* 
+
+          Defines how the ``dimensionValues`` of a dimension are interpreted. For example, for dimension type TOPIC_FILTER, the ``IN`` operator, a message will be counted only if its topic matches one of the topic filters. With ``NOT_IN`` operator, a message will be counted only if it doesn't match any of the topic filters. The operator is optional: if it's not provided (is ``null``), it will be interpreted as ``IN``.
+
+          
+
+        
+      
+      - **criteria** *(dict) --* 
+
+        The criteria that determine if a device is behaving normally in regard to the ``metric``.
+
+         
+
+        .. note::
+
+          
+
+          In the IoT console, you can choose to be sent an alert through Amazon SNS when IoT Device Defender detects that a device is behaving anomalously.
+
+          
+
+        
+
+      
+        - **comparisonOperator** *(string) --* 
+
+          The operator that relates the thing measured ( ``metric``) to the criteria (containing a ``value`` or ``statisticalThreshold``). Valid operators include:
+
+           
+
+          
+          * ``string-list``: ``in-set`` and ``not-in-set``
+           
+          * ``number-list``: ``in-set`` and ``not-in-set``
+           
+          * ``ip-address-list``: ``in-cidr-set`` and ``not-in-cidr-set``
+           
+          * ``number``: ``less-than``, ``less-than-equals``, ``greater-than``, and ``greater-than-equals``
+          
+
+          
+
+        
+        - **value** *(dict) --* 
+
+          The value to be compared with the ``metric``.
+
+          
+
+        
+          - **count** *(integer) --* 
+
+            If the ``comparisonOperator`` calls for a numeric value, use this to specify that numeric value to be compared with the ``metric``.
+
+            
+
+          
+          - **cidrs** *(list) --* 
+
+            If the ``comparisonOperator`` calls for a set of CIDRs, use this to specify that set to be compared with the ``metric``.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+          - **ports** *(list) --* 
+
+            If the ``comparisonOperator`` calls for a set of ports, use this to specify that set to be compared with the ``metric``.
+
+            
+
+          
+            - *(integer) --* 
+
+            
+        
+          - **number** *(float) --* 
+
+            The numeral value of a metric.
+
+            
+
+          
+          - **numbers** *(list) --* 
+
+            The numeral values of a metric.
+
+            
+
+          
+            - *(float) --* 
+
+            
+        
+          - **strings** *(list) --* 
+
+            The string values of a metric.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+        - **durationSeconds** *(integer) --* 
+
+          Use this to specify the time duration over which the behavior is evaluated, for those criteria that have a time dimension (for example, ``NUM_MESSAGES_SENT``). For a ``statisticalThreshhold`` metric comparison, measurements from all devices are accumulated over this time duration before being used to calculate percentiles, and later, measurements from an individual device are also accumulated over this time duration before being given a percentile rank. Cannot be used with list-based metric datatypes.
+
+          
+
+        
+        - **consecutiveDatapointsToAlarm** *(integer) --* 
+
+          If a device is in violation of the behavior for the specified number of consecutive datapoints, an alarm occurs. If not specified, the default is 1.
+
+          
+
+        
+        - **consecutiveDatapointsToClear** *(integer) --* 
+
+          If an alarm has occurred and the offending device is no longer in violation of the behavior for the specified number of consecutive datapoints, the alarm is cleared. If not specified, the default is 1.
+
+          
+
+        
+        - **statisticalThreshold** *(dict) --* 
+
+          A statistical ranking (percentile)that indicates a threshold value by which a behavior is determined to be in compliance or in violation of the behavior.
+
+          
+
+        
+          - **statistic** *(string) --* 
+
+            The percentile that resolves to a threshold value by which compliance with a behavior is determined. Metrics are collected over the specified period ( ``durationSeconds``) from all reporting devices in your account and statistical ranks are calculated. Then, the measurements from a device are collected over the same period. If the accumulated measurements from the device fall above or below ( ``comparisonOperator``) the value associated with the percentile specified, then the device is considered to be in compliance with the behavior, otherwise a violation occurs.
+
+            
+
+          
+        
+        - **mlDetectionConfig** *(dict) --* 
+
+          The configuration of an ML Detect
+
+          
+
+        
+          - **confidenceLevel** *(string) --* **[REQUIRED]** 
+
+            The sensitivity of anomalous behavior evaluation. Can be ``Low``, ``Medium``, or ``High``.
+
+            
+
+          
+        
+      
+      - **suppressAlerts** *(boolean) --* 
+
+        Suppresses alerts.
+
+        
+
+      
+      - **exportMetric** *(boolean) --* 
+
+        Value indicates exporting metrics related to the behavior when it is true.
+
+        
+
+      
+    
+
+  :type alertTargets: dict
+  :param alertTargets: 
+
+    Where the alerts are sent. (Alerts are always sent to the console.)
+
+    
+
+  
+    - *(string) --* 
+
+      The type of alert target: one of "SNS".
+
+      
+
+    
+      - *(dict) --* 
+
+        A structure containing the alert target ARN and the role ARN.
+
+        
+
+      
+        - **alertTargetArn** *(string) --* **[REQUIRED]** 
+
+          The Amazon Resource Name (ARN) of the notification target to which alerts are sent.
+
+          
+
+        
+        - **roleArn** *(string) --* **[REQUIRED]** 
+
+          The ARN of the role that grants permission to send alerts to the notification target.
+
+          
+
+        
+      
+
+
+  :type additionalMetricsToRetain: list
+  :param additionalMetricsToRetain: 
+
+    Please use  UpdateSecurityProfileRequest$additionalMetricsToRetainV2 instead.
+
+     
+
+    A list of metrics whose data is retained (stored). By default, data is retained for any metric used in the profile's ``behaviors``, but it is also retained for any metric specified here. Can be used with custom metrics; cannot be used with dimensions.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type additionalMetricsToRetainV2: list
+  :param additionalMetricsToRetainV2: 
+
+    A list of metrics whose data is retained (stored). By default, data is retained for any metric used in the profile's behaviors, but it is also retained for any metric specified here. Can be used with custom metrics; cannot be used with dimensions.
+
+    
+
+  
+    - *(dict) --* 
+
+      The metric you want to retain. Dimensions are optional.
+
+      
+
+    
+      - **metric** *(string) --* **[REQUIRED]** 
+
+        What is measured by the behavior.
+
+        
+
+      
+      - **metricDimension** *(dict) --* 
+
+        The dimension of a metric. This can't be used with custom metrics.
+
+        
+
+      
+        - **dimensionName** *(string) --* **[REQUIRED]** 
+
+          A unique identifier for the dimension.
+
+          
+
+        
+        - **operator** *(string) --* 
+
+          Defines how the ``dimensionValues`` of a dimension are interpreted. For example, for dimension type TOPIC_FILTER, the ``IN`` operator, a message will be counted only if its topic matches one of the topic filters. With ``NOT_IN`` operator, a message will be counted only if it doesn't match any of the topic filters. The operator is optional: if it's not provided (is ``null``), it will be interpreted as ``IN``.
+
+          
+
+        
+      
+      - **exportMetric** *(boolean) --* 
+
+        The value indicates exporting metrics related to the ``MetricToRetain`` when it's true.
+
+        
+
+      
+    
+
+  :type deleteBehaviors: boolean
+  :param deleteBehaviors: 
+
+    If true, delete all ``behaviors`` defined for this security profile. If any ``behaviors`` are defined in the current invocation, an exception occurs.
+
+    
+
+  
+  :type deleteAlertTargets: boolean
+  :param deleteAlertTargets: 
+
+    If true, delete all ``alertTargets`` defined for this security profile. If any ``alertTargets`` are defined in the current invocation, an exception occurs.
+
+    
+
+  
+  :type deleteAdditionalMetricsToRetain: boolean
+  :param deleteAdditionalMetricsToRetain: 
+
+    If true, delete all ``additionalMetricsToRetain`` defined for this security profile. If any ``additionalMetricsToRetain`` are defined in the current invocation, an exception occurs.
+
+    
+
+  
+  :type expectedVersion: integer
+  :param expectedVersion: 
+
+    The expected version of the security profile. A new version is generated whenever the security profile is updated. If you specify a value that is different from the actual version, a ``VersionConflictException`` is thrown.
+
+    
+
+  
+  :type metricsExportConfig: dict
+  :param metricsExportConfig: 
+
+    Specifies the MQTT topic and role ARN required for metric export.
+
+    
+
+  
+    - **mqttTopic** *(string) --* **[REQUIRED]** 
+
+      The MQTT topic that Device Defender Detect should publish messages to for metrics export.
+
+      
+
+    
+    - **roleArn** *(string) --* **[REQUIRED]** 
+
+      This role ARN has permission to publish MQTT messages, after which Device Defender Detect can assume the role and publish messages on your behalf.
+
+      
+
+    
+  
+  :type deleteMetricsExportConfig: boolean
+  :param deleteMetricsExportConfig: 
+
+    Set the value as true to delete metrics export related configurations.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'securityProfileName': 'string',
+          'securityProfileArn': 'string',
+          'securityProfileDescription': 'string',
+          'behaviors': [
+              {
+                  'name': 'string',
+                  'metric': 'string',
+                  'metricDimension': {
+                      'dimensionName': 'string',
+                      'operator': 'IN'|'NOT_IN'
+                  },
+                  'criteria': {
+                      'comparisonOperator': 'less-than'|'less-than-equals'|'greater-than'|'greater-than-equals'|'in-cidr-set'|'not-in-cidr-set'|'in-port-set'|'not-in-port-set'|'in-set'|'not-in-set',
+                      'value': {
+                          'count': 123,
+                          'cidrs': [
+                              'string',
+                          ],
+                          'ports': [
+                              123,
+                          ],
+                          'number': 123.0,
+                          'numbers': [
+                              123.0,
+                          ],
+                          'strings': [
+                              'string',
+                          ]
+                      },
+                      'durationSeconds': 123,
+                      'consecutiveDatapointsToAlarm': 123,
+                      'consecutiveDatapointsToClear': 123,
+                      'statisticalThreshold': {
+                          'statistic': 'string'
+                      },
+                      'mlDetectionConfig': {
+                          'confidenceLevel': 'LOW'|'MEDIUM'|'HIGH'
+                      }
+                  },
+                  'suppressAlerts': True|False,
+                  'exportMetric': True|False
+              },
+          ],
+          'alertTargets': {
+              'string': {
+                  'alertTargetArn': 'string',
+                  'roleArn': 'string'
+              }
+          },
+          'additionalMetricsToRetain': [
+              'string',
+          ],
+          'additionalMetricsToRetainV2': [
+              {
+                  'metric': 'string',
+                  'metricDimension': {
+                      'dimensionName': 'string',
+                      'operator': 'IN'|'NOT_IN'
+                  },
+                  'exportMetric': True|False
+              },
+          ],
+          'version': 123,
+          'creationDate': datetime(2015, 1, 1),
+          'lastModifiedDate': datetime(2015, 1, 1),
+          'metricsExportConfig': {
+              'mqttTopic': 'string',
+              'roleArn': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **securityProfileName** *(string) --* 
+
+        The name of the security profile that was updated.
+
+        
+      
+
+      - **securityProfileArn** *(string) --* 
+
+        The ARN of the security profile that was updated.
+
+        
+      
+
+      - **securityProfileDescription** *(string) --* 
+
+        The description of the security profile.
+
+        
+      
+
+      - **behaviors** *(list) --* 
+
+        Specifies the behaviors that, when violated by a device (thing), cause an alert.
+
+        
+        
+
+        - *(dict) --* 
+
+          A Device Defender security profile behavior.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name you've given to the behavior.
+
+            
+          
+
+          - **metric** *(string) --* 
+
+            What is measured by the behavior.
+
+            
+          
+
+          - **metricDimension** *(dict) --* 
+
+            The dimension for a metric in your behavior. For example, using a ``TOPIC_FILTER`` dimension, you can narrow down the scope of the metric to only MQTT topics where the name matches the pattern specified in the dimension. This can't be used with custom metrics.
+
+            
+            
+
+            - **dimensionName** *(string) --* 
+
+              A unique identifier for the dimension.
+
+              
+            
+
+            - **operator** *(string) --* 
+
+              Defines how the ``dimensionValues`` of a dimension are interpreted. For example, for dimension type TOPIC_FILTER, the ``IN`` operator, a message will be counted only if its topic matches one of the topic filters. With ``NOT_IN`` operator, a message will be counted only if it doesn't match any of the topic filters. The operator is optional: if it's not provided (is ``null``), it will be interpreted as ``IN``.
+
+              
+        
+          
+
+          - **criteria** *(dict) --* 
+
+            The criteria that determine if a device is behaving normally in regard to the ``metric``.
+
+             
+
+            .. note::
+
+              
+
+              In the IoT console, you can choose to be sent an alert through Amazon SNS when IoT Device Defender detects that a device is behaving anomalously.
+
+              
+
+            
+            
+
+            - **comparisonOperator** *(string) --* 
+
+              The operator that relates the thing measured ( ``metric``) to the criteria (containing a ``value`` or ``statisticalThreshold``). Valid operators include:
+
+               
+
+              
+              * ``string-list``: ``in-set`` and ``not-in-set``
+               
+              * ``number-list``: ``in-set`` and ``not-in-set``
+               
+              * ``ip-address-list``: ``in-cidr-set`` and ``not-in-cidr-set``
+               
+              * ``number``: ``less-than``, ``less-than-equals``, ``greater-than``, and ``greater-than-equals``
+              
+
+              
+            
+
+            - **value** *(dict) --* 
+
+              The value to be compared with the ``metric``.
+
+              
+              
+
+              - **count** *(integer) --* 
+
+                If the ``comparisonOperator`` calls for a numeric value, use this to specify that numeric value to be compared with the ``metric``.
+
+                
+              
+
+              - **cidrs** *(list) --* 
+
+                If the ``comparisonOperator`` calls for a set of CIDRs, use this to specify that set to be compared with the ``metric``.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **ports** *(list) --* 
+
+                If the ``comparisonOperator`` calls for a set of ports, use this to specify that set to be compared with the ``metric``.
+
+                
+                
+
+                - *(integer) --* 
+            
+              
+
+              - **number** *(float) --* 
+
+                The numeral value of a metric.
+
+                
+              
+
+              - **numbers** *(list) --* 
+
+                The numeral values of a metric.
+
+                
+                
+
+                - *(float) --* 
+            
+              
+
+              - **strings** *(list) --* 
+
+                The string values of a metric.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+            
+
+            - **durationSeconds** *(integer) --* 
+
+              Use this to specify the time duration over which the behavior is evaluated, for those criteria that have a time dimension (for example, ``NUM_MESSAGES_SENT``). For a ``statisticalThreshhold`` metric comparison, measurements from all devices are accumulated over this time duration before being used to calculate percentiles, and later, measurements from an individual device are also accumulated over this time duration before being given a percentile rank. Cannot be used with list-based metric datatypes.
+
+              
+            
+
+            - **consecutiveDatapointsToAlarm** *(integer) --* 
+
+              If a device is in violation of the behavior for the specified number of consecutive datapoints, an alarm occurs. If not specified, the default is 1.
+
+              
+            
+
+            - **consecutiveDatapointsToClear** *(integer) --* 
+
+              If an alarm has occurred and the offending device is no longer in violation of the behavior for the specified number of consecutive datapoints, the alarm is cleared. If not specified, the default is 1.
+
+              
+            
+
+            - **statisticalThreshold** *(dict) --* 
+
+              A statistical ranking (percentile)that indicates a threshold value by which a behavior is determined to be in compliance or in violation of the behavior.
+
+              
+              
+
+              - **statistic** *(string) --* 
+
+                The percentile that resolves to a threshold value by which compliance with a behavior is determined. Metrics are collected over the specified period ( ``durationSeconds``) from all reporting devices in your account and statistical ranks are calculated. Then, the measurements from a device are collected over the same period. If the accumulated measurements from the device fall above or below ( ``comparisonOperator``) the value associated with the percentile specified, then the device is considered to be in compliance with the behavior, otherwise a violation occurs.
+
+                
+          
+            
+
+            - **mlDetectionConfig** *(dict) --* 
+
+              The configuration of an ML Detect
+
+              
+              
+
+              - **confidenceLevel** *(string) --* 
+
+                The sensitivity of anomalous behavior evaluation. Can be ``Low``, ``Medium``, or ``High``.
+
+                
+          
+        
+          
+
+          - **suppressAlerts** *(boolean) --* 
+
+            Suppresses alerts.
+
+            
+          
+
+          - **exportMetric** *(boolean) --* 
+
+            Value indicates exporting metrics related to the behavior when it is true.
+
+            
+      
+    
+      
+
+      - **alertTargets** *(dict) --* 
+
+        Where the alerts are sent. (Alerts are always sent to the console.)
+
+        
+        
+
+        - *(string) --* 
+
+          The type of alert target: one of "SNS".
+
+          
+          
+
+          - *(dict) --* 
+
+            A structure containing the alert target ARN and the role ARN.
+
+            
+            
+
+            - **alertTargetArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the notification target to which alerts are sent.
+
+              
+            
+
+            - **roleArn** *(string) --* 
+
+              The ARN of the role that grants permission to send alerts to the notification target.
+
+              
+        
+    
+  
+      
+
+      - **additionalMetricsToRetain** *(list) --* 
+
+        Please use  UpdateSecurityProfileResponse$additionalMetricsToRetainV2 instead.
+
+         
+
+        A list of metrics whose data is retained (stored). By default, data is retained for any metric used in the security profile's ``behaviors``, but it is also retained for any metric specified here.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **additionalMetricsToRetainV2** *(list) --* 
+
+        A list of metrics whose data is retained (stored). By default, data is retained for any metric used in the profile's behaviors, but it is also retained for any metric specified here. Can be used with custom metrics; cannot be used with dimensions.
+
+        
+        
+
+        - *(dict) --* 
+
+          The metric you want to retain. Dimensions are optional.
+
+          
+          
+
+          - **metric** *(string) --* 
+
+            What is measured by the behavior.
+
+            
+          
+
+          - **metricDimension** *(dict) --* 
+
+            The dimension of a metric. This can't be used with custom metrics.
+
+            
+            
+
+            - **dimensionName** *(string) --* 
+
+              A unique identifier for the dimension.
+
+              
+            
+
+            - **operator** *(string) --* 
+
+              Defines how the ``dimensionValues`` of a dimension are interpreted. For example, for dimension type TOPIC_FILTER, the ``IN`` operator, a message will be counted only if its topic matches one of the topic filters. With ``NOT_IN`` operator, a message will be counted only if it doesn't match any of the topic filters. The operator is optional: if it's not provided (is ``null``), it will be interpreted as ``IN``.
+
+              
+        
+          
+
+          - **exportMetric** *(boolean) --* 
+
+            The value indicates exporting metrics related to the ``MetricToRetain`` when it's true.
+
+            
+      
+    
+      
+
+      - **version** *(integer) --* 
+
+        The updated version of the security profile.
+
+        
+      
+
+      - **creationDate** *(datetime) --* 
+
+        The time the security profile was created.
+
+        
+      
+
+      - **lastModifiedDate** *(datetime) --* 
+
+        The time the security profile was last modified.
+
+        
+      
+
+      - **metricsExportConfig** *(dict) --* 
+
+        Specifies the MQTT topic and role ARN required for metric export.
+
+        
+        
+
+        - **mqttTopic** *(string) --* 
+
+          The MQTT topic that Device Defender Detect should publish messages to for metrics export.
+
+          
+        
+
+        - **roleArn** *(string) --* 
+
+          This role ARN has permission to publish MQTT messages, after which Device Defender Detect can assume the role and publish messages on your behalf.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`IoT.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.VersionConflictException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.InternalFailureException`
+
+  

@@ -1,0 +1,247 @@
+:doc:`Organizations <../../organizations>` / Client / list_roots
+
+**********
+list_roots
+**********
+
+
+
+.. py:method:: Organizations.Client.list_roots(**kwargs)
+
+  
+
+  Lists the roots that are defined in the current organization.
+
+   
+
+  .. note::
+
+    
+
+    When calling List* operations, always check the ``NextToken`` response parameter value, even if you receive an empty result set. These operations can occasionally return an empty set of results even when more results are available. Continue making requests until ``NextToken`` returns null. A null ``NextToken`` value indicates that you have retrieved all available results.
+
+    
+
+   
+
+  You can only call this operation from the management account or a member account that is a delegated administrator.
+
+   
+
+  .. note::
+
+    
+
+    Policy types can be enabled and disabled in roots. This is distinct from whether they're available in the organization. When you enable all features, you make policy types available for use in that organization. Individual policy types can then be enabled and disabled in a root. To see the availability of a policy type in an organization, use  DescribeOrganization.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/ListRoots>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_roots(
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type NextToken: string
+  :param NextToken: 
+
+    The parameter for receiving additional results if you receive a ``NextToken`` response in a previous request. A ``NextToken`` response indicates that more output is available. Set this parameter to the value of the previous call's ``NextToken`` response to indicate where the output should continue from.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return in the response. If more results exist than the specified ``MaxResults`` value, a token is included in the response so that you can retrieve the remaining results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Roots': [
+              {
+                  'Id': 'string',
+                  'Arn': 'string',
+                  'Name': 'string',
+                  'PolicyTypes': [
+                      {
+                          'Type': 'SERVICE_CONTROL_POLICY'|'RESOURCE_CONTROL_POLICY'|'TAG_POLICY'|'BACKUP_POLICY'|'AISERVICES_OPT_OUT_POLICY'|'CHATBOT_POLICY'|'DECLARATIVE_POLICY_EC2'|'SECURITYHUB_POLICY'|'INSPECTOR_POLICY'|'UPGRADE_ROLLOUT_POLICY'|'BEDROCK_POLICY'|'S3_POLICY'|'NETWORK_SECURITY_DIRECTOR_POLICY',
+                          'Status': 'ENABLED'|'PENDING_ENABLE'|'PENDING_DISABLE'
+                      },
+                  ]
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Roots** *(list) --* 
+
+        A list of roots that are defined in an organization.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains details about a root. A root is a top-level parent node in the hierarchy of an organization that can contain organizational units (OUs) and accounts. The root contains every Amazon Web Services account in the organization.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The unique identifier (ID) for the root. The ID is unique to the organization only.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ for a root ID string requires "r-" followed by from 4 to 32 lowercase letters or digits.
+
+            
+          
+
+          - **Arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the root.
+
+             
+
+            For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The friendly name of the root.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ that is used to validate this parameter is a string of any of the characters in the ASCII character range.
+
+            
+          
+
+          - **PolicyTypes** *(list) --* 
+
+            The types of policies that are currently enabled for the root and therefore can be attached to the root or to its OUs or accounts.
+
+             
+
+            .. note::
+
+              
+
+              Even if a policy type is shown as available in the organization, you can separately enable and disable them at the root level by using  EnablePolicyType and  DisablePolicyType. Use  DescribeOrganization to see the availability of the policy types in that organization.
+
+              
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains information about a policy type and its status in the associated root.
+
+              
+              
+
+              - **Type** *(string) --* 
+
+                The name of the policy type.
+
+                
+              
+
+              - **Status** *(string) --* 
+
+                The status of the policy type as it relates to the associated root. To attach a policy of the specified type to a root or to an OU or account in that root, it must be available in the organization and enabled for that root.
+
+                
+          
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If present, indicates that more output is available than is included in the current response. Use this value in the ``NextToken`` request parameter in a subsequent call to the operation to get the next part of the output. You should repeat this until the ``NextToken`` response element comes back as ``null``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+
+  **Examples**
+
+  The following example shows how to get the list of the roots in the current organization:/n/n
+  ::
+
+    response = client.list_roots(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Roots': [
+            {
+                'Arn': 'arn:aws:organizations::111111111111:root/o-exampleorgid/r-examplerootid111',
+                'Id': 'r-examplerootid111',
+                'Name': 'Root',
+                'PolicyTypes': [
+                    {
+                        'Status': 'ENABLED',
+                        'Type': 'SERVICE_CONTROL_POLICY',
+                    },
+                ],
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

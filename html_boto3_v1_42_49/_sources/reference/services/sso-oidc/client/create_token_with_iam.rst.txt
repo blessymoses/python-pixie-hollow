@@ -1,0 +1,324 @@
+:doc:`SSOOIDC <../../sso-oidc>` / Client / create_token_with_iam
+
+*********************
+create_token_with_iam
+*********************
+
+
+
+.. py:method:: SSOOIDC.Client.create_token_with_iam(**kwargs)
+
+  
+
+  Creates and returns access and refresh tokens for authorized client applications that are authenticated using any IAM entity, such as a service role or user. These tokens might contain defined scopes that specify permissions such as ``read:profile`` or ``write:data``. Through downscoping, you can use the scopes parameter to request tokens with reduced permissions compared to the original client application's permissions or, if applicable, the refresh token's scopes. The access token can be used to fetch short-lived credentials for the assigned Amazon Web Services accounts or to access application APIs using ``bearer`` authentication.
+
+   
+
+  .. note::
+
+    
+
+    This API is used with Signature Version 4. For more information, see `Amazon Web Services Signature Version 4 for API Requests <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sso-oidc-2019-06-10/CreateTokenWithIAM>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_token_with_iam(
+        clientId='string',
+        grantType='string',
+        code='string',
+        refreshToken='string',
+        assertion='string',
+        scope=[
+            'string',
+        ],
+        redirectUri='string',
+        subjectToken='string',
+        subjectTokenType='string',
+        requestedTokenType='string',
+        codeVerifier='string'
+    )
+    
+  :type clientId: string
+  :param clientId: **[REQUIRED]** 
+
+    The unique identifier string for the client or application. This value is an application ARN that has OAuth grants configured.
+
+    
+
+  
+  :type grantType: string
+  :param grantType: **[REQUIRED]** 
+
+    Supports the following OAuth grant types: Authorization Code, Refresh Token, JWT Bearer, and Token Exchange. Specify one of the following values, depending on the grant type that you want:
+
+     
+
+    * Authorization Code - ``authorization_code``
+
+     
+
+    * Refresh Token - ``refresh_token``
+
+     
+
+    * JWT Bearer - ``urn:ietf:params:oauth:grant-type:jwt-bearer``
+
+     
+
+    * Token Exchange - ``urn:ietf:params:oauth:grant-type:token-exchange``
+
+    
+
+  
+  :type code: string
+  :param code: 
+
+    Used only when calling this API for the Authorization Code grant type. This short-lived code is used to identify this authorization request. The code is obtained through a redirect from IAM Identity Center to a redirect URI persisted in the Authorization Code GrantOptions for the application.
+
+    
+
+  
+  :type refreshToken: string
+  :param refreshToken: 
+
+    Used only when calling this API for the Refresh Token grant type. This token is used to refresh short-lived tokens, such as the access token, that might expire.
+
+     
+
+    For more information about the features and limitations of the current IAM Identity Center OIDC implementation, see *Considerations for Using this Guide* in the `IAM Identity Center OIDC API Reference <https://docs.aws.amazon.com/singlesignon/latest/OIDCAPIReference/Welcome.html>`__.
+
+    
+
+  
+  :type assertion: string
+  :param assertion: 
+
+    Used only when calling this API for the JWT Bearer grant type. This value specifies the JSON Web Token (JWT) issued by a trusted token issuer. To authorize a trusted token issuer, configure the JWT Bearer GrantOptions for the application.
+
+    
+
+  
+  :type scope: list
+  :param scope: 
+
+    The list of scopes for which authorization is requested. The access token that is issued is limited to the scopes that are granted. If the value is not specified, IAM Identity Center authorizes all scopes configured for the application, including the following default scopes: ``openid``, ``aws``, ``sts:identity_context``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type redirectUri: string
+  :param redirectUri: 
+
+    Used only when calling this API for the Authorization Code grant type. This value specifies the location of the client or application that has registered to receive the authorization code.
+
+    
+
+  
+  :type subjectToken: string
+  :param subjectToken: 
+
+    Used only when calling this API for the Token Exchange grant type. This value specifies the subject of the exchange. The value of the subject token must be an access token issued by IAM Identity Center to a different client or application. The access token must have authorized scopes that indicate the requested application as a target audience.
+
+    
+
+  
+  :type subjectTokenType: string
+  :param subjectTokenType: 
+
+    Used only when calling this API for the Token Exchange grant type. This value specifies the type of token that is passed as the subject of the exchange. The following value is supported:
+
+     
+
+    * Access Token - ``urn:ietf:params:oauth:token-type:access_token``
+
+    
+
+  
+  :type requestedTokenType: string
+  :param requestedTokenType: 
+
+    Used only when calling this API for the Token Exchange grant type. This value specifies the type of token that the requester can receive. The following values are supported:
+
+     
+
+    * Access Token - ``urn:ietf:params:oauth:token-type:access_token``
+
+     
+
+    * Refresh Token - ``urn:ietf:params:oauth:token-type:refresh_token``
+
+    
+
+  
+  :type codeVerifier: string
+  :param codeVerifier: 
+
+    Used only when calling this API for the Authorization Code grant type. This value is generated by the client and presented to validate the original code challenge value the client passed at authorization time.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'accessToken': 'string',
+          'tokenType': 'string',
+          'expiresIn': 123,
+          'refreshToken': 'string',
+          'idToken': 'string',
+          'issuedTokenType': 'string',
+          'scope': [
+              'string',
+          ],
+          'awsAdditionalDetails': {
+              'identityContext': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **accessToken** *(string) --* 
+
+        A bearer token to access Amazon Web Services accounts and applications assigned to a user.
+
+        
+      
+
+      - **tokenType** *(string) --* 
+
+        Used to notify the requester that the returned token is an access token. The supported token type is ``Bearer``.
+
+        
+      
+
+      - **expiresIn** *(integer) --* 
+
+        Indicates the time in seconds when an access token will expire.
+
+        
+      
+
+      - **refreshToken** *(string) --* 
+
+        A token that, if present, can be used to refresh a previously issued access token that might have expired.
+
+         
+
+        For more information about the features and limitations of the current IAM Identity Center OIDC implementation, see *Considerations for Using this Guide* in the `IAM Identity Center OIDC API Reference <https://docs.aws.amazon.com/singlesignon/latest/OIDCAPIReference/Welcome.html>`__.
+
+        
+      
+
+      - **idToken** *(string) --* 
+
+        A JSON Web Token (JWT) that identifies the user associated with the issued access token.
+
+        
+      
+
+      - **issuedTokenType** *(string) --* 
+
+        Indicates the type of tokens that are issued by IAM Identity Center. The following values are supported:
+
+         
+
+        * Access Token - ``urn:ietf:params:oauth:token-type:access_token``
+
+         
+
+        * Refresh Token - ``urn:ietf:params:oauth:token-type:refresh_token``
+
+        
+      
+
+      - **scope** *(list) --* 
+
+        The list of scopes for which authorization is granted. The access token that is issued is limited to the scopes that are granted.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **awsAdditionalDetails** *(dict) --* 
+
+        A structure containing information from IAM Identity Center managed user and group information.
+
+        
+        
+
+        - **identityContext** *(string) --* 
+
+          The trusted context assertion is signed and encrypted by STS. It provides access to ``sts:identity_context`` claim in the ``idToken`` without JWT parsing
+
+           
+
+          Identity context comprises information that Amazon Web Services services use to make authorization decisions when they receive requests.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.InvalidClientException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.InvalidGrantException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.UnauthorizedClientException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.UnsupportedGrantTypeException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.InvalidScopeException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.AuthorizationPendingException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.SlowDownException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.ExpiredTokenException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SSOOIDC.Client.exceptions.InvalidRequestRegionException`
+
+  

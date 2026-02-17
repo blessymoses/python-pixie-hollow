@@ -1,0 +1,270 @@
+:doc:`AuroraDSQL <../../dsql>` / Client / update_cluster
+
+**************
+update_cluster
+**************
+
+
+
+.. py:method:: AuroraDSQL.Client.update_cluster(**kwargs)
+
+  
+
+  The *UpdateCluster* API allows you to modify both single-Region and multi-Region cluster configurations. With the *multiRegionProperties* parameter, you can add or modify witness Region support and manage peer relationships with clusters in other Regions.
+
+   
+
+  .. note::
+
+    
+
+    Note that updating multi-Region clusters requires additional IAM permissions beyond those needed for standard cluster updates, as detailed in the Permissions section.
+
+    
+
+   
+
+  **Required permissions**
+
+    dsql:UpdateCluster  
+
+  Permission to update a DSQL cluster.
+
+   
+
+  Resources: ``arn:aws:dsql:region:account-id:cluster/cluster-id``
+
+      dsql:PutMultiRegionProperties  
+
+  Permission to configure multi-Region properties for a cluster.
+
+   
+
+  Resources: ``arn:aws:dsql:region:account-id:cluster/cluster-id``
+
+      dsql:GetCluster  
+
+  Permission to retrieve cluster information.
+
+   
+
+  Resources: ``arn:aws:dsql:region:account-id:cluster/cluster-id``
+
+    dsql:AddPeerCluster  
+
+  Permission to add peer clusters.
+
+   
+
+  Resources:
+
+   
+
+  
+  * Local cluster: ``arn:aws:dsql:region:account-id:cluster/cluster-id``
+   
+  * Each peer cluster: exact ARN of each specified peer cluster
+  
+
+    dsql:RemovePeerCluster  
+
+  Permission to remove peer clusters. The *dsql:RemovePeerCluster* permission uses a wildcard ARN pattern to simplify permission management during updates.
+
+   
+
+  Resources: ``arn:aws:dsql:*:account-id:cluster/*``
+
+      dsql:PutWitnessRegion  
+
+  Permission to set a witness Region.
+
+   
+
+  Resources: ``arn:aws:dsql:region:account-id:cluster/cluster-id``
+
+   
+
+  Condition Keys: dsql:WitnessRegion (matching the specified witness Region)
+
+   
+
+  **This permission is checked both in the cluster Region and in the witness Region.**
+
+     
+
+  .. warning::
+
+     
+
+    
+    * The witness region specified in ``multiRegionProperties.witnessRegion`` cannot be the same as the cluster's Region.
+     
+    * When updating clusters with peer relationships, permissions are checked for both adding and removing peers.
+     
+    * The ``dsql:RemovePeerCluster`` permission uses a wildcard ARN pattern to simplify permission management during updates.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/dsql-2018-05-10/UpdateCluster>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_cluster(
+        identifier='string',
+        deletionProtectionEnabled=True|False,
+        kmsEncryptionKey='string',
+        clientToken='string',
+        multiRegionProperties={
+            'witnessRegion': 'string',
+            'clusters': [
+                'string',
+            ]
+        }
+    )
+    
+  :type identifier: string
+  :param identifier: **[REQUIRED]** 
+
+    The ID of the cluster you want to update.
+
+    
+
+  
+  :type deletionProtectionEnabled: boolean
+  :param deletionProtectionEnabled: 
+
+    Specifies whether to enable deletion protection in your cluster.
+
+    
+
+  
+  :type kmsEncryptionKey: string
+  :param kmsEncryptionKey: 
+
+    The KMS key that encrypts and protects the data on your cluster. You can specify the ARN, ID, or alias of an existing key or have Amazon Web Services create a default key for you.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. Idempotency ensures that an API request completes only once. With an idempotent request, if the original request completes successfully. The subsequent retries with the same client token return the result from the original successful request and they have no additional effect.
+
+     
+
+    If you don't specify a client token, the Amazon Web Services SDK automatically generates one.
+
+    This field is autopopulated if not provided.
+
+  
+  :type multiRegionProperties: dict
+  :param multiRegionProperties: 
+
+    The new multi-Region cluster configuration settings to be applied during an update operation.
+
+    
+
+  
+    - **witnessRegion** *(string) --* 
+
+      The Region that serves as the witness region for a multi-Region cluster. The witness Region helps maintain cluster consistency and quorum.
+
+      
+
+    
+    - **clusters** *(list) --* 
+
+      The set of peered clusters that form the multi-Region cluster configuration. Each peered cluster represents a database instance in a different Region.
+
+      
+
+    
+      - *(string) --* 
+
+        The Amazon Resource Name of the cluster.
+
+        
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'identifier': 'string',
+          'arn': 'string',
+          'status': 'CREATING'|'ACTIVE'|'IDLE'|'INACTIVE'|'UPDATING'|'DELETING'|'DELETED'|'FAILED'|'PENDING_SETUP'|'PENDING_DELETE',
+          'creationTime': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The details of the cluster after it has been updated.
+
+      
+      
+
+      - **identifier** *(string) --* 
+
+        The ID of the cluster to update.
+
+        
+      
+
+      - **arn** *(string) --* 
+
+        The ARN of the updated cluster.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The status of the updated cluster.
+
+        
+      
+
+      - **creationTime** *(datetime) --* 
+
+        The time of when the cluster was created.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AuroraDSQL.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AuroraDSQL.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AuroraDSQL.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AuroraDSQL.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AuroraDSQL.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AuroraDSQL.Client.exceptions.ConflictException`
+
+  

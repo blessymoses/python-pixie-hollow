@@ -1,0 +1,249 @@
+:doc:`CloudWatchEvidently <../../evidently>` / Client / batch_evaluate_feature
+
+**********************
+batch_evaluate_feature
+**********************
+
+
+
+.. py:method:: CloudWatchEvidently.Client.batch_evaluate_feature(**kwargs)
+
+  
+
+  This operation assigns feature variation to user sessions. For each user session, you pass in an ``entityID`` that represents the user. Evidently then checks the evaluation rules and assigns the variation.
+
+   
+
+  The first rules that are evaluated are the override rules. If the user's ``entityID`` matches an override rule, the user is served the variation specified by that rule.
+
+   
+
+  Next, if there is a launch of the feature, the user might be assigned to a variation in the launch. The chance of this depends on the percentage of users that are allocated to that launch. If the user is enrolled in the launch, the variation they are served depends on the allocation of the various feature variations used for the launch.
+
+   
+
+  If the user is not assigned to a launch, and there is an ongoing experiment for this feature, the user might be assigned to a variation in the experiment. The chance of this depends on the percentage of users that are allocated to that experiment. If the user is enrolled in the experiment, the variation they are served depends on the allocation of the various feature variations used for the experiment.
+
+   
+
+  If the user is not assigned to a launch or experiment, they are served the default variation.
+
+  
+
+  .. danger::
+
+        This operation is deprecated and may not function as expected. This operation should not be used going forward and is only kept for the purpose of backwards compatiblity.
+
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/evidently-2021-02-01/BatchEvaluateFeature>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_evaluate_feature(
+        project='string',
+        requests=[
+            {
+                'entityId': 'string',
+                'evaluationContext': 'string',
+                'feature': 'string'
+            },
+        ]
+    )
+    
+  :type project: string
+  :param project: **[REQUIRED]** 
+
+    The name or ARN of the project that contains the feature being evaluated.
+
+    
+
+  
+  :type requests: list
+  :param requests: **[REQUIRED]** 
+
+    An array of structures, where each structure assigns a feature variation to one user session.
+
+    
+
+  
+    - *(dict) --* 
+
+      This structure assigns a feature variation to one user session.
+
+      
+
+    
+      - **entityId** *(string) --* **[REQUIRED]** 
+
+        An internal ID that represents a unique user session of the application. This ``entityID`` is checked against any override rules assigned for this feature.
+
+        
+
+      
+      - **evaluationContext** *(string) --* 
+
+        A JSON block of attributes that you can optionally pass in. This JSON block is included in the evaluation events sent to Evidently from the user session.
+
+        
+
+      
+      - **feature** *(string) --* **[REQUIRED]** 
+
+        The name of the feature being evaluated.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'results': [
+              {
+                  'details': 'string',
+                  'entityId': 'string',
+                  'feature': 'string',
+                  'project': 'string',
+                  'reason': 'string',
+                  'value': {
+                      'boolValue': True|False,
+                      'doubleValue': 123.0,
+                      'longValue': 123,
+                      'stringValue': 'string'
+                  },
+                  'variation': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **results** *(list) --* 
+
+        An array of structures, where each structure displays the results of one feature evaluation assignment to one user session.
+
+        
+        
+
+        - *(dict) --* 
+
+          This structure displays the results of one feature evaluation assignment to one user session.
+
+          
+          
+
+          - **details** *(string) --* 
+
+            If this user was assigned to a launch or experiment, this field lists the launch or experiment name.
+
+            
+          
+
+          - **entityId** *(string) --* 
+
+            An internal ID that represents a unique user session of the application.
+
+            
+          
+
+          - **feature** *(string) --* 
+
+            The name of the feature being evaluated.
+
+            
+          
+
+          - **project** *(string) --* 
+
+            The name or ARN of the project that contains the feature being evaluated.
+
+            
+          
+
+          - **reason** *(string) --* 
+
+            Specifies the reason that the user session was assigned this variation. Possible values include ``DEFAULT``, meaning the user was served the default variation; ``LAUNCH_RULE_MATCH``, if the user session was enrolled in a launch; or ``EXPERIMENT_RULE_MATCH``, if the user session was enrolled in an experiment.
+
+            
+          
+
+          - **value** *(dict) --* 
+
+            The value assigned to this variation to differentiate it from the other variations of this feature.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``boolValue``, ``doubleValue``, ``longValue``, ``stringValue``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **boolValue** *(boolean) --* 
+
+              If this feature uses the Boolean variation type, this field contains the Boolean value of this variation.
+
+              
+            
+
+            - **doubleValue** *(float) --* 
+
+              If this feature uses the double integer variation type, this field contains the double integer value of this variation.
+
+              
+            
+
+            - **longValue** *(integer) --* 
+
+              If this feature uses the long variation type, this field contains the long value of this variation.
+
+              
+            
+
+            - **stringValue** *(string) --* 
+
+              If this feature uses the string variation type, this field contains the string value of this variation.
+
+              
+        
+          
+
+          - **variation** *(string) --* 
+
+            The name of the variation that was served to the user session.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchEvidently.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CloudWatchEvidently.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CloudWatchEvidently.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchEvidently.Client.exceptions.AccessDeniedException`
+
+  

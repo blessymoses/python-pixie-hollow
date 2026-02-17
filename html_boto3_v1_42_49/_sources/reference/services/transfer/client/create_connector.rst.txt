@@ -1,0 +1,529 @@
+:doc:`Transfer <../../transfer>` / Client / create_connector
+
+****************
+create_connector
+****************
+
+
+
+.. py:method:: Transfer.Client.create_connector(**kwargs)
+
+  
+
+  Creates the connector, which captures the parameters for a connection for the AS2 or SFTP protocol. For AS2, the connector is required for sending files to an externally hosted AS2 server. For SFTP, the connector is required when sending files to an SFTP server or receiving files from an SFTP server. For more details about connectors, see `Configure AS2 connectors <https://docs.aws.amazon.com/transfer/latest/userguide/configure-as2-connector.html>`__ and `Create SFTP connectors <https://docs.aws.amazon.com/transfer/latest/userguide/configure-sftp-connector.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    You must specify exactly one configuration object: either for AS2 ( ``As2Config``) or SFTP ( ``SftpConfig``).
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/CreateConnector>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_connector(
+        Url='string',
+        As2Config={
+            'LocalProfileId': 'string',
+            'PartnerProfileId': 'string',
+            'MessageSubject': 'string',
+            'Compression': 'ZLIB'|'DISABLED',
+            'EncryptionAlgorithm': 'AES128_CBC'|'AES192_CBC'|'AES256_CBC'|'DES_EDE3_CBC'|'NONE',
+            'SigningAlgorithm': 'SHA256'|'SHA384'|'SHA512'|'SHA1'|'NONE',
+            'MdnSigningAlgorithm': 'SHA256'|'SHA384'|'SHA512'|'SHA1'|'NONE'|'DEFAULT',
+            'MdnResponse': 'SYNC'|'NONE'|'ASYNC',
+            'BasicAuthSecretId': 'string',
+            'PreserveContentType': 'ENABLED'|'DISABLED',
+            'AsyncMdnConfig': {
+                'Url': 'string',
+                'ServerIds': [
+                    'string',
+                ]
+            }
+        },
+        AccessRole='string',
+        LoggingRole='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        SftpConfig={
+            'UserSecretId': 'string',
+            'TrustedHostKeys': [
+                'string',
+            ],
+            'MaxConcurrentConnections': 123
+        },
+        SecurityPolicyName='string',
+        EgressConfig={
+            'VpcLattice': {
+                'ResourceConfigurationArn': 'string',
+                'PortNumber': 123
+            }
+        }
+    )
+    
+  :type Url: string
+  :param Url: 
+
+    The URL of the partner's AS2 or SFTP endpoint.
+
+     
+
+    When creating AS2 connectors or service-managed SFTP connectors (connectors without egress configuration), you must provide a URL to specify the remote server endpoint. For VPC Lattice type connectors, the URL must be null.
+
+    
+
+  
+  :type As2Config: dict
+  :param As2Config: 
+
+    A structure that contains the parameters for an AS2 connector object.
+
+    
+
+  
+    - **LocalProfileId** *(string) --* 
+
+      A unique identifier for the AS2 local profile.
+
+      
+
+    
+    - **PartnerProfileId** *(string) --* 
+
+      A unique identifier for the partner profile for the connector.
+
+      
+
+    
+    - **MessageSubject** *(string) --* 
+
+      Used as the ``Subject`` HTTP header attribute in AS2 messages that are being sent with the connector.
+
+      
+
+    
+    - **Compression** *(string) --* 
+
+      Specifies whether the AS2 file is compressed.
+
+      
+
+    
+    - **EncryptionAlgorithm** *(string) --* 
+
+      The algorithm that is used to encrypt the file.
+
+       
+
+      Note the following:
+
+       
+
+      
+      * Do not use the ``DES_EDE3_CBC`` algorithm unless you must support a legacy client that requires it, as it is a weak encryption algorithm.
+       
+      * You can only specify ``NONE`` if the URL for your connector uses HTTPS. Using HTTPS ensures that no traffic is sent in clear text.
+      
+
+      
+
+    
+    - **SigningAlgorithm** *(string) --* 
+
+      The algorithm that is used to sign the AS2 messages sent with the connector.
+
+      
+
+    
+    - **MdnSigningAlgorithm** *(string) --* 
+
+      The signing algorithm for the MDN response.
+
+       
+
+      .. note::
+
+        
+
+        If set to DEFAULT (or not set at all), the value for ``SigningAlgorithm`` is used.
+
+        
+
+      
+
+    
+    - **MdnResponse** *(string) --* 
+
+      Used for outbound requests (from an Transfer Family connector to a partner AS2 server) to determine whether the partner response for transfers is synchronous or asynchronous. Specify either of the following values:
+
+       
+
+      
+      * ``ASYNC``: The system expects an asynchronous MDN response, confirming that the file was transferred successfully (or not).
+       
+      * ``SYNC``: The system expects a synchronous MDN response, confirming that the file was transferred successfully (or not).
+       
+      * ``NONE``: Specifies that no MDN response is required.
+      
+
+      
+
+    
+    - **BasicAuthSecretId** *(string) --* 
+
+      Provides Basic authentication support to the AS2 Connectors API. To use Basic authentication, you must provide the name or Amazon Resource Name (ARN) of a secret in Secrets Manager.
+
+       
+
+      The default value for this parameter is ``null``, which indicates that Basic authentication is not enabled for the connector.
+
+       
+
+      If the connector should use Basic authentication, the secret needs to be in the following format:
+
+       
+
+      ``{ "Username": "user-name", "Password": "user-password" }``
+
+       
+
+      Replace ``user-name`` and ``user-password`` with the credentials for the actual user that is being authenticated.
+
+       
+
+      Note the following:
+
+       
+
+      
+      * You are storing these credentials in Secrets Manager, *not passing them directly* into this API.
+       
+      * If you are using the API, SDKs, or CloudFormation to configure your connector, then you must create the secret before you can enable Basic authentication. However, if you are using the Amazon Web Services management console, you can have the system create the secret for you.
+      
+
+       
+
+      If you have previously enabled Basic authentication for a connector, you can disable it by using the ``UpdateConnector`` API call. For example, if you are using the CLI, you can run the following command to remove Basic authentication:
+
+       
+
+      ``update-connector --connector-id my-connector-id --as2-config 'BasicAuthSecretId=""'``
+
+      
+
+    
+    - **PreserveContentType** *(string) --* 
+
+      Allows you to use the Amazon S3 ``Content-Type`` that is associated with objects in S3 instead of having the content type mapped based on the file extension. This parameter is enabled by default when you create an AS2 connector from the console, but disabled by default when you create an AS2 connector by calling the API directly.
+
+      
+
+    
+    - **AsyncMdnConfig** *(dict) --* 
+
+      Configuration settings for asynchronous Message Disposition Notification (MDN) responses. This allows you to configure where asynchronous MDN responses should be sent and which servers should handle them.
+
+      
+
+    
+      - **Url** *(string) --* 
+
+        The URL endpoint where asynchronous MDN responses should be sent.
+
+        
+
+      
+      - **ServerIds** *(list) --* 
+
+        A list of server identifiers that can handle asynchronous MDN responses. You can specify between 1 and 10 server IDs.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+  
+  :type AccessRole: string
+  :param AccessRole: **[REQUIRED]** 
+
+    Connectors are used to send files using either the AS2 or SFTP protocol. For the access role, provide the Amazon Resource Name (ARN) of the Identity and Access Management role to use.
+
+     
+
+    **For AS2 connectors**
+
+     
+
+    With AS2, you can send files by calling ``StartFileTransfer`` and specifying the file paths in the request parameter, ``SendFilePaths``. We use the file’s parent directory (for example, for ``--send-file-paths /bucket/dir/file.txt``, parent directory is ``/bucket/dir/``) to temporarily store a processed AS2 message file, store the MDN when we receive them from the partner, and write a final JSON file containing relevant metadata of the transmission. So, the ``AccessRole`` needs to provide read and write access to the parent directory of the file location used in the ``StartFileTransfer`` request. Additionally, you need to provide read and write access to the parent directory of the files that you intend to send with ``StartFileTransfer``.
+
+     
+
+    If you are using Basic authentication for your AS2 connector, the access role requires the ``secretsmanager:GetSecretValue`` permission for the secret. If the secret is encrypted using a customer-managed key instead of the Amazon Web Services managed key in Secrets Manager, then the role also needs the ``kms:Decrypt`` permission for that key.
+
+     
+
+    **For SFTP connectors**
+
+     
+
+    Make sure that the access role provides read and write access to the parent directory of the file location that's used in the ``StartFileTransfer`` request. Additionally, make sure that the role provides ``secretsmanager:GetSecretValue`` permission to Secrets Manager.
+
+    
+
+  
+  :type LoggingRole: string
+  :param LoggingRole: 
+
+    The Amazon Resource Name (ARN) of the Identity and Access Management (IAM) role that allows a connector to turn on CloudWatch logging for Amazon S3 events. When set, you can view connector activity in your CloudWatch logs.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    Key-value pairs that can be used to group and search for connectors. Tags are metadata attached to connectors for any purpose.
+
+    
+
+  
+    - *(dict) --* 
+
+      Creates a key-value pair for a specific resource. Tags are metadata that you can use to search for and group a resource for various purposes. You can apply tags to servers, users, and roles. A tag key can take more than one value. For example, to group servers for accounting purposes, you might create a tag called ``Group`` and assign the values ``Research`` and ``Accounting`` to that group.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name assigned to the tag that you create.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        Contains one or more values that you assigned to the key name you create.
+
+        
+
+      
+    
+
+  :type SftpConfig: dict
+  :param SftpConfig: 
+
+    A structure that contains the parameters for an SFTP connector object.
+
+    
+
+  
+    - **UserSecretId** *(string) --* 
+
+      The identifier for the secret (in Amazon Web Services Secrets Manager) that contains the SFTP user's private key, password, or both. The identifier must be the Amazon Resource Name (ARN) of the secret.
+
+       
+
+      .. note::
+
+        
+
+        
+        * Required when creating an SFTP connector
+         
+        * Optional when updating an existing SFTP connector
+        
+
+        
+
+      
+
+    
+    - **TrustedHostKeys** *(list) --* 
+
+      The public portion of the host key, or keys, that are used to identify the external server to which you are connecting. You can use the ``ssh-keyscan`` command against the SFTP server to retrieve the necessary key.
+
+       
+
+      .. note::
+
+        
+
+        ``TrustedHostKeys`` is optional for ``CreateConnector``. If not provided, you can use ``TestConnection`` to retrieve the server host key during the initial connection attempt, and subsequently update the connector with the observed host key.
+
+        
+
+       
+
+      When creating connectors with egress config (VPC_LATTICE type connectors), since host name is not something we can verify, the only accepted trusted host key format is ``key-type key-body`` without the host name. For example: ``ssh-rsa AAAAB3Nza...<long-string-for-public-key>``
+
+       
+
+      The three standard SSH public key format elements are ``<key type>``, ``<body base64>``, and an optional ``<comment>``, with spaces between each element. Specify only the ``<key type>`` and ``<body base64>``: do not enter the ``<comment>`` portion of the key.
+
+       
+
+      For the trusted host key, Transfer Family accepts RSA and ECDSA keys.
+
+       
+
+      
+      * For RSA keys, the ``<key type>`` string is ``ssh-rsa``.
+       
+      * For ECDSA keys, the ``<key type>`` string is either ``ecdsa-sha2-nistp256``, ``ecdsa-sha2-nistp384``, or ``ecdsa-sha2-nistp521``, depending on the size of the key you generated.
+      
+
+       
+
+      Run this command to retrieve the SFTP server host key, where your SFTP server name is ``ftp.host.com``.
+
+       
+
+      ``ssh-keyscan ftp.host.com``
+
+       
+
+      This prints the public host key to standard output.
+
+       
+
+      ``ftp.host.com ssh-rsa AAAAB3Nza...<long-string-for-public-key>``
+
+       
+
+      Copy and paste this string into the ``TrustedHostKeys`` field for the ``create-connector`` command or into the **Trusted host keys** field in the console.
+
+       
+
+      For VPC Lattice type connectors (VPC_LATTICE), remove the hostname from the key and use only the ``key-type key-body`` format. In this example, it should be: ``ssh-rsa AAAAB3Nza...<long-string-for-public-key>``
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **MaxConcurrentConnections** *(integer) --* 
+
+      Specify the number of concurrent connections that your connector creates to the remote server. The default value is ``1``. The maximum values is ``5``.
+
+       
+
+      .. note::
+
+        
+
+        If you are using the Amazon Web Services Management Console, the default value is ``5``.
+
+        
+
+       
+
+      This parameter specifies the number of active connections that your connector can establish with the remote server at the same time. Increasing this value can enhance connector performance when transferring large file batches by enabling parallel operations.
+
+      
+
+    
+  
+  :type SecurityPolicyName: string
+  :param SecurityPolicyName: 
+
+    Specifies the name of the security policy for the connector.
+
+    
+
+  
+  :type EgressConfig: dict
+  :param EgressConfig: 
+
+    Specifies the egress configuration for the connector, which determines how traffic is routed from the connector to the SFTP server. When set to VPC, enables routing through customer VPCs using VPC_LATTICE for private connectivity.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``VpcLattice``. 
+
+  
+    - **VpcLattice** *(dict) --* 
+
+      VPC_LATTICE configuration for routing connector traffic through customer VPCs. Enables private connectivity to SFTP servers without requiring public internet access or complex network configurations.
+
+      
+
+    
+      - **ResourceConfigurationArn** *(string) --* **[REQUIRED]** 
+
+        ARN of the VPC_LATTICE Resource Configuration that defines the target SFTP server location. Must point to a valid Resource Configuration in the customer's VPC with appropriate network connectivity to the SFTP server.
+
+        
+
+      
+      - **PortNumber** *(integer) --* 
+
+        Port number for connecting to the SFTP server through VPC_LATTICE. Defaults to 22 if not specified. Must match the port on which the target SFTP server is listening.
+
+        
+
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ConnectorId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ConnectorId** *(string) --* 
+
+        The unique identifier for the connector, returned after the API call succeeds.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Transfer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InternalServiceError`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.ResourceExistsException`
+
+  

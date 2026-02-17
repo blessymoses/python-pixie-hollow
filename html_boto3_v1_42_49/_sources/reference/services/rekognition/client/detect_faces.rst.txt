@@ -1,0 +1,793 @@
+:doc:`Rekognition <../../rekognition>` / Client / detect_faces
+
+************
+detect_faces
+************
+
+
+
+.. py:method:: Rekognition.Client.detect_faces(**kwargs)
+
+  
+
+  Detects faces within an image that is provided as input.
+
+   
+
+  ``DetectFaces`` detects the 100 largest faces in the image. For each face detected, the operation returns face details. These details include a bounding box of the face, a confidence value (that the bounding box contains a face), and a fixed set of attributes such as facial landmarks (for example, coordinates of eye and mouth), pose, presence of facial occlusion, and so on.
+
+   
+
+  The face-detection algorithm is most effective on frontal faces. For non-frontal or obscured faces, the algorithm might not detect the faces or might detect faces with lower confidence.
+
+   
+
+  You pass the input image either as base64-encoded image bytes or as a reference to an image in an Amazon S3 bucket. If you use the AWS CLI to call Amazon Rekognition operations, passing image bytes is not supported. The image must be either a PNG or JPEG formatted file.
+
+   
+
+  .. note::
+
+    
+
+    This is a stateless API operation. That is, the operation does not persist any data.
+
+    
+
+   
+
+  This operation requires permissions to perform the ``rekognition:DetectFaces`` action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rekognition-2016-06-27/DetectFaces>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.detect_faces(
+        Image={
+            'Bytes': b'bytes',
+            'S3Object': {
+                'Bucket': 'string',
+                'Name': 'string',
+                'Version': 'string'
+            }
+        },
+        Attributes=[
+            'DEFAULT'|'ALL'|'AGE_RANGE'|'BEARD'|'EMOTIONS'|'EYE_DIRECTION'|'EYEGLASSES'|'EYES_OPEN'|'GENDER'|'MOUTH_OPEN'|'MUSTACHE'|'FACE_OCCLUDED'|'SMILE'|'SUNGLASSES',
+        ]
+    )
+    
+  :type Image: dict
+  :param Image: **[REQUIRED]** 
+
+    The input image as base64-encoded bytes or an S3 object. If you use the AWS CLI to call Amazon Rekognition operations, passing base64-encoded image bytes is not supported.
+
+     
+
+    If you are using an AWS SDK to call Amazon Rekognition, you might not need to base64-encode image bytes passed using the ``Bytes`` field. For more information, see Images in the Amazon Rekognition developer guide.
+
+    
+
+  
+    - **Bytes** *(bytes) --* 
+
+      Blob of image bytes up to 5 MBs. Note that the maximum image size you can pass to ``DetectCustomLabels`` is 4MB.
+
+      
+
+    
+    - **S3Object** *(dict) --* 
+
+      Identifies an S3 object as the image source.
+
+      
+
+    
+      - **Bucket** *(string) --* 
+
+        Name of the S3 bucket.
+
+        
+
+      
+      - **Name** *(string) --* 
+
+        S3 object key name.
+
+        
+
+      
+      - **Version** *(string) --* 
+
+        If the bucket is versioning enabled, you can specify the object version.
+
+        
+
+      
+    
+  
+  :type Attributes: list
+  :param Attributes: 
+
+    An array of facial attributes you want to be returned. A ``DEFAULT`` subset of facial attributes - ``BoundingBox``, ``Confidence``, ``Pose``, ``Quality``, and ``Landmarks`` - will always be returned. You can request for specific facial attributes (in addition to the default list) - by using [ ``"DEFAULT", "FACE_OCCLUDED"``] or just [ ``"FACE_OCCLUDED"``]. You can request for all facial attributes by using [ ``"ALL"]``. Requesting more attributes may increase response time.
+
+     
+
+    If you provide both, ``["ALL", "DEFAULT"]``, the service uses a logical "AND" operator to determine which attributes to return (in this case, all attributes).
+
+     
+
+    Note that while the FaceOccluded and EyeDirection attributes are supported when using ``DetectFaces``, they aren't supported when analyzing videos with ``StartFaceDetection`` and ``GetFaceDetection``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FaceDetails': [
+              {
+                  'BoundingBox': {
+                      'Width': ...,
+                      'Height': ...,
+                      'Left': ...,
+                      'Top': ...
+                  },
+                  'AgeRange': {
+                      'Low': 123,
+                      'High': 123
+                  },
+                  'Smile': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'Eyeglasses': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'Sunglasses': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'Gender': {
+                      'Value': 'Male'|'Female',
+                      'Confidence': ...
+                  },
+                  'Beard': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'Mustache': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'EyesOpen': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'MouthOpen': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'Emotions': [
+                      {
+                          'Type': 'HAPPY'|'SAD'|'ANGRY'|'CONFUSED'|'DISGUSTED'|'SURPRISED'|'CALM'|'UNKNOWN'|'FEAR',
+                          'Confidence': ...
+                      },
+                  ],
+                  'Landmarks': [
+                      {
+                          'Type': 'eyeLeft'|'eyeRight'|'nose'|'mouthLeft'|'mouthRight'|'leftEyeBrowLeft'|'leftEyeBrowRight'|'leftEyeBrowUp'|'rightEyeBrowLeft'|'rightEyeBrowRight'|'rightEyeBrowUp'|'leftEyeLeft'|'leftEyeRight'|'leftEyeUp'|'leftEyeDown'|'rightEyeLeft'|'rightEyeRight'|'rightEyeUp'|'rightEyeDown'|'noseLeft'|'noseRight'|'mouthUp'|'mouthDown'|'leftPupil'|'rightPupil'|'upperJawlineLeft'|'midJawlineLeft'|'chinBottom'|'midJawlineRight'|'upperJawlineRight',
+                          'X': ...,
+                          'Y': ...
+                      },
+                  ],
+                  'Pose': {
+                      'Roll': ...,
+                      'Yaw': ...,
+                      'Pitch': ...
+                  },
+                  'Quality': {
+                      'Brightness': ...,
+                      'Sharpness': ...
+                  },
+                  'Confidence': ...,
+                  'FaceOccluded': {
+                      'Value': True|False,
+                      'Confidence': ...
+                  },
+                  'EyeDirection': {
+                      'Yaw': ...,
+                      'Pitch': ...,
+                      'Confidence': ...
+                  }
+              },
+          ],
+          'OrientationCorrection': 'ROTATE_0'|'ROTATE_90'|'ROTATE_180'|'ROTATE_270'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FaceDetails** *(list) --* 
+
+        Details of each face found in the image.
+
+        
+        
+
+        - *(dict) --* 
+
+          Structure containing attributes of the face that the algorithm detected.
+
+           
+
+          A ``FaceDetail`` object contains either the default facial attributes or all facial attributes. The default attributes are ``BoundingBox``, ``Confidence``, ``Landmarks``, ``Pose``, and ``Quality``.
+
+           
+
+           GetFaceDetection is the only Amazon Rekognition Video stored video operation that can return a ``FaceDetail`` object with all attributes. To specify which attributes to return, use the ``FaceAttributes`` input parameter for  StartFaceDetection. The following Amazon Rekognition Video operations return only the default attributes. The corresponding Start operations don't have a ``FaceAttributes`` input parameter:
+
+           
+
+          
+          * GetCelebrityRecognition
+           
+          * GetPersonTracking
+           
+          * GetFaceSearch
+          
+
+           
+
+          The Amazon Rekognition Image  DetectFaces and  IndexFaces operations can return all facial attributes. To specify which attributes to return, use the ``Attributes`` input parameter for ``DetectFaces``. For ``IndexFaces``, use the ``DetectAttributes`` input parameter.
+
+          
+          
+
+          - **BoundingBox** *(dict) --* 
+
+            Bounding box of the face. Default attribute.
+
+            
+            
+
+            - **Width** *(float) --* 
+
+              Width of the bounding box as a ratio of the overall image width.
+
+              
+            
+
+            - **Height** *(float) --* 
+
+              Height of the bounding box as a ratio of the overall image height.
+
+              
+            
+
+            - **Left** *(float) --* 
+
+              Left coordinate of the bounding box as a ratio of overall image width.
+
+              
+            
+
+            - **Top** *(float) --* 
+
+              Top coordinate of the bounding box as a ratio of overall image height.
+
+              
+        
+          
+
+          - **AgeRange** *(dict) --* 
+
+            The estimated age range, in years, for the face. Low represents the lowest estimated age and High represents the highest estimated age.
+
+            
+            
+
+            - **Low** *(integer) --* 
+
+              The lowest estimated age.
+
+              
+            
+
+            - **High** *(integer) --* 
+
+              The highest estimated age.
+
+              
+        
+          
+
+          - **Smile** *(dict) --* 
+
+            Indicates whether or not the face is smiling, and the confidence level in the determination.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              Boolean value that indicates whether the face is smiling or not.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the determination.
+
+              
+        
+          
+
+          - **Eyeglasses** *(dict) --* 
+
+            Indicates whether or not the face is wearing eye glasses, and the confidence level in the determination.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              Boolean value that indicates whether the face is wearing eye glasses or not.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the determination.
+
+              
+        
+          
+
+          - **Sunglasses** *(dict) --* 
+
+            Indicates whether or not the face is wearing sunglasses, and the confidence level in the determination.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              Boolean value that indicates whether the face is wearing sunglasses or not.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the determination.
+
+              
+        
+          
+
+          - **Gender** *(dict) --* 
+
+            The predicted gender of a detected face.
+
+            
+            
+
+            - **Value** *(string) --* 
+
+              The predicted gender of the face.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the prediction.
+
+              
+        
+          
+
+          - **Beard** *(dict) --* 
+
+            Indicates whether or not the face has a beard, and the confidence level in the determination.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              Boolean value that indicates whether the face has beard or not.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the determination.
+
+              
+        
+          
+
+          - **Mustache** *(dict) --* 
+
+            Indicates whether or not the face has a mustache, and the confidence level in the determination.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              Boolean value that indicates whether the face has mustache or not.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the determination.
+
+              
+        
+          
+
+          - **EyesOpen** *(dict) --* 
+
+            Indicates whether or not the eyes on the face are open, and the confidence level in the determination.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              Boolean value that indicates whether the eyes on the face are open.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the determination.
+
+              
+        
+          
+
+          - **MouthOpen** *(dict) --* 
+
+            Indicates whether or not the mouth on the face is open, and the confidence level in the determination.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              Boolean value that indicates whether the mouth on the face is open or not.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Level of confidence in the determination.
+
+              
+        
+          
+
+          - **Emotions** *(list) --* 
+
+            The emotions that appear to be expressed on the face, and the confidence level in the determination. The API is only making a determination of the physical appearance of a person's face. It is not a determination of the person’s internal emotional state and should not be used in such a way. For example, a person pretending to have a sad face might not be sad emotionally.
+
+            
+            
+
+            - *(dict) --* 
+
+              The API returns a prediction of an emotion based on a person's facial expressions, along with the confidence level for the predicted emotion. It is not a determination of the person’s internal emotional state and should not be used in such a way. For example, a person pretending to have a sad face might not be sad emotionally. The API is not intended to be used, and you may not use it, in a manner that violates the EU Artificial Intelligence Act or any other applicable law.
+
+              
+              
+
+              - **Type** *(string) --* 
+
+                Type of emotion detected.
+
+                
+              
+
+              - **Confidence** *(float) --* 
+
+                Level of confidence in the determination.
+
+                
+          
+        
+          
+
+          - **Landmarks** *(list) --* 
+
+            Indicates the location of landmarks on the face. Default attribute.
+
+            
+            
+
+            - *(dict) --* 
+
+              Indicates the location of the landmark on the face.
+
+              
+              
+
+              - **Type** *(string) --* 
+
+                Type of landmark.
+
+                
+              
+
+              - **X** *(float) --* 
+
+                The x-coordinate of the landmark expressed as a ratio of the width of the image. The x-coordinate is measured from the left-side of the image. For example, if the image is 700 pixels wide and the x-coordinate of the landmark is at 350 pixels, this value is 0.5.
+
+                
+              
+
+              - **Y** *(float) --* 
+
+                The y-coordinate of the landmark expressed as a ratio of the height of the image. The y-coordinate is measured from the top of the image. For example, if the image height is 200 pixels and the y-coordinate of the landmark is at 50 pixels, this value is 0.25.
+
+                
+          
+        
+          
+
+          - **Pose** *(dict) --* 
+
+            Indicates the pose of the face as determined by its pitch, roll, and yaw. Default attribute.
+
+            
+            
+
+            - **Roll** *(float) --* 
+
+              Value representing the face rotation on the roll axis.
+
+              
+            
+
+            - **Yaw** *(float) --* 
+
+              Value representing the face rotation on the yaw axis.
+
+              
+            
+
+            - **Pitch** *(float) --* 
+
+              Value representing the face rotation on the pitch axis.
+
+              
+        
+          
+
+          - **Quality** *(dict) --* 
+
+            Identifies image brightness and sharpness. Default attribute.
+
+            
+            
+
+            - **Brightness** *(float) --* 
+
+              Value representing brightness of the face. The service returns a value between 0 and 100 (inclusive). A higher value indicates a brighter face image.
+
+              
+            
+
+            - **Sharpness** *(float) --* 
+
+              Value representing sharpness of the face. The service returns a value between 0 and 100 (inclusive). A higher value indicates a sharper face image.
+
+              
+        
+          
+
+          - **Confidence** *(float) --* 
+
+            Confidence level that the bounding box contains a face (and not a different object such as a tree). Default attribute.
+
+            
+          
+
+          - **FaceOccluded** *(dict) --* 
+
+            ``FaceOccluded`` should return "true" with a high confidence score if a detected face’s eyes, nose, and mouth are partially captured or if they are covered by masks, dark sunglasses, cell phones, hands, or other objects. ``FaceOccluded`` should return "false" with a high confidence score if common occurrences that do not impact face verification are detected, such as eye glasses, lightly tinted sunglasses, strands of hair, and others.
+
+            
+            
+
+            - **Value** *(boolean) --* 
+
+              True if a detected face’s eyes, nose, and mouth are partially captured or if they are covered by masks, dark sunglasses, cell phones, hands, or other objects. False if common occurrences that do not impact face verification are detected, such as eye glasses, lightly tinted sunglasses, strands of hair, and others.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              The confidence that the service has detected the presence of a face occlusion.
+
+              
+        
+          
+
+          - **EyeDirection** *(dict) --* 
+
+            Indicates the direction the eyes are gazing in, as defined by pitch and yaw.
+
+            
+            
+
+            - **Yaw** *(float) --* 
+
+              Value representing eye direction on the yaw axis.
+
+              
+            
+
+            - **Pitch** *(float) --* 
+
+              Value representing eye direction on the pitch axis.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              The confidence that the service has in its predicted eye direction.
+
+              
+        
+      
+    
+      
+
+      - **OrientationCorrection** *(string) --* 
+
+        The value of ``OrientationCorrection`` is always null.
+
+         
+
+        If the input image is in .jpeg format, it might contain exchangeable image file format (Exif) metadata that includes the image's orientation. Amazon Rekognition uses this orientation information to perform image correction. The bounding box coordinates are translated to represent object locations after the orientation information in the Exif metadata is used to correct the image orientation. Images in .png format don't contain Exif metadata.
+
+         
+
+        Amazon Rekognition doesn’t perform image correction for images in .png format and .jpeg images without orientation information in the image Exif metadata. The bounding box coordinates aren't translated and represent the object locations before the image is rotated.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidS3ObjectException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ImageTooLargeException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ProvisionedThroughputExceededException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidImageFormatException`
+
+  
+
+  **Examples**
+
+  This operation detects faces in an image stored in an AWS S3 bucket.
+  ::
+
+    response = client.detect_faces(
+        Image={
+            'S3Object': {
+                'Bucket': 'mybucket',
+                'Name': 'myphoto',
+            },
+        },
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'FaceDetails': [
+            {
+                'BoundingBox': {
+                    'Height': 0.18000000715255737,
+                    'Left': 0.5555555820465088,
+                    'Top': 0.33666667342185974,
+                    'Width': 0.23999999463558197,
+                },
+                'Confidence': 100,
+                'Landmarks': [
+                    {
+                        'Type': 'eyeLeft',
+                        'X': 0.6394737362861633,
+                        'Y': 0.40819624066352844,
+                    },
+                    {
+                        'Type': 'eyeRight',
+                        'X': 0.7266660928726196,
+                        'Y': 0.41039225459098816,
+                    },
+                    {
+                        'Type': 'eyeRight',
+                        'X': 0.6912462115287781,
+                        'Y': 0.44240960478782654,
+                    },
+                    {
+                        'Type': 'mouthDown',
+                        'X': 0.6306198239326477,
+                        'Y': 0.46700039505958557,
+                    },
+                    {
+                        'Type': 'mouthUp',
+                        'X': 0.7215608954429626,
+                        'Y': 0.47114261984825134,
+                    },
+                ],
+                'Pose': {
+                    'Pitch': 4.050806522369385,
+                    'Roll': 0.9950747489929199,
+                    'Yaw': 13.693790435791016,
+                },
+                'Quality': {
+                    'Brightness': 37.60169982910156,
+                    'Sharpness': 80,
+                },
+            },
+        ],
+        'OrientationCorrection': 'ROTATE_0',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

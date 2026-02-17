@@ -1,0 +1,102 @@
+:doc:`FMS <../../fms>` / Client / delete_policy
+
+*************
+delete_policy
+*************
+
+
+
+.. py:method:: FMS.Client.delete_policy(**kwargs)
+
+  
+
+  Permanently deletes an Firewall Manager policy.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/fms-2018-01-01/DeletePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.delete_policy(
+        PolicyId='string',
+        DeleteAllPolicyResources=True|False
+    )
+    
+  :type PolicyId: string
+  :param PolicyId: **[REQUIRED]** 
+
+    The ID of the policy that you want to delete. You can retrieve this ID from ``PutPolicy`` and ``ListPolicies``.
+
+    
+
+  
+  :type DeleteAllPolicyResources: boolean
+  :param DeleteAllPolicyResources: 
+
+    If ``True``, the request performs cleanup according to the policy type.
+
+     
+
+    For WAF and Shield Advanced policies, the cleanup does the following:
+
+     
+
+    
+    * Deletes rule groups created by Firewall Manager
+     
+    * Removes web ACLs from in-scope resources
+     
+    * Deletes web ACLs that contain no rules or rule groups
+    
+
+     
+
+    For security group policies, the cleanup does the following for each security group in the policy:
+
+     
+
+    
+    * Disassociates the security group from in-scope resources
+     
+    * Deletes the security group if it was created through Firewall Manager and if it's no longer associated with any resources through another policy
+    
+
+     
+
+    .. note::
+
+      
+
+      For security group common policies, even if set to ``False``, Firewall Manager deletes all security groups created by Firewall Manager that aren't associated with any other resources through another policy.
+
+      
+
+     
+
+    After the cleanup, in-scope resources are no longer protected by web ACLs in this policy. Protection of out-of-scope resources remains unchanged. Scope is determined by tags that you create and accounts that you associate with the policy. When creating the policy, if you specify that only resources in specific accounts or with specific tags are in scope of the policy, those accounts and resources are handled by the policy. All others are out of scope. If you don't specify tags or accounts, all resources are in scope.
+
+    
+
+  
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`FMS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`FMS.Client.exceptions.InvalidOperationException`
+
+  
+  *   :py:class:`FMS.Client.exceptions.InternalErrorException`
+
+  
+  *   :py:class:`FMS.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`FMS.Client.exceptions.LimitExceededException`
+
+  

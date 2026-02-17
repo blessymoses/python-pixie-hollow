@@ -1,0 +1,424 @@
+:doc:`FraudDetector <../../frauddetector>` / Client / get_event_prediction
+
+********************
+get_event_prediction
+********************
+
+
+
+.. py:method:: FraudDetector.Client.get_event_prediction(**kwargs)
+
+  
+
+  Evaluates an event against a detector version. If a version ID is not provided, the detector’s ( ``ACTIVE``) version is used.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/frauddetector-2019-11-15/GetEventPrediction>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_event_prediction(
+        detectorId='string',
+        detectorVersionId='string',
+        eventId='string',
+        eventTypeName='string',
+        entities=[
+            {
+                'entityType': 'string',
+                'entityId': 'string'
+            },
+        ],
+        eventTimestamp='string',
+        eventVariables={
+            'string': 'string'
+        },
+        externalModelEndpointDataBlobs={
+            'string': {
+                'byteBuffer': b'bytes',
+                'contentType': 'string'
+            }
+        }
+    )
+    
+  :type detectorId: string
+  :param detectorId: **[REQUIRED]** 
+
+    The detector ID.
+
+    
+
+  
+  :type detectorVersionId: string
+  :param detectorVersionId: 
+
+    The detector version ID.
+
+    
+
+  
+  :type eventId: string
+  :param eventId: **[REQUIRED]** 
+
+    The unique ID used to identify the event.
+
+    
+
+  
+  :type eventTypeName: string
+  :param eventTypeName: **[REQUIRED]** 
+
+    The event type associated with the detector specified for the prediction.
+
+    
+
+  
+  :type entities: list
+  :param entities: **[REQUIRED]** 
+
+    The entity type (associated with the detector's event type) and specific entity ID representing who performed the event. If an entity id is not available, use "UNKNOWN."
+
+    
+
+  
+    - *(dict) --* 
+
+      The entity details.
+
+      
+
+    
+      - **entityType** *(string) --* **[REQUIRED]** 
+
+        The entity type.
+
+        
+
+      
+      - **entityId** *(string) --* **[REQUIRED]** 
+
+        The entity ID. If you do not know the ``entityId``, you can pass ``unknown``, which is areserved string literal.
+
+        
+
+      
+    
+
+  :type eventTimestamp: string
+  :param eventTimestamp: **[REQUIRED]** 
+
+    Timestamp that defines when the event under evaluation occurred. The timestamp must be specified using ISO 8601 standard in UTC.
+
+    
+
+  
+  :type eventVariables: dict
+  :param eventVariables: **[REQUIRED]** 
+
+    Names of the event type's variables you defined in Amazon Fraud Detector to represent data elements and their corresponding values for the event you are sending for evaluation.
+
+     
+
+    .. warning::
+
+       
+
+      You must provide at least one eventVariable
+
+       
+
+     
+
+    To ensure most accurate fraud prediction and to simplify your data preparation, Amazon Fraud Detector will replace all missing variables or values as follows:
+
+     
+
+    **For Amazon Fraud Detector trained models:**
+
+     
+
+    If a null value is provided explicitly for a variable or if a variable is missing, model will replace the null value or the missing variable (no variable name in the eventVariables map) with calculated default mean/medians for numeric variables and with special values for categorical variables.
+
+     
+
+    **For imported SageMaker models:**
+
+     
+
+    If a null value is provided explicitly for a variable, the model and rules will use “null” as the value. If a variable is not provided (no variable name in the eventVariables map), model and rules will use the default value that is provided for the variable.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type externalModelEndpointDataBlobs: dict
+  :param externalModelEndpointDataBlobs: 
+
+    The Amazon SageMaker model endpoint input data blobs.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(dict) --* 
+
+        A pre-formed Amazon SageMaker model input you can include if your detector version includes an imported Amazon SageMaker model endpoint with pass-through input configuration.
+
+        
+
+      
+        - **byteBuffer** *(bytes) --* 
+
+          The byte buffer of the Amazon SageMaker model endpoint input data blob.
+
+          
+
+        
+        - **contentType** *(string) --* 
+
+          The content type of the Amazon SageMaker model endpoint input data blob.
+
+          
+
+        
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'modelScores': [
+              {
+                  'modelVersion': {
+                      'modelId': 'string',
+                      'modelType': 'ONLINE_FRAUD_INSIGHTS'|'TRANSACTION_FRAUD_INSIGHTS'|'ACCOUNT_TAKEOVER_INSIGHTS',
+                      'modelVersionNumber': 'string',
+                      'arn': 'string'
+                  },
+                  'scores': {
+                      'string': ...
+                  }
+              },
+          ],
+          'ruleResults': [
+              {
+                  'ruleId': 'string',
+                  'outcomes': [
+                      'string',
+                  ]
+              },
+          ],
+          'externalModelOutputs': [
+              {
+                  'externalModel': {
+                      'modelEndpoint': 'string',
+                      'modelSource': 'SAGEMAKER'
+                  },
+                  'outputs': {
+                      'string': 'string'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **modelScores** *(list) --* 
+
+        The model scores. Amazon Fraud Detector generates model scores between 0 and 1000, where 0 is low fraud risk and 1000 is high fraud risk. Model scores are directly related to the false positive rate (FPR). For example, a score of 600 corresponds to an estimated 10% false positive rate whereas a score of 900 corresponds to an estimated 2% false positive rate.
+
+        
+        
+
+        - *(dict) --* 
+
+          The fraud prediction scores.
+
+          
+          
+
+          - **modelVersion** *(dict) --* 
+
+            The model version.
+
+            
+            
+
+            - **modelId** *(string) --* 
+
+              The model ID.
+
+              
+            
+
+            - **modelType** *(string) --* 
+
+              The model type.
+
+              
+            
+
+            - **modelVersionNumber** *(string) --* 
+
+              The model version number.
+
+              
+            
+
+            - **arn** *(string) --* 
+
+              The model version ARN.
+
+              
+        
+          
+
+          - **scores** *(dict) --* 
+
+            The model's fraud prediction scores.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(float) --* 
+        
+      
+      
+    
+      
+
+      - **ruleResults** *(list) --* 
+
+        The results from the rules.
+
+        
+        
+
+        - *(dict) --* 
+
+          The rule results.
+
+          
+          
+
+          - **ruleId** *(string) --* 
+
+            The rule ID that was matched, based on the rule execution mode.
+
+            
+          
+
+          - **outcomes** *(list) --* 
+
+            The outcomes of the matched rule, based on the rule execution mode.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+    
+      
+
+      - **externalModelOutputs** *(list) --* 
+
+        The model scores for Amazon SageMaker models.
+
+        
+        
+
+        - *(dict) --* 
+
+          The fraud prediction scores from Amazon SageMaker model.
+
+          
+          
+
+          - **externalModel** *(dict) --* 
+
+            The Amazon SageMaker model.
+
+            
+            
+
+            - **modelEndpoint** *(string) --* 
+
+              The endpoint of the Amazon SageMaker model.
+
+              
+            
+
+            - **modelSource** *(string) --* 
+
+              The source of the model.
+
+              
+        
+          
+
+          - **outputs** *(dict) --* 
+
+            The fraud prediction scores from Amazon SageMaker model.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`FraudDetector.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`FraudDetector.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`FraudDetector.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`FraudDetector.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`FraudDetector.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`FraudDetector.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`FraudDetector.Client.exceptions.ResourceUnavailableException`
+
+  

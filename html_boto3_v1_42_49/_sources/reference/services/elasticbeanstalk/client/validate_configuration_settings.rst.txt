@@ -1,0 +1,240 @@
+:doc:`ElasticBeanstalk <../../elasticbeanstalk>` / Client / validate_configuration_settings
+
+*******************************
+validate_configuration_settings
+*******************************
+
+
+
+.. py:method:: ElasticBeanstalk.Client.validate_configuration_settings(**kwargs)
+
+  
+
+  Takes a set of configuration settings and either a configuration template or environment, and determines whether those values are valid.
+
+   
+
+  This action returns a list of messages indicating any errors or warnings associated with the selection of option values.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticbeanstalk-2010-12-01/ValidateConfigurationSettings>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.validate_configuration_settings(
+        ApplicationName='string',
+        TemplateName='string',
+        EnvironmentName='string',
+        OptionSettings=[
+            {
+                'ResourceName': 'string',
+                'Namespace': 'string',
+                'OptionName': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type ApplicationName: string
+  :param ApplicationName: **[REQUIRED]** 
+
+    The name of the application that the configuration template or environment belongs to.
+
+    
+
+  
+  :type TemplateName: string
+  :param TemplateName: 
+
+    The name of the configuration template to validate the settings against.
+
+     
+
+    Condition: You cannot specify both this and an environment name.
+
+    
+
+  
+  :type EnvironmentName: string
+  :param EnvironmentName: 
+
+    The name of the environment to validate the settings against.
+
+     
+
+    Condition: You cannot specify both this and a configuration template name.
+
+    
+
+  
+  :type OptionSettings: list
+  :param OptionSettings: **[REQUIRED]** 
+
+    A list of the options and desired values to evaluate.
+
+    
+
+  
+    - *(dict) --* 
+
+      A specification identifying an individual configuration option along with its current value. For a list of possible namespaces and option values, see `Option Values <https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options.html>`__ in the *AWS Elastic Beanstalk Developer Guide*.
+
+      
+
+    
+      - **ResourceName** *(string) --* 
+
+        A unique resource name for the option setting. Use it for a time–based scaling configuration option.
+
+        
+
+      
+      - **Namespace** *(string) --* 
+
+        A unique namespace that identifies the option's associated AWS resource.
+
+        
+
+      
+      - **OptionName** *(string) --* 
+
+        The name of the configuration option.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The current value for the configuration option.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Messages': [
+              {
+                  'Message': 'string',
+                  'Severity': 'error'|'warning',
+                  'Namespace': 'string',
+                  'OptionName': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Provides a list of validation messages.
+
+      
+      
+
+      - **Messages** *(list) --* 
+
+        A list of  ValidationMessage.
+
+        
+        
+
+        - *(dict) --* 
+
+          An error or warning for a desired configuration option value.
+
+          
+          
+
+          - **Message** *(string) --* 
+
+            A message describing the error or warning.
+
+            
+          
+
+          - **Severity** *(string) --* 
+
+            An indication of the severity of this message:
+
+             
+
+            
+            * ``error``: This message indicates that this is not a valid setting for an option.
+             
+            * ``warning``: This message is providing information you should take into account.
+            
+
+            
+          
+
+          - **Namespace** *(string) --* 
+
+            The namespace to which the option belongs.
+
+            
+          
+
+          - **OptionName** *(string) --* 
+
+            The name of the option.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ElasticBeanstalk.Client.exceptions.InsufficientPrivilegesException`
+
+  
+  *   :py:class:`ElasticBeanstalk.Client.exceptions.TooManyBucketsException`
+
+  
+
+  **Examples**
+
+  The following operation validates a CloudWatch custom metrics config document:
+  ::
+
+    response = client.validate_configuration_settings(
+        ApplicationName='my-app',
+        EnvironmentName='my-env',
+        OptionSettings=[
+            {
+                'Namespace': 'aws:elasticbeanstalk:healthreporting:system',
+                'OptionName': 'ConfigDocument',
+                'Value': '{"CloudWatchMetrics": {"Environment": {"ApplicationLatencyP99.9": null,"InstancesSevere": 60,"ApplicationLatencyP90": 60,"ApplicationLatencyP99": null,"ApplicationLatencyP95": 60,"InstancesUnknown": 60,"ApplicationLatencyP85": 60,"InstancesInfo": null,"ApplicationRequests2xx": null,"InstancesDegraded": null,"InstancesWarning": 60,"ApplicationLatencyP50": 60,"ApplicationRequestsTotal": null,"InstancesNoData": null,"InstancesPending": 60,"ApplicationLatencyP10": null,"ApplicationRequests5xx": null,"ApplicationLatencyP75": null,"InstancesOk": 60,"ApplicationRequests3xx": null,"ApplicationRequests4xx": null},"Instance": {"ApplicationLatencyP99.9": null,"ApplicationLatencyP90": 60,"ApplicationLatencyP99": null,"ApplicationLatencyP95": null,"ApplicationLatencyP85": null,"CPUUser": 60,"ApplicationRequests2xx": null,"CPUIdle": null,"ApplicationLatencyP50": null,"ApplicationRequestsTotal": 60,"RootFilesystemUtil": null,"LoadAverage1min": null,"CPUIrq": null,"CPUNice": 60,"CPUIowait": 60,"ApplicationLatencyP10": null,"LoadAverage5min": null,"ApplicationRequests5xx": null,"ApplicationLatencyP75": 60,"CPUSystem": 60,"ApplicationRequests3xx": 60,"ApplicationRequests4xx": null,"InstanceHealth": null,"CPUSoftirq": 60}},"Version": 1}',
+            },
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Messages': [
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

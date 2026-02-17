@@ -1,0 +1,611 @@
+:doc:`SFN <../../stepfunctions>` / Client / test_state
+
+**********
+test_state
+**********
+
+
+
+.. py:method:: SFN.Client.test_state(**kwargs)
+
+  
+
+  Accepts the definition of a single state and executes it. You can test a state without creating a state machine or updating an existing state machine. Using this API, you can test the following:
+
+   
+
+  
+  * A state's `input and output processing <https://docs.aws.amazon.com/step-functions/latest/dg/test-state-isolation.html#test-state-input-output-dataflow>`__ data flow
+   
+  * An `Amazon Web Services service integration <https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-services.html>`__ request and response
+   
+  * An `HTTP Task <https://docs.aws.amazon.com/step-functions/latest/dg/call-https-apis.html>`__ request and response
+  
+
+   
+
+  You can call this API on only one state at a time. The states that you can test include the following:
+
+   
+
+  
+  * `All Task types <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-task-state.html#task-types>`__ except `Activity <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-activities.html>`__
+   
+  * `Pass <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-pass-state.html>`__
+   
+  * `Wait <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-wait-state.html>`__
+   
+  * `Choice <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-choice-state.html>`__
+   
+  * `Succeed <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-succeed-state.html>`__
+   
+  * `Fail <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-fail-state.html>`__
+  
+
+   
+
+  The ``TestState`` API assumes an IAM role which must contain the required IAM permissions for the resources your state is accessing. For information about the permissions a state might need, see `IAM permissions to test a state <https://docs.aws.amazon.com/step-functions/latest/dg/test-state-isolation.html#test-state-permissions>`__.
+
+   
+
+  The ``TestState`` API can run for up to five minutes. If the execution of a state exceeds this duration, it fails with the ``States.Timeout`` error.
+
+   
+
+  ``TestState`` only supports the following when a mock is specified: `Activity tasks <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-activities.html>`__, ``.sync`` or ``.waitForTaskToken`` `service integration patterns <https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html>`__, `Parallel <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-parallel-state.html>`__, or `Map <https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-map-state.html>`__ states.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/TestState>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.test_state(
+        definition='string',
+        roleArn='string',
+        input='string',
+        inspectionLevel='INFO'|'DEBUG'|'TRACE',
+        revealSecrets=True|False,
+        variables='string',
+        stateName='string',
+        mock={
+            'result': 'string',
+            'errorOutput': {
+                'error': 'string',
+                'cause': 'string'
+            },
+            'fieldValidationMode': 'STRICT'|'PRESENT'|'NONE'
+        },
+        context='string',
+        stateConfiguration={
+            'retrierRetryCount': 123,
+            'errorCausedByState': 'string',
+            'mapIterationFailureCount': 123,
+            'mapItemReaderData': 'string'
+        }
+    )
+    
+  :type definition: string
+  :param definition: **[REQUIRED]** 
+
+    The `Amazon States Language <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-amazon-states-language.html>`__ (ASL) definition of the state or state machine.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: 
+
+    The Amazon Resource Name (ARN) of the execution role with the required IAM permissions for the state.
+
+    
+
+  
+  :type input: string
+  :param input: 
+
+    A string that contains the JSON input data for the state.
+
+    
+
+  
+  :type inspectionLevel: string
+  :param inspectionLevel: 
+
+    Determines the values to return when a state is tested. You can specify one of the following types:
+
+     
+
+    
+    * ``INFO``: Shows the final state output. By default, Step Functions sets ``inspectionLevel`` to ``INFO`` if you don't specify a level.
+     
+    * ``DEBUG``: Shows the final state output along with the input and output data processing result.
+     
+    * ``TRACE``: Shows the HTTP request and response for an HTTP Task. This level also shows the final state output along with the input and output data processing result.
+    
+
+     
+
+    Each of these levels also provide information about the status of the state execution and the next state to transition to.
+
+    
+
+  
+  :type revealSecrets: boolean
+  :param revealSecrets: 
+
+    Specifies whether or not to include secret information in the test result. For HTTP Tasks, a secret includes the data that an EventBridge connection adds to modify the HTTP request headers, query parameters, and body. Step Functions doesn't omit any information included in the state definition or the HTTP response.
+
+     
+
+    If you set ``revealSecrets`` to ``true``, you must make sure that the IAM user that calls the ``TestState`` API has permission for the ``states:RevealSecrets`` action. For an example of IAM policy that sets the ``states:RevealSecrets`` permission, see `IAM permissions to test a state <https://docs.aws.amazon.com/step-functions/latest/dg/test-state-isolation.html#test-state-permissions>`__. Without this permission, Step Functions throws an access denied error.
+
+     
+
+    By default, ``revealSecrets`` is set to ``false``.
+
+    
+
+  
+  :type variables: string
+  :param variables: 
+
+    JSON object literal that sets variables used in the state under test. Object keys are the variable names and values are the variable values.
+
+    
+
+  
+  :type stateName: string
+  :param stateName: 
+
+    Denotes the particular state within a state machine definition to be tested. If this field is specified, the ``definition`` must contain a fully-formed state machine definition.
+
+    
+
+  
+  :type mock: dict
+  :param mock: 
+
+    Defines a mocked result or error for the state under test.
+
+     
+
+    A mock can only be specified for Task, Map, or Parallel states. If it is specified for another state type, an exception will be thrown.
+
+    
+
+  
+    - **result** *(string) --* 
+
+      A JSON string containing the mocked result of the state invocation.
+
+      
+
+    
+    - **errorOutput** *(dict) --* 
+
+      The mocked error output when calling TestState. When specified, the mocked response is returned as a JSON object that contains an ``error`` and ``cause`` field.
+
+      
+
+    
+      - **error** *(string) --* 
+
+        A string denoting the error code of the exception thrown when invoking the tested state. This field is required if ``mock.errorOutput`` is specified.
+
+        
+
+      
+      - **cause** *(string) --* 
+
+        A string containing the cause of the exception thrown when executing the state's logic.
+
+        
+
+      
+    
+    - **fieldValidationMode** *(string) --* 
+
+      Determines the level of strictness when validating mocked results against their respective API models. Values include:
+
+       
+
+      
+      * ``STRICT``: All required fields must be present, and all present fields must conform to the API's schema.
+       
+      * ``PRESENT``: All present fields must conform to the API's schema.
+       
+      * ``NONE``: No validation is performed.
+      
+
+       
+
+      If no value is specified, the default value is ``STRICT``.
+
+      
+
+    
+  
+  :type context: string
+  :param context: 
+
+    A JSON string representing a valid Context object for the state under test. This field may only be specified if a mock is specified in the same request.
+
+    
+
+  
+  :type stateConfiguration: dict
+  :param stateConfiguration: 
+
+    Contains configurations for the state under test.
+
+    
+
+  
+    - **retrierRetryCount** *(integer) --* 
+
+      The number of retry attempts that have occurred for the state's Retry that applies to the mocked error.
+
+      
+
+    
+    - **errorCausedByState** *(string) --* 
+
+      The name of the state from which an error originates when an error is mocked for a Map or Parallel state.
+
+      
+
+    
+    - **mapIterationFailureCount** *(integer) --* 
+
+      The number of Map state iterations that failed during the Map state invocation.
+
+      
+
+    
+    - **mapItemReaderData** *(string) --* 
+
+      The data read by ItemReader in Distributed Map states as found in its original source.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'output': 'string',
+          'error': 'string',
+          'cause': 'string',
+          'inspectionData': {
+              'input': 'string',
+              'afterArguments': 'string',
+              'afterInputPath': 'string',
+              'afterParameters': 'string',
+              'result': 'string',
+              'afterResultSelector': 'string',
+              'afterResultPath': 'string',
+              'request': {
+                  'protocol': 'string',
+                  'method': 'string',
+                  'url': 'string',
+                  'headers': 'string',
+                  'body': 'string'
+              },
+              'response': {
+                  'protocol': 'string',
+                  'statusCode': 'string',
+                  'statusMessage': 'string',
+                  'headers': 'string',
+                  'body': 'string'
+              },
+              'variables': 'string',
+              'errorDetails': {
+                  'catchIndex': 123,
+                  'retryIndex': 123,
+                  'retryBackoffIntervalSeconds': 123
+              },
+              'afterItemsPath': 'string',
+              'afterItemSelector': 'string',
+              'afterItemBatcher': 'string',
+              'afterItemsPointer': 'string',
+              'toleratedFailureCount': 123,
+              'toleratedFailurePercentage': ...,
+              'maxConcurrency': 123
+          },
+          'nextState': 'string',
+          'status': 'SUCCEEDED'|'FAILED'|'RETRIABLE'|'CAUGHT_ERROR'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **output** *(string) --* 
+
+        The JSON output data of the state. Length constraints apply to the payload size, and are expressed as bytes in UTF-8 encoding.
+
+        
+      
+
+      - **error** *(string) --* 
+
+        The error returned when the execution of a state fails.
+
+        
+      
+
+      - **cause** *(string) --* 
+
+        A detailed explanation of the cause for the error when the execution of a state fails.
+
+        
+      
+
+      - **inspectionData** *(dict) --* 
+
+        Returns additional details about the state's execution, including its input and output data processing flow, and HTTP request and response information. The ``inspectionLevel`` request parameter specifies which details are returned.
+
+        
+        
+
+        - **input** *(string) --* 
+
+          The raw state input.
+
+          
+        
+
+        - **afterArguments** *(string) --* 
+
+          The input after Step Functions applies an Arguments filter. This event will only be present when QueryLanguage for the state machine or individual states is set to JSONata. For more info, see `Transforming data with Step Functions <https://docs.aws.amazon.com/step-functions/latest/dg/data-transform.html>`__.
+
+          
+        
+
+        - **afterInputPath** *(string) --* 
+
+          The input after Step Functions applies the `InputPath <https://docs.aws.amazon.com/step-functions/latest/dg/input-output-inputpath-params.html#input-output-inputpath>`__ filter. Not populated when QueryLanguage is JSONata.
+
+          
+        
+
+        - **afterParameters** *(string) --* 
+
+          The effective input after Step Functions applies the `Parameters <https://docs.aws.amazon.com/step-functions/latest/dg/input-output-inputpath-params.html#input-output-parameters>`__ filter. Not populated when QueryLanguage is JSONata.
+
+          
+        
+
+        - **result** *(string) --* 
+
+          The state's raw result.
+
+          
+        
+
+        - **afterResultSelector** *(string) --* 
+
+          The effective result after Step Functions applies the `ResultSelector <https://docs.aws.amazon.com/step-functions/latest/dg/input-output-inputpath-params.html#input-output-resultselector>`__ filter. Not populated when QueryLanguage is JSONata.
+
+          
+        
+
+        - **afterResultPath** *(string) --* 
+
+          The effective result combined with the raw state input after Step Functions applies the `ResultPath <https://docs.aws.amazon.com/step-functions/latest/dg/input-output-resultpath.html>`__ filter. Not populated when QueryLanguage is JSONata.
+
+          
+        
+
+        - **request** *(dict) --* 
+
+          The raw HTTP request that is sent when you test an HTTP Task.
+
+          
+          
+
+          - **protocol** *(string) --* 
+
+            The protocol used to make the HTTP request.
+
+            
+          
+
+          - **method** *(string) --* 
+
+            The HTTP method used for the HTTP request.
+
+            
+          
+
+          - **url** *(string) --* 
+
+            The API endpoint used for the HTTP request.
+
+            
+          
+
+          - **headers** *(string) --* 
+
+            The request headers associated with the HTTP request.
+
+            
+          
+
+          - **body** *(string) --* 
+
+            The request body for the HTTP request.
+
+            
+      
+        
+
+        - **response** *(dict) --* 
+
+          The raw HTTP response that is returned when you test an HTTP Task.
+
+          
+          
+
+          - **protocol** *(string) --* 
+
+            The protocol used to return the HTTP response.
+
+            
+          
+
+          - **statusCode** *(string) --* 
+
+            The HTTP response status code for the HTTP response.
+
+            
+          
+
+          - **statusMessage** *(string) --* 
+
+            The message associated with the HTTP status code.
+
+            
+          
+
+          - **headers** *(string) --* 
+
+            The response headers associated with the HTTP response.
+
+            
+          
+
+          - **body** *(string) --* 
+
+            The HTTP response returned.
+
+            
+      
+        
+
+        - **variables** *(string) --* 
+
+          JSON string that contains the set of workflow variables after execution of the state. The set will include variables assigned in the state and variables set up as test state input.
+
+          
+        
+
+        - **errorDetails** *(dict) --* 
+
+          An object containing data about a handled exception in the tested state.
+
+          
+          
+
+          - **catchIndex** *(integer) --* 
+
+            The array index of the Catch which handled the exception.
+
+            
+          
+
+          - **retryIndex** *(integer) --* 
+
+            The array index of the Retry which handled the exception.
+
+            
+          
+
+          - **retryBackoffIntervalSeconds** *(integer) --* 
+
+            The duration in seconds of the backoff for a retry on a failed state invocation.
+
+            
+      
+        
+
+        - **afterItemsPath** *(string) --* 
+
+          The effective input after the ItemsPath filter is applied. Not populated when the QueryLanguage is JSONata.
+
+          
+        
+
+        - **afterItemSelector** *(string) --* 
+
+          An array containing the inputs for each Map iteration, transformed by the ItemSelector specified in a Map state.
+
+          
+        
+
+        - **afterItemBatcher** *(string) --* 
+
+          The effective input after the ItemBatcher filter is applied in a Map state.
+
+          
+        
+
+        - **afterItemsPointer** *(string) --* 
+
+          The effective input after the ItemsPointer filter is applied in a Map state.
+
+          
+        
+
+        - **toleratedFailureCount** *(integer) --* 
+
+          The tolerated failure threshold for a Map state as defined in number of Map state iterations.
+
+          
+        
+
+        - **toleratedFailurePercentage** *(float) --* 
+
+          The tolerated failure threshold for a Map state as defined in percentage of Map state iterations.
+
+          
+        
+
+        - **maxConcurrency** *(integer) --* 
+
+          The max concurrency of the Map state.
+
+          
+    
+      
+
+      - **nextState** *(string) --* 
+
+        The name of the next state to transition to. If you haven't defined a next state in your definition or if the execution of the state fails, this field doesn't contain a value.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The execution status of the state.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidArn`
+
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidDefinition`
+
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidExecutionInput`
+
+  
+  *   :py:class:`SFN.Client.exceptions.ValidationException`
+
+  

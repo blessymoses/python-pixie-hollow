@@ -1,0 +1,175 @@
+:doc:`Glue <../../glue>` / Client / delete_schema_versions
+
+**********************
+delete_schema_versions
+**********************
+
+
+
+.. py:method:: Glue.Client.delete_schema_versions(**kwargs)
+
+  
+
+  Remove versions from the specified schema. A version number or range may be supplied. If the compatibility mode forbids deleting of a version that is necessary, such as BACKWARDS_FULL, an error is returned. Calling the ``GetSchemaVersions`` API after this call will list the status of the deleted versions.
+
+   
+
+  When the range of version numbers contain check pointed version, the API will return a 409 conflict and will not proceed with the deletion. You have to remove the checkpoint first using the ``DeleteSchemaCheckpoint`` API before using this API.
+
+   
+
+  You cannot use the ``DeleteSchemaVersions`` API to delete the first schema version in the schema set. The first schema version can only be deleted by the ``DeleteSchema`` API. This operation will also delete the attached ``SchemaVersionMetadata`` under the schema versions. Hard deletes will be enforced on the database.
+
+   
+
+  If the compatibility mode forbids deleting of a version that is necessary, such as BACKWARDS_FULL, an error is returned.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/glue-2017-03-31/DeleteSchemaVersions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.delete_schema_versions(
+        SchemaId={
+            'SchemaArn': 'string',
+            'SchemaName': 'string',
+            'RegistryName': 'string'
+        },
+        Versions='string'
+    )
+    
+  :type SchemaId: dict
+  :param SchemaId: **[REQUIRED]** 
+
+    This is a wrapper structure that may contain the schema name and Amazon Resource Name (ARN).
+
+    
+
+  
+    - **SchemaArn** *(string) --* 
+
+      The Amazon Resource Name (ARN) of the schema. One of ``SchemaArn`` or ``SchemaName`` has to be provided.
+
+      
+
+    
+    - **SchemaName** *(string) --* 
+
+      The name of the schema. One of ``SchemaArn`` or ``SchemaName`` has to be provided.
+
+      
+
+    
+    - **RegistryName** *(string) --* 
+
+      The name of the schema registry that contains the schema.
+
+      
+
+    
+  
+  :type Versions: string
+  :param Versions: **[REQUIRED]** 
+
+    A version range may be supplied which may be of the format:
+
+     
+
+    
+    * a single version number, 5
+     
+    * a range, 5-8 : deletes versions 5, 6, 7, 8
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'SchemaVersionErrors': [
+              {
+                  'VersionNumber': 123,
+                  'ErrorDetails': {
+                      'ErrorCode': 'string',
+                      'ErrorMessage': 'string'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **SchemaVersionErrors** *(list) --* 
+
+        A list of ``SchemaVersionErrorItem`` objects, each containing an error and schema version.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object that contains the error details for an operation on a schema version.
+
+          
+          
+
+          - **VersionNumber** *(integer) --* 
+
+            The version number of the schema.
+
+            
+          
+
+          - **ErrorDetails** *(dict) --* 
+
+            The details of the error for the schema version.
+
+            
+            
+
+            - **ErrorCode** *(string) --* 
+
+              The error code for an error.
+
+              
+            
+
+            - **ErrorMessage** *(string) --* 
+
+              The error message for an error.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Glue.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.EntityNotFoundException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.ConcurrentModificationException`
+
+  

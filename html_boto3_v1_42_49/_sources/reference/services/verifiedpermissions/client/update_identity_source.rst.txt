@@ -1,0 +1,319 @@
+:doc:`VerifiedPermissions <../../verifiedpermissions>` / Client / update_identity_source
+
+**********************
+update_identity_source
+**********************
+
+
+
+.. py:method:: VerifiedPermissions.Client.update_identity_source(**kwargs)
+
+  
+
+  Updates the specified identity source to use a new identity provider (IdP), or to change the mapping of identities from the IdP to a different principal entity type.
+
+   
+
+  .. note::
+
+    
+
+    Verified Permissions is `eventually consistent <https://wikipedia.org/wiki/Eventual_consistency>`__ . It can take a few seconds for a new or changed element to propagate through the service and be visible in the results of other Verified Permissions operations.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/UpdateIdentitySource>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_identity_source(
+        policyStoreId='string',
+        identitySourceId='string',
+        updateConfiguration={
+            'cognitoUserPoolConfiguration': {
+                'userPoolArn': 'string',
+                'clientIds': [
+                    'string',
+                ],
+                'groupConfiguration': {
+                    'groupEntityType': 'string'
+                }
+            },
+            'openIdConnectConfiguration': {
+                'issuer': 'string',
+                'entityIdPrefix': 'string',
+                'groupConfiguration': {
+                    'groupClaim': 'string',
+                    'groupEntityType': 'string'
+                },
+                'tokenSelection': {
+                    'accessTokenOnly': {
+                        'principalIdClaim': 'string',
+                        'audiences': [
+                            'string',
+                        ]
+                    },
+                    'identityTokenOnly': {
+                        'principalIdClaim': 'string',
+                        'clientIds': [
+                            'string',
+                        ]
+                    }
+                }
+            }
+        },
+        principalEntityType='string'
+    )
+    
+  :type policyStoreId: string
+  :param policyStoreId: **[REQUIRED]** 
+
+    Specifies the ID of the policy store that contains the identity source that you want to update.
+
+    
+
+  
+  :type identitySourceId: string
+  :param identitySourceId: **[REQUIRED]** 
+
+    Specifies the ID of the identity source that you want to update.
+
+    
+
+  
+  :type updateConfiguration: dict
+  :param updateConfiguration: **[REQUIRED]** 
+
+    Specifies the details required to communicate with the identity provider (IdP) associated with this identity source.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``cognitoUserPoolConfiguration``, ``openIdConnectConfiguration``. 
+
+  
+    - **cognitoUserPoolConfiguration** *(dict) --* 
+
+      Contains configuration details of a Amazon Cognito user pool.
+
+      
+
+    
+      - **userPoolArn** *(string) --* **[REQUIRED]** 
+
+        The `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the Amazon Cognito user pool associated with this identity source.
+
+        
+
+      
+      - **clientIds** *(list) --* 
+
+        The client ID of an app client that is configured for the specified Amazon Cognito user pool.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **groupConfiguration** *(dict) --* 
+
+        The configuration of the user groups from an Amazon Cognito user pool identity source.
+
+        
+
+      
+        - **groupEntityType** *(string) --* **[REQUIRED]** 
+
+          The name of the schema entity type that's mapped to the user pool group. Defaults to ``AWS::CognitoGroup``.
+
+          
+
+        
+      
+    
+    - **openIdConnectConfiguration** *(dict) --* 
+
+      Contains configuration details of an OpenID Connect (OIDC) identity provider, or identity source, that Verified Permissions can use to generate entities from authenticated identities. It specifies the issuer URL, token type that you want to use, and policy store entity details.
+
+      
+
+    
+      - **issuer** *(string) --* **[REQUIRED]** 
+
+        The issuer URL of an OIDC identity provider. This URL must have an OIDC discovery endpoint at the path ``.well-known/openid-configuration``.
+
+        
+
+      
+      - **entityIdPrefix** *(string) --* 
+
+        A descriptive string that you want to prefix to user entities from your OIDC identity provider. For example, if you set an ``entityIdPrefix`` of ``MyOIDCProvider``, you can reference principals in your policies in the format ``MyCorp::User::MyOIDCProvider|Carlos``.
+
+        
+
+      
+      - **groupConfiguration** *(dict) --* 
+
+        The claim in OIDC identity provider tokens that indicates a user's group membership, and the entity type that you want to map it to. For example, this object can map the contents of a ``groups`` claim to ``MyCorp::UserGroup``.
+
+        
+
+      
+        - **groupClaim** *(string) --* **[REQUIRED]** 
+
+          The token claim that you want Verified Permissions to interpret as group membership. For example, ``groups``.
+
+          
+
+        
+        - **groupEntityType** *(string) --* **[REQUIRED]** 
+
+          The policy store entity type that you want to map your users' group claim to. For example, ``MyCorp::UserGroup``. A group entity type is an entity that can have a user entity type as a member.
+
+          
+
+        
+      
+      - **tokenSelection** *(dict) --* **[REQUIRED]** 
+
+        The token type that you want to process from your OIDC identity provider. Your policy store can process either identity (ID) or access tokens from a given OIDC identity source.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``accessTokenOnly``, ``identityTokenOnly``. 
+
+      
+        - **accessTokenOnly** *(dict) --* 
+
+          The OIDC configuration for processing access tokens. Contains allowed audience claims, for example ``https://auth.example.com``, and the claim that you want to map to the principal, for example ``sub``.
+
+          
+
+        
+          - **principalIdClaim** *(string) --* 
+
+            The claim that determines the principal in OIDC access tokens. For example, ``sub``.
+
+            
+
+          
+          - **audiences** *(list) --* 
+
+            The access token ``aud`` claim values that you want to accept in your policy store. For example, ``https://myapp.example.com, https://myapp2.example.com``.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+        - **identityTokenOnly** *(dict) --* 
+
+          The OIDC configuration for processing identity (ID) tokens. Contains allowed client ID claims, for example ``1example23456789``, and the claim that you want to map to the principal, for example ``sub``.
+
+          
+
+        
+          - **principalIdClaim** *(string) --* 
+
+            The claim that determines the principal in OIDC access tokens. For example, ``sub``.
+
+            
+
+          
+          - **clientIds** *(list) --* 
+
+            The ID token audience, or client ID, claim values that you want to accept in your policy store from an OIDC identity provider. For example, ``1example23456789, 2example10111213``.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+      
+    
+  
+  :type principalEntityType: string
+  :param principalEntityType: 
+
+    Specifies the data type of principals generated for identities authenticated by the identity source.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'createdDate': datetime(2015, 1, 1),
+          'identitySourceId': 'string',
+          'lastUpdatedDate': datetime(2015, 1, 1),
+          'policyStoreId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **createdDate** *(datetime) --* 
+
+        The date and time that the updated identity source was originally created.
+
+        
+      
+
+      - **identitySourceId** *(string) --* 
+
+        The ID of the updated identity source.
+
+        
+      
+
+      - **lastUpdatedDate** *(datetime) --* 
+
+        The date and time that the identity source was most recently updated.
+
+        
+      
+
+      - **policyStoreId** *(string) --* 
+
+        The ID of the policy store that contains the updated identity source.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.InternalServerException`
+
+  

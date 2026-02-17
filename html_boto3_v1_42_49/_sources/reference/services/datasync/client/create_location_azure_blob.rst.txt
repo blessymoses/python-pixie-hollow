@@ -1,0 +1,293 @@
+:doc:`DataSync <../../datasync>` / Client / create_location_azure_blob
+
+**************************
+create_location_azure_blob
+**************************
+
+
+
+.. py:method:: DataSync.Client.create_location_azure_blob(**kwargs)
+
+  
+
+  Creates a transfer *location* for a Microsoft Azure Blob Storage container. DataSync can use this location as a transfer source or destination. You can make transfers with or without a `DataSync agent <https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-creating-agent>`__ that connects to your container.
+
+   
+
+  Before you begin, make sure you know `how DataSync accesses Azure Blob Storage <https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access>`__ and works with `access tiers <https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access-tiers>`__ and `blob types <https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#blob-types>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/datasync-2018-11-09/CreateLocationAzureBlob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_location_azure_blob(
+        ContainerUrl='string',
+        AuthenticationType='SAS'|'NONE',
+        SasConfiguration={
+            'Token': 'string'
+        },
+        BlobType='BLOCK',
+        AccessTier='HOT'|'COOL'|'ARCHIVE',
+        Subdirectory='string',
+        AgentArns=[
+            'string',
+        ],
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        CmkSecretConfig={
+            'SecretArn': 'string',
+            'KmsKeyArn': 'string'
+        },
+        CustomSecretConfig={
+            'SecretArn': 'string',
+            'SecretAccessRoleArn': 'string'
+        }
+    )
+    
+  :type ContainerUrl: string
+  :param ContainerUrl: **[REQUIRED]** 
+
+    Specifies the URL of the Azure Blob Storage container involved in your transfer.
+
+    
+
+  
+  :type AuthenticationType: string
+  :param AuthenticationType: **[REQUIRED]** 
+
+    Specifies the authentication method DataSync uses to access your Azure Blob Storage. DataSync can access blob storage using a shared access signature (SAS).
+
+    
+
+  
+  :type SasConfiguration: dict
+  :param SasConfiguration: 
+
+    Specifies the SAS configuration that allows DataSync to access your Azure Blob Storage.
+
+     
+
+    .. note::
+
+      
+
+      If you provide an authentication token using ``SasConfiguration``, but do not provide secret configuration details using ``CmkSecretConfig`` or ``CustomSecretConfig``, then DataSync stores the token using your Amazon Web Services account's secrets manager secret.
+
+      
+
+    
+
+  
+    - **Token** *(string) --* **[REQUIRED]** 
+
+      Specifies a SAS token that provides permissions to access your Azure Blob Storage.
+
+       
+
+      The token is part of the SAS URI string that comes after the storage resource URI and a question mark. A token looks something like this:
+
+       
+
+      ``sp=r&st=2023-12-20T14:54:52Z&se=2023-12-20T22:54:52Z&spr=https&sv=2021-06-08&sr=c&sig=aBBKDWQvyuVcTPH9EBp%2FXTI9E%2F%2Fmq171%2BZU178wcwqU%3D``
+
+      
+
+    
+  
+  :type BlobType: string
+  :param BlobType: 
+
+    Specifies the type of blob that you want your objects or files to be when transferring them into Azure Blob Storage. Currently, DataSync only supports moving data into Azure Blob Storage as block blobs. For more information on blob types, see the `Azure Blob Storage documentation <https://learn.microsoft.com/en-us/rest/api/storageservices/understanding-block-blobs--append-blobs--and-page-blobs>`__.
+
+    
+
+  
+  :type AccessTier: string
+  :param AccessTier: 
+
+    Specifies the access tier that you want your objects or files transferred into. This only applies when using the location as a transfer destination. For more information, see `Access tiers <https://docs.aws.amazon.com/datasync/latest/userguide/creating-azure-blob-location.html#azure-blob-access-tiers>`__.
+
+    
+
+  
+  :type Subdirectory: string
+  :param Subdirectory: 
+
+    Specifies path segments if you want to limit your transfer to a virtual directory in your container (for example, ``/my/images``).
+
+    
+
+  
+  :type AgentArns: list
+  :param AgentArns: 
+
+    (Optional) Specifies the Amazon Resource Name (ARN) of the DataSync agent that can connect with your Azure Blob Storage container. If you are setting up an agentless cross-cloud transfer, you do not need to specify a value for this parameter.
+
+     
+
+    You can specify more than one agent. For more information, see `Using multiple agents for your transfer <https://docs.aws.amazon.com/datasync/latest/userguide/multiple-agents.html>`__.
+
+     
+
+    .. note::
+
+      
+
+      Make sure you configure this parameter correctly when you first create your storage location. You cannot add or remove agents from a storage location after you create it.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type Tags: list
+  :param Tags: 
+
+    Specifies labels that help you categorize, filter, and search for your Amazon Web Services resources. We recommend creating at least a name tag for your transfer location.
+
+    
+
+  
+    - *(dict) --* 
+
+      A key-value pair representing a single tag that's been applied to an Amazon Web Services resource.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key for an Amazon Web Services resource tag.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The value for an Amazon Web Services resource tag.
+
+        
+
+      
+    
+
+  :type CmkSecretConfig: dict
+  :param CmkSecretConfig: 
+
+    Specifies configuration information for a DataSync-managed secret, which includes the authentication token that DataSync uses to access a specific AzureBlob storage location, with a customer-managed KMS key.
+
+     
+
+    When you include this parameter as part of a ``CreateLocationAzureBlob`` request, you provide only the KMS key ARN. DataSync uses this KMS key together with the authentication token you specify for ``SasConfiguration`` to create a DataSync-managed secret to store the location access credentials.
+
+     
+
+    Make sure that DataSync has permission to access the KMS key that you specify.
+
+     
+
+    .. note::
+
+      
+
+      You can use either ``CmkSecretConfig`` (with ``SasConfiguration``) or ``CustomSecretConfig`` (without ``SasConfiguration``) to provide credentials for a ``CreateLocationAzureBlob`` request. Do not provide both parameters for the same request.
+
+      
+
+    
+
+  
+    - **SecretArn** *(string) --* 
+
+      Specifies the ARN for the DataSync-managed Secrets Manager secret that that is used to access a specific storage location. This property is generated by DataSync and is read-only. DataSync encrypts this secret with the KMS key that you specify for ``KmsKeyArn``.
+
+      
+
+    
+    - **KmsKeyArn** *(string) --* 
+
+      Specifies the ARN for the customer-managed KMS key that DataSync uses to encrypt the DataSync-managed secret stored for ``SecretArn``. DataSync provides this key to Secrets Manager.
+
+      
+
+    
+  
+  :type CustomSecretConfig: dict
+  :param CustomSecretConfig: 
+
+    Specifies configuration information for a customer-managed Secrets Manager secret where the authentication token for an AzureBlob storage location is stored in plain text, in Secrets Manager. This configuration includes the secret ARN, and the ARN for an IAM role that provides access to the secret.
+
+     
+
+    .. note::
+
+      
+
+      You can use either ``CmkSecretConfig`` (with ``SasConfiguration``) or ``CustomSecretConfig`` (without ``SasConfiguration``) to provide credentials for a ``CreateLocationAzureBlob`` request. Do not provide both parameters for the same request.
+
+      
+
+    
+
+  
+    - **SecretArn** *(string) --* 
+
+      Specifies the ARN for an Secrets Manager secret.
+
+      
+
+    
+    - **SecretAccessRoleArn** *(string) --* 
+
+      Specifies the ARN for the Identity and Access Management role that DataSync uses to access the secret specified for ``SecretArn``.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'LocationArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **LocationArn** *(string) --* 
+
+        The ARN of the Azure Blob Storage transfer location that you created.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DataSync.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`DataSync.Client.exceptions.InternalException`
+
+  

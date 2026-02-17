@@ -1,0 +1,380 @@
+:doc:`kendra <../../kendra>` / Client / create_index
+
+************
+create_index
+************
+
+
+
+.. py:method:: kendra.Client.create_index(**kwargs)
+
+  
+
+  Creates an Amazon Kendra index. Index creation is an asynchronous API. To determine if index creation has completed, check the ``Status`` field returned from a call to ``DescribeIndex``. The ``Status`` field is set to ``ACTIVE`` when the index is ready to use.
+
+   
+
+  Once the index is active, you can index your documents using the ``BatchPutDocument`` API or using one of the supported `data sources <https://docs.aws.amazon.com/kendra/latest/dg/data-sources.html>`__.
+
+   
+
+  For an example of creating an index and data source using the Python SDK, see `Getting started with Python SDK <https://docs.aws.amazon.com/kendra/latest/dg/gs-python.html>`__. For an example of creating an index and data source using the Java SDK, see `Getting started with Java SDK <https://docs.aws.amazon.com/kendra/latest/dg/gs-java.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kendra-2019-02-03/CreateIndex>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_index(
+        Name='string',
+        Edition='DEVELOPER_EDITION'|'ENTERPRISE_EDITION'|'GEN_AI_ENTERPRISE_EDITION',
+        RoleArn='string',
+        ServerSideEncryptionConfiguration={
+            'KmsKeyId': 'string'
+        },
+        Description='string',
+        ClientToken='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        UserTokenConfigurations=[
+            {
+                'JwtTokenTypeConfiguration': {
+                    'KeyLocation': 'URL'|'SECRET_MANAGER',
+                    'URL': 'string',
+                    'SecretManagerArn': 'string',
+                    'UserNameAttributeField': 'string',
+                    'GroupAttributeField': 'string',
+                    'Issuer': 'string',
+                    'ClaimRegex': 'string'
+                },
+                'JsonTokenTypeConfiguration': {
+                    'UserNameAttributeField': 'string',
+                    'GroupAttributeField': 'string'
+                }
+            },
+        ],
+        UserContextPolicy='ATTRIBUTE_FILTER'|'USER_TOKEN',
+        UserGroupResolutionConfiguration={
+            'UserGroupResolutionMode': 'AWS_SSO'|'NONE'
+        }
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A name for the index.
+
+    
+
+  
+  :type Edition: string
+  :param Edition: 
+
+    The Amazon Kendra edition to use for the index. Choose ``DEVELOPER_EDITION`` for indexes intended for development, testing, or proof of concept. Use ``ENTERPRISE_EDITION`` for production. Use ``GEN_AI_ENTERPRISE_EDITION`` for creating generative AI applications. Once you set the edition for an index, it can't be changed.
+
+     
+
+    The ``Edition`` parameter is optional. If you don't supply a value, the default is ``ENTERPRISE_EDITION``.
+
+     
+
+    For more information on quota limits for Gen AI Enterprise Edition, Enterprise Edition, and Developer Edition indices, see `Quotas <https://docs.aws.amazon.com/kendra/latest/dg/quotas.html>`__.
+
+    
+
+  
+  :type RoleArn: string
+  :param RoleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of an IAM role with permission to access your Amazon CloudWatch logs and metrics. For more information, see `IAM access roles for Amazon Kendra <https://docs.aws.amazon.com/kendra/latest/dg/iam-roles.html>`__.
+
+    
+
+  
+  :type ServerSideEncryptionConfiguration: dict
+  :param ServerSideEncryptionConfiguration: 
+
+    The identifier of the KMS customer managed key (CMK) that's used to encrypt data indexed by Amazon Kendra. Amazon Kendra doesn't support asymmetric CMKs.
+
+    
+
+  
+    - **KmsKeyId** *(string) --* 
+
+      The identifier of the KMS key. Amazon Kendra doesn't support asymmetric keys.
+
+      
+
+    
+  
+  :type Description: string
+  :param Description: 
+
+    A description for the index.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A token that you provide to identify the request to create an index. Multiple calls to the ``CreateIndex`` API with the same client token will create only one index.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of key-value pairs that identify or categorize the index. You can also use tags to help control access to the index. Tag keys and values can consist of Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @.
+
+    
+
+  
+    - *(dict) --* 
+
+      A key-value pair that identifies or categorizes an index, FAQ, data source, or other resource. TA tag key and value can consist of Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key for the tag. Keys are not case sensitive and must be unique for the index, FAQ, data source, or other resource.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value associated with the tag. The value may be an empty string but it can't be null.
+
+        
+
+      
+    
+
+  :type UserTokenConfigurations: list
+  :param UserTokenConfigurations: 
+
+    The user token configuration.
+
+     
+
+    .. warning::
+
+       
+
+      If you're using an Amazon Kendra Gen AI Enterprise Edition index and you try to use ``UserTokenConfigurations`` to configure user context policy, Amazon Kendra returns a ``ValidationException`` error.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      Provides the configuration information for a token.
+
+       
+
+      .. warning::
+
+         
+
+        If you're using an Amazon Kendra Gen AI Enterprise Edition index and you try to use ``UserTokenConfigurations`` to configure user context policy, Amazon Kendra returns a ``ValidationException`` error.
+
+        
+
+      
+
+    
+      - **JwtTokenTypeConfiguration** *(dict) --* 
+
+        Information about the JWT token type configuration.
+
+        
+
+      
+        - **KeyLocation** *(string) --* **[REQUIRED]** 
+
+          The location of the key.
+
+          
+
+        
+        - **URL** *(string) --* 
+
+          The signing key URL.
+
+          
+
+        
+        - **SecretManagerArn** *(string) --* 
+
+          The Amazon Resource Name (arn) of the secret.
+
+          
+
+        
+        - **UserNameAttributeField** *(string) --* 
+
+          The user name attribute field.
+
+          
+
+        
+        - **GroupAttributeField** *(string) --* 
+
+          The group attribute field.
+
+          
+
+        
+        - **Issuer** *(string) --* 
+
+          The issuer of the token.
+
+          
+
+        
+        - **ClaimRegex** *(string) --* 
+
+          The regular expression that identifies the claim.
+
+          
+
+        
+      
+      - **JsonTokenTypeConfiguration** *(dict) --* 
+
+        Information about the JSON token type configuration.
+
+        
+
+      
+        - **UserNameAttributeField** *(string) --* **[REQUIRED]** 
+
+          The user name attribute field.
+
+          
+
+        
+        - **GroupAttributeField** *(string) --* **[REQUIRED]** 
+
+          The group attribute field.
+
+          
+
+        
+      
+    
+
+  :type UserContextPolicy: string
+  :param UserContextPolicy: 
+
+    The user context policy.
+
+     
+
+    .. warning::
+
+       
+
+      If you're using an Amazon Kendra Gen AI Enterprise Edition index, you can only use ``ATTRIBUTE_FILTER`` to filter search results by user context. If you're using an Amazon Kendra Gen AI Enterprise Edition index and you try to use ``USER_TOKEN`` to configure user context policy, Amazon Kendra returns a ``ValidationException`` error.
+
+       
+
+      ATTRIBUTE_FILTER  
+
+    All indexed content is searchable and displayable for all users. If you want to filter search results on user context, you can use the attribute filters of ``_user_id`` and ``_group_ids`` or you can provide user and group information in ``UserContext``.
+
+      USER_TOKEN  
+
+    Enables token-based user access control to filter search results on user context. All documents with no access control and all documents accessible to the user will be searchable and displayable.
+
+    
+
+  
+  :type UserGroupResolutionConfiguration: dict
+  :param UserGroupResolutionConfiguration: 
+
+    Gets users and groups from IAM Identity Center identity source. To configure this, see `UserGroupResolutionConfiguration <https://docs.aws.amazon.com/kendra/latest/dg/API_UserGroupResolutionConfiguration.html>`__. This is useful for user context filtering, where search results are filtered based on the user or their group access to documents.
+
+     
+
+    .. warning::
+
+       
+
+      If you're using an Amazon Kendra Gen AI Enterprise Edition index, ``UserGroupResolutionConfiguration`` isn't supported.
+
+      
+
+    
+
+  
+    - **UserGroupResolutionMode** *(string) --* **[REQUIRED]** 
+
+      The identity store provider (mode) you want to use to get users and groups. IAM Identity Center is currently the only available mode. Your users and groups must exist in an IAM Identity Center identity source in order to use this mode.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Id': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Id** *(string) --* 
+
+        The identifier of the index. Use this identifier when you query an index, set up a data source, or index a document.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`kendra.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ResourceAlreadyExistException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.InternalServerException`
+
+  

@@ -1,0 +1,795 @@
+:doc:`DynamoDB <../../dynamodb>` / Client / transact_get_items
+
+******************
+transact_get_items
+******************
+
+
+
+.. py:method:: DynamoDB.Client.transact_get_items(**kwargs)
+
+  
+
+  ``TransactGetItems`` is a synchronous operation that atomically retrieves multiple items from one or more tables (but not from indexes) in a single account and Region. A ``TransactGetItems`` call can contain up to 100 ``TransactGetItem`` objects, each of which contains a ``Get`` structure that specifies an item to retrieve from a table in the account and Region. A call to ``TransactGetItems`` cannot retrieve items from tables in more than one Amazon Web Services account or Region. The aggregate size of the items in the transaction cannot exceed 4 MB.
+
+   
+
+  DynamoDB rejects the entire ``TransactGetItems`` request if any of the following is true:
+
+   
+
+  
+  * A conflicting operation is in the process of updating an item to be read.
+   
+  * There is insufficient provisioned capacity for the transaction to be completed.
+   
+  * There is a user error, such as an invalid data format.
+   
+  * The aggregate size of the items in the transaction exceeded 4 MB.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/TransactGetItems>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.transact_get_items(
+        TransactItems=[
+            {
+                'Get': {
+                    'Key': {
+                        'string': {
+                            'S': 'string',
+                            'N': 'string',
+                            'B': b'bytes',
+                            'SS': [
+                                'string',
+                            ],
+                            'NS': [
+                                'string',
+                            ],
+                            'BS': [
+                                b'bytes',
+                            ],
+                            'M': {
+                                'string': {'... recursive ...'}
+                            },
+                            'L': [
+                                {'... recursive ...'},
+                            ],
+                            'NULL': True|False,
+                            'BOOL': True|False
+                        }
+                    },
+                    'TableName': 'string',
+                    'ProjectionExpression': 'string',
+                    'ExpressionAttributeNames': {
+                        'string': 'string'
+                    }
+                }
+            },
+        ],
+        ReturnConsumedCapacity='INDEXES'|'TOTAL'|'NONE'
+    )
+    
+  :type TransactItems: list
+  :param TransactItems: **[REQUIRED]** 
+
+    An ordered array of up to 100 ``TransactGetItem`` objects, each of which contains a ``Get`` structure.
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies an item to be retrieved as part of the transaction.
+
+      
+
+    
+      - **Get** *(dict) --* **[REQUIRED]** 
+
+        Contains the primary key that identifies the item to get, together with the name of the table that contains the item, and optionally the specific attributes of the item to retrieve.
+
+        
+
+      
+        - **Key** *(dict) --* **[REQUIRED]** 
+
+          A map of attribute names to ``AttributeValue`` objects that specifies the primary key of the item to retrieve.
+
+          
+
+        
+          - *(string) --* 
+
+          
+            - *(dict) --* 
+
+              Represents the data for an attribute.
+
+               
+
+              Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+               
+
+              For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+              
+
+            
+              - **S** *(string) --* 
+
+                An attribute of type String. For example:
+
+                 
+
+                ``"S": "Hello"``
+
+                
+
+              
+              - **N** *(string) --* 
+
+                An attribute of type Number. For example:
+
+                 
+
+                ``"N": "123.45"``
+
+                 
+
+                Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                
+
+              
+              - **B** *(bytes) --* 
+
+                An attribute of type Binary. For example:
+
+                 
+
+                ``"B": "dGhpcyB0ZXh0IGlzIGJhc2U2NC1lbmNvZGVk"``
+
+                
+
+              
+              - **SS** *(list) --* 
+
+                An attribute of type String Set. For example:
+
+                 
+
+                ``"SS": ["Giraffe", "Hippo" ,"Zebra"]``
+
+                
+
+              
+                - *(string) --* 
+
+                
+            
+              - **NS** *(list) --* 
+
+                An attribute of type Number Set. For example:
+
+                 
+
+                ``"NS": ["42.2", "-19", "7.5", "3.14"]``
+
+                 
+
+                Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                
+
+              
+                - *(string) --* 
+
+                
+            
+              - **BS** *(list) --* 
+
+                An attribute of type Binary Set. For example:
+
+                 
+
+                ``"BS": ["U3Vubnk=", "UmFpbnk=", "U25vd3k="]``
+
+                
+
+              
+                - *(bytes) --* 
+
+                
+            
+              - **M** *(dict) --* 
+
+                An attribute of type Map. For example:
+
+                 
+
+                ``"M": {"Name": {"S": "Joe"}, "Age": {"N": "35"}}``
+
+                
+
+              
+                - *(string) --* 
+
+                
+                  - *(dict) --* 
+
+                    Represents the data for an attribute.
+
+                     
+
+                    Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                     
+
+                    For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                    
+
+                  
+            
+          
+              - **L** *(list) --* 
+
+                An attribute of type List. For example:
+
+                 
+
+                ``"L": [ {"S": "Cookies"} , {"S": "Coffee"}, {"N": "3.14159"}]``
+
+                
+
+              
+                - *(dict) --* 
+
+                  Represents the data for an attribute.
+
+                   
+
+                  Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                   
+
+                  For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                  
+
+                
+            
+              - **NULL** *(boolean) --* 
+
+                An attribute of type Null. For example:
+
+                 
+
+                ``"NULL": true``
+
+                
+
+              
+              - **BOOL** *(boolean) --* 
+
+                An attribute of type Boolean. For example:
+
+                 
+
+                ``"BOOL": true``
+
+                
+
+              
+            
+      
+    
+        - **TableName** *(string) --* **[REQUIRED]** 
+
+          The name of the table from which to retrieve the specified item. You can also provide the Amazon Resource Name (ARN) of the table in this parameter.
+
+          
+
+        
+        - **ProjectionExpression** *(string) --* 
+
+          A string that identifies one or more attributes of the specified item to retrieve from the table. The attributes in the expression must be separated by commas. If no attribute names are specified, then all attributes of the specified item are returned. If any of the requested attributes are not found, they do not appear in the result.
+
+          
+
+        
+        - **ExpressionAttributeNames** *(dict) --* 
+
+          One or more substitution tokens for attribute names in the ProjectionExpression parameter.
+
+          
+
+        
+          - *(string) --* 
+
+          
+            - *(string) --* 
+
+            
+      
+    
+      
+    
+
+  :type ReturnConsumedCapacity: string
+  :param ReturnConsumedCapacity: 
+
+    A value of ``TOTAL`` causes consumed capacity information to be returned, and a value of ``NONE`` prevents that information from being returned. No other value is valid.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ConsumedCapacity': [
+              {
+                  'TableName': 'string',
+                  'CapacityUnits': 123.0,
+                  'ReadCapacityUnits': 123.0,
+                  'WriteCapacityUnits': 123.0,
+                  'Table': {
+                      'ReadCapacityUnits': 123.0,
+                      'WriteCapacityUnits': 123.0,
+                      'CapacityUnits': 123.0
+                  },
+                  'LocalSecondaryIndexes': {
+                      'string': {
+                          'ReadCapacityUnits': 123.0,
+                          'WriteCapacityUnits': 123.0,
+                          'CapacityUnits': 123.0
+                      }
+                  },
+                  'GlobalSecondaryIndexes': {
+                      'string': {
+                          'ReadCapacityUnits': 123.0,
+                          'WriteCapacityUnits': 123.0,
+                          'CapacityUnits': 123.0
+                      }
+                  }
+              },
+          ],
+          'Responses': [
+              {
+                  'Item': {
+                      'string': {
+                          'S': 'string',
+                          'N': 'string',
+                          'B': b'bytes',
+                          'SS': [
+                              'string',
+                          ],
+                          'NS': [
+                              'string',
+                          ],
+                          'BS': [
+                              b'bytes',
+                          ],
+                          'M': {
+                              'string': {'... recursive ...'}
+                          },
+                          'L': [
+                              {'... recursive ...'},
+                          ],
+                          'NULL': True|False,
+                          'BOOL': True|False
+                      }
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ConsumedCapacity** *(list) --* 
+
+        If the *ReturnConsumedCapacity* value was ``TOTAL``, this is an array of ``ConsumedCapacity`` objects, one for each table addressed by ``TransactGetItem`` objects in the *TransactItems* parameter. These ``ConsumedCapacity`` objects report the read-capacity units consumed by the ``TransactGetItems`` call in that table.
+
+        
+        
+
+        - *(dict) --* 
+
+          The capacity units consumed by an operation. The data returned includes the total provisioned throughput consumed, along with statistics for the table and any indexes involved in the operation. ``ConsumedCapacity`` is only returned if the request asked for it. For more information, see `Provisioned capacity mode <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html>`__ in the *Amazon DynamoDB Developer Guide*.
+
+          
+          
+
+          - **TableName** *(string) --* 
+
+            The name of the table that was affected by the operation. If you had specified the Amazon Resource Name (ARN) of a table in the input, you'll see the table ARN in the response.
+
+            
+          
+
+          - **CapacityUnits** *(float) --* 
+
+            The total number of capacity units consumed by the operation.
+
+            
+          
+
+          - **ReadCapacityUnits** *(float) --* 
+
+            The total number of read capacity units consumed by the operation.
+
+            
+          
+
+          - **WriteCapacityUnits** *(float) --* 
+
+            The total number of write capacity units consumed by the operation.
+
+            
+          
+
+          - **Table** *(dict) --* 
+
+            The amount of throughput consumed on the table affected by the operation.
+
+            
+            
+
+            - **ReadCapacityUnits** *(float) --* 
+
+              The total number of read capacity units consumed on a table or an index.
+
+              
+            
+
+            - **WriteCapacityUnits** *(float) --* 
+
+              The total number of write capacity units consumed on a table or an index.
+
+              
+            
+
+            - **CapacityUnits** *(float) --* 
+
+              The total number of capacity units consumed on a table or an index.
+
+              
+        
+          
+
+          - **LocalSecondaryIndexes** *(dict) --* 
+
+            The amount of throughput consumed on each local index affected by the operation.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(dict) --* 
+
+                Represents the amount of provisioned throughput capacity consumed on a table or an index.
+
+                
+                
+
+                - **ReadCapacityUnits** *(float) --* 
+
+                  The total number of read capacity units consumed on a table or an index.
+
+                  
+                
+
+                - **WriteCapacityUnits** *(float) --* 
+
+                  The total number of write capacity units consumed on a table or an index.
+
+                  
+                
+
+                - **CapacityUnits** *(float) --* 
+
+                  The total number of capacity units consumed on a table or an index.
+
+                  
+            
+        
+      
+          
+
+          - **GlobalSecondaryIndexes** *(dict) --* 
+
+            The amount of throughput consumed on each global index affected by the operation.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(dict) --* 
+
+                Represents the amount of provisioned throughput capacity consumed on a table or an index.
+
+                
+                
+
+                - **ReadCapacityUnits** *(float) --* 
+
+                  The total number of read capacity units consumed on a table or an index.
+
+                  
+                
+
+                - **WriteCapacityUnits** *(float) --* 
+
+                  The total number of write capacity units consumed on a table or an index.
+
+                  
+                
+
+                - **CapacityUnits** *(float) --* 
+
+                  The total number of capacity units consumed on a table or an index.
+
+                  
+            
+        
+      
+      
+    
+      
+
+      - **Responses** *(list) --* 
+
+        An ordered array of up to 100 ``ItemResponse`` objects, each of which corresponds to the ``TransactGetItem`` object in the same position in the *TransactItems* array. Each ``ItemResponse`` object contains a Map of the name-value pairs that are the projected attributes of the requested item.
+
+         
+
+        If a requested item could not be retrieved, the corresponding ``ItemResponse`` object is Null, or if the requested item has no projected attributes, the corresponding ``ItemResponse`` object is an empty Map.
+
+        
+        
+
+        - *(dict) --* 
+
+          Details for the requested item.
+
+          
+          
+
+          - **Item** *(dict) --* 
+
+            Map of attribute data consisting of the data type and attribute value.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(dict) --* 
+
+                Represents the data for an attribute.
+
+                 
+
+                Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                 
+
+                For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                
+                
+
+                - **S** *(string) --* 
+
+                  An attribute of type String. For example:
+
+                   
+
+                  ``"S": "Hello"``
+
+                  
+                
+
+                - **N** *(string) --* 
+
+                  An attribute of type Number. For example:
+
+                   
+
+                  ``"N": "123.45"``
+
+                   
+
+                  Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                  
+                
+
+                - **B** *(bytes) --* 
+
+                  An attribute of type Binary. For example:
+
+                   
+
+                  ``"B": "dGhpcyB0ZXh0IGlzIGJhc2U2NC1lbmNvZGVk"``
+
+                  
+                
+
+                - **SS** *(list) --* 
+
+                  An attribute of type String Set. For example:
+
+                   
+
+                  ``"SS": ["Giraffe", "Hippo" ,"Zebra"]``
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **NS** *(list) --* 
+
+                  An attribute of type Number Set. For example:
+
+                   
+
+                  ``"NS": ["42.2", "-19", "7.5", "3.14"]``
+
+                   
+
+                  Numbers are sent across the network to DynamoDB as strings, to maximize compatibility across languages and libraries. However, DynamoDB treats them as number type attributes for mathematical operations.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **BS** *(list) --* 
+
+                  An attribute of type Binary Set. For example:
+
+                   
+
+                  ``"BS": ["U3Vubnk=", "UmFpbnk=", "U25vd3k="]``
+
+                  
+                  
+
+                  - *(bytes) --* 
+              
+                
+
+                - **M** *(dict) --* 
+
+                  An attribute of type Map. For example:
+
+                   
+
+                  ``"M": {"Name": {"S": "Joe"}, "Age": {"N": "35"}}``
+
+                  
+                  
+
+                  - *(string) --* 
+                    
+
+                    - *(dict) --* 
+
+                      Represents the data for an attribute.
+
+                       
+
+                      Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                       
+
+                      For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                      
+              
+            
+                
+
+                - **L** *(list) --* 
+
+                  An attribute of type List. For example:
+
+                   
+
+                  ``"L": [ {"S": "Cookies"} , {"S": "Coffee"}, {"N": "3.14159"}]``
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    Represents the data for an attribute.
+
+                     
+
+                    Each attribute value is described as a name-value pair. The name is the data type, and the value is the data itself.
+
+                     
+
+                    For more information, see `Data Types <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes>`__ in the *Amazon DynamoDB Developer Guide*.
+
+                    
+              
+                
+
+                - **NULL** *(boolean) --* 
+
+                  An attribute of type Null. For example:
+
+                   
+
+                  ``"NULL": true``
+
+                  
+                
+
+                - **BOOL** *(boolean) --* 
+
+                  An attribute of type Boolean. For example:
+
+                   
+
+                  ``"BOOL": true``
+
+                  
+            
+        
+      
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`DynamoDB.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.TransactionCanceledException`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.ProvisionedThroughputExceededException`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.RequestLimitExceeded`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.ThrottlingException`
+
+  

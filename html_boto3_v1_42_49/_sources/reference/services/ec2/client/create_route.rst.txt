@@ -1,0 +1,257 @@
+:doc:`EC2 <../../ec2>` / Client / create_route
+
+************
+create_route
+************
+
+
+
+.. py:method:: EC2.Client.create_route(**kwargs)
+
+  
+
+  Creates a route in a route table within a VPC.
+
+   
+
+  You must specify either a destination CIDR block or a prefix list ID. You must also specify exactly one of the resources from the parameter list.
+
+   
+
+  When determining how to route traffic, we use the route with the most specific match. For example, traffic is destined for the IPv4 address ``192.0.2.3``, and the route table includes the following two IPv4 routes:
+
+   
+
+  
+  * ``192.0.2.0/24`` (goes to some target A)
+   
+  * ``192.0.2.0/28`` (goes to some target B)
+  
+
+   
+
+  Both routes apply to the traffic destined for ``192.0.2.3``. However, the second route in the list covers a smaller number of IP addresses and is therefore more specific, so we use that route to determine where to target the traffic.
+
+   
+
+  For more information about route tables, see `Route tables <https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html>`__ in the *Amazon VPC User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/CreateRoute>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_route(
+        DestinationPrefixListId='string',
+        VpcEndpointId='string',
+        TransitGatewayId='string',
+        LocalGatewayId='string',
+        CarrierGatewayId='string',
+        CoreNetworkArn='string',
+        OdbNetworkArn='string',
+        DryRun=True|False,
+        RouteTableId='string',
+        DestinationCidrBlock='string',
+        GatewayId='string',
+        DestinationIpv6CidrBlock='string',
+        EgressOnlyInternetGatewayId='string',
+        InstanceId='string',
+        NetworkInterfaceId='string',
+        VpcPeeringConnectionId='string',
+        NatGatewayId='string'
+    )
+    
+  :type DestinationPrefixListId: string
+  :param DestinationPrefixListId: 
+
+    The ID of a prefix list used for the destination match.
+
+    
+
+  
+  :type VpcEndpointId: string
+  :param VpcEndpointId: 
+
+    The ID of a VPC endpoint. Supported for Gateway Load Balancer endpoints only.
+
+    
+
+  
+  :type TransitGatewayId: string
+  :param TransitGatewayId: 
+
+    The ID of a transit gateway.
+
+    
+
+  
+  :type LocalGatewayId: string
+  :param LocalGatewayId: 
+
+    The ID of the local gateway.
+
+    
+
+  
+  :type CarrierGatewayId: string
+  :param CarrierGatewayId: 
+
+    The ID of the carrier gateway.
+
+     
+
+    You can only use this option when the VPC contains a subnet which is associated with a Wavelength Zone.
+
+    
+
+  
+  :type CoreNetworkArn: string
+  :param CoreNetworkArn: 
+
+    The Amazon Resource Name (ARN) of the core network.
+
+    
+
+  
+  :type OdbNetworkArn: string
+  :param OdbNetworkArn: 
+
+    The Amazon Resource Name (ARN) of the ODB network.
+
+    
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type RouteTableId: string
+  :param RouteTableId: **[REQUIRED]** 
+
+    The ID of the route table for the route.
+
+    
+
+  
+  :type DestinationCidrBlock: string
+  :param DestinationCidrBlock: 
+
+    The IPv4 CIDR address block used for the destination match. Routing decisions are based on the most specific match. We modify the specified CIDR block to its canonical form; for example, if you specify ``100.68.0.18/18``, we modify it to ``100.68.0.0/18``.
+
+    
+
+  
+  :type GatewayId: string
+  :param GatewayId: 
+
+    The ID of an internet gateway or virtual private gateway attached to your VPC.
+
+    
+
+  
+  :type DestinationIpv6CidrBlock: string
+  :param DestinationIpv6CidrBlock: 
+
+    The IPv6 CIDR block used for the destination match. Routing decisions are based on the most specific match.
+
+    
+
+  
+  :type EgressOnlyInternetGatewayId: string
+  :param EgressOnlyInternetGatewayId: 
+
+    [IPv6 traffic only] The ID of an egress-only internet gateway.
+
+    
+
+  
+  :type InstanceId: string
+  :param InstanceId: 
+
+    The ID of a NAT instance in your VPC. The operation fails if you specify an instance ID unless exactly one network interface is attached.
+
+    
+
+  
+  :type NetworkInterfaceId: string
+  :param NetworkInterfaceId: 
+
+    The ID of a network interface.
+
+    
+
+  
+  :type VpcPeeringConnectionId: string
+  :param VpcPeeringConnectionId: 
+
+    The ID of a VPC peering connection.
+
+    
+
+  
+  :type NatGatewayId: string
+  :param NatGatewayId: 
+
+    [IPv4 traffic only] The ID of a NAT gateway.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Return': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Return** *(boolean) --* 
+
+        Returns ``true`` if the request succeeds; otherwise, it returns an error.
+
+        
+  
+
+  **Examples**
+
+  This example creates a route for the specified route table. The route matches all traffic (0.0.0.0/0) and routes it to the specified Internet gateway.
+  ::
+
+    response = client.create_route(
+        DestinationCidrBlock='0.0.0.0/0',
+        GatewayId='igw-c0a643a9',
+        RouteTableId='rtb-22574640',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

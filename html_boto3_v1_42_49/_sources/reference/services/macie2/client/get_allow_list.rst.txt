@@ -1,0 +1,233 @@
+:doc:`Macie2 <../../macie2>` / Client / get_allow_list
+
+**************
+get_allow_list
+**************
+
+
+
+.. py:method:: Macie2.Client.get_allow_list(**kwargs)
+
+  
+
+  Retrieves the settings and status of an allow list.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/macie2-2020-01-01/GetAllowList>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_allow_list(
+        id='string'
+    )
+    
+  :type id: string
+  :param id: **[REQUIRED]** 
+
+    The unique identifier for the Amazon Macie resource that the request applies to.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'arn': 'string',
+          'createdAt': datetime(2015, 1, 1),
+          'criteria': {
+              'regex': 'string',
+              's3WordsList': {
+                  'bucketName': 'string',
+                  'objectKey': 'string'
+              }
+          },
+          'description': 'string',
+          'id': 'string',
+          'name': 'string',
+          'status': {
+              'code': 'OK'|'S3_OBJECT_NOT_FOUND'|'S3_USER_ACCESS_DENIED'|'S3_OBJECT_ACCESS_DENIED'|'S3_THROTTLED'|'S3_OBJECT_OVERSIZE'|'S3_OBJECT_EMPTY'|'UNKNOWN_ERROR',
+              'description': 'string'
+          },
+          'tags': {
+              'string': 'string'
+          },
+          'updatedAt': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The request succeeded.
+
+      
+      
+
+      - **arn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the allow list.
+
+        
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The date and time, in UTC and extended ISO 8601 format, when the allow list was created in Amazon Macie.
+
+        
+      
+
+      - **criteria** *(dict) --* 
+
+        The criteria that specify the text or text pattern to ignore. The criteria can be the location and name of an S3 object that lists specific text to ignore (s3WordsList), or a regular expression (regex) that defines a text pattern to ignore.
+
+        
+        
+
+        - **regex** *(string) --* 
+
+          The regular expression (*regex*) that defines the text pattern to ignore. The expression can contain as many as 512 characters.
+
+          
+        
+
+        - **s3WordsList** *(dict) --* 
+
+          The location and name of the S3 object that lists specific text to ignore.
+
+          
+          
+
+          - **bucketName** *(string) --* 
+
+            The full name of the S3 bucket that contains the object.
+
+            
+          
+
+          - **objectKey** *(string) --* 
+
+            The full name (key) of the object.
+
+            
+      
+    
+      
+
+      - **description** *(string) --* 
+
+        The custom description of the allow list.
+
+        
+      
+
+      - **id** *(string) --* 
+
+        The unique identifier for the allow list.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The custom name of the allow list.
+
+        
+      
+
+      - **status** *(dict) --* 
+
+        The current status of the allow list, which indicates whether Amazon Macie can access and use the list's criteria.
+
+        
+        
+
+        - **code** *(string) --* 
+
+          The current status of the allow list. If the list's criteria specify a regular expression (regex), this value is typically OK. Amazon Macie can compile the expression.
+
+           
+
+          If the list's criteria specify an S3 object, possible values are:
+
+           
+
+          
+          * OK - Macie can retrieve and parse the contents of the object.
+           
+          * S3_OBJECT_ACCESS_DENIED - Macie isn't allowed to access the object or the object is encrypted with a customer managed KMS key that Macie isn't allowed to use. Check the bucket policy and other permissions settings for the bucket and the object. If the object is encrypted, also ensure that it's encrypted with a key that Macie is allowed to use.
+           
+          * S3_OBJECT_EMPTY - Macie can retrieve the object but the object doesn't contain any content. Ensure that the object contains the correct entries. Also ensure that the list's criteria specify the correct bucket and object names.
+           
+          * S3_OBJECT_NOT_FOUND - The object doesn't exist in Amazon S3. Ensure that the list's criteria specify the correct bucket and object names.
+           
+          * S3_OBJECT_OVERSIZE - Macie can retrieve the object. However, the object contains too many entries or its storage size exceeds the quota for an allow list. Try breaking the list into multiple files and ensure that each file doesn't exceed any quotas. Then configure list settings in Macie for each file.
+           
+          * S3_THROTTLED - Amazon S3 throttled the request to retrieve the object. Wait a few minutes and then try again.
+           
+          * S3_USER_ACCESS_DENIED - Amazon S3 denied the request to retrieve the object. If the specified object exists, you're not allowed to access it or it's encrypted with an KMS key that you're not allowed to use. Work with your Amazon Web Services administrator to ensure that the list's criteria specify the correct bucket and object names, and you have read access to the bucket and the object. If the object is encrypted, also ensure that it's encrypted with a key that you're allowed to use.
+           
+          * UNKNOWN_ERROR - A transient or internal error occurred when Macie attempted to retrieve or parse the object. Wait a few minutes and then try again. A list can also have this status if it's encrypted with a key that Amazon S3 and Macie can't access or use.
+          
+
+          
+        
+
+        - **description** *(string) --* 
+
+          A brief description of the status of the allow list. Amazon Macie uses this value to provide additional information about an error that occurred when Macie tried to access and use the list's criteria.
+
+          
+    
+      
+
+      - **tags** *(dict) --* 
+
+        A map of key-value pairs that specifies which tags (keys and values) are associated with the allow list.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **updatedAt** *(datetime) --* 
+
+        The date and time, in UTC and extended ISO 8601 format, when the allow list's settings were most recently changed in Amazon Macie.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Macie2.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Macie2.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Macie2.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Macie2.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Macie2.Client.exceptions.AccessDeniedException`
+
+  

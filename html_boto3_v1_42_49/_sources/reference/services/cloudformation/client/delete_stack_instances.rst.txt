@@ -1,0 +1,400 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / delete_stack_instances
+
+**********************
+delete_stack_instances
+**********************
+
+
+
+.. py:method:: CloudFormation.Client.delete_stack_instances(**kwargs)
+
+  
+
+  Deletes stack instances for the specified accounts, in the specified Amazon Web Services Regions.
+
+   
+
+  .. note::
+
+    
+
+    The maximum number of organizational unit (OUs) supported by a ``DeleteStackInstances`` operation is 50.
+
+     
+
+    If you need more than 50, consider the following options:
+
+     
+
+    
+    * *Batch processing:* If you don't want to expose your OU hierarchy, split up the operations into multiple calls with less than 50 OUs each.
+     
+    * *Parent OU strategy:* If you don't mind exposing the OU hierarchy, target a parent OU that contains all desired child OUs.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/DeleteStackInstances>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.delete_stack_instances(
+        StackSetName='string',
+        Accounts=[
+            'string',
+        ],
+        DeploymentTargets={
+            'Accounts': [
+                'string',
+            ],
+            'AccountsUrl': 'string',
+            'OrganizationalUnitIds': [
+                'string',
+            ],
+            'AccountFilterType': 'NONE'|'INTERSECTION'|'DIFFERENCE'|'UNION'
+        },
+        Regions=[
+            'string',
+        ],
+        OperationPreferences={
+            'RegionConcurrencyType': 'SEQUENTIAL'|'PARALLEL',
+            'RegionOrder': [
+                'string',
+            ],
+            'FailureToleranceCount': 123,
+            'FailureTolerancePercentage': 123,
+            'MaxConcurrentCount': 123,
+            'MaxConcurrentPercentage': 123,
+            'ConcurrencyMode': 'STRICT_FAILURE_TOLERANCE'|'SOFT_FAILURE_TOLERANCE'
+        },
+        RetainStacks=True|False,
+        OperationId='string',
+        CallAs='SELF'|'DELEGATED_ADMIN'
+    )
+    
+  :type StackSetName: string
+  :param StackSetName: **[REQUIRED]** 
+
+    The name or unique ID of the StackSet that you want to delete stack instances for.
+
+    
+
+  
+  :type Accounts: list
+  :param Accounts: 
+
+    [Self-managed permissions] The account IDs of the Amazon Web Services accounts that you want to delete stack instances for.
+
+     
+
+    You can specify ``Accounts`` or ``DeploymentTargets``, but not both.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type DeploymentTargets: dict
+  :param DeploymentTargets: 
+
+    [Service-managed permissions] The Organizations accounts from which to delete stack instances.
+
+     
+
+    You can specify ``Accounts`` or ``DeploymentTargets``, but not both.
+
+    
+
+  
+    - **Accounts** *(list) --* 
+
+      The Amazon Web Services account IDs where you want to perform stack operations. How these accounts are used depends on the ``AccountFilterType`` property.
+
+       
+
+      If you have many account numbers, you can provide those accounts using the ``AccountsUrl`` property instead.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AccountsUrl** *(string) --* 
+
+      The Amazon S3 URL path to a file that contains a list of Amazon Web Services account IDs. The file format must be either ``.csv`` or ``.txt``, and the data can be comma-separated or new-line-separated. There is currently a 10MB limit for the data (approximately 800,000 accounts).
+
+       
+
+      This property serves the same purpose as ``Accounts`` but allows you to specify a large number of accounts.
+
+      
+
+    
+    - **OrganizationalUnitIds** *(list) --* 
+
+      The organization root ID or organizational unit (OU) IDs where you want to perform stack operations. CloudFormation will perform operations on accounts within these OUs and their child OUs.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AccountFilterType** *(string) --* 
+
+      Refines which accounts will have stack operations performed on them by specifying how to use the ``Accounts`` and ``OrganizationalUnitIds`` properties together.
+
+       
+
+      The following values determine how CloudFormation selects target accounts:
+
+       
+
+      
+      * ``INTERSECTION``: Performs stack operations only on specific individual accounts within the selected OUs. Only accounts that are both specified in the ``Accounts`` property and belong to the specified OUs will be targeted.
+       
+      * ``DIFFERENCE``: Performs stack operations on all accounts in the selected OUs except for specific accounts listed in the ``Accounts`` property. This enables you to exclude certain accounts within an OU, such as suspended accounts.
+       
+      * ``UNION``: Performs stack operations on the specified OUs plus additional individual accounts listed in the ``Accounts`` property. This is the default value if ``AccountFilterType`` is not provided. This lets you target an entire OU and individual accounts from a different OU in one request. Note that ``UNION`` is not supported for ``CreateStackInstances`` operations.
+       
+      * ``NONE``: Performs stack operations on all accounts in the specified organizational units (OUs).
+      
+
+      
+
+    
+  
+  :type Regions: list
+  :param Regions: **[REQUIRED]** 
+
+    The Amazon Web Services Regions where you want to delete StackSet instances.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type OperationPreferences: dict
+  :param OperationPreferences: 
+
+    Preferences for how CloudFormation performs this StackSet operation.
+
+    
+
+  
+    - **RegionConcurrencyType** *(string) --* 
+
+      The concurrency type of deploying StackSets operations in Regions, could be in parallel or one Region at a time.
+
+      
+
+    
+    - **RegionOrder** *(list) --* 
+
+      The order of the Regions where you want to perform the stack operation.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **FailureToleranceCount** *(integer) --* 
+
+      The number of accounts per Region this operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **FailureTolerancePercentage** *(integer) --* 
+
+      The percentage of accounts per Region this stack operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds *down* to the next whole number.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **MaxConcurrentCount** *(integer) --* 
+
+      The maximum number of accounts in which to perform this operation at one time. This can depend on the value of ``FailureToleranceCount`` depending on your ``ConcurrencyMode``. ``MaxConcurrentCount`` is at most one more than the ``FailureToleranceCount`` if you're using ``STRICT_FAILURE_TOLERANCE``.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **MaxConcurrentPercentage** *(integer) --* 
+
+      The maximum percentage of accounts in which to perform this operation at one time.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds down to the next whole number. This is true except in cases where rounding down would result is zero. In this case, CloudFormation sets the number as one instead.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **ConcurrencyMode** *(string) --* 
+
+      Specifies how the concurrency level behaves during the operation execution.
+
+       
+
+      
+      * ``STRICT_FAILURE_TOLERANCE``: This option dynamically lowers the concurrency level to ensure the number of failed accounts never exceeds the value of ``FailureToleranceCount`` +1. The initial actual concurrency is set to the lower of either the value of the ``MaxConcurrentCount``, or the value of ``FailureToleranceCount`` +1. The actual concurrency is then reduced proportionally by the number of failures. This is the default behavior. If failure tolerance or Maximum concurrent accounts are set to percentages, the behavior is similar.
+       
+      * ``SOFT_FAILURE_TOLERANCE``: This option decouples ``FailureToleranceCount`` from the actual concurrency. This allows StackSet operations to run at the concurrency level set by the ``MaxConcurrentCount`` value, or ``MaxConcurrentPercentage``, regardless of the number of failures.
+      
+
+      
+
+    
+  
+  :type RetainStacks: boolean
+  :param RetainStacks: **[REQUIRED]** 
+
+    Removes the stack instances from the specified StackSet, but doesn't delete the stacks. You can't reassociate a retained stack or add an existing, saved stack to a new stack set.
+
+     
+
+    For more information, see `StackSet operation options <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html#stackset-ops-options>`__.
+
+    
+
+  
+  :type OperationId: string
+  :param OperationId: 
+
+    The unique identifier for this StackSet operation.
+
+     
+
+    If you don't specify an operation ID, the SDK generates one automatically.
+
+     
+
+    The operation ID also functions as an idempotency token, to ensure that CloudFormation performs the StackSet operation only once, even if you retry the request multiple times. You can retry StackSet operation requests to ensure that CloudFormation successfully received them.
+
+     
+
+    Repeating this StackSet operation with a new operation ID retries all stack instances whose status is ``OUTDATED``.
+
+    This field is autopopulated if not provided.
+
+  
+  :type CallAs: string
+  :param CallAs: 
+
+    [Service-managed permissions] Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account.
+
+     
+
+    By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+     
+
+    
+    * If you are signed in to the management account, specify ``SELF``.
+     
+    * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'OperationId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **OperationId** *(string) --* 
+
+        The unique identifier for this StackSet operation.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackSetNotFoundException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationInProgressException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationIdAlreadyExistsException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StaleRequestException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.InvalidOperationException`
+
+  

@@ -1,0 +1,355 @@
+:doc:`CodeArtifact <../../codeartifact>` / Client / copy_package_versions
+
+*********************
+copy_package_versions
+*********************
+
+
+
+.. py:method:: CodeArtifact.Client.copy_package_versions(**kwargs)
+
+  
+
+  Copies package versions from one repository to another repository in the same domain.
+
+   
+
+  .. note::
+
+    
+
+    You must specify ``versions`` or ``versionRevisions``. You cannot specify both.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codeartifact-2018-09-22/CopyPackageVersions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.copy_package_versions(
+        domain='string',
+        domainOwner='string',
+        sourceRepository='string',
+        destinationRepository='string',
+        format='npm'|'pypi'|'maven'|'nuget'|'generic'|'ruby'|'swift'|'cargo',
+        namespace='string',
+        package='string',
+        versions=[
+            'string',
+        ],
+        versionRevisions={
+            'string': 'string'
+        },
+        allowOverwrite=True|False,
+        includeFromUpstream=True|False
+    )
+    
+  :type domain: string
+  :param domain: **[REQUIRED]** 
+
+    The name of the domain that contains the source and destination repositories.
+
+    
+
+  
+  :type domainOwner: string
+  :param domainOwner: 
+
+    The 12-digit account number of the Amazon Web Services account that owns the domain. It does not include dashes or spaces.
+
+    
+
+  
+  :type sourceRepository: string
+  :param sourceRepository: **[REQUIRED]** 
+
+    The name of the repository that contains the package versions to be copied.
+
+    
+
+  
+  :type destinationRepository: string
+  :param destinationRepository: **[REQUIRED]** 
+
+    The name of the repository into which package versions are copied.
+
+    
+
+  
+  :type format: string
+  :param format: **[REQUIRED]** 
+
+    The format of the package versions to be copied.
+
+    
+
+  
+  :type namespace: string
+  :param namespace: 
+
+    The namespace of the package versions to be copied. The package component that specifies its namespace depends on its type. For example:
+
+     
+
+    .. note::
+
+      
+
+      The namespace is required when copying package versions of the following formats:
+
+       
+
+      
+      * Maven
+       
+      * Swift
+       
+      * generic
+      
+
+      
+
+     
+
+    
+    * The namespace of a Maven package version is its ``groupId``.
+     
+    * The namespace of an npm or Swift package version is its ``scope``.
+     
+    * The namespace of a generic package is its ``namespace``.
+     
+    * Python, NuGet, Ruby, and Cargo package versions do not contain a corresponding component, package versions of those formats do not have a namespace.
+    
+
+    
+
+  
+  :type package: string
+  :param package: **[REQUIRED]** 
+
+    The name of the package that contains the versions to be copied.
+
+    
+
+  
+  :type versions: list
+  :param versions: 
+
+    The versions of the package to be copied.
+
+     
+
+    .. note::
+
+      
+
+      You must specify ``versions`` or ``versionRevisions``. You cannot specify both.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type versionRevisions: dict
+  :param versionRevisions: 
+
+    A list of key-value pairs. The keys are package versions and the values are package version revisions. A ``CopyPackageVersion`` operation succeeds if the specified versions in the source repository match the specified package version revision.
+
+     
+
+    .. note::
+
+      
+
+      You must specify ``versions`` or ``versionRevisions``. You cannot specify both.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type allowOverwrite: boolean
+  :param allowOverwrite: 
+
+    Set to true to overwrite a package version that already exists in the destination repository. If set to false and the package version already exists in the destination repository, the package version is returned in the ``failedVersions`` field of the response with an ``ALREADY_EXISTS`` error code.
+
+    
+
+  
+  :type includeFromUpstream: boolean
+  :param includeFromUpstream: 
+
+    Set to true to copy packages from repositories that are upstream from the source repository to the destination repository. The default setting is false. For more information, see `Working with upstream repositories <https://docs.aws.amazon.com/codeartifact/latest/ug/repos-upstream.html>`__.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'successfulVersions': {
+              'string': {
+                  'revision': 'string',
+                  'status': 'Published'|'Unfinished'|'Unlisted'|'Archived'|'Disposed'|'Deleted'
+              }
+          },
+          'failedVersions': {
+              'string': {
+                  'errorCode': 'ALREADY_EXISTS'|'MISMATCHED_REVISION'|'MISMATCHED_STATUS'|'NOT_ALLOWED'|'NOT_FOUND'|'SKIPPED',
+                  'errorMessage': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **successfulVersions** *(dict) --* 
+
+        A list of the package versions that were successfully copied to your repository.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(dict) --* 
+
+            Contains the revision and status of a package version.
+
+            
+            
+
+            - **revision** *(string) --* 
+
+              The revision of a package version.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The status of a package version.
+
+              
+        
+    
+  
+      
+
+      - **failedVersions** *(dict) --* 
+
+        A map of package versions that failed to copy and their error codes. The possible error codes are in the ``PackageVersionError`` data type. They are:
+
+         
+
+        
+        * ``ALREADY_EXISTS``
+         
+        * ``MISMATCHED_REVISION``
+         
+        * ``MISMATCHED_STATUS``
+         
+        * ``NOT_ALLOWED``
+         
+        * ``NOT_FOUND``
+         
+        * ``SKIPPED``
+        
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(dict) --* 
+
+            l An error associated with package.
+
+            
+            
+
+            - **errorCode** *(string) --* 
+
+              The error code associated with the error. Valid error codes are:
+
+               
+
+              
+              * ``ALREADY_EXISTS``
+               
+              * ``MISMATCHED_REVISION``
+               
+              * ``MISMATCHED_STATUS``
+               
+              * ``NOT_ALLOWED``
+               
+              * ``NOT_FOUND``
+               
+              * ``SKIPPED``
+              
+
+              
+            
+
+            - **errorMessage** *(string) --* 
+
+              The error message associated with the error.
+
+              
+        
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ValidationException`
+
+  

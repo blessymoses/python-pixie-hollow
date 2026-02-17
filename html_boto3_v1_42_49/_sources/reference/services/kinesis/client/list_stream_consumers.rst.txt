@@ -1,0 +1,201 @@
+:doc:`Kinesis <../../kinesis>` / Client / list_stream_consumers
+
+*********************
+list_stream_consumers
+*********************
+
+
+
+.. py:method:: Kinesis.Client.list_stream_consumers(**kwargs)
+
+  
+
+  Lists the consumers registered to receive data from a stream using enhanced fan-out, and provides information about each consumer.
+
+   
+
+  This operation has a limit of 5 transactions per second per stream.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kinesis-2013-12-02/ListStreamConsumers>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_stream_consumers(
+        StreamARN='string',
+        NextToken='string',
+        MaxResults=123,
+        StreamCreationTimestamp=datetime(2015, 1, 1),
+        StreamId='string'
+    )
+    
+  :type StreamARN: string
+  :param StreamARN: **[REQUIRED]** 
+
+    The ARN of the Kinesis data stream for which you want to list the registered consumers. For more information, see `Amazon Resource Names (ARNs) and Amazon Web Services Service Namespaces <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-kinesis-streams>`__.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    When the number of consumers that are registered with the data stream is greater than the default value for the ``MaxResults`` parameter, or if you explicitly specify a value for ``MaxResults`` that is less than the number of consumers that are registered with the data stream, the response includes a pagination token named ``NextToken``. You can specify this ``NextToken`` value in a subsequent call to ``ListStreamConsumers`` to list the next set of registered consumers.
+
+     
+
+    Don't specify ``StreamName`` or ``StreamCreationTimestamp`` if you specify ``NextToken`` because the latter unambiguously identifies the stream.
+
+     
+
+    You can optionally specify a value for the ``MaxResults`` parameter when you specify ``NextToken``. If you specify a ``MaxResults`` value that is less than the number of consumers that the operation returns if you don't specify ``MaxResults``, the response will contain a new ``NextToken`` value. You can use the new ``NextToken`` value in a subsequent call to the ``ListStreamConsumers`` operation to list the next set of consumers.
+
+     
+
+    .. warning::
+
+       
+
+      Tokens expire after 300 seconds. When you obtain a value for ``NextToken`` in the response to a call to ``ListStreamConsumers``, you have 300 seconds to use that value. If you specify an expired token in a call to ``ListStreamConsumers``, you get ``ExpiredNextTokenException``.
+
+      
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of consumers that you want a single call of ``ListStreamConsumers`` to return. The default value is 100. If you specify a value greater than 100, at most 100 results are returned.
+
+    
+
+  
+  :type StreamCreationTimestamp: datetime
+  :param StreamCreationTimestamp: 
+
+    Specify this input parameter to distinguish data streams that have the same name. For example, if you create a data stream and then delete it, and you later create another data stream with the same name, you can use this input parameter to specify which of the two streams you want to list the consumers for.
+
+     
+
+    You can't specify this parameter if you specify the NextToken parameter.
+
+    
+
+  
+  :type StreamId: string
+  :param StreamId: 
+
+    Not Implemented. Reserved for future use.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Consumers': [
+              {
+                  'ConsumerName': 'string',
+                  'ConsumerARN': 'string',
+                  'ConsumerStatus': 'CREATING'|'DELETING'|'ACTIVE',
+                  'ConsumerCreationTimestamp': datetime(2015, 1, 1)
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Consumers** *(list) --* 
+
+        An array of JSON objects. Each object represents one registered consumer.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object that represents the details of the consumer you registered. This type of object is returned by  RegisterStreamConsumer.
+
+          
+          
+
+          - **ConsumerName** *(string) --* 
+
+            The name of the consumer is something you choose when you register the consumer.
+
+            
+          
+
+          - **ConsumerARN** *(string) --* 
+
+            When you register a consumer, Kinesis Data Streams generates an ARN for it. You need this ARN to be able to call  SubscribeToShard.
+
+             
+
+            If you delete a consumer and then create a new one with the same name, it won't have the same ARN. That's because consumer ARNs contain the creation timestamp. This is important to keep in mind if you have IAM policies that reference consumer ARNs.
+
+            
+          
+
+          - **ConsumerStatus** *(string) --* 
+
+            A consumer can't read data while in the ``CREATING`` or ``DELETING`` states.
+
+            
+          
+
+          - **ConsumerCreationTimestamp** *(datetime) --* 
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        When the number of consumers that are registered with the data stream is greater than the default value for the ``MaxResults`` parameter, or if you explicitly specify a value for ``MaxResults`` that is less than the number of registered consumers, the response includes a pagination token named ``NextToken``. You can specify this ``NextToken`` value in a subsequent call to ``ListStreamConsumers`` to list the next set of registered consumers. For more information about the use of this pagination token when calling the ``ListStreamConsumers`` operation, see  ListStreamConsumersInput$NextToken.
+
+         
+
+        .. warning::
+
+           
+
+          Tokens expire after 300 seconds. When you obtain a value for ``NextToken`` in the response to a call to ``ListStreamConsumers``, you have 300 seconds to use that value. If you specify an expired token in a call to ``ListStreamConsumers``, you get ``ExpiredNextTokenException``.
+
+          
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Kinesis.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Kinesis.Client.exceptions.InvalidArgumentException`
+
+  
+  *   :py:class:`Kinesis.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Kinesis.Client.exceptions.ExpiredNextTokenException`
+
+  
+  *   :py:class:`Kinesis.Client.exceptions.ResourceInUseException`
+
+  

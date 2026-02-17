@@ -1,0 +1,330 @@
+:doc:`EKS <../../eks>` / Client / update_nodegroup_version
+
+************************
+update_nodegroup_version
+************************
+
+
+
+.. py:method:: EKS.Client.update_nodegroup_version(**kwargs)
+
+  
+
+  Updates the Kubernetes version or AMI version of an Amazon EKS managed node group.
+
+   
+
+  You can update a node group using a launch template only if the node group was originally deployed with a launch template. Additionally, the launch template ID or name must match what was used when the node group was created. You can update the launch template version with necessary changes.
+
+   
+
+  If you need to update a custom AMI in a node group that was deployed with a launch template, then update your custom AMI, specify the new ID in a new version of the launch template, and then update the node group to the new version of the launch template.
+
+   
+
+  If you update without a launch template, then you can update to the latest available AMI version of a node group's current Kubernetes version by not specifying a Kubernetes version in the request. You can update to the latest AMI version of your cluster's current Kubernetes version by specifying your cluster's Kubernetes version in the request. For information about Linux versions, see `Amazon EKS optimized Amazon Linux AMI versions <https://docs.aws.amazon.com/eks/latest/userguide/eks-linux-ami-versions.html>`__ in the *Amazon EKS User Guide*. For information about Windows versions, see `Amazon EKS optimized Windows AMI versions <https://docs.aws.amazon.com/eks/latest/userguide/eks-ami-versions-windows.html>`__ in the *Amazon EKS User Guide*.
+
+   
+
+  You cannot roll back a node group to an earlier Kubernetes version or AMI version.
+
+   
+
+  When a node in a managed node group is terminated due to a scaling action or update, every ``Pod`` on that node is drained first. Amazon EKS attempts to drain the nodes gracefully and will fail if it is unable to do so. You can ``force`` the update if Amazon EKS is unable to drain the nodes as a result of a ``Pod`` disruption budget issue.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateNodegroupVersion>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_nodegroup_version(
+        clusterName='string',
+        nodegroupName='string',
+        version='string',
+        releaseVersion='string',
+        launchTemplate={
+            'name': 'string',
+            'version': 'string',
+            'id': 'string'
+        },
+        force=True|False,
+        clientRequestToken='string'
+    )
+    
+  :type clusterName: string
+  :param clusterName: **[REQUIRED]** 
+
+    The name of your cluster.
+
+    
+
+  
+  :type nodegroupName: string
+  :param nodegroupName: **[REQUIRED]** 
+
+    The name of the managed node group to update.
+
+    
+
+  
+  :type version: string
+  :param version: 
+
+    The Kubernetes version to update to. If no version is specified, then the node group will be updated to match the cluster's current Kubernetes version, and the latest available AMI for that version will be used. You can also specify the Kubernetes version of the cluster to update the node group to the latest AMI version of the cluster's Kubernetes version. If you specify ``launchTemplate``, and your launch template uses a custom AMI, then don't specify ``version``, or the node group update will fail. For more information about using launch templates with Amazon EKS, see `Customizing managed nodes with launch templates <https://docs.aws.amazon.com/eks/latest/userguide/launch-templates.html>`__ in the *Amazon EKS User Guide*.
+
+    
+
+  
+  :type releaseVersion: string
+  :param releaseVersion: 
+
+    The AMI version of the Amazon EKS optimized AMI to use for the update. By default, the latest available AMI version for the node group's Kubernetes version is used. For information about Linux versions, see `Amazon EKS optimized Amazon Linux AMI versions <https://docs.aws.amazon.com/eks/latest/userguide/eks-linux-ami-versions.html>`__ in the *Amazon EKS User Guide*. Amazon EKS managed node groups support the November 2022 and later releases of the Windows AMIs. For information about Windows versions, see `Amazon EKS optimized Windows AMI versions <https://docs.aws.amazon.com/eks/latest/userguide/eks-ami-versions-windows.html>`__ in the *Amazon EKS User Guide*.
+
+     
+
+    If you specify ``launchTemplate``, and your launch template uses a custom AMI, then don't specify ``releaseVersion``, or the node group update will fail. For more information about using launch templates with Amazon EKS, see `Customizing managed nodes with launch templates <https://docs.aws.amazon.com/eks/latest/userguide/launch-templates.html>`__ in the *Amazon EKS User Guide*.
+
+    
+
+  
+  :type launchTemplate: dict
+  :param launchTemplate: 
+
+    An object representing a node group's launch template specification. You can only update a node group using a launch template if the node group was originally deployed with a launch template. When updating, you must specify the same launch template ID or name that was used to create the node group.
+
+    
+
+  
+    - **name** *(string) --* 
+
+      The name of the launch template.
+
+       
+
+      You must specify either the launch template name or the launch template ID in the request, but not both. After node group creation, you cannot use a different name.
+
+      
+
+    
+    - **version** *(string) --* 
+
+      The version number of the launch template to use. If no version is specified, then the template's default version is used. You can use a different version for node group updates.
+
+      
+
+    
+    - **id** *(string) --* 
+
+      The ID of the launch template.
+
+       
+
+      You must specify either the launch template ID or the launch template name in the request, but not both. After node group creation, you cannot use a different ID.
+
+      
+
+    
+  
+  :type force: boolean
+  :param force: 
+
+    Force the update if any ``Pod`` on the existing node group can't be drained due to a ``Pod`` disruption budget issue. If an update fails because all Pods can't be drained, you can force the update after it fails to terminate the old node whether or not any ``Pod`` is running on the node.
+
+    
+
+  
+  :type clientRequestToken: string
+  :param clientRequestToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'update': {
+              'id': 'string',
+              'status': 'InProgress'|'Failed'|'Cancelled'|'Successful',
+              'type': 'VersionUpdate'|'EndpointAccessUpdate'|'LoggingUpdate'|'ConfigUpdate'|'AssociateIdentityProviderConfig'|'DisassociateIdentityProviderConfig'|'AssociateEncryptionConfig'|'AddonUpdate'|'VpcConfigUpdate'|'AccessConfigUpdate'|'UpgradePolicyUpdate'|'ZonalShiftConfigUpdate'|'AutoModeUpdate'|'RemoteNetworkConfigUpdate'|'DeletionProtectionUpdate'|'ControlPlaneScalingConfigUpdate'|'VendedLogsUpdate',
+              'params': [
+                  {
+                      'type': 'Version'|'PlatformVersion'|'EndpointPrivateAccess'|'EndpointPublicAccess'|'ClusterLogging'|'DesiredSize'|'LabelsToAdd'|'LabelsToRemove'|'TaintsToAdd'|'TaintsToRemove'|'MaxSize'|'MinSize'|'ReleaseVersion'|'PublicAccessCidrs'|'LaunchTemplateName'|'LaunchTemplateVersion'|'IdentityProviderConfig'|'EncryptionConfig'|'AddonVersion'|'ServiceAccountRoleArn'|'ResolveConflicts'|'MaxUnavailable'|'MaxUnavailablePercentage'|'NodeRepairEnabled'|'UpdateStrategy'|'ConfigurationValues'|'SecurityGroups'|'Subnets'|'AuthenticationMode'|'PodIdentityAssociations'|'UpgradePolicy'|'ZonalShiftConfig'|'ComputeConfig'|'StorageConfig'|'KubernetesNetworkConfig'|'RemoteNetworkConfig'|'DeletionProtection'|'NodeRepairConfig'|'UpdatedTier'|'PreviousTier',
+                      'value': 'string'
+                  },
+              ],
+              'createdAt': datetime(2015, 1, 1),
+              'errors': [
+                  {
+                      'errorCode': 'SubnetNotFound'|'SecurityGroupNotFound'|'EniLimitReached'|'IpNotAvailable'|'AccessDenied'|'OperationNotPermitted'|'VpcIdNotFound'|'Unknown'|'NodeCreationFailure'|'PodEvictionFailure'|'InsufficientFreeAddresses'|'ClusterUnreachable'|'InsufficientNumberOfReplicas'|'ConfigurationConflict'|'AdmissionRequestDenied'|'UnsupportedAddonModification'|'K8sResourceNotFound',
+                      'errorMessage': 'string',
+                      'resourceIds': [
+                          'string',
+                      ]
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **update** *(dict) --* 
+
+        An object representing an asynchronous update.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          A UUID that is used to track the update.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The current status of the update.
+
+          
+        
+
+        - **type** *(string) --* 
+
+          The type of the update.
+
+          
+        
+
+        - **params** *(list) --* 
+
+          A key-value map that contains the parameters associated with the update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing the details of an update request.
+
+            
+            
+
+            - **type** *(string) --* 
+
+              The keys associated with an update request.
+
+              
+            
+
+            - **value** *(string) --* 
+
+              The value of the keys submitted as part of an update request.
+
+              
+        
+      
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The Unix epoch timestamp at object creation.
+
+          
+        
+
+        - **errors** *(list) --* 
+
+          Any errors associated with a ``Failed`` update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing an error when an asynchronous operation fails.
+
+            
+            
+
+            - **errorCode** *(string) --* 
+
+              A brief description of the error.
+
+               
+
+              
+              * **SubnetNotFound**: We couldn't find one of the subnets associated with the cluster.
+               
+              * **SecurityGroupNotFound**: We couldn't find one of the security groups associated with the cluster.
+               
+              * **EniLimitReached**: You have reached the elastic network interface limit for your account.
+               
+              * **IpNotAvailable**: A subnet associated with the cluster doesn't have any available IP addresses.
+               
+              * **AccessDenied**: You don't have permissions to perform the specified operation.
+               
+              * **OperationNotPermitted**: The service role associated with the cluster doesn't have the required access permissions for Amazon EKS.
+               
+              * **VpcIdNotFound**: We couldn't find the VPC associated with the cluster.
+              
+
+              
+            
+
+            - **errorMessage** *(string) --* 
+
+              A more complete description of the error.
+
+              
+            
+
+            - **resourceIds** *(list) --* 
+
+              An optional field that contains the resource IDs associated with the error.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidRequestException`
+
+  

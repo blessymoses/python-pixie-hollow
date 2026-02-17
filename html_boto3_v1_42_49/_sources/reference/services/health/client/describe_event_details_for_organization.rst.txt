@@ -1,0 +1,430 @@
+:doc:`Health <../../health>` / Client / describe_event_details_for_organization
+
+***************************************
+describe_event_details_for_organization
+***************************************
+
+
+
+.. py:method:: Health.Client.describe_event_details_for_organization(**kwargs)
+
+  
+
+  Returns detailed information about one or more specified events for one or more Amazon Web Services accounts in your organization. This information includes standard event data (such as the Amazon Web Services Region and service), an event description, and (depending on the event) possible metadata. This operation doesn't return affected entities, such as the resources related to the event. To return affected entities, use the `DescribeAffectedEntitiesForOrganization <https://docs.aws.amazon.com/health/latest/APIReference/API_DescribeAffectedEntitiesForOrganization.html>`__ operation.
+
+   
+
+  .. note::
+
+    
+
+    Before you can call this operation, you must first enable Health to work with Organizations. To do this, call the `EnableHealthServiceAccessForOrganization <https://docs.aws.amazon.com/health/latest/APIReference/API_EnableHealthServiceAccessForOrganization.html>`__ operation from your organization's management account.
+
+    
+
+   
+
+  When you call the ``DescribeEventDetailsForOrganization`` operation, specify the ``organizationEventDetailFilters`` object in the request. Depending on the Health event type, note the following differences:
+
+   
+
+  
+  * To return event details for a public event, you must specify a null value for the ``awsAccountId`` parameter. If you specify an account ID for a public event, Health returns an error message because public events aren't specific to an account.
+   
+  * To return event details for an event that is specific to an account in your organization, you must specify the ``awsAccountId`` parameter in the request. If you don't specify an account ID, Health returns an error message because the event is specific to an account in your organization.
+  
+
+   
+
+  For more information, see `Event <https://docs.aws.amazon.com/health/latest/APIReference/API_Event.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    This operation doesn't support resource-level permissions. You can't use this operation to allow or deny access to specific Health events. For more information, see `Resource- and action-based conditions <https://docs.aws.amazon.com/health/latest/ug/security_iam_id-based-policy-examples.html#resource-action-based-conditions>`__ in the *Health User Guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/health-2016-08-04/DescribeEventDetailsForOrganization>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_event_details_for_organization(
+        organizationEventDetailFilters=[
+            {
+                'eventArn': 'string',
+                'awsAccountId': 'string'
+            },
+        ],
+        locale='string'
+    )
+    
+  :type organizationEventDetailFilters: list
+  :param organizationEventDetailFilters: **[REQUIRED]** 
+
+    A set of JSON elements that includes the ``awsAccountId`` and the ``eventArn``.
+
+    
+
+  
+    - *(dict) --* 
+
+      The values used to filter results from the `DescribeEventDetailsForOrganization <https://docs.aws.amazon.com/health/latest/APIReference/API_DescribeEventDetailsForOrganization.html>`__ and `DescribeAffectedEntitiesForOrganization <https://docs.aws.amazon.com/health/latest/APIReference/API_DescribeAffectedEntitiesForOrganization.html>`__ operations.
+
+      
+
+    
+      - **eventArn** *(string) --* **[REQUIRED]** 
+
+        The unique identifier for the event. The event ARN has the ``arn:aws:health:event-region::event/SERVICE/EVENT_TYPE_CODE/EVENT_TYPE_PLUS_ID`` format.
+
+         
+
+        For example, an event ARN might look like the following:
+
+         
+
+        ``arn:aws:health:us-east-1::event/EC2/EC2_INSTANCE_RETIREMENT_SCHEDULED/EC2_INSTANCE_RETIREMENT_SCHEDULED_ABC123-DEF456``
+
+        
+
+      
+      - **awsAccountId** *(string) --* 
+
+        The 12-digit Amazon Web Services account numbers that contains the affected entities.
+
+        
+
+      
+    
+
+  :type locale: string
+  :param locale: 
+
+    The locale (language) to return information in. English (en) is the default and the only supported value at this time.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'successfulSet': [
+              {
+                  'awsAccountId': 'string',
+                  'event': {
+                      'arn': 'string',
+                      'service': 'string',
+                      'eventTypeCode': 'string',
+                      'eventTypeCategory': 'issue'|'accountNotification'|'scheduledChange'|'investigation',
+                      'region': 'string',
+                      'availabilityZone': 'string',
+                      'startTime': datetime(2015, 1, 1),
+                      'endTime': datetime(2015, 1, 1),
+                      'lastUpdatedTime': datetime(2015, 1, 1),
+                      'statusCode': 'open'|'closed'|'upcoming',
+                      'eventScopeCode': 'PUBLIC'|'ACCOUNT_SPECIFIC'|'NONE',
+                      'actionability': 'ACTION_REQUIRED'|'ACTION_MAY_BE_REQUIRED'|'INFORMATIONAL',
+                      'personas': [
+                          'OPERATIONS'|'SECURITY'|'BILLING',
+                      ]
+                  },
+                  'eventDescription': {
+                      'latestDescription': 'string'
+                  },
+                  'eventMetadata': {
+                      'string': 'string'
+                  }
+              },
+          ],
+          'failedSet': [
+              {
+                  'awsAccountId': 'string',
+                  'eventArn': 'string',
+                  'errorName': 'string',
+                  'errorMessage': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **successfulSet** *(list) --* 
+
+        Information about the events that could be retrieved.
+
+        
+        
+
+        - *(dict) --* 
+
+          Detailed information about an event. A combination of an `Event <https://docs.aws.amazon.com/health/latest/APIReference/API_Event.html>`__ object, an `EventDescription <https://docs.aws.amazon.com/health/latest/APIReference/API_EventDescription.html>`__ object, and additional metadata about the event. Returned by the `DescribeEventDetailsForOrganization <https://docs.aws.amazon.com/health/latest/APIReference/API_DescribeEventDetailsForOrganization.html>`__ operation.
+
+          
+          
+
+          - **awsAccountId** *(string) --* 
+
+            The 12-digit Amazon Web Services account numbers that contains the affected entities.
+
+            
+          
+
+          - **event** *(dict) --* 
+
+            Summary information about an Health event.
+
+             
+
+            Health events can be public or account-specific:
+
+             
+
+            
+            * *Public events* might be service events that are not specific to an Amazon Web Services account. For example, if there is an issue with an Amazon Web Services Region, Health provides information about the event, even if you don't use services or resources in that Region.
+             
+            * *Account-specific* events are specific to either your Amazon Web Services account or an account in your organization. For example, if there's an issue with Amazon Elastic Compute Cloud in a Region that you use, Health provides information about the event and the affected resources in the account.
+            
+
+             
+
+            You can determine if an event is public or account-specific by using the ``eventScopeCode`` parameter. For more information, see `eventScopeCode <https://docs.aws.amazon.com/health/latest/APIReference/API_Event.html#AWSHealth-Type-Event-eventScopeCode>`__.
+
+            
+            
+
+            - **arn** *(string) --* 
+
+              The unique identifier for the event. The event ARN has the ``arn:aws:health:event-region::event/SERVICE/EVENT_TYPE_CODE/EVENT_TYPE_PLUS_ID`` format.
+
+               
+
+              For example, an event ARN might look like the following:
+
+               
+
+              ``arn:aws:health:us-east-1::event/EC2/EC2_INSTANCE_RETIREMENT_SCHEDULED/EC2_INSTANCE_RETIREMENT_SCHEDULED_ABC123-DEF456``
+
+              
+            
+
+            - **service** *(string) --* 
+
+              The Amazon Web Services service that is affected by the event. For example, ``EC2``, ``RDS``.
+
+              
+            
+
+            - **eventTypeCode** *(string) --* 
+
+              The unique identifier for the event type. The format is ``AWS_SERVICE_DESCRIPTION ``; for example, ``AWS_EC2_SYSTEM_MAINTENANCE_EVENT``.
+
+              
+            
+
+            - **eventTypeCategory** *(string) --* 
+
+              A list of event type category codes. Possible values are ``issue``, ``accountNotification``, or ``scheduledChange``. Currently, the ``investigation`` value isn't supported at this time.
+
+              
+            
+
+            - **region** *(string) --* 
+
+              The Amazon Web Services Region name of the event.
+
+              
+            
+
+            - **availabilityZone** *(string) --* 
+
+              The Amazon Web Services Availability Zone of the event. For example, us-east-1a.
+
+              
+            
+
+            - **startTime** *(datetime) --* 
+
+              The date and time that the event began.
+
+              
+            
+
+            - **endTime** *(datetime) --* 
+
+              The date and time that the event ended.
+
+              
+            
+
+            - **lastUpdatedTime** *(datetime) --* 
+
+              The most recent date and time that the event was updated.
+
+              
+            
+
+            - **statusCode** *(string) --* 
+
+              The most recent status of the event. Possible values are ``open``, ``closed``, and ``upcoming``.
+
+              
+            
+
+            - **eventScopeCode** *(string) --* 
+
+              This parameter specifies if the Health event is a public Amazon Web Services service event or an account-specific event.
+
+               
+
+              
+              * If the ``eventScopeCode`` value is ``PUBLIC``, then the ``affectedAccounts`` value is always empty.
+               
+              * If the ``eventScopeCode`` value is ``ACCOUNT_SPECIFIC``, then the ``affectedAccounts`` value lists the affected Amazon Web Services accounts in your organization. For example, if an event affects a service such as Amazon Elastic Compute Cloud and you have Amazon Web Services accounts that use that service, those account IDs appear in the response.
+               
+              * If the ``eventScopeCode`` value is ``NONE``, then the ``eventArn`` that you specified in the request is invalid or doesn't exist.
+              
+
+              
+            
+
+            - **actionability** *(string) --* 
+
+              The actionability classification of the event. Possible values are ``ACTION_REQUIRED``, ``ACTION_MAY_BE_REQUIRED`` and ``INFORMATIONAL``. Events with ``ACTION_REQUIRED`` actionability require customer action to resolve or mitigate the event. Events with ``ACTION_MAY_BE_REQUIRED`` actionability indicates that the current status is unknown or conditional and inspection is needed to determine if action is required. Events with ``INFORMATIONAL`` actionability are provided for awareness and do not require immediate action.
+
+              
+            
+
+            - **personas** *(list) --* 
+
+              A list of persona classifications that indicate the target audience for the event. Possible values are ``OPERATIONS``, ``SECURITY``, and ``BILLING``. Events can be associated with multiple personas to indicate relevance to different teams or roles within an organization.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **eventDescription** *(dict) --* 
+
+            The detailed description of the event. Included in the information returned by the `DescribeEventDetails <https://docs.aws.amazon.com/health/latest/APIReference/API_DescribeEventDetails.html>`__ operation.
+
+            
+            
+
+            - **latestDescription** *(string) --* 
+
+              The most recent description of the event.
+
+              
+        
+          
+
+          - **eventMetadata** *(dict) --* 
+
+            Additional metadata about the event.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+      
+
+      - **failedSet** *(list) --* 
+
+        Error messages for any events that could not be retrieved.
+
+        
+        
+
+        - *(dict) --* 
+
+          Error information returned when a `DescribeEventDetailsForOrganization <https://docs.aws.amazon.com/health/latest/APIReference/API_DescribeEventDetailsForOrganization.html>`__ operation can't find a specified event.
+
+          
+          
+
+          - **awsAccountId** *(string) --* 
+
+            Error information returned when a `DescribeEventDetailsForOrganization <https://docs.aws.amazon.com/health/latest/APIReference/API_DescribeEventDetailsForOrganization.html>`__ operation can't find a specified event.
+
+            
+          
+
+          - **eventArn** *(string) --* 
+
+            The unique identifier for the event. The event ARN has the ``arn:aws:health:event-region::event/SERVICE/EVENT_TYPE_CODE/EVENT_TYPE_PLUS_ID`` format.
+
+             
+
+            For example, an event ARN might look like the following:
+
+             
+
+            ``arn:aws:health:us-east-1::event/EC2/EC2_INSTANCE_RETIREMENT_SCHEDULED/EC2_INSTANCE_RETIREMENT_SCHEDULED_ABC123-DEF456``
+
+            
+          
+
+          - **errorName** *(string) --* 
+
+            The name of the error.
+
+            
+          
+
+          - **errorMessage** *(string) --* 
+
+            A message that describes the error.
+
+             
+
+            If you call the ``DescribeEventDetailsForOrganization`` operation and receive one of the following errors, follow the recommendations in the message:
+
+             
+
+            
+            * We couldn't find a public event that matches your request. To find an event that is account specific, you must enter an Amazon Web Services account ID in the request.
+             
+            * We couldn't find an account specific event for the specified Amazon Web Services account. To find an event that is public, you must enter a null value for the Amazon Web Services account ID in the request.
+             
+            * Your Amazon Web Services account doesn't include the Amazon Web Services Support plan required to use the Health API. You must have either a Business, Enterprise On-Ramp, or Enterprise Support plan.
+            
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Health.Client.exceptions.UnsupportedLocale`
+
+  

@@ -1,0 +1,526 @@
+:doc:`GameLift <../../gamelift>` / Client / create_game_session
+
+*******************
+create_game_session
+*******************
+
+
+
+.. py:method:: GameLift.Client.create_game_session(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Anywhere, Container
+
+   
+
+  Creates a multiplayer game session for players in a specific fleet location. This operation prompts an available server process to start a game session and retrieves connection information for the new game session. As an alternative, consider using the Amazon GameLift Servers game session placement feature with `StartGameSessionPlacement <https://docs.aws.amazon.com/gamelift/latest/apireference/API_StartGameSessionPlacement.html>`__, which uses the FleetIQ algorithm and queues to optimize the placement process.
+
+   
+
+  When creating a game session, you specify exactly where you want to place it and provide a set of game session configuration settings. The target fleet must be in ``ACTIVE`` status.
+
+   
+
+  You can use this operation in the following ways:
+
+   
+
+  
+  * To create a game session on an instance in a fleet's home Region, provide a fleet or alias ID along with your game session configuration.
+   
+  * To create a game session on an instance in a fleet's remote location, provide a fleet or alias ID and a location name, along with your game session configuration.
+   
+  * To create a game session on an instance in an Anywhere fleet, specify the fleet's custom location.
+  
+
+   
+
+  If successful, Amazon GameLift Servers initiates a workflow to start a new game session and returns a ``GameSession`` object containing the game session configuration and status. When the game session status is ``ACTIVE``, it is updated with connection information and you can create player sessions for the game session. By default, newly created game sessions are open to new players. You can restrict new player access by using `UpdateGameSession <https://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateGameSession.html>`__ to change the game session's player session creation policy.
+
+   
+
+  Amazon GameLift Servers retains logs for active for 14 days. To access the logs, call `GetGameSessionLogUrl <https://docs.aws.amazon.com/gamelift/latest/apireference/API_GetGameSessionLogUrl.html>`__ to download the log files.
+
+   
+
+  *Available in Amazon GameLift Servers Local.*
+
+   
+
+  **Learn more**
+
+   
+
+  `Start a game session <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-startsession>`__
+
+   
+
+  `All APIs by task <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateGameSession>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_game_session(
+        FleetId='string',
+        AliasId='string',
+        MaximumPlayerSessionCount=123,
+        Name='string',
+        GameProperties=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        CreatorId='string',
+        GameSessionId='string',
+        IdempotencyToken='string',
+        GameSessionData='string',
+        Location='string'
+    )
+    
+  :type FleetId: string
+  :param FleetId: 
+
+    A unique identifier for the fleet to create a game session in. You can use either the fleet ID or ARN value. Each request must reference either a fleet ID or alias ID, but not both.
+
+    
+
+  
+  :type AliasId: string
+  :param AliasId: 
+
+    A unique identifier for the alias associated with the fleet to create a game session in. You can use either the alias ID or ARN value. Each request must reference either a fleet ID or alias ID, but not both.
+
+    
+
+  
+  :type MaximumPlayerSessionCount: integer
+  :param MaximumPlayerSessionCount: **[REQUIRED]** 
+
+    The maximum number of players that can be connected simultaneously to the game session.
+
+    
+
+  
+  :type Name: string
+  :param Name: 
+
+    A descriptive label that is associated with a game session. Session names do not need to be unique.
+
+    
+
+  
+  :type GameProperties: list
+  :param GameProperties: 
+
+    A set of key-value pairs that can store custom data in a game session. For example: ``{"Key": "difficulty", "Value": "novice"}``. For an example, see `Create a game session with custom properties <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties-create>`__.
+
+     
+
+    .. note::
+
+      
+
+      Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      This key-value pair can store custom data about a game session. For example, you might use a ``GameProperty`` to track a game session's map, level of difficulty, or remaining time. The difficulty level could be specified like this: ``{"Key": "difficulty", "Value":"Novice"}``.
+
+       
+
+      You can set game properties when creating a game session. You can also modify game properties of an active game session. When searching for game sessions, you can filter on game property keys and values. You can't delete game properties from a game session.
+
+       
+
+      For examples of working with game properties, see `Create a game session with properties <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties>`__.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The game property identifier.
+
+         
+
+        .. note::
+
+          
+
+          Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+          
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The game property value.
+
+        
+
+      
+    
+
+  :type CreatorId: string
+  :param CreatorId: 
+
+    A unique identifier for a player or entity creating the game session.
+
+     
+
+    If you add a resource creation limit policy to a fleet, the ``CreateGameSession`` operation requires a ``CreatorId``. Amazon GameLift Servers limits the number of game session creation requests with the same ``CreatorId`` in a specified time period.
+
+     
+
+    If you your fleet doesn't have a resource creation limit policy and you provide a ``CreatorId`` in your ``CreateGameSession`` requests, Amazon GameLift Servers limits requests to one request per ``CreatorId`` per second.
+
+     
+
+    To not limit ``CreateGameSession`` requests with the same ``CreatorId``, don't provide a ``CreatorId`` in your ``CreateGameSession`` request.
+
+    
+
+  
+  :type GameSessionId: string
+  :param GameSessionId: 
+
+    This parameter is deprecated. Use ``IdempotencyToken`` instead.
+
+     
+
+    Custom string that uniquely identifies a request for a new game session. Maximum token length is 48 characters. If provided, this string is included in the new game session's ID.
+
+    
+
+  
+  :type IdempotencyToken: string
+  :param IdempotencyToken: 
+
+    Custom string that uniquely identifies the new game session request. This is useful for ensuring that game session requests with the same idempotency token are processed only once. Subsequent requests with the same string return the original ``GameSession`` object, with an updated status. Maximum token length is 48 characters. If provided, this string is included in the new game session's ID. A game session ARN has the following format: ``arn:aws:gamelift:<location>::gamesession/<fleet ID>/<custom ID string or idempotency token>``. Idempotency tokens remain in use for 30 days after a game session has ended; game session objects are retained for this time period and then deleted.
+
+    
+
+  
+  :type GameSessionData: string
+  :param GameSessionData: 
+
+    A set of custom game session properties, formatted as a single string value. This data is passed to a game server process with a request to start a new game session. For more information, see `Start a game session <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-startsession>`__.
+
+    
+
+  
+  :type Location: string
+  :param Location: 
+
+    A fleet's remote location to place the new game session in. If this parameter is not set, the new game session is placed in the fleet's home Region. Specify a remote location with an Amazon Web Services Region code such as ``us-west-2``. When using an Anywhere fleet, this parameter is required and must be set to the Anywhere fleet's custom location.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GameSession': {
+              'GameSessionId': 'string',
+              'Name': 'string',
+              'FleetId': 'string',
+              'FleetArn': 'string',
+              'CreationTime': datetime(2015, 1, 1),
+              'TerminationTime': datetime(2015, 1, 1),
+              'CurrentPlayerSessionCount': 123,
+              'MaximumPlayerSessionCount': 123,
+              'Status': 'ACTIVE'|'ACTIVATING'|'TERMINATED'|'TERMINATING'|'ERROR',
+              'StatusReason': 'INTERRUPTED'|'TRIGGERED_ON_PROCESS_TERMINATE'|'FORCE_TERMINATED',
+              'GameProperties': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'IpAddress': 'string',
+              'DnsName': 'string',
+              'Port': 123,
+              'PlayerSessionCreationPolicy': 'ACCEPT_ALL'|'DENY_ALL',
+              'CreatorId': 'string',
+              'GameSessionData': 'string',
+              'MatchmakerData': 'string',
+              'Location': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GameSession** *(dict) --* 
+
+        Object that describes the newly created game session record.
+
+        
+        
+
+        - **GameSessionId** *(string) --* 
+
+          A unique identifier for the game session. A game session ARN has the following format: ``arn:aws:gamelift:<location>::gamesession/<fleet ID>/<custom ID string or idempotency token>``.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          A descriptive label that is associated with a game session. Session names do not need to be unique.
+
+          
+        
+
+        - **FleetId** *(string) --* 
+
+          A unique identifier for the fleet that the game session is running on.
+
+          
+        
+
+        - **FleetArn** *(string) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) associated with the GameLift fleet that this game session is running on.
+
+          
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          A time stamp indicating when this data object was created. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **TerminationTime** *(datetime) --* 
+
+          A time stamp indicating when this data object was terminated. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **CurrentPlayerSessionCount** *(integer) --* 
+
+          Number of players currently in the game session.
+
+          
+        
+
+        - **MaximumPlayerSessionCount** *(integer) --* 
+
+          The maximum number of players that can be connected simultaneously to the game session.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          Current status of the game session. A game session must have an ``ACTIVE`` status to have player sessions.
+
+          
+        
+
+        - **StatusReason** *(string) --* 
+
+          Provides additional information about game session status.
+
+           
+
+          
+          * ``INTERRUPTED`` -- The game session was hosted on an EC2 Spot instance that was reclaimed, causing the active game session to be stopped.
+           
+          * ``TRIGGERED_ON_PROCESS_TERMINATE`` – The game session was stopped by calling ``TerminateGameSession`` with the termination mode ``TRIGGER_ON_PROCESS_TERMINATE``.
+           
+          * ``FORCE_TERMINATED`` – The game session was stopped by calling ``TerminateGameSession`` with the termination mode ``FORCE_TERMINATE``.
+          
+
+          
+        
+
+        - **GameProperties** *(list) --* 
+
+          A set of key-value pairs that can store custom data in a game session. For example: ``{"Key": "difficulty", "Value": "novice"}``.
+
+           
+
+          .. note::
+
+            
+
+            Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+            
+
+          
+          
+
+          - *(dict) --* 
+
+            This key-value pair can store custom data about a game session. For example, you might use a ``GameProperty`` to track a game session's map, level of difficulty, or remaining time. The difficulty level could be specified like this: ``{"Key": "difficulty", "Value":"Novice"}``.
+
+             
+
+            You can set game properties when creating a game session. You can also modify game properties of an active game session. When searching for game sessions, you can filter on game property keys and values. You can't delete game properties from a game session.
+
+             
+
+            For examples of working with game properties, see `Create a game session with properties <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties>`__.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The game property identifier.
+
+               
+
+              .. note::
+
+                
+
+                Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+                
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The game property value.
+
+              
+        
+      
+        
+
+        - **IpAddress** *(string) --* 
+
+          The IP address of the game session. To connect to a Amazon GameLift Servers game server, an app needs both the IP address and port number.
+
+          
+        
+
+        - **DnsName** *(string) --* 
+
+          The DNS identifier assigned to the instance that is running the game session. Values have the following format:
+
+           
+
+          
+          * TLS-enabled fleets: ``<unique identifier>.<region identifier>.amazongamelift.com``.
+           
+          * Non-TLS-enabled fleets: ``ec2-<unique identifier>.compute.amazonaws.com``. (See `Amazon EC2 Instance IP Addressing <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses>`__.)
+          
+
+           
+
+          When connecting to a game session that is running on a TLS-enabled fleet, you must use the DNS name, not the IP address.
+
+          
+        
+
+        - **Port** *(integer) --* 
+
+          The port number for the game session. To connect to a Amazon GameLift Servers game server, an app needs both the IP address and port number.
+
+          
+        
+
+        - **PlayerSessionCreationPolicy** *(string) --* 
+
+          Indicates whether the game session is accepting new players.
+
+          
+        
+
+        - **CreatorId** *(string) --* 
+
+          A unique identifier for a player. This ID is used to enforce a resource protection policy (if one exists), that limits the number of game sessions a player can create.
+
+          
+        
+
+        - **GameSessionData** *(string) --* 
+
+          A set of custom game session properties, formatted as a single string value. This data is passed to a game server process with a request to start a new game session. For more information, see `Start a game session <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-startsession>`__.
+
+          
+        
+
+        - **MatchmakerData** *(string) --* 
+
+          Information about the matchmaking process that resulted in the game session, if matchmaking was used. Data is in JSON syntax, formatted as a string. Information includes the matchmaker ID as well as player attributes and team assignments. For more details on matchmaker data, see `Match Data <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-server.html#match-server-data>`__. Matchmaker data is updated whenever new players are added during a successful backfill (see `StartMatchBackfill <https://docs.aws.amazon.com/gamelift/latest/apireference/API_StartMatchBackfill.html>`__).
+
+          
+        
+
+        - **Location** *(string) --* 
+
+          The fleet location where the game session is running. This value might specify the fleet's home Region or a remote location. Location is expressed as an Amazon Web Services Region code such as ``us-west-2``.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidFleetStatusException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.TerminalRoutingStrategyException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.FleetCapacityExceededException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.IdempotentParameterMismatchException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  

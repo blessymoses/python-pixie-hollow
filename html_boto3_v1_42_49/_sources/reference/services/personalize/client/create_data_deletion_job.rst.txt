@@ -1,0 +1,212 @@
+:doc:`Personalize <../../personalize>` / Client / create_data_deletion_job
+
+************************
+create_data_deletion_job
+************************
+
+
+
+.. py:method:: Personalize.Client.create_data_deletion_job(**kwargs)
+
+  
+
+  Creates a batch job that deletes all references to specific users from an Amazon Personalize dataset group in batches. You specify the users to delete in a CSV file of userIds in an Amazon S3 bucket. After a job completes, Amazon Personalize no longer trains on the users’ data and no longer considers the users when generating user segments. For more information about creating a data deletion job, see `Deleting users <https://docs.aws.amazon.com/personalize/latest/dg/delete-records.html>`__.
+
+   
+
+  
+  * Your input file must be a CSV file with a single USER_ID column that lists the users IDs. For more information about preparing the CSV file, see `Preparing your data deletion file and uploading it to Amazon S3 <https://docs.aws.amazon.com/personalize/latest/dg/prepare-deletion-input-file.html>`__.
+   
+  * To give Amazon Personalize permission to access your input CSV file of userIds, you must specify an IAM service role that has permission to read from the data source. This role needs ``GetObject`` and ``ListBucket`` permissions for the bucket and its content. These permissions are the same as importing data. For information on granting access to your Amazon S3 bucket, see `Giving Amazon Personalize Access to Amazon S3 Resources <https://docs.aws.amazon.com/personalize/latest/dg/granting-personalize-s3-access.html>`__.
+  
+
+   
+
+  After you create a job, it can take up to a day to delete all references to the users from datasets and models. Until the job completes, Amazon Personalize continues to use the data when training. And if you use a User Segmentation recipe, the users might appear in user segments.
+
+   
+
+  **Status**
+
+   
+
+  A data deletion job can have one of the following statuses:
+
+   
+
+  
+  * PENDING > IN_PROGRESS > COMPLETED -or- FAILED
+  
+
+   
+
+  To get the status of the data deletion job, call `DescribeDataDeletionJob <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeDataDeletionJob.html>`__ API operation and specify the Amazon Resource Name (ARN) of the job. If the status is FAILED, the response includes a ``failureReason`` key, which describes why the job failed.
+
+   
+
+  **Related APIs**
+
+   
+
+  
+  * `ListDataDeletionJobs <https://docs.aws.amazon.com/personalize/latest/dg/API_ListDataDeletionJobs.html>`__
+   
+  * `DescribeDataDeletionJob <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeDataDeletionJob.html>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/personalize-2018-05-22/CreateDataDeletionJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_data_deletion_job(
+        jobName='string',
+        datasetGroupArn='string',
+        dataSource={
+            'dataLocation': 'string'
+        },
+        roleArn='string',
+        tags=[
+            {
+                'tagKey': 'string',
+                'tagValue': 'string'
+            },
+        ]
+    )
+    
+  :type jobName: string
+  :param jobName: **[REQUIRED]** 
+
+    The name for the data deletion job.
+
+    
+
+  
+  :type datasetGroupArn: string
+  :param datasetGroupArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the dataset group that has the datasets you want to delete records from.
+
+    
+
+  
+  :type dataSource: dict
+  :param dataSource: **[REQUIRED]** 
+
+    The Amazon S3 bucket that contains the list of userIds of the users to delete.
+
+    
+
+  
+    - **dataLocation** *(string) --* 
+
+      For dataset import jobs, the path to the Amazon S3 bucket where the data that you want to upload to your dataset is stored. For data deletion jobs, the path to the Amazon S3 bucket that stores the list of records to delete.
+
+       
+
+      For example:
+
+       
+
+      ``s3://bucket-name/folder-name/fileName.csv``
+
+       
+
+      If your CSV files are in a folder in your Amazon S3 bucket and you want your import job or data deletion job to consider multiple files, you can specify the path to the folder. With a data deletion job, Amazon Personalize uses all files in the folder and any sub folder. Use the following syntax with a ``/`` after the folder name:
+
+       
+
+      ``s3://bucket-name/folder-name/``
+
+      
+
+    
+  
+  :type roleArn: string
+  :param roleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the IAM role that has permissions to read from the Amazon S3 data source.
+
+    
+
+  
+  :type tags: list
+  :param tags: 
+
+    A list of `tags <https://docs.aws.amazon.com/personalize/latest/dg/tagging-resources.html>`__ to apply to the data deletion job.
+
+    
+
+  
+    - *(dict) --* 
+
+      The optional metadata that you apply to resources to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define. For more information see `Tagging Amazon Personalize resources <https://docs.aws.amazon.com/personalize/latest/dg/tagging-resources.html>`__.
+
+      
+
+    
+      - **tagKey** *(string) --* **[REQUIRED]** 
+
+        One part of a key-value pair that makes up a tag. A key is a general label that acts like a category for more specific tag values.
+
+        
+
+      
+      - **tagValue** *(string) --* **[REQUIRED]** 
+
+        The optional part of a key-value pair that makes up a tag. A value acts as a descriptor within a tag category (key).
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'dataDeletionJobArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **dataDeletionJobArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the data deletion job.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.TooManyTagsException`
+
+  

@@ -1,0 +1,252 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / create_scheduled_query
+
+**********************
+create_scheduled_query
+**********************
+
+
+
+.. py:method:: CloudWatchLogs.Client.create_scheduled_query(**kwargs)
+
+  
+
+  Creates a scheduled query that runs CloudWatch Logs Insights queries at regular intervals. Scheduled queries enable proactive monitoring by automatically executing queries to detect patterns and anomalies in your log data. Query results can be delivered to Amazon S3 for analysis or further processing.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/CreateScheduledQuery>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_scheduled_query(
+        name='string',
+        description='string',
+        queryLanguage='CWLI'|'SQL'|'PPL',
+        queryString='string',
+        logGroupIdentifiers=[
+            'string',
+        ],
+        scheduleExpression='string',
+        timezone='string',
+        startTimeOffset=123,
+        destinationConfiguration={
+            's3Configuration': {
+                'destinationIdentifier': 'string',
+                'roleArn': 'string'
+            }
+        },
+        scheduleStartTime=123,
+        scheduleEndTime=123,
+        executionRoleArn='string',
+        state='ENABLED'|'DISABLED',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the scheduled query. The name must be unique within your account and region. Valid characters are alphanumeric characters, hyphens, underscores, and periods. Length must be between 1 and 255 characters.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    An optional description for the scheduled query to help identify its purpose and functionality.
+
+    
+
+  
+  :type queryLanguage: string
+  :param queryLanguage: **[REQUIRED]** 
+
+    The query language to use for the scheduled query. Valid values are ``LogsQL``, ``PPL``, and ``SQL``.
+
+    
+
+  
+  :type queryString: string
+  :param queryString: **[REQUIRED]** 
+
+    The query string to execute. This is the same query syntax used in CloudWatch Logs Insights. Maximum length is 10,000 characters.
+
+    
+
+  
+  :type logGroupIdentifiers: list
+  :param logGroupIdentifiers: 
+
+    An array of log group names or ARNs to query. You can specify between 1 and 50 log groups. Log groups can be identified by name or full ARN.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type scheduleExpression: string
+  :param scheduleExpression: **[REQUIRED]** 
+
+    A cron expression that defines when the scheduled query runs. The expression uses standard cron syntax and supports minute-level precision. Maximum length is 256 characters.
+
+    
+
+  
+  :type timezone: string
+  :param timezone: 
+
+    The timezone for evaluating the schedule expression. This determines when the scheduled query executes relative to the specified timezone.
+
+    
+
+  
+  :type startTimeOffset: integer
+  :param startTimeOffset: 
+
+    The time offset in seconds that defines the lookback period for the query. This determines how far back in time the query searches from the execution time.
+
+    
+
+  
+  :type destinationConfiguration: dict
+  :param destinationConfiguration: 
+
+    Configuration for where to deliver query results. Currently supports Amazon S3 destinations for storing query output.
+
+    
+
+  
+    - **s3Configuration** *(dict) --* **[REQUIRED]** 
+
+      Configuration for delivering query results to Amazon S3.
+
+      
+
+    
+      - **destinationIdentifier** *(string) --* **[REQUIRED]** 
+
+        The Amazon S3 URI where query results are delivered. Must be a valid S3 URI format.
+
+        
+
+      
+      - **roleArn** *(string) --* **[REQUIRED]** 
+
+        The ARN of the IAM role that grants permissions to write query results to the specified Amazon S3 destination.
+
+        
+
+      
+    
+  
+  :type scheduleStartTime: integer
+  :param scheduleStartTime: 
+
+    The start time for the scheduled query in Unix epoch format. The query will not execute before this time.
+
+    
+
+  
+  :type scheduleEndTime: integer
+  :param scheduleEndTime: 
+
+    The end time for the scheduled query in Unix epoch format. The query will stop executing after this time.
+
+    
+
+  
+  :type executionRoleArn: string
+  :param executionRoleArn: **[REQUIRED]** 
+
+    The ARN of the IAM role that grants permissions to execute the query and deliver results to the specified destination. The role must have permissions to read from the specified log groups and write to the destination.
+
+    
+
+  
+  :type state: string
+  :param state: 
+
+    The initial state of the scheduled query. Valid values are ``ENABLED`` and ``DISABLED``. Default is ``ENABLED``.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    Key-value pairs to associate with the scheduled query for resource management and cost allocation.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'scheduledQueryArn': 'string',
+          'state': 'ENABLED'|'DISABLED'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **scheduledQueryArn** *(string) --* 
+
+        The ARN of the created scheduled query.
+
+        
+      
+
+      - **state** *(string) --* 
+
+        The current state of the scheduled query.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InternalServerException`
+
+  

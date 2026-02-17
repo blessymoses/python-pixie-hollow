@@ -1,0 +1,880 @@
+:doc:`IoTFleetWise <../../iotfleetwise>` / Client / create_campaign
+
+***************
+create_campaign
+***************
+
+
+
+.. py:method:: IoTFleetWise.Client.create_campaign(**kwargs)
+
+  
+
+  Creates an orchestration of data collection rules. The Amazon Web Services IoT FleetWise Edge Agent software running in vehicles uses campaigns to decide how to collect and transfer data to the cloud. You create campaigns in the cloud. After you or your team approve campaigns, Amazon Web Services IoT FleetWise automatically deploys them to vehicles.
+
+   
+
+  For more information, see `Collect and transfer data with campaigns <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/campaigns.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    Access to certain Amazon Web Services IoT FleetWise features is currently gated. For more information, see `Amazon Web Services Region and feature availability <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotfleetwise-2021-06-17/CreateCampaign>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_campaign(
+        name='string',
+        description='string',
+        signalCatalogArn='string',
+        targetArn='string',
+        startTime=datetime(2015, 1, 1),
+        expiryTime=datetime(2015, 1, 1),
+        postTriggerCollectionDuration=123,
+        diagnosticsMode='OFF'|'SEND_ACTIVE_DTCS',
+        spoolingMode='OFF'|'TO_DISK',
+        compression='OFF'|'SNAPPY',
+        priority=123,
+        signalsToCollect=[
+            {
+                'name': 'string',
+                'maxSampleCount': 123,
+                'minimumSamplingIntervalMs': 123,
+                'dataPartitionId': 'string'
+            },
+        ],
+        collectionScheme={
+            'timeBasedCollectionScheme': {
+                'periodMs': 123
+            },
+            'conditionBasedCollectionScheme': {
+                'expression': 'string',
+                'minimumTriggerIntervalMs': 123,
+                'triggerMode': 'ALWAYS'|'RISING_EDGE',
+                'conditionLanguageVersion': 123
+            }
+        },
+        dataExtraDimensions=[
+            'string',
+        ],
+        tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        dataDestinationConfigs=[
+            {
+                's3Config': {
+                    'bucketArn': 'string',
+                    'dataFormat': 'JSON'|'PARQUET',
+                    'storageCompressionFormat': 'NONE'|'GZIP',
+                    'prefix': 'string'
+                },
+                'timestreamConfig': {
+                    'timestreamTableArn': 'string',
+                    'executionRoleArn': 'string'
+                },
+                'mqttTopicConfig': {
+                    'mqttTopicArn': 'string',
+                    'executionRoleArn': 'string'
+                }
+            },
+        ],
+        dataPartitions=[
+            {
+                'id': 'string',
+                'storageOptions': {
+                    'maximumSize': {
+                        'unit': 'MB'|'GB'|'TB',
+                        'value': 123
+                    },
+                    'storageLocation': 'string',
+                    'minimumTimeToLive': {
+                        'unit': 'HOURS'|'DAYS'|'WEEKS',
+                        'value': 123
+                    }
+                },
+                'uploadOptions': {
+                    'expression': 'string',
+                    'conditionLanguageVersion': 123
+                }
+            },
+        ],
+        signalsToFetch=[
+            {
+                'fullyQualifiedName': 'string',
+                'signalFetchConfig': {
+                    'timeBased': {
+                        'executionFrequencyMs': 123
+                    },
+                    'conditionBased': {
+                        'conditionExpression': 'string',
+                        'triggerMode': 'ALWAYS'|'RISING_EDGE'
+                    }
+                },
+                'conditionLanguageVersion': 123,
+                'actions': [
+                    'string',
+                ]
+            },
+        ]
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the campaign to create.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    An optional description of the campaign to help identify its purpose.
+
+    
+
+  
+  :type signalCatalogArn: string
+  :param signalCatalogArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the signal catalog to associate with the campaign.
+
+    
+
+  
+  :type targetArn: string
+  :param targetArn: **[REQUIRED]** 
+
+    The ARN of the vehicle or fleet to deploy a campaign to.
+
+    
+
+  
+  :type startTime: datetime
+  :param startTime: 
+
+    The time, in milliseconds, to deliver a campaign after it was approved. If it's not specified, ``0`` is used.
+
+     
+
+    Default: ``0``
+
+    
+
+  
+  :type expiryTime: datetime
+  :param expiryTime: 
+
+    The time the campaign expires, in seconds since epoch (January 1, 1970 at midnight UTC time). Vehicle data isn't collected after the campaign expires.
+
+     
+
+    Default: 253402214400 (December 31, 9999, 00:00:00 UTC)
+
+    
+
+  
+  :type postTriggerCollectionDuration: integer
+  :param postTriggerCollectionDuration: 
+
+    How long (in milliseconds) to collect raw data after a triggering event initiates the collection. If it's not specified, ``0`` is used.
+
+     
+
+    Default: ``0``
+
+    
+
+  
+  :type diagnosticsMode: string
+  :param diagnosticsMode: 
+
+    Option for a vehicle to send diagnostic trouble codes to Amazon Web Services IoT FleetWise. If you want to send diagnostic trouble codes, use ``SEND_ACTIVE_DTCS``. If it's not specified, ``OFF`` is used.
+
+     
+
+    Default: ``OFF``
+
+    
+
+  
+  :type spoolingMode: string
+  :param spoolingMode: 
+
+    Determines whether to store collected data after a vehicle lost a connection with the cloud. After a connection is re-established, the data is automatically forwarded to Amazon Web Services IoT FleetWise. If you want to store collected data when a vehicle loses connection with the cloud, use ``TO_DISK``. If it's not specified, ``OFF`` is used.
+
+     
+
+    Default: ``OFF``
+
+    
+
+  
+  :type compression: string
+  :param compression: 
+
+    Determines whether to compress signals before transmitting data to Amazon Web Services IoT FleetWise. If you don't want to compress the signals, use ``OFF``. If it's not specified, ``SNAPPY`` is used.
+
+     
+
+    Default: ``SNAPPY``
+
+    
+
+  
+  :type priority: integer
+  :param priority: 
+
+    A number indicating the priority of one campaign over another campaign for a certain vehicle or fleet. A campaign with the lowest value is deployed to vehicles before any other campaigns. If it's not specified, ``0`` is used.
+
+     
+
+    Default: ``0``
+
+    
+
+  
+  :type signalsToCollect: list
+  :param signalsToCollect: 
+
+    A list of information about signals to collect.
+
+     
+
+    .. note::
+
+      
+
+      If you upload a signal as a condition in a data partition for a campaign, then those same signals must be included in ``signalsToCollect``.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      Information about a signal.
+
+      
+
+    
+      - **name** *(string) --* **[REQUIRED]** 
+
+        The name of the signal.
+
+        
+
+      
+      - **maxSampleCount** *(integer) --* 
+
+        The maximum number of samples to collect.
+
+        
+
+      
+      - **minimumSamplingIntervalMs** *(integer) --* 
+
+        The minimum duration of time (in milliseconds) between two triggering events to collect data.
+
+         
+
+        .. note::
+
+          
+
+          If a signal changes often, you might want to collect data at a slower rate.
+
+          
+
+        
+
+      
+      - **dataPartitionId** *(string) --* 
+
+        The ID of the data partition this signal is associated with.
+
+         
+
+        The ID must match one of the IDs provided in ``dataPartitions``. This is accomplished either by specifying a particular data partition ID or by using ``default`` for an established default partition. You can establish a default partition in the ``DataPartition`` data type.
+
+         
+
+        .. note::
+
+          
+
+          If you upload a signal as a condition for a campaign's data partition, the same signal must be included in ``signalsToCollect``.
+
+          
+
+         
+
+        .. warning::
+
+           
+
+          Access to certain Amazon Web Services IoT FleetWise features is currently gated. For more information, see `Amazon Web Services Region and feature availability <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+          
+
+        
+
+      
+    
+
+  :type collectionScheme: dict
+  :param collectionScheme: **[REQUIRED]** 
+
+    The data collection scheme associated with the campaign. You can specify a scheme that collects data based on time or an event.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``timeBasedCollectionScheme``, ``conditionBasedCollectionScheme``. 
+
+  
+    - **timeBasedCollectionScheme** *(dict) --* 
+
+      Information about a collection scheme that uses a time period to decide how often to collect data.
+
+      
+
+    
+      - **periodMs** *(integer) --* **[REQUIRED]** 
+
+        The time period (in milliseconds) to decide how often to collect data. For example, if the time period is ``60000``, the Edge Agent software collects data once every minute.
+
+        
+
+      
+    
+    - **conditionBasedCollectionScheme** *(dict) --* 
+
+      Information about a collection scheme that uses a simple logical expression to recognize what data to collect.
+
+      
+
+    
+      - **expression** *(string) --* **[REQUIRED]** 
+
+        The logical expression used to recognize what data to collect. For example, ``$variable.`Vehicle.OutsideAirTemperature` >= 105.0``.
+
+        
+
+      
+      - **minimumTriggerIntervalMs** *(integer) --* 
+
+        The minimum duration of time between two triggering events to collect data, in milliseconds.
+
+         
+
+        .. note::
+
+          
+
+          If a signal changes often, you might want to collect data at a slower rate.
+
+          
+
+        
+
+      
+      - **triggerMode** *(string) --* 
+
+        Whether to collect data for all triggering events ( ``ALWAYS``). Specify ( ``RISING_EDGE``), or specify only when the condition first evaluates to false. For example, triggering on "AirbagDeployed"; Users aren't interested on triggering when the airbag is already exploded; they only care about the change from not deployed => deployed.
+
+        
+
+      
+      - **conditionLanguageVersion** *(integer) --* 
+
+        Specifies the version of the conditional expression language.
+
+        
+
+      
+    
+  
+  :type dataExtraDimensions: list
+  :param dataExtraDimensions: 
+
+    A list of vehicle attributes to associate with a campaign.
+
+     
+
+    Enrich the data with specified vehicle attributes. For example, add ``make`` and ``model`` to the campaign, and Amazon Web Services IoT FleetWise will associate the data with those attributes as dimensions in Amazon Timestream. You can then query the data against ``make`` and ``model``.
+
+     
+
+    Default: An empty array
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type tags: list
+  :param tags: 
+
+    Metadata that can be used to manage the campaign.
+
+    
+
+  
+    - *(dict) --* 
+
+      A set of key/value pairs that are used to manage the resource.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The tag's key.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The tag's value.
+
+        
+
+      
+    
+
+  :type dataDestinationConfigs: list
+  :param dataDestinationConfigs: 
+
+    The destination where the campaign sends data. You can send data to an MQTT topic, or store it in Amazon S3 or Amazon Timestream.
+
+     
+
+    MQTT is the publish/subscribe messaging protocol used by Amazon Web Services IoT to communicate with your devices.
+
+     
+
+    Amazon S3 optimizes the cost of data storage and provides additional mechanisms to use vehicle data, such as data lakes, centralized data storage, data processing pipelines, and analytics. Amazon Web Services IoT FleetWise supports at-least-once file delivery to S3. Your vehicle data is stored on multiple Amazon Web Services IoT FleetWise servers for redundancy and high availability.
+
+     
+
+    You can use Amazon Timestream to access and analyze time series data, and Timestream to query vehicle data so that you can identify trends and patterns.
+
+    
+
+  
+    - *(dict) --* 
+
+      The destination where the campaign sends data. You can send data to an MQTT topic, or store it in Amazon S3 or Amazon Timestream.
+
+      .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``s3Config``, ``timestreamConfig``, ``mqttTopicConfig``. 
+
+    
+      - **s3Config** *(dict) --* 
+
+        The Amazon S3 bucket where the Amazon Web Services IoT FleetWise campaign sends data.
+
+        
+
+      
+        - **bucketArn** *(string) --* **[REQUIRED]** 
+
+          The Amazon Resource Name (ARN) of the Amazon S3 bucket.
+
+          
+
+        
+        - **dataFormat** *(string) --* 
+
+          Specify the format that files are saved in the Amazon S3 bucket. You can save files in an Apache Parquet or JSON format.
+
+           
+
+          
+          * Parquet - Store data in a columnar storage file format. Parquet is optimal for fast data retrieval and can reduce costs. This option is selected by default.
+           
+          * JSON - Store data in a standard text-based JSON file format.
+          
+
+          
+
+        
+        - **storageCompressionFormat** *(string) --* 
+
+          By default, stored data is compressed as a .gzip file. Compressed files have a reduced file size, which can optimize the cost of data storage.
+
+          
+
+        
+        - **prefix** *(string) --* 
+
+          Enter an S3 bucket prefix. The prefix is the string of characters after the bucket name and before the object name. You can use the prefix to organize data stored in Amazon S3 buckets. For more information, see `Organizing objects using prefixes <https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html>`__ in the *Amazon Simple Storage Service User Guide*.
+
+           
+
+          By default, Amazon Web Services IoT FleetWise sets the prefix ``processed-data/year=YY/month=MM/date=DD/hour=HH/`` (in UTC) to data it delivers to Amazon S3. You can enter a prefix to append it to this default prefix. For example, if you enter the prefix ``vehicles``, the prefix will be ``vehicles/processed-data/year=YY/month=MM/date=DD/hour=HH/``.
+
+          
+
+        
+      
+      - **timestreamConfig** *(dict) --* 
+
+        The Amazon Timestream table where the campaign sends data.
+
+        
+
+      
+        - **timestreamTableArn** *(string) --* **[REQUIRED]** 
+
+          The Amazon Resource Name (ARN) of the Amazon Timestream table.
+
+          
+
+        
+        - **executionRoleArn** *(string) --* **[REQUIRED]** 
+
+          The Amazon Resource Name (ARN) of the task execution role that grants Amazon Web Services IoT FleetWise permission to deliver data to the Amazon Timestream table.
+
+          
+
+        
+      
+      - **mqttTopicConfig** *(dict) --* 
+
+        The MQTT topic to which the Amazon Web Services IoT FleetWise campaign routes data.
+
+         
+
+        .. warning::
+
+           
+
+          Access to certain Amazon Web Services IoT FleetWise features is currently gated. For more information, see `Amazon Web Services Region and feature availability <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+          
+
+        
+
+      
+        - **mqttTopicArn** *(string) --* **[REQUIRED]** 
+
+          The ARN of the MQTT topic.
+
+          
+
+        
+        - **executionRoleArn** *(string) --* **[REQUIRED]** 
+
+          The ARN of the role that grants Amazon Web Services IoT FleetWise permission to access and act on messages sent to the MQTT topic.
+
+          
+
+        
+      
+    
+
+  :type dataPartitions: list
+  :param dataPartitions: 
+
+    The data partitions associated with the signals collected from the vehicle.
+
+    
+
+  
+    - *(dict) --* 
+
+      The configuration for signal data storage and upload options. You can only specify these options when the campaign's spooling mode is ``TO_DISK``.
+
+       
+
+      .. warning::
+
+         
+
+        Access to certain Amazon Web Services IoT FleetWise features is currently gated. For more information, see `Amazon Web Services Region and feature availability <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+        
+
+      
+
+    
+      - **id** *(string) --* **[REQUIRED]** 
+
+        The ID of the data partition. The data partition ID must be unique within a campaign. You can establish a data partition as the default partition for a campaign by using ``default`` as the ID.
+
+        
+
+      
+      - **storageOptions** *(dict) --* **[REQUIRED]** 
+
+        The storage options for a data partition.
+
+        
+
+      
+        - **maximumSize** *(dict) --* **[REQUIRED]** 
+
+          The maximum storage size of the data stored in the data partition.
+
+           
+
+          .. note::
+
+            
+
+            Newer data overwrites older data when the partition reaches the maximum size.
+
+            
+
+          
+
+        
+          - **unit** *(string) --* **[REQUIRED]** 
+
+            The data type of the data to store.
+
+            
+
+          
+          - **value** *(integer) --* **[REQUIRED]** 
+
+            The maximum amount of time to store data.
+
+            
+
+          
+        
+        - **storageLocation** *(string) --* **[REQUIRED]** 
+
+          The folder name for the data partition under the campaign storage folder.
+
+          
+
+        
+        - **minimumTimeToLive** *(dict) --* **[REQUIRED]** 
+
+          The amount of time that data in this partition will be kept on disk.
+
+           
+
+          
+          * After the designated amount of time passes, the data can be removed, but it's not guaranteed to be removed.
+           
+          * Before the time expires, data in this partition can still be deleted if the partition reaches its configured maximum size.
+           
+          * Newer data will overwrite older data when the partition reaches the maximum size.
+          
+
+          
+
+        
+          - **unit** *(string) --* **[REQUIRED]** 
+
+            The time increment type.
+
+            
+
+          
+          - **value** *(integer) --* **[REQUIRED]** 
+
+            The minimum amount of time to store the data.
+
+            
+
+          
+        
+      
+      - **uploadOptions** *(dict) --* 
+
+        The upload options for the data partition.
+
+        
+
+      
+        - **expression** *(string) --* **[REQUIRED]** 
+
+          The logical expression used to recognize what data to collect. For example, ``$variable.`Vehicle.OutsideAirTemperature` >= 105.0``.
+
+          
+
+        
+        - **conditionLanguageVersion** *(integer) --* 
+
+          The version of the condition language. Defaults to the most recent condition language version.
+
+          
+
+        
+      
+    
+
+  :type signalsToFetch: list
+  :param signalsToFetch: 
+
+    A list of information about signals to fetch.
+
+    
+
+  
+    - *(dict) --* 
+
+      Information about the signal to be fetched.
+
+       
+
+      .. warning::
+
+         
+
+        Access to certain Amazon Web Services IoT FleetWise features is currently gated. For more information, see `Amazon Web Services Region and feature availability <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+        
+
+      
+
+    
+      - **fullyQualifiedName** *(string) --* **[REQUIRED]** 
+
+        The fully qualified name of the signal to be fetched.
+
+        
+
+      
+      - **signalFetchConfig** *(dict) --* **[REQUIRED]** 
+
+        The configuration of the signal fetch operation.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``timeBased``, ``conditionBased``. 
+
+      
+        - **timeBased** *(dict) --* 
+
+          The configuration of a time-based signal fetch operation.
+
+          
+
+        
+          - **executionFrequencyMs** *(integer) --* **[REQUIRED]** 
+
+            The frequency with which the signal fetch will be executed.
+
+            
+
+          
+        
+        - **conditionBased** *(dict) --* 
+
+          The configuration of a condition-based signal fetch operation.
+
+          
+
+        
+          - **conditionExpression** *(string) --* **[REQUIRED]** 
+
+            The condition that must be satisfied to trigger a signal fetch.
+
+            
+
+          
+          - **triggerMode** *(string) --* **[REQUIRED]** 
+
+            Indicates the mode in which the signal fetch is triggered.
+
+            
+
+          
+        
+      
+      - **conditionLanguageVersion** *(integer) --* 
+
+        The version of the condition language used.
+
+        
+
+      
+      - **actions** *(list) --* **[REQUIRED]** 
+
+        The actions to be performed by the signal fetch.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'name': 'string',
+          'arn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **name** *(string) --* 
+
+        The name of the created campaign.
+
+        
+      
+
+      - **arn** *(string) --* 
+
+        The ARN of the created campaign.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.AccessDeniedException`
+
+  

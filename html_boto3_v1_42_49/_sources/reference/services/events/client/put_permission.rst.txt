@@ -1,0 +1,162 @@
+:doc:`EventBridge <../../events>` / Client / put_permission
+
+**************
+put_permission
+**************
+
+
+
+.. py:method:: EventBridge.Client.put_permission(**kwargs)
+
+  
+
+  Running ``PutPermission`` permits the specified Amazon Web Services account or Amazon Web Services organization to put events to the specified *event bus*. Amazon EventBridge rules in your account are triggered by these events arriving to an event bus in your account.
+
+   
+
+  For another account to send events to your account, that external account must have an EventBridge rule with your account's event bus as a target.
+
+   
+
+  To enable multiple Amazon Web Services accounts to put events to your event bus, run ``PutPermission`` once for each of these accounts. Or, if all the accounts are members of the same Amazon Web Services organization, you can run ``PutPermission`` once specifying ``Principal`` as "*" and specifying the Amazon Web Services organization ID in ``Condition``, to grant permissions to all accounts in that organization.
+
+   
+
+  If you grant permissions using an organization, then accounts in that organization must specify a ``RoleArn`` with proper permissions when they use ``PutTarget`` to add your account's event bus as a target. For more information, see `Sending and Receiving Events Between Amazon Web Services Accounts <https://docs.aws.amazon.com/eventbridge/latest/userguide/eventbridge-cross-account-event-delivery.html>`__ in the *Amazon EventBridge User Guide*.
+
+   
+
+  The permission policy on the event bus cannot exceed 10 KB in size.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eventbridge-2015-10-07/PutPermission>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_permission(
+        EventBusName='string',
+        Action='string',
+        Principal='string',
+        StatementId='string',
+        Condition={
+            'Type': 'string',
+            'Key': 'string',
+            'Value': 'string'
+        },
+        Policy='string'
+    )
+    
+  :type EventBusName: string
+  :param EventBusName: 
+
+    The name of the event bus associated with the rule. If you omit this, the default event bus is used.
+
+    
+
+  
+  :type Action: string
+  :param Action: 
+
+    The action that you are enabling the other account to perform.
+
+    
+
+  
+  :type Principal: string
+  :param Principal: 
+
+    The 12-digit Amazon Web Services account ID that you are permitting to put events to your default event bus. Specify "*" to permit any account to put events to your default event bus.
+
+     
+
+    If you specify "*" without specifying ``Condition``, avoid creating rules that may match undesirable events. To create more secure rules, make sure that the event pattern for each rule contains an ``account`` field with a specific account ID from which to receive events. Rules with an account field do not match any events sent from other accounts.
+
+    
+
+  
+  :type StatementId: string
+  :param StatementId: 
+
+    An identifier string for the external account that you are granting permissions to. If you later want to revoke the permission for this external account, specify this ``StatementId`` when you run `RemovePermission <https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_RemovePermission.html>`__.
+
+     
+
+    .. note::
+
+      
+
+      Each ``StatementId`` must be unique.
+
+      
+
+    
+
+  
+  :type Condition: dict
+  :param Condition: 
+
+    This parameter enables you to limit the permission to accounts that fulfill a certain condition, such as being a member of a certain Amazon Web Services organization. For more information about Amazon Web Services Organizations, see `What Is Amazon Web Services Organizations <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html>`__ in the *Amazon Web Services Organizations User Guide*.
+
+     
+
+    If you specify ``Condition`` with an Amazon Web Services organization ID, and specify "*" as the value for ``Principal``, you grant permission to all the accounts in the named organization.
+
+     
+
+    The ``Condition`` is a JSON string which must contain ``Type``, ``Key``, and ``Value`` fields.
+
+    
+
+  
+    - **Type** *(string) --* **[REQUIRED]** 
+
+      Specifies the type of condition. Currently the only supported value is ``StringEquals``.
+
+      
+
+    
+    - **Key** *(string) --* **[REQUIRED]** 
+
+      Specifies the key for the condition. Currently the only supported key is ``aws:PrincipalOrgID``.
+
+      
+
+    
+    - **Value** *(string) --* **[REQUIRED]** 
+
+      Specifies the value for the key. Currently, this must be the ID of the organization.
+
+      
+
+    
+  
+  :type Policy: string
+  :param Policy: 
+
+    A JSON string that describes the permission policy statement. You can include a ``Policy`` parameter in the request instead of using the ``StatementId``, ``Action``, ``Principal``, or ``Condition`` parameters.
+
+    
+
+  
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`EventBridge.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`EventBridge.Client.exceptions.PolicyLengthExceededException`
+
+  
+  *   :py:class:`EventBridge.Client.exceptions.InternalException`
+
+  
+  *   :py:class:`EventBridge.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`EventBridge.Client.exceptions.OperationDisabledException`
+
+  

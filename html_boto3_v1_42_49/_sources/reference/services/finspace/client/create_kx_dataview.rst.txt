@@ -1,0 +1,397 @@
+:doc:`finspace <../../finspace>` / Client / create_kx_dataview
+
+******************
+create_kx_dataview
+******************
+
+
+
+.. py:method:: finspace.Client.create_kx_dataview(**kwargs)
+
+  
+
+  Creates a snapshot of kdb database with tiered storage capabilities and a pre-warmed cache, ready for mounting on kdb clusters. Dataviews are only available for clusters running on a scaling group. They are not supported on dedicated clusters.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/finspace-2021-03-12/CreateKxDataview>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_kx_dataview(
+        environmentId='string',
+        databaseName='string',
+        dataviewName='string',
+        azMode='SINGLE'|'MULTI',
+        availabilityZoneId='string',
+        changesetId='string',
+        segmentConfigurations=[
+            {
+                'dbPaths': [
+                    'string',
+                ],
+                'volumeName': 'string',
+                'onDemand': True|False
+            },
+        ],
+        autoUpdate=True|False,
+        readWrite=True|False,
+        description='string',
+        tags={
+            'string': 'string'
+        },
+        clientToken='string'
+    )
+    
+  :type environmentId: string
+  :param environmentId: **[REQUIRED]** 
+
+    A unique identifier for the kdb environment, where you want to create the dataview.
+
+    
+
+  
+  :type databaseName: string
+  :param databaseName: **[REQUIRED]** 
+
+    The name of the database where you want to create a dataview.
+
+    
+
+  
+  :type dataviewName: string
+  :param dataviewName: **[REQUIRED]** 
+
+    A unique identifier for the dataview.
+
+    
+
+  
+  :type azMode: string
+  :param azMode: **[REQUIRED]** 
+
+    The number of availability zones you want to assign per volume. Currently, FinSpace only supports ``SINGLE`` for volumes. This places dataview in a single AZ.
+
+    
+
+  
+  :type availabilityZoneId: string
+  :param availabilityZoneId: 
+
+    The identifier of the availability zones.
+
+    
+
+  
+  :type changesetId: string
+  :param changesetId: 
+
+    A unique identifier of the changeset that you want to use to ingest data.
+
+    
+
+  
+  :type segmentConfigurations: list
+  :param segmentConfigurations: 
+
+    The configuration that contains the database path of the data that you want to place on each selected volume. Each segment must have a unique database path for each volume. If you do not explicitly specify any database path for a volume, they are accessible from the cluster through the default S3/object store segment.
+
+    
+
+  
+    - *(dict) --* 
+
+      The configuration that contains the database path of the data that you want to place on each selected volume. Each segment must have a unique database path for each volume. If you do not explicitly specify any database path for a volume, they are accessible from the cluster through the default S3/object store segment.
+
+      
+
+    
+      - **dbPaths** *(list) --* **[REQUIRED]** 
+
+        The database path of the data that you want to place on each selected volume for the segment. Each segment must have a unique database path for each volume.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **volumeName** *(string) --* **[REQUIRED]** 
+
+        The name of the volume where you want to add data.
+
+        
+
+      
+      - **onDemand** *(boolean) --* 
+
+        Enables on-demand caching on the selected database path when a particular file or a column of the database is accessed. When on demand caching is **True**, dataviews perform minimal loading of files on the filesystem as needed. When it is set to **False**, everything is cached. The default value is **False**.
+
+        
+
+      
+    
+
+  :type autoUpdate: boolean
+  :param autoUpdate: 
+
+    The option to specify whether you want to apply all the future additions and corrections automatically to the dataview, when you ingest new changesets. The default value is false.
+
+    
+
+  
+  :type readWrite: boolean
+  :param readWrite: 
+
+    The option to specify whether you want to make the dataview writable to perform database maintenance. The following are some considerations related to writable dataviews.
+
+     
+
+    
+    * You cannot create partial writable dataviews. When you create writeable dataviews you must provide the entire database path.
+     
+    * You cannot perform updates on a writeable dataview. Hence, ``autoUpdate`` must be set as **False** if ``readWrite`` is **True** for a dataview.
+     
+    * You must also use a unique volume for creating a writeable dataview. So, if you choose a volume that is already in use by another dataview, the dataview creation fails.
+     
+    * Once you create a dataview as writeable, you cannot change it to read-only. So, you cannot update the ``readWrite`` parameter later.
+    
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    A description of the dataview.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    A list of key-value pairs to label the dataview. You can add up to 50 tags to a dataview.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type clientToken: string
+  :param clientToken: **[REQUIRED]** 
+
+    A token that ensures idempotency. This token expires in 10 minutes.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'dataviewName': 'string',
+          'databaseName': 'string',
+          'environmentId': 'string',
+          'azMode': 'SINGLE'|'MULTI',
+          'availabilityZoneId': 'string',
+          'changesetId': 'string',
+          'segmentConfigurations': [
+              {
+                  'dbPaths': [
+                      'string',
+                  ],
+                  'volumeName': 'string',
+                  'onDemand': True|False
+              },
+          ],
+          'description': 'string',
+          'autoUpdate': True|False,
+          'readWrite': True|False,
+          'createdTimestamp': datetime(2015, 1, 1),
+          'lastModifiedTimestamp': datetime(2015, 1, 1),
+          'status': 'CREATING'|'ACTIVE'|'UPDATING'|'FAILED'|'DELETING'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **dataviewName** *(string) --* 
+
+        A unique identifier for the dataview.
+
+        
+      
+
+      - **databaseName** *(string) --* 
+
+        The name of the database where you want to create a dataview.
+
+        
+      
+
+      - **environmentId** *(string) --* 
+
+        A unique identifier for the kdb environment, where you want to create the dataview.
+
+        
+      
+
+      - **azMode** *(string) --* 
+
+        The number of availability zones you want to assign per volume. Currently, FinSpace only supports ``SINGLE`` for volumes. This places dataview in a single AZ.
+
+        
+      
+
+      - **availabilityZoneId** *(string) --* 
+
+        The identifier of the availability zones.
+
+        
+      
+
+      - **changesetId** *(string) --* 
+
+        A unique identifier for the changeset.
+
+        
+      
+
+      - **segmentConfigurations** *(list) --* 
+
+        The configuration that contains the database path of the data that you want to place on each selected volume. Each segment must have a unique database path for each volume. If you do not explicitly specify any database path for a volume, they are accessible from the cluster through the default S3/object store segment.
+
+        
+        
+
+        - *(dict) --* 
+
+          The configuration that contains the database path of the data that you want to place on each selected volume. Each segment must have a unique database path for each volume. If you do not explicitly specify any database path for a volume, they are accessible from the cluster through the default S3/object store segment.
+
+          
+          
+
+          - **dbPaths** *(list) --* 
+
+            The database path of the data that you want to place on each selected volume for the segment. Each segment must have a unique database path for each volume.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **volumeName** *(string) --* 
+
+            The name of the volume where you want to add data.
+
+            
+          
+
+          - **onDemand** *(boolean) --* 
+
+            Enables on-demand caching on the selected database path when a particular file or a column of the database is accessed. When on demand caching is **True**, dataviews perform minimal loading of files on the filesystem as needed. When it is set to **False**, everything is cached. The default value is **False**.
+
+            
+      
+    
+      
+
+      - **description** *(string) --* 
+
+        A description of the dataview.
+
+        
+      
+
+      - **autoUpdate** *(boolean) --* 
+
+        The option to select whether you want to apply all the future additions and corrections automatically to the dataview when you ingest new changesets. The default value is false.
+
+        
+      
+
+      - **readWrite** *(boolean) --* 
+
+        Returns True if the dataview is created as writeable and False otherwise.
+
+        
+      
+
+      - **createdTimestamp** *(datetime) --* 
+
+        The timestamp at which the dataview was created in FinSpace. The value is determined as epoch time in milliseconds. For example, the value for Monday, November 1, 2021 12:00:00 PM UTC is specified as 1635768000000.
+
+        
+      
+
+      - **lastModifiedTimestamp** *(datetime) --* 
+
+        The last time that the dataview was updated in FinSpace. The value is determined as epoch time in milliseconds. For example, the value for Monday, November 1, 2021 12:00:00 PM UTC is specified as 1635768000000.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The status of dataview creation.
+
+         
+
+        
+        * ``CREATING`` – The dataview creation is in progress.
+         
+        * ``UPDATING`` – The dataview is in the process of being updated.
+         
+        * ``ACTIVE`` – The dataview is active.
+        
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`finspace.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ResourceAlreadyExistsException`
+
+  

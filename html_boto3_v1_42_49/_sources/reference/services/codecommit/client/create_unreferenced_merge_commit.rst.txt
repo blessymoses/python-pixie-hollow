@@ -1,0 +1,396 @@
+:doc:`CodeCommit <../../codecommit>` / Client / create_unreferenced_merge_commit
+
+********************************
+create_unreferenced_merge_commit
+********************************
+
+
+
+.. py:method:: CodeCommit.Client.create_unreferenced_merge_commit(**kwargs)
+
+  
+
+  Creates an unreferenced commit that represents the result of merging two branches using a specified merge strategy. This can help you determine the outcome of a potential merge. This API cannot be used with the fast-forward merge strategy because that strategy does not create a merge commit.
+
+   
+
+  .. note::
+
+    
+
+    This unreferenced merge commit can only be accessed using the GetCommit API or through git commands such as git fetch. To retrieve this commit, you must specify its commit ID or otherwise reference it.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codecommit-2015-04-13/CreateUnreferencedMergeCommit>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_unreferenced_merge_commit(
+        repositoryName='string',
+        sourceCommitSpecifier='string',
+        destinationCommitSpecifier='string',
+        mergeOption='FAST_FORWARD_MERGE'|'SQUASH_MERGE'|'THREE_WAY_MERGE',
+        conflictDetailLevel='FILE_LEVEL'|'LINE_LEVEL',
+        conflictResolutionStrategy='NONE'|'ACCEPT_SOURCE'|'ACCEPT_DESTINATION'|'AUTOMERGE',
+        authorName='string',
+        email='string',
+        commitMessage='string',
+        keepEmptyFolders=True|False,
+        conflictResolution={
+            'replaceContents': [
+                {
+                    'filePath': 'string',
+                    'replacementType': 'KEEP_BASE'|'KEEP_SOURCE'|'KEEP_DESTINATION'|'USE_NEW_CONTENT',
+                    'content': b'bytes',
+                    'fileMode': 'EXECUTABLE'|'NORMAL'|'SYMLINK'
+                },
+            ],
+            'deleteFiles': [
+                {
+                    'filePath': 'string'
+                },
+            ],
+            'setFileModes': [
+                {
+                    'filePath': 'string',
+                    'fileMode': 'EXECUTABLE'|'NORMAL'|'SYMLINK'
+                },
+            ]
+        }
+    )
+    
+  :type repositoryName: string
+  :param repositoryName: **[REQUIRED]** 
+
+    The name of the repository where you want to create the unreferenced merge commit.
+
+    
+
+  
+  :type sourceCommitSpecifier: string
+  :param sourceCommitSpecifier: **[REQUIRED]** 
+
+    The branch, tag, HEAD, or other fully qualified reference used to identify a commit (for example, a branch name or a full commit ID).
+
+    
+
+  
+  :type destinationCommitSpecifier: string
+  :param destinationCommitSpecifier: **[REQUIRED]** 
+
+    The branch, tag, HEAD, or other fully qualified reference used to identify a commit (for example, a branch name or a full commit ID).
+
+    
+
+  
+  :type mergeOption: string
+  :param mergeOption: **[REQUIRED]** 
+
+    The merge option or strategy you want to use to merge the code.
+
+    
+
+  
+  :type conflictDetailLevel: string
+  :param conflictDetailLevel: 
+
+    The level of conflict detail to use. If unspecified, the default FILE_LEVEL is used, which returns a not-mergeable result if the same file has differences in both branches. If LINE_LEVEL is specified, a conflict is considered not mergeable if the same file in both branches has differences on the same line.
+
+    
+
+  
+  :type conflictResolutionStrategy: string
+  :param conflictResolutionStrategy: 
+
+    Specifies which branch to use when resolving conflicts, or whether to attempt automatically merging two versions of a file. The default is NONE, which requires any conflicts to be resolved manually before the merge operation is successful.
+
+    
+
+  
+  :type authorName: string
+  :param authorName: 
+
+    The name of the author who created the unreferenced commit. This information is used as both the author and committer for the commit.
+
+    
+
+  
+  :type email: string
+  :param email: 
+
+    The email address for the person who created the unreferenced commit.
+
+    
+
+  
+  :type commitMessage: string
+  :param commitMessage: 
+
+    The commit message for the unreferenced commit.
+
+    
+
+  
+  :type keepEmptyFolders: boolean
+  :param keepEmptyFolders: 
+
+    If the commit contains deletions, whether to keep a folder or folder structure if the changes leave the folders empty. If this is specified as true, a .gitkeep file is created for empty folders. The default is false.
+
+    
+
+  
+  :type conflictResolution: dict
+  :param conflictResolution: 
+
+    If AUTOMERGE is the conflict resolution strategy, a list of inputs to use when resolving conflicts during a merge.
+
+    
+
+  
+    - **replaceContents** *(list) --* 
+
+      Files to have content replaced as part of the merge conflict resolution.
+
+      
+
+    
+      - *(dict) --* 
+
+        Information about a replacement content entry in the conflict of a merge or pull request operation.
+
+        
+
+      
+        - **filePath** *(string) --* **[REQUIRED]** 
+
+          The path of the conflicting file.
+
+          
+
+        
+        - **replacementType** *(string) --* **[REQUIRED]** 
+
+          The replacement type to use when determining how to resolve the conflict.
+
+          
+
+        
+        - **content** *(bytes) --* 
+
+          The base-64 encoded content to use when the replacement type is USE_NEW_CONTENT.
+
+          
+
+        
+        - **fileMode** *(string) --* 
+
+          The file mode to apply during conflict resoltion.
+
+          
+
+        
+      
+  
+    - **deleteFiles** *(list) --* 
+
+      Files to be deleted as part of the merge conflict resolution.
+
+      
+
+    
+      - *(dict) --* 
+
+        A file that is deleted as part of a commit.
+
+        
+
+      
+        - **filePath** *(string) --* **[REQUIRED]** 
+
+          The full path of the file to be deleted, including the name of the file.
+
+          
+
+        
+      
+  
+    - **setFileModes** *(list) --* 
+
+      File modes that are set as part of the merge conflict resolution.
+
+      
+
+    
+      - *(dict) --* 
+
+        Information about the file mode changes.
+
+        
+
+      
+        - **filePath** *(string) --* **[REQUIRED]** 
+
+          The full path to the file, including the name of the file.
+
+          
+
+        
+        - **fileMode** *(string) --* **[REQUIRED]** 
+
+          The file mode for the file.
+
+          
+
+        
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'commitId': 'string',
+          'treeId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **commitId** *(string) --* 
+
+        The full commit ID of the commit that contains your merge results.
+
+        
+      
+
+      - **treeId** *(string) --* 
+
+        The full SHA-1 pointer of the tree information for the commit that contains the merge results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeCommit.Client.exceptions.RepositoryNameRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidRepositoryNameException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.RepositoryDoesNotExistException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.TipsDivergenceExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.CommitRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidCommitException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.CommitDoesNotExistException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.MergeOptionRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidMergeOptionException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidConflictDetailLevelException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidConflictResolutionStrategyException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidConflictResolutionException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.ManualMergeRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.MaximumConflictResolutionEntriesExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.MultipleConflictResolutionEntriesException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.ReplacementTypeRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidReplacementTypeException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.ReplacementContentRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidReplacementContentException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.PathRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidPathException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.FileContentSizeLimitExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.FolderContentSizeLimitExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.MaximumFileContentToLoadExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.MaximumItemsToCompareExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.ConcurrentReferenceUpdateException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.FileModeRequiredException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidFileModeException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.NameLengthExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.InvalidEmailException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.CommitMessageLengthExceededException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.EncryptionIntegrityChecksFailedException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.EncryptionKeyAccessDeniedException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.EncryptionKeyDisabledException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.EncryptionKeyNotFoundException`
+
+  
+  *   :py:class:`CodeCommit.Client.exceptions.EncryptionKeyUnavailableException`
+
+  

@@ -1,0 +1,718 @@
+:doc:`Bedrock <../../bedrock>` / Client / create_model_customization_job
+
+******************************
+create_model_customization_job
+******************************
+
+
+
+.. py:method:: Bedrock.Client.create_model_customization_job(**kwargs)
+
+  
+
+  Creates a fine-tuning job to customize a base model.
+
+   
+
+  You specify the base foundation model and the location of the training data. After the model-customization job completes successfully, your custom model resource will be ready to use. Amazon Bedrock returns validation loss metrics and output generations after the job completes.
+
+   
+
+  For information on the format of training and validation data, see `Prepare the datasets <https://docs.aws.amazon.com/bedrock/latest/userguide/model-customization-prepare.html>`__.
+
+   
+
+  Model-customization jobs are asynchronous and the completion time depends on the base model and the training/validation data size. To monitor a job, use the ``GetModelCustomizationJob`` operation to retrieve the job status.
+
+   
+
+  For more information, see `Custom models <https://docs.aws.amazon.com/bedrock/latest/userguide/custom-models.html>`__ in the `Amazon Bedrock User Guide <https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-service.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-2023-04-20/CreateModelCustomizationJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_model_customization_job(
+        jobName='string',
+        customModelName='string',
+        roleArn='string',
+        clientRequestToken='string',
+        baseModelIdentifier='string',
+        customizationType='FINE_TUNING'|'CONTINUED_PRE_TRAINING'|'DISTILLATION'|'REINFORCEMENT_FINE_TUNING'|'IMPORTED',
+        customModelKmsKeyId='string',
+        jobTags=[
+            {
+                'key': 'string',
+                'value': 'string'
+            },
+        ],
+        customModelTags=[
+            {
+                'key': 'string',
+                'value': 'string'
+            },
+        ],
+        trainingDataConfig={
+            's3Uri': 'string',
+            'invocationLogsConfig': {
+                'usePromptResponse': True|False,
+                'invocationLogSource': {
+                    's3Uri': 'string'
+                },
+                'requestMetadataFilters': {
+                    'equals': {
+                        'string': 'string'
+                    },
+                    'notEquals': {
+                        'string': 'string'
+                    },
+                    'andAll': [
+                        {
+                            'equals': {
+                                'string': 'string'
+                            },
+                            'notEquals': {
+                                'string': 'string'
+                            }
+                        },
+                    ],
+                    'orAll': [
+                        {
+                            'equals': {
+                                'string': 'string'
+                            },
+                            'notEquals': {
+                                'string': 'string'
+                            }
+                        },
+                    ]
+                }
+            }
+        },
+        validationDataConfig={
+            'validators': [
+                {
+                    's3Uri': 'string'
+                },
+            ]
+        },
+        outputDataConfig={
+            's3Uri': 'string'
+        },
+        hyperParameters={
+            'string': 'string'
+        },
+        vpcConfig={
+            'subnetIds': [
+                'string',
+            ],
+            'securityGroupIds': [
+                'string',
+            ]
+        },
+        customizationConfig={
+            'distillationConfig': {
+                'teacherModelConfig': {
+                    'teacherModelIdentifier': 'string',
+                    'maxResponseLengthForInference': 123
+                }
+            },
+            'rftConfig': {
+                'graderConfig': {
+                    'lambdaGrader': {
+                        'lambdaArn': 'string'
+                    }
+                },
+                'hyperParameters': {
+                    'epochCount': 123,
+                    'batchSize': 123,
+                    'learningRate': ...,
+                    'maxPromptLength': 123,
+                    'trainingSamplePerPrompt': 123,
+                    'inferenceMaxTokens': 123,
+                    'reasoningEffort': 'low'|'medium'|'high',
+                    'evalInterval': 123
+                }
+            }
+        }
+    )
+    
+  :type jobName: string
+  :param jobName: **[REQUIRED]** 
+
+    A name for the fine-tuning job.
+
+    
+
+  
+  :type customModelName: string
+  :param customModelName: **[REQUIRED]** 
+
+    A name for the resulting custom model.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of an IAM service role that Amazon Bedrock can assume to perform tasks on your behalf. For example, during model training, Amazon Bedrock needs your permission to read input data from an S3 bucket, write model artifacts to an S3 bucket. To pass this role to Amazon Bedrock, the caller of this API must have the ``iam:PassRole`` permission.
+
+    
+
+  
+  :type clientRequestToken: string
+  :param clientRequestToken: 
+
+    A unique, case-sensitive identifier to ensure that the API request completes no more than one time. If this token matches a previous request, Amazon Bedrock ignores the request, but does not return an error. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__.
+
+    This field is autopopulated if not provided.
+
+  
+  :type baseModelIdentifier: string
+  :param baseModelIdentifier: **[REQUIRED]** 
+
+    Name of the base model.
+
+    
+
+  
+  :type customizationType: string
+  :param customizationType: 
+
+    The customization type.
+
+    
+
+  
+  :type customModelKmsKeyId: string
+  :param customModelKmsKeyId: 
+
+    The custom model is encrypted at rest using this key.
+
+    
+
+  
+  :type jobTags: list
+  :param jobTags: 
+
+    Tags to attach to the job.
+
+    
+
+  
+    - *(dict) --* 
+
+      Definition of the key/value pair for a tag.
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        Key for the tag.
+
+        
+
+      
+      - **value** *(string) --* **[REQUIRED]** 
+
+        Value for the tag.
+
+        
+
+      
+    
+
+  :type customModelTags: list
+  :param customModelTags: 
+
+    Tags to attach to the resulting custom model.
+
+    
+
+  
+    - *(dict) --* 
+
+      Definition of the key/value pair for a tag.
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        Key for the tag.
+
+        
+
+      
+      - **value** *(string) --* **[REQUIRED]** 
+
+        Value for the tag.
+
+        
+
+      
+    
+
+  :type trainingDataConfig: dict
+  :param trainingDataConfig: **[REQUIRED]** 
+
+    Information about the training dataset.
+
+    
+
+  
+    - **s3Uri** *(string) --* 
+
+      The S3 URI where the training data is stored.
+
+      
+
+    
+    - **invocationLogsConfig** *(dict) --* 
+
+      Settings for using invocation logs to customize a model.
+
+      
+
+    
+      - **usePromptResponse** *(boolean) --* 
+
+        Whether to use the model's response for training, or just the prompt. The default value is ``False``.
+
+        
+
+      
+      - **invocationLogSource** *(dict) --* **[REQUIRED]** 
+
+        The source of the invocation logs.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``s3Uri``. 
+
+      
+        - **s3Uri** *(string) --* 
+
+          The URI of an invocation log in a bucket.
+
+          
+
+        
+      
+      - **requestMetadataFilters** *(dict) --* 
+
+        Rules for filtering invocation logs based on request metadata.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``equals``, ``notEquals``, ``andAll``, ``orAll``. 
+
+      
+        - **equals** *(dict) --* 
+
+          Include results where the key equals the value.
+
+          
+
+        
+          - *(string) --* 
+
+          
+            - *(string) --* 
+
+            
+      
+    
+        - **notEquals** *(dict) --* 
+
+          Include results where the key does not equal the value.
+
+          
+
+        
+          - *(string) --* 
+
+          
+            - *(string) --* 
+
+            
+      
+    
+        - **andAll** *(list) --* 
+
+          Include results where all of the based filters match.
+
+          
+
+        
+          - *(dict) --* 
+
+            A mapping of a metadata key to a value that it should or should not equal.
+
+            
+
+          
+            - **equals** *(dict) --* 
+
+              Include results where the key equals the value.
+
+              
+
+            
+              - *(string) --* 
+
+              
+                - *(string) --* 
+
+                
+          
+        
+            - **notEquals** *(dict) --* 
+
+              Include results where the key does not equal the value.
+
+              
+
+            
+              - *(string) --* 
+
+              
+                - *(string) --* 
+
+                
+          
+        
+          
+      
+        - **orAll** *(list) --* 
+
+          Include results where any of the base filters match.
+
+          
+
+        
+          - *(dict) --* 
+
+            A mapping of a metadata key to a value that it should or should not equal.
+
+            
+
+          
+            - **equals** *(dict) --* 
+
+              Include results where the key equals the value.
+
+              
+
+            
+              - *(string) --* 
+
+              
+                - *(string) --* 
+
+                
+          
+        
+            - **notEquals** *(dict) --* 
+
+              Include results where the key does not equal the value.
+
+              
+
+            
+              - *(string) --* 
+
+              
+                - *(string) --* 
+
+                
+          
+        
+          
+      
+      
+    
+  
+  :type validationDataConfig: dict
+  :param validationDataConfig: 
+
+    Information about the validation dataset.
+
+    
+
+  
+    - **validators** *(list) --* **[REQUIRED]** 
+
+      Information about the validators.
+
+      
+
+    
+      - *(dict) --* 
+
+        Information about a validator.
+
+        
+
+      
+        - **s3Uri** *(string) --* **[REQUIRED]** 
+
+          The S3 URI where the validation data is stored.
+
+          
+
+        
+      
+  
+  
+  :type outputDataConfig: dict
+  :param outputDataConfig: **[REQUIRED]** 
+
+    S3 location for the output data.
+
+    
+
+  
+    - **s3Uri** *(string) --* **[REQUIRED]** 
+
+      The S3 URI where the output data is stored.
+
+      
+
+    
+  
+  :type hyperParameters: dict
+  :param hyperParameters: 
+
+    Parameters related to tuning the model. For details on the format for different models, see `Custom model hyperparameters <https://docs.aws.amazon.com/bedrock/latest/userguide/custom-models-hp.html>`__.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type vpcConfig: dict
+  :param vpcConfig: 
+
+    The configuration of the Virtual Private Cloud (VPC) that contains the resources that you're using for this job. For more information, see `Protect your model customization jobs using a VPC <https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-model-customization.html>`__.
+
+    
+
+  
+    - **subnetIds** *(list) --* **[REQUIRED]** 
+
+      An array of IDs for each subnet in the VPC to use.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **securityGroupIds** *(list) --* **[REQUIRED]** 
+
+      An array of IDs for each security group in the VPC to use.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type customizationConfig: dict
+  :param customizationConfig: 
+
+    The customization configuration for the model customization job.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``distillationConfig``, ``rftConfig``. 
+
+  
+    - **distillationConfig** *(dict) --* 
+
+      The Distillation configuration for the custom model.
+
+      
+
+    
+      - **teacherModelConfig** *(dict) --* **[REQUIRED]** 
+
+        The teacher model configuration.
+
+        
+
+      
+        - **teacherModelIdentifier** *(string) --* **[REQUIRED]** 
+
+          The identifier of the teacher model.
+
+          
+
+        
+        - **maxResponseLengthForInference** *(integer) --* 
+
+          The maximum number of tokens requested when the customization job invokes the teacher model.
+
+          
+
+        
+      
+    
+    - **rftConfig** *(dict) --* 
+
+      Configuration settings for reinforcement fine-tuning (RFT) model customization, including grader configuration and hyperparameters.
+
+      
+
+    
+      - **graderConfig** *(dict) --* 
+
+        Configuration for the grader that evaluates model responses and provides reward signals during RFT training.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``lambdaGrader``. 
+
+      
+        - **lambdaGrader** *(dict) --* 
+
+          Configuration for using an AWS Lambda function as the grader for evaluating model responses and provide reward signals in reinforcement fine-tuning.
+
+          
+
+        
+          - **lambdaArn** *(string) --* **[REQUIRED]** 
+
+            ARN of the AWS Lambda function that will evaluate model responses and return reward scores for RFT training.
+
+            
+
+          
+        
+      
+      - **hyperParameters** *(dict) --* 
+
+        Hyperparameters that control the reinforcement fine-tuning training process, including learning rate, batch size, and epoch count.
+
+        
+
+      
+        - **epochCount** *(integer) --* 
+
+          Number of training epochs to run during reinforcement fine-tuning. Higher values may improve performance but increase training time.
+
+          
+
+        
+        - **batchSize** *(integer) --* 
+
+          Number of training samples processed in each batch during reinforcement fine-tuning (RFT) training. Larger batches may improve training stability.
+
+          
+
+        
+        - **learningRate** *(float) --* 
+
+          Learning rate for the reinforcement fine-tuning. Controls how quickly the model adapts to reward signals.
+
+          
+
+        
+        - **maxPromptLength** *(integer) --* 
+
+          Maximum length of input prompts during RFT training, measured in tokens. Longer prompts allow more context but increase memory usage and training-time.
+
+          
+
+        
+        - **trainingSamplePerPrompt** *(integer) --* 
+
+          Number of response samples generated per prompt during RFT training. More samples provide better reward signal estimation.
+
+          
+
+        
+        - **inferenceMaxTokens** *(integer) --* 
+
+          Maximum number of tokens the model can generate in response to each prompt during RFT training.
+
+          
+
+        
+        - **reasoningEffort** *(string) --* 
+
+          Level of reasoning effort applied during RFT training. Higher values may improve response quality but increase training time.
+
+          
+
+        
+        - **evalInterval** *(integer) --* 
+
+          Interval between evaluation runs during RFT training, measured in training steps. More frequent evaluation provides better monitoring.
+
+          
+
+        
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobArn** *(string) --* 
+
+        Amazon Resource Name (ARN) of the fine tuning job
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Bedrock.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.TooManyTagsException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`Bedrock.Client.exceptions.ThrottlingException`
+
+  

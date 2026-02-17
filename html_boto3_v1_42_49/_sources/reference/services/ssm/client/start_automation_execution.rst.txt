@@ -1,0 +1,772 @@
+:doc:`SSM <../../ssm>` / Client / start_automation_execution
+
+**************************
+start_automation_execution
+**************************
+
+
+
+.. py:method:: SSM.Client.start_automation_execution(**kwargs)
+
+  
+
+  Initiates execution of an Automation runbook.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/StartAutomationExecution>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_automation_execution(
+        DocumentName='string',
+        DocumentVersion='string',
+        Parameters={
+            'string': [
+                'string',
+            ]
+        },
+        ClientToken='string',
+        Mode='Auto'|'Interactive',
+        TargetParameterName='string',
+        Targets=[
+            {
+                'Key': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        TargetMaps=[
+            {
+                'string': [
+                    'string',
+                ]
+            },
+        ],
+        MaxConcurrency='string',
+        MaxErrors='string',
+        TargetLocations=[
+            {
+                'Accounts': [
+                    'string',
+                ],
+                'Regions': [
+                    'string',
+                ],
+                'TargetLocationMaxConcurrency': 'string',
+                'TargetLocationMaxErrors': 'string',
+                'ExecutionRoleName': 'string',
+                'TargetLocationAlarmConfiguration': {
+                    'IgnorePollAlarmFailure': True|False,
+                    'Alarms': [
+                        {
+                            'Name': 'string'
+                        },
+                    ]
+                },
+                'IncludeChildOrganizationUnits': True|False,
+                'ExcludeAccounts': [
+                    'string',
+                ],
+                'Targets': [
+                    {
+                        'Key': 'string',
+                        'Values': [
+                            'string',
+                        ]
+                    },
+                ],
+                'TargetsMaxConcurrency': 'string',
+                'TargetsMaxErrors': 'string'
+            },
+        ],
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        AlarmConfiguration={
+            'IgnorePollAlarmFailure': True|False,
+            'Alarms': [
+                {
+                    'Name': 'string'
+                },
+            ]
+        },
+        TargetLocationsURL='string'
+    )
+    
+  :type DocumentName: string
+  :param DocumentName: **[REQUIRED]** 
+
+    The name of the SSM document to run. This can be a public document or a custom document. To run a shared document belonging to another account, specify the document ARN. For more information about how to use shared documents, see `Sharing SSM documents <https://docs.aws.amazon.com/systems-manager/latest/userguide/documents-ssm-sharing.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+    
+
+  
+  :type DocumentVersion: string
+  :param DocumentVersion: 
+
+    The version of the Automation runbook to use for this execution.
+
+    
+
+  
+  :type Parameters: dict
+  :param Parameters: 
+
+    A key-value map of execution parameters, which match the declared parameters in the Automation runbook.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(list) --* 
+
+      
+        - *(string) --* 
+
+        
+    
+
+
+  :type ClientToken: string
+  :param ClientToken: 
+
+    User-provided idempotency token. The token must be unique, is case insensitive, enforces the UUID format, and can't be reused.
+
+    
+
+  
+  :type Mode: string
+  :param Mode: 
+
+    The execution mode of the automation. Valid modes include the following: Auto and Interactive. The default mode is Auto.
+
+    
+
+  
+  :type TargetParameterName: string
+  :param TargetParameterName: 
+
+    The name of the parameter used as the target resource for the rate-controlled execution. Required if you specify targets.
+
+    
+
+  
+  :type Targets: list
+  :param Targets: 
+
+    A key-value mapping to target resources. Required if you specify TargetParameterName.
+
+     
+
+    If both this parameter and the ``TargetLocation:Targets`` parameter are supplied, ``TargetLocation:Targets`` takes precedence.
+
+    
+
+  
+    - *(dict) --* 
+
+      An array of search criteria that targets managed nodes using a key-value pair that you specify.
+
+       
+
+      .. note::
+
+        
+
+        One or more targets must be specified for maintenance window Run Command-type tasks. Depending on the task, targets are optional for other maintenance window task types (Automation, Lambda, and Step Functions). For more information about running tasks that don't specify targets, see `Registering maintenance window tasks without targets <https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+        
+
+       
+
+      Supported formats include the following.
+
+       
+
+      **For all Systems Manager tools:**
+
+       
+
+      
+      * ``Key=tag-key,Values=tag-value-1,tag-value-2``
+      
+
+       
+
+      **For Automation and Change Manager:**
+
+       
+
+      
+      * ``Key=tag:tag-key,Values=tag-value``
+       
+      * ``Key=ResourceGroup,Values=resource-group-name``
+       
+      * ``Key=ParameterValues,Values=value-1,value-2,value-3``
+       
+      * To target all instances in the Amazon Web Services Region: 
+
+        
+        * ``Key=AWS::EC2::Instance,Values=*``
+         
+        * ``Key=InstanceIds,Values=*``
+        
+
+      
+      
+
+       
+
+      **For Run Command and Maintenance Windows:**
+
+       
+
+      
+      * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+       
+      * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+       
+      * ``Key=resource-groups:Name,Values=resource-group-name``
+       
+      * Additionally, Maintenance Windows support targeting resource types: 
+
+        
+        * ``Key=resource-groups:ResourceTypeFilters,Values=resource-type-1,resource-type-2``
+        
+
+      
+      
+
+       
+
+      **For State Manager:**
+
+       
+
+      
+      * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+       
+      * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+       
+      * To target all instances in the Amazon Web Services Region: 
+
+        
+        * ``Key=InstanceIds,Values=*``
+        
+
+      
+      
+
+       
+
+      For more information about how to send commands that target managed nodes using ``Key,Value`` parameters, see `Targeting multiple managed nodes <https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-multiple.html#send-commands-targeting>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        User-defined criteria for sending commands that target managed nodes that meet the criteria.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        User-defined criteria that maps to ``Key``. For example, if you specified ``tag:ServerRole``, you could specify ``value:WebServer`` to run a command on instances that include EC2 tags of ``ServerRole,WebServer``.
+
+         
+
+        Depending on the type of target, the maximum number of values for a key might be lower than the global maximum of 50.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type TargetMaps: list
+  :param TargetMaps: 
+
+    A key-value mapping of document parameters to target resources. Both Targets and TargetMaps can't be specified together.
+
+    
+
+  
+    - *(dict) --* 
+
+    
+      - *(string) --* 
+
+      
+        - *(list) --* 
+
+        
+          - *(string) --* 
+
+          
+      
+  
+
+
+  :type MaxConcurrency: string
+  :param MaxConcurrency: 
+
+    The maximum number of targets allowed to run this task in parallel. You can specify a number, such as 10, or a percentage, such as 10%. The default value is ``10``.
+
+     
+
+    If both this parameter and the ``TargetLocation:TargetsMaxConcurrency`` are supplied, ``TargetLocation:TargetsMaxConcurrency`` takes precedence.
+
+    
+
+  
+  :type MaxErrors: string
+  :param MaxErrors: 
+
+    The number of errors that are allowed before the system stops running the automation on additional targets. You can specify either an absolute number of errors, for example 10, or a percentage of the target set, for example 10%. If you specify 3, for example, the system stops running the automation when the fourth error is received. If you specify 0, then the system stops running the automation on additional targets after the first error result is returned. If you run an automation on 50 resources and set max-errors to 10%, then the system stops running the automation on additional targets when the sixth error is received.
+
+     
+
+    Executions that are already running an automation when max-errors is reached are allowed to complete, but some of these executions may fail as well. If you need to ensure that there won't be more than max-errors failed executions, set max-concurrency to 1 so the executions proceed one at a time.
+
+     
+
+    If this parameter and the ``TargetLocation:TargetsMaxErrors`` parameter are both supplied, ``TargetLocation:TargetsMaxErrors`` takes precedence.
+
+    
+
+  
+  :type TargetLocations: list
+  :param TargetLocations: 
+
+    A location is a combination of Amazon Web Services Regions and/or Amazon Web Services accounts where you want to run the automation. Use this operation to start an automation in multiple Amazon Web Services Regions and multiple Amazon Web Services accounts. For more information, see `Running automations in multiple Amazon Web Services Regions and accounts <https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation-multiple-accounts-and-regions.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+    
+
+  
+    - *(dict) --* 
+
+      The combination of Amazon Web Services Regions and Amazon Web Services accounts targeted by the current Automation execution.
+
+      
+
+    
+      - **Accounts** *(list) --* 
+
+        The Amazon Web Services accounts targeted by the current Automation execution.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **Regions** *(list) --* 
+
+        The Amazon Web Services Regions targeted by the current Automation execution.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **TargetLocationMaxConcurrency** *(string) --* 
+
+        The maximum number of Amazon Web Services Regions and Amazon Web Services accounts allowed to run the Automation concurrently. ``TargetLocationMaxConcurrency`` has a default value of 1.
+
+        
+
+      
+      - **TargetLocationMaxErrors** *(string) --* 
+
+        The maximum number of errors allowed before the system stops queueing additional Automation executions for the currently running Automation. ``TargetLocationMaxErrors`` has a default value of 0.
+
+        
+
+      
+      - **ExecutionRoleName** *(string) --* 
+
+        The Automation execution role used by the currently running Automation. If not specified, the default value is ``AWS-SystemsManager-AutomationExecutionRole``.
+
+        
+
+      
+      - **TargetLocationAlarmConfiguration** *(dict) --* 
+
+        The details for the CloudWatch alarm you want to apply to an automation or command.
+
+        
+
+      
+        - **IgnorePollAlarmFailure** *(boolean) --* 
+
+          When this value is *true*, your automation or command continues to run in cases where we can’t retrieve alarm status information from CloudWatch. In cases where we successfully retrieve an alarm status of OK or INSUFFICIENT_DATA, the automation or command continues to run, regardless of this value. Default is *false*.
+
+          
+
+        
+        - **Alarms** *(list) --* **[REQUIRED]** 
+
+          The name of the CloudWatch alarm specified in the configuration.
+
+          
+
+        
+          - *(dict) --* 
+
+            A CloudWatch alarm you apply to an automation or command.
+
+            
+
+          
+            - **Name** *(string) --* **[REQUIRED]** 
+
+              The name of your CloudWatch alarm.
+
+              
+
+            
+          
+      
+      
+      - **IncludeChildOrganizationUnits** *(boolean) --* 
+
+        Indicates whether to include child organizational units (OUs) that are children of the targeted OUs. The default is ``false``.
+
+         
+
+        .. note::
+
+          
+
+          This parameter is not supported by State Manager.
+
+          
+
+        
+
+      
+      - **ExcludeAccounts** *(list) --* 
+
+        Amazon Web Services accounts or organizational units to exclude as expanded targets.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **Targets** *(list) --* 
+
+        A list of key-value mappings to target resources. If you specify values for this data type, you must also specify a value for ``TargetParameterName``.
+
+         
+
+        This ``Targets`` parameter takes precedence over the ``StartAutomationExecution:Targets`` parameter if both are supplied.
+
+        
+
+      
+        - *(dict) --* 
+
+          An array of search criteria that targets managed nodes using a key-value pair that you specify.
+
+           
+
+          .. note::
+
+            
+
+            One or more targets must be specified for maintenance window Run Command-type tasks. Depending on the task, targets are optional for other maintenance window task types (Automation, Lambda, and Step Functions). For more information about running tasks that don't specify targets, see `Registering maintenance window tasks without targets <https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+
+           
+
+          Supported formats include the following.
+
+           
+
+          **For all Systems Manager tools:**
+
+           
+
+          
+          * ``Key=tag-key,Values=tag-value-1,tag-value-2``
+          
+
+           
+
+          **For Automation and Change Manager:**
+
+           
+
+          
+          * ``Key=tag:tag-key,Values=tag-value``
+           
+          * ``Key=ResourceGroup,Values=resource-group-name``
+           
+          * ``Key=ParameterValues,Values=value-1,value-2,value-3``
+           
+          * To target all instances in the Amazon Web Services Region: 
+
+            
+            * ``Key=AWS::EC2::Instance,Values=*``
+             
+            * ``Key=InstanceIds,Values=*``
+            
+
+          
+          
+
+           
+
+          **For Run Command and Maintenance Windows:**
+
+           
+
+          
+          * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+           
+          * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+           
+          * ``Key=resource-groups:Name,Values=resource-group-name``
+           
+          * Additionally, Maintenance Windows support targeting resource types: 
+
+            
+            * ``Key=resource-groups:ResourceTypeFilters,Values=resource-type-1,resource-type-2``
+            
+
+          
+          
+
+           
+
+          **For State Manager:**
+
+           
+
+          
+          * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+           
+          * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+           
+          * To target all instances in the Amazon Web Services Region: 
+
+            
+            * ``Key=InstanceIds,Values=*``
+            
+
+          
+          
+
+           
+
+          For more information about how to send commands that target managed nodes using ``Key,Value`` parameters, see `Targeting multiple managed nodes <https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-multiple.html#send-commands-targeting>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+          
+
+        
+          - **Key** *(string) --* 
+
+            User-defined criteria for sending commands that target managed nodes that meet the criteria.
+
+            
+
+          
+          - **Values** *(list) --* 
+
+            User-defined criteria that maps to ``Key``. For example, if you specified ``tag:ServerRole``, you could specify ``value:WebServer`` to run a command on instances that include EC2 tags of ``ServerRole,WebServer``.
+
+             
+
+            Depending on the type of target, the maximum number of values for a key might be lower than the global maximum of 50.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+    
+      - **TargetsMaxConcurrency** *(string) --* 
+
+        The maximum number of targets allowed to run this task in parallel. This ``TargetsMaxConcurrency`` takes precedence over the ``StartAutomationExecution:MaxConcurrency`` parameter if both are supplied.
+
+        
+
+      
+      - **TargetsMaxErrors** *(string) --* 
+
+        The maximum number of errors that are allowed before the system stops running the automation on additional targets. This ``TargetsMaxErrors`` parameter takes precedence over the ``StartAutomationExecution:MaxErrors`` parameter if both are supplied.
+
+        
+
+      
+    
+
+  :type Tags: list
+  :param Tags: 
+
+    Optional metadata that you assign to a resource. You can specify a maximum of five tags for an automation. Tags enable you to categorize a resource in different ways, such as by purpose, owner, or environment. For example, you might want to tag an automation to identify an environment or operating system. In this case, you could specify the following key-value pairs:
+
+     
+
+    
+    * ``Key=environment,Value=test``
+     
+    * ``Key=OS,Value=Windows``
+    
+
+     
+
+    .. note::
+
+      
+
+      The ``Array Members`` maximum value is reported as 1000. This number includes capacity reserved for internal operations. When calling the ``StartAutomationExecution`` action, you can specify a maximum of 5 tags. You can, however, use the  AddTagsToResource action to add up to a total of 50 tags to an existing automation configuration.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      Metadata that you assign to your Amazon Web Services resources. Tags enable you to categorize your resources in different ways, for example, by purpose, owner, or environment. In Amazon Web Services Systems Manager, you can apply tags to Systems Manager documents (SSM documents), managed nodes, maintenance windows, parameters, patch baselines, OpsItems, and OpsMetadata.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name of the tag.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value of the tag.
+
+        
+
+      
+    
+
+  :type AlarmConfiguration: dict
+  :param AlarmConfiguration: 
+
+    The CloudWatch alarm you want to apply to your automation.
+
+    
+
+  
+    - **IgnorePollAlarmFailure** *(boolean) --* 
+
+      When this value is *true*, your automation or command continues to run in cases where we can’t retrieve alarm status information from CloudWatch. In cases where we successfully retrieve an alarm status of OK or INSUFFICIENT_DATA, the automation or command continues to run, regardless of this value. Default is *false*.
+
+      
+
+    
+    - **Alarms** *(list) --* **[REQUIRED]** 
+
+      The name of the CloudWatch alarm specified in the configuration.
+
+      
+
+    
+      - *(dict) --* 
+
+        A CloudWatch alarm you apply to an automation or command.
+
+        
+
+      
+        - **Name** *(string) --* **[REQUIRED]** 
+
+          The name of your CloudWatch alarm.
+
+          
+
+        
+      
+  
+  
+  :type TargetLocationsURL: string
+  :param TargetLocationsURL: 
+
+    Specify a publicly accessible URL for a file that contains the ``TargetLocations`` body. Currently, only files in presigned Amazon S3 buckets are supported.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'AutomationExecutionId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **AutomationExecutionId** *(string) --* 
+
+        The unique ID of a newly scheduled automation execution.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.AutomationDefinitionNotFoundException`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidAutomationExecutionParametersException`
+
+  
+  *   :py:class:`SSM.Client.exceptions.AutomationExecutionLimitExceededException`
+
+  
+  *   :py:class:`SSM.Client.exceptions.AutomationDefinitionVersionNotFoundException`
+
+  
+  *   :py:class:`SSM.Client.exceptions.IdempotentParameterMismatch`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidTarget`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  

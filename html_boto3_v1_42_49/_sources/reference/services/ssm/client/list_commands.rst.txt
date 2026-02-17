@@ -1,0 +1,789 @@
+:doc:`SSM <../../ssm>` / Client / list_commands
+
+*************
+list_commands
+*************
+
+
+
+.. py:method:: SSM.Client.list_commands(**kwargs)
+
+  
+
+  Lists the commands requested by users of the Amazon Web Services account.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/ListCommands>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_commands(
+        CommandId='string',
+        InstanceId='string',
+        MaxResults=123,
+        NextToken='string',
+        Filters=[
+            {
+                'key': 'InvokedAfter'|'InvokedBefore'|'Status'|'ExecutionStage'|'DocumentName',
+                'value': 'string'
+            },
+        ]
+    )
+    
+  :type CommandId: string
+  :param CommandId: 
+
+    (Optional) If provided, lists only the specified command.
+
+    
+
+  
+  :type InstanceId: string
+  :param InstanceId: 
+
+    (Optional) Lists commands issued against this managed node ID.
+
+     
+
+    .. note::
+
+      
+
+      You can't specify a managed node ID in the same command that you specify ``Status`` = ``Pending``. This is because the command hasn't reached the managed node yet.
+
+      
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    (Optional) The maximum number of items to return for this call. The call also returns a token that you can specify in a subsequent call to get the next set of results.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    (Optional) The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    (Optional) One or more filters. Use a filter to return a more specific list of results.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a command filter.
+
+       
+
+      .. note::
+
+        
+
+        A managed node ID can't be specified when a command status is ``Pending`` because the command hasn't run on the node yet.
+
+        
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        The name of the filter.
+
+         
+
+        .. note::
+
+          
+
+          The ``ExecutionStage`` filter can't be used with the ``ListCommandInvocations`` operation, only with ``ListCommands``.
+
+          
+
+        
+
+      
+      - **value** *(string) --* **[REQUIRED]** 
+
+        The filter value. Valid values for each filter key are as follows:
+
+         
+
+        
+        * **InvokedAfter**: Specify a timestamp to limit your results. For example, specify ``2024-07-07T00:00:00Z`` to see a list of command executions occurring July 7, 2021, and later.
+         
+        * **InvokedBefore**: Specify a timestamp to limit your results. For example, specify ``2024-07-07T00:00:00Z`` to see a list of command executions from before July 7, 2021.
+         
+        * **Status**: Specify a valid command status to see a list of all command executions with that status. The status choices depend on the API you call. The status values you can specify for ``ListCommands`` are: 
+
+          
+          * ``Pending``
+           
+          * ``InProgress``
+           
+          * ``Success``
+           
+          * ``Cancelled``
+           
+          * ``Failed``
+           
+          * ``TimedOut`` (this includes both Delivery and Execution time outs)
+           
+          * ``AccessDenied``
+           
+          * ``DeliveryTimedOut``
+           
+          * ``ExecutionTimedOut``
+           
+          * ``Incomplete``
+           
+          * ``NoInstancesInTag``
+           
+          * ``LimitExceeded``
+          
+
+         
+
+        The status values you can specify for ``ListCommandInvocations`` are:
+
+         
+
+          
+          * ``Pending``
+           
+          * ``InProgress``
+           
+          * ``Delayed``
+           
+          * ``Success``
+           
+          * ``Cancelled``
+           
+          * ``Failed``
+           
+          * ``TimedOut`` (this includes both Delivery and Execution time outs)
+           
+          * ``AccessDenied``
+           
+          * ``DeliveryTimedOut``
+           
+          * ``ExecutionTimedOut``
+           
+          * ``Undeliverable``
+           
+          * ``InvalidPlatform``
+           
+          * ``Terminated``
+          
+
+        
+         
+        * **DocumentName**: Specify name of the Amazon Web Services Systems Manager document (SSM document) for which you want to see command execution results. For example, specify ``AWS-RunPatchBaseline`` to see command executions that used this SSM document to perform security patching operations on managed nodes.
+         
+        * **ExecutionStage**: Specify one of the following values ( ``ListCommands`` operations only): 
+
+          
+          * ``Executing``: Returns a list of command executions that are currently still running.
+           
+          * ``Complete``: Returns a list of command executions that have already completed.
+          
+
+        
+        
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Commands': [
+              {
+                  'CommandId': 'string',
+                  'DocumentName': 'string',
+                  'DocumentVersion': 'string',
+                  'Comment': 'string',
+                  'ExpiresAfter': datetime(2015, 1, 1),
+                  'Parameters': {
+                      'string': [
+                          'string',
+                      ]
+                  },
+                  'InstanceIds': [
+                      'string',
+                  ],
+                  'Targets': [
+                      {
+                          'Key': 'string',
+                          'Values': [
+                              'string',
+                          ]
+                      },
+                  ],
+                  'RequestedDateTime': datetime(2015, 1, 1),
+                  'Status': 'Pending'|'InProgress'|'Success'|'Cancelled'|'Failed'|'TimedOut'|'Cancelling',
+                  'StatusDetails': 'string',
+                  'OutputS3Region': 'string',
+                  'OutputS3BucketName': 'string',
+                  'OutputS3KeyPrefix': 'string',
+                  'MaxConcurrency': 'string',
+                  'MaxErrors': 'string',
+                  'TargetCount': 123,
+                  'CompletedCount': 123,
+                  'ErrorCount': 123,
+                  'DeliveryTimedOutCount': 123,
+                  'ServiceRole': 'string',
+                  'NotificationConfig': {
+                      'NotificationArn': 'string',
+                      'NotificationEvents': [
+                          'All'|'InProgress'|'Success'|'TimedOut'|'Cancelled'|'Failed',
+                      ],
+                      'NotificationType': 'Command'|'Invocation'
+                  },
+                  'CloudWatchOutputConfig': {
+                      'CloudWatchLogGroupName': 'string',
+                      'CloudWatchOutputEnabled': True|False
+                  },
+                  'TimeoutSeconds': 123,
+                  'AlarmConfiguration': {
+                      'IgnorePollAlarmFailure': True|False,
+                      'Alarms': [
+                          {
+                              'Name': 'string'
+                          },
+                      ]
+                  },
+                  'TriggeredAlarms': [
+                      {
+                          'Name': 'string',
+                          'State': 'UNKNOWN'|'ALARM'
+                      },
+                  ]
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Commands** *(list) --* 
+
+        (Optional) The list of commands requested by the user.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a command request.
+
+          
+          
+
+          - **CommandId** *(string) --* 
+
+            A unique identifier for this command.
+
+            
+          
+
+          - **DocumentName** *(string) --* 
+
+            The name of the document requested for execution.
+
+            
+          
+
+          - **DocumentVersion** *(string) --* 
+
+            The Systems Manager document (SSM document) version.
+
+            
+          
+
+          - **Comment** *(string) --* 
+
+            User-specified information about the command, such as a brief description of what the command should do.
+
+            
+          
+
+          - **ExpiresAfter** *(datetime) --* 
+
+            If a command expires, it changes status to ``DeliveryTimedOut`` for all invocations that have the status ``InProgress``, ``Pending``, or ``Delayed``. ``ExpiresAfter`` is calculated based on the total timeout for the overall command. For more information, see `Understanding command timeout values <https://docs.aws.amazon.com/systems-manager/latest/userguide/monitor-commands.html?icmpid=docs_ec2_console#monitor-about-status-timeouts>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+          
+
+          - **Parameters** *(dict) --* 
+
+            The parameter values to be inserted in the document when running the command.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(list) --* 
+                
+
+                - *(string) --* 
+            
+        
+      
+          
+
+          - **InstanceIds** *(list) --* 
+
+            The managed node IDs against which this command was requested.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **Targets** *(list) --* 
+
+            An array of search criteria that targets managed nodes using a Key,Value combination that you specify. Targets is required if you don't provide one or more managed node IDs in the call.
+
+            
+            
+
+            - *(dict) --* 
+
+              An array of search criteria that targets managed nodes using a key-value pair that you specify.
+
+               
+
+              .. note::
+
+                
+
+                One or more targets must be specified for maintenance window Run Command-type tasks. Depending on the task, targets are optional for other maintenance window task types (Automation, Lambda, and Step Functions). For more information about running tasks that don't specify targets, see `Registering maintenance window tasks without targets <https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+                
+
+               
+
+              Supported formats include the following.
+
+               
+
+              **For all Systems Manager tools:**
+
+               
+
+              
+              * ``Key=tag-key,Values=tag-value-1,tag-value-2``
+              
+
+               
+
+              **For Automation and Change Manager:**
+
+               
+
+              
+              * ``Key=tag:tag-key,Values=tag-value``
+               
+              * ``Key=ResourceGroup,Values=resource-group-name``
+               
+              * ``Key=ParameterValues,Values=value-1,value-2,value-3``
+               
+              * To target all instances in the Amazon Web Services Region: 
+
+                
+                * ``Key=AWS::EC2::Instance,Values=*``
+                 
+                * ``Key=InstanceIds,Values=*``
+                
+
+              
+              
+
+               
+
+              **For Run Command and Maintenance Windows:**
+
+               
+
+              
+              * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+               
+              * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+               
+              * ``Key=resource-groups:Name,Values=resource-group-name``
+               
+              * Additionally, Maintenance Windows support targeting resource types: 
+
+                
+                * ``Key=resource-groups:ResourceTypeFilters,Values=resource-type-1,resource-type-2``
+                
+
+              
+              
+
+               
+
+              **For State Manager:**
+
+               
+
+              
+              * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+               
+              * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+               
+              * To target all instances in the Amazon Web Services Region: 
+
+                
+                * ``Key=InstanceIds,Values=*``
+                
+
+              
+              
+
+               
+
+              For more information about how to send commands that target managed nodes using ``Key,Value`` parameters, see `Targeting multiple managed nodes <https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-multiple.html#send-commands-targeting>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+              
+              
+
+              - **Key** *(string) --* 
+
+                User-defined criteria for sending commands that target managed nodes that meet the criteria.
+
+                
+              
+
+              - **Values** *(list) --* 
+
+                User-defined criteria that maps to ``Key``. For example, if you specified ``tag:ServerRole``, you could specify ``value:WebServer`` to run a command on instances that include EC2 tags of ``ServerRole,WebServer``.
+
+                 
+
+                Depending on the type of target, the maximum number of values for a key might be lower than the global maximum of 50.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+        
+          
+
+          - **RequestedDateTime** *(datetime) --* 
+
+            The date and time the command was requested.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the command.
+
+            
+          
+
+          - **StatusDetails** *(string) --* 
+
+            A detailed status of the command execution. ``StatusDetails`` includes more information than ``Status`` because it includes states resulting from error and concurrency control parameters. ``StatusDetails`` can show different results than Status. For more information about these statuses, see `Understanding command statuses <https://docs.aws.amazon.com/systems-manager/latest/userguide/monitor-commands.html>`__ in the *Amazon Web Services Systems Manager User Guide*. StatusDetails can be one of the following values:
+
+             
+
+            
+            * Pending: The command hasn't been sent to any managed nodes.
+             
+            * In Progress: The command has been sent to at least one managed node but hasn't reached a final state on all managed nodes.
+             
+            * Success: The command successfully ran on all invocations. This is a terminal state.
+             
+            * Delivery Timed Out: The value of MaxErrors or more command invocations shows a status of Delivery Timed Out. This is a terminal state.
+             
+            * Execution Timed Out: The value of MaxErrors or more command invocations shows a status of Execution Timed Out. This is a terminal state.
+             
+            * Failed: The value of MaxErrors or more command invocations shows a status of Failed. This is a terminal state.
+             
+            * Incomplete: The command was attempted on all managed nodes and one or more invocations doesn't have a value of Success but not enough invocations failed for the status to be Failed. This is a terminal state.
+             
+            * Cancelled: The command was terminated before it was completed. This is a terminal state.
+             
+            * Rate Exceeded: The number of managed nodes targeted by the command exceeded the account limit for pending invocations. The system has canceled the command before running it on any managed node. This is a terminal state.
+             
+            * Delayed: The system attempted to send the command to the managed node but wasn't successful. The system retries again.
+            
+
+            
+          
+
+          - **OutputS3Region** *(string) --* 
+
+            (Deprecated) You can no longer specify this parameter. The system ignores it. Instead, Systems Manager automatically determines the Amazon Web Services Region of the S3 bucket.
+
+            
+          
+
+          - **OutputS3BucketName** *(string) --* 
+
+            The S3 bucket where the responses to the command executions should be stored. This was requested when issuing the command.
+
+            
+          
+
+          - **OutputS3KeyPrefix** *(string) --* 
+
+            The S3 directory path inside the bucket where the responses to the command executions should be stored. This was requested when issuing the command.
+
+            
+          
+
+          - **MaxConcurrency** *(string) --* 
+
+            The maximum number of managed nodes that are allowed to run the command at the same time. You can specify a number of managed nodes, such as 10, or a percentage of nodes, such as 10%. The default value is 50. For more information about how to use ``MaxConcurrency``, see `Amazon Web Services Systems Manager Run Command <https://docs.aws.amazon.com/systems-manager/latest/userguide/run-command.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+          
+
+          - **MaxErrors** *(string) --* 
+
+            The maximum number of errors allowed before the system stops sending the command to additional targets. You can specify a number of errors, such as 10, or a percentage or errors, such as 10%. The default value is ``0``. For more information about how to use ``MaxErrors``, see `Amazon Web Services Systems Manager Run Command <https://docs.aws.amazon.com/systems-manager/latest/userguide/run-command.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+          
+
+          - **TargetCount** *(integer) --* 
+
+            The number of targets for the command.
+
+            
+          
+
+          - **CompletedCount** *(integer) --* 
+
+            The number of targets for which the command invocation reached a terminal state. Terminal states include the following: Success, Failed, Execution Timed Out, Delivery Timed Out, Cancelled, Terminated, or Undeliverable.
+
+            
+          
+
+          - **ErrorCount** *(integer) --* 
+
+            The number of targets for which the status is Failed or Execution Timed Out.
+
+            
+          
+
+          - **DeliveryTimedOutCount** *(integer) --* 
+
+            The number of targets for which the status is Delivery Timed Out.
+
+            
+          
+
+          - **ServiceRole** *(string) --* 
+
+            The Identity and Access Management (IAM) service role that Run Command, a tool in Amazon Web Services Systems Manager, uses to act on your behalf when sending notifications about command status changes.
+
+            
+          
+
+          - **NotificationConfig** *(dict) --* 
+
+            Configurations for sending notifications about command status changes.
+
+            
+            
+
+            - **NotificationArn** *(string) --* 
+
+              An Amazon Resource Name (ARN) for an Amazon Simple Notification Service (Amazon SNS) topic. Run Command pushes notifications about command status changes to this topic.
+
+              
+            
+
+            - **NotificationEvents** *(list) --* 
+
+              The different events for which you can receive notifications. To learn more about these events, see `Monitoring Systems Manager status changes using Amazon SNS notifications <https://docs.aws.amazon.com/systems-manager/latest/userguide/monitoring-sns-notifications.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **NotificationType** *(string) --* 
+
+              The type of notification.
+
+               
+
+              
+              * ``Command``: Receive notification when the status of a command changes.
+               
+              * ``Invocation``: For commands sent to multiple managed nodes, receive notification on a per-node basis when the status of a command changes.
+              
+
+              
+        
+          
+
+          - **CloudWatchOutputConfig** *(dict) --* 
+
+            Amazon CloudWatch Logs information where you want Amazon Web Services Systems Manager to send the command output.
+
+            
+            
+
+            - **CloudWatchLogGroupName** *(string) --* 
+
+              The name of the CloudWatch Logs log group where you want to send command output. If you don't specify a group name, Amazon Web Services Systems Manager automatically creates a log group for you. The log group uses the following naming format:
+
+               
+
+              ``aws/ssm/SystemsManagerDocumentName``
+
+              
+            
+
+            - **CloudWatchOutputEnabled** *(boolean) --* 
+
+              Enables Systems Manager to send command output to CloudWatch Logs.
+
+              
+        
+          
+
+          - **TimeoutSeconds** *(integer) --* 
+
+            The ``TimeoutSeconds`` value specified for a command.
+
+            
+          
+
+          - **AlarmConfiguration** *(dict) --* 
+
+            The details for the CloudWatch alarm applied to your command.
+
+            
+            
+
+            - **IgnorePollAlarmFailure** *(boolean) --* 
+
+              When this value is *true*, your automation or command continues to run in cases where we can’t retrieve alarm status information from CloudWatch. In cases where we successfully retrieve an alarm status of OK or INSUFFICIENT_DATA, the automation or command continues to run, regardless of this value. Default is *false*.
+
+              
+            
+
+            - **Alarms** *(list) --* 
+
+              The name of the CloudWatch alarm specified in the configuration.
+
+              
+              
+
+              - *(dict) --* 
+
+                A CloudWatch alarm you apply to an automation or command.
+
+                
+                
+
+                - **Name** *(string) --* 
+
+                  The name of your CloudWatch alarm.
+
+                  
+            
+          
+        
+          
+
+          - **TriggeredAlarms** *(list) --* 
+
+            The CloudWatch alarm that was invoked by the command.
+
+            
+            
+
+            - *(dict) --* 
+
+              The details about the state of your CloudWatch alarm.
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The name of your CloudWatch alarm.
+
+                
+              
+
+              - **State** *(string) --* 
+
+                The state of your CloudWatch alarm.
+
+                
+          
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        (Optional) The token for the next set of items to return. (You received this token from a previous call.)
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidCommandId`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidInstanceId`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilterKey`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidNextToken`
+
+  

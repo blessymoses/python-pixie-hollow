@@ -1,0 +1,760 @@
+:doc:`Backup <../../backup>` / Client / get_backup_plan
+
+***************
+get_backup_plan
+***************
+
+
+
+.. py:method:: Backup.Client.get_backup_plan(**kwargs)
+
+  
+
+  Returns ``BackupPlan`` details for the specified ``BackupPlanId``. The details are the body of a backup plan in JSON format, in addition to plan metadata.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/GetBackupPlan>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_backup_plan(
+        BackupPlanId='string',
+        VersionId='string',
+        MaxScheduledRunsPreview=123
+    )
+    
+  :type BackupPlanId: string
+  :param BackupPlanId: **[REQUIRED]** 
+
+    Uniquely identifies a backup plan.
+
+    
+
+  
+  :type VersionId: string
+  :param VersionId: 
+
+    Unique, randomly generated, Unicode, UTF-8 encoded strings that are at most 1,024 bytes long. Version IDs cannot be edited.
+
+    
+
+  
+  :type MaxScheduledRunsPreview: integer
+  :param MaxScheduledRunsPreview: 
+
+    Number of future scheduled backup runs to preview. When set to 0 (default), no scheduled runs preview is included in the response. Valid range is 0-10.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'BackupPlan': {
+              'BackupPlanName': 'string',
+              'Rules': [
+                  {
+                      'RuleName': 'string',
+                      'TargetBackupVaultName': 'string',
+                      'TargetLogicallyAirGappedBackupVaultArn': 'string',
+                      'ScheduleExpression': 'string',
+                      'StartWindowMinutes': 123,
+                      'CompletionWindowMinutes': 123,
+                      'Lifecycle': {
+                          'MoveToColdStorageAfterDays': 123,
+                          'DeleteAfterDays': 123,
+                          'OptInToArchiveForSupportedResources': True|False,
+                          'DeleteAfterEvent': 'DELETE_AFTER_COPY'
+                      },
+                      'RecoveryPointTags': {
+                          'string': 'string'
+                      },
+                      'RuleId': 'string',
+                      'CopyActions': [
+                          {
+                              'Lifecycle': {
+                                  'MoveToColdStorageAfterDays': 123,
+                                  'DeleteAfterDays': 123,
+                                  'OptInToArchiveForSupportedResources': True|False,
+                                  'DeleteAfterEvent': 'DELETE_AFTER_COPY'
+                              },
+                              'DestinationBackupVaultArn': 'string'
+                          },
+                      ],
+                      'EnableContinuousBackup': True|False,
+                      'ScheduleExpressionTimezone': 'string',
+                      'IndexActions': [
+                          {
+                              'ResourceTypes': [
+                                  'string',
+                              ]
+                          },
+                      ],
+                      'ScanActions': [
+                          {
+                              'MalwareScanner': 'GUARDDUTY',
+                              'ScanMode': 'FULL_SCAN'|'INCREMENTAL_SCAN'
+                          },
+                      ]
+                  },
+              ],
+              'AdvancedBackupSettings': [
+                  {
+                      'ResourceType': 'string',
+                      'BackupOptions': {
+                          'string': 'string'
+                      }
+                  },
+              ],
+              'ScanSettings': [
+                  {
+                      'MalwareScanner': 'GUARDDUTY',
+                      'ResourceTypes': [
+                          'string',
+                      ],
+                      'ScannerRoleArn': 'string'
+                  },
+              ]
+          },
+          'BackupPlanId': 'string',
+          'BackupPlanArn': 'string',
+          'VersionId': 'string',
+          'CreatorRequestId': 'string',
+          'CreationDate': datetime(2015, 1, 1),
+          'DeletionDate': datetime(2015, 1, 1),
+          'LastExecutionDate': datetime(2015, 1, 1),
+          'AdvancedBackupSettings': [
+              {
+                  'ResourceType': 'string',
+                  'BackupOptions': {
+                      'string': 'string'
+                  }
+              },
+          ],
+          'ScheduledRunsPreview': [
+              {
+                  'ExecutionTime': datetime(2015, 1, 1),
+                  'RuleId': 'string',
+                  'RuleExecutionType': 'CONTINUOUS'|'SNAPSHOTS'|'CONTINUOUS_AND_SNAPSHOTS'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **BackupPlan** *(dict) --* 
+
+        Specifies the body of a backup plan. Includes a ``BackupPlanName`` and one or more sets of ``Rules``.
+
+        
+        
+
+        - **BackupPlanName** *(string) --* 
+
+          The display name of a backup plan. Must contain only alphanumeric or '-_.' special characters.
+
+           
+
+          If this is set in the console, it can contain 1 to 50 characters; if this is set through CLI or API, it can contain 1 to 200 characters.
+
+          
+        
+
+        - **Rules** *(list) --* 
+
+          An array of ``BackupRule`` objects, each of which specifies a scheduled task that is used to back up a selection of resources.
+
+          
+          
+
+          - *(dict) --* 
+
+            Specifies a scheduled task used to back up a selection of resources.
+
+            
+            
+
+            - **RuleName** *(string) --* 
+
+              A display name for a backup rule. Must contain 1 to 50 alphanumeric or '-_.' characters.
+
+              
+            
+
+            - **TargetBackupVaultName** *(string) --* 
+
+              The name of a logical container where backups are stored. Backup vaults are identified by names that are unique to the account used to create them and the Amazon Web Services Region where they are created.
+
+              
+            
+
+            - **TargetLogicallyAirGappedBackupVaultArn** *(string) --* 
+
+              The ARN of a logically air-gapped vault. ARN must be in the same account and Region. If provided, supported fully managed resources back up directly to logically air-gapped vault, while other supported resources create a temporary (billable) snapshot in backup vault, then copy it to logically air-gapped vault. Unsupported resources only back up to the specified backup vault.
+
+              
+            
+
+            - **ScheduleExpression** *(string) --* 
+
+              A cron expression in UTC specifying when Backup initiates a backup job. When no CRON expression is provided, Backup will use the default expression ``cron(0 5 ? * * *)``.
+
+               
+
+              For more information about Amazon Web Services cron expressions, see `Schedule Expressions for Rules <https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html>`__ in the *Amazon CloudWatch Events User Guide*.
+
+               
+
+              Two examples of Amazon Web Services cron expressions are ``15 * ? * * *`` (take a backup every hour at 15 minutes past the hour) and ``0 12 * * ? *`` (take a backup every day at 12 noon UTC).
+
+               
+
+              For a table of examples, click the preceding link and scroll down the page.
+
+              
+            
+
+            - **StartWindowMinutes** *(integer) --* 
+
+              A value in minutes after a backup is scheduled before a job will be canceled if it doesn't start successfully. This value is optional. If this value is included, it must be at least 60 minutes to avoid errors.
+
+               
+
+              During the start window, the backup job status remains in ``CREATED`` status until it has successfully begun or until the start window time has run out. If within the start window time Backup receives an error that allows the job to be retried, Backup will automatically retry to begin the job at least every 10 minutes until the backup successfully begins (the job status changes to ``RUNNING``) or until the job status changes to ``EXPIRED`` (which is expected to occur when the start window time is over).
+
+              
+            
+
+            - **CompletionWindowMinutes** *(integer) --* 
+
+              A value in minutes after a backup job is successfully started before it must be completed or it will be canceled by Backup. This value is optional.
+
+              
+            
+
+            - **Lifecycle** *(dict) --* 
+
+              The lifecycle defines when a protected resource is transitioned to cold storage and when it expires. Backup transitions and expires backups automatically according to the lifecycle that you define.
+
+               
+
+              Backups transitioned to cold storage must be stored in cold storage for a minimum of 90 days. Therefore, the “retention” setting must be 90 days greater than the “transition to cold after days” setting. The “transition to cold after days” setting cannot be changed after a backup has been transitioned to cold.
+
+               
+
+              Resource types that can transition to cold storage are listed in the `Feature availability by resource <https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-feature-availability.html#features-by-resource>`__ table. Backup ignores this expression for other resource types.
+
+              
+              
+
+              - **MoveToColdStorageAfterDays** *(integer) --* 
+
+                The number of days after creation that a recovery point is moved to cold storage.
+
+                
+              
+
+              - **DeleteAfterDays** *(integer) --* 
+
+                The number of days after creation that a recovery point is deleted. This value must be at least 90 days after the number of days specified in ``MoveToColdStorageAfterDays``.
+
+                
+              
+
+              - **OptInToArchiveForSupportedResources** *(boolean) --* 
+
+                If the value is true, your backup plan transitions supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+
+                
+              
+
+              - **DeleteAfterEvent** *(string) --* 
+
+                The event after which a recovery point is deleted. A recovery point with both ``DeleteAfterDays`` and ``DeleteAfterEvent`` will delete after whichever condition is satisfied first. Not valid as an input.
+
+                
+          
+            
+
+            - **RecoveryPointTags** *(dict) --* 
+
+              The tags that are assigned to resources that are associated with this rule when restored from backup.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **RuleId** *(string) --* 
+
+              Uniquely identifies a rule that is used to schedule the backup of a selection of resources.
+
+              
+            
+
+            - **CopyActions** *(list) --* 
+
+              An array of ``CopyAction`` objects, which contains the details of the copy operation.
+
+              
+              
+
+              - *(dict) --* 
+
+                The details of the copy operation.
+
+                
+                
+
+                - **Lifecycle** *(dict) --* 
+
+                  Specifies the time period, in days, before a recovery point transitions to cold storage or is deleted.
+
+                   
+
+                  Backups transitioned to cold storage must be stored in cold storage for a minimum of 90 days. Therefore, on the console, the retention setting must be 90 days greater than the transition to cold after days setting. The transition to cold after days setting can't be changed after a backup has been transitioned to cold.
+
+                   
+
+                  Resource types that can transition to cold storage are listed in the `Feature availability by resource <https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-feature-availability.html#features-by-resource>`__ table. Backup ignores this expression for other resource types.
+
+                   
+
+                  To remove the existing lifecycle and retention periods and keep your recovery points indefinitely, specify -1 for ``MoveToColdStorageAfterDays`` and ``DeleteAfterDays``.
+
+                  
+                  
+
+                  - **MoveToColdStorageAfterDays** *(integer) --* 
+
+                    The number of days after creation that a recovery point is moved to cold storage.
+
+                    
+                  
+
+                  - **DeleteAfterDays** *(integer) --* 
+
+                    The number of days after creation that a recovery point is deleted. This value must be at least 90 days after the number of days specified in ``MoveToColdStorageAfterDays``.
+
+                    
+                  
+
+                  - **OptInToArchiveForSupportedResources** *(boolean) --* 
+
+                    If the value is true, your backup plan transitions supported resources to archive (cold) storage tier in accordance with your lifecycle settings.
+
+                    
+                  
+
+                  - **DeleteAfterEvent** *(string) --* 
+
+                    The event after which a recovery point is deleted. A recovery point with both ``DeleteAfterDays`` and ``DeleteAfterEvent`` will delete after whichever condition is satisfied first. Not valid as an input.
+
+                    
+              
+                
+
+                - **DestinationBackupVaultArn** *(string) --* 
+
+                  An Amazon Resource Name (ARN) that uniquely identifies the destination backup vault for the copied backup. For example, ``arn:aws:backup:us-east-1:123456789012:backup-vault:aBackupVault``.
+
+                  
+            
+          
+            
+
+            - **EnableContinuousBackup** *(boolean) --* 
+
+              Specifies whether Backup creates continuous backups. True causes Backup to create continuous backups capable of point-in-time restore (PITR). False (or not specified) causes Backup to create snapshot backups.
+
+              
+            
+
+            - **ScheduleExpressionTimezone** *(string) --* 
+
+              The timezone in which the schedule expression is set. By default, ScheduleExpressions are in UTC. You can modify this to a specified timezone.
+
+              
+            
+
+            - **IndexActions** *(list) --* 
+
+              IndexActions is an array you use to specify how backup data should be indexed.
+
+               
+
+              eEach BackupRule can have 0 or 1 IndexAction, as each backup can have up to one index associated with it.
+
+               
+
+              Within the array is ResourceType. Only one will be accepted for each BackupRule.
+
+              
+              
+
+              - *(dict) --* 
+
+                This is an optional array within a BackupRule.
+
+                 
+
+                IndexAction consists of one ResourceTypes.
+
+                
+                
+
+                - **ResourceTypes** *(list) --* 
+
+                  0 or 1 index action will be accepted for each BackupRule.
+
+                   
+
+                  Valid values:
+
+                   
+
+                  
+                  * ``EBS`` for Amazon Elastic Block Store
+                   
+                  * ``S3`` for Amazon Simple Storage Service (Amazon S3)
+                  
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **ScanActions** *(list) --* 
+
+              Contains your scanning configuration for the backup rule and includes the malware scanner, and scan mode of either full or incremental.
+
+              
+              
+
+              - *(dict) --* 
+
+                Defines a scanning action that specifies the malware scanner and scan mode to use.
+
+                
+                
+
+                - **MalwareScanner** *(string) --* 
+
+                  The malware scanner to use for the scan action. Currently only ``GUARDDUTY`` is supported.
+
+                  
+                
+
+                - **ScanMode** *(string) --* 
+
+                  The scanning mode to use for the scan action.
+
+                   
+
+                  Valid values: ``FULL_SCAN`` | ``INCREMENTAL_SCAN``.
+
+                  
+            
+          
+        
+      
+        
+
+        - **AdvancedBackupSettings** *(list) --* 
+
+          Contains a list of ``BackupOptions`` for each resource type.
+
+          
+          
+
+          - *(dict) --* 
+
+            The backup options for each resource type.
+
+            
+            
+
+            - **ResourceType** *(string) --* 
+
+              Specifies an object containing resource type and backup options. The only supported resource type is Amazon EC2 instances with Windows Volume Shadow Copy Service (VSS). For a CloudFormation example, see the `sample CloudFormation template to enable Windows VSS <https://docs.aws.amazon.com/aws-backup/latest/devguide/integrate-cloudformation-with-aws-backup.html>`__ in the *Backup User Guide*.
+
+               
+
+              Valid values: ``EC2``.
+
+              
+            
+
+            - **BackupOptions** *(dict) --* 
+
+              Specifies the backup option for a selected resource. This option is available for Windows VSS backup jobs and S3 backups.
+
+               
+
+              Valid values:
+
+               
+
+              Set to ``"WindowsVSS":"enabled"`` to enable the ``WindowsVSS`` backup option and create a Windows VSS backup.
+
+               
+
+              Set to ``"WindowsVSS":"disabled"`` to create a regular backup. The ``WindowsVSS`` option is not enabled by default.
+
+               
+
+              For S3 backups, set to ``"S3BackupACLs":"disabled"`` to exclude ACLs from the backup, or ``"S3BackupObjectTags":"disabled"`` to exclude object tags from the backup. By default, both ACLs and object tags are included in S3 backups.
+
+               
+
+              If you specify an invalid option, you get an ``InvalidParameterValueException`` exception.
+
+               
+
+              For more information about Windows VSS backups, see `Creating a VSS-Enabled Windows Backup <https://docs.aws.amazon.com/aws-backup/latest/devguide/windows-backups.html>`__.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+        
+      
+        
+
+        - **ScanSettings** *(list) --* 
+
+          Contains your scanning configuration for the backup plan and includes the Malware scanner, your selected resources, and scanner role.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains configuration settings for malware scanning, including the scanner type, target resource types, and scanner role.
+
+            
+            
+
+            - **MalwareScanner** *(string) --* 
+
+              The malware scanner to use for scanning. Currently only ``GUARDDUTY`` is supported.
+
+              
+            
+
+            - **ResourceTypes** *(list) --* 
+
+              An array of resource types to be scanned for malware.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **ScannerRoleArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the IAM role that the scanner uses to access resources; for example, ``arn:aws:iam::123456789012:role/ScannerRole``.
+
+              
+        
+      
+    
+      
+
+      - **BackupPlanId** *(string) --* 
+
+        Uniquely identifies a backup plan.
+
+        
+      
+
+      - **BackupPlanArn** *(string) --* 
+
+        An Amazon Resource Name (ARN) that uniquely identifies a backup plan; for example, ``arn:aws:backup:us-east-1:123456789012:plan:8F81F553-3A74-4A3F-B93D-B3360DC80C50``.
+
+        
+      
+
+      - **VersionId** *(string) --* 
+
+        Unique, randomly generated, Unicode, UTF-8 encoded strings that are at most 1,024 bytes long. Version IDs cannot be edited.
+
+        
+      
+
+      - **CreatorRequestId** *(string) --* 
+
+        A unique string that identifies the request and allows failed requests to be retried without the risk of running the operation twice.
+
+        
+      
+
+      - **CreationDate** *(datetime) --* 
+
+        The date and time that a backup plan is created, in Unix format and Coordinated Universal Time (UTC). The value of ``CreationDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **DeletionDate** *(datetime) --* 
+
+        The date and time that a backup plan is deleted, in Unix format and Coordinated Universal Time (UTC). The value of ``DeletionDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **LastExecutionDate** *(datetime) --* 
+
+        The last time this backup plan was run. A date and time, in Unix format and Coordinated Universal Time (UTC). The value of ``LastExecutionDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **AdvancedBackupSettings** *(list) --* 
+
+        Contains a list of ``BackupOptions`` for each resource type. The list is populated only if the advanced option is set for the backup plan.
+
+        
+        
+
+        - *(dict) --* 
+
+          The backup options for each resource type.
+
+          
+          
+
+          - **ResourceType** *(string) --* 
+
+            Specifies an object containing resource type and backup options. The only supported resource type is Amazon EC2 instances with Windows Volume Shadow Copy Service (VSS). For a CloudFormation example, see the `sample CloudFormation template to enable Windows VSS <https://docs.aws.amazon.com/aws-backup/latest/devguide/integrate-cloudformation-with-aws-backup.html>`__ in the *Backup User Guide*.
+
+             
+
+            Valid values: ``EC2``.
+
+            
+          
+
+          - **BackupOptions** *(dict) --* 
+
+            Specifies the backup option for a selected resource. This option is available for Windows VSS backup jobs and S3 backups.
+
+             
+
+            Valid values:
+
+             
+
+            Set to ``"WindowsVSS":"enabled"`` to enable the ``WindowsVSS`` backup option and create a Windows VSS backup.
+
+             
+
+            Set to ``"WindowsVSS":"disabled"`` to create a regular backup. The ``WindowsVSS`` option is not enabled by default.
+
+             
+
+            For S3 backups, set to ``"S3BackupACLs":"disabled"`` to exclude ACLs from the backup, or ``"S3BackupObjectTags":"disabled"`` to exclude object tags from the backup. By default, both ACLs and object tags are included in S3 backups.
+
+             
+
+            If you specify an invalid option, you get an ``InvalidParameterValueException`` exception.
+
+             
+
+            For more information about Windows VSS backups, see `Creating a VSS-Enabled Windows Backup <https://docs.aws.amazon.com/aws-backup/latest/devguide/windows-backups.html>`__.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+      
+
+      - **ScheduledRunsPreview** *(list) --* 
+
+        List of upcoming scheduled backup runs. Only included when ``MaxScheduledRunsPreview`` parameter is greater than 0. Contains up to 10 future backup executions with their scheduled times, execution types, and associated rule IDs.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about a scheduled backup plan execution, including the execution time, rule type, and associated rule identifier.
+
+          
+          
+
+          - **ExecutionTime** *(datetime) --* 
+
+            The timestamp when the backup is scheduled to run, in Unix format and Coordinated Universal Time (UTC). The value is accurate to milliseconds.
+
+            
+          
+
+          - **RuleId** *(string) --* 
+
+            The unique identifier of the backup rule that will execute at the scheduled time.
+
+            
+          
+
+          - **RuleExecutionType** *(string) --* 
+
+            The type of backup rule execution. Valid values are ``CONTINUOUS`` (point-in-time recovery), ``SNAPSHOTS`` (snapshot backups), or ``CONTINUOUS_AND_SNAPSHOTS`` (both types combined).
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Backup.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.MissingParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.ServiceUnavailableException`
+
+  

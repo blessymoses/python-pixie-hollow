@@ -1,0 +1,311 @@
+:doc:`RAM <../../ram>` / Client / associate_resource_share
+
+************************
+associate_resource_share
+************************
+
+
+
+.. py:method:: RAM.Client.associate_resource_share(**kwargs)
+
+  
+
+  Adds the specified list of principals, resources, and source constraints to a resource share. Principals that already have access to this resource share immediately receive access to the added resources. Newly added principals immediately receive access to the resources shared in this resource share.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ram-2018-01-04/AssociateResourceShare>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.associate_resource_share(
+        resourceShareArn='string',
+        resourceArns=[
+            'string',
+        ],
+        principals=[
+            'string',
+        ],
+        clientToken='string',
+        sources=[
+            'string',
+        ]
+    )
+    
+  :type resourceShareArn: string
+  :param resourceShareArn: **[REQUIRED]** 
+
+    Specifies the `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the resource share that you want to add principals or resources to.
+
+    
+
+  
+  :type resourceArns: list
+  :param resourceArns: 
+
+    Specifies a list of `Amazon Resource Names (ARNs) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the resources that you want to share. This can be ``null`` if you want to add only principals.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type principals: list
+  :param principals: 
+
+    Specifies a list of principals to whom you want to the resource share. This can be ``null`` if you want to add only resources.
+
+     
+
+    What the principals can do with the resources in the share is determined by the RAM permissions that you associate with the resource share. See  AssociateResourceSharePermission.
+
+     
+
+    You can include the following values:
+
+     
+
+    
+    * An Amazon Web Services account ID, for example: ``123456789012``
+     
+    * An `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of an organization in Organizations, for example: ``organizations::123456789012:organization/o-exampleorgid``
+     
+    * An ARN of an organizational unit (OU) in Organizations, for example: ``organizations::123456789012:ou/o-exampleorgid/ou-examplerootid-exampleouid123``
+     
+    * An ARN of an IAM role, for example: ``iam::123456789012:role/rolename``
+     
+    * An ARN of an IAM user, for example: ``iam::123456789012user/username``
+     
+    * A service principal name, for example: ``service-id.amazonaws.com``
+    
+
+     
+
+    .. note::
+
+      
+
+      Not all resource types can be shared with IAM roles and users. For more information, see `Sharing with IAM roles and users <https://docs.aws.amazon.com/ram/latest/userguide/permissions.html#permissions-rbp-supported-resource-types>`__ in the *Resource Access Manager User Guide*.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type clientToken: string
+  :param clientToken: 
+
+    Specifies a unique, case-sensitive identifier that you provide to ensure the idempotency of the request. This lets you safely retry the request without accidentally performing the same operation a second time. Passing the same value to a later call to an operation requires that you also pass the same value for all other parameters. We recommend that you use a `UUID type of value. <https://wikipedia.org/wiki/Universally_unique_identifier>`__.
+
+     
+
+    If you don't provide this value, then Amazon Web Services generates a random one for you.
+
+     
+
+    If you retry the operation with the same ``ClientToken``, but with different parameters, the retry fails with an ``IdempotentParameterMismatch`` error.
+
+    
+
+  
+  :type sources: list
+  :param sources: 
+
+    Specifies source constraints (accounts, ARNs, organization IDs, or organization paths) that limit when service principals can access resources in this resource share. When a service principal attempts to access a shared resource, validation is performed to ensure the request originates from one of the specified sources. This helps prevent confused deputy attacks by applying constraints on where service principals can access resources from.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'resourceShareAssociations': [
+              {
+                  'resourceShareArn': 'string',
+                  'resourceShareName': 'string',
+                  'associatedEntity': 'string',
+                  'associationType': 'PRINCIPAL'|'RESOURCE'|'SOURCE',
+                  'status': 'ASSOCIATING'|'ASSOCIATED'|'FAILED'|'DISASSOCIATING'|'DISASSOCIATED'|'SUSPENDED'|'SUSPENDING'|'RESTORING',
+                  'statusMessage': 'string',
+                  'creationTime': datetime(2015, 1, 1),
+                  'lastUpdatedTime': datetime(2015, 1, 1),
+                  'external': True|False
+              },
+          ],
+          'clientToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **resourceShareAssociations** *(list) --* 
+
+        An array of objects that contain information about the associations.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes an association between a resource share and either a principal or a resource.
+
+          
+          
+
+          - **resourceShareArn** *(string) --* 
+
+            The `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the resource share.
+
+            
+          
+
+          - **resourceShareName** *(string) --* 
+
+            The name of the resource share.
+
+            
+          
+
+          - **associatedEntity** *(string) --* 
+
+            The associated entity. This can be either of the following:
+
+             
+
+            
+            * For a resource association, this is the `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the resource.
+             
+            * For principal associations, this is one of the following: 
+
+              
+              * The ID of an Amazon Web Services account
+               
+              * The `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of an organization in Organizations
+               
+              * The ARN of an organizational unit (OU) in Organizations
+               
+              * The ARN of an IAM role
+               
+              * The ARN of an IAM user
+              
+
+            
+            
+
+            
+          
+
+          - **associationType** *(string) --* 
+
+            The type of entity included in this association.
+
+            
+          
+
+          - **status** *(string) --* 
+
+            The current status of the association.
+
+            
+          
+
+          - **statusMessage** *(string) --* 
+
+            A message about the status of the association.
+
+            
+          
+
+          - **creationTime** *(datetime) --* 
+
+            The date and time when the association was created.
+
+            
+          
+
+          - **lastUpdatedTime** *(datetime) --* 
+
+            The date and time when the association was last updated.
+
+            
+          
+
+          - **external** *(boolean) --* 
+
+            Indicates whether the principal belongs to the same organization in Organizations as the Amazon Web Services account that owns the resource share.
+
+            
+      
+    
+      
+
+      - **clientToken** *(string) --* 
+
+        The idempotency identifier associated with this request. If you want to repeat the same operation in an idempotent manner then you must include this value in the ``clientToken`` request parameter of that later call. All other parameters must also have the same values that you used in the first call.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`RAM.Client.exceptions.IdempotentParameterMismatchException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.UnknownResourceException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidStateTransitionException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ResourceShareLimitExceededException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.MalformedArnException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidStateTransitionException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidClientTokenException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.OperationNotPermittedException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ServerInternalException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.UnknownResourceException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ThrottlingException`
+
+  

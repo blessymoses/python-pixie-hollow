@@ -1,0 +1,277 @@
+:doc:`ConfigService <../../config>` / Client / put_remediation_exceptions
+
+**************************
+put_remediation_exceptions
+**************************
+
+
+
+.. py:method:: ConfigService.Client.put_remediation_exceptions(**kwargs)
+
+  
+
+  A remediation exception is when a specified resource is no longer considered for auto-remediation. This API adds a new exception or updates an existing exception for a specified resource with a specified Config rule.
+
+   
+
+  .. note::
+
+    
+
+    **Exceptions block auto remediation**
+
+     
+
+    Config generates a remediation exception when a problem occurs running a remediation action for a specified resource. Remediation exceptions blocks auto-remediation until the exception is cleared.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    **Manual remediation is recommended when placing an exception**
+
+     
+
+    When placing an exception on an Amazon Web Services resource, it is recommended that remediation is set as manual remediation until the given Config rule for the specified resource evaluates the resource as ``NON_COMPLIANT``. Once the resource has been evaluated as ``NON_COMPLIANT``, you can add remediation exceptions and change the remediation type back from Manual to Auto if you want to use auto-remediation. Otherwise, using auto-remediation before a ``NON_COMPLIANT`` evaluation result can delete resources before the exception is applied.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    **Exceptions can only be performed on non-compliant resources**
+
+     
+
+    Placing an exception can only be performed on resources that are ``NON_COMPLIANT``. If you use this API for ``COMPLIANT`` resources or resources that are ``NOT_APPLICABLE``, a remediation exception will not be generated. For more information on the conditions that initiate the possible Config evaluation results, see `Concepts | Config Rules <https://docs.aws.amazon.com/config/latest/developerguide/config-concepts.html#aws-config-rules>`__ in the *Config Developer Guide*.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    **Exceptions cannot be placed on service-linked remediation actions**
+
+     
+
+    You cannot place an exception on service-linked remediation actions, such as remediation actions put by an organizational conformance pack.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    **Auto remediation can be initiated even for compliant resources**
+
+     
+
+    If you enable auto remediation for a specific Config rule using the `PutRemediationConfigurations <https://docs.aws.amazon.com/config/latest/APIReference/emAPI_PutRemediationConfigurations.html>`__ API or the Config console, it initiates the remediation process for all non-compliant resources for that specific rule. The auto remediation process relies on the compliance data snapshot which is captured on a periodic basis. Any non-compliant resource that is updated between the snapshot schedule will continue to be remediated based on the last known compliance data snapshot.
+
+     
+
+    This means that in some cases auto remediation can be initiated even for compliant resources, since the bootstrap processor uses a database that can have stale evaluation results based on the last known compliance data snapshot.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/config-2014-11-12/PutRemediationExceptions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_remediation_exceptions(
+        ConfigRuleName='string',
+        ResourceKeys=[
+            {
+                'ResourceType': 'string',
+                'ResourceId': 'string'
+            },
+        ],
+        Message='string',
+        ExpirationTime=datetime(2015, 1, 1)
+    )
+    
+  :type ConfigRuleName: string
+  :param ConfigRuleName: **[REQUIRED]** 
+
+    The name of the Config rule for which you want to create remediation exception.
+
+    
+
+  
+  :type ResourceKeys: list
+  :param ResourceKeys: **[REQUIRED]** 
+
+    An exception list of resource exception keys to be processed with the current request. Config adds exception for each resource key. For example, Config adds 3 exceptions for 3 resource keys.
+
+    
+
+  
+    - *(dict) --* 
+
+      The details that identify a resource within Config, including the resource type and resource ID.
+
+      
+
+    
+      - **ResourceType** *(string) --* 
+
+        The type of a resource.
+
+        
+
+      
+      - **ResourceId** *(string) --* 
+
+        The ID of the resource (for example., sg-xxxxxx).
+
+        
+
+      
+    
+
+  :type Message: string
+  :param Message: 
+
+    The message contains an explanation of the exception.
+
+    
+
+  
+  :type ExpirationTime: datetime
+  :param ExpirationTime: 
+
+    The exception is automatically deleted after the expiration date.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FailedBatches': [
+              {
+                  'FailureMessage': 'string',
+                  'FailedItems': [
+                      {
+                          'ConfigRuleName': 'string',
+                          'ResourceType': 'string',
+                          'ResourceId': 'string',
+                          'Message': 'string',
+                          'ExpirationTime': datetime(2015, 1, 1)
+                      },
+                  ]
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FailedBatches** *(list) --* 
+
+        Returns a list of failed remediation exceptions batch objects. Each object in the batch consists of a list of failed items and failure messages.
+
+        
+        
+
+        - *(dict) --* 
+
+          List of each of the failed remediation exceptions with specific reasons.
+
+          
+          
+
+          - **FailureMessage** *(string) --* 
+
+            Returns a failure message. For example, the auto-remediation has failed.
+
+            
+          
+
+          - **FailedItems** *(list) --* 
+
+            Returns remediation exception resource key object of the failed items.
+
+            
+            
+
+            - *(dict) --* 
+
+              An object that represents the details about the remediation exception. The details include the rule name, an explanation of an exception, the time when the exception will be deleted, the resource ID, and resource type.
+
+              
+              
+
+              - **ConfigRuleName** *(string) --* 
+
+                The name of the Config rule.
+
+                
+              
+
+              - **ResourceType** *(string) --* 
+
+                The type of a resource.
+
+                
+              
+
+              - **ResourceId** *(string) --* 
+
+                The ID of the resource (for example., sg-xxxxxx).
+
+                
+              
+
+              - **Message** *(string) --* 
+
+                An explanation of an remediation exception.
+
+                
+              
+
+              - **ExpirationTime** *(datetime) --* 
+
+                The time when the remediation exception will be deleted.
+
+                
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.InsufficientPermissionsException`
+
+  

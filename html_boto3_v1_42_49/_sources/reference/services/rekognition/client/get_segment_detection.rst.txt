@@ -1,0 +1,513 @@
+:doc:`Rekognition <../../rekognition>` / Client / get_segment_detection
+
+*********************
+get_segment_detection
+*********************
+
+
+
+.. py:method:: Rekognition.Client.get_segment_detection(**kwargs)
+
+  
+
+  Gets the segment detection results of a Amazon Rekognition Video analysis started by  StartSegmentDetection.
+
+   
+
+  Segment detection with Amazon Rekognition Video is an asynchronous operation. You start segment detection by calling  StartSegmentDetection which returns a job identifier ( ``JobId``). When the segment detection operation finishes, Amazon Rekognition publishes a completion status to the Amazon Simple Notification Service topic registered in the initial call to ``StartSegmentDetection``. To get the results of the segment detection operation, first check that the status value published to the Amazon SNS topic is ``SUCCEEDED``. if so, call ``GetSegmentDetection`` and pass the job identifier ( ``JobId``) from the initial call of ``StartSegmentDetection``.
+
+   
+
+  ``GetSegmentDetection`` returns detected segments in an array ( ``Segments``) of  SegmentDetection objects. ``Segments`` is sorted by the segment types specified in the ``SegmentTypes`` input parameter of ``StartSegmentDetection``. Each element of the array includes the detected segment, the precentage confidence in the acuracy of the detected segment, the type of the segment, and the frame in which the segment was detected.
+
+   
+
+  Use ``SelectedSegmentTypes`` to find out the type of segment detection requested in the call to ``StartSegmentDetection``.
+
+   
+
+  Use the ``MaxResults`` parameter to limit the number of segment detections returned. If there are more results than specified in ``MaxResults``, the value of ``NextToken`` in the operation response contains a pagination token for getting the next set of results. To get the next page of results, call ``GetSegmentDetection`` and populate the ``NextToken`` request parameter with the token value returned from the previous call to ``GetSegmentDetection``.
+
+   
+
+  For more information, see Detecting video segments in stored video in the Amazon Rekognition Developer Guide.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rekognition-2016-06-27/GetSegmentDetection>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_segment_detection(
+        JobId='string',
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type JobId: string
+  :param JobId: **[REQUIRED]** 
+
+    Job identifier for the text detection operation for which you want results returned. You get the job identifer from an initial call to ``StartSegmentDetection``.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    Maximum number of results to return per paginated call. The largest value you can specify is 1000.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    If the response is truncated, Amazon Rekognition Video returns this token that you can use in the subsequent request to retrieve the next set of text.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'JobStatus': 'IN_PROGRESS'|'SUCCEEDED'|'FAILED',
+          'StatusMessage': 'string',
+          'VideoMetadata': [
+              {
+                  'Codec': 'string',
+                  'DurationMillis': 123,
+                  'Format': 'string',
+                  'FrameRate': ...,
+                  'FrameHeight': 123,
+                  'FrameWidth': 123,
+                  'ColorRange': 'FULL'|'LIMITED'
+              },
+          ],
+          'AudioMetadata': [
+              {
+                  'Codec': 'string',
+                  'DurationMillis': 123,
+                  'SampleRate': 123,
+                  'NumberOfChannels': 123
+              },
+          ],
+          'NextToken': 'string',
+          'Segments': [
+              {
+                  'Type': 'TECHNICAL_CUE'|'SHOT',
+                  'StartTimestampMillis': 123,
+                  'EndTimestampMillis': 123,
+                  'DurationMillis': 123,
+                  'StartTimecodeSMPTE': 'string',
+                  'EndTimecodeSMPTE': 'string',
+                  'DurationSMPTE': 'string',
+                  'TechnicalCueSegment': {
+                      'Type': 'ColorBars'|'EndCredits'|'BlackFrames'|'OpeningCredits'|'StudioLogo'|'Slate'|'Content',
+                      'Confidence': ...
+                  },
+                  'ShotSegment': {
+                      'Index': 123,
+                      'Confidence': ...
+                  },
+                  'StartFrameNumber': 123,
+                  'EndFrameNumber': 123,
+                  'DurationFrames': 123
+              },
+          ],
+          'SelectedSegmentTypes': [
+              {
+                  'Type': 'TECHNICAL_CUE'|'SHOT',
+                  'ModelVersion': 'string'
+              },
+          ],
+          'JobId': 'string',
+          'Video': {
+              'S3Object': {
+                  'Bucket': 'string',
+                  'Name': 'string',
+                  'Version': 'string'
+              }
+          },
+          'JobTag': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **JobStatus** *(string) --* 
+
+        Current status of the segment detection job.
+
+        
+      
+
+      - **StatusMessage** *(string) --* 
+
+        If the job fails, ``StatusMessage`` provides a descriptive error message.
+
+        
+      
+
+      - **VideoMetadata** *(list) --* 
+
+        Currently, Amazon Rekognition Video returns a single object in the ``VideoMetadata`` array. The object contains information about the video stream in the input file that Amazon Rekognition Video chose to analyze. The ``VideoMetadata`` object includes the video codec, video format and other information. Video metadata is returned in each page of information returned by ``GetSegmentDetection``.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about a video that Amazon Rekognition analyzed. ``Videometadata`` is returned in every page of paginated responses from a Amazon Rekognition video operation.
+
+          
+          
+
+          - **Codec** *(string) --* 
+
+            Type of compression used in the analyzed video.
+
+            
+          
+
+          - **DurationMillis** *(integer) --* 
+
+            Length of the video in milliseconds.
+
+            
+          
+
+          - **Format** *(string) --* 
+
+            Format of the analyzed video. Possible values are MP4, MOV and AVI.
+
+            
+          
+
+          - **FrameRate** *(float) --* 
+
+            Number of frames per second in the video.
+
+            
+          
+
+          - **FrameHeight** *(integer) --* 
+
+            Vertical pixel dimension of the video.
+
+            
+          
+
+          - **FrameWidth** *(integer) --* 
+
+            Horizontal pixel dimension of the video.
+
+            
+          
+
+          - **ColorRange** *(string) --* 
+
+            A description of the range of luminance values in a video, either LIMITED (16 to 235) or FULL (0 to 255).
+
+            
+      
+    
+      
+
+      - **AudioMetadata** *(list) --* 
+
+        An array of objects. There can be multiple audio streams. Each ``AudioMetadata`` object contains metadata for a single audio stream. Audio information in an ``AudioMetadata`` objects includes the audio codec, the number of audio channels, the duration of the audio stream, and the sample rate. Audio metadata is returned in each page of information returned by ``GetSegmentDetection``.
+
+        
+        
+
+        - *(dict) --* 
+
+          Metadata information about an audio stream. An array of ``AudioMetadata`` objects for the audio streams found in a stored video is returned by  GetSegmentDetection.
+
+          
+          
+
+          - **Codec** *(string) --* 
+
+            The audio codec used to encode or decode the audio stream.
+
+            
+          
+
+          - **DurationMillis** *(integer) --* 
+
+            The duration of the audio stream in milliseconds.
+
+            
+          
+
+          - **SampleRate** *(integer) --* 
+
+            The sample rate for the audio stream.
+
+            
+          
+
+          - **NumberOfChannels** *(integer) --* 
+
+            The number of audio channels in the segment.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If the previous response was incomplete (because there are more labels to retrieve), Amazon Rekognition Video returns a pagination token in the response. You can use this pagination token to retrieve the next set of text.
+
+        
+      
+
+      - **Segments** *(list) --* 
+
+        An array of segments detected in a video. The array is sorted by the segment types (TECHNICAL_CUE or SHOT) specified in the ``SegmentTypes`` input parameter of ``StartSegmentDetection``. Within each segment type the array is sorted by timestamp values.
+
+        
+        
+
+        - *(dict) --* 
+
+          A technical cue or shot detection segment detected in a video. An array of ``SegmentDetection`` objects containing all segments detected in a stored video is returned by  GetSegmentDetection.
+
+          
+          
+
+          - **Type** *(string) --* 
+
+            The type of the segment. Valid values are ``TECHNICAL_CUE`` and ``SHOT``.
+
+            
+          
+
+          - **StartTimestampMillis** *(integer) --* 
+
+            The start time of the detected segment in milliseconds from the start of the video. This value is rounded down. For example, if the actual timestamp is 100.6667 milliseconds, Amazon Rekognition Video returns a value of 100 millis.
+
+            
+          
+
+          - **EndTimestampMillis** *(integer) --* 
+
+            The end time of the detected segment, in milliseconds, from the start of the video. This value is rounded down.
+
+            
+          
+
+          - **DurationMillis** *(integer) --* 
+
+            The duration of the detected segment in milliseconds.
+
+            
+          
+
+          - **StartTimecodeSMPTE** *(string) --* 
+
+            The frame-accurate SMPTE timecode, from the start of a video, for the start of a detected segment. ``StartTimecode`` is in *HH:MM:SS:fr* format (and *;fr* for drop frame-rates).
+
+            
+          
+
+          - **EndTimecodeSMPTE** *(string) --* 
+
+            The frame-accurate SMPTE timecode, from the start of a video, for the end of a detected segment. ``EndTimecode`` is in *HH:MM:SS:fr* format (and *;fr* for drop frame-rates).
+
+            
+          
+
+          - **DurationSMPTE** *(string) --* 
+
+            The duration of the timecode for the detected segment in SMPTE format.
+
+            
+          
+
+          - **TechnicalCueSegment** *(dict) --* 
+
+            If the segment is a technical cue, contains information about the technical cue.
+
+            
+            
+
+            - **Type** *(string) --* 
+
+              The type of the technical cue.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              The confidence that Amazon Rekognition Video has in the accuracy of the detected segment.
+
+              
+        
+          
+
+          - **ShotSegment** *(dict) --* 
+
+            If the segment is a shot detection, contains information about the shot detection.
+
+            
+            
+
+            - **Index** *(integer) --* 
+
+              An Identifier for a shot detection segment detected in a video.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              The confidence that Amazon Rekognition Video has in the accuracy of the detected segment.
+
+              
+        
+          
+
+          - **StartFrameNumber** *(integer) --* 
+
+            The frame number of the start of a video segment, using a frame index that starts with 0.
+
+            
+          
+
+          - **EndFrameNumber** *(integer) --* 
+
+            The frame number at the end of a video segment, using a frame index that starts with 0.
+
+            
+          
+
+          - **DurationFrames** *(integer) --* 
+
+            The duration of a video segment, expressed in frames.
+
+            
+      
+    
+      
+
+      - **SelectedSegmentTypes** *(list) --* 
+
+        An array containing the segment types requested in the call to ``StartSegmentDetection``.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about the type of a segment requested in a call to  StartSegmentDetection. An array of ``SegmentTypeInfo`` objects is returned by the response from  GetSegmentDetection.
+
+          
+          
+
+          - **Type** *(string) --* 
+
+            The type of a segment (technical cue or shot detection).
+
+            
+          
+
+          - **ModelVersion** *(string) --* 
+
+            The version of the model used to detect segments.
+
+            
+      
+    
+      
+
+      - **JobId** *(string) --* 
+
+        Job identifier for the segment detection operation for which you want to obtain results. The job identifer is returned by an initial call to StartSegmentDetection.
+
+        
+      
+
+      - **Video** *(dict) --* 
+
+        Video file stored in an Amazon S3 bucket. Amazon Rekognition video start operations such as  StartLabelDetection use ``Video`` to specify a video for analysis. The supported file formats are .mp4, .mov and .avi.
+
+        
+        
+
+        - **S3Object** *(dict) --* 
+
+          The Amazon S3 bucket name and file name for the video.
+
+          
+          
+
+          - **Bucket** *(string) --* 
+
+            Name of the S3 bucket.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            S3 object key name.
+
+            
+          
+
+          - **Version** *(string) --* 
+
+            If the bucket is versioning enabled, you can specify the object version.
+
+            
+      
+    
+      
+
+      - **JobTag** *(string) --* 
+
+        A job identifier specified in the call to StartSegmentDetection and returned in the job completion notification sent to your Amazon Simple Notification Service topic.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Rekognition.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidPaginationTokenException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ProvisionedThroughputExceededException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ThrottlingException`
+
+  

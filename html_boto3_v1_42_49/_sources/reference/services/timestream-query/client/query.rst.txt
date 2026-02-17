@@ -1,0 +1,615 @@
+:doc:`TimestreamQuery <../../timestream-query>` / Client / query
+
+*****
+query
+*****
+
+
+
+.. py:method:: TimestreamQuery.Client.query(**kwargs)
+
+  
+
+  ``Query`` is a synchronous operation that enables you to run a query against your Amazon Timestream data.
+
+   
+
+  If you enabled ``QueryInsights``, this API also returns insights and metrics related to the query that you executed. ``QueryInsights`` helps with performance tuning of your query. For more information about ``QueryInsights``, see `Using query insights to optimize queries in Amazon Timestream <https://docs.aws.amazon.com/timestream/latest/developerguide/using-query-insights.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    The maximum number of ``Query`` API requests you're allowed to make with ``QueryInsights`` enabled is 1 query per second (QPS). If you exceed this query rate, it might result in throttling.
+
+    
+
+   
+
+  ``Query`` will time out after 60 seconds. You must update the default timeout in the SDK to support a timeout of 60 seconds. See the `code sample <https://docs.aws.amazon.com/timestream/latest/developerguide/code-samples.run-query.html>`__ for details.
+
+   
+
+  Your query request will fail in the following cases:
+
+   
+
+  
+  * If you submit a ``Query`` request with the same client token outside of the 5-minute idempotency window.
+   
+  * If you submit a ``Query`` request with the same client token, but change other parameters, within the 5-minute idempotency window.
+   
+  * If the size of the row (including the query metadata) exceeds 1 MB, then the query will fail with the following error message: ``Query aborted as max page response size has been exceeded by the output result row``
+   
+  * If the IAM principal of the query initiator and the result reader are not the same and/or the query initiator and the result reader do not have the same query string in the query requests, the query will fail with an ``Invalid pagination token`` error.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/timestream-query-2018-11-01/Query>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.query(
+        QueryString='string',
+        ClientToken='string',
+        NextToken='string',
+        MaxRows=123,
+        QueryInsights={
+            'Mode': 'ENABLED_WITH_RATE_CONTROL'|'DISABLED'
+        }
+    )
+    
+  :type QueryString: string
+  :param QueryString: **[REQUIRED]** 
+
+    The query to be run by Timestream.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    Unique, case-sensitive string of up to 64 ASCII characters specified when a ``Query`` request is made. Providing a ``ClientToken`` makes the call to ``Query`` *idempotent*. This means that running the same query repeatedly will produce the same result. In other words, making multiple identical ``Query`` requests has the same effect as making a single request. When using ``ClientToken`` in a query, note the following:
+
+     
+
+    
+    * If the Query API is instantiated without a ``ClientToken``, the Query SDK generates a ``ClientToken`` on your behalf.
+     
+    * If the ``Query`` invocation only contains the ``ClientToken`` but does not include a ``NextToken``, that invocation of ``Query`` is assumed to be a new query run.
+     
+    * If the invocation contains ``NextToken``, that particular invocation is assumed to be a subsequent invocation of a prior call to the Query API, and a result set is returned.
+     
+    * After 4 hours, any request with the same ``ClientToken`` is treated as a new request.
+    
+
+    This field is autopopulated if not provided.
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A pagination token used to return a set of results. When the ``Query`` API is invoked using ``NextToken``, that particular invocation is assumed to be a subsequent invocation of a prior call to ``Query``, and a result set is returned. However, if the ``Query`` invocation only contains the ``ClientToken``, that invocation of ``Query`` is assumed to be a new query run.
+
+     
+
+    Note the following when using NextToken in a query:
+
+     
+
+    
+    * A pagination token can be used for up to five ``Query`` invocations, OR for a duration of up to 1 hour – whichever comes first.
+     
+    * Using the same ``NextToken`` will return the same set of records. To keep paginating through the result set, you must to use the most recent ``nextToken``.
+     
+    * Suppose a ``Query`` invocation returns two ``NextToken`` values, ``TokenA`` and ``TokenB``. If ``TokenB`` is used in a subsequent ``Query`` invocation, then ``TokenA`` is invalidated and cannot be reused.
+     
+    * To request a previous result set from a query after pagination has begun, you must re-invoke the Query API.
+     
+    * The latest ``NextToken`` should be used to paginate until ``null`` is returned, at which point a new ``NextToken`` should be used.
+     
+    * If the IAM principal of the query initiator and the result reader are not the same and/or the query initiator and the result reader do not have the same query string in the query requests, the query will fail with an ``Invalid pagination token`` error.
+    
+
+    
+
+  
+  :type MaxRows: integer
+  :param MaxRows: 
+
+    The total number of rows to be returned in the ``Query`` output. The initial run of ``Query`` with a ``MaxRows`` value specified will return the result set of the query in two cases:
+
+     
+
+    
+    * The size of the result is less than ``1MB``.
+     
+    * The number of rows in the result set is less than the value of ``maxRows``.
+    
+
+     
+
+    Otherwise, the initial invocation of ``Query`` only returns a ``NextToken``, which can then be used in subsequent calls to fetch the result set. To resume pagination, provide the ``NextToken`` value in the subsequent command.
+
+     
+
+    If the row size is large (e.g. a row has many columns), Timestream may return fewer rows to keep the response size from exceeding the 1 MB limit. If ``MaxRows`` is not provided, Timestream will send the necessary number of rows to meet the 1 MB limit.
+
+    
+
+  
+  :type QueryInsights: dict
+  :param QueryInsights: 
+
+    Encapsulates settings for enabling ``QueryInsights``.
+
+     
+
+    Enabling ``QueryInsights`` returns insights and metrics in addition to query results for the query that you executed. You can use ``QueryInsights`` to tune your query performance.
+
+    
+
+  
+    - **Mode** *(string) --* **[REQUIRED]** 
+
+      Provides the following modes to enable ``QueryInsights``:
+
+       
+
+      
+      * ``ENABLED_WITH_RATE_CONTROL`` – Enables ``QueryInsights`` for the queries being processed. This mode also includes a rate control mechanism, which limits the ``QueryInsights`` feature to 1 query per second (QPS).
+       
+      * ``DISABLED`` – Disables ``QueryInsights``.
+      
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'QueryId': 'string',
+          'NextToken': 'string',
+          'Rows': [
+              {
+                  'Data': [
+                      {
+                          'ScalarValue': 'string',
+                          'TimeSeriesValue': [
+                              {
+                                  'Time': 'string',
+                                  'Value': {'... recursive ...'}
+                              },
+                          ],
+                          'ArrayValue': {'... recursive ...'},
+                          'RowValue': {'... recursive ...'},
+                          'NullValue': True|False
+                      },
+                  ]
+              },
+          ],
+          'ColumnInfo': [
+              {
+                  'Name': 'string',
+                  'Type': {
+                      'ScalarType': 'VARCHAR'|'BOOLEAN'|'BIGINT'|'DOUBLE'|'TIMESTAMP'|'DATE'|'TIME'|'INTERVAL_DAY_TO_SECOND'|'INTERVAL_YEAR_TO_MONTH'|'UNKNOWN'|'INTEGER',
+                      'ArrayColumnInfo': {'... recursive ...'},
+                      'TimeSeriesMeasureValueColumnInfo': {'... recursive ...'},
+                      'RowColumnInfo': {'... recursive ...'}
+                  }
+              },
+          ],
+          'QueryStatus': {
+              'ProgressPercentage': 123.0,
+              'CumulativeBytesScanned': 123,
+              'CumulativeBytesMetered': 123
+          },
+          'QueryInsightsResponse': {
+              'QuerySpatialCoverage': {
+                  'Max': {
+                      'Value': 123.0,
+                      'TableArn': 'string',
+                      'PartitionKey': [
+                          'string',
+                      ]
+                  }
+              },
+              'QueryTemporalRange': {
+                  'Max': {
+                      'Value': 123,
+                      'TableArn': 'string'
+                  }
+              },
+              'QueryTableCount': 123,
+              'OutputRows': 123,
+              'OutputBytes': 123,
+              'UnloadPartitionCount': 123,
+              'UnloadWrittenRows': 123,
+              'UnloadWrittenBytes': 123
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **QueryId** *(string) --* 
+
+        A unique ID for the given query.
+
+        
+      
+
+      - **NextToken** *(string) --* 
+
+        A pagination token that can be used again on a ``Query`` call to get the next set of results.
+
+        
+      
+
+      - **Rows** *(list) --* 
+
+        The result set rows returned by the query.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents a single row in the query results.
+
+          
+          
+
+          - **Data** *(list) --* 
+
+            List of data points in a single row of the result set.
+
+            
+            
+
+            - *(dict) --* 
+
+              Datum represents a single data point in a query result.
+
+              
+              
+
+              - **ScalarValue** *(string) --* 
+
+                Indicates if the data point is a scalar value such as integer, string, double, or Boolean.
+
+                
+              
+
+              - **TimeSeriesValue** *(list) --* 
+
+                Indicates if the data point is a timeseries data type.
+
+                
+                
+
+                - *(dict) --* 
+
+                  The timeseries data type represents the values of a measure over time. A time series is an array of rows of timestamps and measure values, with rows sorted in ascending order of time. A TimeSeriesDataPoint is a single data point in the time series. It represents a tuple of (time, measure value) in a time series.
+
+                  
+                  
+
+                  - **Time** *(string) --* 
+
+                    The timestamp when the measure value was collected.
+
+                    
+                  
+
+                  - **Value** *(dict) --* 
+
+                    The measure value for the data point.
+
+                    
+              
+            
+              
+
+              - **ArrayValue** *(list) --* 
+
+                Indicates if the data point is an array.
+
+                
+              
+
+              - **RowValue** *(dict) --* 
+
+                Indicates if the data point is a row.
+
+                
+              
+
+              - **NullValue** *(boolean) --* 
+
+                Indicates if the data point is null.
+
+                
+          
+        
+      
+    
+      
+
+      - **ColumnInfo** *(list) --* 
+
+        The column data types of the returned result set.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the metadata for query results such as the column names, data types, and other attributes.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The name of the result set column. The name of the result set is available for columns of all data types except for arrays.
+
+            
+          
+
+          - **Type** *(dict) --* 
+
+            The data type of the result set column. The data type can be a scalar or complex. Scalar data types are integers, strings, doubles, Booleans, and others. Complex data types are types such as arrays, rows, and others.
+
+            
+            
+
+            - **ScalarType** *(string) --* 
+
+              Indicates if the column is of type string, integer, Boolean, double, timestamp, date, time. For more information, see `Supported data types <https://docs.aws.amazon.com/timestream/latest/developerguide/supported-data-types.html>`__.
+
+              
+            
+
+            - **ArrayColumnInfo** *(dict) --* 
+
+              Indicates if the column is an array.
+
+              
+            
+
+            - **TimeSeriesMeasureValueColumnInfo** *(dict) --* 
+
+              Indicates if the column is a timeseries data type.
+
+              
+            
+
+            - **RowColumnInfo** *(list) --* 
+
+              Indicates if the column is a row.
+
+              
+        
+      
+    
+      
+
+      - **QueryStatus** *(dict) --* 
+
+        Information about the status of the query, including progress and bytes scanned.
+
+        
+        
+
+        - **ProgressPercentage** *(float) --* 
+
+          The progress of the query, expressed as a percentage.
+
+          
+        
+
+        - **CumulativeBytesScanned** *(integer) --* 
+
+          The amount of data scanned by the query in bytes. This is a cumulative sum and represents the total amount of bytes scanned since the query was started.
+
+          
+        
+
+        - **CumulativeBytesMetered** *(integer) --* 
+
+          The amount of data scanned by the query in bytes that you will be charged for. This is a cumulative sum and represents the total amount of data that you will be charged for since the query was started. The charge is applied only once and is either applied when the query completes running or when the query is cancelled.
+
+          
+    
+      
+
+      - **QueryInsightsResponse** *(dict) --* 
+
+        Encapsulates ``QueryInsights`` containing insights and metrics related to the query that you executed.
+
+        
+        
+
+        - **QuerySpatialCoverage** *(dict) --* 
+
+          Provides insights into the spatial coverage of the query, including the table with sub-optimal (max) spatial pruning. This information can help you identify areas for improvement in your partitioning strategy to enhance spatial pruning.
+
+          
+          
+
+          - **Max** *(dict) --* 
+
+            Provides insights into the spatial coverage of the executed query and the table with the most inefficient spatial pruning.
+
+             
+
+            
+            * ``Value`` – The maximum ratio of spatial coverage.
+             
+            * ``TableArn`` – The Amazon Resource Name (ARN) of the table with sub-optimal spatial pruning.
+             
+            * ``PartitionKey`` – The partition key used for partitioning, which can be a default ``measure_name`` or a CDPK.
+            
+
+            
+            
+
+            - **Value** *(float) --* 
+
+              The maximum ratio of spatial coverage.
+
+              
+            
+
+            - **TableArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the table with the most sub-optimal spatial pruning.
+
+              
+            
+
+            - **PartitionKey** *(list) --* 
+
+              The partition key used for partitioning, which can be a default ``measure_name`` or a `customer defined partition key <https://docs.aws.amazon.com/timestream/latest/developerguide/customer-defined-partition-keys.html>`__.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **QueryTemporalRange** *(dict) --* 
+
+          Provides insights into the temporal range of the query, including the table with the largest (max) time range. Following are some of the potential options for optimizing time-based pruning:
+
+           
+
+          
+          * Add missing time-predicates.
+           
+          * Remove functions around the time predicates.
+           
+          * Add time predicates to all the sub-queries.
+          
+
+          
+          
+
+          - **Max** *(dict) --* 
+
+            Encapsulates the following properties that provide insights into the most sub-optimal performing table on the temporal axis:
+
+             
+
+            
+            * ``Value`` – The maximum duration in nanoseconds between the start and end of the query.
+             
+            * ``TableArn`` – The Amazon Resource Name (ARN) of the table which is queried with the largest time range.
+            
+
+            
+            
+
+            - **Value** *(integer) --* 
+
+              The maximum duration in nanoseconds between the start and end of the query.
+
+              
+            
+
+            - **TableArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the table which is queried with the largest time range.
+
+              
+        
+      
+        
+
+        - **QueryTableCount** *(integer) --* 
+
+          Indicates the number of tables in the query.
+
+          
+        
+
+        - **OutputRows** *(integer) --* 
+
+          Indicates the total number of rows returned as part of the query result set. You can use this data to validate if the number of rows in the result set have changed as part of the query tuning exercise.
+
+          
+        
+
+        - **OutputBytes** *(integer) --* 
+
+          Indicates the size of query result set in bytes. You can use this data to validate if the result set has changed as part of the query tuning exercise.
+
+          
+        
+
+        - **UnloadPartitionCount** *(integer) --* 
+
+          Indicates the partitions created by the ``Unload`` operation.
+
+          
+        
+
+        - **UnloadWrittenRows** *(integer) --* 
+
+          Indicates the rows written by the ``Unload`` query.
+
+          
+        
+
+        - **UnloadWrittenBytes** *(integer) --* 
+
+          Indicates the size, in bytes, written by the ``Unload`` operation.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`TimestreamQuery.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`TimestreamQuery.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`TimestreamQuery.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`TimestreamQuery.Client.exceptions.QueryExecutionException`
+
+  
+  *   :py:class:`TimestreamQuery.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`TimestreamQuery.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`TimestreamQuery.Client.exceptions.InvalidEndpointException`
+
+  

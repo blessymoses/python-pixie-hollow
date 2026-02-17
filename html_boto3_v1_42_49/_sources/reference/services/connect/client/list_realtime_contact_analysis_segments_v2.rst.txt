@@ -1,0 +1,765 @@
+:doc:`Connect <../../connect>` / Client / list_realtime_contact_analysis_segments_v2
+
+******************************************
+list_realtime_contact_analysis_segments_v2
+******************************************
+
+
+
+.. py:method:: Connect.Client.list_realtime_contact_analysis_segments_v2(**kwargs)
+
+  
+
+  Provides a list of analysis segments for a real-time chat analysis session. This API supports CHAT channels only.
+
+   
+
+  .. warning::
+
+     
+
+    This API does not support VOICE. If you attempt to use it for VOICE, an ``InvalidRequestException`` occurs.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connect-2017-08-08/ListRealtimeContactAnalysisSegmentsV2>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_realtime_contact_analysis_segments_v2(
+        InstanceId='string',
+        ContactId='string',
+        MaxResults=123,
+        NextToken='string',
+        OutputType='Raw'|'Redacted',
+        SegmentTypes=[
+            'Transcript'|'Categories'|'Issues'|'Event'|'Attachments'|'PostContactSummary',
+        ]
+    )
+    
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The identifier of the Amazon Connect instance. You can `find the instance ID <https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html>`__ in the Amazon Resource Name (ARN) of the instance.
+
+    
+
+  
+  :type ContactId: string
+  :param ContactId: **[REQUIRED]** 
+
+    The identifier of the contact in this instance of Amazon Connect.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of results to return per page.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of results. Use the value returned in the previous response in the next request to retrieve the next set of results.
+
+    
+
+  
+  :type OutputType: string
+  :param OutputType: **[REQUIRED]** 
+
+    The Contact Lens output type to be returned.
+
+    
+
+  
+  :type SegmentTypes: list
+  :param SegmentTypes: **[REQUIRED]** 
+
+    Enum with segment types . Each value corresponds to a segment type returned in the segments list of the API. Each segment type has its own structure. Different channels may have different sets of supported segment types.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Channel': 'VOICE'|'CHAT',
+          'Status': 'IN_PROGRESS'|'FAILED'|'COMPLETED',
+          'Segments': [
+              {
+                  'Transcript': {
+                      'Id': 'string',
+                      'ParticipantId': 'string',
+                      'ParticipantRole': 'AGENT'|'CUSTOMER'|'SYSTEM'|'CUSTOM_BOT'|'SUPERVISOR',
+                      'DisplayName': 'string',
+                      'Content': 'string',
+                      'ContentType': 'string',
+                      'Time': {
+                          'AbsoluteTime': datetime(2015, 1, 1)
+                      },
+                      'Redaction': {
+                          'CharacterOffsets': [
+                              {
+                                  'BeginOffsetChar': 123,
+                                  'EndOffsetChar': 123
+                              },
+                          ]
+                      },
+                      'Sentiment': 'POSITIVE'|'NEGATIVE'|'NEUTRAL'
+                  },
+                  'Categories': {
+                      'MatchedDetails': {
+                          'string': {
+                              'PointsOfInterest': [
+                                  {
+                                      'TranscriptItems': [
+                                          {
+                                              'Id': 'string',
+                                              'CharacterOffsets': {
+                                                  'BeginOffsetChar': 123,
+                                                  'EndOffsetChar': 123
+                                              }
+                                          },
+                                      ]
+                                  },
+                              ]
+                          }
+                      }
+                  },
+                  'Issues': {
+                      'IssuesDetected': [
+                          {
+                              'TranscriptItems': [
+                                  {
+                                      'Content': 'string',
+                                      'Id': 'string',
+                                      'CharacterOffsets': {
+                                          'BeginOffsetChar': 123,
+                                          'EndOffsetChar': 123
+                                      }
+                                  },
+                              ]
+                          },
+                      ]
+                  },
+                  'Event': {
+                      'Id': 'string',
+                      'ParticipantId': 'string',
+                      'ParticipantRole': 'AGENT'|'CUSTOMER'|'SYSTEM'|'CUSTOM_BOT'|'SUPERVISOR',
+                      'DisplayName': 'string',
+                      'EventType': 'string',
+                      'Time': {
+                          'AbsoluteTime': datetime(2015, 1, 1)
+                      }
+                  },
+                  'Attachments': {
+                      'Id': 'string',
+                      'ParticipantId': 'string',
+                      'ParticipantRole': 'AGENT'|'CUSTOMER'|'SYSTEM'|'CUSTOM_BOT'|'SUPERVISOR',
+                      'DisplayName': 'string',
+                      'Attachments': [
+                          {
+                              'AttachmentName': 'string',
+                              'ContentType': 'string',
+                              'AttachmentId': 'string',
+                              'Status': 'APPROVED'|'REJECTED'|'IN_PROGRESS'
+                          },
+                      ],
+                      'Time': {
+                          'AbsoluteTime': datetime(2015, 1, 1)
+                      }
+                  },
+                  'PostContactSummary': {
+                      'Content': 'string',
+                      'Status': 'FAILED'|'COMPLETED',
+                      'FailureCode': 'QUOTA_EXCEEDED'|'INSUFFICIENT_CONVERSATION_CONTENT'|'FAILED_SAFETY_GUIDELINES'|'INVALID_ANALYSIS_CONFIGURATION'|'INTERNAL_ERROR'
+                  }
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Channel** *(string) --* 
+
+        The channel of the contact.
+
+         
+
+        .. warning::
+
+           
+
+          Only ``CHAT`` is supported. This API does not support ``VOICE``. If you attempt to use it for the VOICE channel, an ``InvalidRequestException`` error occurs.
+
+          
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        Status of real-time contact analysis.
+
+        
+      
+
+      - **Segments** *(list) --* 
+
+        An analyzed transcript or category.
+
+        
+        
+
+        - *(dict) --* 
+
+          An analyzed segment for a real-time analysis session.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``Transcript``, ``Categories``, ``Issues``, ``Event``, ``Attachments``, ``PostContactSummary``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+        
+          
+
+          - **Transcript** *(dict) --* 
+
+            The analyzed transcript segment.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              The identifier of the transcript.
+
+              
+            
+
+            - **ParticipantId** *(string) --* 
+
+              The identifier of the participant.
+
+              
+            
+
+            - **ParticipantRole** *(string) --* 
+
+              The role of the participant. For example, is it a customer, agent, or system.
+
+              
+            
+
+            - **DisplayName** *(string) --* 
+
+              The display name of the participant.
+
+              
+            
+
+            - **Content** *(string) --* 
+
+              The content of the transcript. Can be redacted.
+
+              
+            
+
+            - **ContentType** *(string) --* 
+
+              The type of content of the item. For example, ``text/plain``.
+
+              
+            
+
+            - **Time** *(dict) --* 
+
+              Field describing the time of the event. It can have different representations of time.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``AbsoluteTime``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **AbsoluteTime** *(datetime) --* 
+
+                Time represented in ISO 8601 format: yyyy-MM-ddThh:mm:ss.SSSZ. For example, 2019-11-08T02:41:28.172Z.
+
+                
+          
+            
+
+            - **Redaction** *(dict) --* 
+
+              Object describing redaction that was applied to the transcript. If transcript has the field it means part of the transcript was redacted.
+
+              
+              
+
+              - **CharacterOffsets** *(list) --* 
+
+                List of character intervals each describing a part of the text that was redacted. For ``OutputType.Raw``, part of the original text that contains data that can be redacted. For ``OutputType.Redacted``, part of the string with redaction tag.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Begin and end offsets for a part of text.
+
+                  
+                  
+
+                  - **BeginOffsetChar** *(integer) --* 
+
+                    The beginning of the character interval.
+
+                    
+                  
+
+                  - **EndOffsetChar** *(integer) --* 
+
+                    The end of the character interval.
+
+                    
+              
+            
+          
+            
+
+            - **Sentiment** *(string) --* 
+
+              The sentiment detected for this piece of transcript.
+
+              
+        
+          
+
+          - **Categories** *(dict) --* 
+
+            The matched category rules.
+
+            
+            
+
+            - **MatchedDetails** *(dict) --* 
+
+              Map between the name of the matched rule and RealTimeContactAnalysisCategoryDetails.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(dict) --* 
+
+                  Provides information about the category rule that was matched.
+
+                  
+                  
+
+                  - **PointsOfInterest** *(list) --* 
+
+                    List of PointOfInterest - objects describing a single match of a rule.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      The section of the contact transcript segment that category rule was detected.
+
+                      
+                      
+
+                      - **TranscriptItems** *(list) --* 
+
+                        List of the transcript items (segments) that are associated with a given point of interest.
+
+                        
+                        
+
+                        - *(dict) --* 
+
+                          Transcript representation containing Id and list of character intervals that are associated with analysis data. For example, this object within a ``RealTimeContactAnalysisPointOfInterest`` in ``Category.MatchedDetails`` would have character interval describing part of the text that matched category.
+
+                          
+                          
+
+                          - **Id** *(string) --* 
+
+                            Transcript identifier. Matches the identifier from one of the TranscriptSegments.
+
+                            
+                          
+
+                          - **CharacterOffsets** *(dict) --* 
+
+                            List of character intervals within transcript content/text.
+
+                            
+                            
+
+                            - **BeginOffsetChar** *(integer) --* 
+
+                              The beginning of the character interval.
+
+                              
+                            
+
+                            - **EndOffsetChar** *(integer) --* 
+
+                              The end of the character interval.
+
+                              
+                        
+                      
+                    
+                  
+                
+              
+          
+        
+        
+          
+
+          - **Issues** *(dict) --* 
+
+            Segment type containing a list of detected issues.
+
+            
+            
+
+            - **IssuesDetected** *(list) --* 
+
+              List of the issues detected.
+
+              
+              
+
+              - *(dict) --* 
+
+                Potential issues that are detected based on an artificial intelligence analysis of each turn in the conversation.
+
+                
+                
+
+                - **TranscriptItems** *(list) --* 
+
+                  List of the transcript items (segments) that are associated with a given issue.
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    Transcript representation containing Id, Content and list of character intervals that are associated with analysis data. For example, this object within an issue detected would describe both content that contains identified issue and intervals where that content is taken from.
+
+                    
+                    
+
+                    - **Content** *(string) --* 
+
+                      Part of the transcript content that contains identified issue. Can be redacted
+
+                      
+                    
+
+                    - **Id** *(string) --* 
+
+                      Transcript identifier. Matches the identifier from one of the TranscriptSegments.
+
+                      
+                    
+
+                    - **CharacterOffsets** *(dict) --* 
+
+                      Begin and end offsets for a part of text.
+
+                      
+                      
+
+                      - **BeginOffsetChar** *(integer) --* 
+
+                        The beginning of the character interval.
+
+                        
+                      
+
+                      - **EndOffsetChar** *(integer) --* 
+
+                        The end of the character interval.
+
+                        
+                  
+                
+              
+            
+          
+        
+          
+
+          - **Event** *(dict) --* 
+
+            Segment type describing a contact event.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              The identifier of the contact event.
+
+              
+            
+
+            - **ParticipantId** *(string) --* 
+
+              The identifier of the participant.
+
+              
+            
+
+            - **ParticipantRole** *(string) --* 
+
+              The role of the participant. For example, is it a customer, agent, or system.
+
+              
+            
+
+            - **DisplayName** *(string) --* 
+
+              The display name of the participant. Can be redacted.
+
+              
+            
+
+            - **EventType** *(string) --* 
+
+              Type of the event. For example, ``application/vnd.amazonaws.connect.event.participant.left``.
+
+              
+            
+
+            - **Time** *(dict) --* 
+
+              Field describing the time of the event. It can have different representations of time.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``AbsoluteTime``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **AbsoluteTime** *(datetime) --* 
+
+                Time represented in ISO 8601 format: yyyy-MM-ddThh:mm:ss.SSSZ. For example, 2019-11-08T02:41:28.172Z.
+
+                
+          
+        
+          
+
+          - **Attachments** *(dict) --* 
+
+            The analyzed attachments.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              The identifier of the segment.
+
+              
+            
+
+            - **ParticipantId** *(string) --* 
+
+              The identifier of the participant.
+
+              
+            
+
+            - **ParticipantRole** *(string) --* 
+
+              The role of the participant. For example, is it a customer, agent, or system.
+
+              
+            
+
+            - **DisplayName** *(string) --* 
+
+              The display name of the participant. Can be redacted.
+
+              
+            
+
+            - **Attachments** *(list) --* 
+
+              List of objects describing an individual attachment.
+
+              
+              
+
+              - *(dict) --* 
+
+                Object that describes attached file.
+
+                
+                
+
+                - **AttachmentName** *(string) --* 
+
+                  A case-sensitive name of the attachment being uploaded. Can be redacted.
+
+                  
+                
+
+                - **ContentType** *(string) --* 
+
+                  Describes the MIME file type of the attachment. For a list of supported file types, see `Feature specifications <https://docs.aws.amazon.com/connect/latest/adminguide/feature-limits.html>`__ in the *Amazon Connect Administrator Guide*.
+
+                  
+                
+
+                - **AttachmentId** *(string) --* 
+
+                  A unique identifier for the attachment.
+
+                  
+                
+
+                - **Status** *(string) --* 
+
+                  Status of the attachment.
+
+                  
+            
+          
+            
+
+            - **Time** *(dict) --* 
+
+              Field describing the time of the event. It can have different representations of time.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``AbsoluteTime``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **AbsoluteTime** *(datetime) --* 
+
+                Time represented in ISO 8601 format: yyyy-MM-ddThh:mm:ss.SSSZ. For example, 2019-11-08T02:41:28.172Z.
+
+                
+          
+        
+          
+
+          - **PostContactSummary** *(dict) --* 
+
+            Information about the post-contact summary.
+
+            
+            
+
+            - **Content** *(string) --* 
+
+              The content of the summary.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              Whether the summary was successfully COMPLETED or FAILED to be generated.
+
+              
+            
+
+            - **FailureCode** *(string) --* 
+
+              If the summary failed to be generated, one of the following failure codes occurs:
+
+               
+
+              
+              * ``QUOTA_EXCEEDED``: The number of concurrent analytics jobs reached your service quota.
+               
+              * ``INSUFFICIENT_CONVERSATION_CONTENT``: The conversation needs to have at least one turn from both the participants in order to generate the summary.
+               
+              * ``FAILED_SAFETY_GUIDELINES``: The generated summary cannot be provided because it failed to meet system safety guidelines.
+               
+              * ``INVALID_ANALYSIS_CONFIGURATION``: This code occurs when, for example, you're using a `language <https://docs.aws.amazon.com/connect/latest/adminguide/supported-languages.html#supported-languages-contact-lens>`__ that isn't supported by generative AI-powered post-contact summaries.
+               
+              * ``INTERNAL_ERROR``: Internal system error.
+              
+
+              
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If there are additional results, this is the token for the next set of results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Connect.Client.exceptions.OutputTypeNotFoundException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ThrottlingException`
+
+  

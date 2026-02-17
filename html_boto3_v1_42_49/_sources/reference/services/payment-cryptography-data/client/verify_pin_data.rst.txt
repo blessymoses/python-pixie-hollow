@@ -1,0 +1,398 @@
+:doc:`PaymentCryptographyDataPlane <../../payment-cryptography-data>` / Client / verify_pin_data
+
+***************
+verify_pin_data
+***************
+
+
+
+.. py:method:: PaymentCryptographyDataPlane.Client.verify_pin_data(**kwargs)
+
+  
+
+  Verifies pin-related data such as PIN and PIN Offset using algorithms including VISA PVV and IBM3624. For more information, see `Verify PIN data <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/verify-pin-data.html>`__ in the *Amazon Web Services Payment Cryptography User Guide*.
+
+   
+
+  This operation verifies PIN data for user payment card. A card holder PIN data is never transmitted in clear to or from Amazon Web Services Payment Cryptography. This operation uses PIN Verification Key (PVK) for PIN or PIN Offset generation and then encrypts it using PIN Encryption Key (PEK) to create an ``EncryptedPinBlock`` for transmission from Amazon Web Services Payment Cryptography.
+
+   
+
+  For information about valid keys for this operation, see `Understanding key attributes <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html>`__ and `Key types for specific data operations <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html>`__ in the *Amazon Web Services Payment Cryptography User Guide*.
+
+   
+
+  **Cross-account use**: This operation can't be used across different Amazon Web Services accounts.
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  GeneratePinData
+   
+  *  TranslatePinData
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-data-2022-02-03/VerifyPinData>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.verify_pin_data(
+        VerificationKeyIdentifier='string',
+        EncryptionKeyIdentifier='string',
+        VerificationAttributes={
+            'VisaPin': {
+                'PinVerificationKeyIndex': 123,
+                'VerificationValue': 'string'
+            },
+            'Ibm3624Pin': {
+                'DecimalizationTable': 'string',
+                'PinValidationDataPadCharacter': 'string',
+                'PinValidationData': 'string',
+                'PinOffset': 'string'
+            }
+        },
+        EncryptedPinBlock='string',
+        PrimaryAccountNumber='string',
+        PinBlockFormat='ISO_FORMAT_0'|'ISO_FORMAT_1'|'ISO_FORMAT_3'|'ISO_FORMAT_4',
+        PinDataLength=123,
+        DukptAttributes={
+            'KeySerialNumber': 'string',
+            'DukptDerivationType': 'TDES_2KEY'|'TDES_3KEY'|'AES_128'|'AES_192'|'AES_256'
+        },
+        EncryptionWrappedKey={
+            'WrappedKeyMaterial': {
+                'Tr31KeyBlock': 'string',
+                'DiffieHellmanSymmetricKey': {
+                    'CertificateAuthorityPublicKeyIdentifier': 'string',
+                    'PublicKeyCertificate': 'string',
+                    'KeyAlgorithm': 'TDES_2KEY'|'TDES_3KEY'|'AES_128'|'AES_192'|'AES_256'|'HMAC_SHA256'|'HMAC_SHA384'|'HMAC_SHA512'|'HMAC_SHA224',
+                    'KeyDerivationFunction': 'NIST_SP800'|'ANSI_X963',
+                    'KeyDerivationHashAlgorithm': 'SHA_256'|'SHA_384'|'SHA_512',
+                    'SharedInformation': 'string'
+                }
+            },
+            'KeyCheckValueAlgorithm': 'CMAC'|'ANSI_X9_24'|'HMAC'|'SHA_1'
+        }
+    )
+    
+  :type VerificationKeyIdentifier: string
+  :param VerificationKeyIdentifier: **[REQUIRED]** 
+
+    The ``keyARN`` of the PIN verification key.
+
+    
+
+  
+  :type EncryptionKeyIdentifier: string
+  :param EncryptionKeyIdentifier: **[REQUIRED]** 
+
+    The ``keyARN`` of the encryption key under which the PIN block data is encrypted. This key type can be PEK or BDK.
+
+    
+
+  
+  :type VerificationAttributes: dict
+  :param VerificationAttributes: **[REQUIRED]** 
+
+    The attributes and values for PIN data verification.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``VisaPin``, ``Ibm3624Pin``. 
+
+  
+    - **VisaPin** *(dict) --* 
+
+      Parameters that are required to generate or verify Visa PIN.
+
+      
+
+    
+      - **PinVerificationKeyIndex** *(integer) --* **[REQUIRED]** 
+
+        The value for PIN verification index. It is used in the Visa PIN algorithm to calculate the PVV (PIN Verification Value).
+
+        
+
+      
+      - **VerificationValue** *(string) --* **[REQUIRED]** 
+
+        Parameters that are required to generate or verify Visa PVV (PIN Verification Value).
+
+        
+
+      
+    
+    - **Ibm3624Pin** *(dict) --* 
+
+      Parameters that are required to generate or verify Ibm3624 PIN.
+
+      
+
+    
+      - **DecimalizationTable** *(string) --* **[REQUIRED]** 
+
+        The decimalization table to use for IBM 3624 PIN algorithm. The table is used to convert the algorithm intermediate result from hexadecimal characters to decimal.
+
+        
+
+      
+      - **PinValidationDataPadCharacter** *(string) --* **[REQUIRED]** 
+
+        The padding character for validation data.
+
+        
+
+      
+      - **PinValidationData** *(string) --* **[REQUIRED]** 
+
+        The unique data for cardholder identification.
+
+        
+
+      
+      - **PinOffset** *(string) --* **[REQUIRED]** 
+
+        The PIN offset value.
+
+        
+
+      
+    
+  
+  :type EncryptedPinBlock: string
+  :param EncryptedPinBlock: **[REQUIRED]** 
+
+    The encrypted PIN block data that Amazon Web Services Payment Cryptography verifies.
+
+    
+
+  
+  :type PrimaryAccountNumber: string
+  :param PrimaryAccountNumber: 
+
+    The Primary Account Number (PAN), a unique identifier for a payment credit or debit card that associates the card with a specific account holder.
+
+    
+
+  
+  :type PinBlockFormat: string
+  :param PinBlockFormat: **[REQUIRED]** 
+
+    The PIN encoding format for pin data generation as specified in ISO 9564. Amazon Web Services Payment Cryptography supports ``ISO_Format_0`` and ``ISO_Format_3``.
+
+     
+
+    The ``ISO_Format_0`` PIN block format is equivalent to the ANSI X9.8, VISA-1, and ECI-1 PIN block formats. It is similar to a VISA-4 PIN block format. It supports a PIN from 4 to 12 digits in length.
+
+     
+
+    The ``ISO_Format_3`` PIN block format is the same as ``ISO_Format_0`` except that the fill digits are random values from 10 to 15.
+
+    
+
+  
+  :type PinDataLength: integer
+  :param PinDataLength: 
+
+    The length of PIN being verified.
+
+    
+
+  
+  :type DukptAttributes: dict
+  :param DukptAttributes: 
+
+    The attributes and values for the DUKPT encrypted PIN block data.
+
+    
+
+  
+    - **KeySerialNumber** *(string) --* **[REQUIRED]** 
+
+      The unique identifier known as Key Serial Number (KSN) that comes from an encrypting device using DUKPT encryption method. The KSN is derived from the encrypting device unique identifier and an internal transaction counter.
+
+      
+
+    
+    - **DukptDerivationType** *(string) --* **[REQUIRED]** 
+
+      The key type derived using DUKPT from a Base Derivation Key (BDK) and Key Serial Number (KSN). This must be less than or equal to the strength of the BDK. For example, you can't use ``AES_128`` as a derivation type for a BDK of ``AES_128`` or ``TDES_2KEY``.
+
+      
+
+    
+  
+  :type EncryptionWrappedKey: dict
+  :param EncryptionWrappedKey: 
+
+    Parameter information of a WrappedKeyBlock for encryption key exchange.
+
+    
+
+  
+    - **WrappedKeyMaterial** *(dict) --* **[REQUIRED]** 
+
+      Parameter information of a WrappedKeyBlock for encryption key exchange.
+
+      .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``Tr31KeyBlock``, ``DiffieHellmanSymmetricKey``. 
+
+    
+      - **Tr31KeyBlock** *(string) --* 
+
+        The TR-31 wrapped key block.
+
+        
+
+      
+      - **DiffieHellmanSymmetricKey** *(dict) --* 
+
+        The parameter information for deriving a ECDH shared key.
+
+        
+
+      
+        - **CertificateAuthorityPublicKeyIdentifier** *(string) --* **[REQUIRED]** 
+
+          The ``keyArn`` of the certificate that signed the client's ``PublicKeyCertificate``.
+
+          
+
+        
+        - **PublicKeyCertificate** *(string) --* **[REQUIRED]** 
+
+          The client's public key certificate in PEM format (base64 encoded) to use for ECDH key derivation.
+
+          
+
+        
+        - **KeyAlgorithm** *(string) --* **[REQUIRED]** 
+
+          The key algorithm of the derived ECDH key.
+
+          
+
+        
+        - **KeyDerivationFunction** *(string) --* **[REQUIRED]** 
+
+          The key derivation function to use for deriving a key using ECDH.
+
+          
+
+        
+        - **KeyDerivationHashAlgorithm** *(string) --* **[REQUIRED]** 
+
+          The hash type to use for deriving a key using ECDH.
+
+          
+
+        
+        - **SharedInformation** *(string) --* **[REQUIRED]** 
+
+          A byte string containing information that binds the ECDH derived key to the two parties involved or to the context of the key.
+
+           
+
+          It may include details like identities of the two parties deriving the key, context of the operation, session IDs, and optionally a nonce. It must not contain zero bytes, and re-using shared information for multiple ECDH key derivations is not recommended.
+
+          
+
+        
+      
+    
+    - **KeyCheckValueAlgorithm** *(string) --* 
+
+      The algorithm that Amazon Web Services Payment Cryptography uses to calculate the key check value (KCV). It is used to validate the key integrity.
+
+       
+
+      For TDES keys, the KCV is computed by encrypting 8 bytes, each with value of zero, with the key to be checked and retaining the 3 highest order bytes of the encrypted result. For AES keys, the KCV is computed using a CMAC algorithm where the input data is 16 bytes of zero and retaining the 3 highest order bytes of the encrypted result.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'VerificationKeyArn': 'string',
+          'VerificationKeyCheckValue': 'string',
+          'EncryptionKeyArn': 'string',
+          'EncryptionKeyCheckValue': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **VerificationKeyArn** *(string) --* 
+
+        The ``keyARN`` of the PIN encryption key that Amazon Web Services Payment Cryptography uses for PIN or PIN Offset verification.
+
+        
+      
+
+      - **VerificationKeyCheckValue** *(string) --* 
+
+        The key check value (KCV) of the encryption key. The KCV is used to check if all parties holding a given key have the same key or to detect that a key has changed.
+
+         
+
+        Amazon Web Services Payment Cryptography computes the KCV according to the CMAC specification.
+
+        
+      
+
+      - **EncryptionKeyArn** *(string) --* 
+
+        The ``keyARN`` of the PEK that Amazon Web Services Payment Cryptography uses for encrypted pin block generation.
+
+        
+      
+
+      - **EncryptionKeyCheckValue** *(string) --* 
+
+        The key check value (KCV) of the encryption key. The KCV is used to check if all parties holding a given key have the same key or to detect that a key has changed.
+
+         
+
+        Amazon Web Services Payment Cryptography computes the KCV according to the CMAC specification.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.VerificationFailedException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.InternalServerException`
+
+  

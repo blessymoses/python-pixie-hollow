@@ -1,0 +1,337 @@
+:doc:`IoTSiteWise <../../iotsitewise>` / Client / get_interpolated_asset_property_values
+
+**************************************
+get_interpolated_asset_property_values
+**************************************
+
+
+
+.. py:method:: IoTSiteWise.Client.get_interpolated_asset_property_values(**kwargs)
+
+  
+
+  Get interpolated values for an asset property for a specified time interval, during a period of time. If your time series is missing data points during the specified time interval, you can use interpolation to estimate the missing data.
+
+   
+
+  For example, you can use this operation to return the interpolated temperature values for a wind turbine every 24 hours over a duration of 7 days.
+
+   
+
+  To identify an asset property, you must specify one of the following:
+
+   
+
+  
+  * The ``assetId`` and ``propertyId`` of an asset property.
+   
+  * A ``propertyAlias``, which is a data stream alias (for example, ``/company/windfarm/3/turbine/7/temperature``). To define an asset property's alias, see `UpdateAssetProperty <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_UpdateAssetProperty.html>`__.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotsitewise-2019-12-02/GetInterpolatedAssetPropertyValues>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_interpolated_asset_property_values(
+        assetId='string',
+        propertyId='string',
+        propertyAlias='string',
+        startTimeInSeconds=123,
+        startTimeOffsetInNanos=123,
+        endTimeInSeconds=123,
+        endTimeOffsetInNanos=123,
+        quality='GOOD'|'BAD'|'UNCERTAIN',
+        intervalInSeconds=123,
+        nextToken='string',
+        maxResults=123,
+        type='string',
+        intervalWindowInSeconds=123
+    )
+    
+  :type assetId: string
+  :param assetId: 
+
+    The ID of the asset, in UUID format.
+
+    
+
+  
+  :type propertyId: string
+  :param propertyId: 
+
+    The ID of the asset property, in UUID format.
+
+    
+
+  
+  :type propertyAlias: string
+  :param propertyAlias: 
+
+    The alias that identifies the property, such as an OPC-UA server data stream path (for example, ``/company/windfarm/3/turbine/7/temperature``). For more information, see `Mapping industrial data streams to asset properties <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/connect-data-streams.html>`__ in the *IoT SiteWise User Guide*.
+
+    
+
+  
+  :type startTimeInSeconds: integer
+  :param startTimeInSeconds: **[REQUIRED]** 
+
+    The exclusive start of the range from which to interpolate data, expressed in seconds in Unix epoch time.
+
+    
+
+  
+  :type startTimeOffsetInNanos: integer
+  :param startTimeOffsetInNanos: 
+
+    The nanosecond offset converted from ``startTimeInSeconds``.
+
+    
+
+  
+  :type endTimeInSeconds: integer
+  :param endTimeInSeconds: **[REQUIRED]** 
+
+    The inclusive end of the range from which to interpolate data, expressed in seconds in Unix epoch time.
+
+    
+
+  
+  :type endTimeOffsetInNanos: integer
+  :param endTimeOffsetInNanos: 
+
+    The nanosecond offset converted from ``endTimeInSeconds``.
+
+    
+
+  
+  :type quality: string
+  :param quality: **[REQUIRED]** 
+
+    The quality of the asset property value. You can use this parameter as a filter to choose only the asset property values that have a specific quality.
+
+    
+
+  
+  :type intervalInSeconds: integer
+  :param intervalInSeconds: **[REQUIRED]** 
+
+    The time interval in seconds over which to interpolate data. Each interval starts when the previous one ends.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The token to be used for the next set of paginated results.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of results to return for each paginated request. If not specified, the default value is 10.
+
+    
+
+  
+  :type type: string
+  :param type: **[REQUIRED]** 
+
+    The interpolation type.
+
+     
+
+    Valid values: ``LINEAR_INTERPOLATION | LOCF_INTERPOLATION``
+
+     
+
+    
+    * ``LINEAR_INTERPOLATION`` – Estimates missing data using `linear interpolation <https://en.wikipedia.org/wiki/Linear_interpolation>`__. For example, you can use this operation to return the interpolated temperature values for a wind turbine every 24 hours over a duration of 7 days. If the interpolation starts July 1, 2021, at 9 AM, IoT SiteWise returns the first interpolated value on July 2, 2021, at 9 AM, the second interpolated value on July 3, 2021, at 9 AM, and so on.
+     
+    * ``LOCF_INTERPOLATION`` – Estimates missing data using last observation carried forward interpolation If no data point is found for an interval, IoT SiteWise returns the last observed data point for the previous interval and carries forward this interpolated value until a new data point is found. For example, you can get the state of an on-off valve every 24 hours over a duration of 7 days. If the interpolation starts July 1, 2021, at 9 AM, IoT SiteWise returns the last observed data point between July 1, 2021, at 9 AM and July 2, 2021, at 9 AM as the first interpolated value. If a data point isn't found after 9 AM on July 2, 2021, IoT SiteWise uses the same interpolated value for the rest of the days.
+    
+
+    
+
+  
+  :type intervalWindowInSeconds: integer
+  :param intervalWindowInSeconds: 
+
+    The query interval for the window, in seconds. IoT SiteWise computes each interpolated value by using data points from the timestamp of each interval, minus the window to the timestamp of each interval plus the window. If not specified, the window ranges between the start time minus the interval and the end time plus the interval.
+
+     
+
+    .. note::
+
+      
+
+      
+      * If you specify a value for the ``intervalWindowInSeconds`` parameter, the value for the ``type`` parameter must be ``LINEAR_INTERPOLATION``.
+       
+      * If a data point isn't found during the specified query window, IoT SiteWise won't return an interpolated value for the interval. This indicates that there's a gap in the ingested data points.
+      
+
+      
+
+     
+
+    For example, you can get the interpolated temperature values for a wind turbine every 24 hours over a duration of 7 days. If the interpolation starts on July 1, 2021, at 9 AM with a window of 2 hours, IoT SiteWise uses the data points from 7 AM (9 AM minus 2 hours) to 11 AM (9 AM plus 2 hours) on July 2, 2021 to compute the first interpolated value. Next, IoT SiteWise uses the data points from 7 AM (9 AM minus 2 hours) to 11 AM (9 AM plus 2 hours) on July 3, 2021 to compute the second interpolated value, and so on.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'interpolatedAssetPropertyValues': [
+              {
+                  'timestamp': {
+                      'timeInSeconds': 123,
+                      'offsetInNanos': 123
+                  },
+                  'value': {
+                      'stringValue': 'string',
+                      'integerValue': 123,
+                      'doubleValue': 123.0,
+                      'booleanValue': True|False,
+                      'nullValue': {
+                          'valueType': 'D'|'B'|'S'|'I'|'U'
+                      }
+                  }
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **interpolatedAssetPropertyValues** *(list) --* 
+
+        The requested interpolated values.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about an interpolated asset property value.
+
+          
+          
+
+          - **timestamp** *(dict) --* 
+
+            Contains a timestamp with optional nanosecond granularity.
+
+            
+            
+
+            - **timeInSeconds** *(integer) --* 
+
+              The timestamp date, in seconds, in the Unix epoch format. Fractional nanosecond data is provided by ``offsetInNanos``.
+
+              
+            
+
+            - **offsetInNanos** *(integer) --* 
+
+              The nanosecond offset from ``timeInSeconds``.
+
+              
+        
+          
+
+          - **value** *(dict) --* 
+
+            Contains an asset property value (of a single type only).
+
+            
+            
+
+            - **stringValue** *(string) --* 
+
+              Asset property data of type string (sequence of characters). The allowed pattern: "^$|[^\u0000-\u001F\u007F]+". The max length is 1024.
+
+              
+            
+
+            - **integerValue** *(integer) --* 
+
+              Asset property data of type integer (whole number).
+
+              
+            
+
+            - **doubleValue** *(float) --* 
+
+              Asset property data of type double (floating point number). The min value is -10^10. The max value is 10^10. Double.NaN is allowed.
+
+              
+            
+
+            - **booleanValue** *(boolean) --* 
+
+              Asset property data of type Boolean (true or false).
+
+              
+            
+
+            - **nullValue** *(dict) --* 
+
+              The type of null asset property data with BAD and UNCERTAIN qualities.
+
+              
+              
+
+              - **valueType** *(string) --* 
+
+                The type of null asset property data.
+
+                
+          
+        
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The token for the next set of results, or null if there are no additional results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ServiceUnavailableException`
+
+  

@@ -1,0 +1,539 @@
+:doc:`CodePipeline <../../codepipeline>` / Client / get_third_party_job_details
+
+***************************
+get_third_party_job_details
+***************************
+
+
+
+.. py:method:: CodePipeline.Client.get_third_party_job_details(**kwargs)
+
+  
+
+  Requests the details of a job for a third party action. Used for partner actions only.
+
+   
+
+  .. warning::
+
+     
+
+    When this API is called, CodePipeline returns temporary credentials for the S3 bucket used to store artifacts for the pipeline, if the action requires access to that S3 bucket for input or output artifacts. This API also returns any secret values defined for the action.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codepipeline-2015-07-09/GetThirdPartyJobDetails>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_third_party_job_details(
+        jobId='string',
+        clientToken='string'
+    )
+    
+  :type jobId: string
+  :param jobId: **[REQUIRED]** 
+
+    The unique system-generated ID used for identifying the job.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: **[REQUIRED]** 
+
+    The clientToken portion of the clientId and clientToken pair used to verify that the calling entity is allowed access to the job and its details.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobDetails': {
+              'id': 'string',
+              'data': {
+                  'actionTypeId': {
+                      'category': 'Source'|'Build'|'Deploy'|'Test'|'Invoke'|'Approval'|'Compute',
+                      'owner': 'AWS'|'ThirdParty'|'Custom',
+                      'provider': 'string',
+                      'version': 'string'
+                  },
+                  'actionConfiguration': {
+                      'configuration': {
+                          'string': 'string'
+                      }
+                  },
+                  'pipelineContext': {
+                      'pipelineName': 'string',
+                      'stage': {
+                          'name': 'string'
+                      },
+                      'action': {
+                          'name': 'string',
+                          'actionExecutionId': 'string'
+                      },
+                      'pipelineArn': 'string',
+                      'pipelineExecutionId': 'string'
+                  },
+                  'inputArtifacts': [
+                      {
+                          'name': 'string',
+                          'revision': 'string',
+                          'location': {
+                              'type': 'S3',
+                              's3Location': {
+                                  'bucketName': 'string',
+                                  'objectKey': 'string'
+                              }
+                          }
+                      },
+                  ],
+                  'outputArtifacts': [
+                      {
+                          'name': 'string',
+                          'revision': 'string',
+                          'location': {
+                              'type': 'S3',
+                              's3Location': {
+                                  'bucketName': 'string',
+                                  'objectKey': 'string'
+                              }
+                          }
+                      },
+                  ],
+                  'artifactCredentials': {
+                      'accessKeyId': 'string',
+                      'secretAccessKey': 'string',
+                      'sessionToken': 'string'
+                  },
+                  'continuationToken': 'string',
+                  'encryptionKey': {
+                      'id': 'string',
+                      'type': 'KMS'
+                  }
+              },
+              'nonce': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the output of a ``GetThirdPartyJobDetails`` action.
+
+      
+      
+
+      - **jobDetails** *(dict) --* 
+
+        The details of the job, including any protected values defined for the job.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          The identifier used to identify the job details in CodePipeline.
+
+          
+        
+
+        - **data** *(dict) --* 
+
+          The data to be returned by the third party job worker.
+
+          
+          
+
+          - **actionTypeId** *(dict) --* 
+
+            Represents information about an action type.
+
+            
+            
+
+            - **category** *(string) --* 
+
+              A category defines what kind of action can be taken in the stage, and constrains the provider type for the action. Valid categories are limited to one of the following values.
+
+               
+
+              
+              * Source
+               
+              * Build
+               
+              * Test
+               
+              * Deploy
+               
+              * Invoke
+               
+              * Approval
+               
+              * Compute
+              
+
+              
+            
+
+            - **owner** *(string) --* 
+
+              The creator of the action being called. There are three valid values for the ``Owner`` field in the action category section within your pipeline structure: ``AWS``, ``ThirdParty``, and ``Custom``. For more information, see `Valid Action Types and Providers in CodePipeline <https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html#actions-valid-providers>`__.
+
+              
+            
+
+            - **provider** *(string) --* 
+
+              The provider of the service being called by the action. Valid providers are determined by the action category. For example, an action in the Deploy category type might have a provider of CodeDeploy, which would be specified as ``CodeDeploy``. For more information, see `Valid Action Types and Providers in CodePipeline <https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html#actions-valid-providers>`__.
+
+              
+            
+
+            - **version** *(string) --* 
+
+              A string that describes the action version.
+
+              
+        
+          
+
+          - **actionConfiguration** *(dict) --* 
+
+            Represents information about an action configuration.
+
+            
+            
+
+            - **configuration** *(dict) --* 
+
+              The configuration data for the action.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+        
+          
+
+          - **pipelineContext** *(dict) --* 
+
+            Represents information about a pipeline to a job worker.
+
+             
+
+            .. note::
+
+              
+
+              Does not include ``pipelineArn`` and ``pipelineExecutionId`` for ThirdParty jobs.
+
+              
+
+            
+            
+
+            - **pipelineName** *(string) --* 
+
+              The name of the pipeline. This is a user-specified value. Pipeline names must be unique across all pipeline names under an Amazon Web Services account.
+
+              
+            
+
+            - **stage** *(dict) --* 
+
+              The stage of the pipeline.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the stage.
+
+                
+          
+            
+
+            - **action** *(dict) --* 
+
+              The context of an action to a job worker in the stage of a pipeline.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the action in the context of a job.
+
+                
+              
+
+              - **actionExecutionId** *(string) --* 
+
+                The system-generated unique ID that corresponds to an action's execution.
+
+                
+          
+            
+
+            - **pipelineArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the pipeline.
+
+              
+            
+
+            - **pipelineExecutionId** *(string) --* 
+
+              The execution ID of the pipeline.
+
+              
+        
+          
+
+          - **inputArtifacts** *(list) --* 
+
+            The name of the artifact that is worked on by the action, if any. This name might be system-generated, such as "MyApp", or it might be defined by the user when the action is created. The input artifact name must match the name of an output artifact generated by an action in an earlier action or stage of the pipeline.
+
+            
+            
+
+            - *(dict) --* 
+
+              Artifacts are the files that are worked on by actions in the pipeline. See the action configuration for each action for details about artifact parameters. For example, the S3 source action artifact is a file name (or file path), and the files are generally provided as a ZIP file. Example artifact name: SampleApp_Windows.zip
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The artifact's name.
+
+                
+              
+
+              - **revision** *(string) --* 
+
+                The artifact's revision ID. Depending on the type of object, this could be a commit ID (GitHub) or a revision ID (Amazon S3).
+
+                
+              
+
+              - **location** *(dict) --* 
+
+                The location of an artifact.
+
+                
+                
+
+                - **type** *(string) --* 
+
+                  The type of artifact in the location.
+
+                  
+                
+
+                - **s3Location** *(dict) --* 
+
+                  The S3 bucket that contains the artifact.
+
+                  
+                  
+
+                  - **bucketName** *(string) --* 
+
+                    The name of the S3 bucket.
+
+                    
+                  
+
+                  - **objectKey** *(string) --* 
+
+                    The key of the object in the S3 bucket, which uniquely identifies the object in the bucket.
+
+                    
+              
+            
+          
+        
+          
+
+          - **outputArtifacts** *(list) --* 
+
+            The name of the artifact that is the result of the action, if any. This name might be system-generated, such as "MyBuiltApp", or it might be defined by the user when the action is created.
+
+            
+            
+
+            - *(dict) --* 
+
+              Artifacts are the files that are worked on by actions in the pipeline. See the action configuration for each action for details about artifact parameters. For example, the S3 source action artifact is a file name (or file path), and the files are generally provided as a ZIP file. Example artifact name: SampleApp_Windows.zip
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The artifact's name.
+
+                
+              
+
+              - **revision** *(string) --* 
+
+                The artifact's revision ID. Depending on the type of object, this could be a commit ID (GitHub) or a revision ID (Amazon S3).
+
+                
+              
+
+              - **location** *(dict) --* 
+
+                The location of an artifact.
+
+                
+                
+
+                - **type** *(string) --* 
+
+                  The type of artifact in the location.
+
+                  
+                
+
+                - **s3Location** *(dict) --* 
+
+                  The S3 bucket that contains the artifact.
+
+                  
+                  
+
+                  - **bucketName** *(string) --* 
+
+                    The name of the S3 bucket.
+
+                    
+                  
+
+                  - **objectKey** *(string) --* 
+
+                    The key of the object in the S3 bucket, which uniquely identifies the object in the bucket.
+
+                    
+              
+            
+          
+        
+          
+
+          - **artifactCredentials** *(dict) --* 
+
+            Represents an Amazon Web Services session credentials object. These credentials are temporary credentials that are issued by Amazon Web Services Secure Token Service (STS). They can be used to access input and output artifacts in the S3 bucket used to store artifact for the pipeline in CodePipeline.
+
+            
+            
+
+            - **accessKeyId** *(string) --* 
+
+              The access key for the session.
+
+              
+            
+
+            - **secretAccessKey** *(string) --* 
+
+              The secret access key for the session.
+
+              
+            
+
+            - **sessionToken** *(string) --* 
+
+              The token for the session.
+
+              
+        
+          
+
+          - **continuationToken** *(string) --* 
+
+            A system-generated token, such as a CodeDeploy deployment ID, that a job requires to continue the job asynchronously.
+
+            
+          
+
+          - **encryptionKey** *(dict) --* 
+
+            The encryption key used to encrypt and decrypt data in the artifact store for the pipeline, such as an Amazon Web Services Key Management Service (Amazon Web Services KMS) key. This is optional and might not be present.
+
+            
+            
+
+            - **id** *(string) --* 
+
+              The ID used to identify the key. For an Amazon Web Services KMS key, you can use the key ID, the key ARN, or the alias ARN.
+
+               
+
+              .. note::
+
+                
+
+                Aliases are recognized only in the account that created the KMS key. For cross-account actions, you can only use the key ID or key ARN to identify the key. Cross-account actions involve using the role from the other account (AccountB), so specifying the key ID will use the key from the other account (AccountB).
+
+                
+
+              
+            
+
+            - **type** *(string) --* 
+
+              The type of encryption key, such as an Amazon Web Services KMS key. When creating or updating a pipeline, the value must be set to 'KMS'.
+
+              
+        
+      
+        
+
+        - **nonce** *(string) --* 
+
+          A system-generated random number that CodePipeline uses to ensure that the job is being worked on by only one job worker. Use this number in an  AcknowledgeThirdPartyJob request.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CodePipeline.Client.exceptions.JobNotFoundException`
+
+  
+  *   :py:class:`CodePipeline.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CodePipeline.Client.exceptions.InvalidClientTokenException`
+
+  
+  *   :py:class:`CodePipeline.Client.exceptions.InvalidJobException`
+
+  

@@ -1,0 +1,607 @@
+:doc:`GameLift <../../gamelift>` / Client / start_match_backfill
+
+********************
+start_match_backfill
+********************
+
+
+
+.. py:method:: GameLift.Client.start_match_backfill(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Anywhere, Container
+
+   
+
+  Finds new players to fill open slots in currently running game sessions. The backfill match process is essentially identical to the process of forming new matches. Backfill requests use the same matchmaker that was used to make the original match, and they provide matchmaking data for all players currently in the game session. FlexMatch uses this information to select new players so that backfilled match continues to meet the original match requirements.
+
+   
+
+  When using FlexMatch with Amazon GameLift Servers managed hosting, you can request a backfill match from a client service by calling this operation with a ``GameSessions`` ID. You also have the option of making backfill requests directly from your game server. In response to a request, FlexMatch creates player sessions for the new players, updates the ``GameSession`` resource, and sends updated matchmaking data to the game server. You can request a backfill match at any point after a game session is started. Each game session can have only one active backfill request at a time; a subsequent request automatically replaces the earlier request.
+
+   
+
+  When using FlexMatch as a standalone component, request a backfill match by calling this operation without a game session identifier. As with newly formed matches, matchmaking results are returned in a matchmaking event so that your game can update the game session that is being backfilled.
+
+   
+
+  To request a backfill match, specify a unique ticket ID, the original matchmaking configuration, and matchmaking data for all current players in the game session being backfilled. Optionally, specify the ``GameSession`` ARN. If successful, a match backfill ticket is created and returned with status set to QUEUED. Track the status of backfill tickets using the same method for tracking tickets for new matches.
+
+   
+
+  Only game sessions created by FlexMatch are supported for match backfill.
+
+   
+
+  **Learn more**
+
+   
+
+  `Backfill existing games with FlexMatch <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-backfill.html>`__
+
+   
+
+  `Matchmaking events <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-events.html>`__ (reference)
+
+   
+
+  `How Amazon GameLift Servers FlexMatch works <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/gamelift-match.html>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/StartMatchBackfill>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_match_backfill(
+        TicketId='string',
+        ConfigurationName='string',
+        GameSessionArn='string',
+        Players=[
+            {
+                'PlayerId': 'string',
+                'PlayerAttributes': {
+                    'string': {
+                        'S': 'string',
+                        'N': 123.0,
+                        'SL': [
+                            'string',
+                        ],
+                        'SDM': {
+                            'string': 123.0
+                        }
+                    }
+                },
+                'Team': 'string',
+                'LatencyInMs': {
+                    'string': 123
+                }
+            },
+        ]
+    )
+    
+  :type TicketId: string
+  :param TicketId: 
+
+    A unique identifier for a matchmaking ticket. If no ticket ID is specified here, Amazon GameLift Servers will generate one in the form of a UUID. Use this identifier to track the match backfill ticket status and retrieve match results.
+
+    
+
+  
+  :type ConfigurationName: string
+  :param ConfigurationName: **[REQUIRED]** 
+
+    Name of the matchmaker to use for this request. You can use either the configuration name or ARN value. The ARN of the matchmaker that was used with the original game session is listed in the ``GameSession`` object, ``MatchmakerData`` property.
+
+    
+
+  
+  :type GameSessionArn: string
+  :param GameSessionArn: 
+
+    A unique identifier for the game session. Use the game session ID. When using FlexMatch as a standalone matchmaking solution, this parameter is not needed.
+
+    
+
+  
+  :type Players: list
+  :param Players: **[REQUIRED]** 
+
+    Match information on all players that are currently assigned to the game session. This information is used by the matchmaker to find new players and add them to the existing game.
+
+     
+
+    You can include up to 199 ``Players`` in a ``StartMatchBackfill`` request.
+
+     
+
+    
+    * PlayerID, PlayerAttributes, Team -- This information is maintained in the ``GameSession`` object, ``MatchmakerData`` property, for all players who are currently assigned to the game session. The matchmaker data is in JSON syntax, formatted as a string. For more details, see `Match Data <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-server.html#match-server-data>`__. The backfill request must specify the team membership for every player. Do not specify team if you are not using backfill.
+     
+    * LatencyInMs -- If the matchmaker uses player latency, include a latency value, in milliseconds, for the Region that the game session is currently in. Do not include latency values for any other Region.
+    
+
+    
+
+  
+    - *(dict) --* 
+
+      Represents a player in matchmaking. When starting a matchmaking request, a player has a player ID, attributes, and may have latency data. Team information is added after a match has been successfully completed.
+
+      
+
+    
+      - **PlayerId** *(string) --* 
+
+        A unique identifier for a player
+
+        
+
+      
+      - **PlayerAttributes** *(dict) --* 
+
+        A collection of key:value pairs containing player information for use in matchmaking. Player attribute keys must match the *playerAttributes* used in a matchmaking rule set. Example: ``"PlayerAttributes": {"skill": {"N": "23"}, "gameMode": {"S": "deathmatch"}}``.
+
+         
+
+        You can provide up to 10 ``PlayerAttributes``.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(dict) --* 
+
+            Values for use in player attribute key-value pairs. This object lets you specify an attribute value using any of the valid data types: string, number, string array, or data map. Each ``AttributeValue`` object can use only one of the available properties.
+
+            
+
+          
+            - **S** *(string) --* 
+
+              For single string values. Maximum string length is 100 characters.
+
+              
+
+            
+            - **N** *(float) --* 
+
+              For number values, expressed as double.
+
+              
+
+            
+            - **SL** *(list) --* 
+
+              For a list of up to 100 strings. Maximum length for each string is 100 characters. Duplicate values are not recognized; all occurrences of the repeated value after the first of a repeated value are ignored.
+
+              
+
+            
+              - *(string) --* 
+
+              
+          
+            - **SDM** *(dict) --* 
+
+              For a map of up to 10 data type:value pairs. Maximum length for each string value is 100 characters.
+
+              
+
+            
+              - *(string) --* 
+
+              
+                - *(float) --* 
+
+                
+          
+        
+          
+    
+  
+      - **Team** *(string) --* 
+
+        Name of the team that the player is assigned to in a match. Team names are defined in a matchmaking rule set.
+
+        
+
+      
+      - **LatencyInMs** *(dict) --* 
+
+        A set of values, expressed in milliseconds, that indicates the amount of latency that a player experiences when connected to Amazon Web Services Regions. If this property is present, FlexMatch considers placing the match only in Regions for which latency is reported.
+
+         
+
+        If a matchmaker has a rule that evaluates player latency, players must report latency in order to be matched. If no latency is reported in this scenario, FlexMatch assumes that no Regions are available to the player and the ticket is not matchable.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(integer) --* 
+
+          
+    
+  
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'MatchmakingTicket': {
+              'TicketId': 'string',
+              'ConfigurationName': 'string',
+              'ConfigurationArn': 'string',
+              'Status': 'CANCELLED'|'COMPLETED'|'FAILED'|'PLACING'|'QUEUED'|'REQUIRES_ACCEPTANCE'|'SEARCHING'|'TIMED_OUT',
+              'StatusReason': 'string',
+              'StatusMessage': 'string',
+              'StartTime': datetime(2015, 1, 1),
+              'EndTime': datetime(2015, 1, 1),
+              'Players': [
+                  {
+                      'PlayerId': 'string',
+                      'PlayerAttributes': {
+                          'string': {
+                              'S': 'string',
+                              'N': 123.0,
+                              'SL': [
+                                  'string',
+                              ],
+                              'SDM': {
+                                  'string': 123.0
+                              }
+                          }
+                      },
+                      'Team': 'string',
+                      'LatencyInMs': {
+                          'string': 123
+                      }
+                  },
+              ],
+              'GameSessionConnectionInfo': {
+                  'GameSessionArn': 'string',
+                  'IpAddress': 'string',
+                  'DnsName': 'string',
+                  'Port': 123,
+                  'MatchedPlayerSessions': [
+                      {
+                          'PlayerId': 'string',
+                          'PlayerSessionId': 'string'
+                      },
+                  ]
+              },
+              'EstimatedWaitTime': 123
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **MatchmakingTicket** *(dict) --* 
+
+        Ticket representing the backfill matchmaking request. This object includes the information in the request, ticket status, and match results as generated during the matchmaking process.
+
+        
+        
+
+        - **TicketId** *(string) --* 
+
+          A unique identifier for a matchmaking ticket.
+
+          
+        
+
+        - **ConfigurationName** *(string) --* 
+
+          Name of the matchmaking configuration that is used with this ticket. Matchmaking configurations determine how players are grouped into a match and how a new game session is created for the match.
+
+          
+        
+
+        - **ConfigurationArn** *(string) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) associated with the GameLift matchmaking configuration resource that is used with this ticket.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          Current status of the matchmaking request.
+
+           
+
+          
+          * **QUEUED** -- The matchmaking request has been received and is currently waiting to be processed.
+           
+          * **SEARCHING** -- The matchmaking request is currently being processed.
+           
+          * **REQUIRES_ACCEPTANCE** -- A match has been proposed and the players must accept the match. This status is used only with requests that use a matchmaking configuration with a player acceptance requirement.
+           
+          * **PLACING** -- The FlexMatch engine has matched players and is in the process of placing a new game session for the match.
+           
+          * **COMPLETED** -- Players have been matched and a game session is ready to host the players. A ticket in this state contains the necessary connection information for players.
+           
+          * **FAILED** -- The matchmaking request was not completed.
+           
+          * **CANCELLED** -- The matchmaking request was canceled. This may be the result of a ``StopMatchmaking`` operation or a proposed match that one or more players failed to accept.
+           
+          * **TIMED_OUT** -- The matchmaking request was not successful within the duration specified in the matchmaking configuration.
+          
+
+           
+
+          .. note::
+
+            
+
+            Matchmaking requests that fail to successfully complete (statuses FAILED, CANCELLED, TIMED_OUT) can be resubmitted as new requests with new ticket IDs.
+
+            
+
+          
+        
+
+        - **StatusReason** *(string) --* 
+
+          Code to explain the current status. For example, a status reason may indicate when a ticket has returned to ``SEARCHING`` status after a proposed match fails to receive player acceptances.
+
+          
+        
+
+        - **StatusMessage** *(string) --* 
+
+          Additional information about the current status.
+
+          
+        
+
+        - **StartTime** *(datetime) --* 
+
+          Time stamp indicating when this matchmaking request was received. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **EndTime** *(datetime) --* 
+
+          Time stamp indicating when the matchmaking request stopped being processed due to successful completion, timeout, or cancellation. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **Players** *(list) --* 
+
+          A set of ``Player`` objects, each representing a player to find matches for. Players are identified by a unique player ID and may include latency data for use during matchmaking. If the ticket is in status ``COMPLETED``, the ``Player`` objects include the team the players were assigned to in the resulting match.
+
+          
+          
+
+          - *(dict) --* 
+
+            Represents a player in matchmaking. When starting a matchmaking request, a player has a player ID, attributes, and may have latency data. Team information is added after a match has been successfully completed.
+
+            
+            
+
+            - **PlayerId** *(string) --* 
+
+              A unique identifier for a player
+
+              
+            
+
+            - **PlayerAttributes** *(dict) --* 
+
+              A collection of key:value pairs containing player information for use in matchmaking. Player attribute keys must match the *playerAttributes* used in a matchmaking rule set. Example: ``"PlayerAttributes": {"skill": {"N": "23"}, "gameMode": {"S": "deathmatch"}}``.
+
+               
+
+              You can provide up to 10 ``PlayerAttributes``.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(dict) --* 
+
+                  Values for use in player attribute key-value pairs. This object lets you specify an attribute value using any of the valid data types: string, number, string array, or data map. Each ``AttributeValue`` object can use only one of the available properties.
+
+                  
+                  
+
+                  - **S** *(string) --* 
+
+                    For single string values. Maximum string length is 100 characters.
+
+                    
+                  
+
+                  - **N** *(float) --* 
+
+                    For number values, expressed as double.
+
+                    
+                  
+
+                  - **SL** *(list) --* 
+
+                    For a list of up to 100 strings. Maximum length for each string is 100 characters. Duplicate values are not recognized; all occurrences of the repeated value after the first of a repeated value are ignored.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+                  
+
+                  - **SDM** *(dict) --* 
+
+                    For a map of up to 10 data type:value pairs. Maximum length for each string value is 100 characters.
+
+                    
+                    
+
+                    - *(string) --* 
+                      
+
+                      - *(float) --* 
+                
+              
+              
+          
+        
+            
+
+            - **Team** *(string) --* 
+
+              Name of the team that the player is assigned to in a match. Team names are defined in a matchmaking rule set.
+
+              
+            
+
+            - **LatencyInMs** *(dict) --* 
+
+              A set of values, expressed in milliseconds, that indicates the amount of latency that a player experiences when connected to Amazon Web Services Regions. If this property is present, FlexMatch considers placing the match only in Regions for which latency is reported.
+
+               
+
+              If a matchmaker has a rule that evaluates player latency, players must report latency in order to be matched. If no latency is reported in this scenario, FlexMatch assumes that no Regions are available to the player and the ticket is not matchable.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(integer) --* 
+          
+        
+        
+      
+        
+
+        - **GameSessionConnectionInfo** *(dict) --* 
+
+          Connection information for a new game session. Once a match is made, the FlexMatch engine creates a new game session for it. This information is added to the matchmaking ticket, which you can be retrieve by calling `DescribeMatchmaking <https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeMatchmaking.html>`__ .
+
+          
+          
+
+          - **GameSessionArn** *(string) --* 
+
+            A unique identifier for the game session. Use the game session ID.
+
+            
+          
+
+          - **IpAddress** *(string) --* 
+
+            The IP address of the game session. To connect to a Amazon GameLift Servers game server, an app needs both the IP address and port number.
+
+            
+          
+
+          - **DnsName** *(string) --* 
+
+            The DNS identifier assigned to the instance that is running the game session. Values have the following format:
+
+             
+
+            
+            * TLS-enabled fleets: ``<unique identifier>.<region identifier>.amazongamelift.com``.
+             
+            * Non-TLS-enabled fleets: ``ec2-<unique identifier>.compute.amazonaws.com``. (See `Amazon EC2 Instance IP Addressing <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses>`__.)
+            
+
+             
+
+            When connecting to a game session that is running on a TLS-enabled fleet, you must use the DNS name, not the IP address.
+
+            
+          
+
+          - **Port** *(integer) --* 
+
+            The port number for the game session. To connect to a Amazon GameLift Servers game server, an app needs both the IP address and port number.
+
+            
+          
+
+          - **MatchedPlayerSessions** *(list) --* 
+
+            A collection of player session IDs, one for each player ID that was included in the original matchmaking request.
+
+            
+            
+
+            - *(dict) --* 
+
+              Represents a new player session that is created as a result of a successful FlexMatch match. A successful match automatically creates new player sessions for every player ID in the original matchmaking request.
+
+               
+
+              When players connect to the match's game session, they must include both player ID and player session ID in order to claim their assigned player slot.
+
+              
+              
+
+              - **PlayerId** *(string) --* 
+
+                A unique identifier for a player
+
+                
+              
+
+              - **PlayerSessionId** *(string) --* 
+
+                A unique identifier for a player session
+
+                
+          
+        
+      
+        
+
+        - **EstimatedWaitTime** *(integer) --* 
+
+          Average amount of time (in seconds) that players are currently waiting for a match. If there is not enough recent data, this property may be empty.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  

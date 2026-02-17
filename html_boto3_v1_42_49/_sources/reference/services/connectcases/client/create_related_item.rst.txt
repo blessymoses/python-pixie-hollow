@@ -1,0 +1,486 @@
+:doc:`ConnectCases <../../connectcases>` / Client / create_related_item
+
+*******************
+create_related_item
+*******************
+
+
+
+.. py:method:: ConnectCases.Client.create_related_item(**kwargs)
+
+  
+
+  Creates a related item (comments, tasks, and contacts) and associates it with a case.
+
+   
+
+  There's a quota for the number of fields allowed in a Custom type related item. See `Amazon Connect Cases quotas <https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html#cases-quotas>`__.
+
+   
+
+  **Use cases**
+
+   
+
+  Following are examples of related items that you may want to associate with a case:
+
+   
+
+  
+  * Related contacts, such as calls, chats, emails tasks
+   
+  * Comments, for agent notes
+   
+  * SLAs, to capture target resolution goals
+   
+  * Cases, to capture related Amazon Connect Cases
+   
+  * Files, such as policy documentation or customer-provided attachments
+   
+  * Custom related items, which provide flexibility for you to define related items that such as bookings, orders, products, notices, and more
+  
+
+   
+
+  **Important things to know**
+
+   
+
+  
+  * If you are associating a contact to a case by passing in ``Contact`` for a ``type``, you must have `DescribeContact <https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeContact.html>`__ permission on the ARN of the contact that you provide in ``content.contact.contactArn``.
+   
+  * A Related Item is a resource that is associated with a case. It may or may not have an external identifier linking it to an external resource (for example, a ``contactArn``). All Related Items have their own internal identifier, the ``relatedItemArn``. Examples of related items include ``comments`` and ``contacts``.
+   
+  * If you provide a value for ``performedBy.userArn`` you must also have `DescribeUser <https://docs.aws.amazon.com/connect/latest/APIReference/API_DescribeUser.html>`__ permission on the ARN of the user that you provide.
+   
+  * The ``type`` field is reserved for internal use only.
+  
+
+   
+
+  **Endpoints**: See `Amazon Connect endpoints and quotas <https://docs.aws.amazon.com/general/latest/gr/connect_region.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/CreateRelatedItem>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_related_item(
+        domainId='string',
+        caseId='string',
+        type='Contact'|'Comment'|'File'|'Sla'|'ConnectCase'|'Custom',
+        content={
+            'contact': {
+                'contactArn': 'string'
+            },
+            'comment': {
+                'body': 'string',
+                'contentType': 'Text/Plain'
+            },
+            'file': {
+                'fileArn': 'string'
+            },
+            'sla': {
+                'slaInputConfiguration': {
+                    'name': 'string',
+                    'type': 'CaseField',
+                    'fieldId': 'string',
+                    'targetFieldValues': [
+                        {
+                            'stringValue': 'string',
+                            'doubleValue': 123.0,
+                            'booleanValue': True|False,
+                            'emptyValue': {}
+                            ,
+                            'userArnValue': 'string'
+                        },
+                    ],
+                    'targetSlaMinutes': 123
+                }
+            },
+            'connectCase': {
+                'caseId': 'string'
+            },
+            'custom': {
+                'fields': [
+                    {
+                        'id': 'string',
+                        'value': {
+                            'stringValue': 'string',
+                            'doubleValue': 123.0,
+                            'booleanValue': True|False,
+                            'emptyValue': {}
+                            ,
+                            'userArnValue': 'string'
+                        }
+                    },
+                ]
+            }
+        },
+        performedBy={
+            'userArn': 'string',
+            'customEntity': 'string'
+        }
+    )
+    
+  :type domainId: string
+  :param domainId: **[REQUIRED]** 
+
+    The unique identifier of the Cases domain.
+
+    
+
+  
+  :type caseId: string
+  :param caseId: **[REQUIRED]** 
+
+    A unique identifier of the case.
+
+    
+
+  
+  :type type: string
+  :param type: **[REQUIRED]** 
+
+    The type of a related item.
+
+    
+
+  
+  :type content: dict
+  :param content: **[REQUIRED]** 
+
+    The content of a related item to be created.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``contact``, ``comment``, ``file``, ``sla``, ``connectCase``, ``custom``. 
+
+  
+    - **contact** *(dict) --* 
+
+      Object representing a contact in Amazon Connect as an API request field.
+
+      
+
+    
+      - **contactArn** *(string) --* **[REQUIRED]** 
+
+        A unique identifier of a contact in Amazon Connect.
+
+        
+
+      
+    
+    - **comment** *(dict) --* 
+
+      Represents the content of a comment to be returned to agents.
+
+      
+
+    
+      - **body** *(string) --* **[REQUIRED]** 
+
+        Text in the body of a ``Comment`` on a case.
+
+        
+
+      
+      - **contentType** *(string) --* **[REQUIRED]** 
+
+        Type of the text in the box of a ``Comment`` on a case.
+
+        
+
+      
+    
+    - **file** *(dict) --* 
+
+      A file of related items.
+
+      
+
+    
+      - **fileArn** *(string) --* **[REQUIRED]** 
+
+        The Amazon Resource Name (ARN) of a File in Amazon Connect.
+
+        
+
+      
+    
+    - **sla** *(dict) --* 
+
+      Represents the content of an SLA to be created.
+
+      .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``slaInputConfiguration``. 
+
+    
+      - **slaInputConfiguration** *(dict) --* 
+
+        Represents an input SLA configuration.
+
+        
+
+      
+        - **name** *(string) --* **[REQUIRED]** 
+
+          Name of an SLA.
+
+          
+
+        
+        - **type** *(string) --* **[REQUIRED]** 
+
+          Type of SLA.
+
+          
+
+        
+        - **fieldId** *(string) --* 
+
+          Unique identifier of a field.
+
+          
+
+        
+        - **targetFieldValues** *(list) --* 
+
+          Represents a list of target field values for the fieldId specified in SlaInputConfiguration. The SLA is considered met if any one of these target field values matches the actual field value.
+
+          
+
+        
+          - *(dict) --* 
+
+            Object to store union of Field values.
+
+             
+
+            .. note::
+
+              
+
+              The ``Summary`` system field accepts 3000 characters while all other fields accept 500 characters.
+
+              
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+          
+            - **stringValue** *(string) --* 
+
+              String value type.
+
+              
+
+            
+            - **doubleValue** *(float) --* 
+
+              Can be either null, or have a Double number value type. Only one value can be provided.
+
+              
+
+            
+            - **booleanValue** *(boolean) --* 
+
+              Can be either null, or have a Boolean value type. Only one value can be provided.
+
+              
+
+            
+            - **emptyValue** *(dict) --* 
+
+              An empty value.
+
+              
+
+            
+            
+            - **userArnValue** *(string) --* 
+
+              Represents the user that performed the audit.
+
+              
+
+            
+          
+      
+        - **targetSlaMinutes** *(integer) --* **[REQUIRED]** 
+
+          Target duration in minutes within which an SLA should be completed.
+
+          
+
+        
+      
+    
+    - **connectCase** *(dict) --* 
+
+      Represents the Amazon Connect case to be created as a related item.
+
+      
+
+    
+      - **caseId** *(string) --* **[REQUIRED]** 
+
+        A unique identifier of the case.
+
+        
+
+      
+    
+    - **custom** *(dict) --* 
+
+      Represents the content of a ``Custom`` type related item.
+
+      
+
+    
+      - **fields** *(list) --* **[REQUIRED]** 
+
+        List of field values for the ``Custom`` related item.
+
+        
+
+      
+        - *(dict) --* 
+
+          Object for case field values.
+
+          
+
+        
+          - **id** *(string) --* **[REQUIRED]** 
+
+            Unique identifier of a field.
+
+            
+
+          
+          - **value** *(dict) --* **[REQUIRED]** 
+
+            Union of potential field value types.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+          
+            - **stringValue** *(string) --* 
+
+              String value type.
+
+              
+
+            
+            - **doubleValue** *(float) --* 
+
+              Can be either null, or have a Double number value type. Only one value can be provided.
+
+              
+
+            
+            - **booleanValue** *(boolean) --* 
+
+              Can be either null, or have a Boolean value type. Only one value can be provided.
+
+              
+
+            
+            - **emptyValue** *(dict) --* 
+
+              An empty value.
+
+              
+
+            
+            
+            - **userArnValue** *(string) --* 
+
+              Represents the user that performed the audit.
+
+              
+
+            
+          
+        
+    
+    
+  
+  :type performedBy: dict
+  :param performedBy: 
+
+    Represents the creator of the related item.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``userArn``, ``customEntity``. 
+
+  
+    - **userArn** *(string) --* 
+
+      Represents the Amazon Connect ARN of the user.
+
+      
+
+    
+    - **customEntity** *(string) --* 
+
+      Any provided entity.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'relatedItemId': 'string',
+          'relatedItemArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **relatedItemId** *(string) --* 
+
+        The unique identifier of the related item.
+
+        
+      
+
+      - **relatedItemArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the related item.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ConnectCases.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.ServiceQuotaExceededException`
+
+  

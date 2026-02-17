@@ -1,0 +1,625 @@
+:doc:`S3 <../../s3>` / Client / select_object_content
+
+*********************
+select_object_content
+*********************
+
+
+
+.. py:method:: S3.Client.select_object_content(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This operation is not supported for directory buckets.
+
+    
+
+   
+
+  This action filters the contents of an Amazon S3 object based on a simple structured query language (SQL) statement. In the request, along with the SQL expression, you must also specify a data serialization format (JSON, CSV, or Apache Parquet) of the object. Amazon S3 uses this format to parse object data into records, and returns only records that match the specified SQL expression. You must also specify the data serialization format for the response.
+
+   
+
+  This functionality is not supported for Amazon S3 on Outposts.
+
+   
+
+  For more information about Amazon S3 Select, see `Selecting Content from Objects <https://docs.aws.amazon.com/AmazonS3/latest/dev/selecting-content-from-objects.html>`__ and `SELECT Command <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-glacier-select-sql-reference-select.html>`__ in the *Amazon S3 User Guide*.
+
+   
+
+  
+
+    Permissions  
+
+  You must have the ``s3:GetObject`` permission for this operation. Amazon S3 Select does not support anonymous access. For more information about permissions, see `Specifying Permissions in a Policy <https://docs.aws.amazon.com/AmazonS3/latest/dev/using-with-s3-actions.html>`__ in the *Amazon S3 User Guide*.
+
+    Object Data Formats  
+
+  You can use Amazon S3 Select to query objects that have the following format properties:
+
+   
+
+  
+  * *CSV, JSON, and Parquet* - Objects must be in CSV, JSON, or Parquet format.
+   
+  * *UTF-8* - UTF-8 is the only encoding type Amazon S3 Select supports.
+   
+  * *GZIP or BZIP2* - CSV and JSON files can be compressed using GZIP or BZIP2. GZIP and BZIP2 are the only compression formats that Amazon S3 Select supports for CSV and JSON files. Amazon S3 Select supports columnar compression for Parquet using GZIP or Snappy. Amazon S3 Select does not support whole-object compression for Parquet objects.
+   
+  * *Server-side encryption* - Amazon S3 Select supports querying objects that are protected with server-side encryption. For objects that are encrypted with customer-provided encryption keys (SSE-C), you must use HTTPS, and you must use the headers that are documented in the `GetObject <https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html>`__. For more information about SSE-C, see `Server-Side Encryption (Using Customer-Provided Encryption Keys) <https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html>`__ in the *Amazon S3 User Guide*. For objects that are encrypted with Amazon S3 managed keys (SSE-S3) and Amazon Web Services KMS keys (SSE-KMS), server-side encryption is handled transparently, so you don't need to specify anything. For more information about server-side encryption, including SSE-S3 and SSE-KMS, see `Protecting Data Using Server-Side Encryption <https://docs.aws.amazon.com/AmazonS3/latest/dev/serv-side-encryption.html>`__ in the *Amazon S3 User Guide*.
+  
+
+    Working with the Response Body  
+
+  Given the response size is unknown, Amazon S3 Select streams the response as a series of messages and includes a ``Transfer-Encoding`` header with ``chunked`` as its value in the response. For more information, see `Appendix\: SelectObjectContent Response <https://docs.aws.amazon.com/AmazonS3/latest/API/RESTSelectObjectAppendix.html>`__.
+
+    GetObject Support  
+
+  The ``SelectObjectContent`` action does not support the following ``GetObject`` functionality. For more information, see `GetObject <https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html>`__.
+
+   
+
+  
+  * ``Range``: Although you can specify a scan range for an Amazon S3 Select request (see `SelectObjectContentRequest - ScanRange <https://docs.aws.amazon.com/AmazonS3/latest/API/API_SelectObjectContent.html#AmazonS3-SelectObjectContent-request-ScanRange>`__ in the request parameters), you cannot specify the range of bytes of an object to return.
+   
+  * The ``GLACIER``, ``DEEP_ARCHIVE``, and ``REDUCED_REDUNDANCY`` storage classes, or the ``ARCHIVE_ACCESS`` and ``DEEP_ARCHIVE_ACCESS`` access tiers of the ``INTELLIGENT_TIERING`` storage class: You cannot query objects in the ``GLACIER``, ``DEEP_ARCHIVE``, or ``REDUCED_REDUNDANCY`` storage classes, nor objects in the ``ARCHIVE_ACCESS`` or ``DEEP_ARCHIVE_ACCESS`` access tiers of the ``INTELLIGENT_TIERING`` storage class. For more information about storage classes, see `Using Amazon S3 storage classes <https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html>`__ in the *Amazon S3 User Guide*.
+  
+
+    Special Errors  
+
+  For a list of special errors for this operation, see `List of SELECT Object Content Error Codes <https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html#SelectObjectContentErrorCodeList>`__
+
+     
+
+  The following operations are related to ``SelectObjectContent``:
+
+   
+
+  
+  * `GetObject <https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html>`__
+   
+  * `GetBucketLifecycleConfiguration <https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLifecycleConfiguration.html>`__
+   
+  * `PutBucketLifecycleConfiguration <https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLifecycleConfiguration.html>`__
+  
+
+   
+
+  .. warning::
+
+     
+
+    You must URL encode any signed header values that contain spaces. For example, if your header value is ``my file.txt``, containing two spaces after ``my``, you must URL encode this value to ``my%20%20file.txt``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/SelectObjectContent>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.select_object_content(
+        Bucket='string',
+        Key='string',
+        SSECustomerAlgorithm='string',
+        SSECustomerKey='string',
+        Expression='string',
+        ExpressionType='SQL',
+        RequestProgress={
+            'Enabled': True|False
+        },
+        InputSerialization={
+            'CSV': {
+                'FileHeaderInfo': 'USE'|'IGNORE'|'NONE',
+                'Comments': 'string',
+                'QuoteEscapeCharacter': 'string',
+                'RecordDelimiter': 'string',
+                'FieldDelimiter': 'string',
+                'QuoteCharacter': 'string',
+                'AllowQuotedRecordDelimiter': True|False
+            },
+            'CompressionType': 'NONE'|'GZIP'|'BZIP2',
+            'JSON': {
+                'Type': 'DOCUMENT'|'LINES'
+            },
+            'Parquet': {}
+            
+        },
+        OutputSerialization={
+            'CSV': {
+                'QuoteFields': 'ALWAYS'|'ASNEEDED',
+                'QuoteEscapeCharacter': 'string',
+                'RecordDelimiter': 'string',
+                'FieldDelimiter': 'string',
+                'QuoteCharacter': 'string'
+            },
+            'JSON': {
+                'RecordDelimiter': 'string'
+            }
+        },
+        ScanRange={
+            'Start': 123,
+            'End': 123
+        },
+        ExpectedBucketOwner='string'
+    )
+    
+  :type Bucket: string
+  :param Bucket: **[REQUIRED]** 
+
+    The S3 bucket.
+
+    
+
+  
+  :type Key: string
+  :param Key: **[REQUIRED]** 
+
+    The object key.
+
+    
+
+  
+  :type SSECustomerAlgorithm: string
+  :param SSECustomerAlgorithm: 
+
+    The server-side encryption (SSE) algorithm used to encrypt the object. This parameter is needed only when the object was created using a checksum algorithm. For more information, see `Protecting data using SSE-C keys <https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html>`__ in the *Amazon S3 User Guide*.
+
+    
+
+  
+  :type SSECustomerKey: string
+  :param SSECustomerKey: 
+
+    The server-side encryption (SSE) customer managed key. This parameter is needed only when the object was created using a checksum algorithm. For more information, see `Protecting data using SSE-C keys <https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html>`__ in the *Amazon S3 User Guide*.
+
+    
+
+  
+  :type SSECustomerKeyMD5: string
+  :param SSECustomerKeyMD5: 
+
+    The MD5 server-side encryption (SSE) customer managed key. This parameter is needed only when the object was created using a checksum algorithm. For more information, see `Protecting data using SSE-C keys <https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html>`__ in the *Amazon S3 User Guide*.
+
+        Please note that this parameter is automatically populated if it is not provided. Including this parameter is not required
+
+
+
+  
+  :type Expression: string
+  :param Expression: **[REQUIRED]** 
+
+    The expression that is used to query the object.
+
+    
+
+  
+  :type ExpressionType: string
+  :param ExpressionType: **[REQUIRED]** 
+
+    The type of the provided expression (for example, SQL).
+
+    
+
+  
+  :type RequestProgress: dict
+  :param RequestProgress: 
+
+    Specifies if periodic request progress information should be enabled.
+
+    
+
+  
+    - **Enabled** *(boolean) --* 
+
+      Specifies whether periodic QueryProgress frames should be sent. Valid values: TRUE, FALSE. Default value: FALSE.
+
+      
+
+    
+  
+  :type InputSerialization: dict
+  :param InputSerialization: **[REQUIRED]** 
+
+    Describes the format of the data in the object that is being queried.
+
+    
+
+  
+    - **CSV** *(dict) --* 
+
+      Describes the serialization of a CSV-encoded object.
+
+      
+
+    
+      - **FileHeaderInfo** *(string) --* 
+
+        Describes the first line of input. Valid values are:
+
+         
+
+        
+        * ``NONE``: First line is not a header.
+         
+        * ``IGNORE``: First line is a header, but you can't use the header values to indicate the column in an expression. You can use column position (such as _1, _2, …) to indicate the column ( ``SELECT s._1 FROM OBJECT s``).
+         
+        * ``Use``: First line is a header, and you can use the header value to identify a column in an expression ( ``SELECT "name" FROM OBJECT``).
+        
+
+        
+
+      
+      - **Comments** *(string) --* 
+
+        A single character used to indicate that a row should be ignored when the character is present at the start of that row. You can specify any character to indicate a comment line. The default character is ``#``.
+
+         
+
+        Default: ``#``
+
+        
+
+      
+      - **QuoteEscapeCharacter** *(string) --* 
+
+        A single character used for escaping the quotation mark character inside an already escaped value. For example, the value ``""" a , b """`` is parsed as ``" a , b "``.
+
+        
+
+      
+      - **RecordDelimiter** *(string) --* 
+
+        A single character used to separate individual records in the input. Instead of the default value, you can specify an arbitrary delimiter.
+
+        
+
+      
+      - **FieldDelimiter** *(string) --* 
+
+        A single character used to separate individual fields in a record. You can specify an arbitrary delimiter.
+
+        
+
+      
+      - **QuoteCharacter** *(string) --* 
+
+        A single character used for escaping when the field delimiter is part of the value. For example, if the value is ``a, b``, Amazon S3 wraps this field value in quotation marks, as follows: ``" a , b "``.
+
+         
+
+        Type: String
+
+         
+
+        Default: ``"``
+
+         
+
+        Ancestors: ``CSV``
+
+        
+
+      
+      - **AllowQuotedRecordDelimiter** *(boolean) --* 
+
+        Specifies that CSV field values may contain quoted record delimiters and such records should be allowed. Default value is FALSE. Setting this value to TRUE may lower performance.
+
+        
+
+      
+    
+    - **CompressionType** *(string) --* 
+
+      Specifies object's compression format. Valid values: NONE, GZIP, BZIP2. Default Value: NONE.
+
+      
+
+    
+    - **JSON** *(dict) --* 
+
+      Specifies JSON as object's input serialization format.
+
+      
+
+    
+      - **Type** *(string) --* 
+
+        The type of JSON. Valid values: Document, Lines.
+
+        
+
+      
+    
+    - **Parquet** *(dict) --* 
+
+      Specifies Parquet as object's input serialization format.
+
+      
+
+    
+    
+  
+  :type OutputSerialization: dict
+  :param OutputSerialization: **[REQUIRED]** 
+
+    Describes the format of the data that you want Amazon S3 to return in response.
+
+    
+
+  
+    - **CSV** *(dict) --* 
+
+      Describes the serialization of CSV-encoded Select results.
+
+      
+
+    
+      - **QuoteFields** *(string) --* 
+
+        Indicates whether to use quotation marks around output fields.
+
+         
+
+        
+        * ``ALWAYS``: Always use quotation marks for output fields.
+         
+        * ``ASNEEDED``: Use quotation marks for output fields when needed.
+        
+
+        
+
+      
+      - **QuoteEscapeCharacter** *(string) --* 
+
+        The single character used for escaping the quote character inside an already escaped value.
+
+        
+
+      
+      - **RecordDelimiter** *(string) --* 
+
+        A single character used to separate individual records in the output. Instead of the default value, you can specify an arbitrary delimiter.
+
+        
+
+      
+      - **FieldDelimiter** *(string) --* 
+
+        The value used to separate individual fields in a record. You can specify an arbitrary delimiter.
+
+        
+
+      
+      - **QuoteCharacter** *(string) --* 
+
+        A single character used for escaping when the field delimiter is part of the value. For example, if the value is ``a, b``, Amazon S3 wraps this field value in quotation marks, as follows: ``" a , b "``.
+
+        
+
+      
+    
+    - **JSON** *(dict) --* 
+
+      Specifies JSON as request's output serialization format.
+
+      
+
+    
+      - **RecordDelimiter** *(string) --* 
+
+        The value used to separate individual records in the output. If no value is specified, Amazon S3 uses a newline character ('\n').
+
+        
+
+      
+    
+  
+  :type ScanRange: dict
+  :param ScanRange: 
+
+    Specifies the byte range of the object to get the records from. A record is processed when its first byte is contained by the range. This parameter is optional, but when specified, it must not be empty. See RFC 2616, Section 14.35.1 about how to specify the start and end of the range.
+
+     
+
+    ``ScanRange``may be used in the following ways:
+
+     
+
+    
+    * ``<scanrange><start>50</start><end>100</end></scanrange>`` - process only the records starting between the bytes 50 and 100 (inclusive, counting from zero)
+     
+    * ``<scanrange><start>50</start></scanrange>`` - process only the records starting after the byte 50
+     
+    * ``<scanrange><end>50</end></scanrange>`` - process only the records within the last 50 bytes of the file.
+    
+
+    
+
+  
+    - **Start** *(integer) --* 
+
+      Specifies the start of the byte range. This parameter is optional. Valid values: non-negative integers. The default value is 0. If only ``start`` is supplied, it means scan from that point to the end of the file. For example, ``<scanrange><start>50</start></scanrange>`` means scan from byte 50 until the end of the file.
+
+      
+
+    
+    - **End** *(integer) --* 
+
+      Specifies the end of the byte range. This parameter is optional. Valid values: non-negative integers. The default value is one less than the size of the object being queried. If only the End parameter is supplied, it is interpreted to mean scan the last N bytes of the file. For example, ``<scanrange><end>50</end></scanrange>`` means scan the last 50 bytes.
+
+      
+
+    
+  
+  :type ExpectedBucketOwner: string
+  :param ExpectedBucketOwner: 
+
+    The account ID of the expected bucket owner. If the account ID that you provide does not match the actual owner of the bucket, the request fails with the HTTP status code ``403 Forbidden`` (access denied).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+
+    The response of this operation contains an :class:`.EventStream` member. When iterated the :class:`.EventStream` will yield events based on the structure below, where only one of the top level keys will be present for any given event.
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Payload': EventStream({
+              'Records': {
+                  'Payload': b'bytes'
+              },
+              'Stats': {
+                  'Details': {
+                      'BytesScanned': 123,
+                      'BytesProcessed': 123,
+                      'BytesReturned': 123
+                  }
+              },
+              'Progress': {
+                  'Details': {
+                      'BytesScanned': 123,
+                      'BytesProcessed': 123,
+                      'BytesReturned': 123
+                  }
+              },
+              'Cont': {},
+              'End': {}
+          })
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Payload** (:class:`.EventStream`) -- 
+
+        The array of results.
+
+        
+        
+
+        - **Records** *(dict) --* 
+
+          The Records Event.
+
+          
+          
+
+          - **Payload** *(bytes) --* 
+
+            The byte array of partial, one or more result records. S3 Select doesn't guarantee that a record will be self-contained in one record frame. To ensure continuous streaming of data, S3 Select might split the same record across multiple record frames instead of aggregating the results in memory. Some S3 clients (for example, the SDK for Java) handle this behavior by creating a ``ByteStream`` out of the response by default. Other clients might not handle this behavior by default. In those cases, you must aggregate the results on the client side and parse the response.
+
+            
+      
+        
+
+        - **Stats** *(dict) --* 
+
+          The Stats Event.
+
+          
+          
+
+          - **Details** *(dict) --* 
+
+            The Stats event details.
+
+            
+            
+
+            - **BytesScanned** *(integer) --* 
+
+              The total number of object bytes scanned.
+
+              
+            
+
+            - **BytesProcessed** *(integer) --* 
+
+              The total number of uncompressed object bytes processed.
+
+              
+            
+
+            - **BytesReturned** *(integer) --* 
+
+              The total number of bytes of records payload data returned.
+
+              
+        
+      
+        
+
+        - **Progress** *(dict) --* 
+
+          The Progress Event.
+
+          
+          
+
+          - **Details** *(dict) --* 
+
+            The Progress event details.
+
+            
+            
+
+            - **BytesScanned** *(integer) --* 
+
+              The current number of object bytes scanned.
+
+              
+            
+
+            - **BytesProcessed** *(integer) --* 
+
+              The current number of uncompressed object bytes processed.
+
+              
+            
+
+            - **BytesReturned** *(integer) --* 
+
+              The current number of bytes of records payload data returned.
+
+              
+        
+      
+        
+
+        - **Cont** *(dict) --* 
+
+          The Continuation Event.
+
+          
+      
+        
+
+        - **End** *(dict) --* 
+
+          The End Event.
+
+          
+      
+    
+  

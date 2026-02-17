@@ -1,0 +1,191 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / describe_load_balancers
+
+***********************
+describe_load_balancers
+***********************
+
+
+
+.. py:method:: AutoScaling.Client.describe_load_balancers(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This API operation is superseded by `DescribeTrafficSources <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeTrafficSources.html>`__, which can describe multiple traffic sources types. We recommend using ``DescribeTrafficSources`` to simplify how you manage traffic sources. However, we continue to support ``DescribeLoadBalancers``. You can use both the original ``DescribeLoadBalancers`` API operation and ``DescribeTrafficSources`` on the same Auto Scaling group.
+
+    
+
+   
+
+  Gets information about the load balancers for the specified Auto Scaling group.
+
+   
+
+  This operation describes only Classic Load Balancers. If you have Application Load Balancers, Network Load Balancers, or Gateway Load Balancers, use the `DescribeLoadBalancerTargetGroups <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeLoadBalancerTargetGroups.html>`__ API instead.
+
+   
+
+  To determine the attachment status of the load balancer, use the ``State`` element in the response. When you attach a load balancer to an Auto Scaling group, the initial ``State`` value is ``Adding``. The state transitions to ``Added`` after all Auto Scaling instances are registered with the load balancer. If Elastic Load Balancing health checks are enabled for the Auto Scaling group, the state transitions to ``InService`` after at least one Auto Scaling instance passes the health check. When the load balancer is in the ``InService`` state, Amazon EC2 Auto Scaling can terminate and replace any instances that are reported as unhealthy. If no registered instances pass the health checks, the load balancer doesn't enter the ``InService`` state.
+
+   
+
+  Load balancers also have an ``InService`` state if you attach them in the `CreateAutoScalingGroup <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_CreateAutoScalingGroup.html>`__ API call. If your load balancer state is ``InService``, but it is not working properly, check the scaling activities by calling `DescribeScalingActivities <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_DescribeScalingActivities.html>`__ and take any corrective actions necessary.
+
+   
+
+  For help with failed health checks, see `Troubleshooting Amazon EC2 Auto Scaling\: Health checks <https://docs.aws.amazon.com/autoscaling/ec2/userguide/ts-as-healthchecks.html>`__ in the *Amazon EC2 Auto Scaling User Guide*. For more information, see `Use Elastic Load Balancing to distribute traffic across the instances in your Auto Scaling group <https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-load-balancer.html>`__ in the *Amazon EC2 Auto Scaling User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DescribeLoadBalancers>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_load_balancers(
+        AutoScalingGroupName='string',
+        NextToken='string',
+        MaxRecords=123
+    )
+    
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: **[REQUIRED]** 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type MaxRecords: integer
+  :param MaxRecords: 
+
+    The maximum number of items to return with this call. The default value is ``100`` and the maximum value is ``100``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'LoadBalancers': [
+              {
+                  'LoadBalancerName': 'string',
+                  'State': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **LoadBalancers** *(list) --* 
+
+        The load balancers.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes the state of a Classic Load Balancer.
+
+          
+          
+
+          - **LoadBalancerName** *(string) --* 
+
+            The name of the load balancer.
+
+            
+          
+
+          - **State** *(string) --* 
+
+            One of the following load balancer states:
+
+             
+
+            
+            * ``Adding`` - The Auto Scaling instances are being registered with the load balancer.
+             
+            * ``Added`` - All Auto Scaling instances are registered with the load balancer.
+             
+            * ``InService`` - At least one Auto Scaling instance passed an ``ELB`` health check.
+             
+            * ``Removing`` - The Auto Scaling instances are being deregistered from the load balancer. If connection draining is enabled, Elastic Load Balancing waits for in-flight requests to complete before deregistering the instances.
+             
+            * ``Removed`` - All Auto Scaling instances are deregistered from the load balancer.
+            
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A string that indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the ``NextToken`` value when requesting the next set of items. This value is null when there are no more items to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+  *   :py:class:`AutoScaling.Client.exceptions.InvalidNextToken`
+
+  
+
+  **Examples**
+
+  This example describes the load balancers attached to the specified Auto Scaling group.
+  ::
+
+    response = client.describe_load_balancers(
+        AutoScalingGroupName='my-auto-scaling-group',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'LoadBalancers': [
+            {
+                'LoadBalancerName': 'my-load-balancer',
+                'State': 'Added',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,2747 @@
+:doc:`EC2 <../../ec2>` / Client / describe_instances
+
+******************
+describe_instances
+******************
+
+
+
+.. py:method:: EC2.Client.describe_instances(**kwargs)
+
+  
+
+  Describes the specified instances or all instances.
+
+   
+
+  If you specify instance IDs, the output includes information for only the specified instances. If you specify filters, the output includes information for only those instances that meet the filter criteria. If you do not specify instance IDs or filters, the output includes information for all instances, which can affect performance. We recommend that you use pagination to ensure that the operation returns quickly and successfully.
+
+   
+
+  The response includes SQL license exemption status information for instances registered with the SQL LE service, providing visibility into license exemption configuration and status.
+
+   
+
+  If you specify an instance ID that is not valid, an error is returned. If you specify an instance that you do not own, it is not included in the output.
+
+   
+
+  Recently terminated instances might appear in the returned results. This interval is usually less than one hour.
+
+   
+
+  If you describe instances in the rare case where an Availability Zone is experiencing a service disruption and you specify instance IDs that are in the affected zone, or do not specify any instance IDs at all, the call fails. If you describe instances and specify only instance IDs that are in an unaffected zone, the call works normally.
+
+   
+
+  The Amazon EC2 API follows an eventual consistency model. This means that the result of an API command you run that creates or modifies resources might not be immediately available to all subsequent commands you run. For guidance on how to manage eventual consistency, see `Eventual consistency in the Amazon EC2 API <https://docs.aws.amazon.com/ec2/latest/devguide/eventual-consistency.html>`__ in the *Amazon EC2 Developer Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    We strongly recommend using only paginated requests. Unpaginated requests are susceptible to throttling and timeouts.
+
+     
+
+   
+
+  .. note::
+
+    
+
+    The order of the elements in the response, including those within nested structures, might vary. Applications should not assume the elements appear in a particular order.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/DescribeInstances>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_instances(
+        InstanceIds=[
+            'string',
+        ],
+        DryRun=True|False,
+        Filters=[
+            {
+                'Name': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type InstanceIds: list
+  :param InstanceIds: 
+
+    The instance IDs.
+
+     
+
+    Default: Describes all your instances.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the operation, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    The filters.
+
+     
+
+    
+    * ``affinity`` - The affinity setting for an instance running on a Dedicated Host ( ``default`` | ``host``).
+     
+    * ``architecture`` - The instance architecture ( ``i386`` | ``x86_64`` | ``arm64``).
+     
+    * ``availability-zone`` - The Availability Zone of the instance.
+     
+    * ``availability-zone-id`` - The ID of the Availability Zone of the instance.
+     
+    * ``block-device-mapping.attach-time`` - The attach time for an EBS volume mapped to the instance, for example, ``2022-09-15T17:15:20.000Z``.
+     
+    * ``block-device-mapping.delete-on-termination`` - A Boolean that indicates whether the EBS volume is deleted on instance termination.
+     
+    * ``block-device-mapping.device-name`` - The device name specified in the block device mapping (for example, ``/dev/sdh`` or ``xvdh``).
+     
+    * ``block-device-mapping.status`` - The status for the EBS volume ( ``attaching`` | ``attached`` | ``detaching`` | ``detached``).
+     
+    * ``block-device-mapping.volume-id`` - The volume ID of the EBS volume.
+     
+    * ``boot-mode`` - The boot mode that was specified by the AMI ( ``legacy-bios`` | ``uefi`` | ``uefi-preferred``).
+     
+    * ``capacity-reservation-id`` - The ID of the Capacity Reservation into which the instance was launched.
+     
+    * ``capacity-reservation-specification.capacity-reservation-preference`` - The instance's Capacity Reservation preference ( ``open`` | ``none``).
+     
+    * ``capacity-reservation-specification.capacity-reservation-target.capacity-reservation-id`` - The ID of the targeted Capacity Reservation.
+     
+    * ``capacity-reservation-specification.capacity-reservation-target.capacity-reservation-resource-group-arn`` - The ARN of the targeted Capacity Reservation group.
+     
+    * ``client-token`` - The idempotency token you provided when you launched the instance.
+     
+    * ``current-instance-boot-mode`` - The boot mode that is used to launch the instance at launch or start ( ``legacy-bios`` | ``uefi``).
+     
+    * ``dns-name`` - The public DNS name of the instance.
+     
+    * ``ebs-optimized`` - A Boolean that indicates whether the instance is optimized for Amazon EBS I/O.
+     
+    * ``ena-support`` - A Boolean that indicates whether the instance is enabled for enhanced networking with ENA.
+     
+    * ``enclave-options.enabled`` - A Boolean that indicates whether the instance is enabled for Amazon Web Services Nitro Enclaves.
+     
+    * ``hibernation-options.configured`` - A Boolean that indicates whether the instance is enabled for hibernation. A value of ``true`` means that the instance is enabled for hibernation.
+     
+    * ``host-id`` - The ID of the Dedicated Host on which the instance is running, if applicable.
+     
+    * ``hypervisor`` - The hypervisor type of the instance ( ``ovm`` | ``xen``). The value ``xen`` is used for both Xen and Nitro hypervisors.
+     
+    * ``iam-instance-profile.arn`` - The instance profile associated with the instance. Specified as an ARN.
+     
+    * ``iam-instance-profile.id`` - The instance profile associated with the instance. Specified as an ID.
+     
+    * ``image-id`` - The ID of the image used to launch the instance.
+     
+    * ``instance-id`` - The ID of the instance.
+     
+    * ``instance-lifecycle`` - Indicates whether this is a Spot Instance, a Scheduled Instance, or a Capacity Block ( ``spot`` | ``scheduled`` | ``capacity-block``).
+     
+    * ``instance-state-code`` - The state of the instance, as a 16-bit unsigned integer. The high byte is used for internal purposes and should be ignored. The low byte is set based on the state represented. The valid values are: 0 (pending), 16 (running), 32 (shutting-down), 48 (terminated), 64 (stopping), and 80 (stopped).
+     
+    * ``instance-state-name`` - The state of the instance ( ``pending`` | ``running`` | ``shutting-down`` | ``terminated`` | ``stopping`` | ``stopped``).
+     
+    * ``instance-type`` - The type of instance (for example, ``t2.micro``).
+     
+    * ``instance.group-id`` - The ID of the security group for the instance.
+     
+    * ``instance.group-name`` - The name of the security group for the instance.
+     
+    * ``ip-address`` - The public IPv4 address of the instance.
+     
+    * ``ipv6-address`` - The IPv6 address of the instance.
+     
+    * ``kernel-id`` - The kernel ID.
+     
+    * ``key-name`` - The name of the key pair used when the instance was launched.
+     
+    * ``launch-index`` - When launching multiple instances, this is the index for the instance in the launch group (for example, 0, 1, 2, and so on).
+     
+    * ``launch-time`` - The time when the instance was launched, in the ISO 8601 format in the UTC time zone (YYYY-MM-DDThh:mm:ss.sssZ), for example, ``2021-09-29T11:04:43.305Z``. You can use a wildcard ( ``*``), for example, ``2021-09-29T*``, which matches an entire day.
+     
+    * ``maintenance-options.auto-recovery`` - The current automatic recovery behavior of the instance ( ``disabled`` | ``default``).
+     
+    * ``metadata-options.http-endpoint`` - The status of access to the HTTP metadata endpoint on your instance ( ``enabled`` | ``disabled``)
+     
+    * ``metadata-options.http-protocol-ipv4`` - Indicates whether the IPv4 endpoint is enabled ( ``disabled`` | ``enabled``).
+     
+    * ``metadata-options.http-protocol-ipv6`` - Indicates whether the IPv6 endpoint is enabled ( ``disabled`` | ``enabled``).
+     
+    * ``metadata-options.http-put-response-hop-limit`` - The HTTP metadata request put response hop limit (integer, possible values ``1`` to ``64``)
+     
+    * ``metadata-options.http-tokens`` - The metadata request authorization state ( ``optional`` | ``required``)
+     
+    * ``metadata-options.instance-metadata-tags`` - The status of access to instance tags from the instance metadata ( ``enabled`` | ``disabled``)
+     
+    * ``metadata-options.state`` - The state of the metadata option changes ( ``pending`` | ``applied``).
+     
+    * ``monitoring-state`` - Indicates whether detailed monitoring is enabled ( ``disabled`` | ``enabled``).
+     
+    * ``network-interface.addresses.association.allocation-id`` - The allocation ID.
+     
+    * ``network-interface.addresses.association.association-id`` - The association ID.
+     
+    * ``network-interface.addresses.association.carrier-ip`` - The carrier IP address.
+     
+    * ``network-interface.addresses.association.customer-owned-ip`` - The customer-owned IP address.
+     
+    * ``network-interface.addresses.association.ip-owner-id`` - The owner ID of the private IPv4 address associated with the network interface.
+     
+    * ``network-interface.addresses.association.public-dns-name`` - The public DNS name.
+     
+    * ``network-interface.addresses.association.public-ip`` - The ID of the association of an Elastic IP address (IPv4) with a network interface.
+     
+    * ``network-interface.addresses.primary`` - Specifies whether the IPv4 address of the network interface is the primary private IPv4 address.
+     
+    * ``network-interface.addresses.private-dns-name`` - The private DNS name.
+     
+    * ``network-interface.addresses.private-ip-address`` - The private IPv4 address associated with the network interface.
+     
+    * ``network-interface.association.allocation-id`` - The allocation ID returned when you allocated the Elastic IP address (IPv4) for your network interface.
+     
+    * ``network-interface.association.association-id`` - The association ID returned when the network interface was associated with an IPv4 address.
+     
+    * ``network-interface.association.carrier-ip`` - The customer-owned IP address.
+     
+    * ``network-interface.association.customer-owned-ip`` - The customer-owned IP address.
+     
+    * ``network-interface.association.ip-owner-id`` - The owner of the Elastic IP address (IPv4) associated with the network interface.
+     
+    * ``network-interface.association.public-dns-name`` - The public DNS name.
+     
+    * ``network-interface.association.public-ip`` - The address of the Elastic IP address (IPv4) bound to the network interface.
+     
+    * ``network-interface.attachment.attach-time`` - The time that the network interface was attached to an instance.
+     
+    * ``network-interface.attachment.attachment-id`` - The ID of the interface attachment.
+     
+    * ``network-interface.attachment.delete-on-termination`` - Specifies whether the attachment is deleted when an instance is terminated.
+     
+    * ``network-interface.attachment.device-index`` - The device index to which the network interface is attached.
+     
+    * ``network-interface.attachment.instance-id`` - The ID of the instance to which the network interface is attached.
+     
+    * ``network-interface.attachment.instance-owner-id`` - The owner ID of the instance to which the network interface is attached.
+     
+    * ``network-interface.attachment.network-card-index`` - The index of the network card.
+     
+    * ``network-interface.attachment.status`` - The status of the attachment ( ``attaching`` | ``attached`` | ``detaching`` | ``detached``).
+     
+    * ``network-interface.availability-zone`` - The Availability Zone for the network interface.
+     
+    * ``network-interface.deny-all-igw-traffic`` - A Boolean that indicates whether a network interface with an IPv6 address is unreachable from the public internet.
+     
+    * ``network-interface.description`` - The description of the network interface.
+     
+    * ``network-interface.group-id`` - The ID of a security group associated with the network interface.
+     
+    * ``network-interface.group-name`` - The name of a security group associated with the network interface.
+     
+    * ``network-interface.ipv4-prefixes.ipv4-prefix`` - The IPv4 prefixes that are assigned to the network interface.
+     
+    * ``network-interface.ipv6-address`` - The IPv6 address associated with the network interface.
+     
+    * ``network-interface.ipv6-addresses.ipv6-address`` - The IPv6 address associated with the network interface.
+     
+    * ``network-interface.ipv6-addresses.is-primary-ipv6`` - A Boolean that indicates whether this is the primary IPv6 address.
+     
+    * ``network-interface.ipv6-native`` - A Boolean that indicates whether this is an IPv6 only network interface.
+     
+    * ``network-interface.ipv6-prefixes.ipv6-prefix`` - The IPv6 prefix assigned to the network interface.
+     
+    * ``network-interface.mac-address`` - The MAC address of the network interface.
+     
+    * ``network-interface.network-interface-id`` - The ID of the network interface.
+     
+    * ``network-interface.operator.managed`` - A Boolean that indicates whether the instance has a managed network interface.
+     
+    * ``network-interface.operator.principal`` - The principal that manages the network interface. Only valid for instances with managed network interfaces, where ``managed`` is ``true``.
+     
+    * ``network-interface.outpost-arn`` - The ARN of the Outpost.
+     
+    * ``network-interface.owner-id`` - The ID of the owner of the network interface.
+     
+    * ``network-interface.private-dns-name`` - The private DNS name of the network interface.
+     
+    * ``network-interface.private-ip-address`` - The private IPv4 address.
+     
+    * ``network-interface.public-dns-name`` - The public DNS name.
+     
+    * ``network-interface.requester-id`` - The requester ID for the network interface.
+     
+    * ``network-interface.requester-managed`` - Indicates whether the network interface is being managed by Amazon Web Services.
+     
+    * ``network-interface.status`` - The status of the network interface ( ``available``) | ``in-use``).
+     
+    * ``network-interface.source-dest-check`` - Whether the network interface performs source/destination checking. A value of ``true`` means that checking is enabled, and ``false`` means that checking is disabled. The value must be ``false`` for the network interface to perform network address translation (NAT) in your VPC.
+     
+    * ``network-interface.subnet-id`` - The ID of the subnet for the network interface.
+     
+    * ``network-interface.tag-key`` - The key of a tag assigned to the network interface.
+     
+    * ``network-interface.tag-value`` - The value of a tag assigned to the network interface.
+     
+    * ``network-interface.vpc-id`` - The ID of the VPC for the network interface.
+     
+    * ``network-performance-options.bandwidth-weighting`` - Where the performance boost is applied, if applicable. Valid values: ``default``, ``vpc-1``, ``ebs-1``.
+     
+    * ``operator.managed`` - A Boolean that indicates whether this is a managed instance.
+     
+    * ``operator.principal`` - The principal that manages the instance. Only valid for managed instances, where ``managed`` is ``true``.
+     
+    * ``outpost-arn`` - The Amazon Resource Name (ARN) of the Outpost.
+     
+    * ``owner-id`` - The Amazon Web Services account ID of the instance owner.
+     
+    * ``placement-group-name`` - The name of the placement group for the instance.
+     
+    * ``placement-partition-number`` - The partition in which the instance is located.
+     
+    * ``platform`` - The platform. To list only Windows instances, use ``windows``.
+     
+    * ``platform-details`` - The platform ( ``Linux/UNIX`` | ``Red Hat BYOL Linux`` | ``Red Hat Enterprise Linux`` | ``Red Hat Enterprise Linux with HA`` | ``Red Hat Enterprise Linux with High Availability`` | ``Red Hat Enterprise Linux with SQL Server Standard and HA`` | ``Red Hat Enterprise Linux with SQL Server Enterprise and HA`` | ``Red Hat Enterprise Linux with SQL Server Standard`` | ``Red Hat Enterprise Linux with SQL Server Web`` | ``Red Hat Enterprise Linux with SQL Server Enterprise`` | ``SQL Server Enterprise`` | ``SQL Server Standard`` | ``SQL Server Web`` | ``SUSE Linux`` | ``Ubuntu Pro`` | ``Windows`` | ``Windows BYOL`` | ``Windows with SQL Server Enterprise`` | ``Windows with SQL Server Standard`` | ``Windows with SQL Server Web``).
+     
+    * ``private-dns-name`` - The private IPv4 DNS name of the instance.
+     
+    * ``private-dns-name-options.enable-resource-name-dns-a-record`` - A Boolean that indicates whether to respond to DNS queries for instance hostnames with DNS A records.
+     
+    * ``private-dns-name-options.enable-resource-name-dns-aaaa-record`` - A Boolean that indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records.
+     
+    * ``private-dns-name-options.hostname-type`` - The type of hostname ( ``ip-name`` | ``resource-name``).
+     
+    * ``private-ip-address`` - The private IPv4 address of the instance. This can only be used to filter by the primary IP address of the network interface attached to the instance. To filter by additional IP addresses assigned to the network interface, use the filter ``network-interface.addresses.private-ip-address``.
+     
+    * ``product-code`` - The product code associated with the AMI used to launch the instance.
+     
+    * ``product-code.type`` - The type of product code ( ``devpay`` | ``marketplace``).
+     
+    * ``ramdisk-id`` - The RAM disk ID.
+     
+    * ``reason`` - The reason for the current state of the instance (for example, shows "User Initiated [date]" when you stop or terminate the instance). Similar to the state-reason-code filter.
+     
+    * ``requester-id`` - The ID of the entity that launched the instance on your behalf (for example, Amazon Web Services Management Console, Auto Scaling, and so on).
+     
+    * ``reservation-id`` - The ID of the instance's reservation. A reservation ID is created any time you launch an instance. A reservation ID has a one-to-one relationship with an instance launch request, but can be associated with more than one instance if you launch multiple instances using the same launch request. For example, if you launch one instance, you get one reservation ID. If you launch ten instances using the same launch request, you also get one reservation ID.
+     
+    * ``root-device-name`` - The device name of the root device volume (for example, ``/dev/sda1``).
+     
+    * ``root-device-type`` - The type of the root device volume ( ``ebs`` | ``instance-store``).
+     
+    * ``source-dest-check`` - Indicates whether the instance performs source/destination checking. A value of ``true`` means that checking is enabled, and ``false`` means that checking is disabled. The value must be ``false`` for the instance to perform network address translation (NAT) in your VPC.
+     
+    * ``spot-instance-request-id`` - The ID of the Spot Instance request.
+     
+    * ``state-reason-code`` - The reason code for the state change.
+     
+    * ``state-reason-message`` - A message that describes the state change.
+     
+    * ``subnet-id`` - The ID of the subnet for the instance.
+     
+    * ``tag:<key>`` - The key/value combination of a tag assigned to the resource. Use the tag key in the filter name and the tag value as the filter value. For example, to find all resources that have a tag with the key ``Owner`` and the value ``TeamA``, specify ``tag:Owner`` for the filter name and ``TeamA`` for the filter value.
+     
+    * ``tag-key`` - The key of a tag assigned to the resource. Use this filter to find all resources that have a tag with a specific key, regardless of the tag value.
+     
+    * ``tenancy`` - The tenancy of an instance ( ``dedicated`` | ``default`` | ``host``).
+     
+    * ``tpm-support`` - Indicates if the instance is configured for NitroTPM support ( ``v2.0``).
+     
+    * ``usage-operation`` - The usage operation value for the instance ( ``RunInstances`` | ``RunInstances:00g0`` | ``RunInstances:0010`` | ``RunInstances:1010`` | ``RunInstances:1014`` | ``RunInstances:1110`` | ``RunInstances:0014`` | ``RunInstances:0210`` | ``RunInstances:0110`` | ``RunInstances:0100`` | ``RunInstances:0004`` | ``RunInstances:0200`` | ``RunInstances:000g`` | ``RunInstances:0g00`` | ``RunInstances:0002`` | ``RunInstances:0800`` | ``RunInstances:0102`` | ``RunInstances:0006`` | ``RunInstances:0202``).
+     
+    * ``usage-operation-update-time`` - The time that the usage operation was last updated, for example, ``2022-09-15T17:15:20.000Z``.
+     
+    * ``virtualization-type`` - The virtualization type of the instance ( ``paravirtual`` | ``hvm``).
+     
+    * ``vpc-id`` - The ID of the VPC that the instance is running in.
+    
+
+    
+
+  
+    - *(dict) --* 
+
+      A filter name and value pair that is used to return a more specific list of results from a describe operation. Filters can be used to match a set of resources by specific criteria, such as tags, attributes, or IDs.
+
+       
+
+      If you specify multiple filters, the filters are joined with an ``AND``, and the request returns only results that match all of the specified filters.
+
+       
+
+      For more information, see `List and filter using the CLI and API <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Filtering.html#Filtering_Resources_CLI>`__ in the *Amazon EC2 User Guide*.
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The name of the filter. Filter names are case-sensitive.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The filter values. Filter values are case-sensitive. If you specify multiple values for a filter, the values are joined with an ``OR``, and the request returns all results that match any of the specified values.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type NextToken: string
+  :param NextToken: 
+
+    The token returned from a previous paginated request. Pagination continues from the end of the items returned by the previous request.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this request. To get the next page of items, make another request with the token returned in the output. For more information, see `Pagination <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination>`__.
+
+     
+
+    You cannot specify this parameter and the instance IDs parameter in the same request.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'NextToken': 'string',
+          'Reservations': [
+              {
+                  'ReservationId': 'string',
+                  'OwnerId': 'string',
+                  'RequesterId': 'string',
+                  'Groups': [
+                      {
+                          'GroupId': 'string',
+                          'GroupName': 'string'
+                      },
+                  ],
+                  'Instances': [
+                      {
+                          'Architecture': 'i386'|'x86_64'|'arm64'|'x86_64_mac'|'arm64_mac',
+                          'BlockDeviceMappings': [
+                              {
+                                  'DeviceName': 'string',
+                                  'Ebs': {
+                                      'AttachTime': datetime(2015, 1, 1),
+                                      'DeleteOnTermination': True|False,
+                                      'Status': 'attaching'|'attached'|'detaching'|'detached',
+                                      'VolumeId': 'string',
+                                      'AssociatedResource': 'string',
+                                      'VolumeOwnerId': 'string',
+                                      'Operator': {
+                                          'Managed': True|False,
+                                          'Principal': 'string'
+                                      },
+                                      'EbsCardIndex': 123
+                                  }
+                              },
+                          ],
+                          'ClientToken': 'string',
+                          'EbsOptimized': True|False,
+                          'EnaSupport': True|False,
+                          'Hypervisor': 'ovm'|'xen',
+                          'IamInstanceProfile': {
+                              'Arn': 'string',
+                              'Id': 'string'
+                          },
+                          'InstanceLifecycle': 'spot'|'scheduled'|'capacity-block'|'interruptible-capacity-reservation',
+                          'ElasticGpuAssociations': [
+                              {
+                                  'ElasticGpuId': 'string',
+                                  'ElasticGpuAssociationId': 'string',
+                                  'ElasticGpuAssociationState': 'string',
+                                  'ElasticGpuAssociationTime': 'string'
+                              },
+                          ],
+                          'ElasticInferenceAcceleratorAssociations': [
+                              {
+                                  'ElasticInferenceAcceleratorArn': 'string',
+                                  'ElasticInferenceAcceleratorAssociationId': 'string',
+                                  'ElasticInferenceAcceleratorAssociationState': 'string',
+                                  'ElasticInferenceAcceleratorAssociationTime': datetime(2015, 1, 1)
+                              },
+                          ],
+                          'NetworkInterfaces': [
+                              {
+                                  'Association': {
+                                      'CarrierIp': 'string',
+                                      'CustomerOwnedIp': 'string',
+                                      'IpOwnerId': 'string',
+                                      'PublicDnsName': 'string',
+                                      'PublicIp': 'string'
+                                  },
+                                  'Attachment': {
+                                      'AttachTime': datetime(2015, 1, 1),
+                                      'AttachmentId': 'string',
+                                      'DeleteOnTermination': True|False,
+                                      'DeviceIndex': 123,
+                                      'Status': 'attaching'|'attached'|'detaching'|'detached',
+                                      'NetworkCardIndex': 123,
+                                      'EnaSrdSpecification': {
+                                          'EnaSrdEnabled': True|False,
+                                          'EnaSrdUdpSpecification': {
+                                              'EnaSrdUdpEnabled': True|False
+                                          }
+                                      },
+                                      'EnaQueueCount': 123
+                                  },
+                                  'Description': 'string',
+                                  'Groups': [
+                                      {
+                                          'GroupId': 'string',
+                                          'GroupName': 'string'
+                                      },
+                                  ],
+                                  'Ipv6Addresses': [
+                                      {
+                                          'Ipv6Address': 'string',
+                                          'IsPrimaryIpv6': True|False
+                                      },
+                                  ],
+                                  'MacAddress': 'string',
+                                  'NetworkInterfaceId': 'string',
+                                  'OwnerId': 'string',
+                                  'PrivateDnsName': 'string',
+                                  'PrivateIpAddress': 'string',
+                                  'PrivateIpAddresses': [
+                                      {
+                                          'Association': {
+                                              'CarrierIp': 'string',
+                                              'CustomerOwnedIp': 'string',
+                                              'IpOwnerId': 'string',
+                                              'PublicDnsName': 'string',
+                                              'PublicIp': 'string'
+                                          },
+                                          'Primary': True|False,
+                                          'PrivateDnsName': 'string',
+                                          'PrivateIpAddress': 'string'
+                                      },
+                                  ],
+                                  'SourceDestCheck': True|False,
+                                  'Status': 'available'|'associated'|'attaching'|'in-use'|'detaching',
+                                  'SubnetId': 'string',
+                                  'VpcId': 'string',
+                                  'InterfaceType': 'string',
+                                  'Ipv4Prefixes': [
+                                      {
+                                          'Ipv4Prefix': 'string'
+                                      },
+                                  ],
+                                  'Ipv6Prefixes': [
+                                      {
+                                          'Ipv6Prefix': 'string'
+                                      },
+                                  ],
+                                  'ConnectionTrackingConfiguration': {
+                                      'TcpEstablishedTimeout': 123,
+                                      'UdpStreamTimeout': 123,
+                                      'UdpTimeout': 123
+                                  },
+                                  'Operator': {
+                                      'Managed': True|False,
+                                      'Principal': 'string'
+                                  }
+                              },
+                          ],
+                          'OutpostArn': 'string',
+                          'RootDeviceName': 'string',
+                          'RootDeviceType': 'ebs'|'instance-store',
+                          'SecurityGroups': [
+                              {
+                                  'GroupId': 'string',
+                                  'GroupName': 'string'
+                              },
+                          ],
+                          'SourceDestCheck': True|False,
+                          'SpotInstanceRequestId': 'string',
+                          'SriovNetSupport': 'string',
+                          'StateReason': {
+                              'Code': 'string',
+                              'Message': 'string'
+                          },
+                          'Tags': [
+                              {
+                                  'Key': 'string',
+                                  'Value': 'string'
+                              },
+                          ],
+                          'VirtualizationType': 'hvm'|'paravirtual',
+                          'CpuOptions': {
+                              'CoreCount': 123,
+                              'ThreadsPerCore': 123,
+                              'AmdSevSnp': 'enabled'|'disabled',
+                              'NestedVirtualization': 'enabled'|'disabled'
+                          },
+                          'CapacityBlockId': 'string',
+                          'CapacityReservationId': 'string',
+                          'CapacityReservationSpecification': {
+                              'CapacityReservationPreference': 'capacity-reservations-only'|'open'|'none',
+                              'CapacityReservationTarget': {
+                                  'CapacityReservationId': 'string',
+                                  'CapacityReservationResourceGroupArn': 'string'
+                              }
+                          },
+                          'HibernationOptions': {
+                              'Configured': True|False
+                          },
+                          'Licenses': [
+                              {
+                                  'LicenseConfigurationArn': 'string'
+                              },
+                          ],
+                          'MetadataOptions': {
+                              'State': 'pending'|'applied',
+                              'HttpTokens': 'optional'|'required',
+                              'HttpPutResponseHopLimit': 123,
+                              'HttpEndpoint': 'disabled'|'enabled',
+                              'HttpProtocolIpv6': 'disabled'|'enabled',
+                              'InstanceMetadataTags': 'disabled'|'enabled'
+                          },
+                          'EnclaveOptions': {
+                              'Enabled': True|False
+                          },
+                          'BootMode': 'legacy-bios'|'uefi'|'uefi-preferred',
+                          'PlatformDetails': 'string',
+                          'UsageOperation': 'string',
+                          'UsageOperationUpdateTime': datetime(2015, 1, 1),
+                          'PrivateDnsNameOptions': {
+                              'HostnameType': 'ip-name'|'resource-name',
+                              'EnableResourceNameDnsARecord': True|False,
+                              'EnableResourceNameDnsAAAARecord': True|False
+                          },
+                          'Ipv6Address': 'string',
+                          'TpmSupport': 'string',
+                          'MaintenanceOptions': {
+                              'AutoRecovery': 'disabled'|'default',
+                              'RebootMigration': 'disabled'|'default'
+                          },
+                          'CurrentInstanceBootMode': 'legacy-bios'|'uefi',
+                          'NetworkPerformanceOptions': {
+                              'BandwidthWeighting': 'default'|'vpc-1'|'ebs-1'
+                          },
+                          'Operator': {
+                              'Managed': True|False,
+                              'Principal': 'string'
+                          },
+                          'SecondaryInterfaces': [
+                              {
+                                  'Attachment': {
+                                      'AttachTime': datetime(2015, 1, 1),
+                                      'AttachmentId': 'string',
+                                      'DeleteOnTermination': True|False,
+                                      'DeviceIndex': 123,
+                                      'Status': 'attaching'|'attached'|'detaching'|'detached',
+                                      'NetworkCardIndex': 123
+                                  },
+                                  'MacAddress': 'string',
+                                  'SecondaryInterfaceId': 'string',
+                                  'OwnerId': 'string',
+                                  'PrivateIpAddresses': [
+                                      {
+                                          'PrivateIpAddress': 'string'
+                                      },
+                                  ],
+                                  'SourceDestCheck': True|False,
+                                  'Status': 'available'|'in-use',
+                                  'SecondarySubnetId': 'string',
+                                  'SecondaryNetworkId': 'string',
+                                  'InterfaceType': 'secondary'
+                              },
+                          ],
+                          'InstanceId': 'string',
+                          'ImageId': 'string',
+                          'State': {
+                              'Code': 123,
+                              'Name': 'pending'|'running'|'shutting-down'|'terminated'|'stopping'|'stopped'
+                          },
+                          'PrivateDnsName': 'string',
+                          'PublicDnsName': 'string',
+                          'StateTransitionReason': 'string',
+                          'KeyName': 'string',
+                          'AmiLaunchIndex': 123,
+                          'ProductCodes': [
+                              {
+                                  'ProductCodeId': 'string',
+                                  'ProductCodeType': 'devpay'|'marketplace'
+                              },
+                          ],
+                          'InstanceType': 'a1.medium'|'a1.large'|'a1.xlarge'|'a1.2xlarge'|'a1.4xlarge'|'a1.metal'|'c1.medium'|'c1.xlarge'|'c3.large'|'c3.xlarge'|'c3.2xlarge'|'c3.4xlarge'|'c3.8xlarge'|'c4.large'|'c4.xlarge'|'c4.2xlarge'|'c4.4xlarge'|'c4.8xlarge'|'c5.large'|'c5.xlarge'|'c5.2xlarge'|'c5.4xlarge'|'c5.9xlarge'|'c5.12xlarge'|'c5.18xlarge'|'c5.24xlarge'|'c5.metal'|'c5a.large'|'c5a.xlarge'|'c5a.2xlarge'|'c5a.4xlarge'|'c5a.8xlarge'|'c5a.12xlarge'|'c5a.16xlarge'|'c5a.24xlarge'|'c5ad.large'|'c5ad.xlarge'|'c5ad.2xlarge'|'c5ad.4xlarge'|'c5ad.8xlarge'|'c5ad.12xlarge'|'c5ad.16xlarge'|'c5ad.24xlarge'|'c5d.large'|'c5d.xlarge'|'c5d.2xlarge'|'c5d.4xlarge'|'c5d.9xlarge'|'c5d.12xlarge'|'c5d.18xlarge'|'c5d.24xlarge'|'c5d.metal'|'c5n.large'|'c5n.xlarge'|'c5n.2xlarge'|'c5n.4xlarge'|'c5n.9xlarge'|'c5n.18xlarge'|'c5n.metal'|'c6g.medium'|'c6g.large'|'c6g.xlarge'|'c6g.2xlarge'|'c6g.4xlarge'|'c6g.8xlarge'|'c6g.12xlarge'|'c6g.16xlarge'|'c6g.metal'|'c6gd.medium'|'c6gd.large'|'c6gd.xlarge'|'c6gd.2xlarge'|'c6gd.4xlarge'|'c6gd.8xlarge'|'c6gd.12xlarge'|'c6gd.16xlarge'|'c6gd.metal'|'c6gn.medium'|'c6gn.large'|'c6gn.xlarge'|'c6gn.2xlarge'|'c6gn.4xlarge'|'c6gn.8xlarge'|'c6gn.12xlarge'|'c6gn.16xlarge'|'c6i.large'|'c6i.xlarge'|'c6i.2xlarge'|'c6i.4xlarge'|'c6i.8xlarge'|'c6i.12xlarge'|'c6i.16xlarge'|'c6i.24xlarge'|'c6i.32xlarge'|'c6i.metal'|'cc1.4xlarge'|'cc2.8xlarge'|'cg1.4xlarge'|'cr1.8xlarge'|'d2.xlarge'|'d2.2xlarge'|'d2.4xlarge'|'d2.8xlarge'|'d3.xlarge'|'d3.2xlarge'|'d3.4xlarge'|'d3.8xlarge'|'d3en.xlarge'|'d3en.2xlarge'|'d3en.4xlarge'|'d3en.6xlarge'|'d3en.8xlarge'|'d3en.12xlarge'|'dl1.24xlarge'|'f1.2xlarge'|'f1.4xlarge'|'f1.16xlarge'|'g2.2xlarge'|'g2.8xlarge'|'g3.4xlarge'|'g3.8xlarge'|'g3.16xlarge'|'g3s.xlarge'|'g4ad.xlarge'|'g4ad.2xlarge'|'g4ad.4xlarge'|'g4ad.8xlarge'|'g4ad.16xlarge'|'g4dn.xlarge'|'g4dn.2xlarge'|'g4dn.4xlarge'|'g4dn.8xlarge'|'g4dn.12xlarge'|'g4dn.16xlarge'|'g4dn.metal'|'g5.xlarge'|'g5.2xlarge'|'g5.4xlarge'|'g5.8xlarge'|'g5.12xlarge'|'g5.16xlarge'|'g5.24xlarge'|'g5.48xlarge'|'g5g.xlarge'|'g5g.2xlarge'|'g5g.4xlarge'|'g5g.8xlarge'|'g5g.16xlarge'|'g5g.metal'|'hi1.4xlarge'|'hpc6a.48xlarge'|'hs1.8xlarge'|'h1.2xlarge'|'h1.4xlarge'|'h1.8xlarge'|'h1.16xlarge'|'i2.xlarge'|'i2.2xlarge'|'i2.4xlarge'|'i2.8xlarge'|'i3.large'|'i3.xlarge'|'i3.2xlarge'|'i3.4xlarge'|'i3.8xlarge'|'i3.16xlarge'|'i3.metal'|'i3en.large'|'i3en.xlarge'|'i3en.2xlarge'|'i3en.3xlarge'|'i3en.6xlarge'|'i3en.12xlarge'|'i3en.24xlarge'|'i3en.metal'|'im4gn.large'|'im4gn.xlarge'|'im4gn.2xlarge'|'im4gn.4xlarge'|'im4gn.8xlarge'|'im4gn.16xlarge'|'inf1.xlarge'|'inf1.2xlarge'|'inf1.6xlarge'|'inf1.24xlarge'|'is4gen.medium'|'is4gen.large'|'is4gen.xlarge'|'is4gen.2xlarge'|'is4gen.4xlarge'|'is4gen.8xlarge'|'m1.small'|'m1.medium'|'m1.large'|'m1.xlarge'|'m2.xlarge'|'m2.2xlarge'|'m2.4xlarge'|'m3.medium'|'m3.large'|'m3.xlarge'|'m3.2xlarge'|'m4.large'|'m4.xlarge'|'m4.2xlarge'|'m4.4xlarge'|'m4.10xlarge'|'m4.16xlarge'|'m5.large'|'m5.xlarge'|'m5.2xlarge'|'m5.4xlarge'|'m5.8xlarge'|'m5.12xlarge'|'m5.16xlarge'|'m5.24xlarge'|'m5.metal'|'m5a.large'|'m5a.xlarge'|'m5a.2xlarge'|'m5a.4xlarge'|'m5a.8xlarge'|'m5a.12xlarge'|'m5a.16xlarge'|'m5a.24xlarge'|'m5ad.large'|'m5ad.xlarge'|'m5ad.2xlarge'|'m5ad.4xlarge'|'m5ad.8xlarge'|'m5ad.12xlarge'|'m5ad.16xlarge'|'m5ad.24xlarge'|'m5d.large'|'m5d.xlarge'|'m5d.2xlarge'|'m5d.4xlarge'|'m5d.8xlarge'|'m5d.12xlarge'|'m5d.16xlarge'|'m5d.24xlarge'|'m5d.metal'|'m5dn.large'|'m5dn.xlarge'|'m5dn.2xlarge'|'m5dn.4xlarge'|'m5dn.8xlarge'|'m5dn.12xlarge'|'m5dn.16xlarge'|'m5dn.24xlarge'|'m5dn.metal'|'m5n.large'|'m5n.xlarge'|'m5n.2xlarge'|'m5n.4xlarge'|'m5n.8xlarge'|'m5n.12xlarge'|'m5n.16xlarge'|'m5n.24xlarge'|'m5n.metal'|'m5zn.large'|'m5zn.xlarge'|'m5zn.2xlarge'|'m5zn.3xlarge'|'m5zn.6xlarge'|'m5zn.12xlarge'|'m5zn.metal'|'m6a.large'|'m6a.xlarge'|'m6a.2xlarge'|'m6a.4xlarge'|'m6a.8xlarge'|'m6a.12xlarge'|'m6a.16xlarge'|'m6a.24xlarge'|'m6a.32xlarge'|'m6a.48xlarge'|'m6g.metal'|'m6g.medium'|'m6g.large'|'m6g.xlarge'|'m6g.2xlarge'|'m6g.4xlarge'|'m6g.8xlarge'|'m6g.12xlarge'|'m6g.16xlarge'|'m6gd.metal'|'m6gd.medium'|'m6gd.large'|'m6gd.xlarge'|'m6gd.2xlarge'|'m6gd.4xlarge'|'m6gd.8xlarge'|'m6gd.12xlarge'|'m6gd.16xlarge'|'m6i.large'|'m6i.xlarge'|'m6i.2xlarge'|'m6i.4xlarge'|'m6i.8xlarge'|'m6i.12xlarge'|'m6i.16xlarge'|'m6i.24xlarge'|'m6i.32xlarge'|'m6i.metal'|'mac1.metal'|'p2.xlarge'|'p2.8xlarge'|'p2.16xlarge'|'p3.2xlarge'|'p3.8xlarge'|'p3.16xlarge'|'p3dn.24xlarge'|'p4d.24xlarge'|'r3.large'|'r3.xlarge'|'r3.2xlarge'|'r3.4xlarge'|'r3.8xlarge'|'r4.large'|'r4.xlarge'|'r4.2xlarge'|'r4.4xlarge'|'r4.8xlarge'|'r4.16xlarge'|'r5.large'|'r5.xlarge'|'r5.2xlarge'|'r5.4xlarge'|'r5.8xlarge'|'r5.12xlarge'|'r5.16xlarge'|'r5.24xlarge'|'r5.metal'|'r5a.large'|'r5a.xlarge'|'r5a.2xlarge'|'r5a.4xlarge'|'r5a.8xlarge'|'r5a.12xlarge'|'r5a.16xlarge'|'r5a.24xlarge'|'r5ad.large'|'r5ad.xlarge'|'r5ad.2xlarge'|'r5ad.4xlarge'|'r5ad.8xlarge'|'r5ad.12xlarge'|'r5ad.16xlarge'|'r5ad.24xlarge'|'r5b.large'|'r5b.xlarge'|'r5b.2xlarge'|'r5b.4xlarge'|'r5b.8xlarge'|'r5b.12xlarge'|'r5b.16xlarge'|'r5b.24xlarge'|'r5b.metal'|'r5d.large'|'r5d.xlarge'|'r5d.2xlarge'|'r5d.4xlarge'|'r5d.8xlarge'|'r5d.12xlarge'|'r5d.16xlarge'|'r5d.24xlarge'|'r5d.metal'|'r5dn.large'|'r5dn.xlarge'|'r5dn.2xlarge'|'r5dn.4xlarge'|'r5dn.8xlarge'|'r5dn.12xlarge'|'r5dn.16xlarge'|'r5dn.24xlarge'|'r5dn.metal'|'r5n.large'|'r5n.xlarge'|'r5n.2xlarge'|'r5n.4xlarge'|'r5n.8xlarge'|'r5n.12xlarge'|'r5n.16xlarge'|'r5n.24xlarge'|'r5n.metal'|'r6g.medium'|'r6g.large'|'r6g.xlarge'|'r6g.2xlarge'|'r6g.4xlarge'|'r6g.8xlarge'|'r6g.12xlarge'|'r6g.16xlarge'|'r6g.metal'|'r6gd.medium'|'r6gd.large'|'r6gd.xlarge'|'r6gd.2xlarge'|'r6gd.4xlarge'|'r6gd.8xlarge'|'r6gd.12xlarge'|'r6gd.16xlarge'|'r6gd.metal'|'r6i.large'|'r6i.xlarge'|'r6i.2xlarge'|'r6i.4xlarge'|'r6i.8xlarge'|'r6i.12xlarge'|'r6i.16xlarge'|'r6i.24xlarge'|'r6i.32xlarge'|'r6i.metal'|'t1.micro'|'t2.nano'|'t2.micro'|'t2.small'|'t2.medium'|'t2.large'|'t2.xlarge'|'t2.2xlarge'|'t3.nano'|'t3.micro'|'t3.small'|'t3.medium'|'t3.large'|'t3.xlarge'|'t3.2xlarge'|'t3a.nano'|'t3a.micro'|'t3a.small'|'t3a.medium'|'t3a.large'|'t3a.xlarge'|'t3a.2xlarge'|'t4g.nano'|'t4g.micro'|'t4g.small'|'t4g.medium'|'t4g.large'|'t4g.xlarge'|'t4g.2xlarge'|'u-6tb1.56xlarge'|'u-6tb1.112xlarge'|'u-9tb1.112xlarge'|'u-12tb1.112xlarge'|'u-6tb1.metal'|'u-9tb1.metal'|'u-12tb1.metal'|'u-18tb1.metal'|'u-24tb1.metal'|'vt1.3xlarge'|'vt1.6xlarge'|'vt1.24xlarge'|'x1.16xlarge'|'x1.32xlarge'|'x1e.xlarge'|'x1e.2xlarge'|'x1e.4xlarge'|'x1e.8xlarge'|'x1e.16xlarge'|'x1e.32xlarge'|'x2iezn.2xlarge'|'x2iezn.4xlarge'|'x2iezn.6xlarge'|'x2iezn.8xlarge'|'x2iezn.12xlarge'|'x2iezn.metal'|'x2gd.medium'|'x2gd.large'|'x2gd.xlarge'|'x2gd.2xlarge'|'x2gd.4xlarge'|'x2gd.8xlarge'|'x2gd.12xlarge'|'x2gd.16xlarge'|'x2gd.metal'|'z1d.large'|'z1d.xlarge'|'z1d.2xlarge'|'z1d.3xlarge'|'z1d.6xlarge'|'z1d.12xlarge'|'z1d.metal'|'x2idn.16xlarge'|'x2idn.24xlarge'|'x2idn.32xlarge'|'x2iedn.xlarge'|'x2iedn.2xlarge'|'x2iedn.4xlarge'|'x2iedn.8xlarge'|'x2iedn.16xlarge'|'x2iedn.24xlarge'|'x2iedn.32xlarge'|'c6a.large'|'c6a.xlarge'|'c6a.2xlarge'|'c6a.4xlarge'|'c6a.8xlarge'|'c6a.12xlarge'|'c6a.16xlarge'|'c6a.24xlarge'|'c6a.32xlarge'|'c6a.48xlarge'|'c6a.metal'|'m6a.metal'|'i4i.large'|'i4i.xlarge'|'i4i.2xlarge'|'i4i.4xlarge'|'i4i.8xlarge'|'i4i.16xlarge'|'i4i.32xlarge'|'i4i.metal'|'x2idn.metal'|'x2iedn.metal'|'c7g.medium'|'c7g.large'|'c7g.xlarge'|'c7g.2xlarge'|'c7g.4xlarge'|'c7g.8xlarge'|'c7g.12xlarge'|'c7g.16xlarge'|'mac2.metal'|'c6id.large'|'c6id.xlarge'|'c6id.2xlarge'|'c6id.4xlarge'|'c6id.8xlarge'|'c6id.12xlarge'|'c6id.16xlarge'|'c6id.24xlarge'|'c6id.32xlarge'|'c6id.metal'|'m6id.large'|'m6id.xlarge'|'m6id.2xlarge'|'m6id.4xlarge'|'m6id.8xlarge'|'m6id.12xlarge'|'m6id.16xlarge'|'m6id.24xlarge'|'m6id.32xlarge'|'m6id.metal'|'r6id.large'|'r6id.xlarge'|'r6id.2xlarge'|'r6id.4xlarge'|'r6id.8xlarge'|'r6id.12xlarge'|'r6id.16xlarge'|'r6id.24xlarge'|'r6id.32xlarge'|'r6id.metal'|'r6a.large'|'r6a.xlarge'|'r6a.2xlarge'|'r6a.4xlarge'|'r6a.8xlarge'|'r6a.12xlarge'|'r6a.16xlarge'|'r6a.24xlarge'|'r6a.32xlarge'|'r6a.48xlarge'|'r6a.metal'|'p4de.24xlarge'|'u-3tb1.56xlarge'|'u-18tb1.112xlarge'|'u-24tb1.112xlarge'|'trn1.2xlarge'|'trn1.32xlarge'|'hpc6id.32xlarge'|'c6in.large'|'c6in.xlarge'|'c6in.2xlarge'|'c6in.4xlarge'|'c6in.8xlarge'|'c6in.12xlarge'|'c6in.16xlarge'|'c6in.24xlarge'|'c6in.32xlarge'|'m6in.large'|'m6in.xlarge'|'m6in.2xlarge'|'m6in.4xlarge'|'m6in.8xlarge'|'m6in.12xlarge'|'m6in.16xlarge'|'m6in.24xlarge'|'m6in.32xlarge'|'m6idn.large'|'m6idn.xlarge'|'m6idn.2xlarge'|'m6idn.4xlarge'|'m6idn.8xlarge'|'m6idn.12xlarge'|'m6idn.16xlarge'|'m6idn.24xlarge'|'m6idn.32xlarge'|'r6in.large'|'r6in.xlarge'|'r6in.2xlarge'|'r6in.4xlarge'|'r6in.8xlarge'|'r6in.12xlarge'|'r6in.16xlarge'|'r6in.24xlarge'|'r6in.32xlarge'|'r6idn.large'|'r6idn.xlarge'|'r6idn.2xlarge'|'r6idn.4xlarge'|'r6idn.8xlarge'|'r6idn.12xlarge'|'r6idn.16xlarge'|'r6idn.24xlarge'|'r6idn.32xlarge'|'c7g.metal'|'m7g.medium'|'m7g.large'|'m7g.xlarge'|'m7g.2xlarge'|'m7g.4xlarge'|'m7g.8xlarge'|'m7g.12xlarge'|'m7g.16xlarge'|'m7g.metal'|'r7g.medium'|'r7g.large'|'r7g.xlarge'|'r7g.2xlarge'|'r7g.4xlarge'|'r7g.8xlarge'|'r7g.12xlarge'|'r7g.16xlarge'|'r7g.metal'|'c6in.metal'|'m6in.metal'|'m6idn.metal'|'r6in.metal'|'r6idn.metal'|'inf2.xlarge'|'inf2.8xlarge'|'inf2.24xlarge'|'inf2.48xlarge'|'trn1n.32xlarge'|'i4g.large'|'i4g.xlarge'|'i4g.2xlarge'|'i4g.4xlarge'|'i4g.8xlarge'|'i4g.16xlarge'|'hpc7g.4xlarge'|'hpc7g.8xlarge'|'hpc7g.16xlarge'|'c7gn.medium'|'c7gn.large'|'c7gn.xlarge'|'c7gn.2xlarge'|'c7gn.4xlarge'|'c7gn.8xlarge'|'c7gn.12xlarge'|'c7gn.16xlarge'|'p5.48xlarge'|'m7i.large'|'m7i.xlarge'|'m7i.2xlarge'|'m7i.4xlarge'|'m7i.8xlarge'|'m7i.12xlarge'|'m7i.16xlarge'|'m7i.24xlarge'|'m7i.48xlarge'|'m7i-flex.large'|'m7i-flex.xlarge'|'m7i-flex.2xlarge'|'m7i-flex.4xlarge'|'m7i-flex.8xlarge'|'m7a.medium'|'m7a.large'|'m7a.xlarge'|'m7a.2xlarge'|'m7a.4xlarge'|'m7a.8xlarge'|'m7a.12xlarge'|'m7a.16xlarge'|'m7a.24xlarge'|'m7a.32xlarge'|'m7a.48xlarge'|'m7a.metal-48xl'|'hpc7a.12xlarge'|'hpc7a.24xlarge'|'hpc7a.48xlarge'|'hpc7a.96xlarge'|'c7gd.medium'|'c7gd.large'|'c7gd.xlarge'|'c7gd.2xlarge'|'c7gd.4xlarge'|'c7gd.8xlarge'|'c7gd.12xlarge'|'c7gd.16xlarge'|'m7gd.medium'|'m7gd.large'|'m7gd.xlarge'|'m7gd.2xlarge'|'m7gd.4xlarge'|'m7gd.8xlarge'|'m7gd.12xlarge'|'m7gd.16xlarge'|'r7gd.medium'|'r7gd.large'|'r7gd.xlarge'|'r7gd.2xlarge'|'r7gd.4xlarge'|'r7gd.8xlarge'|'r7gd.12xlarge'|'r7gd.16xlarge'|'r7a.medium'|'r7a.large'|'r7a.xlarge'|'r7a.2xlarge'|'r7a.4xlarge'|'r7a.8xlarge'|'r7a.12xlarge'|'r7a.16xlarge'|'r7a.24xlarge'|'r7a.32xlarge'|'r7a.48xlarge'|'c7i.large'|'c7i.xlarge'|'c7i.2xlarge'|'c7i.4xlarge'|'c7i.8xlarge'|'c7i.12xlarge'|'c7i.16xlarge'|'c7i.24xlarge'|'c7i.48xlarge'|'mac2-m2pro.metal'|'r7iz.large'|'r7iz.xlarge'|'r7iz.2xlarge'|'r7iz.4xlarge'|'r7iz.8xlarge'|'r7iz.12xlarge'|'r7iz.16xlarge'|'r7iz.32xlarge'|'c7a.medium'|'c7a.large'|'c7a.xlarge'|'c7a.2xlarge'|'c7a.4xlarge'|'c7a.8xlarge'|'c7a.12xlarge'|'c7a.16xlarge'|'c7a.24xlarge'|'c7a.32xlarge'|'c7a.48xlarge'|'c7a.metal-48xl'|'r7a.metal-48xl'|'r7i.large'|'r7i.xlarge'|'r7i.2xlarge'|'r7i.4xlarge'|'r7i.8xlarge'|'r7i.12xlarge'|'r7i.16xlarge'|'r7i.24xlarge'|'r7i.48xlarge'|'dl2q.24xlarge'|'mac2-m2.metal'|'i4i.12xlarge'|'i4i.24xlarge'|'c7i.metal-24xl'|'c7i.metal-48xl'|'m7i.metal-24xl'|'m7i.metal-48xl'|'r7i.metal-24xl'|'r7i.metal-48xl'|'r7iz.metal-16xl'|'r7iz.metal-32xl'|'c7gd.metal'|'m7gd.metal'|'r7gd.metal'|'g6.xlarge'|'g6.2xlarge'|'g6.4xlarge'|'g6.8xlarge'|'g6.12xlarge'|'g6.16xlarge'|'g6.24xlarge'|'g6.48xlarge'|'gr6.4xlarge'|'gr6.8xlarge'|'c7i-flex.large'|'c7i-flex.xlarge'|'c7i-flex.2xlarge'|'c7i-flex.4xlarge'|'c7i-flex.8xlarge'|'u7i-12tb.224xlarge'|'u7in-16tb.224xlarge'|'u7in-24tb.224xlarge'|'u7in-32tb.224xlarge'|'u7ib-12tb.224xlarge'|'c7gn.metal'|'r8g.medium'|'r8g.large'|'r8g.xlarge'|'r8g.2xlarge'|'r8g.4xlarge'|'r8g.8xlarge'|'r8g.12xlarge'|'r8g.16xlarge'|'r8g.24xlarge'|'r8g.48xlarge'|'r8g.metal-24xl'|'r8g.metal-48xl'|'mac2-m1ultra.metal'|'g6e.xlarge'|'g6e.2xlarge'|'g6e.4xlarge'|'g6e.8xlarge'|'g6e.12xlarge'|'g6e.16xlarge'|'g6e.24xlarge'|'g6e.48xlarge'|'c8g.medium'|'c8g.large'|'c8g.xlarge'|'c8g.2xlarge'|'c8g.4xlarge'|'c8g.8xlarge'|'c8g.12xlarge'|'c8g.16xlarge'|'c8g.24xlarge'|'c8g.48xlarge'|'c8g.metal-24xl'|'c8g.metal-48xl'|'m8g.medium'|'m8g.large'|'m8g.xlarge'|'m8g.2xlarge'|'m8g.4xlarge'|'m8g.8xlarge'|'m8g.12xlarge'|'m8g.16xlarge'|'m8g.24xlarge'|'m8g.48xlarge'|'m8g.metal-24xl'|'m8g.metal-48xl'|'x8g.medium'|'x8g.large'|'x8g.xlarge'|'x8g.2xlarge'|'x8g.4xlarge'|'x8g.8xlarge'|'x8g.12xlarge'|'x8g.16xlarge'|'x8g.24xlarge'|'x8g.48xlarge'|'x8g.metal-24xl'|'x8g.metal-48xl'|'i7ie.large'|'i7ie.xlarge'|'i7ie.2xlarge'|'i7ie.3xlarge'|'i7ie.6xlarge'|'i7ie.12xlarge'|'i7ie.18xlarge'|'i7ie.24xlarge'|'i7ie.48xlarge'|'i8g.large'|'i8g.xlarge'|'i8g.2xlarge'|'i8g.4xlarge'|'i8g.8xlarge'|'i8g.12xlarge'|'i8g.16xlarge'|'i8g.24xlarge'|'i8g.metal-24xl'|'u7i-6tb.112xlarge'|'u7i-8tb.112xlarge'|'u7inh-32tb.480xlarge'|'p5e.48xlarge'|'p5en.48xlarge'|'f2.12xlarge'|'f2.48xlarge'|'trn2.48xlarge'|'c7i-flex.12xlarge'|'c7i-flex.16xlarge'|'m7i-flex.12xlarge'|'m7i-flex.16xlarge'|'i7ie.metal-24xl'|'i7ie.metal-48xl'|'i8g.48xlarge'|'c8gd.medium'|'c8gd.large'|'c8gd.xlarge'|'c8gd.2xlarge'|'c8gd.4xlarge'|'c8gd.8xlarge'|'c8gd.12xlarge'|'c8gd.16xlarge'|'c8gd.24xlarge'|'c8gd.48xlarge'|'c8gd.metal-24xl'|'c8gd.metal-48xl'|'i7i.large'|'i7i.xlarge'|'i7i.2xlarge'|'i7i.4xlarge'|'i7i.8xlarge'|'i7i.12xlarge'|'i7i.16xlarge'|'i7i.24xlarge'|'i7i.48xlarge'|'i7i.metal-24xl'|'i7i.metal-48xl'|'p6-b200.48xlarge'|'m8gd.medium'|'m8gd.large'|'m8gd.xlarge'|'m8gd.2xlarge'|'m8gd.4xlarge'|'m8gd.8xlarge'|'m8gd.12xlarge'|'m8gd.16xlarge'|'m8gd.24xlarge'|'m8gd.48xlarge'|'m8gd.metal-24xl'|'m8gd.metal-48xl'|'r8gd.medium'|'r8gd.large'|'r8gd.xlarge'|'r8gd.2xlarge'|'r8gd.4xlarge'|'r8gd.8xlarge'|'r8gd.12xlarge'|'r8gd.16xlarge'|'r8gd.24xlarge'|'r8gd.48xlarge'|'r8gd.metal-24xl'|'r8gd.metal-48xl'|'c8gn.medium'|'c8gn.large'|'c8gn.xlarge'|'c8gn.2xlarge'|'c8gn.4xlarge'|'c8gn.8xlarge'|'c8gn.12xlarge'|'c8gn.16xlarge'|'c8gn.24xlarge'|'c8gn.48xlarge'|'c8gn.metal-24xl'|'c8gn.metal-48xl'|'f2.6xlarge'|'p6e-gb200.36xlarge'|'g6f.large'|'g6f.xlarge'|'g6f.2xlarge'|'g6f.4xlarge'|'gr6f.4xlarge'|'p5.4xlarge'|'r8i.large'|'r8i.xlarge'|'r8i.2xlarge'|'r8i.4xlarge'|'r8i.8xlarge'|'r8i.12xlarge'|'r8i.16xlarge'|'r8i.24xlarge'|'r8i.32xlarge'|'r8i.48xlarge'|'r8i.96xlarge'|'r8i.metal-48xl'|'r8i.metal-96xl'|'r8i-flex.large'|'r8i-flex.xlarge'|'r8i-flex.2xlarge'|'r8i-flex.4xlarge'|'r8i-flex.8xlarge'|'r8i-flex.12xlarge'|'r8i-flex.16xlarge'|'m8i.large'|'m8i.xlarge'|'m8i.2xlarge'|'m8i.4xlarge'|'m8i.8xlarge'|'m8i.12xlarge'|'m8i.16xlarge'|'m8i.24xlarge'|'m8i.32xlarge'|'m8i.48xlarge'|'m8i.96xlarge'|'m8i.metal-48xl'|'m8i.metal-96xl'|'m8i-flex.large'|'m8i-flex.xlarge'|'m8i-flex.2xlarge'|'m8i-flex.4xlarge'|'m8i-flex.8xlarge'|'m8i-flex.12xlarge'|'m8i-flex.16xlarge'|'i8ge.large'|'i8ge.xlarge'|'i8ge.2xlarge'|'i8ge.3xlarge'|'i8ge.6xlarge'|'i8ge.12xlarge'|'i8ge.18xlarge'|'i8ge.24xlarge'|'i8ge.48xlarge'|'i8ge.metal-24xl'|'i8ge.metal-48xl'|'mac-m4.metal'|'mac-m4pro.metal'|'r8gn.medium'|'r8gn.large'|'r8gn.xlarge'|'r8gn.2xlarge'|'r8gn.4xlarge'|'r8gn.8xlarge'|'r8gn.12xlarge'|'r8gn.16xlarge'|'r8gn.24xlarge'|'r8gn.48xlarge'|'r8gn.metal-24xl'|'r8gn.metal-48xl'|'c8i.large'|'c8i.xlarge'|'c8i.2xlarge'|'c8i.4xlarge'|'c8i.8xlarge'|'c8i.12xlarge'|'c8i.16xlarge'|'c8i.24xlarge'|'c8i.32xlarge'|'c8i.48xlarge'|'c8i.96xlarge'|'c8i.metal-48xl'|'c8i.metal-96xl'|'c8i-flex.large'|'c8i-flex.xlarge'|'c8i-flex.2xlarge'|'c8i-flex.4xlarge'|'c8i-flex.8xlarge'|'c8i-flex.12xlarge'|'c8i-flex.16xlarge'|'r8gb.medium'|'r8gb.large'|'r8gb.xlarge'|'r8gb.2xlarge'|'r8gb.4xlarge'|'r8gb.8xlarge'|'r8gb.12xlarge'|'r8gb.16xlarge'|'r8gb.24xlarge'|'r8gb.metal-24xl'|'m8a.medium'|'m8a.large'|'m8a.xlarge'|'m8a.2xlarge'|'m8a.4xlarge'|'m8a.8xlarge'|'m8a.12xlarge'|'m8a.16xlarge'|'m8a.24xlarge'|'m8a.48xlarge'|'m8a.metal-24xl'|'m8a.metal-48xl'|'trn2.3xlarge'|'r8a.medium'|'r8a.large'|'r8a.xlarge'|'r8a.2xlarge'|'r8a.4xlarge'|'r8a.8xlarge'|'r8a.12xlarge'|'r8a.16xlarge'|'r8a.24xlarge'|'r8a.48xlarge'|'r8a.metal-24xl'|'r8a.metal-48xl'|'p6-b300.48xlarge'|'c8a.medium'|'c8a.large'|'c8a.xlarge'|'c8a.2xlarge'|'c8a.4xlarge'|'c8a.8xlarge'|'c8a.12xlarge'|'c8a.16xlarge'|'c8a.24xlarge'|'c8a.48xlarge'|'c8a.metal-24xl'|'c8a.metal-48xl'|'c8gb.12xlarge'|'c8gb.16xlarge'|'c8gb.24xlarge'|'c8gb.2xlarge'|'c8gb.4xlarge'|'c8gb.8xlarge'|'c8gb.large'|'c8gb.medium'|'c8gb.metal-24xl'|'c8gb.xlarge'|'c8gb.48xlarge'|'c8gb.metal-48xl'|'m8gb.12xlarge'|'m8gb.16xlarge'|'m8gb.24xlarge'|'m8gb.2xlarge'|'m8gb.4xlarge'|'m8gb.8xlarge'|'m8gb.large'|'m8gb.medium'|'m8gb.xlarge'|'m8gb.48xlarge'|'m8gb.metal-24xl'|'m8gb.metal-48xl'|'m8gn.12xlarge'|'m8gn.16xlarge'|'m8gn.24xlarge'|'m8gn.2xlarge'|'m8gn.48xlarge'|'m8gn.4xlarge'|'m8gn.8xlarge'|'m8gn.large'|'m8gn.medium'|'m8gn.xlarge'|'m8gn.metal-24xl'|'m8gn.metal-48xl'|'x8aedz.12xlarge'|'x8aedz.24xlarge'|'x8aedz.3xlarge'|'x8aedz.6xlarge'|'x8aedz.large'|'x8aedz.metal-12xl'|'x8aedz.metal-24xl'|'x8aedz.xlarge'|'m8azn.medium'|'m8azn.large'|'m8azn.xlarge'|'m8azn.3xlarge'|'m8azn.6xlarge'|'m8azn.12xlarge'|'m8azn.24xlarge'|'m8azn.metal-12xl'|'m8azn.metal-24xl'|'x8i.large'|'x8i.xlarge'|'x8i.2xlarge'|'x8i.4xlarge'|'x8i.8xlarge'|'x8i.12xlarge'|'x8i.16xlarge'|'x8i.24xlarge'|'x8i.32xlarge'|'x8i.48xlarge'|'x8i.64xlarge'|'x8i.96xlarge'|'x8i.metal-48xl'|'x8i.metal-96xl'|'mac-m4max.metal'|'g7e.2xlarge'|'g7e.4xlarge'|'g7e.8xlarge'|'g7e.12xlarge'|'g7e.24xlarge'|'g7e.48xlarge'|'r8id.large'|'r8id.xlarge'|'r8id.2xlarge'|'r8id.4xlarge'|'r8id.8xlarge'|'r8id.12xlarge'|'r8id.16xlarge'|'r8id.24xlarge'|'r8id.32xlarge'|'r8id.48xlarge'|'r8id.96xlarge'|'r8id.metal-48xl'|'r8id.metal-96xl',
+                          'LaunchTime': datetime(2015, 1, 1),
+                          'Placement': {
+                              'AvailabilityZoneId': 'string',
+                              'Affinity': 'string',
+                              'GroupName': 'string',
+                              'PartitionNumber': 123,
+                              'HostId': 'string',
+                              'Tenancy': 'default'|'dedicated'|'host',
+                              'SpreadDomain': 'string',
+                              'HostResourceGroupArn': 'string',
+                              'GroupId': 'string',
+                              'AvailabilityZone': 'string'
+                          },
+                          'KernelId': 'string',
+                          'RamdiskId': 'string',
+                          'Platform': 'Windows',
+                          'Monitoring': {
+                              'State': 'disabled'|'disabling'|'enabled'|'pending'
+                          },
+                          'SubnetId': 'string',
+                          'VpcId': 'string',
+                          'PrivateIpAddress': 'string',
+                          'PublicIpAddress': 'string'
+                      },
+                  ]
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to include in another request to get the next page of items. This value is ``null`` when there are no more items to return.
+
+        
+      
+
+      - **Reservations** *(list) --* 
+
+        Information about the reservations.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a launch request for one or more instances, and includes owner, requester, and security group information that applies to all instances in the launch request.
+
+          
+          
+
+          - **ReservationId** *(string) --* 
+
+            The ID of the reservation.
+
+            
+          
+
+          - **OwnerId** *(string) --* 
+
+            The ID of the Amazon Web Services account that owns the reservation.
+
+            
+          
+
+          - **RequesterId** *(string) --* 
+
+            The ID of the requester that launched the instances on your behalf (for example, Amazon Web Services Management Console or Auto Scaling).
+
+            
+          
+
+          - **Groups** *(list) --* 
+
+            Not supported.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes a security group.
+
+              
+              
+
+              - **GroupId** *(string) --* 
+
+                The ID of the security group.
+
+                
+              
+
+              - **GroupName** *(string) --* 
+
+                The name of the security group.
+
+                
+          
+        
+          
+
+          - **Instances** *(list) --* 
+
+            The instances.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes an instance.
+
+              
+              
+
+              - **Architecture** *(string) --* 
+
+                The architecture of the image.
+
+                
+              
+
+              - **BlockDeviceMappings** *(list) --* 
+
+                Any block device mapping entries for the instance.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes a block device mapping.
+
+                  
+                  
+
+                  - **DeviceName** *(string) --* 
+
+                    The device name.
+
+                    
+                  
+
+                  - **Ebs** *(dict) --* 
+
+                    Parameters used to automatically set up EBS volumes when the instance is launched.
+
+                    
+                    
+
+                    - **AttachTime** *(datetime) --* 
+
+                      The time stamp when the attachment initiated.
+
+                      
+                    
+
+                    - **DeleteOnTermination** *(boolean) --* 
+
+                      Indicates whether the volume is deleted on instance termination.
+
+                      
+                    
+
+                    - **Status** *(string) --* 
+
+                      The attachment state.
+
+                      
+                    
+
+                    - **VolumeId** *(string) --* 
+
+                      The ID of the EBS volume.
+
+                      
+                    
+
+                    - **AssociatedResource** *(string) --* 
+
+                      The ARN of the Amazon Web Services-managed resource to which the volume is attached.
+
+                      
+                    
+
+                    - **VolumeOwnerId** *(string) --* 
+
+                      The ID of the Amazon Web Services account that owns the volume.
+
+                       
+
+                      This parameter is returned only for volumes that are attached to Amazon Web Services-managed resources.
+
+                      
+                    
+
+                    - **Operator** *(dict) --* 
+
+                      The service provider that manages the EBS volume.
+
+                      
+                      
+
+                      - **Managed** *(boolean) --* 
+
+                        If ``true``, the resource is managed by a service provider.
+
+                        
+                      
+
+                      - **Principal** *(string) --* 
+
+                        If ``managed`` is ``true``, then the principal is returned. The principal is the service provider that manages the resource.
+
+                        
+                  
+                    
+
+                    - **EbsCardIndex** *(integer) --* 
+
+                      The index of the EBS card. Some instance types support multiple EBS cards. The default EBS card index is 0.
+
+                      
+                
+              
+            
+              
+
+              - **ClientToken** *(string) --* 
+
+                The idempotency token you provided when you launched the instance, if applicable.
+
+                
+              
+
+              - **EbsOptimized** *(boolean) --* 
+
+                Indicates whether the instance is optimized for Amazon EBS I/O. This optimization provides dedicated throughput to Amazon EBS and an optimized configuration stack to provide optimal I/O performance. This optimization isn't available with all instance types. Additional usage charges apply when using an EBS Optimized instance.
+
+                
+              
+
+              - **EnaSupport** *(boolean) --* 
+
+                Specifies whether enhanced networking with ENA is enabled.
+
+                
+              
+
+              - **Hypervisor** *(string) --* 
+
+                The hypervisor type of the instance. The value ``xen`` is used for both Xen and Nitro hypervisors.
+
+                
+              
+
+              - **IamInstanceProfile** *(dict) --* 
+
+                The IAM instance profile associated with the instance, if applicable.
+
+                
+                
+
+                - **Arn** *(string) --* 
+
+                  The Amazon Resource Name (ARN) of the instance profile.
+
+                  
+                
+
+                - **Id** *(string) --* 
+
+                  The ID of the instance profile.
+
+                  
+            
+              
+
+              - **InstanceLifecycle** *(string) --* 
+
+                Indicates whether this is a Spot Instance or a Scheduled Instance.
+
+                
+              
+
+              - **ElasticGpuAssociations** *(list) --* 
+
+                Deprecated.
+
+                 
+
+                .. note::
+
+                  
+
+                  Amazon Elastic Graphics reached end of life on January 8, 2024.
+
+                  
+
+                
+                
+
+                - *(dict) --* 
+
+                  .. note::
+
+                    
+
+                    Amazon Elastic Graphics reached end of life on January 8, 2024.
+
+                    
+
+                   
+
+                  Describes the association between an instance and an Elastic Graphics accelerator.
+
+                  
+                  
+
+                  - **ElasticGpuId** *(string) --* 
+
+                    The ID of the Elastic Graphics accelerator.
+
+                    
+                  
+
+                  - **ElasticGpuAssociationId** *(string) --* 
+
+                    The ID of the association.
+
+                    
+                  
+
+                  - **ElasticGpuAssociationState** *(string) --* 
+
+                    The state of the association between the instance and the Elastic Graphics accelerator.
+
+                    
+                  
+
+                  - **ElasticGpuAssociationTime** *(string) --* 
+
+                    The time the Elastic Graphics accelerator was associated with the instance.
+
+                    
+              
+            
+              
+
+              - **ElasticInferenceAcceleratorAssociations** *(list) --* 
+
+                Deprecated
+
+                 
+
+                .. note::
+
+                  
+
+                  Amazon Elastic Inference is no longer available.
+
+                  
+
+                
+                
+
+                - *(dict) --* 
+
+                  .. note::
+
+                    
+
+                    Amazon Elastic Inference is no longer available.
+
+                    
+
+                   
+
+                  Describes the association between an instance and an elastic inference accelerator.
+
+                  
+                  
+
+                  - **ElasticInferenceAcceleratorArn** *(string) --* 
+
+                    The Amazon Resource Name (ARN) of the elastic inference accelerator.
+
+                    
+                  
+
+                  - **ElasticInferenceAcceleratorAssociationId** *(string) --* 
+
+                    The ID of the association.
+
+                    
+                  
+
+                  - **ElasticInferenceAcceleratorAssociationState** *(string) --* 
+
+                    The state of the elastic inference accelerator.
+
+                    
+                  
+
+                  - **ElasticInferenceAcceleratorAssociationTime** *(datetime) --* 
+
+                    The time at which the elastic inference accelerator is associated with an instance.
+
+                    
+              
+            
+              
+
+              - **NetworkInterfaces** *(list) --* 
+
+                The network interfaces for the instance.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes a network interface.
+
+                  
+                  
+
+                  - **Association** *(dict) --* 
+
+                    The association information for an Elastic IPv4 associated with the network interface.
+
+                    
+                    
+
+                    - **CarrierIp** *(string) --* 
+
+                      The carrier IP address associated with the network interface.
+
+                      
+                    
+
+                    - **CustomerOwnedIp** *(string) --* 
+
+                      The customer-owned IP address associated with the network interface.
+
+                      
+                    
+
+                    - **IpOwnerId** *(string) --* 
+
+                      The ID of the owner of the Elastic IP address.
+
+                      
+                    
+
+                    - **PublicDnsName** *(string) --* 
+
+                      The public DNS name.
+
+                      
+                    
+
+                    - **PublicIp** *(string) --* 
+
+                      The public IP address or Elastic IP address bound to the network interface.
+
+                      
+                
+                  
+
+                  - **Attachment** *(dict) --* 
+
+                    The network interface attachment.
+
+                    
+                    
+
+                    - **AttachTime** *(datetime) --* 
+
+                      The time stamp when the attachment initiated.
+
+                      
+                    
+
+                    - **AttachmentId** *(string) --* 
+
+                      The ID of the network interface attachment.
+
+                      
+                    
+
+                    - **DeleteOnTermination** *(boolean) --* 
+
+                      Indicates whether the network interface is deleted when the instance is terminated.
+
+                      
+                    
+
+                    - **DeviceIndex** *(integer) --* 
+
+                      The index of the device on the instance for the network interface attachment.
+
+                      
+                    
+
+                    - **Status** *(string) --* 
+
+                      The attachment state.
+
+                      
+                    
+
+                    - **NetworkCardIndex** *(integer) --* 
+
+                      The index of the network card.
+
+                      
+                    
+
+                    - **EnaSrdSpecification** *(dict) --* 
+
+                      Contains the ENA Express settings for the network interface that's attached to the instance.
+
+                      
+                      
+
+                      - **EnaSrdEnabled** *(boolean) --* 
+
+                        Indicates whether ENA Express is enabled for the network interface.
+
+                        
+                      
+
+                      - **EnaSrdUdpSpecification** *(dict) --* 
+
+                        Configures ENA Express for UDP network traffic.
+
+                        
+                        
+
+                        - **EnaSrdUdpEnabled** *(boolean) --* 
+
+                          Indicates whether UDP traffic to and from the instance uses ENA Express. To specify this setting, you must first enable ENA Express.
+
+                          
+                    
+                  
+                    
+
+                    - **EnaQueueCount** *(integer) --* 
+
+                      The number of ENA queues created with the instance.
+
+                      
+                
+                  
+
+                  - **Description** *(string) --* 
+
+                    The description.
+
+                    
+                  
+
+                  - **Groups** *(list) --* 
+
+                    The security groups.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Describes a security group.
+
+                      
+                      
+
+                      - **GroupId** *(string) --* 
+
+                        The ID of the security group.
+
+                        
+                      
+
+                      - **GroupName** *(string) --* 
+
+                        The name of the security group.
+
+                        
+                  
+                
+                  
+
+                  - **Ipv6Addresses** *(list) --* 
+
+                    The IPv6 addresses associated with the network interface.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Describes an IPv6 address.
+
+                      
+                      
+
+                      - **Ipv6Address** *(string) --* 
+
+                        The IPv6 address.
+
+                        
+                      
+
+                      - **IsPrimaryIpv6** *(boolean) --* 
+
+                        Determines if an IPv6 address associated with a network interface is the primary IPv6 address. When you enable an IPv6 GUA address to be a primary IPv6, the first IPv6 GUA will be made the primary IPv6 address until the instance is terminated or the network interface is detached. For more information, see `RunInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RunInstances.html>`__.
+
+                        
+                  
+                
+                  
+
+                  - **MacAddress** *(string) --* 
+
+                    The MAC address.
+
+                    
+                  
+
+                  - **NetworkInterfaceId** *(string) --* 
+
+                    The ID of the network interface.
+
+                    
+                  
+
+                  - **OwnerId** *(string) --* 
+
+                    The ID of the Amazon Web Services account that created the network interface.
+
+                    
+                  
+
+                  - **PrivateDnsName** *(string) --* 
+
+                    The private DNS name.
+
+                    
+                  
+
+                  - **PrivateIpAddress** *(string) --* 
+
+                    The IPv4 address of the network interface within the subnet.
+
+                    
+                  
+
+                  - **PrivateIpAddresses** *(list) --* 
+
+                    The private IPv4 addresses associated with the network interface.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Describes a private IPv4 address.
+
+                      
+                      
+
+                      - **Association** *(dict) --* 
+
+                        The association information for an Elastic IP address for the network interface.
+
+                        
+                        
+
+                        - **CarrierIp** *(string) --* 
+
+                          The carrier IP address associated with the network interface.
+
+                          
+                        
+
+                        - **CustomerOwnedIp** *(string) --* 
+
+                          The customer-owned IP address associated with the network interface.
+
+                          
+                        
+
+                        - **IpOwnerId** *(string) --* 
+
+                          The ID of the owner of the Elastic IP address.
+
+                          
+                        
+
+                        - **PublicDnsName** *(string) --* 
+
+                          The public DNS name.
+
+                          
+                        
+
+                        - **PublicIp** *(string) --* 
+
+                          The public IP address or Elastic IP address bound to the network interface.
+
+                          
+                    
+                      
+
+                      - **Primary** *(boolean) --* 
+
+                        Indicates whether this IPv4 address is the primary private IP address of the network interface.
+
+                        
+                      
+
+                      - **PrivateDnsName** *(string) --* 
+
+                        The private IPv4 DNS name.
+
+                        
+                      
+
+                      - **PrivateIpAddress** *(string) --* 
+
+                        The private IPv4 address of the network interface.
+
+                        
+                  
+                
+                  
+
+                  - **SourceDestCheck** *(boolean) --* 
+
+                    Indicates whether source/destination checking is enabled.
+
+                    
+                  
+
+                  - **Status** *(string) --* 
+
+                    The status of the network interface.
+
+                    
+                  
+
+                  - **SubnetId** *(string) --* 
+
+                    The ID of the subnet.
+
+                    
+                  
+
+                  - **VpcId** *(string) --* 
+
+                    The ID of the VPC.
+
+                    
+                  
+
+                  - **InterfaceType** *(string) --* 
+
+                    The type of network interface.
+
+                     
+
+                    Valid values: ``interface`` | ``efa`` | ``efa-only`` | ``evs`` | ``trunk``
+
+                    
+                  
+
+                  - **Ipv4Prefixes** *(list) --* 
+
+                    The IPv4 delegated prefixes that are assigned to the network interface.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Information about an IPv4 prefix.
+
+                      
+                      
+
+                      - **Ipv4Prefix** *(string) --* 
+
+                        One or more IPv4 prefixes assigned to the network interface.
+
+                        
+                  
+                
+                  
+
+                  - **Ipv6Prefixes** *(list) --* 
+
+                    The IPv6 delegated prefixes that are assigned to the network interface.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Information about an IPv6 prefix.
+
+                      
+                      
+
+                      - **Ipv6Prefix** *(string) --* 
+
+                        One or more IPv6 prefixes assigned to the network interface.
+
+                        
+                  
+                
+                  
+
+                  - **ConnectionTrackingConfiguration** *(dict) --* 
+
+                    A security group connection tracking configuration that enables you to set the timeout for connection tracking on an Elastic network interface. For more information, see `Connection tracking timeouts <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-connection-tracking.html#connection-tracking-timeouts>`__ in the *Amazon EC2 User Guide*.
+
+                    
+                    
+
+                    - **TcpEstablishedTimeout** *(integer) --* 
+
+                      Timeout (in seconds) for idle TCP connections in an established state. Min: 60 seconds. Max: 432000 seconds (5 days). Default: 432000 seconds. Recommended: Less than 432000 seconds.
+
+                      
+                    
+
+                    - **UdpStreamTimeout** *(integer) --* 
+
+                      Timeout (in seconds) for idle UDP flows classified as streams which have seen more than one request-response transaction. Min: 60 seconds. Max: 180 seconds (3 minutes). Default: 180 seconds.
+
+                      
+                    
+
+                    - **UdpTimeout** *(integer) --* 
+
+                      Timeout (in seconds) for idle UDP flows that have seen traffic only in a single direction or a single request-response transaction. Min: 30 seconds. Max: 60 seconds. Default: 30 seconds.
+
+                      
+                
+                  
+
+                  - **Operator** *(dict) --* 
+
+                    The service provider that manages the network interface.
+
+                    
+                    
+
+                    - **Managed** *(boolean) --* 
+
+                      If ``true``, the resource is managed by a service provider.
+
+                      
+                    
+
+                    - **Principal** *(string) --* 
+
+                      If ``managed`` is ``true``, then the principal is returned. The principal is the service provider that manages the resource.
+
+                      
+                
+              
+            
+              
+
+              - **OutpostArn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the Outpost.
+
+                
+              
+
+              - **RootDeviceName** *(string) --* 
+
+                The device name of the root device volume (for example, ``/dev/sda1``).
+
+                
+              
+
+              - **RootDeviceType** *(string) --* 
+
+                The root device type used by the AMI. The AMI can use an EBS volume or an instance store volume.
+
+                
+              
+
+              - **SecurityGroups** *(list) --* 
+
+                The security groups for the instance.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes a security group.
+
+                  
+                  
+
+                  - **GroupId** *(string) --* 
+
+                    The ID of the security group.
+
+                    
+                  
+
+                  - **GroupName** *(string) --* 
+
+                    The name of the security group.
+
+                    
+              
+            
+              
+
+              - **SourceDestCheck** *(boolean) --* 
+
+                Indicates whether source/destination checking is enabled.
+
+                
+              
+
+              - **SpotInstanceRequestId** *(string) --* 
+
+                If the request is a Spot Instance request, the ID of the request.
+
+                
+              
+
+              - **SriovNetSupport** *(string) --* 
+
+                Specifies whether enhanced networking with the Intel 82599 Virtual Function interface is enabled.
+
+                
+              
+
+              - **StateReason** *(dict) --* 
+
+                The reason for the most recent state transition.
+
+                
+                
+
+                - **Code** *(string) --* 
+
+                  The reason code for the state change.
+
+                  
+                
+
+                - **Message** *(string) --* 
+
+                  The message for the state change.
+
+                   
+
+                  
+                  * ``Server.InsufficientInstanceCapacity``: There was insufficient capacity available to satisfy the launch request.
+                   
+                  * ``Server.InternalError``: An internal error caused the instance to terminate during launch.
+                   
+                  * ``Server.ScheduledStop``: The instance was stopped due to a scheduled retirement.
+                   
+                  * ``Server.SpotInstanceShutdown``: The instance was stopped because the number of Spot requests with a maximum price equal to or higher than the Spot price exceeded available capacity or because of an increase in the Spot price.
+                   
+                  * ``Server.SpotInstanceTermination``: The instance was terminated because the number of Spot requests with a maximum price equal to or higher than the Spot price exceeded available capacity or because of an increase in the Spot price.
+                   
+                  * ``Client.InstanceInitiatedShutdown``: The instance was shut down from the operating system of the instance.
+                   
+                  * ``Client.InstanceTerminated``: The instance was terminated or rebooted during AMI creation.
+                   
+                  * ``Client.InternalError``: A client error caused the instance to terminate during launch.
+                   
+                  * ``Client.InvalidSnapshot.NotFound``: The specified snapshot was not found.
+                   
+                  * ``Client.UserInitiatedHibernate``: Hibernation was initiated on the instance.
+                   
+                  * ``Client.UserInitiatedShutdown``: The instance was shut down using the Amazon EC2 API.
+                   
+                  * ``Client.VolumeLimitExceeded``: The limit on the number of EBS volumes or total storage was exceeded. Decrease usage or request an increase in your account limits.
+                  
+
+                  
+            
+              
+
+              - **Tags** *(list) --* 
+
+                Any tags assigned to the instance.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes a tag.
+
+                  
+                  
+
+                  - **Key** *(string) --* 
+
+                    The key of the tag.
+
+                     
+
+                    Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+                    
+                  
+
+                  - **Value** *(string) --* 
+
+                    The value of the tag.
+
+                     
+
+                    Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+                    
+              
+            
+              
+
+              - **VirtualizationType** *(string) --* 
+
+                The virtualization type of the instance.
+
+                
+              
+
+              - **CpuOptions** *(dict) --* 
+
+                The CPU options for the instance.
+
+                
+                
+
+                - **CoreCount** *(integer) --* 
+
+                  The number of CPU cores for the instance.
+
+                  
+                
+
+                - **ThreadsPerCore** *(integer) --* 
+
+                  The number of threads per CPU core.
+
+                  
+                
+
+                - **AmdSevSnp** *(string) --* 
+
+                  Indicates whether the instance is enabled for AMD SEV-SNP. For more information, see `AMD SEV-SNP <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html>`__.
+
+                  
+                
+
+                - **NestedVirtualization** *(string) --* 
+
+                  Indicates whether the instance is enabled for nested virtualization.
+
+                  
+            
+              
+
+              - **CapacityBlockId** *(string) --* 
+
+                The ID of the Capacity Block.
+
+                 
+
+                .. note::
+
+                  
+
+                  For P5 instances, a Capacity Block ID refers to a group of instances. For Trn2u instances, a capacity block ID refers to an EC2 UltraServer.
+
+                  
+
+                
+              
+
+              - **CapacityReservationId** *(string) --* 
+
+                The ID of the Capacity Reservation.
+
+                
+              
+
+              - **CapacityReservationSpecification** *(dict) --* 
+
+                Information about the Capacity Reservation targeting option.
+
+                
+                
+
+                - **CapacityReservationPreference** *(string) --* 
+
+                  Describes the instance's Capacity Reservation preferences. Possible preferences include:
+
+                   
+
+                  
+                  * ``open`` - The instance can run in any ``open`` Capacity Reservation that has matching attributes (instance type, platform, Availability Zone).
+                   
+                  * ``none`` - The instance avoids running in a Capacity Reservation even if one is available. The instance runs in On-Demand capacity.
+                  
+
+                  
+                
+
+                - **CapacityReservationTarget** *(dict) --* 
+
+                  Information about the targeted Capacity Reservation or Capacity Reservation group.
+
+                  
+                  
+
+                  - **CapacityReservationId** *(string) --* 
+
+                    The ID of the targeted Capacity Reservation.
+
+                    
+                  
+
+                  - **CapacityReservationResourceGroupArn** *(string) --* 
+
+                    The ARN of the targeted Capacity Reservation group.
+
+                    
+              
+            
+              
+
+              - **HibernationOptions** *(dict) --* 
+
+                Indicates whether the instance is enabled for hibernation.
+
+                
+                
+
+                - **Configured** *(boolean) --* 
+
+                  If ``true``, your instance is enabled for hibernation; otherwise, it is not enabled for hibernation.
+
+                  
+            
+              
+
+              - **Licenses** *(list) --* 
+
+                The license configurations for the instance.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes a license configuration.
+
+                  
+                  
+
+                  - **LicenseConfigurationArn** *(string) --* 
+
+                    The Amazon Resource Name (ARN) of the license configuration.
+
+                    
+              
+            
+              
+
+              - **MetadataOptions** *(dict) --* 
+
+                The metadata options for the instance.
+
+                
+                
+
+                - **State** *(string) --* 
+
+                  The state of the metadata option changes.
+
+                   
+
+                  ``pending`` - The metadata options are being updated and the instance is not ready to process metadata traffic with the new selection.
+
+                   
+
+                  ``applied`` - The metadata options have been successfully applied on the instance.
+
+                  
+                
+
+                - **HttpTokens** *(string) --* 
+
+                  Indicates whether IMDSv2 is required.
+
+                   
+
+                  
+                  * ``optional`` - IMDSv2 is optional, which means that you can use either IMDSv2 or IMDSv1.
+                   
+                  * ``required`` - IMDSv2 is required, which means that IMDSv1 is disabled, and you must use IMDSv2.
+                  
+
+                  
+                
+
+                - **HttpPutResponseHopLimit** *(integer) --* 
+
+                  The maximum number of hops that the metadata token can travel.
+
+                   
+
+                  Possible values: Integers from ``1`` to ``64``
+
+                  
+                
+
+                - **HttpEndpoint** *(string) --* 
+
+                  Indicates whether the HTTP metadata endpoint on your instances is enabled or disabled.
+
+                   
+
+                  If the value is ``disabled``, you cannot access your instance metadata.
+
+                  
+                
+
+                - **HttpProtocolIpv6** *(string) --* 
+
+                  Indicates whether the IPv6 endpoint for the instance metadata service is enabled or disabled.
+
+                   
+
+                  Default: ``disabled``
+
+                  
+                
+
+                - **InstanceMetadataTags** *(string) --* 
+
+                  Indicates whether access to instance tags from the instance metadata is enabled or disabled. For more information, see `View tags for your EC2 instances using instance metadata <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/work-with-tags-in-IMDS.html>`__.
+
+                  
+            
+              
+
+              - **EnclaveOptions** *(dict) --* 
+
+                Indicates whether the instance is enabled for Amazon Web Services Nitro Enclaves.
+
+                
+                
+
+                - **Enabled** *(boolean) --* 
+
+                  If this parameter is set to ``true``, the instance is enabled for Amazon Web Services Nitro Enclaves; otherwise, it is not enabled for Amazon Web Services Nitro Enclaves.
+
+                  
+            
+              
+
+              - **BootMode** *(string) --* 
+
+                The boot mode that was specified by the AMI. If the value is ``uefi-preferred``, the AMI supports both UEFI and Legacy BIOS. The ``currentInstanceBootMode`` parameter is the boot mode that is used to boot the instance at launch or start.
+
+                 
+
+                .. note::
+
+                  
+
+                  The operating system contained in the AMI must be configured to support the specified boot mode.
+
+                  
+
+                 
+
+                For more information, see `Boot modes <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-boot.html>`__ in the *Amazon EC2 User Guide*.
+
+                
+              
+
+              - **PlatformDetails** *(string) --* 
+
+                The platform details value for the instance. For more information, see `AMI billing information fields <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/billing-info-fields.html>`__ in the *Amazon EC2 User Guide*.
+
+                
+              
+
+              - **UsageOperation** *(string) --* 
+
+                The usage operation value for the instance. For more information, see `AMI billing information fields <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/billing-info-fields.html>`__ in the *Amazon EC2 User Guide*.
+
+                
+              
+
+              - **UsageOperationUpdateTime** *(datetime) --* 
+
+                The time that the usage operation was last updated.
+
+                
+              
+
+              - **PrivateDnsNameOptions** *(dict) --* 
+
+                The options for the instance hostname.
+
+                
+                
+
+                - **HostnameType** *(string) --* 
+
+                  The type of hostname to assign to an instance.
+
+                  
+                
+
+                - **EnableResourceNameDnsARecord** *(boolean) --* 
+
+                  Indicates whether to respond to DNS queries for instance hostnames with DNS A records.
+
+                  
+                
+
+                - **EnableResourceNameDnsAAAARecord** *(boolean) --* 
+
+                  Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records.
+
+                  
+            
+              
+
+              - **Ipv6Address** *(string) --* 
+
+                The IPv6 address assigned to the instance.
+
+                
+              
+
+              - **TpmSupport** *(string) --* 
+
+                If the instance is configured for NitroTPM support, the value is ``v2.0``. For more information, see `NitroTPM <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitrotpm.html>`__ in the *Amazon EC2 User Guide*.
+
+                
+              
+
+              - **MaintenanceOptions** *(dict) --* 
+
+                Provides information on the recovery and maintenance options of your instance.
+
+                
+                
+
+                - **AutoRecovery** *(string) --* 
+
+                  Provides information on the current automatic recovery behavior of your instance.
+
+                  
+                
+
+                - **RebootMigration** *(string) --* 
+
+                  Specifies whether to attempt reboot migration during a user-initiated reboot of an instance that has a scheduled ``system-reboot`` event:
+
+                   
+
+                  
+                  * ``default`` - Amazon EC2 attempts to migrate the instance to new hardware (reboot migration). If successful, the ``system-reboot`` event is cleared. If unsuccessful, an in-place reboot occurs and the event remains scheduled.
+                   
+                  * ``disabled`` - Amazon EC2 keeps the instance on the same hardware (in-place reboot). The ``system-reboot`` event remains scheduled.
+                  
+
+                   
+
+                  This setting only applies to supported instances that have a scheduled reboot event. For more information, see `Enable or disable reboot migration <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/schedevents_actions_reboot.html#reboot-migration>`__ in the *Amazon EC2 User Guide*.
+
+                  
+            
+              
+
+              - **CurrentInstanceBootMode** *(string) --* 
+
+                The boot mode that is used to boot the instance at launch or start. For more information, see `Boot modes <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-boot.html>`__ in the *Amazon EC2 User Guide*.
+
+                
+              
+
+              - **NetworkPerformanceOptions** *(dict) --* 
+
+                Contains settings for the network performance options for your instance.
+
+                
+                
+
+                - **BandwidthWeighting** *(string) --* 
+
+                  When you configure network bandwidth weighting, you can boost your baseline bandwidth for either networking or EBS by up to 25%. The total available baseline bandwidth for your instance remains the same. The default option uses the standard bandwidth configuration for your instance type.
+
+                  
+            
+              
+
+              - **Operator** *(dict) --* 
+
+                The service provider that manages the instance.
+
+                
+                
+
+                - **Managed** *(boolean) --* 
+
+                  If ``true``, the resource is managed by a service provider.
+
+                  
+                
+
+                - **Principal** *(string) --* 
+
+                  If ``managed`` is ``true``, then the principal is returned. The principal is the service provider that manages the resource.
+
+                  
+            
+              
+
+              - **SecondaryInterfaces** *(list) --* 
+
+                The secondary interfaces for the instance.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes a secondary interface attached to an instance.
+
+                  
+                  
+
+                  - **Attachment** *(dict) --* 
+
+                    The attachment information for the secondary interface.
+
+                    
+                    
+
+                    - **AttachTime** *(datetime) --* 
+
+                      The timestamp when the attachment was created.
+
+                      
+                    
+
+                    - **AttachmentId** *(string) --* 
+
+                      The ID of the attachment.
+
+                      
+                    
+
+                    - **DeleteOnTermination** *(boolean) --* 
+
+                      Indicates whether the secondary interface is deleted when the instance is terminated.
+
+                       
+
+                      The only supported value for this field is ``true``.
+
+                      
+                    
+
+                    - **DeviceIndex** *(integer) --* 
+
+                      The device index of the secondary interface.
+
+                      
+                    
+
+                    - **Status** *(string) --* 
+
+                      The attachment state.
+
+                      
+                    
+
+                    - **NetworkCardIndex** *(integer) --* 
+
+                      The index of the network card.
+
+                      
+                
+                  
+
+                  - **MacAddress** *(string) --* 
+
+                    The MAC address of the secondary interface.
+
+                    
+                  
+
+                  - **SecondaryInterfaceId** *(string) --* 
+
+                    The ID of the secondary interface.
+
+                    
+                  
+
+                  - **OwnerId** *(string) --* 
+
+                    The Amazon Web Services account ID of the owner of the secondary interface.
+
+                    
+                  
+
+                  - **PrivateIpAddresses** *(list) --* 
+
+                    The private IPv4 addresses associated with the secondary interface.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      Describes a private IPv4 address for a secondary interface.
+
+                      
+                      
+
+                      - **PrivateIpAddress** *(string) --* 
+
+                        The private IPv4 address.
+
+                        
+                  
+                
+                  
+
+                  - **SourceDestCheck** *(boolean) --* 
+
+                    Indicates whether source/destination checking is enabled.
+
+                    
+                  
+
+                  - **Status** *(string) --* 
+
+                    The status of the secondary interface.
+
+                    
+                  
+
+                  - **SecondarySubnetId** *(string) --* 
+
+                    The ID of the secondary subnet.
+
+                    
+                  
+
+                  - **SecondaryNetworkId** *(string) --* 
+
+                    The ID of the secondary network.
+
+                    
+                  
+
+                  - **InterfaceType** *(string) --* 
+
+                    The type of secondary interface.
+
+                    
+              
+            
+              
+
+              - **InstanceId** *(string) --* 
+
+                The ID of the instance.
+
+                
+              
+
+              - **ImageId** *(string) --* 
+
+                The ID of the AMI used to launch the instance.
+
+                
+              
+
+              - **State** *(dict) --* 
+
+                The current state of the instance.
+
+                
+                
+
+                - **Code** *(integer) --* 
+
+                  The state of the instance as a 16-bit unsigned integer.
+
+                   
+
+                  The high byte is all of the bits between 2^8 and (2^16)-1, which equals decimal values between 256 and 65,535. These numerical values are used for internal purposes and should be ignored.
+
+                   
+
+                  The low byte is all of the bits between 2^0 and (2^8)-1, which equals decimal values between 0 and 255.
+
+                   
+
+                  The valid values for instance-state-code will all be in the range of the low byte and they are:
+
+                   
+
+                  
+                  * ``0`` : ``pending``
+                   
+                  * ``16`` : ``running``
+                   
+                  * ``32`` : ``shutting-down``
+                   
+                  * ``48`` : ``terminated``
+                   
+                  * ``64`` : ``stopping``
+                   
+                  * ``80`` : ``stopped``
+                  
+
+                   
+
+                  You can ignore the high byte value by zeroing out all of the bits above 2^8 or 256 in decimal.
+
+                  
+                
+
+                - **Name** *(string) --* 
+
+                  The current state of the instance.
+
+                  
+            
+              
+
+              - **PrivateDnsName** *(string) --* 
+
+                [IPv4 only] The private DNS hostname name assigned to the instance. This DNS hostname can only be used inside the Amazon EC2 network. This name is not available until the instance enters the ``running`` state.
+
+                 
+
+                The Amazon-provided DNS server resolves Amazon-provided private DNS hostnames if you've enabled DNS resolution and DNS hostnames in your VPC. If you are not using the Amazon-provided DNS server in your VPC, your custom domain name servers must resolve the hostname as appropriate.
+
+                
+              
+
+              - **PublicDnsName** *(string) --* 
+
+                The public DNS name assigned to the instance. This name is not available until the instance enters the ``running`` state. This name is only available if you've enabled DNS hostnames for your VPC. The format of this name depends on the `public hostname type <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/hostname-types.html#public-hostnames>`__.
+
+                
+              
+
+              - **StateTransitionReason** *(string) --* 
+
+                The reason for the most recent state transition. This might be an empty string.
+
+                
+              
+
+              - **KeyName** *(string) --* 
+
+                The name of the key pair, if this instance was launched with an associated key pair.
+
+                
+              
+
+              - **AmiLaunchIndex** *(integer) --* 
+
+                The AMI launch index, which can be used to find this instance in the launch group.
+
+                
+              
+
+              - **ProductCodes** *(list) --* 
+
+                The product codes attached to this instance, if applicable.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Describes a product code.
+
+                  
+                  
+
+                  - **ProductCodeId** *(string) --* 
+
+                    The product code.
+
+                    
+                  
+
+                  - **ProductCodeType** *(string) --* 
+
+                    The type of product code.
+
+                    
+              
+            
+              
+
+              - **InstanceType** *(string) --* 
+
+                The instance type.
+
+                
+              
+
+              - **LaunchTime** *(datetime) --* 
+
+                The time that the instance was last launched. To determine the time that instance was first launched, see the attachment time for the primary network interface.
+
+                
+              
+
+              - **Placement** *(dict) --* 
+
+                The location where the instance launched, if applicable.
+
+                
+                
+
+                - **AvailabilityZoneId** *(string) --* 
+
+                  The ID of the Availability Zone of the instance.
+
+                   
+
+                  On input, you can specify ``AvailabilityZone`` or ``AvailabilityZoneId``, but not both. If you specify neither one, Amazon EC2 automatically selects an Availability Zone for you.
+
+                   
+
+                  This parameter is not supported for `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet>`__.
+
+                  
+                
+
+                - **Affinity** *(string) --* 
+
+                  The affinity setting for the instance on the Dedicated Host.
+
+                   
+
+                  This parameter is not supported for `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet>`__ or `ImportInstance <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_ImportInstance.html>`__.
+
+                  
+                
+
+                - **GroupName** *(string) --* 
+
+                  The name of the placement group that the instance is in.
+
+                   
+
+                  On input, you can specify ``GroupId`` or ``GroupName``, but not both.
+
+                  
+                
+
+                - **PartitionNumber** *(integer) --* 
+
+                  The number of the partition that the instance is in. Valid only if the placement group strategy is set to ``partition``.
+
+                   
+
+                  This parameter is not supported for `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet>`__.
+
+                  
+                
+
+                - **HostId** *(string) --* 
+
+                  The ID of the Dedicated Host on which the instance resides.
+
+                   
+
+                  This parameter is not supported for `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet>`__ or `ImportInstance <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_ImportInstance.html>`__.
+
+                  
+                
+
+                - **Tenancy** *(string) --* 
+
+                  The tenancy of the instance. An instance with a tenancy of ``dedicated`` runs on single-tenant hardware.
+
+                   
+
+                  This parameter is not supported for `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet>`__. The ``host`` tenancy is not supported for `ImportInstance <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_ImportInstance.html>`__ or for T3 instances that are configured for the ``unlimited`` CPU credit option.
+
+                  
+                
+
+                - **SpreadDomain** *(string) --* 
+
+                  Reserved for future use.
+
+                  
+                
+
+                - **HostResourceGroupArn** *(string) --* 
+
+                  The ARN of the host resource group in which to launch the instances.
+
+                   
+
+                  On input, if you specify this parameter, either omit the **Tenancy** parameter or set it to ``host``.
+
+                   
+
+                  This parameter is not supported for `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet>`__.
+
+                  
+                
+
+                - **GroupId** *(string) --* 
+
+                  The ID of the placement group that the instance is in.
+
+                   
+
+                  On input, you can specify ``GroupId`` or ``GroupName``, but not both.
+
+                  
+                
+
+                - **AvailabilityZone** *(string) --* 
+
+                  The Availability Zone of the instance.
+
+                   
+
+                  On input, you can specify ``AvailabilityZone`` or ``AvailabilityZoneId``, but not both. If you specify neither one, Amazon EC2 automatically selects an Availability Zone for you.
+
+                   
+
+                  This parameter is not supported for `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet>`__.
+
+                  
+            
+              
+
+              - **KernelId** *(string) --* 
+
+                The kernel associated with this instance, if applicable.
+
+                
+              
+
+              - **RamdiskId** *(string) --* 
+
+                The RAM disk associated with this instance, if applicable.
+
+                
+              
+
+              - **Platform** *(string) --* 
+
+                The platform. This value is ``windows`` for Windows instances; otherwise, it is empty.
+
+                
+              
+
+              - **Monitoring** *(dict) --* 
+
+                The monitoring for the instance.
+
+                
+                
+
+                - **State** *(string) --* 
+
+                  Indicates whether detailed monitoring is enabled. Otherwise, basic monitoring is enabled.
+
+                  
+            
+              
+
+              - **SubnetId** *(string) --* 
+
+                The ID of the subnet in which the instance is running.
+
+                
+              
+
+              - **VpcId** *(string) --* 
+
+                The ID of the VPC in which the instance is running.
+
+                
+              
+
+              - **PrivateIpAddress** *(string) --* 
+
+                The private IPv4 address assigned to the instance.
+
+                
+              
+
+              - **PublicIpAddress** *(string) --* 
+
+                The public IPv4 address, or the Carrier IP address assigned to the instance, if applicable.
+
+                 
+
+                A Carrier IP address only applies to an instance launched in a subnet associated with a Wavelength Zone.
+
+                
+          
+        
+      
+    
+  
+
+  **Examples**
+
+  This example describes the specified instance.
+  ::
+
+    response = client.describe_instances(
+        InstanceIds=[
+            'i-1234567890abcdef0',
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example describes the instances with the t2.micro instance type.
+  ::
+
+    response = client.describe_instances(
+        Filters=[
+            {
+                'Name': 'instance-type',
+                'Values': [
+                    't2.micro',
+                ],
+            },
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example describes the instances with the Purpose=test tag.
+  ::
+
+    response = client.describe_instances(
+        Filters=[
+            {
+                'Name': 'tag:Purpose',
+                'Values': [
+                    'test',
+                ],
+            },
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

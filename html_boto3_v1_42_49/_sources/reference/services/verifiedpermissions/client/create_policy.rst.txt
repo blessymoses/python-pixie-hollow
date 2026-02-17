@@ -1,0 +1,407 @@
+:doc:`VerifiedPermissions <../../verifiedpermissions>` / Client / create_policy
+
+*************
+create_policy
+*************
+
+
+
+.. py:method:: VerifiedPermissions.Client.create_policy(**kwargs)
+
+  
+
+  Creates a Cedar policy and saves it in the specified policy store. You can create either a static policy or a policy linked to a policy template.
+
+   
+
+  
+  * To create a static policy, provide the Cedar policy text in the ``StaticPolicy`` section of the ``PolicyDefinition``.
+   
+  * To create a policy that is dynamically linked to a policy template, specify the policy template ID and the principal and resource to associate with this policy in the ``templateLinked`` section of the ``PolicyDefinition``. If the policy template is ever updated, any policies linked to the policy template automatically use the updated template.
+  
+
+   
+
+  .. note::
+
+    
+
+    Creating a policy causes it to be validated against the schema in the policy store. If the policy doesn't pass validation, the operation fails and the policy isn't stored.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    Verified Permissions is `eventually consistent <https://wikipedia.org/wiki/Eventual_consistency>`__ . It can take a few seconds for a new or changed element to propagate through the service and be visible in the results of other Verified Permissions operations.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/CreatePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_policy(
+        clientToken='string',
+        policyStoreId='string',
+        definition={
+            'static': {
+                'description': 'string',
+                'statement': 'string'
+            },
+            'templateLinked': {
+                'policyTemplateId': 'string',
+                'principal': {
+                    'entityType': 'string',
+                    'entityId': 'string'
+                },
+                'resource': {
+                    'entityType': 'string',
+                    'entityId': 'string'
+                }
+            }
+        }
+    )
+    
+  :type clientToken: string
+  :param clientToken: 
+
+    Specifies a unique, case-sensitive ID that you provide to ensure the idempotency of the request. This lets you safely retry the request without accidentally performing the same operation a second time. Passing the same value to a later call to an operation requires that you also pass the same value for all other parameters. We recommend that you use a `UUID type of value. <https://wikipedia.org/wiki/Universally_unique_identifier>`__.
+
+     
+
+    If you don't provide this value, then Amazon Web Services generates a random one for you.
+
+     
+
+    If you retry the operation with the same ``ClientToken``, but with different parameters, the retry fails with an ``ConflictException`` error.
+
+     
+
+    Verified Permissions recognizes a ``ClientToken`` for eight hours. After eight hours, the next request with the same parameters performs the operation again regardless of the value of ``ClientToken``.
+
+    This field is autopopulated if not provided.
+
+  
+  :type policyStoreId: string
+  :param policyStoreId: **[REQUIRED]** 
+
+    Specifies the ``PolicyStoreId`` of the policy store you want to store the policy in.
+
+    
+
+  
+  :type definition: dict
+  :param definition: **[REQUIRED]** 
+
+    A structure that specifies the policy type and content to use for the new policy. You must include either a static or a templateLinked element. The policy content must be written in the Cedar policy language.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``static``, ``templateLinked``. 
+
+  
+    - **static** *(dict) --* 
+
+      A structure that describes a static policy. An static policy doesn't use a template or allow placeholders for entities.
+
+      
+
+    
+      - **description** *(string) --* 
+
+        The description of the static policy.
+
+        
+
+      
+      - **statement** *(string) --* **[REQUIRED]** 
+
+        The policy content of the static policy, written in the Cedar policy language.
+
+        
+
+      
+    
+    - **templateLinked** *(dict) --* 
+
+      A structure that describes a policy that was instantiated from a template. The template can specify placeholders for ``principal`` and ``resource``. When you use `CreatePolicy <https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_CreatePolicy.html>`__ to create a policy from a template, you specify the exact principal and resource to use for the instantiated policy.
+
+      
+
+    
+      - **policyTemplateId** *(string) --* **[REQUIRED]** 
+
+        The unique identifier of the policy template used to create this policy.
+
+        
+
+      
+      - **principal** *(dict) --* 
+
+        The principal associated with this template-linked policy. Verified Permissions substitutes this principal for the ``?principal`` placeholder in the policy template when it evaluates an authorization request.
+
+        
+
+      
+        - **entityType** *(string) --* **[REQUIRED]** 
+
+          The type of an entity.
+
+           
+
+          Example: ``"entityType":"typeName"``
+
+          
+
+        
+        - **entityId** *(string) --* **[REQUIRED]** 
+
+          The identifier of an entity.
+
+           
+
+          ``"entityId":"identifier"``
+
+          
+
+        
+      
+      - **resource** *(dict) --* 
+
+        The resource associated with this template-linked policy. Verified Permissions substitutes this resource for the ``?resource`` placeholder in the policy template when it evaluates an authorization request.
+
+        
+
+      
+        - **entityType** *(string) --* **[REQUIRED]** 
+
+          The type of an entity.
+
+           
+
+          Example: ``"entityType":"typeName"``
+
+          
+
+        
+        - **entityId** *(string) --* **[REQUIRED]** 
+
+          The identifier of an entity.
+
+           
+
+          ``"entityId":"identifier"``
+
+          
+
+        
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'policyStoreId': 'string',
+          'policyId': 'string',
+          'policyType': 'STATIC'|'TEMPLATE_LINKED',
+          'principal': {
+              'entityType': 'string',
+              'entityId': 'string'
+          },
+          'resource': {
+              'entityType': 'string',
+              'entityId': 'string'
+          },
+          'actions': [
+              {
+                  'actionType': 'string',
+                  'actionId': 'string'
+              },
+          ],
+          'createdDate': datetime(2015, 1, 1),
+          'lastUpdatedDate': datetime(2015, 1, 1),
+          'effect': 'Permit'|'Forbid'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **policyStoreId** *(string) --* 
+
+        The ID of the policy store that contains the new policy.
+
+        
+      
+
+      - **policyId** *(string) --* 
+
+        The unique ID of the new policy.
+
+        
+      
+
+      - **policyType** *(string) --* 
+
+        The policy type of the new policy.
+
+        
+      
+
+      - **principal** *(dict) --* 
+
+        The principal specified in the new policy's scope. This response element isn't present when ``principal`` isn't specified in the policy content.
+
+        
+        
+
+        - **entityType** *(string) --* 
+
+          The type of an entity.
+
+           
+
+          Example: ``"entityType":"typeName"``
+
+          
+        
+
+        - **entityId** *(string) --* 
+
+          The identifier of an entity.
+
+           
+
+          ``"entityId":"identifier"``
+
+          
+    
+      
+
+      - **resource** *(dict) --* 
+
+        The resource specified in the new policy's scope. This response element isn't present when the ``resource`` isn't specified in the policy content.
+
+        
+        
+
+        - **entityType** *(string) --* 
+
+          The type of an entity.
+
+           
+
+          Example: ``"entityType":"typeName"``
+
+          
+        
+
+        - **entityId** *(string) --* 
+
+          The identifier of an entity.
+
+           
+
+          ``"entityId":"identifier"``
+
+          
+    
+      
+
+      - **actions** *(list) --* 
+
+        The action that a policy permits or forbids. For example, ``{"actions": [{"actionId": "ViewPhoto", "actionType": "PhotoFlash::Action"}, {"entityID": "SharePhoto", "entityType": "PhotoFlash::Action"}]}``.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about an action for a request for which an authorization decision is made.
+
+           
+
+          This data type is used as a request parameter to the `IsAuthorized <https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_IsAuthorized.html>`__, `BatchIsAuthorized <https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_BatchIsAuthorized.html>`__, and `IsAuthorizedWithToken <https://docs.aws.amazon.com/verifiedpermissions/latest/apireference/API_IsAuthorizedWithToken.html>`__ operations.
+
+           
+
+          Example: ``{ "actionId": "<action name>", "actionType": "Action" }``
+
+          
+          
+
+          - **actionType** *(string) --* 
+
+            The type of an action.
+
+            
+          
+
+          - **actionId** *(string) --* 
+
+            The ID of an action.
+
+            
+      
+    
+      
+
+      - **createdDate** *(datetime) --* 
+
+        The date and time the policy was originally created.
+
+        
+      
+
+      - **lastUpdatedDate** *(datetime) --* 
+
+        The date and time the policy was last updated.
+
+        
+      
+
+      - **effect** *(string) --* 
+
+        The effect of the decision that a policy returns to an authorization request. For example, ``"effect": "Permit"``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.InternalServerException`
+
+  

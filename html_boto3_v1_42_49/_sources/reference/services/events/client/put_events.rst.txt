@@ -1,0 +1,310 @@
+:doc:`EventBridge <../../events>` / Client / put_events
+
+**********
+put_events
+**********
+
+
+
+.. py:method:: EventBridge.Client.put_events(**kwargs)
+
+  
+
+  Sends custom events to Amazon EventBridge so that they can be matched to rules.
+
+   
+
+  You can batch multiple event entries into one request for efficiency. However, the total entry size must be less than 256KB. You can calculate the entry size before you send the events. For more information, see `Calculating PutEvents event entry size <https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-putevents.html#eb-putevent-size>`__ in the *Amazon EventBridge User Guide* .
+
+   
+
+  PutEvents accepts the data in JSON format. For the JSON number (integer) data type, the constraints are: a minimum value of -9,223,372,036,854,775,808 and a maximum value of 9,223,372,036,854,775,807.
+
+   
+
+  .. note::
+
+    
+
+    PutEvents will only process nested JSON up to 1000 levels deep.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eventbridge-2015-10-07/PutEvents>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_events(
+        Entries=[
+            {
+                'Time': datetime(2015, 1, 1),
+                'Source': 'string',
+                'Resources': [
+                    'string',
+                ],
+                'DetailType': 'string',
+                'Detail': 'string',
+                'EventBusName': 'string',
+                'TraceHeader': 'string'
+            },
+        ],
+        EndpointId='string'
+    )
+    
+  :type Entries: list
+  :param Entries: **[REQUIRED]** 
+
+    The entry that defines an event in your system. You can specify several parameters for the entry such as the source and type of the event, resources associated with the event, and so on.
+
+    
+
+  
+    - *(dict) --* 
+
+      Represents an event to be submitted.
+
+      
+
+    
+      - **Time** *(datetime) --* 
+
+        The time stamp of the event, per `RFC3339 <https://www.rfc-editor.org/rfc/rfc3339.txt>`__. If no time stamp is provided, the time stamp of the `PutEvents <https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_PutEvents.html>`__ call is used.
+
+        
+
+      
+      - **Source** *(string) --* 
+
+        The source of the event.
+
+         
+
+        .. note::
+
+          
+
+          ``Detail``, ``DetailType``, and ``Source`` are required for EventBridge to successfully send an event to an event bus. If you include event entries in a request that do not include each of those properties, EventBridge fails that entry. If you submit a request in which *none* of the entries have each of these properties, EventBridge fails the entire request.
+
+          
+
+        
+
+      
+      - **Resources** *(list) --* 
+
+        Amazon Web Services resources, identified by Amazon Resource Name (ARN), which the event primarily concerns. Any number, including zero, may be present.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **DetailType** *(string) --* 
+
+        Free-form string, with a maximum of 128 characters, used to decide what fields to expect in the event detail.
+
+         
+
+        .. note::
+
+          
+
+          ``Detail``, ``DetailType``, and ``Source`` are required for EventBridge to successfully send an event to an event bus. If you include event entries in a request that do not include each of those properties, EventBridge fails that entry. If you submit a request in which *none* of the entries have each of these properties, EventBridge fails the entire request.
+
+          
+
+        
+
+      
+      - **Detail** *(string) --* 
+
+        A valid JSON object. There is no other schema imposed. The JSON object may contain fields and nested sub-objects.
+
+         
+
+        .. note::
+
+          
+
+          ``Detail``, ``DetailType``, and ``Source`` are required for EventBridge to successfully send an event to an event bus. If you include event entries in a request that do not include each of those properties, EventBridge fails that entry. If you submit a request in which *none* of the entries have each of these properties, EventBridge fails the entire request.
+
+          
+
+        
+
+      
+      - **EventBusName** *(string) --* 
+
+        The name or ARN of the event bus to receive the event. Only the rules that are associated with this event bus are used to match the event. If you omit this, the default event bus is used.
+
+         
+
+        .. note::
+
+          
+
+          If you're using a global endpoint with a custom bus, you can enter either the name or Amazon Resource Name (ARN) of the event bus in either the primary or secondary Region here. EventBridge then determines the corresponding event bus in the other Region based on the endpoint referenced by the ``EndpointId``. Specifying the event bus ARN is preferred.
+
+          
+
+        
+
+      
+      - **TraceHeader** *(string) --* 
+
+        An X-Ray trace header, which is an http header (X-Amzn-Trace-Id) that contains the trace-id associated with the event.
+
+         
+
+        To learn more about X-Ray trace headers, see `Tracing header <https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-tracingheader>`__ in the X-Ray Developer Guide.
+
+        
+
+      
+    
+
+  :type EndpointId: string
+  :param EndpointId: 
+
+    The URL subdomain of the endpoint. For example, if the URL for Endpoint is https://abcde.veo.endpoints.event.amazonaws.com, then the EndpointId is ``abcde.veo``.
+
+     
+
+    .. warning::
+
+       
+
+      When using Java, you must include ``auth-crt`` on the class path.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FailedEntryCount': 123,
+          'Entries': [
+              {
+                  'EventId': 'string',
+                  'ErrorCode': 'string',
+                  'ErrorMessage': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FailedEntryCount** *(integer) --* 
+
+        The number of failed entries.
+
+        
+      
+
+      - **Entries** *(list) --* 
+
+        The successfully and unsuccessfully ingested events results. If the ingestion was successful, the entry has the event ID in it. Otherwise, you can use the error code and error message to identify the problem with the entry.
+
+         
+
+        For each record, the index of the response element is the same as the index in the request array.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents the results of an event submitted to an event bus.
+
+           
+
+          If the submission was successful, the entry has the event ID in it. Otherwise, you can use the error code and error message to identify the problem with the entry.
+
+           
+
+          For information about the errors that are common to all actions, see `Common Errors <https://docs.aws.amazon.com/eventbridge/latest/APIReference/CommonErrors.html>`__.
+
+          
+          
+
+          - **EventId** *(string) --* 
+
+            The ID of the event.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code that indicates why the event submission failed.
+
+             
+
+            Retryable errors include:
+
+             
+
+            
+            * ``InternalFailure`` The request processing has failed because of an unknown error, exception or failure.
+             
+            * ``ThrottlingException`` The request was denied due to request throttling.
+            
+
+             
+
+            Non-retryable errors include:
+
+             
+
+            
+            * ``AccessDeniedException`` You do not have sufficient access to perform this action.
+             
+            * ``InvalidAccountIdException`` The account ID provided is not valid.
+             
+            * ``InvalidArgument`` A specified parameter is not valid.
+             
+            * ``MalformedDetail`` The JSON provided is not valid.
+             
+            * ``RedactionFailure`` Redacting the CloudTrail event failed.
+             
+            * ``NotAuthorizedForSourceException`` You do not have permissions to publish events with this source onto this event bus.
+             
+            * ``NotAuthorizedForDetailTypeException`` You do not have permissions to publish events with this detail type onto this event bus.
+            
+
+            
+          
+
+          - **ErrorMessage** *(string) --* 
+
+            The error message that explains why the event submission failed.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EventBridge.Client.exceptions.InternalException`
+
+  

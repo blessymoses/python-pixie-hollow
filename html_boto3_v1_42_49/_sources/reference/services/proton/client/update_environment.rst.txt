@@ -1,0 +1,523 @@
+:doc:`Proton <../../proton>` / Client / update_environment
+
+******************
+update_environment
+******************
+
+
+
+.. py:method:: Proton.Client.update_environment(**kwargs)
+
+  
+
+  Update an environment.
+
+   
+
+  If the environment is associated with an environment account connection, *don't* update or include the ``protonServiceRoleArn`` and ``provisioningRepository`` parameter to update or connect to an environment account connection.
+
+   
+
+  You can only update to a new environment account connection if that connection was created in the same environment account that the current environment account connection was created in. The account connection must also be associated with the current environment.
+
+   
+
+  If the environment *isn't* associated with an environment account connection, *don't* update or include the ``environmentAccountConnectionId`` parameter. You *can't* update or connect the environment to an environment account connection if it *isn't* already associated with an environment connection.
+
+   
+
+  You can update either the ``environmentAccountConnectionId`` or ``protonServiceRoleArn`` parameter and value. You can’t update both.
+
+   
+
+  If the environment was configured for Amazon Web Services-managed provisioning, omit the ``provisioningRepository`` parameter.
+
+   
+
+  If the environment was configured for self-managed provisioning, specify the ``provisioningRepository`` parameter and omit the ``protonServiceRoleArn`` and ``environmentAccountConnectionId`` parameters.
+
+   
+
+  For more information, see `Environments <https://docs.aws.amazon.com/proton/latest/userguide/ag-environments.html>`__ and `Provisioning methods <https://docs.aws.amazon.com/proton/latest/userguide/ag-works-prov-methods.html>`__ in the *Proton User Guide*.
+
+   
+
+  There are four modes for updating an environment. The ``deploymentType`` field defines the mode.
+
+      
+
+  ``NONE``
+
+   
+
+  In this mode, a deployment *doesn't* occur. Only the requested metadata parameters are updated.
+
+      
+
+  ``CURRENT_VERSION``
+
+   
+
+  In this mode, the environment is deployed and updated with the new spec that you provide. Only requested parameters are updated. *Don’t* include minor or major version parameters when you use this ``deployment-type``.
+
+      
+
+  ``MINOR_VERSION``
+
+   
+
+  In this mode, the environment is deployed and updated with the published, recommended (latest) minor version of the current major version in use, by default. You can also specify a different minor version of the current major version in use.
+
+      
+
+  ``MAJOR_VERSION``
+
+   
+
+  In this mode, the environment is deployed and updated with the published, recommended (latest) major and minor version of the current template, by default. You can also specify a different major version that's higher than the major version in use and a minor version.
+
+  
+
+  .. danger::
+
+        This operation is deprecated and may not function as expected. This operation should not be used going forward and is only kept for the purpose of backwards compatiblity.
+
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/proton-2020-07-20/UpdateEnvironment>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_environment(
+        codebuildRoleArn='string',
+        componentRoleArn='string',
+        deploymentType='NONE'|'CURRENT_VERSION'|'MINOR_VERSION'|'MAJOR_VERSION',
+        description='string',
+        environmentAccountConnectionId='string',
+        name='string',
+        protonServiceRoleArn='string',
+        provisioningRepository={
+            'branch': 'string',
+            'name': 'string',
+            'provider': 'GITHUB'|'GITHUB_ENTERPRISE'|'BITBUCKET'
+        },
+        spec='string',
+        templateMajorVersion='string',
+        templateMinorVersion='string'
+    )
+    
+  :type codebuildRoleArn: string
+  :param codebuildRoleArn: 
+
+    The Amazon Resource Name (ARN) of the IAM service role that allows Proton to provision infrastructure using CodeBuild-based provisioning on your behalf.
+
+    
+
+  
+  :type componentRoleArn: string
+  :param componentRoleArn: 
+
+    The Amazon Resource Name (ARN) of the IAM service role that Proton uses when provisioning directly defined components in this environment. It determines the scope of infrastructure that a component can provision.
+
+     
+
+    The environment must have a ``componentRoleArn`` to allow directly defined components to be associated with the environment.
+
+     
+
+    For more information about components, see `Proton components <https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html>`__ in the *Proton User Guide*.
+
+    
+
+  
+  :type deploymentType: string
+  :param deploymentType: **[REQUIRED]** 
+
+    There are four modes for updating an environment. The ``deploymentType`` field defines the mode.
+
+        
+
+    ``NONE``
+
+     
+
+    In this mode, a deployment *doesn't* occur. Only the requested metadata parameters are updated.
+
+        
+
+    ``CURRENT_VERSION``
+
+     
+
+    In this mode, the environment is deployed and updated with the new spec that you provide. Only requested parameters are updated. *Don’t* include major or minor version parameters when you use this ``deployment-type``.
+
+        
+
+    ``MINOR_VERSION``
+
+     
+
+    In this mode, the environment is deployed and updated with the published, recommended (latest) minor version of the current major version in use, by default. You can also specify a different minor version of the current major version in use.
+
+        
+
+    ``MAJOR_VERSION``
+
+     
+
+    In this mode, the environment is deployed and updated with the published, recommended (latest) major and minor version of the current template, by default. You can also specify a different major version that is higher than the major version in use and a minor version (optional).
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    A description of the environment update.
+
+    
+
+  
+  :type environmentAccountConnectionId: string
+  :param environmentAccountConnectionId: 
+
+    The ID of the environment account connection.
+
+     
+
+    You can only update to a new environment account connection if it was created in the same environment account that the current environment account connection was created in and is associated with the current environment.
+
+    
+
+  
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the environment to update.
+
+    
+
+  
+  :type protonServiceRoleArn: string
+  :param protonServiceRoleArn: 
+
+    The Amazon Resource Name (ARN) of the Proton service role that allows Proton to make API calls to other services your behalf.
+
+    
+
+  
+  :type provisioningRepository: dict
+  :param provisioningRepository: 
+
+    The linked repository that you use to host your rendered infrastructure templates for self-managed provisioning. A linked repository is a repository that has been registered with Proton. For more information, see  CreateRepository.
+
+    
+
+  
+    - **branch** *(string) --* **[REQUIRED]** 
+
+      The repository branch.
+
+      
+
+    
+    - **name** *(string) --* **[REQUIRED]** 
+
+      The repository name.
+
+      
+
+    
+    - **provider** *(string) --* **[REQUIRED]** 
+
+      The repository provider.
+
+      
+
+    
+  
+  :type spec: string
+  :param spec: 
+
+    The formatted specification that defines the update.
+
+    
+
+  
+  :type templateMajorVersion: string
+  :param templateMajorVersion: 
+
+    The major version of the environment to update.
+
+    
+
+  
+  :type templateMinorVersion: string
+  :param templateMinorVersion: 
+
+    The minor version of the environment to update.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'environment': {
+              'arn': 'string',
+              'codebuildRoleArn': 'string',
+              'componentRoleArn': 'string',
+              'createdAt': datetime(2015, 1, 1),
+              'deploymentStatus': 'IN_PROGRESS'|'FAILED'|'SUCCEEDED'|'DELETE_IN_PROGRESS'|'DELETE_FAILED'|'DELETE_COMPLETE'|'CANCELLING'|'CANCELLED',
+              'deploymentStatusMessage': 'string',
+              'description': 'string',
+              'environmentAccountConnectionId': 'string',
+              'environmentAccountId': 'string',
+              'lastAttemptedDeploymentId': 'string',
+              'lastDeploymentAttemptedAt': datetime(2015, 1, 1),
+              'lastDeploymentSucceededAt': datetime(2015, 1, 1),
+              'lastSucceededDeploymentId': 'string',
+              'name': 'string',
+              'protonServiceRoleArn': 'string',
+              'provisioning': 'CUSTOMER_MANAGED',
+              'provisioningRepository': {
+                  'arn': 'string',
+                  'branch': 'string',
+                  'name': 'string',
+                  'provider': 'GITHUB'|'GITHUB_ENTERPRISE'|'BITBUCKET'
+              },
+              'spec': 'string',
+              'templateMajorVersion': 'string',
+              'templateMinorVersion': 'string',
+              'templateName': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **environment** *(dict) --* 
+
+        The environment detail data that's returned by Proton.
+
+        
+        
+
+        - **arn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the environment.
+
+          
+        
+
+        - **codebuildRoleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the IAM service role that allows Proton to provision infrastructure using CodeBuild-based provisioning on your behalf.
+
+          
+        
+
+        - **componentRoleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the IAM service role that Proton uses when provisioning directly defined components in this environment. It determines the scope of infrastructure that a component can provision.
+
+           
+
+          The environment must have a ``componentRoleArn`` to allow directly defined components to be associated with the environment.
+
+           
+
+          For more information about components, see `Proton components <https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html>`__ in the *Proton User Guide*.
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The time when the environment was created.
+
+          
+        
+
+        - **deploymentStatus** *(string) --* 
+
+          The environment deployment status.
+
+          
+        
+
+        - **deploymentStatusMessage** *(string) --* 
+
+          An environment deployment status message.
+
+          
+        
+
+        - **description** *(string) --* 
+
+          The description of the environment.
+
+          
+        
+
+        - **environmentAccountConnectionId** *(string) --* 
+
+          The ID of the environment account connection that's used to provision infrastructure resources in an environment account.
+
+          
+        
+
+        - **environmentAccountId** *(string) --* 
+
+          The ID of the environment account that the environment infrastructure resources are provisioned in.
+
+          
+        
+
+        - **lastAttemptedDeploymentId** *(string) --* 
+
+          The ID of the last attempted deployment of this environment.
+
+          
+        
+
+        - **lastDeploymentAttemptedAt** *(datetime) --* 
+
+          The time when a deployment of the environment was last attempted.
+
+          
+        
+
+        - **lastDeploymentSucceededAt** *(datetime) --* 
+
+          The time when the environment was last deployed successfully.
+
+          
+        
+
+        - **lastSucceededDeploymentId** *(string) --* 
+
+          The ID of the last successful deployment of this environment.
+
+          
+        
+
+        - **name** *(string) --* 
+
+          The name of the environment.
+
+          
+        
+
+        - **protonServiceRoleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the Proton service role that allows Proton to make calls to other services on your behalf.
+
+          
+        
+
+        - **provisioning** *(string) --* 
+
+          When included, indicates that the environment template is for customer provisioned and managed infrastructure.
+
+          
+        
+
+        - **provisioningRepository** *(dict) --* 
+
+          The linked repository that you use to host your rendered infrastructure templates for self-managed provisioning. A linked repository is a repository that has been registered with Proton. For more information, see `CreateRepository <https://docs.aws.amazon.com/proton/latest/APIReference/API_CreateRepository.html>`__.
+
+          
+          
+
+          - **arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the linked repository.
+
+            
+          
+
+          - **branch** *(string) --* 
+
+            The repository branch.
+
+            
+          
+
+          - **name** *(string) --* 
+
+            The repository name.
+
+            
+          
+
+          - **provider** *(string) --* 
+
+            The repository provider.
+
+            
+      
+        
+
+        - **spec** *(string) --* 
+
+          The environment spec.
+
+          
+        
+
+        - **templateMajorVersion** *(string) --* 
+
+          The major version of the environment template.
+
+          
+        
+
+        - **templateMinorVersion** *(string) --* 
+
+          The minor version of the environment template.
+
+          
+        
+
+        - **templateName** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the environment template.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Proton.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Proton.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Proton.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Proton.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`Proton.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Proton.Client.exceptions.InternalServerException`
+
+  

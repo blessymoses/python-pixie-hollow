@@ -1,0 +1,180 @@
+:doc:`ElasticLoadBalancing <../../elb>` / Client / register_instances_with_load_balancer
+
+*************************************
+register_instances_with_load_balancer
+*************************************
+
+
+
+.. py:method:: ElasticLoadBalancing.Client.register_instances_with_load_balancer(**kwargs)
+
+  
+
+  Adds the specified instances to the specified load balancer.
+
+   
+
+  The instance must be a running instance in the same network as the load balancer (EC2-Classic or the same VPC). If you have EC2-Classic instances and a load balancer in a VPC with ClassicLink enabled, you can link the EC2-Classic instances to that VPC and then register the linked EC2-Classic instances with the load balancer in the VPC.
+
+   
+
+  Note that ``RegisterInstanceWithLoadBalancer`` completes when the request has been registered. Instance registration takes a little time to complete. To check the state of the registered instances, use  DescribeLoadBalancers or  DescribeInstanceHealth.
+
+   
+
+  After the instance is registered, it starts receiving traffic and requests from the load balancer. Any instance that is not in one of the Availability Zones registered for the load balancer is moved to the ``OutOfService`` state. If an Availability Zone is added to the load balancer later, any instances registered with the load balancer move to the ``InService`` state.
+
+   
+
+  To deregister instances from a load balancer, use  DeregisterInstancesFromLoadBalancer.
+
+   
+
+  For more information, see `Register or De-Register EC2 Instances <https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-deregister-register-instances.html>`__ in the *Classic Load Balancers Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticloadbalancing-2012-06-01/RegisterInstancesWithLoadBalancer>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.register_instances_with_load_balancer(
+        LoadBalancerName='string',
+        Instances=[
+            {
+                'InstanceId': 'string'
+            },
+        ]
+    )
+    
+  :type LoadBalancerName: string
+  :param LoadBalancerName: **[REQUIRED]** 
+
+    The name of the load balancer.
+
+    
+
+  
+  :type Instances: list
+  :param Instances: **[REQUIRED]** 
+
+    The IDs of the instances.
+
+    
+
+  
+    - *(dict) --* 
+
+      The ID of an EC2 instance.
+
+      
+
+    
+      - **InstanceId** *(string) --* 
+
+        The instance ID.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Instances': [
+              {
+                  'InstanceId': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains the output of RegisterInstancesWithLoadBalancer.
+
+      
+      
+
+      - **Instances** *(list) --* 
+
+        The updated list of instances for the load balancer.
+
+        
+        
+
+        - *(dict) --* 
+
+          The ID of an EC2 instance.
+
+          
+          
+
+          - **InstanceId** *(string) --* 
+
+            The instance ID.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.AccessPointNotFoundException`
+
+  
+  *   :py:class:`ElasticLoadBalancing.Client.exceptions.InvalidEndPointException`
+
+  
+
+  **Examples**
+
+  This example registers the specified instance with the specified load balancer.
+  ::
+
+    response = client.register_instances_with_load_balancer(
+        Instances=[
+            {
+                'InstanceId': 'i-d6f6fae3',
+            },
+        ],
+        LoadBalancerName='my-load-balancer',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Instances': [
+            {
+                'InstanceId': 'i-d6f6fae3',
+            },
+            {
+                'InstanceId': 'i-207d9717',
+            },
+            {
+                'InstanceId': 'i-afefb49b',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

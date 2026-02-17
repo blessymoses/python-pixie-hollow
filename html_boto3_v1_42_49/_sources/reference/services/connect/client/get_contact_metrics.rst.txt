@@ -1,0 +1,213 @@
+:doc:`Connect <../../connect>` / Client / get_contact_metrics
+
+*******************
+get_contact_metrics
+*******************
+
+
+
+.. py:method:: Connect.Client.get_contact_metrics(**kwargs)
+
+  
+
+  Retrieves contact metric data for a specified contact.
+
+   
+
+  **Use cases**
+
+   
+
+  Following are common use cases for position in queue and estimated wait time:
+
+   
+
+  
+  * Customer-Facing Wait Time Announcements - Display or announce the estimated wait time and position in queue to customers before or during their queue experience.
+   
+  * Callback Offerings - Offer customers a callback option when the estimated wait time or position in queue exceeds a defined threshold.
+   
+  * Queue Routing Decisions - Route incoming contacts to less congested queues by comparing estimated wait time and position in queue across multiple queues.
+   
+  * Self-Service Deflection - Redirect customers to self-service options like chatbots or FAQs when estimated wait time is high or position in queue is unfavorable.
+  
+
+   
+
+  **Important things to know**
+
+   
+
+  
+  * Metrics are only available while the contact is actively in queue.
+   
+  * For more information, see the `Position in queue <https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html>`__ metric in the *Amazon Connect Administrator Guide*.
+  
+
+   
+
+  **Endpoints**: See `Amazon Connect endpoints and quotas <https://docs.aws.amazon.com/general/latest/gr/connect_region.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connect-2017-08-08/GetContactMetrics>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_contact_metrics(
+        InstanceId='string',
+        ContactId='string',
+        Metrics=[
+            {
+                'Name': 'ESTIMATED_WAIT_TIME'|'POSITION_IN_QUEUE'
+            },
+        ]
+    )
+    
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The identifier of the Amazon Connect instance. You can `find the instance ID <https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html>`__ in the Amazon Resource Name (ARN) of the instance.
+
+    
+
+  
+  :type ContactId: string
+  :param ContactId: **[REQUIRED]** 
+
+    The identifier of the contact in this instance of Amazon Connect.
+
+    
+
+  
+  :type Metrics: list
+  :param Metrics: **[REQUIRED]** 
+
+    A list of contact level metrics to retrieve.Supported metrics include POSITION_IN_QUEUE (the contact's current position in the queue) and ESTIMATED_WAIT_TIME (the predicted time in seconds until the contact is connected to an agent)
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains the details of a metric to be retrieved for a contact. Use this object to specify which contact level metrics you want to include in your GetContactMetrics request.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The name of the metric to retrieve. Supported values are POSITION_IN_QUEUE (returns the contact's current position in the queue) and ESTIMATED_WAIT_TIME (returns the predicted wait time in seconds).
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'MetricResults': [
+              {
+                  'Name': 'ESTIMATED_WAIT_TIME'|'POSITION_IN_QUEUE',
+                  'Value': {
+                      'Number': 123.0
+                  }
+              },
+          ],
+          'Id': 'string',
+          'Arn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **MetricResults** *(list) --* 
+
+        A list of metric results containing the calculated values for each requested metric. Each result includes the metric name and its corresponding value. For example, POSITION_IN_QUEUE returns a numeric value representing the contact's position in queue, and ESTIMATED_WAIT_TIME returns the predicted wait time in seconds.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the result of a requested metric for the contact. This object is returned as part of the GetContactMetrics response and includes both the metric name and its calculated value.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The name of the metric that was retrieved. This corresponds to the metric name specified in the request, such as POSITION_IN_QUEUE or ESTIMATED_WAIT_TIME.
+
+            
+          
+
+          - **Value** *(dict) --* 
+
+            The calculated value for the requested metric. This object contains the numeric result based on the contact's current state in the queue.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``Number``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **Number** *(float) --* 
+
+              The numeric value of the metric result. For POSITION_IN_QUEUE, this represents the contact's current position in the queue (e.g., 3.00 means third in line). For ESTIMATED_WAIT_TIME, this represents the predicted wait time in seconds (e.g., 120.00 means approximately 2 minutes).
+
+              
+        
+      
+    
+      
+
+      - **Id** *(string) --* 
+
+        The unique identifier of the contact for which metrics were retrieved. This matches the ContactId provided in the request.
+
+        
+      
+
+      - **Arn** *(string) --* 
+
+        The ARN of the contact for which metrics were retrieved.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InternalServiceException`
+
+  

@@ -1,0 +1,210 @@
+:doc:`CloudFront <../../cloudfront>` / Client / list_domain_conflicts
+
+*********************
+list_domain_conflicts
+*********************
+
+
+
+.. py:method:: CloudFront.Client.list_domain_conflicts(**kwargs)
+
+  
+
+  
+
+  .. note::
+
+    
+
+    We recommend that you use the ``ListDomainConflicts`` API operation to check for domain conflicts, as it supports both standard distributions and distribution tenants. `ListConflictingAliases <https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListConflictingAliases.html>`__ performs similar checks but only supports standard distributions.
+
+    
+
+   
+
+  Lists existing domain associations that conflict with the domain that you specify.
+
+   
+
+  You can use this API operation to identify potential domain conflicts when moving domains between standard distributions and/or distribution tenants. Domain conflicts must be resolved first before they can be moved.
+
+   
+
+  For example, if you provide ``www.example.com`` as input, the returned list can include ``www.example.com`` and the overlapping wildcard alternate domain name ( ``.example.com``), if they exist. If you provide ``.example.com`` as input, the returned list can include ``*.example.com`` and any alternate domain names covered by that wildcard (for example, ``www.example.com``, ``test.example.com``, ``dev.example.com``, and so on), if they exist.
+
+   
+
+  To list conflicting domains, specify the following:
+
+   
+
+  
+  * The domain to search for
+   
+  * The ID of a standard distribution or distribution tenant in your account that has an attached TLS certificate, which covers the specified domain
+  
+
+   
+
+  For more information, including how to set up the standard distribution or distribution tenant, and the certificate, see `Moving an alternate domain name to a different standard distribution or distribution tenant <https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move>`__ in the *Amazon CloudFront Developer Guide*.
+
+   
+
+  You can optionally specify the maximum number of items to receive in the response. If the total number of items in the list exceeds the maximum that you specify, or the default maximum, the response is paginated. To get the next page of items, send a subsequent request that specifies the ``NextMarker`` value from the current response as the ``Marker`` value in the subsequent request.
+
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDomainConflicts>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_domain_conflicts(
+        Domain='string',
+        DomainControlValidationResource={
+            'DistributionId': 'string',
+            'DistributionTenantId': 'string'
+        },
+        MaxItems=123,
+        Marker='string'
+    )
+    
+  :type Domain: string
+  :param Domain: **[REQUIRED]** 
+
+    The domain to check for conflicts.
+
+    
+
+  
+  :type DomainControlValidationResource: dict
+  :param DomainControlValidationResource: **[REQUIRED]** 
+
+    The distribution resource identifier. This can be the standard distribution or distribution tenant that has a valid certificate, which covers the domain that you specify.
+
+    
+
+  
+    - **DistributionId** *(string) --* 
+
+      The ID of the multi-tenant distribution.
+
+      
+
+    
+    - **DistributionTenantId** *(string) --* 
+
+      The ID of the distribution tenant.
+
+      
+
+    
+  
+  :type MaxItems: integer
+  :param MaxItems: 
+
+    The maximum number of domain conflicts to return.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    The marker for the next set of domain conflicts.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DomainConflicts': [
+              {
+                  'Domain': 'string',
+                  'ResourceType': 'distribution'|'distribution-tenant',
+                  'ResourceId': 'string',
+                  'AccountId': 'string'
+              },
+          ],
+          'NextMarker': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DomainConflicts** *(list) --* 
+
+        Contains details about the domain conflicts.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about the domain conflict. Use this information to determine the affected domain, the related resource, and the affected Amazon Web Services account.
+
+          
+          
+
+          - **Domain** *(string) --* 
+
+            The domain used to find existing conflicts for domain configurations.
+
+            
+          
+
+          - **ResourceType** *(string) --* 
+
+            The CloudFront resource type that has a domain conflict.
+
+            
+          
+
+          - **ResourceId** *(string) --* 
+
+            The ID of the resource that has a domain conflict.
+
+            
+          
+
+          - **AccountId** *(string) --* 
+
+            The ID of the Amazon Web Services account for the domain conflict.
+
+            
+      
+    
+      
+
+      - **NextMarker** *(string) --* 
+
+        A token used for pagination of results returned in the response. You can use the token from the previous request to define where the current request should begin.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFront.Client.exceptions.AccessDenied`
+
+  
+  *   :py:class:`CloudFront.Client.exceptions.EntityNotFound`
+
+  
+  *   :py:class:`CloudFront.Client.exceptions.InvalidArgument`
+
+  

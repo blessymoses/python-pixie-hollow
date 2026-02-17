@@ -1,0 +1,437 @@
+:doc:`WickrAdminAPI <../../wickr>` / Client / batch_create_user
+
+*****************
+batch_create_user
+*****************
+
+
+
+.. py:method:: WickrAdminAPI.Client.batch_create_user(**kwargs)
+
+  
+
+  Creates multiple users in a specified Wickr network. This operation allows you to provision multiple user accounts simultaneously, optionally specifying security groups, and validation requirements for each user.
+
+   
+
+  .. note::
+
+    
+
+    ``codeValidation``, ``inviteCode``, and ``inviteCodeTtl`` are restricted to networks under preview only.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/wickr-2024-02-01/BatchCreateUser>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_create_user(
+        networkId='string',
+        users=[
+            {
+                'firstName': 'string',
+                'lastName': 'string',
+                'securityGroupIds': [
+                    'string',
+                ],
+                'username': 'string',
+                'inviteCode': 'string',
+                'inviteCodeTtl': 123,
+                'codeValidation': True|False
+            },
+        ],
+        clientToken='string'
+    )
+    
+  :type networkId: string
+  :param networkId: **[REQUIRED]** 
+
+    The ID of the Wickr network where users will be created.
+
+    
+
+  
+  :type users: list
+  :param users: **[REQUIRED]** 
+
+    A list of user objects containing the details for each user to be created, including username, name, security groups, and optional invite codes. Maximum 50 users per batch request.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains the details for a single user to be created in a batch user creation request.
+
+       
+
+      .. note::
+
+        
+
+        A user can only be assigned to a single security group. Attempting to add a user to multiple security groups is not supported and will result in an error.
+
+        
+
+       
+
+      .. note::
+
+        
+
+        ``codeValidation``, ``inviteCode``, and ``inviteCodeTtl`` are restricted to networks under preview only.
+
+        
+
+      
+
+    
+      - **firstName** *(string) --* 
+
+        The first name of the user.
+
+        
+
+      
+      - **lastName** *(string) --* 
+
+        The last name of the user.
+
+        
+
+      
+      - **securityGroupIds** *(list) --* **[REQUIRED]** 
+
+        A list of security group IDs to which the user should be assigned.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **username** *(string) --* **[REQUIRED]** 
+
+        The email address or username for the user. Must be unique within the network.
+
+        
+
+      
+      - **inviteCode** *(string) --* 
+
+        A custom invite code for the user. If not provided, one will be generated automatically.
+
+        
+
+      
+      - **inviteCodeTtl** *(integer) --* 
+
+        The time-to-live for the invite code in days. After this period, the invite code will expire.
+
+        
+
+      
+      - **codeValidation** *(boolean) --* 
+
+        Indicates whether the user can be verified through a custom invite code.
+
+        
+
+      
+    
+
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique identifier for this request to ensure idempotency. If you retry a request with the same client token, the service will return the same response without creating duplicate users.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'message': 'string',
+          'successful': [
+              {
+                  'userId': 'string',
+                  'firstName': 'string',
+                  'lastName': 'string',
+                  'username': 'string',
+                  'securityGroups': [
+                      'string',
+                  ],
+                  'isAdmin': True|False,
+                  'suspended': True|False,
+                  'status': 123,
+                  'otpEnabled': True|False,
+                  'scimId': 'string',
+                  'type': 'string',
+                  'cell': 'string',
+                  'countryCode': 'string',
+                  'challengeFailures': 123,
+                  'isInviteExpired': True|False,
+                  'isUser': True|False,
+                  'inviteCode': 'string',
+                  'codeValidation': True|False,
+                  'uname': 'string'
+              },
+          ],
+          'failed': [
+              {
+                  'field': 'string',
+                  'reason': 'string',
+                  'userId': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **message** *(string) --* 
+
+        A message indicating the overall result of the batch operation.
+
+        
+      
+
+      - **successful** *(list) --* 
+
+        A list of user objects that were successfully created, including their assigned user IDs and invite codes.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents a user account in a Wickr network with detailed profile information, status, security settings, and authentication details.
+
+           
+
+          .. note::
+
+            
+
+            codeValidation, inviteCode and inviteCodeTtl are restricted to networks under preview only.
+
+            
+
+          
+          
+
+          - **userId** *(string) --* 
+
+            The unique identifier for the user within the network.
+
+            
+          
+
+          - **firstName** *(string) --* 
+
+            The first name of the user.
+
+            
+          
+
+          - **lastName** *(string) --* 
+
+            The last name of the user.
+
+            
+          
+
+          - **username** *(string) --* 
+
+            The email address or username of the user. For bots, this must end in 'bot'.
+
+            
+          
+
+          - **securityGroups** *(list) --* 
+
+            A list of security group IDs to which the user is assigned, determining their permissions and feature access.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **isAdmin** *(boolean) --* 
+
+            Indicates whether the user has administrator privileges in the network.
+
+            
+          
+
+          - **suspended** *(boolean) --* 
+
+            Indicates whether the user is currently suspended and unable to access the network.
+
+            
+          
+
+          - **status** *(integer) --* 
+
+            The current status of the user (1 for pending invitation, 2 for active).
+
+            
+          
+
+          - **otpEnabled** *(boolean) --* 
+
+            Indicates whether one-time password (OTP) authentication is enabled for the user.
+
+            
+          
+
+          - **scimId** *(string) --* 
+
+            The SCIM (System for Cross-domain Identity Management) identifier for the user, used for identity synchronization. Currently not used.
+
+            
+          
+
+          - **type** *(string) --* 
+
+            The descriptive type of the user account (e.g., 'user').
+
+            
+          
+
+          - **cell** *(string) --* 
+
+            The phone number minus country code, used for cloud deployments.
+
+            
+          
+
+          - **countryCode** *(string) --* 
+
+            The country code for the user's phone number, used for cloud deployments.
+
+            
+          
+
+          - **challengeFailures** *(integer) --* 
+
+            The number of failed password attempts for enterprise deployments, used for account lockout policies.
+
+            
+          
+
+          - **isInviteExpired** *(boolean) --* 
+
+            Indicates whether the user's email invitation code has expired, applicable to cloud deployments.
+
+            
+          
+
+          - **isUser** *(boolean) --* 
+
+            Indicates whether this account is a user (as opposed to a bot or other account type).
+
+            
+          
+
+          - **inviteCode** *(string) --* 
+
+            The invitation code for this user, used during registration to join the network.
+
+            
+          
+
+          - **codeValidation** *(boolean) --* 
+
+            Indicates whether the user can be verified through a custom invite code.
+
+            
+          
+
+          - **uname** *(string) --* 
+
+            The unique identifier for the user.
+
+            
+      
+    
+      
+
+      - **failed** *(list) --* 
+
+        A list of user creation attempts that failed, including error details explaining why each user could not be created.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains error information for a user operation that failed in a batch user request.
+
+          
+          
+
+          - **field** *(string) --* 
+
+            The field that caused the error.
+
+            
+          
+
+          - **reason** *(string) --* 
+
+            A description of why the user operation failed.
+
+            
+          
+
+          - **userId** *(string) --* 
+
+            The user ID associated with the failed operation.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`WickrAdminAPI.Client.exceptions.ValidationError`
+
+  
+  *   :py:class:`WickrAdminAPI.Client.exceptions.BadRequestError`
+
+  
+  *   :py:class:`WickrAdminAPI.Client.exceptions.ResourceNotFoundError`
+
+  
+  *   :py:class:`WickrAdminAPI.Client.exceptions.ForbiddenError`
+
+  
+  *   :py:class:`WickrAdminAPI.Client.exceptions.UnauthorizedError`
+
+  
+  *   :py:class:`WickrAdminAPI.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`WickrAdminAPI.Client.exceptions.RateLimitError`
+
+  

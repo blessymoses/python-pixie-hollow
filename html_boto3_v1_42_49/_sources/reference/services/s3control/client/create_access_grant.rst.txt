@@ -1,0 +1,339 @@
+:doc:`S3Control <../../s3control>` / Client / create_access_grant
+
+*******************
+create_access_grant
+*******************
+
+
+
+.. py:method:: S3Control.Client.create_access_grant(**kwargs)
+
+  
+
+  Creates an access grant that gives a grantee access to your S3 data. The grantee can be an IAM user or role or a directory user, or group. Before you can create a grant, you must have an S3 Access Grants instance in the same Region as the S3 data. You can create an S3 Access Grants instance using the `CreateAccessGrantsInstance <https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_CreateAccessGrantsInstance.html>`__. You must also have registered at least one S3 data location in your S3 Access Grants instance using `CreateAccessGrantsLocation <https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_CreateAccessGrantsLocation.html>`__.
+
+    Permissions  
+
+  You must have the ``s3:CreateAccessGrant`` permission to use this operation.
+
+    Additional Permissions  
+
+  For any directory identity - ``sso:DescribeInstance`` and ``sso:DescribeApplication``
+
+   
+
+  For directory users - ``identitystore:DescribeUser``
+
+   
+
+  For directory groups - ``identitystore:DescribeGroup``
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3control-2018-08-20/CreateAccessGrant>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_access_grant(
+        AccountId='string',
+        AccessGrantsLocationId='string',
+        AccessGrantsLocationConfiguration={
+            'S3SubPrefix': 'string'
+        },
+        Grantee={
+            'GranteeType': 'DIRECTORY_USER'|'DIRECTORY_GROUP'|'IAM',
+            'GranteeIdentifier': 'string'
+        },
+        Permission='READ'|'WRITE'|'READWRITE',
+        ApplicationArn='string',
+        S3PrefixType='Object',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type AccountId: string
+  :param AccountId: **[REQUIRED]** 
+
+    The Amazon Web Services account ID of the S3 Access Grants instance.
+
+    
+
+  
+  :type AccessGrantsLocationId: string
+  :param AccessGrantsLocationId: **[REQUIRED]** 
+
+    The ID of the registered location to which you are granting access. S3 Access Grants assigns this ID when you register the location. S3 Access Grants assigns the ID ``default`` to the default location ``s3://`` and assigns an auto-generated ID to other locations that you register.
+
+     
+
+    If you are passing the ``default`` location, you cannot create an access grant for the entire default location. You must also specify a bucket or a bucket and prefix in the ``Subprefix`` field.
+
+    
+
+  
+  :type AccessGrantsLocationConfiguration: dict
+  :param AccessGrantsLocationConfiguration: 
+
+    The configuration options of the grant location. The grant location is the S3 path to the data to which you are granting access. It contains the ``S3SubPrefix`` field. The grant scope is the result of appending the subprefix to the location scope of the registered location.
+
+    
+
+  
+    - **S3SubPrefix** *(string) --* 
+
+      The ``S3SubPrefix`` is appended to the location scope creating the grant scope. Use this field to narrow the scope of the grant to a subset of the location scope. This field is required if the location scope is the default location ``s3://`` because you cannot create a grant for all of your S3 data in the Region and must narrow the scope. For example, if the location scope is the default location ``s3://``, the ``S3SubPrefx`` can be a <bucket-name>/*, so the full grant scope path would be ``s3://<bucket-name>/*``. Or the ``S3SubPrefx`` can be ``<bucket-name>/<prefix-name>*``, so the full grant scope path would be or ``s3://<bucket-name>/<prefix-name>*``.
+
+       
+
+      If the ``S3SubPrefix`` includes a prefix, append the wildcard character ``*`` after the prefix to indicate that you want to include all object key names in the bucket that start with that prefix.
+
+      
+
+    
+  
+  :type Grantee: dict
+  :param Grantee: **[REQUIRED]** 
+
+    The user, group, or role to which you are granting access. You can grant access to an IAM user or role. If you have added your corporate directory to Amazon Web Services IAM Identity Center and associated your Identity Center instance with your S3 Access Grants instance, the grantee can also be a corporate directory user or group.
+
+    
+
+  
+    - **GranteeType** *(string) --* 
+
+      The type of the grantee to which access has been granted. It can be one of the following values:
+
+       
+
+      
+      * ``IAM`` - An IAM user or role.
+       
+      * ``DIRECTORY_USER`` - Your corporate directory user. You can use this option if you have added your corporate identity directory to IAM Identity Center and associated the IAM Identity Center instance with your S3 Access Grants instance.
+       
+      * ``DIRECTORY_GROUP`` - Your corporate directory group. You can use this option if you have added your corporate identity directory to IAM Identity Center and associated the IAM Identity Center instance with your S3 Access Grants instance.
+      
+
+      
+
+    
+    - **GranteeIdentifier** *(string) --* 
+
+      The unique identifier of the ``Grantee``. If the grantee type is ``IAM``, the identifier is the IAM Amazon Resource Name (ARN) of the user or role. If the grantee type is a directory user or group, the identifier is 128-bit universally unique identifier (UUID) in the format ``a1b2c3d4-5678-90ab-cdef-EXAMPLE11111``. You can obtain this UUID from your Amazon Web Services IAM Identity Center instance.
+
+      
+
+    
+  
+  :type Permission: string
+  :param Permission: **[REQUIRED]** 
+
+    The type of access that you are granting to your S3 data, which can be set to one of the following values:
+
+     
+
+    
+    * ``READ`` – Grant read-only access to the S3 data.
+     
+    * ``WRITE`` – Grant write-only access to the S3 data.
+     
+    * ``READWRITE`` – Grant both read and write access to the S3 data.
+    
+
+    
+
+  
+  :type ApplicationArn: string
+  :param ApplicationArn: 
+
+    The Amazon Resource Name (ARN) of an Amazon Web Services IAM Identity Center application associated with your Identity Center instance. If an application ARN is included in the request to create an access grant, the grantee can only access the S3 data through this application.
+
+    
+
+  
+  :type S3PrefixType: string
+  :param S3PrefixType: 
+
+    The type of ``S3SubPrefix``. The only possible value is ``Object``. Pass this value if the access grant scope is an object. Do not pass this value if the access grant scope is a bucket or a bucket and a prefix.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    The Amazon Web Services resource tags that you are adding to the access grant. Each tag is a label consisting of a user-defined key and value. Tags can help you manage, identify, organize, search for, and filter resources.
+
+    
+
+  
+    - *(dict) --* 
+
+      A key-value pair that you use to label your resources. You can add tags to new resources when you create them, or you can add tags to existing resources. Tags can help you organize, track costs for, and control access to resources.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key of the key-value pair of a tag added to your Amazon Web Services resource. A tag key can be up to 128 Unicode characters in length and is case-sensitive. System created tags that begin with ``aws:`` aren’t supported.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value of the key-value pair of a tag added to your Amazon Web Services resource. A tag value can be up to 256 Unicode characters in length and is case-sensitive.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CreatedAt': datetime(2015, 1, 1),
+          'AccessGrantId': 'string',
+          'AccessGrantArn': 'string',
+          'Grantee': {
+              'GranteeType': 'DIRECTORY_USER'|'DIRECTORY_GROUP'|'IAM',
+              'GranteeIdentifier': 'string'
+          },
+          'AccessGrantsLocationId': 'string',
+          'AccessGrantsLocationConfiguration': {
+              'S3SubPrefix': 'string'
+          },
+          'Permission': 'READ'|'WRITE'|'READWRITE',
+          'ApplicationArn': 'string',
+          'GrantScope': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **CreatedAt** *(datetime) --* 
+
+        The date and time when you created the access grant.
+
+        
+      
+
+      - **AccessGrantId** *(string) --* 
+
+        The ID of the access grant. S3 Access Grants auto-generates this ID when you create the access grant.
+
+        
+      
+
+      - **AccessGrantArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the access grant.
+
+        
+      
+
+      - **Grantee** *(dict) --* 
+
+        The user, group, or role to which you are granting access. You can grant access to an IAM user or role. If you have added your corporate directory to Amazon Web Services IAM Identity Center and associated your Identity Center instance with your S3 Access Grants instance, the grantee can also be a corporate directory user or group.
+
+        
+        
+
+        - **GranteeType** *(string) --* 
+
+          The type of the grantee to which access has been granted. It can be one of the following values:
+
+           
+
+          
+          * ``IAM`` - An IAM user or role.
+           
+          * ``DIRECTORY_USER`` - Your corporate directory user. You can use this option if you have added your corporate identity directory to IAM Identity Center and associated the IAM Identity Center instance with your S3 Access Grants instance.
+           
+          * ``DIRECTORY_GROUP`` - Your corporate directory group. You can use this option if you have added your corporate identity directory to IAM Identity Center and associated the IAM Identity Center instance with your S3 Access Grants instance.
+          
+
+          
+        
+
+        - **GranteeIdentifier** *(string) --* 
+
+          The unique identifier of the ``Grantee``. If the grantee type is ``IAM``, the identifier is the IAM Amazon Resource Name (ARN) of the user or role. If the grantee type is a directory user or group, the identifier is 128-bit universally unique identifier (UUID) in the format ``a1b2c3d4-5678-90ab-cdef-EXAMPLE11111``. You can obtain this UUID from your Amazon Web Services IAM Identity Center instance.
+
+          
+    
+      
+
+      - **AccessGrantsLocationId** *(string) --* 
+
+        The ID of the registered location to which you are granting access. S3 Access Grants assigns this ID when you register the location. S3 Access Grants assigns the ID ``default`` to the default location ``s3://`` and assigns an auto-generated ID to other locations that you register.
+
+        
+      
+
+      - **AccessGrantsLocationConfiguration** *(dict) --* 
+
+        The configuration options of the grant location. The grant location is the S3 path to the data to which you are granting access.
+
+        
+        
+
+        - **S3SubPrefix** *(string) --* 
+
+          The ``S3SubPrefix`` is appended to the location scope creating the grant scope. Use this field to narrow the scope of the grant to a subset of the location scope. This field is required if the location scope is the default location ``s3://`` because you cannot create a grant for all of your S3 data in the Region and must narrow the scope. For example, if the location scope is the default location ``s3://``, the ``S3SubPrefx`` can be a <bucket-name>/*, so the full grant scope path would be ``s3://<bucket-name>/*``. Or the ``S3SubPrefx`` can be ``<bucket-name>/<prefix-name>*``, so the full grant scope path would be or ``s3://<bucket-name>/<prefix-name>*``.
+
+           
+
+          If the ``S3SubPrefix`` includes a prefix, append the wildcard character ``*`` after the prefix to indicate that you want to include all object key names in the bucket that start with that prefix.
+
+          
+    
+      
+
+      - **Permission** *(string) --* 
+
+        The type of access that you are granting to your S3 data, which can be set to one of the following values:
+
+         
+
+        
+        * ``READ`` – Grant read-only access to the S3 data.
+         
+        * ``WRITE`` – Grant write-only access to the S3 data.
+         
+        * ``READWRITE`` – Grant both read and write access to the S3 data.
+        
+
+        
+      
+
+      - **ApplicationArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of an Amazon Web Services IAM Identity Center application associated with your Identity Center instance. If the grant includes an application ARN, the grantee can only access the S3 data through this application.
+
+        
+      
+
+      - **GrantScope** *(string) --* 
+
+        The S3 path of the data to which you are granting access. It is the result of appending the ``Subprefix`` to the location scope.
+
+        
+  

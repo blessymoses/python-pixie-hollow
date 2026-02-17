@@ -1,0 +1,399 @@
+:doc:`NetworkFlowMonitor <../../networkflowmonitor>` / Client / create_monitor
+
+**************
+create_monitor
+**************
+
+
+
+.. py:method:: NetworkFlowMonitor.Client.create_monitor(**kwargs)
+
+  
+
+  Create a monitor for specific network flows between local and remote resources, so that you can monitor network performance for one or several of your workloads. For each monitor, Network Flow Monitor publishes detailed end-to-end performance metrics and a network health indicator (NHI) that informs you whether there were Amazon Web Services network issues for one or more of the network flows tracked by a monitor, during a time period that you choose.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/networkflowmonitor-2023-04-19/CreateMonitor>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_monitor(
+        monitorName='string',
+        localResources=[
+            {
+                'type': 'AWS::EC2::VPC'|'AWS::AvailabilityZone'|'AWS::EC2::Subnet'|'AWS::Region'|'AWS::EKS::Cluster',
+                'identifier': 'string'
+            },
+        ],
+        remoteResources=[
+            {
+                'type': 'AWS::EC2::VPC'|'AWS::AvailabilityZone'|'AWS::EC2::Subnet'|'AWS::AWSService'|'AWS::Region',
+                'identifier': 'string'
+            },
+        ],
+        scopeArn='string',
+        clientToken='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type monitorName: string
+  :param monitorName: **[REQUIRED]** 
+
+    The name of the monitor.
+
+    
+
+  
+  :type localResources: list
+  :param localResources: **[REQUIRED]** 
+
+    The local resources to monitor. A local resource in a workload is the location of the host, or hosts, where the Network Flow Monitor agent is installed. For example, if a workload consists of an interaction between a web service and a backend database (for example, Amazon Dynamo DB), the subnet with the EC2 instance that hosts the web service, which also runs the agent, is the local resource.
+
+     
+
+    Be aware that all local resources must belong to the current Region.
+
+    
+
+  
+    - *(dict) --* 
+
+      A local resource is the host where the agent is installed. Local resources can be a a subnet, a VPC, an Availability Zone, an EKS cluster or an Amazon Web Services Region.
+
+      
+
+    
+      - **type** *(string) --* **[REQUIRED]** 
+
+        The type of the local resource. Valid values are ``AWS::EC2::VPC`` ``AWS::AvailabilityZone``, ``AWS::EC2::Subnet``, ``AWS::EKS::Cluster``, or ``AWS::Region``.
+
+        
+
+      
+      - **identifier** *(string) --* **[REQUIRED]** 
+
+        The identifier of the local resource. The values you can specify are the following:
+
+         
+
+        
+        * For a VPC, subnet or EKS cluster, this identifier is the VPC Amazon Resource Name (ARN), subnet ARN or cluster ARN.
+         
+        * For an Availability Zone, this identifier is the AZ name, for example, us-west-2b.
+         
+        * For a Region, this identifier is the Region name, for example, us-west-2.
+        
+
+        
+
+      
+    
+
+  :type remoteResources: list
+  :param remoteResources: 
+
+    The remote resources to monitor. A remote resource is the other endpoint in the bi-directional flow of a workload, with a local resource. For example, Amazon Dynamo DB can be a remote resource.
+
+     
+
+    When you specify remote resources, be aware that specific combinations of resources are allowed and others are not, including the following constraints:
+
+     
+
+    
+    * All remote resources that you specify must all belong to a single Region.
+     
+    * If you specify Amazon Web Services services as remote resources, any other remote resources that you specify must be in the current Region.
+     
+    * When you specify a remote resource for another Region, you can only specify the ``Region`` resource type. You cannot specify a subnet, VPC, or Availability Zone in another Region.
+     
+    * If you leave the ``RemoteResources`` parameter empty, the monitor will include all network flows that terminate in the current Region.
+    
+
+    
+
+  
+    - *(dict) --* 
+
+      A remote resource is the other endpoint in a network flow. That is, one endpoint is the local resource and the other is the remote resource. The values you can specify are the following:
+
+       
+
+      
+      * For a VPC or subnet, this identifier is the VPC Amazon Resource Name (ARN) or subnet ARN.
+       
+      * For a service, this identifier is one of the following strings: ``S3`` or ``DynamoDB``.
+       
+      * For an Availability Zone, this identifier is the AZ name, for example, us-west-2b.
+       
+      * For a Region, this identifier is the Region name, for example, us-west-2.
+      
+
+       
+
+      When a remote resource is an Amazon Web Services Region, Network Flow Monitor provides network performance measurements up to the edge of the Region that you specify.
+
+      
+
+    
+      - **type** *(string) --* **[REQUIRED]** 
+
+        The type of the remote resource. Valid values are ``AWS::EC2::VPC`` ``AWS::AvailabilityZone``, ``AWS::EC2::Subnet``, ``AWS::AWSService``, or ``AWS::Region``.
+
+        
+
+      
+      - **identifier** *(string) --* **[REQUIRED]** 
+
+        The identifier of the remote resource. For a VPC or subnet, this identifier is the VPC Amazon Resource Name (ARN) or subnet ARN. For an Availability Zone, this identifier is the AZ name, for example, us-west-2b. For an Amazon Web Services Region , this identifier is the Region name, for example, us-west-2.
+
+        
+
+      
+    
+
+  :type scopeArn: string
+  :param scopeArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the scope for the monitor.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive string of up to 64 ASCII characters that you specify to make an idempotent API request. Don't reuse the same client token for other API requests.
+
+    This field is autopopulated if not provided.
+
+  
+  :type tags: dict
+  :param tags: 
+
+    The tags for a monitor. You can add a maximum of 200 tags.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'monitorArn': 'string',
+          'monitorName': 'string',
+          'monitorStatus': 'PENDING'|'ACTIVE'|'INACTIVE'|'ERROR'|'DELETING',
+          'localResources': [
+              {
+                  'type': 'AWS::EC2::VPC'|'AWS::AvailabilityZone'|'AWS::EC2::Subnet'|'AWS::Region'|'AWS::EKS::Cluster',
+                  'identifier': 'string'
+              },
+          ],
+          'remoteResources': [
+              {
+                  'type': 'AWS::EC2::VPC'|'AWS::AvailabilityZone'|'AWS::EC2::Subnet'|'AWS::AWSService'|'AWS::Region',
+                  'identifier': 'string'
+              },
+          ],
+          'createdAt': datetime(2015, 1, 1),
+          'modifiedAt': datetime(2015, 1, 1),
+          'tags': {
+              'string': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **monitorArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the monitor.
+
+        
+      
+
+      - **monitorName** *(string) --* 
+
+        The name of the monitor.
+
+        
+      
+
+      - **monitorStatus** *(string) --* 
+
+        The status of a monitor. The status can be one of the following
+
+         
+
+        
+        * ``PENDING``: The monitor is in the process of being created.
+         
+        * ``ACTIVE``: The monitor is active.
+         
+        * ``INACTIVE``: The monitor is inactive.
+         
+        * ``ERROR``: Monitor creation failed due to an error.
+         
+        * ``DELETING``: The monitor is in the process of being deleted.
+        
+
+        
+      
+
+      - **localResources** *(list) --* 
+
+        The local resources to monitor. A local resource in a workload is the location of hosts where the Network Flow Monitor agent is installed.
+
+        
+        
+
+        - *(dict) --* 
+
+          A local resource is the host where the agent is installed. Local resources can be a a subnet, a VPC, an Availability Zone, an EKS cluster or an Amazon Web Services Region.
+
+          
+          
+
+          - **type** *(string) --* 
+
+            The type of the local resource. Valid values are ``AWS::EC2::VPC`` ``AWS::AvailabilityZone``, ``AWS::EC2::Subnet``, ``AWS::EKS::Cluster``, or ``AWS::Region``.
+
+            
+          
+
+          - **identifier** *(string) --* 
+
+            The identifier of the local resource. The values you can specify are the following:
+
+             
+
+            
+            * For a VPC, subnet or EKS cluster, this identifier is the VPC Amazon Resource Name (ARN), subnet ARN or cluster ARN.
+             
+            * For an Availability Zone, this identifier is the AZ name, for example, us-west-2b.
+             
+            * For a Region, this identifier is the Region name, for example, us-west-2.
+            
+
+            
+      
+    
+      
+
+      - **remoteResources** *(list) --* 
+
+        The remote resources to monitor. A remote resource is the other endpoint specified for the network flow of a workload, with a local resource. For example, Amazon Dynamo DB can be a remote resource.
+
+        
+        
+
+        - *(dict) --* 
+
+          A remote resource is the other endpoint in a network flow. That is, one endpoint is the local resource and the other is the remote resource. The values you can specify are the following:
+
+           
+
+          
+          * For a VPC or subnet, this identifier is the VPC Amazon Resource Name (ARN) or subnet ARN.
+           
+          * For a service, this identifier is one of the following strings: ``S3`` or ``DynamoDB``.
+           
+          * For an Availability Zone, this identifier is the AZ name, for example, us-west-2b.
+           
+          * For a Region, this identifier is the Region name, for example, us-west-2.
+          
+
+           
+
+          When a remote resource is an Amazon Web Services Region, Network Flow Monitor provides network performance measurements up to the edge of the Region that you specify.
+
+          
+          
+
+          - **type** *(string) --* 
+
+            The type of the remote resource. Valid values are ``AWS::EC2::VPC`` ``AWS::AvailabilityZone``, ``AWS::EC2::Subnet``, ``AWS::AWSService``, or ``AWS::Region``.
+
+            
+          
+
+          - **identifier** *(string) --* 
+
+            The identifier of the remote resource. For a VPC or subnet, this identifier is the VPC Amazon Resource Name (ARN) or subnet ARN. For an Availability Zone, this identifier is the AZ name, for example, us-west-2b. For an Amazon Web Services Region , this identifier is the Region name, for example, us-west-2.
+
+            
+      
+    
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The date and time when the monitor was created.
+
+        
+      
+
+      - **modifiedAt** *(datetime) --* 
+
+        The last date and time that the monitor was modified.
+
+        
+      
+
+      - **tags** *(dict) --* 
+
+        The tags for a monitor.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`NetworkFlowMonitor.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`NetworkFlowMonitor.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`NetworkFlowMonitor.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`NetworkFlowMonitor.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`NetworkFlowMonitor.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`NetworkFlowMonitor.Client.exceptions.InternalServerException`
+
+  

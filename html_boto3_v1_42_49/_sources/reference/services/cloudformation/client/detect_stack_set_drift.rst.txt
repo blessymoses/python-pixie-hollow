@@ -1,0 +1,264 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / detect_stack_set_drift
+
+**********************
+detect_stack_set_drift
+**********************
+
+
+
+.. py:method:: CloudFormation.Client.detect_stack_set_drift(**kwargs)
+
+  
+
+  Detect drift on a StackSet. When CloudFormation performs drift detection on a StackSet, it performs drift detection on the stack associated with each stack instance in the StackSet. For more information, see `Performing drift detection on CloudFormation StackSets <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-drift.html>`__.
+
+   
+
+  ``DetectStackSetDrift`` returns the ``OperationId`` of the StackSet drift detection operation. Use this operation id with  DescribeStackSetOperation to monitor the progress of the drift detection operation. The drift detection operation may take some time, depending on the number of stack instances included in the StackSet, in addition to the number of resources included in each stack.
+
+   
+
+  Once the operation has completed, use the following actions to return drift information:
+
+   
+
+  
+  * Use  DescribeStackSet to return detailed information about the stack set, including detailed information about the last *completed* drift operation performed on the StackSet. (Information about drift operations that are in progress isn't included.)
+   
+  * Use  ListStackInstances to return a list of stack instances belonging to the StackSet, including the drift status and last drift time checked of each instance.
+   
+  * Use  DescribeStackInstance to return detailed information about a specific stack instance, including its drift status and last drift time checked.
+  
+
+   
+
+  You can only run a single drift detection operation on a given StackSet at one time.
+
+   
+
+  To stop a drift detection StackSet operation, use  StopStackSetOperation.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/DetectStackSetDrift>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.detect_stack_set_drift(
+        StackSetName='string',
+        OperationPreferences={
+            'RegionConcurrencyType': 'SEQUENTIAL'|'PARALLEL',
+            'RegionOrder': [
+                'string',
+            ],
+            'FailureToleranceCount': 123,
+            'FailureTolerancePercentage': 123,
+            'MaxConcurrentCount': 123,
+            'MaxConcurrentPercentage': 123,
+            'ConcurrencyMode': 'STRICT_FAILURE_TOLERANCE'|'SOFT_FAILURE_TOLERANCE'
+        },
+        OperationId='string',
+        CallAs='SELF'|'DELEGATED_ADMIN'
+    )
+    
+  :type StackSetName: string
+  :param StackSetName: **[REQUIRED]** 
+
+    The name of the StackSet on which to perform the drift detection operation.
+
+    
+
+  
+  :type OperationPreferences: dict
+  :param OperationPreferences: 
+
+    The user-specified preferences for how CloudFormation performs a StackSet operation.
+
+     
+
+    For more information about maximum concurrent accounts and failure tolerance, see `StackSet operation options <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html#stackset-ops-options>`__.
+
+    
+
+  
+    - **RegionConcurrencyType** *(string) --* 
+
+      The concurrency type of deploying StackSets operations in Regions, could be in parallel or one Region at a time.
+
+      
+
+    
+    - **RegionOrder** *(list) --* 
+
+      The order of the Regions where you want to perform the stack operation.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **FailureToleranceCount** *(integer) --* 
+
+      The number of accounts per Region this operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **FailureTolerancePercentage** *(integer) --* 
+
+      The percentage of accounts per Region this stack operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds *down* to the next whole number.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **MaxConcurrentCount** *(integer) --* 
+
+      The maximum number of accounts in which to perform this operation at one time. This can depend on the value of ``FailureToleranceCount`` depending on your ``ConcurrencyMode``. ``MaxConcurrentCount`` is at most one more than the ``FailureToleranceCount`` if you're using ``STRICT_FAILURE_TOLERANCE``.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **MaxConcurrentPercentage** *(integer) --* 
+
+      The maximum percentage of accounts in which to perform this operation at one time.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds down to the next whole number. This is true except in cases where rounding down would result is zero. In this case, CloudFormation sets the number as one instead.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **ConcurrencyMode** *(string) --* 
+
+      Specifies how the concurrency level behaves during the operation execution.
+
+       
+
+      
+      * ``STRICT_FAILURE_TOLERANCE``: This option dynamically lowers the concurrency level to ensure the number of failed accounts never exceeds the value of ``FailureToleranceCount`` +1. The initial actual concurrency is set to the lower of either the value of the ``MaxConcurrentCount``, or the value of ``FailureToleranceCount`` +1. The actual concurrency is then reduced proportionally by the number of failures. This is the default behavior. If failure tolerance or Maximum concurrent accounts are set to percentages, the behavior is similar.
+       
+      * ``SOFT_FAILURE_TOLERANCE``: This option decouples ``FailureToleranceCount`` from the actual concurrency. This allows StackSet operations to run at the concurrency level set by the ``MaxConcurrentCount`` value, or ``MaxConcurrentPercentage``, regardless of the number of failures.
+      
+
+      
+
+    
+  
+  :type OperationId: string
+  :param OperationId: 
+
+    *The ID of the StackSet operation.*
+
+    This field is autopopulated if not provided.
+
+  
+  :type CallAs: string
+  :param CallAs: 
+
+    [Service-managed permissions] Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account.
+
+     
+
+    By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+     
+
+    
+    * If you are signed in to the management account, specify ``SELF``.
+     
+    * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'OperationId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **OperationId** *(string) --* 
+
+        The ID of the drift detection StackSet operation.
+
+         
+
+        You can use this operation ID with  DescribeStackSetOperation to monitor the progress of the drift detection operation.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.InvalidOperationException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationInProgressException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackSetNotFoundException`
+
+  

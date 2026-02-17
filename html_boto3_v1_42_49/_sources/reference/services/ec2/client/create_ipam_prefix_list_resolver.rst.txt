@@ -1,0 +1,628 @@
+:doc:`EC2 <../../ec2>` / Client / create_ipam_prefix_list_resolver
+
+********************************
+create_ipam_prefix_list_resolver
+********************************
+
+
+
+.. py:method:: EC2.Client.create_ipam_prefix_list_resolver(**kwargs)
+
+  
+
+  Creates an IPAM prefix list resolver.
+
+   
+
+  An IPAM prefix list resolver is a component that manages the synchronization between IPAM's CIDR selection rules and customer-managed prefix lists. It automates connectivity configurations by selecting CIDRs from IPAM's database based on your business logic and synchronizing them with prefix lists used in resources such as VPC route tables and security groups.
+
+   
+
+  For more information about IPAM prefix list resolver, see `Automate prefix list updates with IPAM <https://docs.aws.amazon.com/vpc/latest/ipam/automate-prefix-list-updates.html>`__ in the *Amazon VPC IPAM User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/CreateIpamPrefixListResolver>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_ipam_prefix_list_resolver(
+        DryRun=True|False,
+        IpamId='string',
+        Description='string',
+        AddressFamily='ipv4'|'ipv6',
+        Rules=[
+            {
+                'RuleType': 'static-cidr'|'ipam-resource-cidr'|'ipam-pool-cidr',
+                'StaticCidr': 'string',
+                'IpamScopeId': 'string',
+                'ResourceType': 'vpc'|'subnet'|'eip'|'public-ipv4-pool'|'ipv6-pool'|'eni'|'anycast-ip-list',
+                'Conditions': [
+                    {
+                        'Operation': 'equals'|'not-equals'|'subnet-of',
+                        'IpamPoolId': 'string',
+                        'ResourceId': 'string',
+                        'ResourceOwner': 'string',
+                        'ResourceRegion': 'string',
+                        'ResourceTag': {
+                            'Key': 'string',
+                            'Value': 'string'
+                        },
+                        'Cidr': 'string'
+                    },
+                ]
+            },
+        ],
+        TagSpecifications=[
+            {
+                'ResourceType': 'capacity-reservation'|'client-vpn-endpoint'|'customer-gateway'|'carrier-gateway'|'coip-pool'|'declarative-policies-report'|'dedicated-host'|'dhcp-options'|'egress-only-internet-gateway'|'elastic-ip'|'elastic-gpu'|'export-image-task'|'export-instance-task'|'fleet'|'fpga-image'|'host-reservation'|'image'|'image-usage-report'|'import-image-task'|'import-snapshot-task'|'instance'|'instance-event-window'|'internet-gateway'|'ipam'|'ipam-pool'|'ipam-scope'|'ipv4pool-ec2'|'ipv6pool-ec2'|'key-pair'|'launch-template'|'local-gateway'|'local-gateway-route-table'|'local-gateway-virtual-interface'|'local-gateway-virtual-interface-group'|'local-gateway-route-table-vpc-association'|'local-gateway-route-table-virtual-interface-group-association'|'natgateway'|'network-acl'|'network-interface'|'network-insights-analysis'|'network-insights-path'|'network-insights-access-scope'|'network-insights-access-scope-analysis'|'outpost-lag'|'placement-group'|'prefix-list'|'replace-root-volume-task'|'reserved-instances'|'route-table'|'security-group'|'security-group-rule'|'service-link-virtual-interface'|'snapshot'|'spot-fleet-request'|'spot-instances-request'|'subnet'|'subnet-cidr-reservation'|'traffic-mirror-filter'|'traffic-mirror-session'|'traffic-mirror-target'|'transit-gateway'|'transit-gateway-attachment'|'transit-gateway-connect-peer'|'transit-gateway-multicast-domain'|'transit-gateway-policy-table'|'transit-gateway-metering-policy'|'transit-gateway-route-table'|'transit-gateway-route-table-announcement'|'volume'|'vpc'|'vpc-endpoint'|'vpc-endpoint-connection'|'vpc-endpoint-service'|'vpc-endpoint-service-permission'|'vpc-peering-connection'|'vpn-connection'|'vpn-gateway'|'vpc-flow-log'|'capacity-reservation-fleet'|'traffic-mirror-filter-rule'|'vpc-endpoint-connection-device-type'|'verified-access-instance'|'verified-access-group'|'verified-access-endpoint'|'verified-access-policy'|'verified-access-trust-provider'|'vpn-connection-device-type'|'vpc-block-public-access-exclusion'|'vpc-encryption-control'|'route-server'|'route-server-endpoint'|'route-server-peer'|'ipam-resource-discovery'|'ipam-resource-discovery-association'|'instance-connect-endpoint'|'verified-access-endpoint-target'|'ipam-external-resource-verification-token'|'capacity-block'|'mac-modification-task'|'ipam-prefix-list-resolver'|'ipam-policy'|'ipam-prefix-list-resolver-target'|'secondary-interface'|'secondary-network'|'secondary-subnet'|'capacity-manager-data-export'|'vpn-concentrator',
+                'Tags': [
+                    {
+                        'Key': 'string',
+                        'Value': 'string'
+                    },
+                ]
+            },
+        ],
+        ClientToken='string'
+    )
+    
+  :type DryRun: boolean
+  :param DryRun: 
+
+    A check for whether you have the required permissions for the action without actually making the request and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type IpamId: string
+  :param IpamId: **[REQUIRED]** 
+
+    The ID of the IPAM that will serve as the source of the IP address database for CIDR selection. The IPAM must be in the Advanced tier to use this feature.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A description for the IPAM prefix list resolver to help you identify its purpose and configuration.
+
+    
+
+  
+  :type AddressFamily: string
+  :param AddressFamily: **[REQUIRED]** 
+
+    The address family for the IPAM prefix list resolver. Valid values are ``ipv4`` and ``ipv6``. You must create separate resolvers for IPv4 and IPv6 CIDRs as they cannot be mixed in the same resolver.
+
+    
+
+  
+  :type Rules: list
+  :param Rules: 
+
+    The CIDR selection rules for the resolver.
+
+     
+
+    CIDR selection rules define the business logic for selecting CIDRs from IPAM. If a CIDR matches any of the rules, it will be included. If a rule has multiple conditions, the CIDR has to match every condition of that rule. You can create a prefix list resolver without any CIDR selection rules, but it will generate empty versions (containing no CIDRs) until you add rules.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a CIDR selection rule to include in a request. This is used when creating or modifying resolver rules.
+
+       
+
+      CIDR selection rules define the business logic for selecting CIDRs from IPAM. If a CIDR matches any of the rules, it will be included. If a rule has multiple conditions, the CIDR has to match every condition of that rule. You can create a prefix list resolver without any CIDR selection rules, but it will generate empty versions (containing no CIDRs) until you add rules.
+
+       
+
+      There are three rule types. Only 2 of the 3 rule types support conditions - **IPAM pool CIDR** and **Scope resource CIDR**. **Static CIDR** rules cannot have conditions.
+
+       
+
+      
+      * **Static CIDR**: A fixed list of CIDRs that do not change (like a manual list replicated across Regions)
+       
+      * **IPAM pool CIDR**: CIDRs from specific IPAM pools (like all CIDRs from your IPAM production pool) If you choose this option, choose the following: 
+
+        
+        * **IPAM scope**: Select the IPAM scope to search for resources
+         
+        * **Conditions:** 
+
+          
+          * **Property** 
+
+            
+            * **IPAM pool ID**: Select an IPAM pool that contains the resources
+             
+            * **CIDR** (like 10.24.34.0/23)
+            
+
+          
+           
+          * **Operation**: Equals/Not equals
+           
+          * **Value**: The value on which to match the condition
+          
+
+        
+        
+
+      
+       
+      * **Scope resource CIDR**: CIDRs from Amazon Web Services resources like VPCs, subnets, EIPs within an IPAM scope If you choose this option, choose the following: 
+
+        
+        * **IPAM scope**: Select the IPAM scope to search for resources
+         
+        * **Resource type**: Select a resource, like a VPC or subnet.
+         
+        * **Conditions**: 
+
+          
+          * **Property**: 
+
+            
+            * Resource ID: The unique ID of a resource (like vpc-1234567890abcdef0)
+             
+            * Resource owner (like 111122223333)
+             
+            * Resource region (like us-east-1)
+             
+            * Resource tag (like key: name, value: dev-vpc-1)
+             
+            * CIDR (like 10.24.34.0/23)
+            
+
+          
+           
+          * **Operation**: Equals/Not equals
+           
+          * **Value**: The value on which to match the condition
+          
+
+        
+        
+
+      
+      
+
+      
+
+    
+      - **RuleType** *(string) --* **[REQUIRED]** 
+
+        The type of CIDR selection rule. Valid values include ``include`` for selecting CIDRs that match the conditions, and ``exclude`` for excluding CIDRs that match the conditions.
+
+        
+
+      
+      - **StaticCidr** *(string) --* 
+
+        A fixed list of CIDRs that do not change (like a manual list replicated across Regions).
+
+        
+
+      
+      - **IpamScopeId** *(string) --* 
+
+        The ID of the IPAM scope from which to select CIDRs. This determines whether to select from public or private IP address space.
+
+        
+
+      
+      - **ResourceType** *(string) --* 
+
+        For rules of type ``ipam-resource-cidr``, this is the resource type.
+
+        
+
+      
+      - **Conditions** *(list) --* 
+
+        The conditions that determine which CIDRs are selected by this rule. Conditions specify criteria such as resource type, tags, account IDs, and Regions.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes a condition used when creating or modifying resolver rules.
+
+           
+
+          CIDR selection rules define the business logic for selecting CIDRs from IPAM. If a CIDR matches any of the rules, it will be included. If a rule has multiple conditions, the CIDR has to match every condition of that rule. You can create a prefix list resolver without any CIDR selection rules, but it will generate empty versions (containing no CIDRs) until you add rules.
+
+           
+
+          There are three rule types. Only 2 of the 3 rule types support conditions - **IPAM pool CIDR** and **Scope resource CIDR**. **Static CIDR** rules cannot have conditions.
+
+           
+
+          
+          * **Static CIDR**: A fixed list of CIDRs that do not change (like a manual list replicated across Regions)
+           
+          * **IPAM pool CIDR**: CIDRs from specific IPAM pools (like all CIDRs from your IPAM production pool) If you choose this option, choose the following: 
+
+            
+            * **IPAM scope**: Select the IPAM scope to search for resources
+             
+            * **Conditions:** 
+
+              
+              * **Property** 
+
+                
+                * **IPAM pool ID**: Select an IPAM pool that contains the resources
+                 
+                * **CIDR** (like 10.24.34.0/23)
+                
+
+              
+               
+              * **Operation**: Equals/Not equals
+               
+              * **Value**: The value on which to match the condition
+              
+
+            
+            
+
+          
+           
+          * **Scope resource CIDR**: CIDRs from Amazon Web Services resources like VPCs, subnets, EIPs within an IPAM scope If you choose this option, choose the following: 
+
+            
+            * **IPAM scope**: Select the IPAM scope to search for resources
+             
+            * **Resource type**: Select a resource, like a VPC or subnet.
+             
+            * **Conditions**: 
+
+              
+              * **Property**: 
+
+                
+                * Resource ID: The unique ID of a resource (like vpc-1234567890abcdef0)
+                 
+                * Resource owner (like 111122223333)
+                 
+                * Resource region (like us-east-1)
+                 
+                * Resource tag (like key: name, value: dev-vpc-1)
+                 
+                * CIDR (like 10.24.34.0/23)
+                
+
+              
+               
+              * **Operation**: Equals/Not equals
+               
+              * **Value**: The value on which to match the condition
+              
+
+            
+            
+
+          
+          
+
+          
+
+        
+          - **Operation** *(string) --* **[REQUIRED]** 
+
+            The operation to perform when evaluating this condition.
+
+            
+
+          
+          - **IpamPoolId** *(string) --* 
+
+            The ID of the IPAM pool to match against. This condition selects CIDRs that belong to the specified IPAM pool.
+
+            
+
+          
+          - **ResourceId** *(string) --* 
+
+            The ID of the Amazon Web Services resource to match against. This condition selects CIDRs associated with the specified resource.
+
+            
+
+          
+          - **ResourceOwner** *(string) --* 
+
+            The Amazon Web Services account ID that owns the resources to match against. This condition selects CIDRs from resources owned by the specified account.
+
+            
+
+          
+          - **ResourceRegion** *(string) --* 
+
+            The Amazon Web Services Region where the resources are located. This condition selects CIDRs from resources in the specified Region.
+
+            
+
+          
+          - **ResourceTag** *(dict) --* 
+
+            A tag key-value pair to match against. This condition selects CIDRs from resources that have the specified tag.
+
+            
+
+          
+            - **Key** *(string) --* 
+
+              The key of a tag assigned to the resource. Use this filter to find all resources assigned a tag with a specific key, regardless of the tag value.
+
+              
+
+            
+            - **Value** *(string) --* 
+
+              The value for the tag.
+
+              
+
+            
+          
+          - **Cidr** *(string) --* 
+
+            A CIDR block to match against. This condition selects CIDRs that fall within or match the specified CIDR range.
+
+            
+
+          
+        
+    
+    
+
+  :type TagSpecifications: list
+  :param TagSpecifications: 
+
+    The tags to apply to the IPAM prefix list resolver during creation. Tags help you organize and manage your Amazon Web Services resources.
+
+    
+
+  
+    - *(dict) --* 
+
+      The tags to apply to a resource when the resource is being created. When you specify a tag, you must specify the resource type to tag, otherwise the request will fail.
+
+       
+
+      .. note::
+
+        
+
+        The ``Valid Values`` lists all the resource types that can be tagged. However, the action you're using might not support tagging all of these resource types. If you try to tag a resource type that is unsupported for the action you're using, you'll get an error.
+
+        
+
+      
+
+    
+      - **ResourceType** *(string) --* 
+
+        The type of resource to tag on creation.
+
+        
+
+      
+      - **Tags** *(list) --* 
+
+        The tags to apply to the resource.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes a tag.
+
+          
+
+        
+          - **Key** *(string) --* 
+
+            The key of the tag.
+
+             
+
+            Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+            
+
+          
+          - **Value** *(string) --* 
+
+            The value of the tag.
+
+             
+
+            Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+            
+
+          
+        
+    
+    
+
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/ec2/latest/devguide/ec2-api-idempotency.html>`__.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'IpamPrefixListResolver': {
+              'OwnerId': 'string',
+              'IpamPrefixListResolverId': 'string',
+              'IpamPrefixListResolverArn': 'string',
+              'IpamArn': 'string',
+              'IpamRegion': 'string',
+              'Description': 'string',
+              'AddressFamily': 'ipv4'|'ipv6',
+              'State': 'create-in-progress'|'create-complete'|'create-failed'|'modify-in-progress'|'modify-complete'|'modify-failed'|'delete-in-progress'|'delete-complete'|'delete-failed'|'isolate-in-progress'|'isolate-complete'|'restore-in-progress',
+              'Tags': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'LastVersionCreationStatus': 'pending'|'success'|'failure',
+              'LastVersionCreationStatusMessage': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **IpamPrefixListResolver** *(dict) --* 
+
+        Information about the IPAM prefix list resolver that was created.
+
+        
+        
+
+        - **OwnerId** *(string) --* 
+
+          The ID of the Amazon Web Services account that owns the IPAM prefix list resolver.
+
+          
+        
+
+        - **IpamPrefixListResolverId** *(string) --* 
+
+          The ID of the IPAM prefix list resolver.
+
+          
+        
+
+        - **IpamPrefixListResolverArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the IPAM prefix list resolver.
+
+          
+        
+
+        - **IpamArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the IPAM associated with this resolver.
+
+          
+        
+
+        - **IpamRegion** *(string) --* 
+
+          The Amazon Web Services Region where the associated IPAM is located.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          The description of the IPAM prefix list resolver.
+
+          
+        
+
+        - **AddressFamily** *(string) --* 
+
+          The address family (IPv4 or IPv6) for the IPAM prefix list resolver.
+
+          
+        
+
+        - **State** *(string) --* 
+
+          The current state of the IPAM prefix list resolver. Valid values include ``create-in-progress``, ``create-complete``, ``create-failed``, ``modify-in-progress``, ``modify-complete``, ``modify-failed``, ``delete-in-progress``, ``delete-complete``, and ``delete-failed``.
+
+          
+        
+
+        - **Tags** *(list) --* 
+
+          The tags assigned to the IPAM prefix list resolver.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes a tag.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The key of the tag.
+
+               
+
+              Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The value of the tag.
+
+               
+
+              Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+              
+        
+      
+        
+
+        - **LastVersionCreationStatus** *(string) --* 
+
+          The status for the last time a version was created.
+
+           
+
+          Each version is a snapshot of what CIDRs matched your rules at that moment in time. The version number increments every time the CIDR list changes due to infrastructure changes.
+
+          
+        
+
+        - **LastVersionCreationStatusMessage** *(string) --* 
+
+          The status message for the last time a version was created.
+
+           
+
+          Each version is a snapshot of what CIDRs matched your rules at that moment in time. The version number increments every time the CIDR list changes due to infrastructure changes.
+
+          
+    
+  

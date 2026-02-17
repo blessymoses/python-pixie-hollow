@@ -1,0 +1,362 @@
+:doc:`Batch <../../batch>` / Client / create_job_queue
+
+****************
+create_job_queue
+****************
+
+
+
+.. py:method:: Batch.Client.create_job_queue(**kwargs)
+
+  
+
+  Creates an Batch job queue. When you create a job queue, you associate one or more compute environments to the queue and assign an order of preference for the compute environments.
+
+   
+
+  You also set a priority to the job queue that determines the order that the Batch scheduler places jobs onto its associated compute environments. For example, if a compute environment is associated with more than one job queue, the job queue with a higher priority is given preference for scheduling jobs to that compute environment.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/CreateJobQueue>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_job_queue(
+        jobQueueName='string',
+        state='ENABLED'|'DISABLED',
+        schedulingPolicyArn='string',
+        priority=123,
+        computeEnvironmentOrder=[
+            {
+                'order': 123,
+                'computeEnvironment': 'string'
+            },
+        ],
+        serviceEnvironmentOrder=[
+            {
+                'order': 123,
+                'serviceEnvironment': 'string'
+            },
+        ],
+        jobQueueType='EKS'|'ECS'|'ECS_FARGATE'|'SAGEMAKER_TRAINING',
+        tags={
+            'string': 'string'
+        },
+        jobStateTimeLimitActions=[
+            {
+                'reason': 'string',
+                'state': 'RUNNABLE',
+                'maxTimeSeconds': 123,
+                'action': 'CANCEL'|'TERMINATE'
+            },
+        ]
+    )
+    
+  :type jobQueueName: string
+  :param jobQueueName: **[REQUIRED]** 
+
+    The name of the job queue. It can be up to 128 letters long. It can contain uppercase and lowercase letters, numbers, hyphens (-), and underscores (_).
+
+    
+
+  
+  :type state: string
+  :param state: 
+
+    The state of the job queue. If the job queue state is ``ENABLED``, it is able to accept jobs. If the job queue state is ``DISABLED``, new jobs can't be added to the queue, but jobs already in the queue can finish.
+
+    
+
+  
+  :type schedulingPolicyArn: string
+  :param schedulingPolicyArn: 
+
+    The Amazon Resource Name (ARN) of the fair-share scheduling policy. Job queues that don't have a fair-share scheduling policy are scheduled in a first-in, first-out (FIFO) model. After a job queue has a fair-share scheduling policy, it can be replaced but can't be removed.
+
+     
+
+    The format is ``aws:Partition:batch:Region:Account:scheduling-policy/Name ``.
+
+     
+
+    An example is ``aws:aws:batch:us-west-2:123456789012:scheduling-policy/MySchedulingPolicy``.
+
+     
+
+    A job queue without a fair-share scheduling policy is scheduled as a FIFO job queue and can't have a fair-share scheduling policy added. Jobs queues with a fair-share scheduling policy can have a maximum of 500 active share identifiers. When the limit has been reached, submissions of any jobs that add a new share identifier fail.
+
+    
+
+  
+  :type priority: integer
+  :param priority: **[REQUIRED]** 
+
+    The priority of the job queue. Job queues with a higher priority (or a higher integer value for the ``priority`` parameter) are evaluated first when associated with the same compute environment. Priority is determined in descending order. For example, a job queue with a priority value of ``10`` is given scheduling preference over a job queue with a priority value of ``1``. All of the compute environments must be either EC2 ( ``EC2`` or ``SPOT``) or Fargate ( ``FARGATE`` or ``FARGATE_SPOT``); EC2 and Fargate compute environments can't be mixed.
+
+    
+
+  
+  :type computeEnvironmentOrder: list
+  :param computeEnvironmentOrder: 
+
+    The set of compute environments mapped to a job queue and their order relative to each other. The job scheduler uses this parameter to determine which compute environment runs a specific job. Compute environments must be in the ``VALID`` state before you can associate them with a job queue. You can associate up to three compute environments with a job queue. All of the compute environments must be either EC2 ( ``EC2`` or ``SPOT``) or Fargate ( ``FARGATE`` or ``FARGATE_SPOT``); EC2 and Fargate compute environments can't be mixed.
+
+     
+
+    .. note::
+
+      
+
+      All compute environments that are associated with a job queue must share the same architecture. Batch doesn't support mixing compute environment architecture types in a single job queue.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      The order that compute environments are tried in for job placement within a queue. Compute environments are tried in ascending order. For example, if two compute environments are associated with a job queue, the compute environment with a lower order integer value is tried for job placement first. Compute environments must be in the ``VALID`` state before you can associate them with a job queue. All of the compute environments must be either EC2 ( ``EC2`` or ``SPOT``) or Fargate ( ``FARGATE`` or ``FARGATE_SPOT``); Amazon EC2 and Fargate compute environments can't be mixed.
+
+       
+
+      .. note::
+
+        
+
+        All compute environments that are associated with a job queue must share the same architecture. Batch doesn't support mixing compute environment architecture types in a single job queue.
+
+        
+
+      
+
+    
+      - **order** *(integer) --* **[REQUIRED]** 
+
+        The order of the compute environment. Compute environments are tried in ascending order. For example, if two compute environments are associated with a job queue, the compute environment with a lower ``order`` integer value is tried for job placement first.
+
+        
+
+      
+      - **computeEnvironment** *(string) --* **[REQUIRED]** 
+
+        The Amazon Resource Name (ARN) of the compute environment.
+
+        
+
+      
+    
+
+  :type serviceEnvironmentOrder: list
+  :param serviceEnvironmentOrder: 
+
+    A list of service environments that this job queue can use to allocate jobs. All serviceEnvironments must have the same type. A job queue can't have both a serviceEnvironmentOrder and a computeEnvironmentOrder field.
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies the order of a service environment for a job queue. This determines the priority order when multiple service environments are associated with the same job queue.
+
+      
+
+    
+      - **order** *(integer) --* **[REQUIRED]** 
+
+        The order of the service environment. Job queues with a higher priority are evaluated first when associated with the same service environment.
+
+        
+
+      
+      - **serviceEnvironment** *(string) --* **[REQUIRED]** 
+
+        The name or ARN of the service environment.
+
+        
+
+      
+    
+
+  :type jobQueueType: string
+  :param jobQueueType: 
+
+    The type of job queue. For service jobs that run on SageMaker Training, this value is ``SAGEMAKER_TRAINING``. For regular container jobs, this value is ``EKS``, ``ECS``, or ``ECS_FARGATE`` depending on the compute environment.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    The tags that you apply to the job queue to help you categorize and organize your resources. Each tag consists of a key and an optional value. For more information, see `Tagging your Batch resources <https://docs.aws.amazon.com/batch/latest/userguide/using-tags.html>`__ in *Batch User Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type jobStateTimeLimitActions: list
+  :param jobStateTimeLimitActions: 
+
+    The set of actions that Batch performs on jobs that remain at the head of the job queue in the specified state longer than specified times. Batch will perform each action after ``maxTimeSeconds`` has passed. (**Note**: The minimum value for maxTimeSeconds is 600 (10 minutes) and its maximum value is 86,400 (24 hours).)
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies an action that Batch will take after the job has remained at the head of the queue in the specified state for longer than the specified time.
+
+      
+
+    
+      - **reason** *(string) --* **[REQUIRED]** 
+
+        The reason to log for the action being taken.
+
+        
+
+      
+      - **state** *(string) --* **[REQUIRED]** 
+
+        The state of the job needed to trigger the action. The only supported value is ``RUNNABLE``.
+
+        
+
+      
+      - **maxTimeSeconds** *(integer) --* **[REQUIRED]** 
+
+        The approximate amount of time, in seconds, that must pass with the job in the specified state before the action is taken. The minimum value is 600 (10 minutes) and the maximum value is 86,400 (24 hours).
+
+        
+
+      
+      - **action** *(string) --* **[REQUIRED]** 
+
+        The action to take when a job is at the head of the job queue in the specified state for the specified period of time. The only supported value is ``CANCEL``, which will cancel the job.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobQueueName': 'string',
+          'jobQueueArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobQueueName** *(string) --* 
+
+        The name of the job queue.
+
+        
+      
+
+      - **jobQueueArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the job queue.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Batch.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`Batch.Client.exceptions.ServerException`
+
+  
+
+  **Examples**
+
+  This example creates a job queue called LowPriority that uses the M4Spot compute environment.
+  ::
+
+    response = client.create_job_queue(
+        computeEnvironmentOrder=[
+            {
+                'computeEnvironment': 'M4Spot',
+                'order': 1,
+            },
+        ],
+        jobQueueName='LowPriority',
+        priority=1,
+        state='ENABLED',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'jobQueueArn': 'arn:aws:batch:us-east-1:012345678910:job-queue/LowPriority',
+        'jobQueueName': 'LowPriority',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example creates a job queue called HighPriority that uses the C4OnDemand compute environment with an order of 1 and the M4Spot compute environment with an order of 2.
+  ::
+
+    response = client.create_job_queue(
+        computeEnvironmentOrder=[
+            {
+                'computeEnvironment': 'C4OnDemand',
+                'order': 1,
+            },
+            {
+                'computeEnvironment': 'M4Spot',
+                'order': 2,
+            },
+        ],
+        jobQueueName='HighPriority',
+        priority=10,
+        state='ENABLED',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'jobQueueArn': 'arn:aws:batch:us-east-1:012345678910:job-queue/HighPriority',
+        'jobQueueName': 'HighPriority',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

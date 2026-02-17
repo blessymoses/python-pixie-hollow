@@ -1,0 +1,315 @@
+:doc:`ComputeOptimizer <../../compute-optimizer>` / Client / get_ec2_recommendation_projected_metrics
+
+****************************************
+get_ec2_recommendation_projected_metrics
+****************************************
+
+
+
+.. py:method:: ComputeOptimizer.Client.get_ec2_recommendation_projected_metrics(**kwargs)
+
+  
+
+  Returns the projected utilization metrics of Amazon EC2 instance recommendations.
+
+   
+
+  .. note::
+
+    
+
+    The ``Cpu`` and ``Memory`` metrics are the only projected utilization metrics returned when you run this action. Additionally, the ``Memory`` metric is returned only for resources that have the unified CloudWatch agent installed on them. For more information, see `Enabling Memory Utilization with the CloudWatch Agent <https://docs.aws.amazon.com/compute-optimizer/latest/ug/metrics.html#cw-agent>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/compute-optimizer-2019-11-01/GetEC2RecommendationProjectedMetrics>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_ec2_recommendation_projected_metrics(
+        instanceArn='string',
+        stat='Maximum'|'Average',
+        period=123,
+        startTime=datetime(2015, 1, 1),
+        endTime=datetime(2015, 1, 1),
+        recommendationPreferences={
+            'cpuVendorArchitectures': [
+                'AWS_ARM64'|'CURRENT',
+            ]
+        }
+    )
+    
+  :type instanceArn: string
+  :param instanceArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the instances for which to return recommendation projected metrics.
+
+    
+
+  
+  :type stat: string
+  :param stat: **[REQUIRED]** 
+
+    The statistic of the projected metrics.
+
+    
+
+  
+  :type period: integer
+  :param period: **[REQUIRED]** 
+
+    The granularity, in seconds, of the projected metrics data points.
+
+    
+
+  
+  :type startTime: datetime
+  :param startTime: **[REQUIRED]** 
+
+    The timestamp of the first projected metrics data point to return.
+
+    
+
+  
+  :type endTime: datetime
+  :param endTime: **[REQUIRED]** 
+
+    The timestamp of the last projected metrics data point to return.
+
+    
+
+  
+  :type recommendationPreferences: dict
+  :param recommendationPreferences: 
+
+    An object to specify the preferences for the Amazon EC2 recommendation projected metrics to return in the response.
+
+    
+
+  
+    - **cpuVendorArchitectures** *(list) --* 
+
+      Specifies the CPU vendor and architecture for Amazon EC2 instance and Amazon EC2 Auto Scaling group recommendations.
+
+       
+
+      For example, when you specify ``AWS_ARM64`` with:
+
+       
+
+      
+      * A  GetEC2InstanceRecommendations or  GetAutoScalingGroupRecommendations request, Compute Optimizer returns recommendations that consist of Graviton instance types only.
+       
+      * A  GetEC2RecommendationProjectedMetrics request, Compute Optimizer returns projected utilization metrics for Graviton instance type recommendations only.
+       
+      * A  ExportEC2InstanceRecommendations or  ExportAutoScalingGroupRecommendations request, Compute Optimizer exports recommendations that consist of Graviton instance types only.
+      
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'recommendedOptionProjectedMetrics': [
+              {
+                  'recommendedInstanceType': 'string',
+                  'rank': 123,
+                  'projectedMetrics': [
+                      {
+                          'name': 'Cpu'|'Memory'|'EBS_READ_OPS_PER_SECOND'|'EBS_WRITE_OPS_PER_SECOND'|'EBS_READ_BYTES_PER_SECOND'|'EBS_WRITE_BYTES_PER_SECOND'|'DISK_READ_OPS_PER_SECOND'|'DISK_WRITE_OPS_PER_SECOND'|'DISK_READ_BYTES_PER_SECOND'|'DISK_WRITE_BYTES_PER_SECOND'|'NETWORK_IN_BYTES_PER_SECOND'|'NETWORK_OUT_BYTES_PER_SECOND'|'NETWORK_PACKETS_IN_PER_SECOND'|'NETWORK_PACKETS_OUT_PER_SECOND'|'GPU_PERCENTAGE'|'GPU_MEMORY_PERCENTAGE',
+                          'timestamps': [
+                              datetime(2015, 1, 1),
+                          ],
+                          'values': [
+                              123.0,
+                          ]
+                      },
+                  ]
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **recommendedOptionProjectedMetrics** *(list) --* 
+
+        An array of objects that describes projected metrics.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a projected utilization metric of a recommendation option.
+
+           
+
+          .. note::
+
+            
+
+            The ``Cpu`` and ``Memory`` metrics are the only projected utilization metrics returned when you run the  GetEC2RecommendationProjectedMetrics action. Additionally, the ``Memory`` metric is returned only for resources that have the unified CloudWatch agent installed on them. For more information, see `Enabling Memory Utilization with the CloudWatch Agent <https://docs.aws.amazon.com/compute-optimizer/latest/ug/metrics.html#cw-agent>`__.
+
+            
+
+          
+          
+
+          - **recommendedInstanceType** *(string) --* 
+
+            The recommended instance type.
+
+            
+          
+
+          - **rank** *(integer) --* 
+
+            The rank of the recommendation option projected metric.
+
+             
+
+            The top recommendation option is ranked as ``1``.
+
+             
+
+            The projected metric rank correlates to the recommendation option rank. For example, the projected metric ranked as ``1`` is related to the recommendation option that is also ranked as ``1`` in the same response.
+
+            
+          
+
+          - **projectedMetrics** *(list) --* 
+
+            An array of objects that describe a projected utilization metric.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes a projected utilization metric of a recommendation option, such as an Amazon EC2 instance. This represents the projected utilization of a recommendation option had you used that resource during the analyzed period.
+
+               
+
+              Compare the utilization metric data of your resource against its projected utilization metric data to determine the performance difference between your current resource and the recommended option.
+
+               
+
+              .. note::
+
+                
+
+                The ``Cpu``, ``Memory``, ``GPU``, and ``GPU_MEMORY`` metrics are the only projected utilization metrics returned when you run the  GetEC2RecommendationProjectedMetrics action. Additionally, these metrics are only returned for resources with the unified CloudWatch agent installed on them. For more information, see `Enabling Memory Utilization with the CloudWatch Agent <https://docs.aws.amazon.com/compute-optimizer/latest/ug/metrics.html#cw-agent>`__ and `Enabling NVIDIA GPU utilization with the CloudWatch Agent <https://docs.aws.amazon.com/compute-optimizer/latest/ug/metrics.html#nvidia-cw-agent>`__.
+
+                
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the projected utilization metric.
+
+                 
+
+                The following projected utilization metrics are returned:
+
+                 
+
+                
+                * ``Cpu`` - The projected percentage of allocated EC2 compute units that would be in use on the recommendation option had you used that resource during the analyzed period. This metric identifies the processing power required to run an application on the recommendation option. Depending on the instance type, tools in your operating system can show a lower percentage than CloudWatch when the instance is not allocated a full processor core.
+                 
+                * ``Memory`` - The percentage of memory that would be in use on the recommendation option had you used that resource during the analyzed period. This metric identifies the amount of memory required to run an application on the recommendation option. Units: Percent 
+
+                .. note::
+
+                  The ``Memory`` metric is only returned for resources with the unified CloudWatch agent installed on them. For more information, see `Enabling Memory Utilization with the CloudWatch Agent <https://docs.aws.amazon.com/compute-optimizer/latest/ug/metrics.html#cw-agent>`__.
+
+                
+                 
+                * ``GPU`` - The projected percentage of allocated GPUs if you adjust your configurations to Compute Optimizer's recommendation option.
+                 
+                * ``GPU_MEMORY`` - The projected percentage of total GPU memory if you adjust your configurations to Compute Optimizer's recommendation option. 
+
+                .. note::
+
+                  The ``GPU`` and ``GPU_MEMORY`` metrics are only returned for resources with the unified CloudWatch Agent installed on them. For more information, see `Enabling NVIDIA GPU utilization with the CloudWatch Agent <https://docs.aws.amazon.com/compute-optimizer/latest/ug/metrics.html#nvidia-cw-agent>`__.
+
+                
+                
+
+                
+              
+
+              - **timestamps** *(list) --* 
+
+                The timestamps of the projected utilization metric.
+
+                
+                
+
+                - *(datetime) --* 
+            
+              
+
+              - **values** *(list) --* 
+
+                The values of the projected utilization metrics.
+
+                
+                
+
+                - *(float) --* 
+            
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.OptInRequiredException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.MissingAuthenticationToken`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ThrottlingException`
+
+  

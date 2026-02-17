@@ -1,0 +1,283 @@
+:doc:`EC2 <../../ec2>` / Client / describe_fleet_history
+
+**********************
+describe_fleet_history
+**********************
+
+
+
+.. py:method:: EC2.Client.describe_fleet_history(**kwargs)
+
+  
+
+  Describes the events for the specified EC2 Fleet during the specified time.
+
+   
+
+  EC2 Fleet events are delayed by up to 30 seconds before they can be described. This ensures that you can query by the last evaluated time and not miss a recorded event. EC2 Fleet events are available for 48 hours.
+
+   
+
+  For more information, see `Monitor fleet events using Amazon EventBridge <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/fleet-monitor.html>`__ in the *Amazon EC2 User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/DescribeFleetHistory>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_fleet_history(
+        DryRun=True|False,
+        EventType='instance-change'|'fleet-change'|'service-error',
+        MaxResults=123,
+        NextToken='string',
+        FleetId='string',
+        StartTime=datetime(2015, 1, 1)
+    )
+    
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type EventType: string
+  :param EventType: 
+
+    The type of events to describe. By default, all events are described.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this request. To get the next page of items, make another request with the token returned in the output. For more information, see `Pagination <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination>`__.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token returned from a previous paginated request. Pagination continues from the end of the items returned by the previous request.
+
+    
+
+  
+  :type FleetId: string
+  :param FleetId: **[REQUIRED]** 
+
+    The ID of the EC2 Fleet.
+
+    
+
+  
+  :type StartTime: datetime
+  :param StartTime: **[REQUIRED]** 
+
+    The start date and time for the events, in UTC format (for example, *YYYY*-*MM*-*DD*T*HH*:*MM*:*SS*Z).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'HistoryRecords': [
+              {
+                  'EventInformation': {
+                      'EventDescription': 'string',
+                      'EventSubType': 'string',
+                      'InstanceId': 'string'
+                  },
+                  'EventType': 'instance-change'|'fleet-change'|'service-error',
+                  'Timestamp': datetime(2015, 1, 1)
+              },
+          ],
+          'LastEvaluatedTime': datetime(2015, 1, 1),
+          'NextToken': 'string',
+          'FleetId': 'string',
+          'StartTime': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **HistoryRecords** *(list) --* 
+
+        Information about the events in the history of the EC2 Fleet.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes an event in the history of an EC2 Fleet.
+
+          
+          
+
+          - **EventInformation** *(dict) --* 
+
+            Information about the event.
+
+            
+            
+
+            - **EventDescription** *(string) --* 
+
+              The description of the event.
+
+              
+            
+
+            - **EventSubType** *(string) --* 
+
+              The event.
+
+               
+
+              ``error`` events:
+
+               
+
+              
+              * ``iamFleetRoleInvalid`` - The EC2 Fleet or Spot Fleet does not have the required permissions either to launch or terminate an instance.
+               
+              * ``allLaunchSpecsTemporarilyBlacklisted`` - None of the configurations are valid, and several attempts to launch instances have failed. For more information, see the description of the event.
+               
+              * ``spotInstanceCountLimitExceeded`` - You've reached the limit on the number of Spot Instances that you can launch.
+               
+              * ``spotFleetRequestConfigurationInvalid`` - The configuration is not valid. For more information, see the description of the event.
+              
+
+               
+
+              ``fleetRequestChange`` events:
+
+               
+
+              
+              * ``active`` - The EC2 Fleet or Spot Fleet request has been validated and Amazon EC2 is attempting to maintain the target number of running instances.
+               
+              * ``deleted`` (EC2 Fleet) / ``cancelled`` (Spot Fleet) - The EC2 Fleet is deleted or the Spot Fleet request is canceled and has no running instances. The EC2 Fleet or Spot Fleet will be deleted two days after its instances are terminated.
+               
+              * ``deleted_running`` (EC2 Fleet) / ``cancelled_running`` (Spot Fleet) - The EC2 Fleet is deleted or the Spot Fleet request is canceled and does not launch additional instances. Its existing instances continue to run until they are interrupted or terminated. The request remains in this state until all instances are interrupted or terminated.
+               
+              * ``deleted_terminating`` (EC2 Fleet) / ``cancelled_terminating`` (Spot Fleet) - The EC2 Fleet is deleted or the Spot Fleet request is canceled and its instances are terminating. The request remains in this state until all instances are terminated.
+               
+              * ``expired`` - The EC2 Fleet or Spot Fleet request has expired. If the request was created with ``TerminateInstancesWithExpiration`` set, a subsequent ``terminated`` event indicates that the instances are terminated.
+               
+              * ``modify_in_progress`` - The EC2 Fleet or Spot Fleet request is being modified. The request remains in this state until the modification is fully processed.
+               
+              * ``modify_succeeded`` - The EC2 Fleet or Spot Fleet request was modified.
+               
+              * ``submitted`` - The EC2 Fleet or Spot Fleet request is being evaluated and Amazon EC2 is preparing to launch the target number of instances.
+               
+              * ``progress`` - The EC2 Fleet or Spot Fleet request is in the process of being fulfilled.
+              
+
+               
+
+              ``instanceChange`` events:
+
+               
+
+              
+              * ``launched`` - A new instance was launched.
+               
+              * ``terminated`` - An instance was terminated by the user.
+               
+              * ``termination_notified`` - An instance termination notification was sent when a Spot Instance was terminated by Amazon EC2 during scale-down, when the target capacity of the fleet was modified down, for example, from a target capacity of 4 to a target capacity of 3.
+              
+
+               
+
+              ``Information`` events:
+
+               
+
+              
+              * ``fleetProgressHalted`` - The price in every launch specification is not valid because it is below the Spot price (all the launch specifications have produced ``launchSpecUnusable`` events). A launch specification might become valid if the Spot price changes.
+               
+              * ``launchSpecTemporarilyBlacklisted`` - The configuration is not valid and several attempts to launch instances have failed. For more information, see the description of the event.
+               
+              * ``launchSpecUnusable`` - The price specified in a launch specification is not valid because it is below the Spot price for the requested Spot pools. Note: Even if a fleet with the ``maintain`` request type is in the process of being canceled, it may still publish a ``launchSpecUnusable`` event. This does not mean that the canceled fleet is attempting to launch a new instance.
+               
+              * ``registerWithLoadBalancersFailed`` - An attempt to register instances with load balancers failed. For more information, see the description of the event.
+              
+
+              
+            
+
+            - **InstanceId** *(string) --* 
+
+              The ID of the instance. This information is available only for ``instanceChange`` events.
+
+              
+        
+          
+
+          - **EventType** *(string) --* 
+
+            The event type.
+
+            
+          
+
+          - **Timestamp** *(datetime) --* 
+
+            The date and time of the event, in UTC format (for example, *YYYY*-*MM*-*DD*T*HH*:*MM*:*SS*Z).
+
+            
+      
+    
+      
+
+      - **LastEvaluatedTime** *(datetime) --* 
+
+        The last date and time for the events, in UTC format (for example, *YYYY*-*MM*-*DD*T*HH*:*MM*:*SS*Z). All records up to this time were retrieved.
+
+         
+
+        If ``nextToken`` indicates that there are more items, this value is not present.
+
+        
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to include in another request to get the next page of items. This value is ``null`` when there are no more items to return.
+
+        
+      
+
+      - **FleetId** *(string) --* 
+
+        The ID of the EC Fleet.
+
+        
+      
+
+      - **StartTime** *(datetime) --* 
+
+        The start date and time for the events, in UTC format (for example, *YYYY*-*MM*-*DD*T*HH*:*MM*:*SS*Z).
+
+        
+  

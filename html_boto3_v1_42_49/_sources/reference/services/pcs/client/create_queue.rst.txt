@@ -1,0 +1,404 @@
+:doc:`ParallelComputingService <../../pcs>` / Client / create_queue
+
+************
+create_queue
+************
+
+
+
+.. py:method:: ParallelComputingService.Client.create_queue(**kwargs)
+
+  
+
+  Creates a job queue. You must associate 1 or more compute node groups with the queue. You can associate 1 compute node group with multiple queues.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/pcs-2023-02-10/CreateQueue>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_queue(
+        clusterIdentifier='string',
+        queueName='string',
+        computeNodeGroupConfigurations=[
+            {
+                'computeNodeGroupId': 'string'
+            },
+        ],
+        slurmConfiguration={
+            'slurmCustomSettings': [
+                {
+                    'parameterName': 'string',
+                    'parameterValue': 'string'
+                },
+            ]
+        },
+        clientToken='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type clusterIdentifier: string
+  :param clusterIdentifier: **[REQUIRED]** 
+
+    The name or ID of the cluster for which to create a queue.
+
+    
+
+  
+  :type queueName: string
+  :param queueName: **[REQUIRED]** 
+
+    A name to identify the queue.
+
+    
+
+  
+  :type computeNodeGroupConfigurations: list
+  :param computeNodeGroupConfigurations: 
+
+    The list of compute node group configurations to associate with the queue. Queues assign jobs to associated compute node groups.
+
+    
+
+  
+    - *(dict) --* 
+
+      The compute node group configuration for a queue.
+
+      
+
+    
+      - **computeNodeGroupId** *(string) --* 
+
+        The compute node group ID for the compute node group configuration.
+
+        
+
+      
+    
+
+  :type slurmConfiguration: dict
+  :param slurmConfiguration: 
+
+    Additional options related to the Slurm scheduler.
+
+    
+
+  
+    - **slurmCustomSettings** *(list) --* 
+
+      Additional Slurm-specific configuration that directly maps to Slurm settings.
+
+      
+
+    
+      - *(dict) --* 
+
+        Additional settings that directly map to Slurm settings.
+
+         
+
+        .. warning::
+
+           
+
+          PCS supports a subset of Slurm settings. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+          
+
+        
+
+      
+        - **parameterName** *(string) --* **[REQUIRED]** 
+
+          PCS supports custom Slurm settings for clusters, compute node groups, and queues. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+          
+
+        
+        - **parameterValue** *(string) --* **[REQUIRED]** 
+
+          The values for the configured Slurm settings.
+
+          
+
+        
+      
+  
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. Idempotency ensures that an API request completes only once. With an idempotent request, if the original request completes successfully, the subsequent retries with the same client token return the result from the original successful request and they have no additional effect. If you don't specify a client token, the CLI and SDK automatically generate 1 for you.
+
+    This field is autopopulated if not provided.
+
+  
+  :type tags: dict
+  :param tags: 
+
+    1 or more tags added to the resource. Each tag consists of a tag key and tag value. The tag value is optional and can be an empty string.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'queue': {
+              'name': 'string',
+              'id': 'string',
+              'arn': 'string',
+              'clusterId': 'string',
+              'createdAt': datetime(2015, 1, 1),
+              'modifiedAt': datetime(2015, 1, 1),
+              'status': 'CREATING'|'ACTIVE'|'UPDATING'|'DELETING'|'CREATE_FAILED'|'DELETE_FAILED'|'UPDATE_FAILED'|'SUSPENDING'|'SUSPENDED'|'RESUMING',
+              'computeNodeGroupConfigurations': [
+                  {
+                      'computeNodeGroupId': 'string'
+                  },
+              ],
+              'slurmConfiguration': {
+                  'slurmCustomSettings': [
+                      {
+                          'parameterName': 'string',
+                          'parameterValue': 'string'
+                      },
+                  ]
+              },
+              'errorInfo': [
+                  {
+                      'code': 'string',
+                      'message': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **queue** *(dict) --* 
+
+        A queue resource.
+
+        
+        
+
+        - **name** *(string) --* 
+
+          The name that identifies the queue.
+
+          
+        
+
+        - **id** *(string) --* 
+
+          The generated unique ID of the queue.
+
+          
+        
+
+        - **arn** *(string) --* 
+
+          The unique Amazon Resource Name (ARN) of the queue.
+
+          
+        
+
+        - **clusterId** *(string) --* 
+
+          The ID of the cluster of the queue.
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The date and time the resource was created.
+
+          
+        
+
+        - **modifiedAt** *(datetime) --* 
+
+          The date and time the resource was modified.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The provisioning status of the queue.
+
+           
+
+          .. note::
+
+            
+
+            The provisioning status doesn't indicate the overall health of the queue.
+
+            
+
+           
+
+          .. warning::
+
+             
+
+            The resource enters the ``SUSPENDING`` and ``SUSPENDED`` states when the scheduler is beyond end of life and we have suspended the cluster. When in these states, you can't use the cluster. The cluster controller is down and all compute instances are terminated. The resources still count toward your service quotas. You can delete a resource if its status is ``SUSPENDED``. For more information, see `Frequently asked questions about Slurm versions in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-versions_faq.html>`__ in the *PCS User Guide*.
+
+            
+
+          
+        
+
+        - **computeNodeGroupConfigurations** *(list) --* 
+
+          The list of compute node group configurations associated with the queue. Queues assign jobs to associated compute node groups.
+
+          
+          
+
+          - *(dict) --* 
+
+            The compute node group configuration for a queue.
+
+            
+            
+
+            - **computeNodeGroupId** *(string) --* 
+
+              The compute node group ID for the compute node group configuration.
+
+              
+        
+      
+        
+
+        - **slurmConfiguration** *(dict) --* 
+
+          Additional options related to the Slurm scheduler.
+
+          
+          
+
+          - **slurmCustomSettings** *(list) --* 
+
+            Additional Slurm-specific configuration that directly maps to Slurm settings.
+
+            
+            
+
+            - *(dict) --* 
+
+              Additional settings that directly map to Slurm settings.
+
+               
+
+              .. warning::
+
+                 
+
+                PCS supports a subset of Slurm settings. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+                
+
+              
+              
+
+              - **parameterName** *(string) --* 
+
+                PCS supports custom Slurm settings for clusters, compute node groups, and queues. For more information, see `Configuring custom Slurm settings in PCS <https://docs.aws.amazon.com/pcs/latest/userguide/slurm-custom-settings.html>`__ in the *PCS User Guide*.
+
+                
+              
+
+              - **parameterValue** *(string) --* 
+
+                The values for the configured Slurm settings.
+
+                
+          
+        
+      
+        
+
+        - **errorInfo** *(list) --* 
+
+          The list of errors that occurred during queue provisioning.
+
+          
+          
+
+          - *(dict) --* 
+
+            An error that occurred during resource creation.
+
+            
+            
+
+            - **code** *(string) --* 
+
+              The short-form error code.
+
+              
+            
+
+            - **message** *(string) --* 
+
+              The detailed error information.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ParallelComputingService.Client.exceptions.AccessDeniedException`
+
+  

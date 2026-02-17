@@ -1,0 +1,351 @@
+:doc:`ServiceCatalog <../../servicecatalog>` / Client / import_as_provisioned_product
+
+*****************************
+import_as_provisioned_product
+*****************************
+
+
+
+.. py:method:: ServiceCatalog.Client.import_as_provisioned_product(**kwargs)
+
+  
+
+  Requests the import of a resource as an Service Catalog provisioned product that is associated to an Service Catalog product and provisioning artifact. Once imported, all supported governance actions are supported on the provisioned product.
+
+   
+
+  Resource import only supports CloudFormation stack ARNs. CloudFormation StackSets, and non-root nested stacks, are not supported.
+
+   
+
+  The CloudFormation stack must have one of the following statuses to be imported: ``CREATE_COMPLETE``, ``UPDATE_COMPLETE``, ``UPDATE_ROLLBACK_COMPLETE``, ``IMPORT_COMPLETE``, and ``IMPORT_ROLLBACK_COMPLETE``.
+
+   
+
+  Import of the resource requires that the CloudFormation stack template matches the associated Service Catalog product provisioning artifact.
+
+   
+
+  .. note::
+
+    
+
+    When you import an existing CloudFormation stack into a portfolio, Service Catalog does not apply the product's associated constraints during the import process. Service Catalog applies the constraints after you call ``UpdateProvisionedProduct`` for the provisioned product.
+
+    
+
+   
+
+  The user or role that performs this operation must have the ``cloudformation:GetTemplate`` and ``cloudformation:DescribeStacks`` IAM policy permissions.
+
+   
+
+  You can only import one provisioned product at a time. The product's CloudFormation stack must have the ``IMPORT_COMPLETE`` status before you import another.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/servicecatalog-2015-12-10/ImportAsProvisionedProduct>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.import_as_provisioned_product(
+        AcceptLanguage='string',
+        ProductId='string',
+        ProvisioningArtifactId='string',
+        ProvisionedProductName='string',
+        PhysicalId='string',
+        IdempotencyToken='string'
+    )
+    
+  :type AcceptLanguage: string
+  :param AcceptLanguage: 
+
+    The language code.
+
+     
+
+    
+    * ``jp`` - Japanese
+     
+    * ``zh`` - Chinese
+    
+
+    
+
+  
+  :type ProductId: string
+  :param ProductId: **[REQUIRED]** 
+
+    The product identifier.
+
+    
+
+  
+  :type ProvisioningArtifactId: string
+  :param ProvisioningArtifactId: **[REQUIRED]** 
+
+    The identifier of the provisioning artifact.
+
+    
+
+  
+  :type ProvisionedProductName: string
+  :param ProvisionedProductName: **[REQUIRED]** 
+
+    The user-friendly name of the provisioned product. The value must be unique for the Amazon Web Services account. The name cannot be updated after the product is provisioned.
+
+    
+
+  
+  :type PhysicalId: string
+  :param PhysicalId: **[REQUIRED]** 
+
+    The unique identifier of the resource to be imported. It only currently supports CloudFormation stack IDs.
+
+    
+
+  
+  :type IdempotencyToken: string
+  :param IdempotencyToken: **[REQUIRED]** 
+
+    A unique identifier that you provide to ensure idempotency. If multiple requests differ only by the idempotency token, the same response is returned for each repeated request.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RecordDetail': {
+              'RecordId': 'string',
+              'ProvisionedProductName': 'string',
+              'Status': 'CREATED'|'IN_PROGRESS'|'IN_PROGRESS_IN_ERROR'|'SUCCEEDED'|'FAILED',
+              'CreatedTime': datetime(2015, 1, 1),
+              'UpdatedTime': datetime(2015, 1, 1),
+              'ProvisionedProductType': 'string',
+              'RecordType': 'string',
+              'ProvisionedProductId': 'string',
+              'ProductId': 'string',
+              'ProvisioningArtifactId': 'string',
+              'PathId': 'string',
+              'RecordErrors': [
+                  {
+                      'Code': 'string',
+                      'Description': 'string'
+                  },
+              ],
+              'RecordTags': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'LaunchRoleArn': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **RecordDetail** *(dict) --* 
+
+        Information about a request operation.
+
+        
+        
+
+        - **RecordId** *(string) --* 
+
+          The identifier of the record.
+
+          
+        
+
+        - **ProvisionedProductName** *(string) --* 
+
+          The user-friendly name of the provisioned product.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The status of the provisioned product.
+
+           
+
+          
+          * ``CREATED`` - The request was created but the operation has not started.
+           
+          * ``IN_PROGRESS`` - The requested operation is in progress.
+           
+          * ``IN_PROGRESS_IN_ERROR`` - The provisioned product is under change but the requested operation failed and some remediation is occurring. For example, a rollback.
+           
+          * ``SUCCEEDED`` - The requested operation has successfully completed.
+           
+          * ``FAILED`` - The requested operation has unsuccessfully completed. Investigate using the error messages returned.
+          
+
+          
+        
+
+        - **CreatedTime** *(datetime) --* 
+
+          The UTC time stamp of the creation time.
+
+          
+        
+
+        - **UpdatedTime** *(datetime) --* 
+
+          The time when the record was last updated.
+
+          
+        
+
+        - **ProvisionedProductType** *(string) --* 
+
+          The type of provisioned product. The supported values are ``CFN_STACK``, ``CFN_STACKSET``, ``TERRAFORM_OPEN_SOURCE``, ``TERRAFORM_CLOUD``, and ``EXTERNAL``.
+
+          
+        
+
+        - **RecordType** *(string) --* 
+
+          The record type.
+
+           
+
+          
+          * ``PROVISION_PRODUCT``
+           
+          * ``UPDATE_PROVISIONED_PRODUCT``
+           
+          * ``TERMINATE_PROVISIONED_PRODUCT``
+          
+
+          
+        
+
+        - **ProvisionedProductId** *(string) --* 
+
+          The identifier of the provisioned product.
+
+          
+        
+
+        - **ProductId** *(string) --* 
+
+          The product identifier.
+
+          
+        
+
+        - **ProvisioningArtifactId** *(string) --* 
+
+          The identifier of the provisioning artifact.
+
+          
+        
+
+        - **PathId** *(string) --* 
+
+          The path identifier.
+
+          
+        
+
+        - **RecordErrors** *(list) --* 
+
+          The errors that occurred.
+
+          
+          
+
+          - *(dict) --* 
+
+            The error code and description resulting from an operation.
+
+            
+            
+
+            - **Code** *(string) --* 
+
+              The numeric value of the error.
+
+              
+            
+
+            - **Description** *(string) --* 
+
+              The description of the error.
+
+              
+        
+      
+        
+
+        - **RecordTags** *(list) --* 
+
+          One or more tags.
+
+          
+          
+
+          - *(dict) --* 
+
+            Information about a tag, which is a key-value pair.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The key for this tag.
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The value for this tag.
+
+              
+        
+      
+        
+
+        - **LaunchRoleArn** *(string) --* 
+
+          The ARN of the launch role associated with the provisioned product.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.DuplicateResourceException`
+
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.InvalidStateException`
+
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.InvalidParametersException`
+
+  

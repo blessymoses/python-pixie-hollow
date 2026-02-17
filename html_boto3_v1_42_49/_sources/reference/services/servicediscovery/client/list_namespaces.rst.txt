@@ -1,0 +1,402 @@
+:doc:`ServiceDiscovery <../../servicediscovery>` / Client / list_namespaces
+
+***************
+list_namespaces
+***************
+
+
+
+.. py:method:: ServiceDiscovery.Client.list_namespaces(**kwargs)
+
+  
+
+  Lists summary information about the namespaces that were created by the current Amazon Web Services account and shared with the current Amazon Web Services account.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/servicediscovery-2017-03-14/ListNamespaces>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_namespaces(
+        NextToken='string',
+        MaxResults=123,
+        Filters=[
+            {
+                'Name': 'TYPE'|'NAME'|'HTTP_NAME'|'RESOURCE_OWNER',
+                'Values': [
+                    'string',
+                ],
+                'Condition': 'EQ'|'IN'|'BETWEEN'|'BEGINS_WITH'
+            },
+        ]
+    )
+    
+  :type NextToken: string
+  :param NextToken: 
+
+    For the first ``ListNamespaces`` request, omit this value.
+
+     
+
+    If the response contains ``NextToken``, submit another ``ListNamespaces`` request to get the next group of results. Specify the value of ``NextToken`` from the previous response in the next request.
+
+     
+
+    .. note::
+
+      
+
+      Cloud Map gets ``MaxResults`` namespaces and then filters them based on the specified criteria. It's possible that no namespaces in the first ``MaxResults`` namespaces matched the specified criteria but that subsequent groups of ``MaxResults`` namespaces do contain namespaces that match the criteria.
+
+      
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of namespaces that you want Cloud Map to return in the response to a ``ListNamespaces`` request. If you don't specify a value for ``MaxResults``, Cloud Map returns up to 100 namespaces.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    A complex type that contains specifications for the namespaces that you want to list.
+
+     
+
+    If you specify more than one filter, a namespace must match all filters to be returned by ``ListNamespaces``.
+
+    
+
+  
+    - *(dict) --* 
+
+      A complex type that identifies the namespaces that you want to list. You can choose to list public or private namespaces.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        Specify the namespaces that you want to get using one of the following.
+
+         
+
+        
+        * ``TYPE``: Gets the namespaces of the specified type.
+         
+        * ``NAME``: Gets the namespaces with the specified name.
+         
+        * ``HTTP_NAME``: Gets the namespaces with the specified HTTP name.
+         
+        * ``RESOURCE_OWNER``: Gets the namespaces created by your Amazon Web Services account or by other accounts. This can be used to filter for shared namespaces. For more information about shared namespaces, see `Cross-account Cloud Map namespace sharing <https://docs.aws.amazon.com/cloud-map/latest/dg/sharing-namespaces.html>`__ in the *Cloud Map Developer Guide*.
+        
+
+        
+
+      
+      - **Values** *(list) --* **[REQUIRED]** 
+
+        Specify the values that are applicable to the value that you specify for ``Name``.
+
+         
+
+        
+        * ``TYPE``: Specify ``HTTP``, ``DNS_PUBLIC``, or ``DNS_PRIVATE``.
+         
+        * ``NAME``: Specify the name of the namespace, which is found in ``Namespace.Name``.
+         
+        * ``HTTP_NAME``: Specify the HTTP name of the namespace, which is found in ``Namespace.Properties.HttpProperties.HttpName``.
+         
+        * ``RESOURCE_OWNER``: Specify one of ``SELF`` or ``OTHER_ACCOUNTS``. ``SELF`` can be used to filter namespaces created by you and ``OTHER_ACCOUNTS`` can be used to filter namespaces shared with you that were created by other accounts.
+        
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **Condition** *(string) --* 
+
+        Specify the operator that you want to use to determine whether a namespace matches the specified value. Valid values for ``Condition`` are one of the following.
+
+         
+
+        
+        * ``EQ``: When you specify ``EQ`` for ``Condition``, you can specify only one value. ``EQ`` is supported for ``TYPE``, ``NAME``, ``RESOURCE_OWNER`` and ``HTTP_NAME``. ``EQ`` is the default condition and can be omitted.
+         
+        * ``BEGINS_WITH``: When you specify ``BEGINS_WITH`` for ``Condition``, you can specify only one value. ``BEGINS_WITH`` is supported for ``TYPE``, ``NAME``, and ``HTTP_NAME``.
+        
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Namespaces': [
+              {
+                  'Id': 'string',
+                  'Arn': 'string',
+                  'ResourceOwner': 'string',
+                  'Name': 'string',
+                  'Type': 'DNS_PUBLIC'|'DNS_PRIVATE'|'HTTP',
+                  'Description': 'string',
+                  'ServiceCount': 123,
+                  'Properties': {
+                      'DnsProperties': {
+                          'HostedZoneId': 'string',
+                          'SOA': {
+                              'TTL': 123
+                          }
+                      },
+                      'HttpProperties': {
+                          'HttpName': 'string'
+                      }
+                  },
+                  'CreateDate': datetime(2015, 1, 1)
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Namespaces** *(list) --* 
+
+        An array that contains one ``NamespaceSummary`` object for each namespace that matches the specified filter criteria.
+
+        
+        
+
+        - *(dict) --* 
+
+          A complex type that contains information about a namespace.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The ID of the namespace.
+
+            
+          
+
+          - **Arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) that Cloud Map assigns to the namespace when you create it.
+
+            
+          
+
+          - **ResourceOwner** *(string) --* 
+
+            The ID of the Amazon Web Services account that created the namespace. If this isn't your account ID, it's the ID of the account that shared the namespace with your account. For more information about shared namespaces, see `Cross-account Cloud Map namespace sharing <https://docs.aws.amazon.com/cloud-map/latest/dg/sharing-namespaces.html>`__ in the *Cloud Map Developer Guide*.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The name of the namespace. When you create a namespace, Cloud Map automatically creates a Route 53 hosted zone that has the same name as the namespace.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The type of the namespace, either public or private.
+
+            
+          
+
+          - **Description** *(string) --* 
+
+            A description for the namespace.
+
+            
+          
+
+          - **ServiceCount** *(integer) --* 
+
+            The number of services that were created using the namespace.
+
+            
+          
+
+          - **Properties** *(dict) --* 
+
+            The properties of the namespace.
+
+            
+            
+
+            - **DnsProperties** *(dict) --* 
+
+              A complex type that contains the ID for the Route 53 hosted zone that Cloud Map creates when you create a namespace.
+
+              
+              
+
+              - **HostedZoneId** *(string) --* 
+
+                The ID for the Route 53 hosted zone that Cloud Map creates when you create a namespace.
+
+                
+              
+
+              - **SOA** *(dict) --* 
+
+                Start of Authority (SOA) record for the hosted zone.
+
+                
+                
+
+                - **TTL** *(integer) --* 
+
+                  The time to live (TTL) for purposes of negative caching.
+
+                  
+            
+          
+            
+
+            - **HttpProperties** *(dict) --* 
+
+              A complex type that contains the name of an HTTP namespace.
+
+              
+              
+
+              - **HttpName** *(string) --* 
+
+                The name of an HTTP namespace.
+
+                
+          
+        
+          
+
+          - **CreateDate** *(datetime) --* 
+
+            The date and time that the namespace was created.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If the response contains ``NextToken``, submit another ``ListNamespaces`` request to get the next group of results. Specify the value of ``NextToken`` from the previous response in the next request.
+
+         
+
+        .. note::
+
+          
+
+          Cloud Map gets ``MaxResults`` namespaces and then filters them based on the specified criteria. It's possible that no namespaces in the first ``MaxResults`` namespaces matched the specified criteria but that subsequent groups of ``MaxResults`` namespaces do contain namespaces that match the criteria.
+
+          
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ServiceDiscovery.Client.exceptions.InvalidInput`
+
+  
+
+  **Examples**
+
+  Example: List namespaces
+  ::
+
+    response = client.list_namespaces(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Namespaces': [
+            {
+                'Arn': 'arn:aws:servicediscovery:us-west-2:123456789012:namespace/ns-a3ccy2e7e3a7rile',
+                'CreateDate': 1585354387.357,
+                'Id': 'ns-a3ccy2e7e3a7rile',
+                'Name': 'local',
+                'Properties': {
+                    'DnsProperties': {
+                        'HostedZoneId': 'Z06752353VBUDTC32S84S',
+                    },
+                    'HttpProperties': {
+                        'HttpName': 'local',
+                    },
+                },
+                'Type': 'DNS_PRIVATE',
+            },
+            {
+                'Arn': 'arn:aws:servicediscovery:us-west-2:123456789012:namespace/ns-pocfyjtrsmwtvcxx',
+                'CreateDate': 1586468974.698,
+                'Description': 'My second namespace',
+                'Id': 'ns-pocfyjtrsmwtvcxx',
+                'Name': 'My-second-namespace',
+                'Properties': {
+                    'DnsProperties': {
+                    },
+                    'HttpProperties': {
+                        'HttpName': 'My-second-namespace',
+                    },
+                },
+                'Type': 'HTTP',
+            },
+            {
+                'Arn': 'arn:aws:servicediscovery:us-west-2:123456789012:namespace/ns-ylexjili4cdxy3xm',
+                'CreateDate': 1587055896.798,
+                'Id': 'ns-ylexjili4cdxy3xm',
+                'Name': 'example.com',
+                'Properties': {
+                    'DnsProperties': {
+                        'HostedZoneId': 'Z09983722P0QME1B3KC8I',
+                    },
+                    'HttpProperties': {
+                        'HttpName': 'example.com',
+                    },
+                },
+                'Type': 'DNS_PRIVATE',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

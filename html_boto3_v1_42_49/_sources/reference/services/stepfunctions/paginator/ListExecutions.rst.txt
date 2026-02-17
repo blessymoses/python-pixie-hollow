@@ -1,0 +1,314 @@
+:doc:`SFN <../../stepfunctions>` / Paginator / ListExecutions
+
+**************
+ListExecutions
+**************
+
+
+
+.. py:class:: SFN.Paginator.ListExecutions
+
+  ::
+
+    
+    paginator = client.get_paginator('list_executions')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`SFN.Client.list_executions`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/ListExecutions>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          stateMachineArn='string',
+          statusFilter='RUNNING'|'SUCCEEDED'|'FAILED'|'TIMED_OUT'|'ABORTED'|'PENDING_REDRIVE',
+          mapRunArn='string',
+          redriveFilter='REDRIVEN'|'NOT_REDRIVEN',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type stateMachineArn: string
+    :param stateMachineArn: 
+
+      The Amazon Resource Name (ARN) of the state machine whose executions is listed.
+
+       
+
+      You can specify either a ``mapRunArn`` or a ``stateMachineArn``, but not both.
+
+       
+
+      You can also return a list of executions associated with a specific `alias <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-state-machine-alias.html>`__ or `version <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-state-machine-version.html>`__, by specifying an alias ARN or a version ARN in the ``stateMachineArn`` parameter.
+
+      
+
+    
+    :type statusFilter: string
+    :param statusFilter: 
+
+      If specified, only list the executions whose current execution status matches the given filter.
+
+       
+
+      If you provide a ``PENDING_REDRIVE`` statusFilter, you must specify ``mapRunArn``. For more information, see `Child workflow execution redrive behaviour <https://docs.aws.amazon.com/step-functions/latest/dg/redrive-map-run.html#redrive-child-workflow-behavior>`__ in the *Step Functions Developer Guide*.
+
+       
+
+      If you provide a stateMachineArn and a ``PENDING_REDRIVE`` statusFilter, the API returns a validation exception.
+
+      
+
+    
+    :type mapRunArn: string
+    :param mapRunArn: 
+
+      The Amazon Resource Name (ARN) of the Map Run that started the child workflow executions. If the ``mapRunArn`` field is specified, a list of all of the child workflow executions started by a Map Run is returned. For more information, see `Examining Map Run <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-examine-map-run.html>`__ in the *Step Functions Developer Guide*.
+
+       
+
+      You can specify either a ``mapRunArn`` or a ``stateMachineArn``, but not both.
+
+      
+
+    
+    :type redriveFilter: string
+    :param redriveFilter: 
+
+      Sets a filter to list executions based on whether or not they have been redriven.
+
+       
+
+      For a Distributed Map, ``redriveFilter`` sets a filter to list child workflow executions based on whether or not they have been redriven.
+
+       
+
+      If you do not provide a ``redriveFilter``, Step Functions returns a list of both redriven and non-redriven executions.
+
+       
+
+      If you provide a state machine ARN in ``redriveFilter``, the API returns a validation exception.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'executions': [
+                {
+                    'executionArn': 'string',
+                    'stateMachineArn': 'string',
+                    'name': 'string',
+                    'status': 'RUNNING'|'SUCCEEDED'|'FAILED'|'TIMED_OUT'|'ABORTED'|'PENDING_REDRIVE',
+                    'startDate': datetime(2015, 1, 1),
+                    'stopDate': datetime(2015, 1, 1),
+                    'mapRunArn': 'string',
+                    'itemCount': 123,
+                    'stateMachineVersionArn': 'string',
+                    'stateMachineAliasArn': 'string',
+                    'redriveCount': 123,
+                    'redriveDate': datetime(2015, 1, 1)
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **executions** *(list) --* 
+
+          The list of matching executions.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains details about an execution.
+
+            
+            
+
+            - **executionArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) that identifies the execution.
+
+              
+            
+
+            - **stateMachineArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the state machine that ran the execution.
+
+              
+            
+
+            - **name** *(string) --* 
+
+              The name of the execution.
+
+               
+
+              A name must *not* contain:
+
+               
+
+              
+              * white space
+               
+              * brackets ``< > { } [ ]``
+               
+              * wildcard characters ``? *``
+               
+              * special characters ``" # % \ ^ | ~ ` $ & , ; : /``
+               
+              * control characters ( ``U+0000-001F``, ``U+007F-009F``, ``U+FFFE-FFFF``)
+               
+              * surrogates ( ``U+D800-DFFF``)
+               
+              * invalid characters ( `` U+10FFFF``)
+              
+
+               
+
+              To enable logging with CloudWatch Logs, the name should only contain 0-9, A-Z, a-z, - and _.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The current status of the execution.
+
+              
+            
+
+            - **startDate** *(datetime) --* 
+
+              The date the execution started.
+
+              
+            
+
+            - **stopDate** *(datetime) --* 
+
+              If the execution already ended, the date the execution stopped.
+
+              
+            
+
+            - **mapRunArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of a Map Run. This field is returned only if ``mapRunArn`` was specified in the ``ListExecutions`` API action. If ``stateMachineArn`` was specified in ``ListExecutions``, the ``mapRunArn`` isn't returned.
+
+              
+            
+
+            - **itemCount** *(integer) --* 
+
+              The total number of items processed in a child workflow execution. This field is returned only if ``mapRunArn`` was specified in the ``ListExecutions`` API action. If ``stateMachineArn`` was specified in ``ListExecutions``, the ``itemCount`` field isn't returned.
+
+              
+            
+
+            - **stateMachineVersionArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the state machine version associated with the execution.
+
+               
+
+              If the state machine execution was started with an unqualified ARN, it returns null.
+
+               
+
+              If the execution was started using a ``stateMachineAliasArn``, both the ``stateMachineAliasArn`` and ``stateMachineVersionArn`` parameters contain the respective values.
+
+              
+            
+
+            - **stateMachineAliasArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the state machine alias used to start an execution.
+
+               
+
+              If the state machine execution was started with an unqualified ARN or a version ARN, it returns null.
+
+              
+            
+
+            - **redriveCount** *(integer) --* 
+
+              The number of times you've redriven an execution. If you have not yet redriven an execution, the ``redriveCount`` is 0. This count is only updated when you successfully redrive an execution.
+
+              
+            
+
+            - **redriveDate** *(datetime) --* 
+
+              The date the execution was last redriven.
+
+              
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

@@ -1,0 +1,286 @@
+:doc:`EC2 <../../ec2>` / Client / cancel_spot_fleet_requests
+
+**************************
+cancel_spot_fleet_requests
+**************************
+
+
+
+.. py:method:: EC2.Client.cancel_spot_fleet_requests(**kwargs)
+
+  
+
+  Cancels the specified Spot Fleet requests.
+
+   
+
+  After you cancel a Spot Fleet request, the Spot Fleet launches no new instances.
+
+   
+
+  You must also specify whether a canceled Spot Fleet request should terminate its instances. If you choose to terminate the instances, the Spot Fleet request enters the ``cancelled_terminating`` state. Otherwise, the Spot Fleet request enters the ``cancelled_running`` state and the instances continue to run until they are interrupted or you terminate them manually.
+
+   
+
+  .. warning::
+
+     
+
+    **Terminating an instance is permanent and irreversible.**
+
+     
+
+    After you terminate an instance, you can no longer connect to it, and it can't be recovered. All attached Amazon EBS volumes that are configured to be deleted on termination are also permanently deleted and can't be recovered. All data stored on instance store volumes is permanently lost. For more information, see `How instance termination works <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/how-ec2-instance-termination-works.html>`__.
+
+     
+
+    Before you terminate an instance, ensure that you have backed up all data that you need to retain after the termination to persistent storage.
+
+     
+
+   
+
+  **Restrictions**
+
+   
+
+  
+  * You can delete up to 100 fleets in a single request. If you exceed the specified number, no fleets are deleted.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/CancelSpotFleetRequests>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.cancel_spot_fleet_requests(
+        DryRun=True|False,
+        SpotFleetRequestIds=[
+            'string',
+        ],
+        TerminateInstances=True|False
+    )
+    
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type SpotFleetRequestIds: list
+  :param SpotFleetRequestIds: **[REQUIRED]** 
+
+    The IDs of the Spot Fleet requests.
+
+     
+
+    Constraint: You can specify up to 100 IDs in a single request.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type TerminateInstances: boolean
+  :param TerminateInstances: **[REQUIRED]** 
+
+    Indicates whether to terminate the associated instances when the Spot Fleet request is canceled. The default is to terminate the instances.
+
+     
+
+    To let the instances continue to run after the Spot Fleet request is canceled, specify ``no-terminate-instances``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'SuccessfulFleetRequests': [
+              {
+                  'CurrentSpotFleetRequestState': 'submitted'|'active'|'cancelled'|'failed'|'cancelled_running'|'cancelled_terminating'|'modifying',
+                  'PreviousSpotFleetRequestState': 'submitted'|'active'|'cancelled'|'failed'|'cancelled_running'|'cancelled_terminating'|'modifying',
+                  'SpotFleetRequestId': 'string'
+              },
+          ],
+          'UnsuccessfulFleetRequests': [
+              {
+                  'Error': {
+                      'Code': 'fleetRequestIdDoesNotExist'|'fleetRequestIdMalformed'|'fleetRequestNotInCancellableState'|'unexpectedError',
+                      'Message': 'string'
+                  },
+                  'SpotFleetRequestId': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains the output of CancelSpotFleetRequests.
+
+      
+      
+
+      - **SuccessfulFleetRequests** *(list) --* 
+
+        Information about the Spot Fleet requests that are successfully canceled.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a Spot Fleet request that was successfully canceled.
+
+          
+          
+
+          - **CurrentSpotFleetRequestState** *(string) --* 
+
+            The current state of the Spot Fleet request.
+
+            
+          
+
+          - **PreviousSpotFleetRequestState** *(string) --* 
+
+            The previous state of the Spot Fleet request.
+
+            
+          
+
+          - **SpotFleetRequestId** *(string) --* 
+
+            The ID of the Spot Fleet request.
+
+            
+      
+    
+      
+
+      - **UnsuccessfulFleetRequests** *(list) --* 
+
+        Information about the Spot Fleet requests that are not successfully canceled.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a Spot Fleet request that was not successfully canceled.
+
+          
+          
+
+          - **Error** *(dict) --* 
+
+            The error.
+
+            
+            
+
+            - **Code** *(string) --* 
+
+              The error code.
+
+              
+            
+
+            - **Message** *(string) --* 
+
+              The description for the error code.
+
+              
+        
+          
+
+          - **SpotFleetRequestId** *(string) --* 
+
+            The ID of the Spot Fleet request.
+
+            
+      
+    
+  
+
+  **Examples**
+
+  This example cancels the specified Spot fleet request and terminates its associated Spot Instances.
+  ::
+
+    response = client.cancel_spot_fleet_requests(
+        SpotFleetRequestIds=[
+            'sfr-73fbd2ce-aa30-494c-8788-1cee4EXAMPLE',
+        ],
+        TerminateInstances=True,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'SuccessfulFleetRequests': [
+            {
+                'CurrentSpotFleetRequestState': 'cancelled_running',
+                'PreviousSpotFleetRequestState': 'active',
+                'SpotFleetRequestId': 'sfr-73fbd2ce-aa30-494c-8788-1cee4EXAMPLE',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example cancels the specified Spot fleet request without terminating its associated Spot Instances.
+  ::
+
+    response = client.cancel_spot_fleet_requests(
+        SpotFleetRequestIds=[
+            'sfr-73fbd2ce-aa30-494c-8788-1cee4EXAMPLE',
+        ],
+        TerminateInstances=False,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'SuccessfulFleetRequests': [
+            {
+                'CurrentSpotFleetRequestState': 'cancelled_terminating',
+                'PreviousSpotFleetRequestState': 'active',
+                'SpotFleetRequestId': 'sfr-73fbd2ce-aa30-494c-8788-1cee4EXAMPLE',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

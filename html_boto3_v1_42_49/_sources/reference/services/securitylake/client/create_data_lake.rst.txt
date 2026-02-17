@@ -1,0 +1,490 @@
+:doc:`SecurityLake <../../securitylake>` / Client / create_data_lake
+
+****************
+create_data_lake
+****************
+
+
+
+.. py:method:: SecurityLake.Client.create_data_lake(**kwargs)
+
+  
+
+  Initializes an Amazon Security Lake instance with the provided (or default) configuration. You can enable Security Lake in Amazon Web Services Regions with customized settings before enabling log collection in Regions. To specify particular Regions, configure these Regions using the ``configurations`` parameter. If you have already enabled Security Lake in a Region when you call this command, the command will update the Region if you provide new configuration parameters. If you have not already enabled Security Lake in the Region when you call this API, it will set up the data lake in the Region with the specified configurations.
+
+   
+
+  When you enable Security Lake, it starts ingesting security data after the ``CreateAwsLogSource`` call and after you create subscribers using the ``CreateSubscriber`` API. This includes ingesting security data from sources, storing data, and making data accessible to subscribers. Security Lake also enables all the existing settings and resources that it stores or maintains for your Amazon Web Services account in the current Region, including security log and event data. For more information, see the `Amazon Security Lake User Guide <https://docs.aws.amazon.com/security-lake/latest/userguide/what-is-security-lake.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/securitylake-2018-05-10/CreateDataLake>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_data_lake(
+        configurations=[
+            {
+                'encryptionConfiguration': {
+                    'kmsKeyId': 'string'
+                },
+                'lifecycleConfiguration': {
+                    'expiration': {
+                        'days': 123
+                    },
+                    'transitions': [
+                        {
+                            'days': 123,
+                            'storageClass': 'string'
+                        },
+                    ]
+                },
+                'region': 'string',
+                'replicationConfiguration': {
+                    'regions': [
+                        'string',
+                    ],
+                    'roleArn': 'string'
+                }
+            },
+        ],
+        metaStoreManagerRoleArn='string',
+        tags=[
+            {
+                'key': 'string',
+                'value': 'string'
+            },
+        ]
+    )
+    
+  :type configurations: list
+  :param configurations: **[REQUIRED]** 
+
+    Specify the Region or Regions that will contribute data to the rollup region.
+
+    
+
+  
+    - *(dict) --* 
+
+      Provides details of Amazon Security Lake object.
+
+      
+
+    
+      - **encryptionConfiguration** *(dict) --* 
+
+        Provides encryption details of Amazon Security Lake object.
+
+        
+
+      
+        - **kmsKeyId** *(string) --* 
+
+          The identifier of KMS encryption key used by Amazon Security Lake to encrypt the Security Lake object.
+
+          
+
+        
+      
+      - **lifecycleConfiguration** *(dict) --* 
+
+        Provides lifecycle details of Amazon Security Lake object.
+
+        
+
+      
+        - **expiration** *(dict) --* 
+
+          Provides data expiration details of Amazon Security Lake object.
+
+          
+
+        
+          - **days** *(integer) --* 
+
+            Number of days before data expires in the Amazon Security Lake object.
+
+            
+
+          
+        
+        - **transitions** *(list) --* 
+
+          Provides data storage transition details of Amazon Security Lake object.
+
+          
+
+        
+          - *(dict) --* 
+
+            Provide transition lifecycle details of Amazon Security Lake object.
+
+            
+
+          
+            - **days** *(integer) --* 
+
+              Number of days before data transitions to a different S3 Storage Class in the Amazon Security Lake object.
+
+              
+
+            
+            - **storageClass** *(string) --* 
+
+              The range of storage classes that you can choose from based on the data access, resiliency, and cost requirements of your workloads.
+
+              
+
+            
+          
+      
+      
+      - **region** *(string) --* **[REQUIRED]** 
+
+        The Amazon Web Services Regions where Security Lake is automatically enabled.
+
+        
+
+      
+      - **replicationConfiguration** *(dict) --* 
+
+        Provides replication details of Amazon Security Lake object.
+
+        
+
+      
+        - **regions** *(list) --* 
+
+          Specifies one or more centralized rollup Regions. The Amazon Web Services Region specified in the ``region`` parameter of the `CreateDataLake <https://docs.aws.amazon.com/security-lake/latest/APIReference/API_CreateDataLake.html>`__ or `UpdateDataLake <https://docs.aws.amazon.com/security-lake/latest/APIReference/API_UpdateDataLake.html>`__ operations contributes data to the rollup Region or Regions specified in this parameter.
+
+           
+
+          Replication enables automatic, asynchronous copying of objects across Amazon S3 buckets. S3 buckets that are configured for object replication can be owned by the same Amazon Web Services account or by different accounts. You can replicate objects to a single destination bucket or to multiple destination buckets. The destination buckets can be in different Regions or within the same Region as the source bucket.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+        - **roleArn** *(string) --* 
+
+          Replication settings for the Amazon S3 buckets. This parameter uses the Identity and Access Management (IAM) role you created that is managed by Security Lake, to ensure the replication setting is correct.
+
+          
+
+        
+      
+    
+
+  :type metaStoreManagerRoleArn: string
+  :param metaStoreManagerRoleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) used to create and update the Glue table. This table contains partitions generated by the ingestion and normalization of Amazon Web Services log sources and custom sources.
+
+    
+
+  
+  :type tags: list
+  :param tags: 
+
+    An array of objects, one for each tag to associate with the data lake configuration. For each tag, you must specify both a tag key and a tag value. A tag value cannot be null, but it can be an empty string.
+
+    
+
+  
+    - *(dict) --* 
+
+      A *tag* is a label that you can define and associate with Amazon Web Services resources, including certain types of Amazon Security Lake resources. Tags can help you identify, categorize, and manage resources in different ways, such as by owner, environment, or other criteria. You can associate tags with the following types of Security Lake resources: subscribers, and the data lake configuration for your Amazon Web Services account in individual Amazon Web Services Regions.
+
+       
+
+      A resource can have up to 50 tags. Each tag consists of a required *tag key* and an associated *tag value*. A *tag key* is a general label that acts as a category for a more specific tag value. Each tag key must be unique and it can have only one tag value. A *tag value* acts as a descriptor for a tag key. Tag keys and values are case sensitive. They can contain letters, numbers, spaces, or the following symbols: _ . : / = + @ -
+
+       
+
+      For more information, see `Tagging Amazon Security Lake resources <https://docs.aws.amazon.com/security-lake/latest/userguide/tagging-resources.html>`__ in the *Amazon Security Lake User Guide*.
+
+      
+
+    
+      - **key** *(string) --* **[REQUIRED]** 
+
+        The name of the tag. This is a general label that acts as a category for a more specific tag value ( ``value``).
+
+        
+
+      
+      - **value** *(string) --* **[REQUIRED]** 
+
+        The value that’s associated with the specified tag key ( ``key``). This value acts as a descriptor for the tag key. A tag value cannot be null, but it can be an empty string.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'dataLakes': [
+              {
+                  'createStatus': 'INITIALIZED'|'PENDING'|'COMPLETED'|'FAILED',
+                  'dataLakeArn': 'string',
+                  'encryptionConfiguration': {
+                      'kmsKeyId': 'string'
+                  },
+                  'lifecycleConfiguration': {
+                      'expiration': {
+                          'days': 123
+                      },
+                      'transitions': [
+                          {
+                              'days': 123,
+                              'storageClass': 'string'
+                          },
+                      ]
+                  },
+                  'region': 'string',
+                  'replicationConfiguration': {
+                      'regions': [
+                          'string',
+                      ],
+                      'roleArn': 'string'
+                  },
+                  's3BucketArn': 'string',
+                  'updateStatus': {
+                      'exception': {
+                          'code': 'string',
+                          'reason': 'string'
+                      },
+                      'requestId': 'string',
+                      'status': 'INITIALIZED'|'PENDING'|'COMPLETED'|'FAILED'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **dataLakes** *(list) --* 
+
+        The created Security Lake configuration object.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides details of Amazon Security Lake object.
+
+          
+          
+
+          - **createStatus** *(string) --* 
+
+            Retrieves the status of the ``CreateDatalake`` API call for an account in Amazon Security Lake.
+
+            
+          
+
+          - **dataLakeArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) created by you to provide to the subscriber. For more information about ARNs and how to use them in policies, see the `Amazon Security Lake User Guide <https://docs.aws.amazon.com/security-lake/latest/userguide/subscriber-management.html>`__.
+
+            
+          
+
+          - **encryptionConfiguration** *(dict) --* 
+
+            Provides encryption details of Amazon Security Lake object.
+
+            
+            
+
+            - **kmsKeyId** *(string) --* 
+
+              The identifier of KMS encryption key used by Amazon Security Lake to encrypt the Security Lake object.
+
+              
+        
+          
+
+          - **lifecycleConfiguration** *(dict) --* 
+
+            Provides lifecycle details of Amazon Security Lake object.
+
+            
+            
+
+            - **expiration** *(dict) --* 
+
+              Provides data expiration details of Amazon Security Lake object.
+
+              
+              
+
+              - **days** *(integer) --* 
+
+                Number of days before data expires in the Amazon Security Lake object.
+
+                
+          
+            
+
+            - **transitions** *(list) --* 
+
+              Provides data storage transition details of Amazon Security Lake object.
+
+              
+              
+
+              - *(dict) --* 
+
+                Provide transition lifecycle details of Amazon Security Lake object.
+
+                
+                
+
+                - **days** *(integer) --* 
+
+                  Number of days before data transitions to a different S3 Storage Class in the Amazon Security Lake object.
+
+                  
+                
+
+                - **storageClass** *(string) --* 
+
+                  The range of storage classes that you can choose from based on the data access, resiliency, and cost requirements of your workloads.
+
+                  
+            
+          
+        
+          
+
+          - **region** *(string) --* 
+
+            The Amazon Web Services Regions where Security Lake is enabled.
+
+            
+          
+
+          - **replicationConfiguration** *(dict) --* 
+
+            Provides replication details of Amazon Security Lake object.
+
+            
+            
+
+            - **regions** *(list) --* 
+
+              Specifies one or more centralized rollup Regions. The Amazon Web Services Region specified in the ``region`` parameter of the `CreateDataLake <https://docs.aws.amazon.com/security-lake/latest/APIReference/API_CreateDataLake.html>`__ or `UpdateDataLake <https://docs.aws.amazon.com/security-lake/latest/APIReference/API_UpdateDataLake.html>`__ operations contributes data to the rollup Region or Regions specified in this parameter.
+
+               
+
+              Replication enables automatic, asynchronous copying of objects across Amazon S3 buckets. S3 buckets that are configured for object replication can be owned by the same Amazon Web Services account or by different accounts. You can replicate objects to a single destination bucket or to multiple destination buckets. The destination buckets can be in different Regions or within the same Region as the source bucket.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **roleArn** *(string) --* 
+
+              Replication settings for the Amazon S3 buckets. This parameter uses the Identity and Access Management (IAM) role you created that is managed by Security Lake, to ensure the replication setting is correct.
+
+              
+        
+          
+
+          - **s3BucketArn** *(string) --* 
+
+            The ARN for the Amazon Security Lake Amazon S3 bucket.
+
+            
+          
+
+          - **updateStatus** *(dict) --* 
+
+            The status of the last ``UpdateDataLake ``or ``DeleteDataLake`` API request.
+
+            
+            
+
+            - **exception** *(dict) --* 
+
+              The details of the last ``UpdateDataLake``or ``DeleteDataLake`` API request which failed.
+
+              
+              
+
+              - **code** *(string) --* 
+
+                The reason code for the exception of the last ``UpdateDataLake`` or ``DeleteDataLake`` API request.
+
+                
+              
+
+              - **reason** *(string) --* 
+
+                The reason for the exception of the last ``UpdateDataLake``or ``DeleteDataLake`` API request.
+
+                
+          
+            
+
+            - **requestId** *(string) --* 
+
+              The unique ID for the last ``UpdateDataLake`` or ``DeleteDataLake`` API request.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The status of the last ``UpdateDataLake`` or ``DeleteDataLake`` API request that was requested.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SecurityLake.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`SecurityLake.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SecurityLake.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SecurityLake.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`SecurityLake.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`SecurityLake.Client.exceptions.ThrottlingException`
+
+  

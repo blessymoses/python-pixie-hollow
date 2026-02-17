@@ -1,0 +1,573 @@
+:doc:`Connect <../../connect>` / Client / create_user
+
+***********
+create_user
+***********
+
+
+
+.. py:method:: Connect.Client.create_user(**kwargs)
+
+  
+
+  Creates a user account for the specified Amazon Connect instance.
+
+   
+
+  .. warning::
+
+     
+
+    Certain `UserIdentityInfo <https://docs.aws.amazon.com/connect/latest/APIReference/API_UserIdentityInfo.html>`__ parameters are required in some situations. For example, ``Email``, ``FirstName`` and ``LastName`` are required if you are using Amazon Connect or SAML for identity management.
+
+     
+
+   
+
+  .. note::
+
+    
+
+    Fields in ``PhoneConfig`` cannot be set simultaneously with their corresponding channel-specific configuration parameters. Specifically:
+
+     
+
+    
+    * ``PhoneConfig.AutoAccept`` conflicts with ``AutoAcceptConfigs``
+     
+    * ``PhoneConfig.AfterContactWorkTimeLimit`` conflicts with ``AfterContactWorkConfigs``
+     
+    * ``PhoneConfig.PhoneType`` and ``PhoneConfig.PhoneNumber`` conflict with ``PhoneNumberConfigs``
+     
+    * ``PhoneConfig.PersistentConnection`` conflicts with ``PersistentConnectionConfigs``
+    
+
+     
+
+    We recommend using channel-specific parameters such as ``AutoAcceptConfigs``, ``AfterContactWorkConfigs``, ``PhoneNumberConfigs``, ``PersistentConnectionConfigs``, and ``VoiceEnhancementConfigs`` for per-channel configuration.
+
+    
+
+   
+
+  For information about how to create users using the Amazon Connect admin website, see `Add Users <https://docs.aws.amazon.com/connect/latest/adminguide/user-management.html>`__ in the *Amazon Connect Administrator Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connect-2017-08-08/CreateUser>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_user(
+        Username='string',
+        Password='string',
+        IdentityInfo={
+            'FirstName': 'string',
+            'LastName': 'string',
+            'Email': 'string',
+            'SecondaryEmail': 'string',
+            'Mobile': 'string'
+        },
+        PhoneConfig={
+            'PhoneType': 'SOFT_PHONE'|'DESK_PHONE',
+            'AutoAccept': True|False,
+            'AfterContactWorkTimeLimit': 123,
+            'DeskPhoneNumber': 'string',
+            'PersistentConnection': True|False
+        },
+        DirectoryUserId='string',
+        SecurityProfileIds=[
+            'string',
+        ],
+        RoutingProfileId='string',
+        HierarchyGroupId='string',
+        InstanceId='string',
+        AutoAcceptConfigs=[
+            {
+                'Channel': 'VOICE'|'CHAT'|'TASK'|'EMAIL',
+                'AutoAccept': True|False,
+                'AgentFirstCallbackAutoAccept': True|False
+            },
+        ],
+        AfterContactWorkConfigs=[
+            {
+                'Channel': 'VOICE'|'CHAT'|'TASK'|'EMAIL',
+                'AfterContactWorkConfig': {
+                    'AfterContactWorkTimeLimit': 123
+                },
+                'AgentFirstCallbackAfterContactWorkConfig': {
+                    'AfterContactWorkTimeLimit': 123
+                }
+            },
+        ],
+        PhoneNumberConfigs=[
+            {
+                'Channel': 'VOICE'|'CHAT'|'TASK'|'EMAIL',
+                'PhoneType': 'SOFT_PHONE'|'DESK_PHONE',
+                'PhoneNumber': 'string'
+            },
+        ],
+        PersistentConnectionConfigs=[
+            {
+                'Channel': 'VOICE'|'CHAT'|'TASK'|'EMAIL',
+                'PersistentConnection': True|False
+            },
+        ],
+        VoiceEnhancementConfigs=[
+            {
+                'Channel': 'VOICE'|'CHAT'|'TASK'|'EMAIL',
+                'VoiceEnhancementMode': 'VOICE_ISOLATION'|'NOISE_SUPPRESSION'|'NONE'
+            },
+        ],
+        Tags={
+            'string': 'string'
+        }
+    )
+    
+  :type Username: string
+  :param Username: **[REQUIRED]** 
+
+    The user name for the account. For instances not using SAML for identity management, the user name can include up to 20 characters. If you are using SAML for identity management, the user name can include up to 64 characters from [a-zA-Z0-9_-.\@]+.
+
+     
+
+    Username can include @ only if used in an email format. For example:
+
+     
+
+    
+    * Correct: testuser
+     
+    * Correct: testuser@example.com
+     
+    * Incorrect: testuser@example
+    
+
+    
+
+  
+  :type Password: string
+  :param Password: 
+
+    The password for the user account. A password is required if you are using Amazon Connect for identity management. Otherwise, it is an error to include a password.
+
+    
+
+  
+  :type IdentityInfo: dict
+  :param IdentityInfo: 
+
+    The information about the identity of the user.
+
+    
+
+  
+    - **FirstName** *(string) --* 
+
+      The first name. This is required if you are using Amazon Connect or SAML for identity management. Inputs must be in Unicode Normalization Form C (NFC). Text containing characters in a non-NFC form (for example, decomposed characters or combining marks) are not accepted.
+
+      
+
+    
+    - **LastName** *(string) --* 
+
+      The last name. This is required if you are using Amazon Connect or SAML for identity management. Inputs must be in Unicode Normalization Form C (NFC). Text containing characters in a non-NFC form (for example, decomposed characters or combining marks) are not accepted.
+
+      
+
+    
+    - **Email** *(string) --* 
+
+      The email address. If you are using SAML for identity management and include this parameter, an error is returned.
+
+      
+
+    
+    - **SecondaryEmail** *(string) --* 
+
+      The user's secondary email address. If you provide a secondary email, the user receives email notifications - other than password reset notifications - to this email address instead of to their primary email address.
+
+       
+
+      Pattern: ``(?=^.{0,265}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}``
+
+      
+
+    
+    - **Mobile** *(string) --* 
+
+      The user's mobile number.
+
+      
+
+    
+  
+  :type PhoneConfig: dict
+  :param PhoneConfig: 
+
+    The phone settings for the user. This parameter is optional. If not provided, the user can be configured using channel-specific parameters such as ``AutoAcceptConfigs``, ``AfterContactWorkConfigs``, ``PhoneNumberConfigs``, ``PersistentConnectionConfigs``, and ``VoiceEnhancementConfigs``.
+
+    
+
+  
+    - **PhoneType** *(string) --* 
+
+      The phone type.
+
+      
+
+    
+    - **AutoAccept** *(boolean) --* 
+
+      The Auto accept setting.
+
+      
+
+    
+    - **AfterContactWorkTimeLimit** *(integer) --* 
+
+      The After Call Work (ACW) timeout setting, in seconds. This parameter has a minimum value of 0 and a maximum value of 2,000,000 seconds (24 days). Enter 0 if you don't want to allocate a specific amount of ACW time. It essentially means an indefinite amount of time. When the conversation ends, ACW starts; the agent must choose Close contact to end ACW.
+
+       
+
+      .. note::
+
+        
+
+        When returned by a ``SearchUsers`` call, ``AfterContactWorkTimeLimit`` is returned in milliseconds.
+
+        
+
+      
+
+    
+    - **DeskPhoneNumber** *(string) --* 
+
+      The phone number for the user's desk phone.
+
+      
+
+    
+    - **PersistentConnection** *(boolean) --* 
+
+      The persistent connection setting for the user.
+
+      
+
+    
+  
+  :type DirectoryUserId: string
+  :param DirectoryUserId: 
+
+    The identifier of the user account in the directory used for identity management. If Amazon Connect cannot access the directory, you can specify this identifier to authenticate users. If you include the identifier, we assume that Amazon Connect cannot access the directory. Otherwise, the identity information is used to authenticate users from your directory.
+
+     
+
+    This parameter is required if you are using an existing directory for identity management in Amazon Connect when Amazon Connect cannot access your directory to authenticate users. If you are using SAML for identity management and include this parameter, an error is returned.
+
+    
+
+  
+  :type SecurityProfileIds: list
+  :param SecurityProfileIds: **[REQUIRED]** 
+
+    The identifier of the security profile for the user.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type RoutingProfileId: string
+  :param RoutingProfileId: **[REQUIRED]** 
+
+    The identifier of the routing profile for the user.
+
+    
+
+  
+  :type HierarchyGroupId: string
+  :param HierarchyGroupId: 
+
+    The identifier of the hierarchy group for the user.
+
+    
+
+  
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The identifier of the Amazon Connect instance. You can `find the instance ID <https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html>`__ in the Amazon Resource Name (ARN) of the instance.
+
+    
+
+  
+  :type AutoAcceptConfigs: list
+  :param AutoAcceptConfigs: 
+
+    The list of auto-accept configuration settings for each channel.
+
+    
+
+  
+    - *(dict) --* 
+
+      Configuration settings for auto-accept for a specific channel.
+
+      
+
+    
+      - **Channel** *(string) --* **[REQUIRED]** 
+
+        The channel for this auto-accept configuration. Valid values: VOICE, CHAT, TASK, EMAIL.
+
+        
+
+      
+      - **AutoAccept** *(boolean) --* **[REQUIRED]** 
+
+        Indicates whether auto-accept is enabled for this channel. When enabled, available agents are automatically connected to contacts from this channel.
+
+        
+
+      
+      - **AgentFirstCallbackAutoAccept** *(boolean) --* 
+
+        Indicates whether auto-accept is enabled for agent-first callbacks. This setting only applies to the VOICE channel.
+
+        
+
+      
+    
+
+  :type AfterContactWorkConfigs: list
+  :param AfterContactWorkConfigs: 
+
+    The list of after contact work (ACW) timeout configuration settings for each channel.
+
+    
+
+  
+    - *(dict) --* 
+
+      Configuration settings for after contact work (ACW) timeout for a specific channel.
+
+      
+
+    
+      - **Channel** *(string) --* **[REQUIRED]** 
+
+        The channel for this ACW timeout configuration. Valid values: VOICE, CHAT, TASK, EMAIL.
+
+        
+
+      
+      - **AfterContactWorkConfig** *(dict) --* **[REQUIRED]** 
+
+        The ACW timeout settings for this channel.
+
+        
+
+      
+        - **AfterContactWorkTimeLimit** *(integer) --* 
+
+          The ACW timeout duration in seconds. Minimum: 1 second. Maximum: 2,000,000 seconds (24 days). Enter 0 for indefinite ACW time.
+
+          
+
+        
+      
+      - **AgentFirstCallbackAfterContactWorkConfig** *(dict) --* 
+
+        The ACW timeout settings for agent-first callbacks. This setting only applies to the VOICE channel.
+
+        
+
+      
+        - **AfterContactWorkTimeLimit** *(integer) --* 
+
+          The ACW timeout duration in seconds. Minimum: 1 second. Maximum: 2,000,000 seconds (24 days). Enter 0 for indefinite ACW time.
+
+          
+
+        
+      
+    
+
+  :type PhoneNumberConfigs: list
+  :param PhoneNumberConfigs: 
+
+    The list of phone number configuration settings for each channel.
+
+    
+
+  
+    - *(dict) --* 
+
+      Configuration settings for phone type and phone number.
+
+      
+
+    
+      - **Channel** *(string) --* **[REQUIRED]** 
+
+        The channel for this phone number configuration. Only ``VOICE`` is supported for this data type.
+
+        
+
+      
+      - **PhoneType** *(string) --* **[REQUIRED]** 
+
+        The phone type. Valid values: SOFT_PHONE, DESK_PHONE.
+
+        
+
+      
+      - **PhoneNumber** *(string) --* 
+
+        The phone number for the user's desk phone.
+
+        
+
+      
+    
+
+  :type PersistentConnectionConfigs: list
+  :param PersistentConnectionConfigs: 
+
+    The list of persistent connection configuration settings for each channel.
+
+    
+
+  
+    - *(dict) --* 
+
+      Configuration settings for persistent connection for a specific channel.
+
+      
+
+    
+      - **Channel** *(string) --* **[REQUIRED]** 
+
+        Configuration settings for persistent connection. Only ``VOICE`` is supported for this data type.
+
+        
+
+      
+      - **PersistentConnection** *(boolean) --* **[REQUIRED]** 
+
+        Indicates whether persistent connection is enabled. When enabled, the agent's connection is maintained after a call ends, enabling subsequent calls to connect faster.
+
+        
+
+      
+    
+
+  :type VoiceEnhancementConfigs: list
+  :param VoiceEnhancementConfigs: 
+
+    The list of voice enhancement configuration settings for each channel.
+
+    
+
+  
+    - *(dict) --* 
+
+      Configuration settings for voice enhancement.
+
+      
+
+    
+      - **Channel** *(string) --* **[REQUIRED]** 
+
+        The channel for this voice enhancement configuration. Only ``VOICE`` is supported for this data type.
+
+        
+
+      
+      - **VoiceEnhancementMode** *(string) --* **[REQUIRED]** 
+
+        The voice enhancement mode.
+
+        
+
+      
+    
+
+  :type Tags: dict
+  :param Tags: 
+
+    The tags used to organize, track, or control access for this resource. For example, { "Tags": {"key1":"value1", "key2":"value2"} }.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'UserId': 'string',
+          'UserArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **UserId** *(string) --* 
+
+        The identifier of the user account.
+
+        
+      
+
+      - **UserArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the user account.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.DuplicateResourceException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InternalServiceException`
+
+  

@@ -1,0 +1,425 @@
+:doc:`ServiceCatalog <../../servicecatalog>` / Client / search_provisioned_products
+
+***************************
+search_provisioned_products
+***************************
+
+
+
+.. py:method:: ServiceCatalog.Client.search_provisioned_products(**kwargs)
+
+  
+
+  Gets information about the provisioned products that meet the specified criteria.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/servicecatalog-2015-12-10/SearchProvisionedProducts>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.search_provisioned_products(
+        AcceptLanguage='string',
+        AccessLevelFilter={
+            'Key': 'Account'|'Role'|'User',
+            'Value': 'string'
+        },
+        Filters={
+            'string': [
+                'string',
+            ]
+        },
+        SortBy='string',
+        SortOrder='ASCENDING'|'DESCENDING',
+        PageSize=123,
+        PageToken='string'
+    )
+    
+  :type AcceptLanguage: string
+  :param AcceptLanguage: 
+
+    The language code.
+
+     
+
+    
+    * ``jp`` - Japanese
+     
+    * ``zh`` - Chinese
+    
+
+    
+
+  
+  :type AccessLevelFilter: dict
+  :param AccessLevelFilter: 
+
+    The access level to use to obtain results. The default is ``Account``.
+
+    
+
+  
+    - **Key** *(string) --* 
+
+      The access level.
+
+       
+
+      
+      * ``Account`` - Filter results based on the account.
+       
+      * ``Role`` - Filter results based on the federated role of the specified user.
+       
+      * ``User`` - Filter results based on the specified user.
+      
+
+      
+
+    
+    - **Value** *(string) --* 
+
+      The user to which the access level applies. The only supported value is ``self``.
+
+      
+
+    
+  
+  :type Filters: dict
+  :param Filters: 
+
+    The search filters.
+
+     
+
+    When the key is ``SearchQuery``, the searchable fields are ``arn``, ``createdTime``, ``id``, ``lastRecordId``, ``idempotencyToken``, ``name``, ``physicalId``, ``productId``, ``provisioningArtifactId``, ``type``, ``status``, ``tags``, ``userArn``, ``userArnSession``, ``lastProvisioningRecordId``, ``lastSuccessfulProvisioningRecordId``, ``productName``, and ``provisioningArtifactName``.
+
+     
+
+    Example: ``"SearchQuery":["status:AVAILABLE"]``
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(list) --* 
+
+      
+        - *(string) --* 
+
+        
+    
+
+
+  :type SortBy: string
+  :param SortBy: 
+
+    The sort field. If no value is specified, the results are not sorted. The valid values are ``arn``, ``id``, ``name``, and ``lastRecordId``.
+
+    
+
+  
+  :type SortOrder: string
+  :param SortOrder: 
+
+    The sort order. If no value is specified, the results are not sorted.
+
+    
+
+  
+  :type PageSize: integer
+  :param PageSize: 
+
+    The maximum number of items to return with this call.
+
+    
+
+  
+  :type PageToken: string
+  :param PageToken: 
+
+    The page token for the next set of results. To retrieve the first set of results, use null.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ProvisionedProducts': [
+              {
+                  'Name': 'string',
+                  'Arn': 'string',
+                  'Type': 'string',
+                  'Id': 'string',
+                  'Status': 'AVAILABLE'|'UNDER_CHANGE'|'TAINTED'|'ERROR'|'PLAN_IN_PROGRESS',
+                  'StatusMessage': 'string',
+                  'CreatedTime': datetime(2015, 1, 1),
+                  'IdempotencyToken': 'string',
+                  'LastRecordId': 'string',
+                  'LastProvisioningRecordId': 'string',
+                  'LastSuccessfulProvisioningRecordId': 'string',
+                  'Tags': [
+                      {
+                          'Key': 'string',
+                          'Value': 'string'
+                      },
+                  ],
+                  'PhysicalId': 'string',
+                  'ProductId': 'string',
+                  'ProductName': 'string',
+                  'ProvisioningArtifactId': 'string',
+                  'ProvisioningArtifactName': 'string',
+                  'UserArn': 'string',
+                  'UserArnSession': 'string'
+              },
+          ],
+          'TotalResultsCount': 123,
+          'NextPageToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ProvisionedProducts** *(list) --* 
+
+        Information about the provisioned products.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about a provisioned product.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The user-friendly name of the provisioned product.
+
+            
+          
+
+          - **Arn** *(string) --* 
+
+            The ARN of the provisioned product.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The type of provisioned product. The supported values are ``CFN_STACK``, ``CFN_STACKSET``, ``TERRAFORM_OPEN_SOURCE``, ``TERRAFORM_CLOUD``, and ``EXTERNAL``.
+
+            
+          
+
+          - **Id** *(string) --* 
+
+            The identifier of the provisioned product.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The current status of the provisioned product.
+
+             
+
+            
+            * ``AVAILABLE`` - Stable state, ready to perform any operation. The most recent operation succeeded and completed.
+             
+            * ``UNDER_CHANGE`` - Transitive state. Operations performed might not have valid results. Wait for an ``AVAILABLE`` status before performing operations.
+             
+            * ``TAINTED`` - Stable state, ready to perform any operation. The stack has completed the requested operation but is not exactly what was requested. For example, a request to update to a new version failed and the stack rolled back to the current version.
+             
+            * ``ERROR`` - An unexpected error occurred. The provisioned product exists but the stack is not running. For example, CloudFormation received a parameter value that was not valid and could not launch the stack.
+             
+            * ``PLAN_IN_PROGRESS`` - Transitive state. The plan operations were performed to provision a new product, but resources have not yet been created. After reviewing the list of resources to be created, execute the plan. Wait for an ``AVAILABLE`` status before performing operations.
+            
+
+            
+          
+
+          - **StatusMessage** *(string) --* 
+
+            The current status message of the provisioned product.
+
+            
+          
+
+          - **CreatedTime** *(datetime) --* 
+
+            The UTC time stamp of the creation time.
+
+            
+          
+
+          - **IdempotencyToken** *(string) --* 
+
+            A unique identifier that you provide to ensure idempotency. If multiple requests differ only by the idempotency token, the same response is returned for each repeated request.
+
+            
+          
+
+          - **LastRecordId** *(string) --* 
+
+            The record identifier of the last request performed on this provisioned product.
+
+            
+          
+
+          - **LastProvisioningRecordId** *(string) --* 
+
+            The record identifier of the last request performed on this provisioned product of the following types:
+
+             
+
+            
+            * ProvisionProduct
+             
+            * UpdateProvisionedProduct
+             
+            * ExecuteProvisionedProductPlan
+             
+            * TerminateProvisionedProduct
+            
+
+            
+          
+
+          - **LastSuccessfulProvisioningRecordId** *(string) --* 
+
+            The record identifier of the last successful request performed on this provisioned product of the following types:
+
+             
+
+            
+            * ProvisionProduct
+             
+            * UpdateProvisionedProduct
+             
+            * ExecuteProvisionedProductPlan
+             
+            * TerminateProvisionedProduct
+            
+
+            
+          
+
+          - **Tags** *(list) --* 
+
+            One or more tags.
+
+            
+            
+
+            - *(dict) --* 
+
+              Information about a tag. A tag is a key-value pair. Tags are propagated to the resources created when provisioning a product.
+
+              
+              
+
+              - **Key** *(string) --* 
+
+                The tag key.
+
+                
+              
+
+              - **Value** *(string) --* 
+
+                The value for this key.
+
+                
+          
+        
+          
+
+          - **PhysicalId** *(string) --* 
+
+            The assigned identifier for the resource, such as an EC2 instance ID or an S3 bucket name.
+
+            
+          
+
+          - **ProductId** *(string) --* 
+
+            The product identifier.
+
+            
+          
+
+          - **ProductName** *(string) --* 
+
+            The name of the product.
+
+            
+          
+
+          - **ProvisioningArtifactId** *(string) --* 
+
+            The identifier of the provisioning artifact.
+
+            
+          
+
+          - **ProvisioningArtifactName** *(string) --* 
+
+            The name of the provisioning artifact.
+
+            
+          
+
+          - **UserArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the user.
+
+            
+          
+
+          - **UserArnSession** *(string) --* 
+
+            The ARN of the user in the session. This ARN might contain a session ID.
+
+            
+      
+    
+      
+
+      - **TotalResultsCount** *(integer) --* 
+
+        The number of provisioned products found.
+
+        
+      
+
+      - **NextPageToken** *(string) --* 
+
+        The page token to use to retrieve the next set of results. If there are no additional results, this value is null.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ServiceCatalog.Client.exceptions.InvalidParametersException`
+
+  

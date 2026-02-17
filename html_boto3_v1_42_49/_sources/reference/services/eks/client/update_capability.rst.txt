@@ -1,0 +1,458 @@
+:doc:`EKS <../../eks>` / Client / update_capability
+
+*****************
+update_capability
+*****************
+
+
+
+.. py:method:: EKS.Client.update_capability(**kwargs)
+
+  
+
+  Updates the configuration of a managed capability in your Amazon EKS cluster. You can update the IAM role, configuration settings, and delete propagation policy for a capability.
+
+   
+
+  When you update a capability, Amazon EKS applies the changes and may restart capability components as needed. The capability remains available during the update process, but some operations may be temporarily unavailable.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/UpdateCapability>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_capability(
+        clusterName='string',
+        capabilityName='string',
+        roleArn='string',
+        configuration={
+            'argoCd': {
+                'rbacRoleMappings': {
+                    'addOrUpdateRoleMappings': [
+                        {
+                            'role': 'ADMIN'|'EDITOR'|'VIEWER',
+                            'identities': [
+                                {
+                                    'id': 'string',
+                                    'type': 'SSO_USER'|'SSO_GROUP'
+                                },
+                            ]
+                        },
+                    ],
+                    'removeRoleMappings': [
+                        {
+                            'role': 'ADMIN'|'EDITOR'|'VIEWER',
+                            'identities': [
+                                {
+                                    'id': 'string',
+                                    'type': 'SSO_USER'|'SSO_GROUP'
+                                },
+                            ]
+                        },
+                    ]
+                },
+                'networkAccess': {
+                    'vpceIds': [
+                        'string',
+                    ]
+                }
+            }
+        },
+        clientRequestToken='string',
+        deletePropagationPolicy='RETAIN'
+    )
+    
+  :type clusterName: string
+  :param clusterName: **[REQUIRED]** 
+
+    The name of the Amazon EKS cluster that contains the capability you want to update configuration for.
+
+    
+
+  
+  :type capabilityName: string
+  :param capabilityName: **[REQUIRED]** 
+
+    The name of the capability to update configuration for.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: 
+
+    The Amazon Resource Name (ARN) of the IAM role that the capability uses to interact with Amazon Web Services services. If you specify a new role ARN, the capability will start using the new role for all subsequent operations.
+
+    
+
+  
+  :type configuration: dict
+  :param configuration: 
+
+    The updated configuration settings for the capability. You only need to specify the configuration parameters you want to change. For Argo CD capabilities, you can update RBAC role mappings and network access settings.
+
+    
+
+  
+    - **argoCd** *(dict) --* 
+
+      Configuration updates specific to Argo CD capabilities.
+
+      
+
+    
+      - **rbacRoleMappings** *(dict) --* 
+
+        Updated RBAC role mappings for the Argo CD capability. You can add, update, or remove role mappings.
+
+        
+
+      
+        - **addOrUpdateRoleMappings** *(list) --* 
+
+          A list of role mappings to add or update. If a mapping for the specified role already exists, it will be updated with the new identities. If it doesn't exist, a new mapping will be created.
+
+          
+
+        
+          - *(dict) --* 
+
+            A mapping between an Argo CD role and IAM Identity CenterIAM; Identity Center identities. This defines which users or groups have specific permissions in Argo CD.
+
+            
+
+          
+            - **role** *(string) --* **[REQUIRED]** 
+
+              The Argo CD role to assign. Valid values are:
+
+               
+
+              
+              * ``ADMIN`` – Full administrative access to Argo CD.
+               
+              * ``EDITOR`` – Edit access to Argo CD resources.
+               
+              * ``VIEWER`` – Read-only access to Argo CD resources.
+              
+
+              
+
+            
+            - **identities** *(list) --* **[REQUIRED]** 
+
+              A list of IAM Identity CenterIAM; Identity Center identities (users or groups) that should be assigned this Argo CD role.
+
+              
+
+            
+              - *(dict) --* 
+
+                An IAM Identity CenterIAM; Identity Center identity (user or group) that can be assigned permissions in a capability.
+
+                
+
+              
+                - **id** *(string) --* **[REQUIRED]** 
+
+                  The unique identifier of the IAM Identity CenterIAM; Identity Center user or group.
+
+                  
+
+                
+                - **type** *(string) --* **[REQUIRED]** 
+
+                  The type of identity. Valid values are ``SSO_USER`` or ``SSO_GROUP``.
+
+                  
+
+                
+              
+          
+          
+      
+        - **removeRoleMappings** *(list) --* 
+
+          A list of role mappings to remove from the RBAC configuration. Each mapping specifies an Argo CD role ( ``ADMIN``, ``EDITOR``, or ``VIEWER``) and the identities to remove from that role.
+
+          
+
+        
+          - *(dict) --* 
+
+            A mapping between an Argo CD role and IAM Identity CenterIAM; Identity Center identities. This defines which users or groups have specific permissions in Argo CD.
+
+            
+
+          
+            - **role** *(string) --* **[REQUIRED]** 
+
+              The Argo CD role to assign. Valid values are:
+
+               
+
+              
+              * ``ADMIN`` – Full administrative access to Argo CD.
+               
+              * ``EDITOR`` – Edit access to Argo CD resources.
+               
+              * ``VIEWER`` – Read-only access to Argo CD resources.
+              
+
+              
+
+            
+            - **identities** *(list) --* **[REQUIRED]** 
+
+              A list of IAM Identity CenterIAM; Identity Center identities (users or groups) that should be assigned this Argo CD role.
+
+              
+
+            
+              - *(dict) --* 
+
+                An IAM Identity CenterIAM; Identity Center identity (user or group) that can be assigned permissions in a capability.
+
+                
+
+              
+                - **id** *(string) --* **[REQUIRED]** 
+
+                  The unique identifier of the IAM Identity CenterIAM; Identity Center user or group.
+
+                  
+
+                
+                - **type** *(string) --* **[REQUIRED]** 
+
+                  The type of identity. Valid values are ``SSO_USER`` or ``SSO_GROUP``.
+
+                  
+
+                
+              
+          
+          
+      
+      
+      - **networkAccess** *(dict) --* 
+
+        Updated network access configuration for the Argo CD capability's managed API server endpoint. You can add or remove VPC endpoint associations to control which VPCs have private access to the Argo CD server.
+
+        
+
+      
+        - **vpceIds** *(list) --* 
+
+          A list of VPC endpoint IDs to associate with the managed Argo CD API server endpoint. Each VPC endpoint provides private connectivity from a specific VPC to the Argo CD server. You can specify multiple VPC endpoint IDs to enable access from multiple VPCs.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+    
+  
+  :type clientRequestToken: string
+  :param clientRequestToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. This token is valid for 24 hours after creation.
+
+    This field is autopopulated if not provided.
+
+  
+  :type deletePropagationPolicy: string
+  :param deletePropagationPolicy: 
+
+    The updated delete propagation policy for the capability. Currently, the only supported value is ``RETAIN``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'update': {
+              'id': 'string',
+              'status': 'InProgress'|'Failed'|'Cancelled'|'Successful',
+              'type': 'VersionUpdate'|'EndpointAccessUpdate'|'LoggingUpdate'|'ConfigUpdate'|'AssociateIdentityProviderConfig'|'DisassociateIdentityProviderConfig'|'AssociateEncryptionConfig'|'AddonUpdate'|'VpcConfigUpdate'|'AccessConfigUpdate'|'UpgradePolicyUpdate'|'ZonalShiftConfigUpdate'|'AutoModeUpdate'|'RemoteNetworkConfigUpdate'|'DeletionProtectionUpdate'|'ControlPlaneScalingConfigUpdate'|'VendedLogsUpdate',
+              'params': [
+                  {
+                      'type': 'Version'|'PlatformVersion'|'EndpointPrivateAccess'|'EndpointPublicAccess'|'ClusterLogging'|'DesiredSize'|'LabelsToAdd'|'LabelsToRemove'|'TaintsToAdd'|'TaintsToRemove'|'MaxSize'|'MinSize'|'ReleaseVersion'|'PublicAccessCidrs'|'LaunchTemplateName'|'LaunchTemplateVersion'|'IdentityProviderConfig'|'EncryptionConfig'|'AddonVersion'|'ServiceAccountRoleArn'|'ResolveConflicts'|'MaxUnavailable'|'MaxUnavailablePercentage'|'NodeRepairEnabled'|'UpdateStrategy'|'ConfigurationValues'|'SecurityGroups'|'Subnets'|'AuthenticationMode'|'PodIdentityAssociations'|'UpgradePolicy'|'ZonalShiftConfig'|'ComputeConfig'|'StorageConfig'|'KubernetesNetworkConfig'|'RemoteNetworkConfig'|'DeletionProtection'|'NodeRepairConfig'|'UpdatedTier'|'PreviousTier',
+                      'value': 'string'
+                  },
+              ],
+              'createdAt': datetime(2015, 1, 1),
+              'errors': [
+                  {
+                      'errorCode': 'SubnetNotFound'|'SecurityGroupNotFound'|'EniLimitReached'|'IpNotAvailable'|'AccessDenied'|'OperationNotPermitted'|'VpcIdNotFound'|'Unknown'|'NodeCreationFailure'|'PodEvictionFailure'|'InsufficientFreeAddresses'|'ClusterUnreachable'|'InsufficientNumberOfReplicas'|'ConfigurationConflict'|'AdmissionRequestDenied'|'UnsupportedAddonModification'|'K8sResourceNotFound',
+                      'errorMessage': 'string',
+                      'resourceIds': [
+                          'string',
+                      ]
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **update** *(dict) --* 
+
+        An object representing an asynchronous update.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          A UUID that is used to track the update.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The current status of the update.
+
+          
+        
+
+        - **type** *(string) --* 
+
+          The type of the update.
+
+          
+        
+
+        - **params** *(list) --* 
+
+          A key-value map that contains the parameters associated with the update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing the details of an update request.
+
+            
+            
+
+            - **type** *(string) --* 
+
+              The keys associated with an update request.
+
+              
+            
+
+            - **value** *(string) --* 
+
+              The value of the keys submitted as part of an update request.
+
+              
+        
+      
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The Unix epoch timestamp at object creation.
+
+          
+        
+
+        - **errors** *(list) --* 
+
+          Any errors associated with a ``Failed`` update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing an error when an asynchronous operation fails.
+
+            
+            
+
+            - **errorCode** *(string) --* 
+
+              A brief description of the error.
+
+               
+
+              
+              * **SubnetNotFound**: We couldn't find one of the subnets associated with the cluster.
+               
+              * **SecurityGroupNotFound**: We couldn't find one of the security groups associated with the cluster.
+               
+              * **EniLimitReached**: You have reached the elastic network interface limit for your account.
+               
+              * **IpNotAvailable**: A subnet associated with the cluster doesn't have any available IP addresses.
+               
+              * **AccessDenied**: You don't have permissions to perform the specified operation.
+               
+              * **OperationNotPermitted**: The service role associated with the cluster doesn't have the required access permissions for Amazon EKS.
+               
+              * **VpcIdNotFound**: We couldn't find the VPC associated with the cluster.
+              
+
+              
+            
+
+            - **errorMessage** *(string) --* 
+
+              A more complete description of the error.
+
+              
+            
+
+            - **resourceIds** *(list) --* 
+
+              An optional field that contains the resource IDs associated with the error.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ServerException`
+
+  

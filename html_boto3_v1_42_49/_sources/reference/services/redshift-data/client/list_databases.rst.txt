@@ -1,0 +1,167 @@
+:doc:`RedshiftDataAPIService <../../redshift-data>` / Client / list_databases
+
+**************
+list_databases
+**************
+
+
+
+.. py:method:: RedshiftDataAPIService.Client.list_databases(**kwargs)
+
+  
+
+  List the databases in a cluster. A token is returned to page through the database list. Depending on the authorization method, use one of the following combinations of request parameters:
+
+   
+
+  
+  * Secrets Manager - when connecting to a cluster, provide the ``secret-arn`` of a secret stored in Secrets Manager which has ``username`` and ``password``. The specified secret contains credentials to connect to the ``database`` you specify. When you are connecting to a cluster, you also supply the database name, If you provide a cluster identifier ( ``dbClusterIdentifier``), it must match the cluster identifier stored in the secret. When you are connecting to a serverless workgroup, you also supply the database name.
+   
+  * Temporary credentials - when connecting to your data warehouse, choose one of the following options: 
+
+    
+    * When connecting to a serverless workgroup, specify the workgroup name and database name. The database user name is derived from the IAM identity. For example, ``arn:iam::123456789012:user:foo`` has the database user name ``IAM:foo``. Also, permission to call the ``redshift-serverless:GetCredentials`` operation is required.
+     
+    * When connecting to a cluster as an IAM identity, specify the cluster identifier and the database name. The database user name is derived from the IAM identity. For example, ``arn:iam::123456789012:user:foo`` has the database user name ``IAM:foo``. Also, permission to call the ``redshift:GetClusterCredentialsWithIAM`` operation is required.
+     
+    * When connecting to a cluster as a database user, specify the cluster identifier, the database name, and the database user name. Also, permission to call the ``redshift:GetClusterCredentials`` operation is required.
+    
+
+  
+  
+
+   
+
+  For more information about the Amazon Redshift Data API and CLI usage examples, see `Using the Amazon Redshift Data API <https://docs.aws.amazon.com/redshift/latest/mgmt/data-api.html>`__ in the *Amazon Redshift Management Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/redshift-data-2019-12-20/ListDatabases>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_databases(
+        ClusterIdentifier='string',
+        Database='string',
+        SecretArn='string',
+        DbUser='string',
+        NextToken='string',
+        MaxResults=123,
+        WorkgroupName='string'
+    )
+    
+  :type ClusterIdentifier: string
+  :param ClusterIdentifier: 
+
+    The cluster identifier. This parameter is required when connecting to a cluster and authenticating using either Secrets Manager or temporary credentials.
+
+    
+
+  
+  :type Database: string
+  :param Database: **[REQUIRED]** 
+
+    The name of the database. This parameter is required when authenticating using either Secrets Manager or temporary credentials.
+
+    
+
+  
+  :type SecretArn: string
+  :param SecretArn: 
+
+    The name or ARN of the secret that enables access to the database. This parameter is required when authenticating using Secrets Manager.
+
+    
+
+  
+  :type DbUser: string
+  :param DbUser: 
+
+    The database user name. This parameter is required when connecting to a cluster as a database user and authenticating using temporary credentials.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A value that indicates the starting point for the next set of response records in a subsequent request. If a value is returned in a response, you can retrieve the next set of records by providing this returned NextToken value in the next NextToken parameter and retrying the command. If the NextToken field is empty, all response records have been retrieved for the request.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of databases to return in the response. If more databases exist than fit in one response, then ``NextToken`` is returned to page through the results.
+
+    
+
+  
+  :type WorkgroupName: string
+  :param WorkgroupName: 
+
+    The serverless workgroup name or Amazon Resource Name (ARN). This parameter is required when connecting to a serverless workgroup and authenticating using either Secrets Manager or temporary credentials.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Databases': [
+              'string',
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Databases** *(list) --* 
+
+        The names of databases.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A value that indicates the starting point for the next set of response records in a subsequent request. If a value is returned in a response, you can retrieve the next set of records by providing this returned NextToken value in the next NextToken parameter and retrying the command. If the NextToken field is empty, all response records have been retrieved for the request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.QueryTimeoutException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.DatabaseConnectionException`
+
+  

@@ -1,0 +1,569 @@
+:doc:`ElasticBeanstalk <../../elasticbeanstalk>` / Client / create_application_version
+
+**************************
+create_application_version
+**************************
+
+
+
+.. py:method:: ElasticBeanstalk.Client.create_application_version(**kwargs)
+
+  
+
+  Creates an application version for the specified application. You can create an application version from a source bundle in Amazon S3, a commit in AWS CodeCommit, or the output of an AWS CodeBuild build as follows:
+
+   
+
+  Specify a commit in an AWS CodeCommit repository with ``SourceBuildInformation``.
+
+   
+
+  Specify a build in an AWS CodeBuild with ``SourceBuildInformation`` and ``BuildConfiguration``.
+
+   
+
+  Specify a source bundle in S3 with ``SourceBundle``
+
+   
+
+  Omit both ``SourceBuildInformation`` and ``SourceBundle`` to use the default sample application.
+
+   
+
+  .. note::
+
+    
+
+    After you create an application version with a specified Amazon S3 bucket and key location, you can't change that Amazon S3 location. If you change the Amazon S3 location, you receive an exception when you attempt to launch an environment from the application version.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticbeanstalk-2010-12-01/CreateApplicationVersion>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_application_version(
+        ApplicationName='string',
+        VersionLabel='string',
+        Description='string',
+        SourceBuildInformation={
+            'SourceType': 'Git'|'Zip',
+            'SourceRepository': 'CodeCommit'|'S3',
+            'SourceLocation': 'string'
+        },
+        SourceBundle={
+            'S3Bucket': 'string',
+            'S3Key': 'string'
+        },
+        BuildConfiguration={
+            'ArtifactName': 'string',
+            'CodeBuildServiceRole': 'string',
+            'ComputeType': 'BUILD_GENERAL1_SMALL'|'BUILD_GENERAL1_MEDIUM'|'BUILD_GENERAL1_LARGE',
+            'Image': 'string',
+            'TimeoutInMinutes': 123
+        },
+        AutoCreateApplication=True|False,
+        Process=True|False,
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type ApplicationName: string
+  :param ApplicationName: **[REQUIRED]** 
+
+    The name of the application. If no application is found with this name, and ``AutoCreateApplication`` is ``false``, returns an ``InvalidParameterValue`` error.
+
+    
+
+  
+  :type VersionLabel: string
+  :param VersionLabel: **[REQUIRED]** 
+
+    A label identifying this version.
+
+     
+
+    Constraint: Must be unique per application. If an application version already exists with this label for the specified application, AWS Elastic Beanstalk returns an ``InvalidParameterValue`` error.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A description of this application version.
+
+    
+
+  
+  :type SourceBuildInformation: dict
+  :param SourceBuildInformation: 
+
+    Specify a commit in an AWS CodeCommit Git repository to use as the source code for the application version.
+
+    
+
+  
+    - **SourceType** *(string) --* **[REQUIRED]** 
+
+      The type of repository.
+
+       
+
+      
+      * ``Git``
+       
+      * ``Zip``
+      
+
+      
+
+    
+    - **SourceRepository** *(string) --* **[REQUIRED]** 
+
+      Location where the repository is stored.
+
+       
+
+      
+      * ``CodeCommit``
+       
+      * ``S3``
+      
+
+      
+
+    
+    - **SourceLocation** *(string) --* **[REQUIRED]** 
+
+      The location of the source code, as a formatted string, depending on the value of ``SourceRepository``
+
+       
+
+      
+      * For ``CodeCommit``, the format is the repository name and commit ID, separated by a forward slash. For example, ``my-git-repo/265cfa0cf6af46153527f55d6503ec030551f57a``.
+       
+      * For ``S3``, the format is the S3 bucket name and object key, separated by a forward slash. For example, ``my-s3-bucket/Folders/my-source-file``.
+      
+
+      
+
+    
+  
+  :type SourceBundle: dict
+  :param SourceBundle: 
+
+    The Amazon S3 bucket and key that identify the location of the source bundle for this version.
+
+     
+
+    .. note::
+
+      
+
+      The Amazon S3 bucket must be in the same region as the environment.
+
+      
+
+     
+
+    Specify a source bundle in S3 or a commit in an AWS CodeCommit repository (with ``SourceBuildInformation``), but not both. If neither ``SourceBundle`` nor ``SourceBuildInformation`` are provided, Elastic Beanstalk uses a sample application.
+
+    
+
+  
+    - **S3Bucket** *(string) --* 
+
+      The Amazon S3 bucket where the data is located.
+
+      
+
+    
+    - **S3Key** *(string) --* 
+
+      The Amazon S3 key where the data is located.
+
+      
+
+    
+  
+  :type BuildConfiguration: dict
+  :param BuildConfiguration: 
+
+    Settings for an AWS CodeBuild build.
+
+    
+
+  
+    - **ArtifactName** *(string) --* 
+
+      The name of the artifact of the CodeBuild build. If provided, Elastic Beanstalk stores the build artifact in the S3 location *S3-bucket*/resources/*application-name*/codebuild/codebuild-*version-label*-*artifact-name*.zip. If not provided, Elastic Beanstalk stores the build artifact in the S3 location *S3-bucket*/resources/*application-name*/codebuild/codebuild-*version-label*.zip.
+
+      
+
+    
+    - **CodeBuildServiceRole** *(string) --* **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) role that enables AWS CodeBuild to interact with dependent AWS services on behalf of the AWS account.
+
+      
+
+    
+    - **ComputeType** *(string) --* 
+
+      Information about the compute resources the build project will use.
+
+       
+
+      
+      * ``BUILD_GENERAL1_SMALL: Use up to 3 GB memory and 2 vCPUs for builds``
+       
+      * ``BUILD_GENERAL1_MEDIUM: Use up to 7 GB memory and 4 vCPUs for builds``
+       
+      * ``BUILD_GENERAL1_LARGE: Use up to 15 GB memory and 8 vCPUs for builds``
+      
+
+      
+
+    
+    - **Image** *(string) --* **[REQUIRED]** 
+
+      The ID of the Docker image to use for this build project.
+
+      
+
+    
+    - **TimeoutInMinutes** *(integer) --* 
+
+      How long in minutes, from 5 to 480 (8 hours), for AWS CodeBuild to wait until timing out any related build that does not get marked as completed. The default is 60 minutes.
+
+      
+
+    
+  
+  :type AutoCreateApplication: boolean
+  :param AutoCreateApplication: 
+
+    Set to ``true`` to create an application with the specified name if it doesn't already exist.
+
+    
+
+  
+  :type Process: boolean
+  :param Process: 
+
+    Pre-processes and validates the environment manifest ( ``env.yaml``) and configuration files ( ``*.config`` files in the ``.ebextensions`` folder) in the source bundle. Validating configuration files can identify issues prior to deploying the application version to an environment.
+
+     
+
+    You must turn processing on for application versions that you create using AWS CodeBuild or AWS CodeCommit. For application versions built from a source bundle in Amazon S3, processing is optional.
+
+     
+
+    .. note::
+
+      
+
+      The ``Process`` option validates Elastic Beanstalk configuration files. It doesn't validate your application's configuration files, like proxy server or Docker configuration.
+
+      
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    Specifies the tags applied to the application version.
+
+     
+
+    Elastic Beanstalk applies these tags only to the application version. Environments that use the application version don't inherit the tags.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a tag applied to a resource in an environment.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        The key of the tag.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The value of the tag.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ApplicationVersion': {
+              'ApplicationVersionArn': 'string',
+              'ApplicationName': 'string',
+              'Description': 'string',
+              'VersionLabel': 'string',
+              'SourceBuildInformation': {
+                  'SourceType': 'Git'|'Zip',
+                  'SourceRepository': 'CodeCommit'|'S3',
+                  'SourceLocation': 'string'
+              },
+              'BuildArn': 'string',
+              'SourceBundle': {
+                  'S3Bucket': 'string',
+                  'S3Key': 'string'
+              },
+              'DateCreated': datetime(2015, 1, 1),
+              'DateUpdated': datetime(2015, 1, 1),
+              'Status': 'Processed'|'Unprocessed'|'Failed'|'Processing'|'Building'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Result message wrapping a single description of an application version.
+
+      
+      
+
+      - **ApplicationVersion** *(dict) --* 
+
+        The  ApplicationVersionDescription of the application version.
+
+        
+        
+
+        - **ApplicationVersionArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the application version.
+
+          
+        
+
+        - **ApplicationName** *(string) --* 
+
+          The name of the application to which the application version belongs.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          The description of the application version.
+
+          
+        
+
+        - **VersionLabel** *(string) --* 
+
+          A unique identifier for the application version.
+
+          
+        
+
+        - **SourceBuildInformation** *(dict) --* 
+
+          If the version's source code was retrieved from AWS CodeCommit, the location of the source code for the application version.
+
+          
+          
+
+          - **SourceType** *(string) --* 
+
+            The type of repository.
+
+             
+
+            
+            * ``Git``
+             
+            * ``Zip``
+            
+
+            
+          
+
+          - **SourceRepository** *(string) --* 
+
+            Location where the repository is stored.
+
+             
+
+            
+            * ``CodeCommit``
+             
+            * ``S3``
+            
+
+            
+          
+
+          - **SourceLocation** *(string) --* 
+
+            The location of the source code, as a formatted string, depending on the value of ``SourceRepository``
+
+             
+
+            
+            * For ``CodeCommit``, the format is the repository name and commit ID, separated by a forward slash. For example, ``my-git-repo/265cfa0cf6af46153527f55d6503ec030551f57a``.
+             
+            * For ``S3``, the format is the S3 bucket name and object key, separated by a forward slash. For example, ``my-s3-bucket/Folders/my-source-file``.
+            
+
+            
+      
+        
+
+        - **BuildArn** *(string) --* 
+
+          Reference to the artifact from the AWS CodeBuild build.
+
+          
+        
+
+        - **SourceBundle** *(dict) --* 
+
+          The storage location of the application version's source bundle in Amazon S3.
+
+          
+          
+
+          - **S3Bucket** *(string) --* 
+
+            The Amazon S3 bucket where the data is located.
+
+            
+          
+
+          - **S3Key** *(string) --* 
+
+            The Amazon S3 key where the data is located.
+
+            
+      
+        
+
+        - **DateCreated** *(datetime) --* 
+
+          The creation date of the application version.
+
+          
+        
+
+        - **DateUpdated** *(datetime) --* 
+
+          The last modified date of the application version.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The processing status of the application version. Reflects the state of the application version during its creation. Many of the values are only applicable if you specified ``True`` for the ``Process`` parameter of the ``CreateApplicationVersion`` action. The following list describes the possible values.
+
+           
+
+          
+          * ``Unprocessed`` – Application version wasn't pre-processed or validated. Elastic Beanstalk will validate configuration files during deployment of the application version to an environment.
+           
+          * ``Processing`` – Elastic Beanstalk is currently processing the application version.
+           
+          * ``Building`` – Application version is currently undergoing an AWS CodeBuild build.
+           
+          * ``Processed`` – Elastic Beanstalk was successfully pre-processed and validated.
+           
+          * ``Failed`` – Either the AWS CodeBuild build failed or configuration files didn't pass validation. This application version isn't usable.
+          
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ElasticBeanstalk.Client.exceptions.TooManyApplicationsException`
+
+  
+  *   :py:class:`ElasticBeanstalk.Client.exceptions.TooManyApplicationVersionsException`
+
+  
+  *   :py:class:`ElasticBeanstalk.Client.exceptions.InsufficientPrivilegesException`
+
+  
+  *   :py:class:`ElasticBeanstalk.Client.exceptions.S3LocationNotInServiceRegionException`
+
+  
+  *   :py:class:`ElasticBeanstalk.Client.exceptions.CodeBuildNotInServiceRegionException`
+
+  
+
+  **Examples**
+
+  The following operation creates a new version (v1) of an application named my-app:
+  ::
+
+    response = client.create_application_version(
+        ApplicationName='my-app',
+        AutoCreateApplication=True,
+        Description='my-app-v1',
+        Process=True,
+        SourceBundle={
+            'S3Bucket': 'my-bucket',
+            'S3Key': 'sample.war',
+        },
+        VersionLabel='v1',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ApplicationVersion': {
+            'ApplicationName': 'my-app',
+            'DateCreated': datetime(2015, 2, 3, 23, 1, 25, 1, 34, 0),
+            'DateUpdated': datetime(2015, 2, 3, 23, 1, 25, 1, 34, 0),
+            'Description': 'my-app-v1',
+            'SourceBundle': {
+                'S3Bucket': 'my-bucket',
+                'S3Key': 'sample.war',
+            },
+            'VersionLabel': 'v1',
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

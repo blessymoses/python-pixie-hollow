@@ -1,0 +1,403 @@
+:doc:`Translate <../../translate>` / Client / import_terminology
+
+******************
+import_terminology
+******************
+
+
+
+.. py:method:: Translate.Client.import_terminology(**kwargs)
+
+  
+
+  Creates or updates a custom terminology, depending on whether one already exists for the given terminology name. Importing a terminology with the same name as an existing one will merge the terminologies based on the chosen merge strategy. The only supported merge strategy is OVERWRITE, where the imported terminology overwrites the existing terminology of the same name.
+
+   
+
+  If you import a terminology that overwrites an existing one, the new terminology takes up to 10 minutes to fully propagate. After that, translations have access to the new terminology.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/translate-2017-07-01/ImportTerminology>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.import_terminology(
+        Name='string',
+        MergeStrategy='OVERWRITE',
+        Description='string',
+        TerminologyData={
+            'File': b'bytes',
+            'Format': 'CSV'|'TMX'|'TSV',
+            'Directionality': 'UNI'|'MULTI'
+        },
+        EncryptionKey={
+            'Type': 'KMS',
+            'Id': 'string'
+        },
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name of the custom terminology being imported.
+
+    
+
+  
+  :type MergeStrategy: string
+  :param MergeStrategy: **[REQUIRED]** 
+
+    The merge strategy of the custom terminology being imported. Currently, only the OVERWRITE merge strategy is supported. In this case, the imported terminology will overwrite an existing terminology of the same name.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    The description of the custom terminology being imported.
+
+    
+
+  
+  :type TerminologyData: dict
+  :param TerminologyData: **[REQUIRED]** 
+
+    The terminology data for the custom terminology being imported.
+
+    
+
+  
+    - **File** *(bytes) --* **[REQUIRED]** 
+
+      The file containing the custom terminology data. Your version of the AWS SDK performs a Base64-encoding on this field before sending a request to the AWS service. Users of the SDK should not perform Base64-encoding themselves.
+
+      
+
+    
+    - **Format** *(string) --* **[REQUIRED]** 
+
+      The data format of the custom terminology.
+
+      
+
+    
+    - **Directionality** *(string) --* 
+
+      The directionality of your terminology resource indicates whether it has one source language (uni-directional) or multiple (multi-directional).
+
+        UNI  
+
+      The terminology resource has one source language (for example, the first column in a CSV file), and all of its other languages are target languages.
+
+        MULTI  
+
+      Any language in the terminology resource can be the source language or a target language. A single multi-directional terminology resource can be used for jobs that translate different language pairs. For example, if the terminology contains English and Spanish terms, it can be used for jobs that translate English to Spanish and Spanish to English.
+
+         
+
+      When you create a custom terminology resource without specifying the directionality, it behaves as uni-directional terminology, although this parameter will have a null value.
+
+      
+
+    
+  
+  :type EncryptionKey: dict
+  :param EncryptionKey: 
+
+    The encryption key for the custom terminology being imported.
+
+    
+
+  
+    - **Type** *(string) --* **[REQUIRED]** 
+
+      The type of encryption key used by Amazon Translate to encrypt this object.
+
+      
+
+    
+    - **Id** *(string) --* **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of the encryption key being used to encrypt this object.
+
+      
+
+    
+  
+  :type Tags: list
+  :param Tags: 
+
+    Tags to be associated with this resource. A tag is a key-value pair that adds metadata to a resource. Each tag key for the resource must be unique. For more information, see `Tagging your resources <https://docs.aws.amazon.com/translate/latest/dg/tagging.html>`__.
+
+    
+
+  
+    - *(dict) --* 
+
+      A key-value pair that adds as a metadata to a resource used by Amazon Translate.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The initial part of a key-value pair that forms a tag associated with a given resource.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The second part of a key-value pair that forms a tag associated with a given resource.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'TerminologyProperties': {
+              'Name': 'string',
+              'Description': 'string',
+              'Arn': 'string',
+              'SourceLanguageCode': 'string',
+              'TargetLanguageCodes': [
+                  'string',
+              ],
+              'EncryptionKey': {
+                  'Type': 'KMS',
+                  'Id': 'string'
+              },
+              'SizeBytes': 123,
+              'TermCount': 123,
+              'CreatedAt': datetime(2015, 1, 1),
+              'LastUpdatedAt': datetime(2015, 1, 1),
+              'Directionality': 'UNI'|'MULTI',
+              'Message': 'string',
+              'SkippedTermCount': 123,
+              'Format': 'CSV'|'TMX'|'TSV'
+          },
+          'AuxiliaryDataLocation': {
+              'RepositoryType': 'string',
+              'Location': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **TerminologyProperties** *(dict) --* 
+
+        The properties of the custom terminology being imported.
+
+        
+        
+
+        - **Name** *(string) --* 
+
+          The name of the custom terminology.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          The description of the custom terminology properties.
+
+          
+        
+
+        - **Arn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the custom terminology.
+
+          
+        
+
+        - **SourceLanguageCode** *(string) --* 
+
+          The language code for the source text of the translation request for which the custom terminology is being used.
+
+          
+        
+
+        - **TargetLanguageCodes** *(list) --* 
+
+          The language codes for the target languages available with the custom terminology resource. All possible target languages are returned in array.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **EncryptionKey** *(dict) --* 
+
+          The encryption key for the custom terminology.
+
+          
+          
+
+          - **Type** *(string) --* 
+
+            The type of encryption key used by Amazon Translate to encrypt this object.
+
+            
+          
+
+          - **Id** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the encryption key being used to encrypt this object.
+
+            
+      
+        
+
+        - **SizeBytes** *(integer) --* 
+
+          The size of the file used when importing a custom terminology.
+
+          
+        
+
+        - **TermCount** *(integer) --* 
+
+          The number of terms included in the custom terminology.
+
+          
+        
+
+        - **CreatedAt** *(datetime) --* 
+
+          The time at which the custom terminology was created, based on the timestamp.
+
+          
+        
+
+        - **LastUpdatedAt** *(datetime) --* 
+
+          The time at which the custom terminology was last update, based on the timestamp.
+
+          
+        
+
+        - **Directionality** *(string) --* 
+
+          The directionality of your terminology resource indicates whether it has one source language (uni-directional) or multiple (multi-directional).
+
+            UNI  
+
+          The terminology resource has one source language (the first column in a CSV file), and all of its other languages are target languages.
+
+            MULTI  
+
+          Any language in the terminology resource can be the source language.
+
+          
+        
+
+        - **Message** *(string) --* 
+
+          Additional information from Amazon Translate about the terminology resource.
+
+          
+        
+
+        - **SkippedTermCount** *(integer) --* 
+
+          The number of terms in the input file that Amazon Translate skipped when you created or updated the terminology resource.
+
+          
+        
+
+        - **Format** *(string) --* 
+
+          The format of the custom terminology input file.
+
+          
+    
+      
+
+      - **AuxiliaryDataLocation** *(dict) --* 
+
+        The Amazon S3 location of a file that provides any errors or warnings that were produced by your input file. This file was created when Amazon Translate attempted to create a terminology resource. The location is returned as a presigned URL to that has a 30 minute expiration.
+
+        
+        
+
+        - **RepositoryType** *(string) --* 
+
+          The repository type for the custom terminology data.
+
+          
+        
+
+        - **Location** *(string) --* 
+
+          The Amazon S3 location of the most recent custom terminology input file that was successfully imported into Amazon Translate. The location is returned as a presigned URL that has a 30-minute expiration .
+
+           
+
+          .. warning::
+
+             
+
+            Amazon Translate doesn't scan all input files for the risk of CSV injection attacks.
+
+             
+
+            CSV injection occurs when a .csv or .tsv file is altered so that a record contains malicious code. The record begins with a special character, such as =, +, -, or @. When the file is opened in a spreadsheet program, the program might interpret the record as a formula and run the code within it.
+
+             
+
+            Before you download an input file from Amazon S3, ensure that you recognize the file and trust its creator.
+
+            
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Translate.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Translate.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Translate.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`Translate.Client.exceptions.TooManyTagsException`
+
+  
+  *   :py:class:`Translate.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`Translate.Client.exceptions.InternalServerException`
+
+  

@@ -1,0 +1,480 @@
+:doc:`Connect <../../connect>` / Client / start_chat_contact
+
+******************
+start_chat_contact
+******************
+
+
+
+.. py:method:: Connect.Client.start_chat_contact(**kwargs)
+
+  
+
+  Initiates a flow to start a new chat for the customer. Response of this API provides a token required to obtain credentials from the `CreateParticipantConnection <https://docs.aws.amazon.com/connect-participant/latest/APIReference/API_CreateParticipantConnection.html>`__ API in the Amazon Connect Participant Service.
+
+   
+
+  When a new chat contact is successfully created, clients must subscribe to the participant’s connection for the created chat within 5 minutes. This is achieved by invoking `CreateParticipantConnection <https://docs.aws.amazon.com/connect-participant/latest/APIReference/API_CreateParticipantConnection.html>`__ with WEBSOCKET and CONNECTION_CREDENTIALS.
+
+   
+
+  A 429 error occurs in the following situations:
+
+   
+
+  
+  * API rate limit is exceeded. API TPS throttling returns a ``TooManyRequests`` exception.
+   
+  * The `quota for concurrent active chats <https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html>`__ is exceeded. Active chat throttling returns a ``LimitExceededException``.
+  
+
+   
+
+  If you use the ``ChatDurationInMinutes`` parameter and receive a 400 error, your account may not support the ability to configure custom chat durations. For more information, contact Amazon Web Services Support.
+
+   
+
+  For more information about chat, see the following topics in the *Amazon Connect Administrator Guide*:
+
+   
+
+  
+  * `Concepts\: Web and mobile messaging capabilities in Amazon Connect <https://docs.aws.amazon.com/connect/latest/adminguide/web-and-mobile-chat.html>`__
+   
+  * `Amazon Connect Chat security best practices <https://docs.aws.amazon.com/connect/latest/adminguide/security-best-practices.html#bp-security-chat>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connect-2017-08-08/StartChatContact>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_chat_contact(
+        InstanceId='string',
+        ContactFlowId='string',
+        Attributes={
+            'string': 'string'
+        },
+        ParticipantDetails={
+            'DisplayName': 'string'
+        },
+        ParticipantConfiguration={
+            'ResponseMode': 'INCREMENTAL'|'COMPLETE'
+        },
+        InitialMessage={
+            'ContentType': 'string',
+            'Content': 'string'
+        },
+        ClientToken='string',
+        ChatDurationInMinutes=123,
+        SupportedMessagingContentTypes=[
+            'string',
+        ],
+        PersistentChat={
+            'RehydrationType': 'ENTIRE_PAST_SESSION'|'FROM_SEGMENT',
+            'SourceContactId': 'string'
+        },
+        RelatedContactId='string',
+        SegmentAttributes={
+            'string': {
+                'ValueString': 'string',
+                'ValueMap': {
+                    'string': {'... recursive ...'}
+                },
+                'ValueInteger': 123,
+                'ValueList': [
+                    {'... recursive ...'},
+                ],
+                'ValueArn': 'string'
+            }
+        },
+        CustomerId='string',
+        DisconnectOnCustomerExit=[
+            'AGENT',
+        ]
+    )
+    
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The identifier of the Amazon Connect instance. You can `find the instance ID <https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html>`__ in the Amazon Resource Name (ARN) of the instance.
+
+    
+
+  
+  :type ContactFlowId: string
+  :param ContactFlowId: **[REQUIRED]** 
+
+    The identifier of the flow for initiating the chat. To see the ContactFlowId in the Amazon Connect admin website, on the navigation menu go to **Routing**, **Flows**. Choose the flow. On the flow page, under the name of the flow, choose **Show additional flow information**. The ContactFlowId is the last part of the ARN, shown here in bold:
+
+     
+
+    arn:aws:connect:us-west-2:xxxxxxxxxxxx:instance/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/contact-flow/**846ec553-a005-41c0-8341-xxxxxxxxxxxx**
+
+    
+
+  
+  :type Attributes: dict
+  :param Attributes: 
+
+    A custom key-value pair using an attribute map. The attributes are standard Amazon Connect attributes. They can be accessed in flows just like any other contact attributes.
+
+     
+
+    There can be up to 32,768 UTF-8 bytes across all key-value pairs per contact. Attribute keys can include only alphanumeric, dash, and underscore characters.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type ParticipantDetails: dict
+  :param ParticipantDetails: **[REQUIRED]** 
+
+    Information identifying the participant.
+
+    
+
+  
+    - **DisplayName** *(string) --* **[REQUIRED]** 
+
+      Display name of the participant.
+
+      
+
+    
+  
+  :type ParticipantConfiguration: dict
+  :param ParticipantConfiguration: 
+
+    The configuration of the participant.
+
+    
+
+  
+    - **ResponseMode** *(string) --* 
+
+      The mode in which responses should be sent to the participant.
+
+      
+
+    
+  
+  :type InitialMessage: dict
+  :param InitialMessage: 
+
+    The initial message to be sent to the newly created chat.
+
+    
+
+  
+    - **ContentType** *(string) --* **[REQUIRED]** 
+
+      The type of the content. Supported types are ``text/plain``, ``text/markdown``, ``application/json``, and ``application/vnd.amazonaws.connect.message.interactive.response``.
+
+      
+
+    
+    - **Content** *(string) --* **[REQUIRED]** 
+
+      The content of the chat message.
+
+       
+
+      
+      * For ``text/plain`` and ``text/markdown``, the Length Constraints are Minimum of 1, Maximum of 1024.
+       
+      * For ``application/json``, the Length Constraints are Minimum of 1, Maximum of 12000.
+       
+      * For ``application/vnd.amazonaws.connect.message.interactive.response``, the Length Constraints are Minimum of 1, Maximum of 12288.
+      
+
+      
+
+    
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. If not provided, the Amazon Web Services SDK populates this field. For more information about idempotency, see `Making retries safe with idempotent APIs <https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/>`__.
+
+    This field is autopopulated if not provided.
+
+  
+  :type ChatDurationInMinutes: integer
+  :param ChatDurationInMinutes: 
+
+    The total duration of the newly started chat session. If not specified, the chat session duration defaults to 25 hour. The minimum configurable time is 60 minutes. The maximum configurable time is 10,080 minutes (7 days).
+
+    
+
+  
+  :type SupportedMessagingContentTypes: list
+  :param SupportedMessagingContentTypes: 
+
+    The supported chat message content types. Supported types are ``text/plain``, ``text/markdown``, ``application/json``, ``application/vnd.amazonaws.connect.message.interactive``, and ``application/vnd.amazonaws.connect.message.interactive.response``.
+
+     
+
+    Content types must always contain ``text/plain``. You can then put any other supported type in the list. For example, all the following lists are valid because they contain ``text/plain``: ``[text/plain, text/markdown, application/json]``, ``[text/markdown, text/plain]``, ``[text/plain, application/json, application/vnd.amazonaws.connect.message.interactive.response]``.
+
+     
+
+    .. note::
+
+      
+
+      The type ``application/vnd.amazonaws.connect.message.interactive`` is required to use the `Show view <https://docs.aws.amazon.com/connect/latest/adminguide/show-view-block.html>`__ flow block.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type PersistentChat: dict
+  :param PersistentChat: 
+
+    Enable persistent chats. For more information about enabling persistent chat, and for example use cases and how to configure for them, see `Enable persistent chat <https://docs.aws.amazon.com/connect/latest/adminguide/chat-persistence.html>`__.
+
+    
+
+  
+    - **RehydrationType** *(string) --* 
+
+      The contactId that is used for rehydration depends on the rehydration type. RehydrationType is required for persistent chat.
+
+       
+
+      
+      * ``ENTIRE_PAST_SESSION``: Rehydrates a chat from the most recently terminated past chat contact of the specified past ended chat session. To use this type, provide the ``initialContactId`` of the past ended chat session in the ``sourceContactId`` field. In this type, Amazon Connect determines the most recent chat contact on the specified chat session that has ended, and uses it to start a persistent chat.
+       
+      * ``FROM_SEGMENT``: Rehydrates a chat from the past chat contact that is specified in the ``sourceContactId`` field.
+      
+
+       
+
+      The actual contactId used for rehydration is provided in the response of this API.
+
+      
+
+    
+    - **SourceContactId** *(string) --* 
+
+      The contactId from which a persistent chat session must be started.
+
+      
+
+    
+  
+  :type RelatedContactId: string
+  :param RelatedContactId: 
+
+    The unique identifier for an Amazon Connect contact. This identifier is related to the chat starting.
+
+     
+
+    .. note::
+
+      
+
+      You cannot provide data for both RelatedContactId and PersistentChat.
+
+      
+
+    
+
+  
+  :type SegmentAttributes: dict
+  :param SegmentAttributes: 
+
+    A set of system defined key-value pairs stored on individual contact segments using an attribute map. The attributes are standard Amazon Connect attributes. They can be accessed in flows.
+
+     
+
+    Attribute keys can include only alphanumeric, -, and _.
+
+     
+
+    This field can be used to show channel subtype, such as ``connect:Guide``.
+
+     
+
+    .. note::
+
+      
+
+      The types ``application/vnd.amazonaws.connect.message.interactive`` and ``application/vnd.amazonaws.connect.message.interactive.response`` must be present in the SupportedMessagingContentTypes field of this API in order to set ``SegmentAttributes`` as { `` "connect:Subtype": {"valueString" : "connect:Guide" }}``.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(dict) --* 
+
+        A value for a segment attribute. This is structured as a map where the key is ``valueString`` and the value is a string.
+
+        
+
+      
+        - **ValueString** *(string) --* 
+
+          The value of a segment attribute.
+
+          
+
+        
+        - **ValueMap** *(dict) --* 
+
+          The value of a segment attribute.
+
+          
+
+        
+          - *(string) --* 
+
+          
+            - *(dict) --* 
+
+              A value for a segment attribute. This is structured as a map where the key is ``valueString`` and the value is a string.
+
+              
+
+            
+      
+    
+        - **ValueInteger** *(integer) --* 
+
+          The value of a segment attribute.
+
+          
+
+        
+        - **ValueList** *(list) --* 
+
+          The value of a segment attribute. This is only supported for system-defined attributes, not for user-defined attributes.
+
+          
+
+        
+          - *(dict) --* 
+
+            A value for a segment attribute. This is structured as a map where the key is ``valueString`` and the value is a string.
+
+            
+
+          
+      
+        - **ValueArn** *(string) --* 
+
+          The value of a segment attribute that has to be a valid ARN. This is only supported for system-defined attributes, not for user-defined attributes.
+
+          
+
+        
+      
+
+
+  :type CustomerId: string
+  :param CustomerId: 
+
+    The customer's identification number. For example, the ``CustomerId`` may be a customer number from your CRM.
+
+    
+
+  
+  :type DisconnectOnCustomerExit: list
+  :param DisconnectOnCustomerExit: 
+
+    A list of participant types to automatically disconnect when the end customer ends the chat session, allowing them to continue through disconnect flows such as surveys or feedback forms.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ContactId': 'string',
+          'ParticipantId': 'string',
+          'ParticipantToken': 'string',
+          'ContinuedFromContactId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ContactId** *(string) --* 
+
+        The identifier of this contact within the Amazon Connect instance.
+
+        
+      
+
+      - **ParticipantId** *(string) --* 
+
+        The identifier for a chat participant. The participantId for a chat participant is the same throughout the chat lifecycle.
+
+        
+      
+
+      - **ParticipantToken** *(string) --* 
+
+        The token used by the chat participant to call `CreateParticipantConnection <https://docs.aws.amazon.com/connect-participant/latest/APIReference/API_CreateParticipantConnection.html>`__. The participant token is valid for the lifetime of a chat participant.
+
+        
+      
+
+      - **ContinuedFromContactId** *(string) --* 
+
+        The contactId from which a persistent chat session is started. This field is populated only for persistent chats.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.LimitExceededException`
+
+  

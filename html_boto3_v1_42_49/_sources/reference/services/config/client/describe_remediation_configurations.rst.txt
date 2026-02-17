@@ -1,0 +1,278 @@
+:doc:`ConfigService <../../config>` / Client / describe_remediation_configurations
+
+***********************************
+describe_remediation_configurations
+***********************************
+
+
+
+.. py:method:: ConfigService.Client.describe_remediation_configurations(**kwargs)
+
+  
+
+  Returns the details of one or more remediation configurations.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/config-2014-11-12/DescribeRemediationConfigurations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_remediation_configurations(
+        ConfigRuleNames=[
+            'string',
+        ]
+    )
+    
+  :type ConfigRuleNames: list
+  :param ConfigRuleNames: **[REQUIRED]** 
+
+    A list of Config rule names of remediation configurations for which you want details.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RemediationConfigurations': [
+              {
+                  'ConfigRuleName': 'string',
+                  'TargetType': 'SSM_DOCUMENT',
+                  'TargetId': 'string',
+                  'TargetVersion': 'string',
+                  'Parameters': {
+                      'string': {
+                          'ResourceValue': {
+                              'Value': 'RESOURCE_ID'
+                          },
+                          'StaticValue': {
+                              'Values': [
+                                  'string',
+                              ]
+                          }
+                      }
+                  },
+                  'ResourceType': 'string',
+                  'Automatic': True|False,
+                  'ExecutionControls': {
+                      'SsmControls': {
+                          'ConcurrentExecutionRatePercentage': 123,
+                          'ErrorPercentage': 123
+                      }
+                  },
+                  'MaximumAutomaticAttempts': 123,
+                  'RetryAttemptSeconds': 123,
+                  'Arn': 'string',
+                  'CreatedByService': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **RemediationConfigurations** *(list) --* 
+
+        Returns a remediation configuration object.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object that represents the details about the remediation configuration that includes the remediation action, parameters, and data to execute the action.
+
+          
+          
+
+          - **ConfigRuleName** *(string) --* 
+
+            The name of the Config rule.
+
+            
+          
+
+          - **TargetType** *(string) --* 
+
+            The type of the target. Target executes remediation. For example, SSM document.
+
+            
+          
+
+          - **TargetId** *(string) --* 
+
+            Target ID is the name of the SSM document.
+
+            
+          
+
+          - **TargetVersion** *(string) --* 
+
+            Version of the target. For example, version of the SSM document.
+
+             
+
+            .. note::
+
+              
+
+              If you make backward incompatible changes to the SSM document, you must call PutRemediationConfiguration API again to ensure the remediations can run.
+
+              
+
+            
+          
+
+          - **Parameters** *(dict) --* 
+
+            An object of the RemediationParameterValue.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(dict) --* 
+
+                The value is either a dynamic (resource) value or a static value. You must select either a dynamic value or a static value.
+
+                
+                
+
+                - **ResourceValue** *(dict) --* 
+
+                  The value is dynamic and changes at run-time.
+
+                  
+                  
+
+                  - **Value** *(string) --* 
+
+                    The value is a resource ID.
+
+                    
+              
+                
+
+                - **StaticValue** *(dict) --* 
+
+                  The value is static and does not change at run-time.
+
+                  
+                  
+
+                  - **Values** *(list) --* 
+
+                    A list of values. For example, the ARN of the assumed role.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+              
+            
+        
+      
+          
+
+          - **ResourceType** *(string) --* 
+
+            The type of a resource.
+
+            
+          
+
+          - **Automatic** *(boolean) --* 
+
+            The remediation is triggered automatically.
+
+            
+          
+
+          - **ExecutionControls** *(dict) --* 
+
+            An ExecutionControls object.
+
+            
+            
+
+            - **SsmControls** *(dict) --* 
+
+              A SsmControls object.
+
+              
+              
+
+              - **ConcurrentExecutionRatePercentage** *(integer) --* 
+
+                The maximum percentage of remediation actions allowed to run in parallel on the non-compliant resources for that specific rule. You can specify a percentage, such as 10%. The default value is 10.
+
+                
+              
+
+              - **ErrorPercentage** *(integer) --* 
+
+                The percentage of errors that are allowed before SSM stops running automations on non-compliant resources for that specific rule. You can specify a percentage of errors, for example 10%. If you do not specifiy a percentage, the default is 50%. For example, if you set the ErrorPercentage to 40% for 10 non-compliant resources, then SSM stops running the automations when the fifth error is received.
+
+                
+          
+        
+          
+
+          - **MaximumAutomaticAttempts** *(integer) --* 
+
+            The maximum number of failed attempts for auto-remediation. If you do not select a number, the default is 5.
+
+             
+
+            For example, if you specify MaximumAutomaticAttempts as 5 with RetryAttemptSeconds as 50 seconds, Config will put a RemediationException on your behalf for the failing resource after the 5th failed attempt within 50 seconds.
+
+            
+          
+
+          - **RetryAttemptSeconds** *(integer) --* 
+
+            Time window to determine whether or not to add a remediation exception to prevent infinite remediation attempts. If ``MaximumAutomaticAttempts`` remediation attempts have been made under ``RetryAttemptSeconds``, a remediation exception will be added to the resource. If you do not select a number, the default is 60 seconds.
+
+             
+
+            For example, if you specify ``RetryAttemptSeconds`` as 50 seconds and ``MaximumAutomaticAttempts`` as 5, Config will run auto-remediations 5 times within 50 seconds before adding a remediation exception to the resource.
+
+            
+          
+
+          - **Arn** *(string) --* 
+
+            Amazon Resource Name (ARN) of remediation configuration.
+
+            
+          
+
+          - **CreatedByService** *(string) --* 
+
+            Name of the service that owns the service-linked rule, if applicable.
+
+            
+      
+    
+  

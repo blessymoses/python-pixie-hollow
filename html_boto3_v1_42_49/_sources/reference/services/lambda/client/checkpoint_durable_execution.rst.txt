@@ -1,0 +1,762 @@
+:doc:`Lambda <../../lambda>` / Client / checkpoint_durable_execution
+
+****************************
+checkpoint_durable_execution
+****************************
+
+
+
+.. py:method:: Lambda.Client.checkpoint_durable_execution(**kwargs)
+
+  
+
+  Saves the progress of a `durable function <https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html>`__ execution during runtime. This API is used by the Lambda durable functions SDK to checkpoint completed steps and schedule asynchronous operations. You typically don't need to call this API directly as the SDK handles checkpointing automatically.
+
+   
+
+  Each checkpoint operation consumes the current checkpoint token and returns a new one for the next checkpoint. This ensures that checkpoints are applied in the correct order and prevents duplicate or out-of-order state updates.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/CheckpointDurableExecution>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.checkpoint_durable_execution(
+        DurableExecutionArn='string',
+        CheckpointToken='string',
+        Updates=[
+            {
+                'Id': 'string',
+                'ParentId': 'string',
+                'Name': 'string',
+                'Type': 'EXECUTION'|'CONTEXT'|'STEP'|'WAIT'|'CALLBACK'|'CHAINED_INVOKE',
+                'SubType': 'string',
+                'Action': 'START'|'SUCCEED'|'FAIL'|'RETRY'|'CANCEL',
+                'Payload': 'string',
+                'Error': {
+                    'ErrorMessage': 'string',
+                    'ErrorType': 'string',
+                    'ErrorData': 'string',
+                    'StackTrace': [
+                        'string',
+                    ]
+                },
+                'ContextOptions': {
+                    'ReplayChildren': True|False
+                },
+                'StepOptions': {
+                    'NextAttemptDelaySeconds': 123
+                },
+                'WaitOptions': {
+                    'WaitSeconds': 123
+                },
+                'CallbackOptions': {
+                    'TimeoutSeconds': 123,
+                    'HeartbeatTimeoutSeconds': 123
+                },
+                'ChainedInvokeOptions': {
+                    'FunctionName': 'string',
+                    'TenantId': 'string'
+                }
+            },
+        ],
+        ClientToken='string'
+    )
+    
+  :type DurableExecutionArn: string
+  :param DurableExecutionArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the durable execution.
+
+    
+
+  
+  :type CheckpointToken: string
+  :param CheckpointToken: **[REQUIRED]** 
+
+    A unique token that identifies the current checkpoint state. This token is provided by the Lambda runtime and must be used to ensure checkpoints are applied in the correct order. Each checkpoint operation consumes this token and returns a new one.
+
+    
+
+  
+  :type Updates: list
+  :param Updates: 
+
+    An array of state updates to apply during this checkpoint. Each update represents a change to the execution state, such as completing a step, starting a callback, or scheduling a timer. Updates are applied atomically as part of the checkpoint operation.
+
+    
+
+  
+    - *(dict) --* 
+
+      An update to be applied to an operation during checkpointing.
+
+      
+
+    
+      - **Id** *(string) --* **[REQUIRED]** 
+
+        The unique identifier for this operation.
+
+        
+
+      
+      - **ParentId** *(string) --* 
+
+        The unique identifier of the parent operation, if this operation is running within a child context.
+
+        
+
+      
+      - **Name** *(string) --* 
+
+        The customer-provided name for this operation.
+
+        
+
+      
+      - **Type** *(string) --* **[REQUIRED]** 
+
+        The type of operation to update.
+
+        
+
+      
+      - **SubType** *(string) --* 
+
+        The subtype of the operation, providing additional categorization.
+
+        
+
+      
+      - **Action** *(string) --* **[REQUIRED]** 
+
+        The action to take on the operation.
+
+        
+
+      
+      - **Payload** *(string) --* 
+
+        The payload for successful operations.
+
+        
+
+      
+      - **Error** *(dict) --* 
+
+        The error information for failed operations.
+
+        
+
+      
+        - **ErrorMessage** *(string) --* 
+
+          A human-readable error message.
+
+          
+
+        
+        - **ErrorType** *(string) --* 
+
+          The error type.
+
+          
+
+        
+        - **ErrorData** *(string) --* 
+
+          Machine-readable error data.
+
+          
+
+        
+        - **StackTrace** *(list) --* 
+
+          Stack trace information for the error.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+      - **ContextOptions** *(dict) --* 
+
+        Options for context operations.
+
+        
+
+      
+        - **ReplayChildren** *(boolean) --* 
+
+          Whether the state data of children of the completed context should be included in the invoke payload and ``GetDurableExecutionState`` response.
+
+          
+
+        
+      
+      - **StepOptions** *(dict) --* 
+
+        Options for step operations.
+
+        
+
+      
+        - **NextAttemptDelaySeconds** *(integer) --* 
+
+          The delay in seconds before the next retry attempt.
+
+          
+
+        
+      
+      - **WaitOptions** *(dict) --* 
+
+        Options for wait operations.
+
+        
+
+      
+        - **WaitSeconds** *(integer) --* 
+
+          The duration to wait, in seconds.
+
+          
+
+        
+      
+      - **CallbackOptions** *(dict) --* 
+
+        Configuration options for callback operations in durable executions, including timeout settings and retry behavior.
+
+        
+
+      
+        - **TimeoutSeconds** *(integer) --* 
+
+          The timeout for the callback operation in seconds. If not specified or set to 0, the callback has no timeout.
+
+          
+
+        
+        - **HeartbeatTimeoutSeconds** *(integer) --* 
+
+          The heartbeat timeout for the callback operation, in seconds. If not specified or set to 0, heartbeat timeout is disabled.
+
+          
+
+        
+      
+      - **ChainedInvokeOptions** *(dict) --* 
+
+        Configuration options for chained function invocations in durable executions, including retry settings and timeout configuration.
+
+        
+
+      
+        - **FunctionName** *(string) --* **[REQUIRED]** 
+
+          The name or ARN of the Lambda function to invoke.
+
+          
+
+        
+        - **TenantId** *(string) --* 
+
+          The tenant identifier for the chained invocation.
+
+          
+
+        
+      
+    
+
+  :type ClientToken: string
+  :param ClientToken: 
+
+    An optional idempotency token to ensure that duplicate checkpoint requests are handled correctly. If provided, Lambda uses this token to detect and handle duplicate requests within a 15-minute window.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CheckpointToken': 'string',
+          'NewExecutionState': {
+              'Operations': [
+                  {
+                      'Id': 'string',
+                      'ParentId': 'string',
+                      'Name': 'string',
+                      'Type': 'EXECUTION'|'CONTEXT'|'STEP'|'WAIT'|'CALLBACK'|'CHAINED_INVOKE',
+                      'SubType': 'string',
+                      'StartTimestamp': datetime(2015, 1, 1),
+                      'EndTimestamp': datetime(2015, 1, 1),
+                      'Status': 'STARTED'|'PENDING'|'READY'|'SUCCEEDED'|'FAILED'|'CANCELLED'|'TIMED_OUT'|'STOPPED',
+                      'ExecutionDetails': {
+                          'InputPayload': 'string'
+                      },
+                      'ContextDetails': {
+                          'ReplayChildren': True|False,
+                          'Result': 'string',
+                          'Error': {
+                              'ErrorMessage': 'string',
+                              'ErrorType': 'string',
+                              'ErrorData': 'string',
+                              'StackTrace': [
+                                  'string',
+                              ]
+                          }
+                      },
+                      'StepDetails': {
+                          'Attempt': 123,
+                          'NextAttemptTimestamp': datetime(2015, 1, 1),
+                          'Result': 'string',
+                          'Error': {
+                              'ErrorMessage': 'string',
+                              'ErrorType': 'string',
+                              'ErrorData': 'string',
+                              'StackTrace': [
+                                  'string',
+                              ]
+                          }
+                      },
+                      'WaitDetails': {
+                          'ScheduledEndTimestamp': datetime(2015, 1, 1)
+                      },
+                      'CallbackDetails': {
+                          'CallbackId': 'string',
+                          'Result': 'string',
+                          'Error': {
+                              'ErrorMessage': 'string',
+                              'ErrorType': 'string',
+                              'ErrorData': 'string',
+                              'StackTrace': [
+                                  'string',
+                              ]
+                          }
+                      },
+                      'ChainedInvokeDetails': {
+                          'Result': 'string',
+                          'Error': {
+                              'ErrorMessage': 'string',
+                              'ErrorType': 'string',
+                              'ErrorData': 'string',
+                              'StackTrace': [
+                                  'string',
+                              ]
+                          }
+                      }
+                  },
+              ],
+              'NextMarker': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The response from the CheckpointDurableExecution operation.
+
+      
+      
+
+      - **CheckpointToken** *(string) --* 
+
+        A new checkpoint token to use for the next checkpoint operation. This token replaces the one provided in the request and must be used for subsequent checkpoints to maintain proper ordering.
+
+        
+      
+
+      - **NewExecutionState** *(dict) --* 
+
+        Updated execution state information that includes any changes that occurred since the last checkpoint, such as completed callbacks or expired timers. This allows the SDK to update its internal state during replay.
+
+        
+        
+
+        - **Operations** *(list) --* 
+
+          A list of operations that have been updated since the last checkpoint.
+
+          
+          
+
+          - *(dict) --* 
+
+            Information about an operation within a durable execution.
+
+            
+            
+
+            - **Id** *(string) --* 
+
+              The unique identifier for this operation.
+
+              
+            
+
+            - **ParentId** *(string) --* 
+
+              The unique identifier of the parent operation, if this operation is running within a child context.
+
+              
+            
+
+            - **Name** *(string) --* 
+
+              The customer-provided name for this operation.
+
+              
+            
+
+            - **Type** *(string) --* 
+
+              The type of operation.
+
+              
+            
+
+            - **SubType** *(string) --* 
+
+              The subtype of the operation, providing additional categorization.
+
+              
+            
+
+            - **StartTimestamp** *(datetime) --* 
+
+              The date and time when the operation started, in `ISO-8601 format <https://www.w3.org/TR/NOTE-datetime>`__ (YYYY-MM-DDThh:mm:ss.sTZD).
+
+              
+            
+
+            - **EndTimestamp** *(datetime) --* 
+
+              The date and time when the operation ended, in `ISO-8601 format <https://www.w3.org/TR/NOTE-datetime>`__ (YYYY-MM-DDThh:mm:ss.sTZD).
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The current status of the operation.
+
+              
+            
+
+            - **ExecutionDetails** *(dict) --* 
+
+              Details about the execution, if this operation represents an execution.
+
+              
+              
+
+              - **InputPayload** *(string) --* 
+
+                The original input payload provided for the durable execution.
+
+                
+          
+            
+
+            - **ContextDetails** *(dict) --* 
+
+              Details about the context, if this operation represents a context.
+
+              
+              
+
+              - **ReplayChildren** *(boolean) --* 
+
+                Whether the state data of child operations of this completed context should be included in the invoke payload and ``GetDurableExecutionState`` response.
+
+                
+              
+
+              - **Result** *(string) --* 
+
+                The response payload from the context.
+
+                
+              
+
+              - **Error** *(dict) --* 
+
+                Details about the context failure.
+
+                
+                
+
+                - **ErrorMessage** *(string) --* 
+
+                  A human-readable error message.
+
+                  
+                
+
+                - **ErrorType** *(string) --* 
+
+                  The error type.
+
+                  
+                
+
+                - **ErrorData** *(string) --* 
+
+                  Machine-readable error data.
+
+                  
+                
+
+                - **StackTrace** *(list) --* 
+
+                  Stack trace information for the error.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **StepDetails** *(dict) --* 
+
+              Details about the step, if this operation represents a step.
+
+              
+              
+
+              - **Attempt** *(integer) --* 
+
+                The current attempt number for this step.
+
+                
+              
+
+              - **NextAttemptTimestamp** *(datetime) --* 
+
+                The date and time when the next attempt is scheduled, in `ISO-8601 format <https://www.w3.org/TR/NOTE-datetime>`__ (YYYY-MM-DDThh:mm:ss.sTZD). Only populated when the step is in a pending state.
+
+                
+              
+
+              - **Result** *(string) --* 
+
+                The JSON response payload from the step operation.
+
+                
+              
+
+              - **Error** *(dict) --* 
+
+                Details about the step failure.
+
+                
+                
+
+                - **ErrorMessage** *(string) --* 
+
+                  A human-readable error message.
+
+                  
+                
+
+                - **ErrorType** *(string) --* 
+
+                  The error type.
+
+                  
+                
+
+                - **ErrorData** *(string) --* 
+
+                  Machine-readable error data.
+
+                  
+                
+
+                - **StackTrace** *(list) --* 
+
+                  Stack trace information for the error.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **WaitDetails** *(dict) --* 
+
+              Details about the wait operation, if this operation represents a wait.
+
+              
+              
+
+              - **ScheduledEndTimestamp** *(datetime) --* 
+
+                The date and time when the wait operation is scheduled to complete, in `ISO-8601 format <https://www.w3.org/TR/NOTE-datetime>`__ (YYYY-MM-DDThh:mm:ss.sTZD).
+
+                
+          
+            
+
+            - **CallbackDetails** *(dict) --* 
+
+              Contains details about a callback operation in a durable execution, including the callback token and timeout configuration.
+
+              
+              
+
+              - **CallbackId** *(string) --* 
+
+                The callback ID. Callback IDs are generated by the ``DurableContext`` when a durable function calls ``ctx.waitForCallback``.
+
+                
+              
+
+              - **Result** *(string) --* 
+
+                The response payload from the callback operation as a string.
+
+                
+              
+
+              - **Error** *(dict) --* 
+
+                An error object that contains details about the failure.
+
+                
+                
+
+                - **ErrorMessage** *(string) --* 
+
+                  A human-readable error message.
+
+                  
+                
+
+                - **ErrorType** *(string) --* 
+
+                  The error type.
+
+                  
+                
+
+                - **ErrorData** *(string) --* 
+
+                  Machine-readable error data.
+
+                  
+                
+
+                - **StackTrace** *(list) --* 
+
+                  Stack trace information for the error.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **ChainedInvokeDetails** *(dict) --* 
+
+              Contains details about a chained function invocation in a durable execution, including the target function and invocation parameters.
+
+              
+              
+
+              - **Result** *(string) --* 
+
+                The response payload from the chained invocation.
+
+                
+              
+
+              - **Error** *(dict) --* 
+
+                Details about the chained invocation failure.
+
+                
+                
+
+                - **ErrorMessage** *(string) --* 
+
+                  A human-readable error message.
+
+                  
+                
+
+                - **ErrorType** *(string) --* 
+
+                  The error type.
+
+                  
+                
+
+                - **ErrorData** *(string) --* 
+
+                  Machine-readable error data.
+
+                  
+                
+
+                - **StackTrace** *(list) --* 
+
+                  Stack trace information for the error.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+        
+      
+        
+
+        - **NextMarker** *(string) --* 
+
+          Indicates that more results are available. Use this value in a subsequent call to retrieve the next page of results.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Lambda.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.ServiceException`
+
+  

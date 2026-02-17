@@ -1,0 +1,236 @@
+:doc:`Organizations <../../organizations>` / Client / list_targets_for_policy
+
+***********************
+list_targets_for_policy
+***********************
+
+
+
+.. py:method:: Organizations.Client.list_targets_for_policy(**kwargs)
+
+  
+
+  Lists all the roots, organizational units (OUs), and accounts that the specified policy is attached to.
+
+   
+
+  .. note::
+
+    
+
+    When calling List* operations, always check the ``NextToken`` response parameter value, even if you receive an empty result set. These operations can occasionally return an empty set of results even when more results are available. Continue making requests until ``NextToken`` returns null. A null ``NextToken`` value indicates that you have retrieved all available results.
+
+    
+
+   
+
+  You can only call this operation from the management account or a member account that is a delegated administrator.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/ListTargetsForPolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_targets_for_policy(
+        PolicyId='string',
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type PolicyId: string
+  :param PolicyId: **[REQUIRED]** 
+
+    ID for the policy whose attachments you want to know.
+
+     
+
+    The `regex pattern <http://wikipedia.org/wiki/regex>`__ for a policy ID string requires "p-" followed by from 8 to 128 lowercase or uppercase letters, digits, or the underscore character (_).
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The parameter for receiving additional results if you receive a ``NextToken`` response in a previous request. A ``NextToken`` response indicates that more output is available. Set this parameter to the value of the previous call's ``NextToken`` response to indicate where the output should continue from.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return in the response. If more results exist than the specified ``MaxResults`` value, a token is included in the response so that you can retrieve the remaining results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Targets': [
+              {
+                  'TargetId': 'string',
+                  'Arn': 'string',
+                  'Name': 'string',
+                  'Type': 'ACCOUNT'|'ORGANIZATIONAL_UNIT'|'ROOT'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Targets** *(list) --* 
+
+        A list of structures, each of which contains details about one of the entities to which the specified policy is attached.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about a root, OU, or account that a policy is attached to.
+
+          
+          
+
+          - **TargetId** *(string) --* 
+
+            The unique identifier (ID) of the policy target.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ for a target ID string requires one of the following:
+
+             
+
+            
+            * **Root** - A string that begins with "r-" followed by from 4 to 32 lowercase letters or digits.
+             
+            * **Account** - A string that consists of exactly 12 digits.
+             
+            * **Organizational unit (OU)** - A string that begins with "ou-" followed by from 4 to 32 lowercase letters or digits (the ID of the root that the OU is in). This string is followed by a second "-" dash and from 8 to 32 additional lowercase letters or digits.
+            
+
+            
+          
+
+          - **Arn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the policy target.
+
+             
+
+            For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The friendly name of the policy target.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ that is used to validate this parameter is a string of any of the characters in the ASCII character range.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The type of the policy target.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If present, indicates that more output is available than is included in the current response. Use this value in the ``NextToken`` request parameter in a subsequent call to the operation to get the next part of the output. You should repeat this until the ``NextToken`` response element comes back as ``null``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.PolicyNotFoundException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.UnsupportedAPIEndpointException`
+
+  
+
+  **Examples**
+
+  The following example shows how to get the list of roots, OUs, and accounts to which the specified policy is attached:/n/n
+  ::
+
+    response = client.list_targets_for_policy(
+        PolicyId='p-FullAWSAccess',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Targets': [
+            {
+                'Arn': 'arn:aws:organizations::111111111111:root/o-exampleorgid/r-examplerootid111',
+                'Name': 'Root',
+                'TargetId': 'r-examplerootid111',
+                'Type': 'ROOT',
+            },
+            {
+                'Arn': 'arn:aws:organizations::111111111111:account/o-exampleorgid/333333333333;',
+                'Name': 'Developer Test Account',
+                'TargetId': '333333333333',
+                'Type': 'ACCOUNT',
+            },
+            {
+                'Arn': 'arn:aws:organizations::111111111111:ou/o-exampleorgid/ou-examplerootid111-exampleouid111',
+                'Name': 'Accounting',
+                'TargetId': 'ou-examplerootid111-exampleouid111',
+                'Type': 'ORGANIZATIONAL_UNIT',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

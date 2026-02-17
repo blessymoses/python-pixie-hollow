@@ -1,0 +1,406 @@
+:doc:`Personalize <../../personalize>` / Client / describe_campaign
+
+*****************
+describe_campaign
+*****************
+
+
+
+.. py:method:: Personalize.Client.describe_campaign(**kwargs)
+
+  
+
+  Describes the given campaign, including its status.
+
+   
+
+  A campaign can be in one of the following states:
+
+   
+
+  
+  * CREATE PENDING > CREATE IN_PROGRESS > ACTIVE -or- CREATE FAILED
+   
+  * DELETE PENDING > DELETE IN_PROGRESS
+  
+
+   
+
+  When the ``status`` is ``CREATE FAILED``, the response includes the ``failureReason`` key, which describes why.
+
+   
+
+  For more information on campaigns, see `CreateCampaign <https://docs.aws.amazon.com/personalize/latest/dg/API_CreateCampaign.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/personalize-2018-05-22/DescribeCampaign>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_campaign(
+        campaignArn='string'
+    )
+    
+  :type campaignArn: string
+  :param campaignArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the campaign.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'campaign': {
+              'name': 'string',
+              'campaignArn': 'string',
+              'solutionVersionArn': 'string',
+              'minProvisionedTPS': 123,
+              'campaignConfig': {
+                  'itemExplorationConfig': {
+                      'string': 'string'
+                  },
+                  'enableMetadataWithRecommendations': True|False,
+                  'syncWithLatestSolutionVersion': True|False,
+                  'rankingInfluence': {
+                      'string': 123.0
+                  }
+              },
+              'status': 'string',
+              'failureReason': 'string',
+              'creationDateTime': datetime(2015, 1, 1),
+              'lastUpdatedDateTime': datetime(2015, 1, 1),
+              'latestCampaignUpdate': {
+                  'solutionVersionArn': 'string',
+                  'minProvisionedTPS': 123,
+                  'campaignConfig': {
+                      'itemExplorationConfig': {
+                          'string': 'string'
+                      },
+                      'enableMetadataWithRecommendations': True|False,
+                      'syncWithLatestSolutionVersion': True|False,
+                      'rankingInfluence': {
+                          'string': 123.0
+                      }
+                  },
+                  'status': 'string',
+                  'failureReason': 'string',
+                  'creationDateTime': datetime(2015, 1, 1),
+                  'lastUpdatedDateTime': datetime(2015, 1, 1)
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **campaign** *(dict) --* 
+
+        .. note::
+
+          
+
+          The ``latestCampaignUpdate`` field is only returned when the campaign has had at least one ``UpdateCampaign`` call.
+
+          
+
+         
+
+        The properties of the campaign.
+
+         
+
+        .. note::
+
+          
+
+          The ``latestCampaignUpdate`` field is only returned when the campaign has had at least one ``UpdateCampaign`` call.
+
+          
+
+        
+        
+
+        - **name** *(string) --* 
+
+          The name of the campaign.
+
+          
+        
+
+        - **campaignArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the campaign.
+
+          
+        
+
+        - **solutionVersionArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the solution version the campaign uses.
+
+          
+        
+
+        - **minProvisionedTPS** *(integer) --* 
+
+          Specifies the requested minimum provisioned transactions (recommendations) per second. A high ``minProvisionedTPS`` will increase your bill. We recommend starting with 1 for ``minProvisionedTPS`` (the default). Track your usage using Amazon CloudWatch metrics, and increase the ``minProvisionedTPS`` as necessary.
+
+          
+        
+
+        - **campaignConfig** *(dict) --* 
+
+          The configuration details of a campaign.
+
+          
+          
+
+          - **itemExplorationConfig** *(dict) --* 
+
+            Specifies the exploration configuration hyperparameters, including ``explorationWeight`` and ``explorationItemAgeCutOff``, you want to use to configure the amount of item exploration Amazon Personalize uses when recommending items. Provide ``itemExplorationConfig`` data only if your solution uses the `User-Personalization <https://docs.aws.amazon.com/personalize/latest/dg/native-recipe-new-item-USER_PERSONALIZATION.html>`__ recipe.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+          
+
+          - **enableMetadataWithRecommendations** *(boolean) --* 
+
+            Whether metadata with recommendations is enabled for the campaign. If enabled, you can specify the columns from your Items dataset in your request for recommendations. Amazon Personalize returns this data for each item in the recommendation response. For information about enabling metadata for a campaign, see `Enabling metadata in recommendations for a campaign <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#create-campaign-return-metadata>`__.
+
+             
+
+            If you enable metadata in recommendations, you will incur additional costs. For more information, see `Amazon Personalize pricing <https://aws.amazon.com/personalize/pricing/>`__.
+
+            
+          
+
+          - **syncWithLatestSolutionVersion** *(boolean) --* 
+
+            Whether the campaign automatically updates to use the latest solution version (trained model) of a solution. If you specify ``True``, you must specify the ARN of your *solution* for the ``SolutionVersionArn`` parameter. It must be in ``SolutionArn/$LATEST`` format. The default is ``False`` and you must manually update the campaign to deploy the latest solution version.
+
+             
+
+            For more information about automatic campaign updates, see `Enabling automatic campaign updates <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#create-campaign-automatic-latest-sv-update>`__.
+
+            
+          
+
+          - **rankingInfluence** *(dict) --* 
+
+            A map of ranking influence values for POPULARITY and FRESHNESS. For each key, specify a numerical value between 0.0 and 1.0 that determines how much influence that ranking factor has on the final recommendations. A value closer to 1.0 gives more weight to the factor, while a value closer to 0.0 reduces its influence.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(float) --* 
+        
+      
+      
+        
+
+        - **status** *(string) --* 
+
+          The status of the campaign.
+
+           
+
+          A campaign can be in one of the following states:
+
+           
+
+          
+          * CREATE PENDING > CREATE IN_PROGRESS > ACTIVE -or- CREATE FAILED
+           
+          * DELETE PENDING > DELETE IN_PROGRESS
+          
+
+          
+        
+
+        - **failureReason** *(string) --* 
+
+          If a campaign fails, the reason behind the failure.
+
+          
+        
+
+        - **creationDateTime** *(datetime) --* 
+
+          The date and time (in Unix format) that the campaign was created.
+
+          
+        
+
+        - **lastUpdatedDateTime** *(datetime) --* 
+
+          The date and time (in Unix format) that the campaign was last updated.
+
+          
+        
+
+        - **latestCampaignUpdate** *(dict) --* 
+
+          Provides a summary of the properties of a campaign update. For a complete listing, call the `DescribeCampaign <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeCampaign.html>`__ API.
+
+           
+
+          .. note::
+
+            
+
+            The ``latestCampaignUpdate`` field is only returned when the campaign has had at least one ``UpdateCampaign`` call.
+
+            
+
+          
+          
+
+          - **solutionVersionArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the deployed solution version.
+
+            
+          
+
+          - **minProvisionedTPS** *(integer) --* 
+
+            Specifies the requested minimum provisioned transactions (recommendations) per second that Amazon Personalize will support.
+
+            
+          
+
+          - **campaignConfig** *(dict) --* 
+
+            The configuration details of a campaign.
+
+            
+            
+
+            - **itemExplorationConfig** *(dict) --* 
+
+              Specifies the exploration configuration hyperparameters, including ``explorationWeight`` and ``explorationItemAgeCutOff``, you want to use to configure the amount of item exploration Amazon Personalize uses when recommending items. Provide ``itemExplorationConfig`` data only if your solution uses the `User-Personalization <https://docs.aws.amazon.com/personalize/latest/dg/native-recipe-new-item-USER_PERSONALIZATION.html>`__ recipe.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **enableMetadataWithRecommendations** *(boolean) --* 
+
+              Whether metadata with recommendations is enabled for the campaign. If enabled, you can specify the columns from your Items dataset in your request for recommendations. Amazon Personalize returns this data for each item in the recommendation response. For information about enabling metadata for a campaign, see `Enabling metadata in recommendations for a campaign <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#create-campaign-return-metadata>`__.
+
+               
+
+              If you enable metadata in recommendations, you will incur additional costs. For more information, see `Amazon Personalize pricing <https://aws.amazon.com/personalize/pricing/>`__.
+
+              
+            
+
+            - **syncWithLatestSolutionVersion** *(boolean) --* 
+
+              Whether the campaign automatically updates to use the latest solution version (trained model) of a solution. If you specify ``True``, you must specify the ARN of your *solution* for the ``SolutionVersionArn`` parameter. It must be in ``SolutionArn/$LATEST`` format. The default is ``False`` and you must manually update the campaign to deploy the latest solution version.
+
+               
+
+              For more information about automatic campaign updates, see `Enabling automatic campaign updates <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#create-campaign-automatic-latest-sv-update>`__.
+
+              
+            
+
+            - **rankingInfluence** *(dict) --* 
+
+              A map of ranking influence values for POPULARITY and FRESHNESS. For each key, specify a numerical value between 0.0 and 1.0 that determines how much influence that ranking factor has on the final recommendations. A value closer to 1.0 gives more weight to the factor, while a value closer to 0.0 reduces its influence.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(float) --* 
+          
+        
+        
+          
+
+          - **status** *(string) --* 
+
+            The status of the campaign update.
+
+             
+
+            A campaign update can be in one of the following states:
+
+             
+
+            
+            * CREATE PENDING > CREATE IN_PROGRESS > ACTIVE -or- CREATE FAILED
+             
+            * DELETE PENDING > DELETE IN_PROGRESS
+            
+
+            
+          
+
+          - **failureReason** *(string) --* 
+
+            If a campaign update fails, the reason behind the failure.
+
+            
+          
+
+          - **creationDateTime** *(datetime) --* 
+
+            The date and time (in Unix time) that the campaign update was created.
+
+            
+          
+
+          - **lastUpdatedDateTime** *(datetime) --* 
+
+            The date and time (in Unix time) that the campaign update was last updated.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceNotFoundException`
+
+  

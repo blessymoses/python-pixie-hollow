@@ -1,0 +1,217 @@
+:doc:`GameLift <../../gamelift>` / Client / update_fleet_attributes
+
+***********************
+update_fleet_attributes
+***********************
+
+
+
+.. py:method:: GameLift.Client.update_fleet_attributes(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Anywhere, Container
+
+   
+
+  Updates a fleet's mutable attributes, such as game session protection and resource creation limits.
+
+   
+
+  To update fleet attributes, specify the fleet ID and the property values that you want to change. If successful, Amazon GameLift Servers returns the identifiers for the updated fleet.
+
+   
+
+  .. note::
+
+    
+
+    A managed fleet's runtime environment, which depends on the fleet's Amazon Machine Image {AMI} version, can't be updated. You must create a new fleet. As a best practice, we recommend replacing your managed fleets every 30 days to maintain a secure and up-to-date runtime environment for your hosted game servers. For guidance, see `Security best practices for Amazon GameLift Servers <https://docs.aws.amazon.com/gameliftservers/latest/developerguide/security-best-practices.html>`__.
+
+    
+
+   
+
+  **Learn more**
+
+   
+
+  `Setting up Amazon GameLift Servers fleets <https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/UpdateFleetAttributes>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_fleet_attributes(
+        FleetId='string',
+        Name='string',
+        Description='string',
+        NewGameSessionProtectionPolicy='NoProtection'|'FullProtection',
+        ResourceCreationLimitPolicy={
+            'NewGameSessionsPerCreator': 123,
+            'PolicyPeriodInMinutes': 123
+        },
+        MetricGroups=[
+            'string',
+        ],
+        AnywhereConfiguration={
+            'Cost': 'string'
+        }
+    )
+    
+  :type FleetId: string
+  :param FleetId: **[REQUIRED]** 
+
+    A unique identifier for the fleet to update attribute metadata for. You can use either the fleet ID or ARN value.
+
+    
+
+  
+  :type Name: string
+  :param Name: 
+
+    A descriptive label that is associated with a fleet. Fleet names do not need to be unique.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A human-readable description of a fleet.
+
+    
+
+  
+  :type NewGameSessionProtectionPolicy: string
+  :param NewGameSessionProtectionPolicy: 
+
+    The game session protection policy to apply to all new game sessions created in this fleet. Game sessions that already exist are not affected. You can set protection for individual game sessions using `UpdateGameSession <https://docs.aws.amazon.com/gamelift/latest/apireference/API_UpdateGameSession.html>`__ .
+
+     
+
+    
+    * **NoProtection** -- The game session can be terminated during a scale-down event.
+     
+    * **FullProtection** -- If the game session is in an ``ACTIVE`` status, it cannot be terminated during a scale-down event.
+    
+
+    
+
+  
+  :type ResourceCreationLimitPolicy: dict
+  :param ResourceCreationLimitPolicy: 
+
+    Policy settings that limit the number of game sessions an individual player can create over a span of time.
+
+    
+
+  
+    - **NewGameSessionsPerCreator** *(integer) --* 
+
+      A policy that puts limits on the number of game sessions that a player can create within a specified span of time. With this policy, you can control players' ability to consume available resources.
+
+       
+
+      The policy is evaluated when a player tries to create a new game session. On receiving a ``CreateGameSession`` request, Amazon GameLift Servers checks that the player (identified by ``CreatorId``) has created fewer than game session limit in the specified time period.
+
+      
+
+    
+    - **PolicyPeriodInMinutes** *(integer) --* 
+
+      The time span used in evaluating the resource creation limit policy.
+
+      
+
+    
+  
+  :type MetricGroups: list
+  :param MetricGroups: 
+
+    The name of a metric group to add this fleet to. Use a metric group in Amazon CloudWatch to aggregate the metrics from multiple fleets. Provide an existing metric group name, or create a new metric group by providing a new name. A fleet can only be in one metric group at a time.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type AnywhereConfiguration: dict
+  :param AnywhereConfiguration: 
+
+    Amazon GameLift Servers Anywhere configuration options.
+
+    
+
+  
+    - **Cost** *(string) --* **[REQUIRED]** 
+
+      The cost to run your fleet per hour. Amazon GameLift Servers uses the provided cost of your fleet to balance usage in queues. For more information about queues, see `Setting up queues <https://docs.aws.amazon.com/gamelift/latest/developerguide/queues-intro.html>`__ in the *Amazon GameLift Servers Developer Guide*.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FleetId': 'string',
+          'FleetArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FleetId** *(string) --* 
+
+        A unique identifier for the fleet that was updated.
+
+        
+      
+
+      - **FleetArn** *(string) --* 
+
+        The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers fleet resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::fleet/fleet-a1234567-b8c9-0d1e-2fa3-b45c6d7e8912``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidFleetStatusException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  

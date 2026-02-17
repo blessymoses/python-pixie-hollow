@@ -1,0 +1,251 @@
+:doc:`ECR <../../ecr>` / Client / batch_delete_image
+
+******************
+batch_delete_image
+******************
+
+
+
+.. py:method:: ECR.Client.batch_delete_image(**kwargs)
+
+  
+
+  Deletes a list of specified images within a repository. Images are specified with either an ``imageTag`` or ``imageDigest``.
+
+   
+
+  You can remove a tag from an image by specifying the image's tag in your request. When you remove the last tag from an image, the image is deleted from your repository.
+
+   
+
+  You can completely delete an image (and all of its tags) by specifying the image's digest in your request.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ecr-2015-09-21/BatchDeleteImage>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_delete_image(
+        registryId='string',
+        repositoryName='string',
+        imageIds=[
+            {
+                'imageDigest': 'string',
+                'imageTag': 'string'
+            },
+        ]
+    )
+    
+  :type registryId: string
+  :param registryId: 
+
+    The Amazon Web Services account ID associated with the registry that contains the image to delete. If you do not specify a registry, the default registry is assumed.
+
+    
+
+  
+  :type repositoryName: string
+  :param repositoryName: **[REQUIRED]** 
+
+    The repository that contains the image to delete.
+
+    
+
+  
+  :type imageIds: list
+  :param imageIds: **[REQUIRED]** 
+
+    A list of image ID references that correspond to images to delete. The format of the ``imageIds`` reference is ``imageTag=tag`` or ``imageDigest=digest``.
+
+    
+
+  
+    - *(dict) --* 
+
+      An object with identifying information for an image in an Amazon ECR repository.
+
+      
+
+    
+      - **imageDigest** *(string) --* 
+
+        The ``sha256`` digest of the image manifest.
+
+        
+
+      
+      - **imageTag** *(string) --* 
+
+        The tag used for the image.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'imageIds': [
+              {
+                  'imageDigest': 'string',
+                  'imageTag': 'string'
+              },
+          ],
+          'failures': [
+              {
+                  'imageId': {
+                      'imageDigest': 'string',
+                      'imageTag': 'string'
+                  },
+                  'failureCode': 'InvalidImageDigest'|'InvalidImageTag'|'ImageTagDoesNotMatchDigest'|'ImageNotFound'|'MissingDigestAndTag'|'ImageReferencedByManifestList'|'KmsError'|'UpstreamAccessDenied'|'UpstreamTooManyRequests'|'UpstreamUnavailable'|'ImageInaccessible',
+                  'failureReason': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **imageIds** *(list) --* 
+
+        The image IDs of the deleted images.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object with identifying information for an image in an Amazon ECR repository.
+
+          
+          
+
+          - **imageDigest** *(string) --* 
+
+            The ``sha256`` digest of the image manifest.
+
+            
+          
+
+          - **imageTag** *(string) --* 
+
+            The tag used for the image.
+
+            
+      
+    
+      
+
+      - **failures** *(list) --* 
+
+        Any failures associated with the call.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object representing an Amazon ECR image failure.
+
+          
+          
+
+          - **imageId** *(dict) --* 
+
+            The image ID associated with the failure.
+
+            
+            
+
+            - **imageDigest** *(string) --* 
+
+              The ``sha256`` digest of the image manifest.
+
+              
+            
+
+            - **imageTag** *(string) --* 
+
+              The tag used for the image.
+
+              
+        
+          
+
+          - **failureCode** *(string) --* 
+
+            The code associated with the failure.
+
+            
+          
+
+          - **failureReason** *(string) --* 
+
+            The reason for the failure.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ECR.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.RepositoryNotFoundException`
+
+  
+
+  **Examples**
+
+  This example deletes images with the tags precise and trusty in a repository called ubuntu in the default registry for an account.
+  ::
+
+    response = client.batch_delete_image(
+        imageIds=[
+            {
+                'imageTag': 'precise',
+            },
+        ],
+        repositoryName='ubuntu',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'failures': [
+        ],
+        'imageIds': [
+            {
+                'imageDigest': 'sha256:examplee6d1e504117a17000003d3753086354a38375961f2e665416ef4b1b2f',
+                'imageTag': 'precise',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

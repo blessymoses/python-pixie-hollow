@@ -1,0 +1,545 @@
+:doc:`WAF <../../waf>` / Client / create_web_acl
+
+**************
+create_web_acl
+**************
+
+
+
+.. py:method:: WAF.Client.create_web_acl(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This is **AWS WAF Classic** documentation. For more information, see `AWS WAF Classic <https://docs.aws.amazon.com/waf/latest/developerguide/classic-waf-chapter.html>`__ in the developer guide.
+
+     
+
+    **For the latest version of AWS WAF**, use the AWS WAFV2 API and see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html>`__. With the latest version, AWS WAF has a single set of endpoints for regional and global use.
+
+    
+
+   
+
+  Creates a ``WebACL``, which contains the ``Rules`` that identify the CloudFront web requests that you want to allow, block, or count. AWS WAF evaluates ``Rules`` in order based on the value of ``Priority`` for each ``Rule``.
+
+   
+
+  You also specify a default action, either ``ALLOW`` or ``BLOCK``. If a web request doesn't match any of the ``Rules`` in a ``WebACL``, AWS WAF responds to the request with the default action.
+
+   
+
+  To create and configure a ``WebACL``, perform the following steps:
+
+   
+
+   
+  * Create and update the ``ByteMatchSet`` objects and other predicates that you want to include in ``Rules``. For more information, see  CreateByteMatchSet,  UpdateByteMatchSet,  CreateIPSet,  UpdateIPSet,  CreateSqlInjectionMatchSet, and  UpdateSqlInjectionMatchSet.
+   
+  * Create and update the ``Rules`` that you want to include in the ``WebACL``. For more information, see  CreateRule and  UpdateRule.
+   
+  * Use  GetChangeToken to get the change token that you provide in the ``ChangeToken`` parameter of a ``CreateWebACL`` request.
+   
+  * Submit a ``CreateWebACL`` request.
+   
+  * Use ``GetChangeToken`` to get the change token that you provide in the ``ChangeToken`` parameter of an  UpdateWebACL request.
+   
+  * Submit an  UpdateWebACL request to specify the ``Rules`` that you want to include in the ``WebACL``, to specify the default action, and to associate the ``WebACL`` with a CloudFront distribution.
+   
+
+   
+
+  For more information about how to use the AWS WAF API, see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/waf-2015-08-24/CreateWebACL>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_web_acl(
+        Name='string',
+        MetricName='string',
+        DefaultAction={
+            'Type': 'BLOCK'|'ALLOW'|'COUNT'
+        },
+        ChangeToken='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A friendly name or description of the  WebACL. You can't change ``Name`` after you create the ``WebACL``.
+
+    
+
+  
+  :type MetricName: string
+  :param MetricName: **[REQUIRED]** 
+
+    A friendly name or description for the metrics for this ``WebACL``.The name can contain only alphanumeric characters (A-Z, a-z, 0-9), with maximum length 128 and minimum length one. It can't contain whitespace or metric names reserved for AWS WAF, including "All" and "Default_Action." You can't change ``MetricName`` after you create the ``WebACL``.
+
+    
+
+  
+  :type DefaultAction: dict
+  :param DefaultAction: **[REQUIRED]** 
+
+    The action that you want AWS WAF to take when a request doesn't match the criteria specified in any of the ``Rule`` objects that are associated with the ``WebACL``.
+
+    
+
+  
+    - **Type** *(string) --* **[REQUIRED]** 
+
+      Specifies how you want AWS WAF to respond to requests that match the settings in a ``Rule``. Valid settings include the following:
+
+       
+
+      
+      * ``ALLOW``: AWS WAF allows requests
+       
+      * ``BLOCK``: AWS WAF blocks requests
+       
+      * ``COUNT``: AWS WAF increments a counter of the requests that match all of the conditions in the rule. AWS WAF then continues to inspect the web request based on the remaining rules in the web ACL. You can't specify ``COUNT`` for the default action for a ``WebACL``.
+      
+
+      
+
+    
+  
+  :type ChangeToken: string
+  :param ChangeToken: **[REQUIRED]** 
+
+    The value returned by the most recent call to  GetChangeToken.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+  
+    - *(dict) --* 
+
+      .. note::
+
+        
+
+        This is **AWS WAF Classic** documentation. For more information, see `AWS WAF Classic <https://docs.aws.amazon.com/waf/latest/developerguide/classic-waf-chapter.html>`__ in the developer guide.
+
+         
+
+        **For the latest version of AWS WAF**, use the AWS WAFV2 API and see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html>`__. With the latest version, AWS WAF has a single set of endpoints for regional and global use.
+
+        
+
+       
+
+      A tag associated with an AWS resource. Tags are key:value pairs that you can use to categorize and manage your resources, for purposes like billing. For example, you might set the tag key to "customer" and the value to the customer name or ID. You can specify one or more tags to add to each AWS resource, up to 50 tags for a resource.
+
+       
+
+      Tagging is only available through the API, SDKs, and CLI. You can't manage or view tags through the AWS WAF Classic console. You can tag the AWS resources that you manage through AWS WAF Classic: web ACLs, rule groups, and rules.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'WebACL': {
+              'WebACLId': 'string',
+              'Name': 'string',
+              'MetricName': 'string',
+              'DefaultAction': {
+                  'Type': 'BLOCK'|'ALLOW'|'COUNT'
+              },
+              'Rules': [
+                  {
+                      'Priority': 123,
+                      'RuleId': 'string',
+                      'Action': {
+                          'Type': 'BLOCK'|'ALLOW'|'COUNT'
+                      },
+                      'OverrideAction': {
+                          'Type': 'NONE'|'COUNT'
+                      },
+                      'Type': 'REGULAR'|'RATE_BASED'|'GROUP',
+                      'ExcludedRules': [
+                          {
+                              'RuleId': 'string'
+                          },
+                      ]
+                  },
+              ],
+              'WebACLArn': 'string'
+          },
+          'ChangeToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **WebACL** *(dict) --* 
+
+        The  WebACL returned in the ``CreateWebACL`` response.
+
+        
+        
+
+        - **WebACLId** *(string) --* 
+
+          A unique identifier for a ``WebACL``. You use ``WebACLId`` to get information about a ``WebACL`` (see  GetWebACL), update a ``WebACL`` (see  UpdateWebACL), and delete a ``WebACL`` from AWS WAF (see  DeleteWebACL).
+
+           
+
+          ``WebACLId`` is returned by  CreateWebACL and by  ListWebACLs.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          A friendly name or description of the ``WebACL``. You can't change the name of a ``WebACL`` after you create it.
+
+          
+        
+
+        - **MetricName** *(string) --* 
+
+          A friendly name or description for the metrics for this ``WebACL``. The name can contain only alphanumeric characters (A-Z, a-z, 0-9), with maximum length 128 and minimum length one. It can't contain whitespace or metric names reserved for AWS WAF, including "All" and "Default_Action." You can't change ``MetricName`` after you create the ``WebACL``.
+
+          
+        
+
+        - **DefaultAction** *(dict) --* 
+
+          The action to perform if none of the ``Rules`` contained in the ``WebACL`` match. The action is specified by the  WafAction object.
+
+          
+          
+
+          - **Type** *(string) --* 
+
+            Specifies how you want AWS WAF to respond to requests that match the settings in a ``Rule``. Valid settings include the following:
+
+             
+
+            
+            * ``ALLOW``: AWS WAF allows requests
+             
+            * ``BLOCK``: AWS WAF blocks requests
+             
+            * ``COUNT``: AWS WAF increments a counter of the requests that match all of the conditions in the rule. AWS WAF then continues to inspect the web request based on the remaining rules in the web ACL. You can't specify ``COUNT`` for the default action for a ``WebACL``.
+            
+
+            
+      
+        
+
+        - **Rules** *(list) --* 
+
+          An array that contains the action for each ``Rule`` in a ``WebACL``, the priority of the ``Rule``, and the ID of the ``Rule``.
+
+          
+          
+
+          - *(dict) --* 
+
+            .. note::
+
+              
+
+              This is **AWS WAF Classic** documentation. For more information, see `AWS WAF Classic <https://docs.aws.amazon.com/waf/latest/developerguide/classic-waf-chapter.html>`__ in the developer guide.
+
+               
+
+              **For the latest version of AWS WAF**, use the AWS WAFV2 API and see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html>`__. With the latest version, AWS WAF has a single set of endpoints for regional and global use.
+
+              
+
+             
+
+            The ``ActivatedRule`` object in an  UpdateWebACL request specifies a ``Rule`` that you want to insert or delete, the priority of the ``Rule`` in the ``WebACL``, and the action that you want AWS WAF to take when a web request matches the ``Rule`` ( ``ALLOW``, ``BLOCK``, or ``COUNT``).
+
+             
+
+            To specify whether to insert or delete a ``Rule``, use the ``Action`` parameter in the  WebACLUpdate data type.
+
+            
+            
+
+            - **Priority** *(integer) --* 
+
+              Specifies the order in which the ``Rules`` in a ``WebACL`` are evaluated. Rules with a lower value for ``Priority`` are evaluated before ``Rules`` with a higher value. The value must be a unique integer. If you add multiple ``Rules`` to a ``WebACL``, the values don't need to be consecutive.
+
+              
+            
+
+            - **RuleId** *(string) --* 
+
+              The ``RuleId`` for a ``Rule``. You use ``RuleId`` to get more information about a ``Rule`` (see  GetRule), update a ``Rule`` (see  UpdateRule), insert a ``Rule`` into a ``WebACL`` or delete a one from a ``WebACL`` (see  UpdateWebACL), or delete a ``Rule`` from AWS WAF (see  DeleteRule).
+
+               
+
+              ``RuleId`` is returned by  CreateRule and by  ListRules.
+
+              
+            
+
+            - **Action** *(dict) --* 
+
+              Specifies the action that CloudFront or AWS WAF takes when a web request matches the conditions in the ``Rule``. Valid values for ``Action`` include the following:
+
+               
+
+              
+              * ``ALLOW``: CloudFront responds with the requested object.
+               
+              * ``BLOCK``: CloudFront responds with an HTTP 403 (Forbidden) status code.
+               
+              * ``COUNT``: AWS WAF increments a counter of requests that match the conditions in the rule and then continues to inspect the web request based on the remaining rules in the web ACL.
+              
+
+               
+
+              ``ActivatedRule|OverrideAction`` applies only when updating or adding a ``RuleGroup`` to a ``WebACL``. In this case, you do not use ``ActivatedRule|Action``. For all other update requests, ``ActivatedRule|Action`` is used instead of ``ActivatedRule|OverrideAction``.
+
+              
+              
+
+              - **Type** *(string) --* 
+
+                Specifies how you want AWS WAF to respond to requests that match the settings in a ``Rule``. Valid settings include the following:
+
+                 
+
+                
+                * ``ALLOW``: AWS WAF allows requests
+                 
+                * ``BLOCK``: AWS WAF blocks requests
+                 
+                * ``COUNT``: AWS WAF increments a counter of the requests that match all of the conditions in the rule. AWS WAF then continues to inspect the web request based on the remaining rules in the web ACL. You can't specify ``COUNT`` for the default action for a ``WebACL``.
+                
+
+                
+          
+            
+
+            - **OverrideAction** *(dict) --* 
+
+              Use the ``OverrideAction`` to test your ``RuleGroup``.
+
+               
+
+              Any rule in a ``RuleGroup`` can potentially block a request. If you set the ``OverrideAction`` to ``None``, the ``RuleGroup`` will block a request if any individual rule in the ``RuleGroup`` matches the request and is configured to block that request. However if you first want to test the ``RuleGroup``, set the ``OverrideAction`` to ``Count``. The ``RuleGroup`` will then override any block action specified by individual rules contained within the group. Instead of blocking matching requests, those requests will be counted. You can view a record of counted requests using  GetSampledRequests.
+
+               
+
+              ``ActivatedRule|OverrideAction`` applies only when updating or adding a ``RuleGroup`` to a ``WebACL``. In this case you do not use ``ActivatedRule|Action``. For all other update requests, ``ActivatedRule|Action`` is used instead of ``ActivatedRule|OverrideAction``.
+
+              
+              
+
+              - **Type** *(string) --* 
+
+                ``COUNT`` overrides the action specified by the individual rule within a ``RuleGroup`` . If set to ``NONE``, the rule's action will take place.
+
+                
+          
+            
+
+            - **Type** *(string) --* 
+
+              The rule type, either ``REGULAR``, as defined by  Rule, ``RATE_BASED``, as defined by  RateBasedRule, or ``GROUP``, as defined by  RuleGroup. The default is REGULAR. Although this field is optional, be aware that if you try to add a RATE_BASED rule to a web ACL without setting the type, the  UpdateWebACL request will fail because the request tries to add a REGULAR rule with the specified ID, which does not exist.
+
+              
+            
+
+            - **ExcludedRules** *(list) --* 
+
+              An array of rules to exclude from a rule group. This is applicable only when the ``ActivatedRule`` refers to a ``RuleGroup``.
+
+               
+
+              Sometimes it is necessary to troubleshoot rule groups that are blocking traffic unexpectedly (false positives). One troubleshooting technique is to identify the specific rule within the rule group that is blocking the legitimate traffic and then disable (exclude) that particular rule. You can exclude rules from both your own rule groups and AWS Marketplace rule groups that have been associated with a web ACL.
+
+               
+
+              Specifying ``ExcludedRules`` does not remove those rules from the rule group. Rather, it changes the action for the rules to ``COUNT``. Therefore, requests that match an ``ExcludedRule`` are counted but not blocked. The ``RuleGroup`` owner will receive COUNT metrics for each ``ExcludedRule``.
+
+               
+
+              If you want to exclude rules from a rule group that is already associated with a web ACL, perform the following steps:
+
+               
+
+               
+              * Use the AWS WAF logs to identify the IDs of the rules that you want to exclude. For more information about the logs, see `Logging Web ACL Traffic Information <https://docs.aws.amazon.com/waf/latest/developerguide/logging.html>`__.
+               
+              * Submit an  UpdateWebACL request that has two actions: 
+
+                
+                * The first action deletes the existing rule group from the web ACL. That is, in the  UpdateWebACL request, the first ``Updates:Action`` should be ``DELETE`` and ``Updates:ActivatedRule:RuleId`` should be the rule group that contains the rules that you want to exclude.
+                 
+                * The second action inserts the same rule group back in, but specifying the rules to exclude. That is, the second ``Updates:Action`` should be ``INSERT``, ``Updates:ActivatedRule:RuleId`` should be the rule group that you just removed, and ``ExcludedRules`` should contain the rules that you want to exclude.
+                
+
+              
+              
+
+              
+              
+
+              - *(dict) --* 
+
+                .. note::
+
+                  
+
+                  This is **AWS WAF Classic** documentation. For more information, see `AWS WAF Classic <https://docs.aws.amazon.com/waf/latest/developerguide/classic-waf-chapter.html>`__ in the developer guide.
+
+                   
+
+                  **For the latest version of AWS WAF**, use the AWS WAFV2 API and see the `AWS WAF Developer Guide <https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html>`__. With the latest version, AWS WAF has a single set of endpoints for regional and global use.
+
+                  
+
+                 
+
+                The rule to exclude from a rule group. This is applicable only when the ``ActivatedRule`` refers to a ``RuleGroup``. The rule must belong to the ``RuleGroup`` that is specified by the ``ActivatedRule``.
+
+                
+                
+
+                - **RuleId** *(string) --* 
+
+                  The unique identifier for the rule to exclude from the rule group.
+
+                  
+            
+          
+        
+      
+        
+
+        - **WebACLArn** *(string) --* 
+
+          Tha Amazon Resource Name (ARN) of the web ACL.
+
+          
+    
+      
+
+      - **ChangeToken** *(string) --* 
+
+        The ``ChangeToken`` that you used to submit the ``CreateWebACL`` request. You can also use this value to query the status of the request. For more information, see  GetChangeTokenStatus.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`WAF.Client.exceptions.WAFStaleDataException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFInternalErrorException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFInvalidAccountException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFDisallowedNameException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFInvalidParameterException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFLimitsExceededException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFTagOperationException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFTagOperationInternalErrorException`
+
+  
+  *   :py:class:`WAF.Client.exceptions.WAFBadRequestException`
+
+  
+
+  **Examples**
+
+  The following example creates a web ACL named CreateExample.
+  ::
+
+    response = client.create_web_acl(
+        ChangeToken='abcd12f2-46da-4fdb-b8d5-fbd4c466928f',
+        DefaultAction={
+            'Type': 'ALLOW',
+        },
+        MetricName='CreateExample',
+        Name='CreateExample',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ChangeToken': 'abcd12f2-46da-4fdb-b8d5-fbd4c466928f',
+        'WebACL': {
+            'DefaultAction': {
+                'Type': 'ALLOW',
+            },
+            'MetricName': 'CreateExample',
+            'Name': 'CreateExample',
+            'Rules': [
+                {
+                    'Action': {
+                        'Type': 'ALLOW',
+                    },
+                    'Priority': 1,
+                    'RuleId': 'WAFRule-1-Example',
+                },
+            ],
+            'WebACLId': 'example-46da-4444-5555-example',
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,305 @@
+:doc:`SESV2 <../../sesv2>` / Client / get_message_insights
+
+********************
+get_message_insights
+********************
+
+
+
+.. py:method:: SESV2.Client.get_message_insights(**kwargs)
+
+  
+
+  Provides information about a specific message, including the from address, the subject, the recipient address, email tags, as well as events associated with the message.
+
+   
+
+  You can execute this operation no more than once per second.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sesv2-2019-09-27/GetMessageInsights>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_message_insights(
+        MessageId='string'
+    )
+    
+  :type MessageId: string
+  :param MessageId: **[REQUIRED]** 
+
+    A ``MessageId`` is a unique identifier for a message, and is returned when sending emails through Amazon SES.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'MessageId': 'string',
+          'FromEmailAddress': 'string',
+          'Subject': 'string',
+          'EmailTags': [
+              {
+                  'Name': 'string',
+                  'Value': 'string'
+              },
+          ],
+          'Insights': [
+              {
+                  'Destination': 'string',
+                  'Isp': 'string',
+                  'Events': [
+                      {
+                          'Timestamp': datetime(2015, 1, 1),
+                          'Type': 'SEND'|'REJECT'|'BOUNCE'|'COMPLAINT'|'DELIVERY'|'OPEN'|'CLICK'|'RENDERING_FAILURE'|'DELIVERY_DELAY'|'SUBSCRIPTION',
+                          'Details': {
+                              'Bounce': {
+                                  'BounceType': 'UNDETERMINED'|'TRANSIENT'|'PERMANENT',
+                                  'BounceSubType': 'string',
+                                  'DiagnosticCode': 'string'
+                              },
+                              'Complaint': {
+                                  'ComplaintSubType': 'string',
+                                  'ComplaintFeedbackType': 'string'
+                              }
+                          }
+                      },
+                  ]
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Information about a message.
+
+      
+      
+
+      - **MessageId** *(string) --* 
+
+        A unique identifier for the message.
+
+        
+      
+
+      - **FromEmailAddress** *(string) --* 
+
+        The from address used to send the message.
+
+        
+      
+
+      - **Subject** *(string) --* 
+
+        The subject line of the message.
+
+        
+      
+
+      - **EmailTags** *(list) --* 
+
+        A list of tags, in the form of name/value pairs, that were applied to the email you sent, along with Amazon SES `Auto-Tags <https://docs.aws.amazon.com/ses/latest/dg/monitor-using-event-publishing.html>`__.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the name and value of a tag that you apply to an email. You can use message tags when you publish email sending events.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The name of the message tag. The message tag name has to meet the following criteria:
+
+             
+
+            
+            * It can only contain ASCII letters (a–z, A–Z), numbers (0–9), underscores (_), or dashes (-).
+             
+            * It can contain no more than 256 characters.
+            
+
+            
+          
+
+          - **Value** *(string) --* 
+
+            The value of the message tag. The message tag value has to meet the following criteria:
+
+             
+
+            
+            * It can only contain ASCII letters (a–z, A–Z), numbers (0–9), underscores (_), or dashes (-).
+             
+            * It can contain no more than 256 characters.
+            
+
+            
+      
+    
+      
+
+      - **Insights** *(list) --* 
+
+        A set of insights associated with the message.
+
+        
+        
+
+        - *(dict) --* 
+
+          An email's insights contain metadata and delivery information about a specific email.
+
+          
+          
+
+          - **Destination** *(string) --* 
+
+            The recipient of the email.
+
+            
+          
+
+          - **Isp** *(string) --* 
+
+            The recipient's ISP (e.g., ``Gmail``, ``Yahoo``, etc.).
+
+            
+          
+
+          - **Events** *(list) --* 
+
+            A list of events associated with the sent email.
+
+            
+            
+
+            - *(dict) --* 
+
+              An object containing details about a specific event.
+
+              
+              
+
+              - **Timestamp** *(datetime) --* 
+
+                The timestamp of the event.
+
+                
+              
+
+              - **Type** *(string) --* 
+
+                The type of event:
+
+                 
+
+                
+                * ``SEND`` - The send request was successful and SES will attempt to deliver the message to the recipient’s mail server. (If account-level or global suppression is being used, SES will still count it as a send, but delivery is suppressed.)
+                 
+                * ``DELIVERY`` - SES successfully delivered the email to the recipient's mail server. Excludes deliveries to the mailbox simulator, and those from emails addressed to more than one recipient.
+                 
+                * ``BOUNCE`` - Feedback received for delivery failures. Additional details about the bounce are provided in the ``Details`` object. Excludes bounces from the mailbox simulator, and those from emails addressed to more than one recipient.
+                 
+                * ``COMPLAINT`` - Complaint received for the email. Additional details about the complaint are provided in the ``Details`` object. This excludes complaints from the mailbox simulator, those originating from your account-level suppression list (if enabled), and those from emails addressed to more than one recipient.
+                 
+                * ``OPEN`` - Open event for emails including open trackers. Excludes opens for emails addressed to more than one recipient.
+                 
+                * ``CLICK`` - Click event for emails including wrapped links. Excludes clicks for emails addressed to more than one recipient.
+                
+
+                
+              
+
+              - **Details** *(dict) --* 
+
+                Details about bounce or complaint events.
+
+                
+                
+
+                - **Bounce** *(dict) --* 
+
+                  Information about a ``Bounce`` event.
+
+                  
+                  
+
+                  - **BounceType** *(string) --* 
+
+                    The type of the bounce, as determined by SES. Can be one of ``UNDETERMINED``, ``TRANSIENT``, or ``PERMANENT``
+
+                    
+                  
+
+                  - **BounceSubType** *(string) --* 
+
+                    The subtype of the bounce, as determined by SES.
+
+                    
+                  
+
+                  - **DiagnosticCode** *(string) --* 
+
+                    The status code issued by the reporting Message Transfer Authority (MTA). This field only appears if a delivery status notification (DSN) was attached to the bounce and the ``Diagnostic-Code`` was provided in the DSN.
+
+                    
+              
+                
+
+                - **Complaint** *(dict) --* 
+
+                  Information about a ``Complaint`` event.
+
+                  
+                  
+
+                  - **ComplaintSubType** *(string) --* 
+
+                    Can either be ``null`` or ``OnAccountSuppressionList``. If the value is ``OnAccountSuppressionList``, SES accepted the message, but didn't attempt to send it because it was on the account-level suppression list.
+
+                    
+                  
+
+                  - **ComplaintFeedbackType** *(string) --* 
+
+                    The value of the ``Feedback-Type`` field from the feedback report received from the ISP.
+
+                    
+              
+            
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SESV2.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`SESV2.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`SESV2.Client.exceptions.BadRequestException`
+
+  

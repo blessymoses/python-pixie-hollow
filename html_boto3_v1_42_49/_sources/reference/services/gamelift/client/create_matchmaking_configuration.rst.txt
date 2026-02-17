@@ -1,0 +1,556 @@
+:doc:`GameLift <../../gamelift>` / Client / create_matchmaking_configuration
+
+********************************
+create_matchmaking_configuration
+********************************
+
+
+
+.. py:method:: GameLift.Client.create_matchmaking_configuration(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Anywhere, Container
+
+   
+
+  Defines a new matchmaking configuration for use with FlexMatch. Whether your are using FlexMatch with Amazon GameLift Servers hosting or as a standalone matchmaking service, the matchmaking configuration sets out rules for matching players and forming teams. If you're also using Amazon GameLift Servers hosting, it defines how to start game sessions for each match. Your matchmaking system can use multiple configurations to handle different game scenarios. All matchmaking requests identify the matchmaking configuration to use and provide player attributes consistent with that configuration.
+
+   
+
+  To create a matchmaking configuration, you must provide the following: configuration name and FlexMatch mode (with or without Amazon GameLift Servers hosting); a rule set that specifies how to evaluate players and find acceptable matches; whether player acceptance is required; and the maximum time allowed for a matchmaking attempt. When using FlexMatch with Amazon GameLift Servers hosting, you also need to identify the game session queue to use when starting a game session for the match.
+
+   
+
+  In addition, you must set up an Amazon Simple Notification Service topic to receive matchmaking notifications. Provide the topic ARN in the matchmaking configuration.
+
+   
+
+  **Learn more**
+
+   
+
+  `Design a FlexMatch matchmaker <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-configuration.html>`__
+
+   
+
+  `Set up FlexMatch event notification <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-notification.html>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateMatchmakingConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_matchmaking_configuration(
+        Name='string',
+        Description='string',
+        GameSessionQueueArns=[
+            'string',
+        ],
+        RequestTimeoutSeconds=123,
+        AcceptanceTimeoutSeconds=123,
+        AcceptanceRequired=True|False,
+        RuleSetName='string',
+        NotificationTarget='string',
+        AdditionalPlayerCount=123,
+        CustomEventData='string',
+        GameProperties=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        GameSessionData='string',
+        BackfillMode='AUTOMATIC'|'MANUAL',
+        FlexMatchMode='STANDALONE'|'WITH_QUEUE',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A unique identifier for the matchmaking configuration. This name is used to identify the configuration associated with a matchmaking request or ticket.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A human-readable description of the matchmaking configuration.
+
+    
+
+  
+  :type GameSessionQueueArns: list
+  :param GameSessionQueueArns: 
+
+    The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers game session queue resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::gamesessionqueue/<queue name>``. Queues can be located in any Region. Queues are used to start new Amazon GameLift Servers-hosted game sessions for matches that are created with this matchmaking configuration. If ``FlexMatchMode`` is set to ``STANDALONE``, do not set this parameter.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type RequestTimeoutSeconds: integer
+  :param RequestTimeoutSeconds: **[REQUIRED]** 
+
+    The maximum duration, in seconds, that a matchmaking ticket can remain in process before timing out. Requests that fail due to timing out can be resubmitted as needed.
+
+    
+
+  
+  :type AcceptanceTimeoutSeconds: integer
+  :param AcceptanceTimeoutSeconds: 
+
+    The length of time (in seconds) to wait for players to accept a proposed match, if acceptance is required.
+
+    
+
+  
+  :type AcceptanceRequired: boolean
+  :param AcceptanceRequired: **[REQUIRED]** 
+
+    A flag that determines whether a match that was created with this configuration must be accepted by the matched players. To require acceptance, set to ``TRUE``. With this option enabled, matchmaking tickets use the status ``REQUIRES_ACCEPTANCE`` to indicate when a completed potential match is waiting for player acceptance.
+
+    
+
+  
+  :type RuleSetName: string
+  :param RuleSetName: **[REQUIRED]** 
+
+    A unique identifier for the matchmaking rule set to use with this configuration. You can use either the rule set name or ARN value. A matchmaking configuration can only use rule sets that are defined in the same Region.
+
+    
+
+  
+  :type NotificationTarget: string
+  :param NotificationTarget: 
+
+    An SNS topic ARN that is set up to receive matchmaking notifications. See `Setting up notifications for matchmaking <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-notification.html>`__ for more information.
+
+    
+
+  
+  :type AdditionalPlayerCount: integer
+  :param AdditionalPlayerCount: 
+
+    The number of player slots in a match to keep open for future players. For example, if the configuration's rule set specifies a match for a single 12-person team, and the additional player count is set to 2, only 10 players are selected for the match. This parameter is not used if ``FlexMatchMode`` is set to ``STANDALONE``.
+
+    
+
+  
+  :type CustomEventData: string
+  :param CustomEventData: 
+
+    Information to be added to all events related to this matchmaking configuration.
+
+    
+
+  
+  :type GameProperties: list
+  :param GameProperties: 
+
+    A set of key-value pairs that can store custom data in a game session. For example: ``{"Key": "difficulty", "Value": "novice"}``. This information is added to the new ``GameSession`` object that is created for a successful match. This parameter is not used if ``FlexMatchMode`` is set to ``STANDALONE``.
+
+     
+
+    .. note::
+
+      
+
+      Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      This key-value pair can store custom data about a game session. For example, you might use a ``GameProperty`` to track a game session's map, level of difficulty, or remaining time. The difficulty level could be specified like this: ``{"Key": "difficulty", "Value":"Novice"}``.
+
+       
+
+      You can set game properties when creating a game session. You can also modify game properties of an active game session. When searching for game sessions, you can filter on game property keys and values. You can't delete game properties from a game session.
+
+       
+
+      For examples of working with game properties, see `Create a game session with properties <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties>`__.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The game property identifier.
+
+         
+
+        .. note::
+
+          
+
+          Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+          
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The game property value.
+
+        
+
+      
+    
+
+  :type GameSessionData: string
+  :param GameSessionData: 
+
+    A set of custom game session properties, formatted as a single string value. This data is passed to a game server process with a request to start a new game session. For more information, see `Start a game session <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-startsession>`__. This information is added to the new ``GameSession`` object that is created for a successful match. This parameter is not used if ``FlexMatchMode`` is set to ``STANDALONE``.
+
+    
+
+  
+  :type BackfillMode: string
+  :param BackfillMode: 
+
+    The method used to backfill game sessions that are created with this matchmaking configuration. Specify ``MANUAL`` when your game manages backfill requests manually or does not use the match backfill feature. Specify ``AUTOMATIC`` to have Amazon GameLift Servers create a backfill request whenever a game session has one or more open slots. Learn more about manual and automatic backfill in `Backfill Existing Games with FlexMatch <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-backfill.html>`__. Automatic backfill is not available when ``FlexMatchMode`` is set to ``STANDALONE``.
+
+    
+
+  
+  :type FlexMatchMode: string
+  :param FlexMatchMode: 
+
+    Indicates whether this matchmaking configuration is being used with Amazon GameLift Servers hosting or as a standalone matchmaking solution.
+
+     
+
+    
+    * **STANDALONE** - FlexMatch forms matches and returns match information, including players and team assignments, in a `MatchmakingSucceeded <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-events.html#match-events-matchmakingsucceeded>`__ event.
+     
+    * **WITH_QUEUE** - FlexMatch forms matches and uses the specified Amazon GameLift Servers queue to start a game session for the match.
+    
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of labels to assign to the new matchmaking configuration resource. Tags are developer-defined key-value pairs. Tagging Amazon Web Services resources are useful for resource management, access management and cost allocation. For more information, see `Tagging Amazon Web Services Resources <https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html>`__ in the *Amazon Web Services General Reference*.
+
+    
+
+  
+    - *(dict) --* 
+
+      A label that you can assign to a Amazon GameLift Servers resource.
+
+       
+
+      **Learn more**
+
+       
+
+      `Tagging Amazon Web Services Resources <https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html>`__ in the *Amazon Web Services General Reference*
+
+       
+
+      `Amazon Web Services Tagging Strategies <http://aws.amazon.com/answers/account-management/aws-tagging-strategies/>`__
+
+       
+
+      **Related actions**
+
+       
+
+      `All APIs by task <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets>`__
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key for a developer-defined key value pair for tagging an Amazon Web Services resource.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value for a developer-defined key value pair for tagging an Amazon Web Services resource.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Configuration': {
+              'Name': 'string',
+              'ConfigurationArn': 'string',
+              'Description': 'string',
+              'GameSessionQueueArns': [
+                  'string',
+              ],
+              'RequestTimeoutSeconds': 123,
+              'AcceptanceTimeoutSeconds': 123,
+              'AcceptanceRequired': True|False,
+              'RuleSetName': 'string',
+              'RuleSetArn': 'string',
+              'NotificationTarget': 'string',
+              'AdditionalPlayerCount': 123,
+              'CustomEventData': 'string',
+              'CreationTime': datetime(2015, 1, 1),
+              'GameProperties': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'GameSessionData': 'string',
+              'BackfillMode': 'AUTOMATIC'|'MANUAL',
+              'FlexMatchMode': 'STANDALONE'|'WITH_QUEUE'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Configuration** *(dict) --* 
+
+        Object that describes the newly created matchmaking configuration.
+
+        
+        
+
+        - **Name** *(string) --* 
+
+          A unique identifier for the matchmaking configuration. This name is used to identify the configuration associated with a matchmaking request or ticket.
+
+          
+        
+
+        - **ConfigurationArn** *(string) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers matchmaking configuration resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::matchmakingconfiguration/<matchmaking configuration name>``. In a Amazon GameLift Servers configuration ARN, the resource ID matches the *Name* value.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          A descriptive label that is associated with matchmaking configuration.
+
+          
+        
+
+        - **GameSessionQueueArns** *(list) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers game session queue resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::gamesessionqueue/<queue name>``. Queues can be located in any Region. Queues are used to start new Amazon GameLift Servers-hosted game sessions for matches that are created with this matchmaking configuration. This property is not set when ``FlexMatchMode`` is set to ``STANDALONE``.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **RequestTimeoutSeconds** *(integer) --* 
+
+          The maximum duration, in seconds, that a matchmaking ticket can remain in process before timing out. Requests that fail due to timing out can be resubmitted as needed.
+
+          
+        
+
+        - **AcceptanceTimeoutSeconds** *(integer) --* 
+
+          The length of time (in seconds) to wait for players to accept a proposed match, if acceptance is required. If any player rejects the match or fails to accept before the timeout, the ticket continues to look for an acceptable match.
+
+          
+        
+
+        - **AcceptanceRequired** *(boolean) --* 
+
+          A flag that indicates whether a match that was created with this configuration must be accepted by the matched players. To require acceptance, set to TRUE. When this option is enabled, matchmaking tickets use the status ``REQUIRES_ACCEPTANCE`` to indicate when a completed potential match is waiting for player acceptance.
+
+          
+        
+
+        - **RuleSetName** *(string) --* 
+
+          A unique identifier for the matchmaking rule set to use with this configuration. A matchmaking configuration can only use rule sets that are defined in the same Region.
+
+          
+        
+
+        - **RuleSetArn** *(string) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) associated with the GameLift matchmaking rule set resource that this configuration uses.
+
+          
+        
+
+        - **NotificationTarget** *(string) --* 
+
+          An SNS topic ARN that is set up to receive matchmaking notifications.
+
+          
+        
+
+        - **AdditionalPlayerCount** *(integer) --* 
+
+          The number of player slots in a match to keep open for future players. For example, if the configuration's rule set specifies a match for a single 12-person team, and the additional player count is set to 2, only 10 players are selected for the match. This parameter is not used when ``FlexMatchMode`` is set to ``STANDALONE``.
+
+          
+        
+
+        - **CustomEventData** *(string) --* 
+
+          Information to attach to all events related to the matchmaking configuration.
+
+          
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          A time stamp indicating when this data object was created. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **GameProperties** *(list) --* 
+
+          A set of key-value pairs that can store custom data in a game session. For example: ``{"Key": "difficulty", "Value": "novice"}``. This information is added to the new ``GameSession`` object that is created for a successful match. This parameter is not used when ``FlexMatchMode`` is set to ``STANDALONE``.
+
+           
+
+          .. note::
+
+            
+
+            Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+            
+
+          
+          
+
+          - *(dict) --* 
+
+            This key-value pair can store custom data about a game session. For example, you might use a ``GameProperty`` to track a game session's map, level of difficulty, or remaining time. The difficulty level could be specified like this: ``{"Key": "difficulty", "Value":"Novice"}``.
+
+             
+
+            You can set game properties when creating a game session. You can also modify game properties of an active game session. When searching for game sessions, you can filter on game property keys and values. You can't delete game properties from a game session.
+
+             
+
+            For examples of working with game properties, see `Create a game session with properties <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties>`__.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The game property identifier.
+
+               
+
+              .. note::
+
+                
+
+                Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+                
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The game property value.
+
+              
+        
+      
+        
+
+        - **GameSessionData** *(string) --* 
+
+          A set of custom game session properties, formatted as a single string value. This data is passed to a game server process with a request to start a new game session. For more information, see `Start a game session <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-startsession>`__. This information is added to the new ``GameSession`` object that is created for a successful match. This parameter is not used when ``FlexMatchMode`` is set to ``STANDALONE``.
+
+          
+        
+
+        - **BackfillMode** *(string) --* 
+
+          The method used to backfill game sessions created with this matchmaking configuration. MANUAL indicates that the game makes backfill requests or does not use the match backfill feature. AUTOMATIC indicates that GameLift creates backfill requests whenever a game session has one or more open slots. Learn more about manual and automatic backfill in `Backfill existing games with FlexMatch <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-backfill.html>`__. Automatic backfill is not available when ``FlexMatchMode`` is set to ``STANDALONE``.
+
+          
+        
+
+        - **FlexMatchMode** *(string) --* 
+
+          Indicates whether this matchmaking configuration is being used with Amazon GameLift Servers hosting or as a standalone matchmaking solution.
+
+           
+
+          
+          * **STANDALONE** - FlexMatch forms matches and returns match information, including players and team assignments, in a `MatchmakingSucceeded <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-events.html#match-events-matchmakingsucceeded>`__ event.
+           
+          * **WITH_QUEUE** - FlexMatch forms matches and uses the specified Amazon GameLift Servers queue to start a game session for the match.
+          
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.TaggingFailedException`
+
+  

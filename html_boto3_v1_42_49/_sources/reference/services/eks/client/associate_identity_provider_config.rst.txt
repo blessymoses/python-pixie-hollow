@@ -1,0 +1,372 @@
+:doc:`EKS <../../eks>` / Client / associate_identity_provider_config
+
+**********************************
+associate_identity_provider_config
+**********************************
+
+
+
+.. py:method:: EKS.Client.associate_identity_provider_config(**kwargs)
+
+  
+
+  Associates an identity provider configuration to a cluster.
+
+   
+
+  If you want to authenticate identities using an identity provider, you can create an identity provider configuration and associate it to your cluster. After configuring authentication to your cluster you can create Kubernetes ``Role`` and ``ClusterRole`` objects, assign permissions to them, and then bind them to the identities using Kubernetes ``RoleBinding`` and ``ClusterRoleBinding`` objects. For more information see `Using RBAC Authorization <https://kubernetes.io/docs/reference/access-authn-authz/rbac/>`__ in the Kubernetes documentation.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/AssociateIdentityProviderConfig>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.associate_identity_provider_config(
+        clusterName='string',
+        oidc={
+            'identityProviderConfigName': 'string',
+            'issuerUrl': 'string',
+            'clientId': 'string',
+            'usernameClaim': 'string',
+            'usernamePrefix': 'string',
+            'groupsClaim': 'string',
+            'groupsPrefix': 'string',
+            'requiredClaims': {
+                'string': 'string'
+            }
+        },
+        tags={
+            'string': 'string'
+        },
+        clientRequestToken='string'
+    )
+    
+  :type clusterName: string
+  :param clusterName: **[REQUIRED]** 
+
+    The name of your cluster.
+
+    
+
+  
+  :type oidc: dict
+  :param oidc: **[REQUIRED]** 
+
+    An object representing an OpenID Connect (OIDC) identity provider configuration.
+
+    
+
+  
+    - **identityProviderConfigName** *(string) --* **[REQUIRED]** 
+
+      The name of the OIDC provider configuration.
+
+      
+
+    
+    - **issuerUrl** *(string) --* **[REQUIRED]** 
+
+      The URL of the OIDC identity provider that allows the API server to discover public signing keys for verifying tokens. The URL must begin with ``https://`` and should correspond to the ``iss`` claim in the provider's OIDC ID tokens. Based on the OIDC standard, path components are allowed but query parameters are not. Typically the URL consists of only a hostname, like ``https://server.example.org`` or ``https://example.com``. This URL should point to the level below ``.well-known/openid-configuration`` and must be publicly accessible over the internet.
+
+      
+
+    
+    - **clientId** *(string) --* **[REQUIRED]** 
+
+      This is also known as *audience*. The ID for the client application that makes authentication requests to the OIDC identity provider.
+
+      
+
+    
+    - **usernameClaim** *(string) --* 
+
+      The JSON Web Token (JWT) claim to use as the username. The default is ``sub``, which is expected to be a unique identifier of the end user. You can choose other claims, such as ``email`` or ``name``, depending on the OIDC identity provider. Claims other than ``email`` are prefixed with the issuer URL to prevent naming clashes with other plug-ins.
+
+      
+
+    
+    - **usernamePrefix** *(string) --* 
+
+      The prefix that is prepended to username claims to prevent clashes with existing names. If you do not provide this field, and ``username`` is a value other than ``email``, the prefix defaults to ``issuerurl#``. You can use the value ``-`` to disable all prefixing.
+
+      
+
+    
+    - **groupsClaim** *(string) --* 
+
+      The JWT claim that the provider uses to return your groups.
+
+      
+
+    
+    - **groupsPrefix** *(string) --* 
+
+      The prefix that is prepended to group claims to prevent clashes with existing names (such as ``system:`` groups). For example, the value `` oidc:`` will create group names like ``oidc:engineering`` and ``oidc:infra``.
+
+      
+
+    
+    - **requiredClaims** *(dict) --* 
+
+      The key value pairs that describe required claims in the identity token. If set, each claim is verified to be present in the token with a matching value. For the maximum number of claims that you can require, see `Amazon EKS service quotas <https://docs.aws.amazon.com/eks/latest/userguide/service-quotas.html>`__ in the *Amazon EKS User Guide*.
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+  
+  :type tags: dict
+  :param tags: 
+
+    Metadata that assists with categorization and organization. Each tag consists of a key and an optional value. You define both. Tags don't propagate to any other cluster or Amazon Web Services resources.
+
+    
+
+  
+    - *(string) --* 
+
+      One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+      
+
+    
+      - *(string) --* 
+
+        The optional part of a key-value pair that make up a tag. A ``value`` acts as a descriptor within a tag category (key).
+
+        
+
+      
+
+
+  :type clientRequestToken: string
+  :param clientRequestToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'update': {
+              'id': 'string',
+              'status': 'InProgress'|'Failed'|'Cancelled'|'Successful',
+              'type': 'VersionUpdate'|'EndpointAccessUpdate'|'LoggingUpdate'|'ConfigUpdate'|'AssociateIdentityProviderConfig'|'DisassociateIdentityProviderConfig'|'AssociateEncryptionConfig'|'AddonUpdate'|'VpcConfigUpdate'|'AccessConfigUpdate'|'UpgradePolicyUpdate'|'ZonalShiftConfigUpdate'|'AutoModeUpdate'|'RemoteNetworkConfigUpdate'|'DeletionProtectionUpdate'|'ControlPlaneScalingConfigUpdate'|'VendedLogsUpdate',
+              'params': [
+                  {
+                      'type': 'Version'|'PlatformVersion'|'EndpointPrivateAccess'|'EndpointPublicAccess'|'ClusterLogging'|'DesiredSize'|'LabelsToAdd'|'LabelsToRemove'|'TaintsToAdd'|'TaintsToRemove'|'MaxSize'|'MinSize'|'ReleaseVersion'|'PublicAccessCidrs'|'LaunchTemplateName'|'LaunchTemplateVersion'|'IdentityProviderConfig'|'EncryptionConfig'|'AddonVersion'|'ServiceAccountRoleArn'|'ResolveConflicts'|'MaxUnavailable'|'MaxUnavailablePercentage'|'NodeRepairEnabled'|'UpdateStrategy'|'ConfigurationValues'|'SecurityGroups'|'Subnets'|'AuthenticationMode'|'PodIdentityAssociations'|'UpgradePolicy'|'ZonalShiftConfig'|'ComputeConfig'|'StorageConfig'|'KubernetesNetworkConfig'|'RemoteNetworkConfig'|'DeletionProtection'|'NodeRepairConfig'|'UpdatedTier'|'PreviousTier',
+                      'value': 'string'
+                  },
+              ],
+              'createdAt': datetime(2015, 1, 1),
+              'errors': [
+                  {
+                      'errorCode': 'SubnetNotFound'|'SecurityGroupNotFound'|'EniLimitReached'|'IpNotAvailable'|'AccessDenied'|'OperationNotPermitted'|'VpcIdNotFound'|'Unknown'|'NodeCreationFailure'|'PodEvictionFailure'|'InsufficientFreeAddresses'|'ClusterUnreachable'|'InsufficientNumberOfReplicas'|'ConfigurationConflict'|'AdmissionRequestDenied'|'UnsupportedAddonModification'|'K8sResourceNotFound',
+                      'errorMessage': 'string',
+                      'resourceIds': [
+                          'string',
+                      ]
+                  },
+              ]
+          },
+          'tags': {
+              'string': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **update** *(dict) --* 
+
+        An object representing an asynchronous update.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          A UUID that is used to track the update.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The current status of the update.
+
+          
+        
+
+        - **type** *(string) --* 
+
+          The type of the update.
+
+          
+        
+
+        - **params** *(list) --* 
+
+          A key-value map that contains the parameters associated with the update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing the details of an update request.
+
+            
+            
+
+            - **type** *(string) --* 
+
+              The keys associated with an update request.
+
+              
+            
+
+            - **value** *(string) --* 
+
+              The value of the keys submitted as part of an update request.
+
+              
+        
+      
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The Unix epoch timestamp at object creation.
+
+          
+        
+
+        - **errors** *(list) --* 
+
+          Any errors associated with a ``Failed`` update.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing an error when an asynchronous operation fails.
+
+            
+            
+
+            - **errorCode** *(string) --* 
+
+              A brief description of the error.
+
+               
+
+              
+              * **SubnetNotFound**: We couldn't find one of the subnets associated with the cluster.
+               
+              * **SecurityGroupNotFound**: We couldn't find one of the security groups associated with the cluster.
+               
+              * **EniLimitReached**: You have reached the elastic network interface limit for your account.
+               
+              * **IpNotAvailable**: A subnet associated with the cluster doesn't have any available IP addresses.
+               
+              * **AccessDenied**: You don't have permissions to perform the specified operation.
+               
+              * **OperationNotPermitted**: The service role associated with the cluster doesn't have the required access permissions for Amazon EKS.
+               
+              * **VpcIdNotFound**: We couldn't find the VPC associated with the cluster.
+              
+
+              
+            
+
+            - **errorMessage** *(string) --* 
+
+              A more complete description of the error.
+
+              
+            
+
+            - **resourceIds** *(list) --* 
+
+              An optional field that contains the resource IDs associated with the error.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+    
+      
+
+      - **tags** *(dict) --* 
+
+        The tags for the resource.
+
+        
+        
+
+        - *(string) --* 
+
+          One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+          
+          
+
+          - *(string) --* 
+
+            The optional part of a key-value pair that make up a tag. A ``value`` acts as a descriptor within a tag category (key).
+
+            
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ThrottlingException`
+
+  

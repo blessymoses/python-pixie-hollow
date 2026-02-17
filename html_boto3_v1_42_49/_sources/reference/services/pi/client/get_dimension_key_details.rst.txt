@@ -1,0 +1,211 @@
+:doc:`PI <../../pi>` / Client / get_dimension_key_details
+
+*************************
+get_dimension_key_details
+*************************
+
+
+
+.. py:method:: PI.Client.get_dimension_key_details(**kwargs)
+
+  
+
+  Get the attributes of the specified dimension group for a DB instance or data source. For example, if you specify a SQL ID, ``GetDimensionKeyDetails`` retrieves the full text of the dimension ``db.sql.statement`` associated with this ID. This operation is useful because ``GetResourceMetrics`` and ``DescribeDimensionKeys`` don't support retrieval of large SQL statement text, lock snapshots, and execution plans.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/pi-2018-02-27/GetDimensionKeyDetails>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_dimension_key_details(
+        ServiceType='RDS'|'DOCDB',
+        Identifier='string',
+        Group='string',
+        GroupIdentifier='string',
+        RequestedDimensions=[
+            'string',
+        ]
+    )
+    
+  :type ServiceType: string
+  :param ServiceType: **[REQUIRED]** 
+
+    The Amazon Web Services service for which Performance Insights returns data. The only valid value is ``RDS``.
+
+    
+
+  
+  :type Identifier: string
+  :param Identifier: **[REQUIRED]** 
+
+    The ID for a data source from which to gather dimension data. This ID must be immutable and unique within an Amazon Web Services Region. When a DB instance is the data source, specify its ``DbiResourceId`` value. For example, specify ``db-ABCDEFGHIJKLMNOPQRSTU1VW2X``.
+
+    
+
+  
+  :type Group: string
+  :param Group: **[REQUIRED]** 
+
+    The name of the dimension group. Performance Insights searches the specified group for the dimension group ID. The following group name values are valid:
+
+     
+
+    
+    * ``db.execution_plan`` (Amazon RDS and Aurora only)
+     
+    * ``db.lock_snapshot`` (Aurora only)
+     
+    * ``db.query`` (Amazon DocumentDB only)
+     
+    * ``db.sql`` (Amazon RDS and Aurora only)
+    
+
+    
+
+  
+  :type GroupIdentifier: string
+  :param GroupIdentifier: **[REQUIRED]** 
+
+    The ID of the dimension group from which to retrieve dimension details. For dimension group ``db.sql``, the group ID is ``db.sql.id``. The following group ID values are valid:
+
+     
+
+    
+    * ``db.execution_plan.id`` for dimension group ``db.execution_plan`` (Aurora and RDS only)
+     
+    * ``db.sql.id`` for dimension group ``db.sql`` (Aurora and RDS only)
+     
+    * ``db.query.id`` for dimension group ``db.query`` (DocumentDB only)
+     
+    * For the dimension group ``db.lock_snapshot``, the ``GroupIdentifier`` is the epoch timestamp when Performance Insights captured the snapshot, in seconds. You can retrieve this value with the ``GetResourceMetrics`` operation for a 1 second period.
+    
+
+    
+
+  
+  :type RequestedDimensions: list
+  :param RequestedDimensions: 
+
+    A list of dimensions to retrieve the detail data for within the given dimension group. If you don't specify this parameter, Performance Insights returns all dimension data within the specified dimension group. Specify dimension names for the following dimension groups:
+
+     
+
+    
+    * ``db.execution_plan`` - Specify the dimension name ``db.execution_plan.raw_plan`` or the short dimension name ``raw_plan`` (Amazon RDS and Aurora only)
+     
+    * ``db.lock_snapshot`` - Specify the dimension name ``db.lock_snapshot.lock_trees`` or the short dimension name ``lock_trees``. (Aurora only)
+     
+    * ``db.sql`` - Specify either the full dimension name ``db.sql.statement`` or the short dimension name ``statement`` (Aurora and RDS only).
+     
+    * ``db.query`` - Specify either the full dimension name ``db.query.statement`` or the short dimension name ``statement`` (DocumentDB only).
+    
+
+    
+
+  
+    - *(string) --* A generic string type that forbids characters that could expose our service (or services downstream) to security risks around injections.
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Dimensions': [
+              {
+                  'Value': 'string',
+                  'Dimension': 'string',
+                  'Status': 'AVAILABLE'|'PROCESSING'|'UNAVAILABLE'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Dimensions** *(list) --* 
+
+        The details for the requested dimensions.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object that describes the details for a specified dimension.
+
+          
+          
+
+          - **Value** *(string) --* 
+
+            The value of the dimension detail data. Depending on the return status, this value is either the full or truncated SQL query for the following dimensions:
+
+             
+
+            
+            * ``db.query.statement`` (Amazon DocumentDB)
+             
+            * ``db.sql.statement`` (Amazon RDS and Aurora)
+            
+
+            
+          
+
+          - **Dimension** *(string) --* 
+
+            The full name of the dimension. The full name includes the group name and key name. The following values are valid:
+
+             
+
+            
+            * ``db.query.statement`` (Amazon DocumentDB)
+             
+            * ``db.sql.statement`` (Amazon RDS and Aurora)
+            
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the dimension detail data. Possible values include the following:
+
+             
+
+            
+            * ``AVAILABLE`` - The dimension detail data is ready to be retrieved.
+             
+            * ``PROCESSING`` - The dimension detail data isn't ready to be retrieved because more processing time is required. If the requested detail data has the status ``PROCESSING``, Performance Insights returns the truncated query.
+             
+            * ``UNAVAILABLE`` - The dimension detail data could not be collected successfully.
+            
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`PI.Client.exceptions.InvalidArgumentException`
+
+  
+  *   :py:class:`PI.Client.exceptions.InternalServiceError`
+
+  
+  *   :py:class:`PI.Client.exceptions.NotAuthorizedException`
+
+  

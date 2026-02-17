@@ -1,0 +1,352 @@
+:doc:`Rekognition <../../rekognition>` / Client / detect_custom_labels
+
+********************
+detect_custom_labels
+********************
+
+
+
+.. py:method:: Rekognition.Client.detect_custom_labels(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This operation applies only to Amazon Rekognition Custom Labels.
+
+    
+
+   
+
+  Detects custom labels in a supplied image by using an Amazon Rekognition Custom Labels model.
+
+   
+
+  You specify which version of a model version to use by using the ``ProjectVersionArn`` input parameter.
+
+   
+
+  You pass the input image as base64-encoded image bytes or as a reference to an image in an Amazon S3 bucket. If you use the AWS CLI to call Amazon Rekognition operations, passing image bytes is not supported. The image must be either a PNG or JPEG formatted file.
+
+   
+
+  For each object that the model version detects on an image, the API returns a ( ``CustomLabel``) object in an array ( ``CustomLabels``). Each ``CustomLabel`` object provides the label name ( ``Name``), the level of confidence that the image contains the object ( ``Confidence``), and object location information, if it exists, for the label on the image ( ``Geometry``).
+
+   
+
+  To filter labels that are returned, specify a value for ``MinConfidence``. ``DetectCustomLabelsLabels`` only returns labels with a confidence that's higher than the specified value. The value of ``MinConfidence`` maps to the assumed threshold values created during training. For more information, see *Assumed threshold* in the Amazon Rekognition Custom Labels Developer Guide. Amazon Rekognition Custom Labels metrics expresses an assumed threshold as a floating point value between 0-1. The range of ``MinConfidence`` normalizes the threshold value to a percentage value (0-100). Confidence responses from ``DetectCustomLabels`` are also returned as a percentage. You can use ``MinConfidence`` to change the precision and recall or your model. For more information, see *Analyzing an image* in the Amazon Rekognition Custom Labels Developer Guide.
+
+   
+
+  If you don't specify a value for ``MinConfidence``, ``DetectCustomLabels`` returns labels based on the assumed threshold of each label.
+
+   
+
+  This is a stateless API operation. That is, the operation does not persist any data.
+
+   
+
+  This operation requires permissions to perform the ``rekognition:DetectCustomLabels`` action.
+
+   
+
+  For more information, see *Analyzing an image* in the Amazon Rekognition Custom Labels Developer Guide.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rekognition-2016-06-27/DetectCustomLabels>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.detect_custom_labels(
+        ProjectVersionArn='string',
+        Image={
+            'Bytes': b'bytes',
+            'S3Object': {
+                'Bucket': 'string',
+                'Name': 'string',
+                'Version': 'string'
+            }
+        },
+        MaxResults=123,
+        MinConfidence=...
+    )
+    
+  :type ProjectVersionArn: string
+  :param ProjectVersionArn: **[REQUIRED]** 
+
+    The ARN of the model version that you want to use. Only models associated with Custom Labels projects accepted by the operation. If a provided ARN refers to a model version associated with a project for a different feature type, then an InvalidParameterException is returned.
+
+    
+
+  
+  :type Image: dict
+  :param Image: **[REQUIRED]** 
+
+    Provides the input image either as bytes or an S3 object.
+
+     
+
+    You pass image bytes to an Amazon Rekognition API operation by using the ``Bytes`` property. For example, you would use the ``Bytes`` property to pass an image loaded from a local file system. Image bytes passed by using the ``Bytes`` property must be base64-encoded. Your code may not need to encode image bytes if you are using an AWS SDK to call Amazon Rekognition API operations.
+
+     
+
+    For more information, see Analyzing an Image Loaded from a Local File System in the Amazon Rekognition Developer Guide.
+
+     
+
+    You pass images stored in an S3 bucket to an Amazon Rekognition API operation by using the ``S3Object`` property. Images stored in an S3 bucket do not need to be base64-encoded.
+
+     
+
+    The region for the S3 bucket containing the S3 object must match the region you use for Amazon Rekognition operations.
+
+     
+
+    If you use the AWS CLI to call Amazon Rekognition operations, passing image bytes using the Bytes property is not supported. You must first upload the image to an Amazon S3 bucket and then call the operation using the S3Object property.
+
+     
+
+    For Amazon Rekognition to process an S3 object, the user must have permission to access the S3 object. For more information, see How Amazon Rekognition works with IAM in the Amazon Rekognition Developer Guide.
+
+    
+
+  
+    - **Bytes** *(bytes) --* 
+
+      Blob of image bytes up to 5 MBs. Note that the maximum image size you can pass to ``DetectCustomLabels`` is 4MB.
+
+      
+
+    
+    - **S3Object** *(dict) --* 
+
+      Identifies an S3 object as the image source.
+
+      
+
+    
+      - **Bucket** *(string) --* 
+
+        Name of the S3 bucket.
+
+        
+
+      
+      - **Name** *(string) --* 
+
+        S3 object key name.
+
+        
+
+      
+      - **Version** *(string) --* 
+
+        If the bucket is versioning enabled, you can specify the object version.
+
+        
+
+      
+    
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    Maximum number of results you want the service to return in the response. The service returns the specified number of highest confidence labels ranked from highest confidence to lowest.
+
+    
+
+  
+  :type MinConfidence: float
+  :param MinConfidence: 
+
+    Specifies the minimum confidence level for the labels to return. ``DetectCustomLabels`` doesn't return any labels with a confidence value that's lower than this specified value. If you specify a value of 0, ``DetectCustomLabels`` returns all labels, regardless of the assumed threshold applied to each label. If you don't specify a value for ``MinConfidence``, ``DetectCustomLabels`` returns labels based on the assumed threshold of each label.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CustomLabels': [
+              {
+                  'Name': 'string',
+                  'Confidence': ...,
+                  'Geometry': {
+                      'BoundingBox': {
+                          'Width': ...,
+                          'Height': ...,
+                          'Left': ...,
+                          'Top': ...
+                      },
+                      'Polygon': [
+                          {
+                              'X': ...,
+                              'Y': ...
+                          },
+                      ]
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **CustomLabels** *(list) --* 
+
+        An array of custom labels detected in the input image.
+
+        
+        
+
+        - *(dict) --* 
+
+          A custom label detected in an image by a call to  DetectCustomLabels.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The name of the custom label.
+
+            
+          
+
+          - **Confidence** *(float) --* 
+
+            The confidence that the model has in the detection of the custom label. The range is 0-100. A higher value indicates a higher confidence.
+
+            
+          
+
+          - **Geometry** *(dict) --* 
+
+            The location of the detected object on the image that corresponds to the custom label. Includes an axis aligned coarse bounding box surrounding the object and a finer grain polygon for more accurate spatial information.
+
+            
+            
+
+            - **BoundingBox** *(dict) --* 
+
+              An axis-aligned coarse representation of the detected item's location on the image.
+
+              
+              
+
+              - **Width** *(float) --* 
+
+                Width of the bounding box as a ratio of the overall image width.
+
+                
+              
+
+              - **Height** *(float) --* 
+
+                Height of the bounding box as a ratio of the overall image height.
+
+                
+              
+
+              - **Left** *(float) --* 
+
+                Left coordinate of the bounding box as a ratio of overall image width.
+
+                
+              
+
+              - **Top** *(float) --* 
+
+                Top coordinate of the bounding box as a ratio of overall image height.
+
+                
+          
+            
+
+            - **Polygon** *(list) --* 
+
+              Within the bounding box, a fine-grained polygon around the detected item.
+
+              
+              
+
+              - *(dict) --* 
+
+                The X and Y coordinates of a point on an image or video frame. The X and Y values are ratios of the overall image size or video resolution. For example, if an input image is 700x200 and the values are X=0.5 and Y=0.25, then the point is at the (350,50) pixel coordinate on the image.
+
+                 
+
+                An array of ``Point`` objects makes up a ``Polygon``. A ``Polygon`` is returned by  DetectText and by  DetectCustomLabels ``Polygon`` represents a fine-grained polygon around a detected item. For more information, see Geometry in the Amazon Rekognition Developer Guide.
+
+                
+                
+
+                - **X** *(float) --* 
+
+                  The value of the X coordinate for a point on a ``Polygon``.
+
+                  
+                
+
+                - **Y** *(float) --* 
+
+                  The value of the Y coordinate for a point on a ``Polygon``.
+
+                  
+            
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Rekognition.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ResourceNotReadyException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidS3ObjectException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ImageTooLargeException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ProvisionedThroughputExceededException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidImageFormatException`
+
+  

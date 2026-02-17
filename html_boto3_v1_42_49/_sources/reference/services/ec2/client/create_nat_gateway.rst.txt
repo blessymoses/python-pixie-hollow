@@ -1,0 +1,824 @@
+:doc:`EC2 <../../ec2>` / Client / create_nat_gateway
+
+******************
+create_nat_gateway
+******************
+
+
+
+.. py:method:: EC2.Client.create_nat_gateway(**kwargs)
+
+  
+
+  Creates a NAT gateway in the specified subnet. This action creates a network interface in the specified subnet with a private IP address from the IP address range of the subnet. You can create either a public NAT gateway or a private NAT gateway.
+
+   
+
+  With a public NAT gateway, internet-bound traffic from a private subnet can be routed to the NAT gateway, so that instances in a private subnet can connect to the internet.
+
+   
+
+  With a private NAT gateway, private communication is routed across VPCs and on-premises networks through a transit gateway or virtual private gateway. Common use cases include running large workloads behind a small pool of allowlisted IPv4 addresses, preserving private IPv4 addresses, and communicating between overlapping networks.
+
+   
+
+  For more information, see `NAT gateways <https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html>`__ in the *Amazon VPC User Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    When you create a public NAT gateway and assign it an EIP or secondary EIPs, the network border group of the EIPs must match the network border group of the Availability Zone (AZ) that the public NAT gateway is in. If it's not the same, the NAT gateway will fail to launch. You can see the network border group for the subnet's AZ by viewing the details of the subnet. Similarly, you can view the network border group of an EIP by viewing the details of the EIP address. For more information about network border groups and EIPs, see `Allocate an Elastic IP address <https://docs.aws.amazon.com/vpc/latest/userguide/WorkWithEIPs.html>`__ in the *Amazon VPC User Guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/CreateNatGateway>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_nat_gateway(
+        AvailabilityMode='zonal'|'regional',
+        AllocationId='string',
+        ClientToken='string',
+        DryRun=True|False,
+        SubnetId='string',
+        VpcId='string',
+        AvailabilityZoneAddresses=[
+            {
+                'AvailabilityZone': 'string',
+                'AvailabilityZoneId': 'string',
+                'AllocationIds': [
+                    'string',
+                ]
+            },
+        ],
+        TagSpecifications=[
+            {
+                'ResourceType': 'capacity-reservation'|'client-vpn-endpoint'|'customer-gateway'|'carrier-gateway'|'coip-pool'|'declarative-policies-report'|'dedicated-host'|'dhcp-options'|'egress-only-internet-gateway'|'elastic-ip'|'elastic-gpu'|'export-image-task'|'export-instance-task'|'fleet'|'fpga-image'|'host-reservation'|'image'|'image-usage-report'|'import-image-task'|'import-snapshot-task'|'instance'|'instance-event-window'|'internet-gateway'|'ipam'|'ipam-pool'|'ipam-scope'|'ipv4pool-ec2'|'ipv6pool-ec2'|'key-pair'|'launch-template'|'local-gateway'|'local-gateway-route-table'|'local-gateway-virtual-interface'|'local-gateway-virtual-interface-group'|'local-gateway-route-table-vpc-association'|'local-gateway-route-table-virtual-interface-group-association'|'natgateway'|'network-acl'|'network-interface'|'network-insights-analysis'|'network-insights-path'|'network-insights-access-scope'|'network-insights-access-scope-analysis'|'outpost-lag'|'placement-group'|'prefix-list'|'replace-root-volume-task'|'reserved-instances'|'route-table'|'security-group'|'security-group-rule'|'service-link-virtual-interface'|'snapshot'|'spot-fleet-request'|'spot-instances-request'|'subnet'|'subnet-cidr-reservation'|'traffic-mirror-filter'|'traffic-mirror-session'|'traffic-mirror-target'|'transit-gateway'|'transit-gateway-attachment'|'transit-gateway-connect-peer'|'transit-gateway-multicast-domain'|'transit-gateway-policy-table'|'transit-gateway-metering-policy'|'transit-gateway-route-table'|'transit-gateway-route-table-announcement'|'volume'|'vpc'|'vpc-endpoint'|'vpc-endpoint-connection'|'vpc-endpoint-service'|'vpc-endpoint-service-permission'|'vpc-peering-connection'|'vpn-connection'|'vpn-gateway'|'vpc-flow-log'|'capacity-reservation-fleet'|'traffic-mirror-filter-rule'|'vpc-endpoint-connection-device-type'|'verified-access-instance'|'verified-access-group'|'verified-access-endpoint'|'verified-access-policy'|'verified-access-trust-provider'|'vpn-connection-device-type'|'vpc-block-public-access-exclusion'|'vpc-encryption-control'|'route-server'|'route-server-endpoint'|'route-server-peer'|'ipam-resource-discovery'|'ipam-resource-discovery-association'|'instance-connect-endpoint'|'verified-access-endpoint-target'|'ipam-external-resource-verification-token'|'capacity-block'|'mac-modification-task'|'ipam-prefix-list-resolver'|'ipam-policy'|'ipam-prefix-list-resolver-target'|'secondary-interface'|'secondary-network'|'secondary-subnet'|'capacity-manager-data-export'|'vpn-concentrator',
+                'Tags': [
+                    {
+                        'Key': 'string',
+                        'Value': 'string'
+                    },
+                ]
+            },
+        ],
+        ConnectivityType='private'|'public',
+        PrivateIpAddress='string',
+        SecondaryAllocationIds=[
+            'string',
+        ],
+        SecondaryPrivateIpAddresses=[
+            'string',
+        ],
+        SecondaryPrivateIpAddressCount=123
+    )
+    
+  :type AvailabilityMode: string
+  :param AvailabilityMode: 
+
+    Specifies whether to create a zonal (single-AZ) or regional (multi-AZ) NAT gateway. Defaults to ``zonal``.
+
+     
+
+    A zonal NAT gateway is a NAT Gateway that provides redundancy and scalability within a single availability zone. A regional NAT gateway is a single NAT Gateway that works across multiple availability zones (AZs) in your VPC, providing redundancy, scalability and availability across all the AZs in a Region.
+
+     
+
+    For more information, see `Regional NAT gateways for automatic multi-AZ expansion <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateways-regional.html>`__ in the *Amazon VPC User Guide*.
+
+    
+
+  
+  :type AllocationId: string
+  :param AllocationId: 
+
+    [Public NAT gateways only] The allocation ID of an Elastic IP address to associate with the NAT gateway. You cannot specify an Elastic IP address with a private NAT gateway. If the Elastic IP address is associated with another resource, you must first disassociate it.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    Unique, case-sensitive identifier that you provide to ensure the idempotency of the request. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/ec2/latest/devguide/ec2-api-idempotency.html>`__.
+
+     
+
+    Constraint: Maximum 64 ASCII characters.
+
+    This field is autopopulated if not provided.
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type SubnetId: string
+  :param SubnetId: 
+
+    The ID of the subnet in which to create the NAT gateway.
+
+    
+
+  
+  :type VpcId: string
+  :param VpcId: 
+
+    The ID of the VPC where you want to create a regional NAT gateway.
+
+    
+
+  
+  :type AvailabilityZoneAddresses: list
+  :param AvailabilityZoneAddresses: 
+
+    For regional NAT gateways only: Specifies which Availability Zones you want the NAT gateway to support and the Elastic IP addresses (EIPs) to use in each AZ. The regional NAT gateway uses these EIPs to handle outbound NAT traffic from their respective AZs. If not specified, the NAT gateway will automatically expand to new AZs and associate EIPs upon detection of an elastic network interface. If you specify this parameter, auto-expansion is disabled and you must manually manage AZ coverage.
+
+     
+
+    A regional NAT gateway is a single NAT Gateway that works across multiple availability zones (AZs) in your VPC, providing redundancy, scalability and availability across all the AZs in a Region.
+
+     
+
+    For more information, see `Regional NAT gateways for automatic multi-AZ expansion <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateways-regional.html>`__ in the *Amazon VPC User Guide*.
+
+    
+
+  
+    - *(dict) --* 
+
+      For regional NAT gateways only: The configuration specifying which Elastic IP address (EIP) to use for handling outbound NAT traffic from a specific Availability Zone.
+
+       
+
+      A regional NAT gateway is a single NAT Gateway that works across multiple availability zones (AZs) in your VPC, providing redundancy, scalability and availability across all the AZs in a Region.
+
+       
+
+      For more information, see `Regional NAT gateways for automatic multi-AZ expansion <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateways-regional.html>`__ in the *Amazon VPC User Guide*.
+
+      
+
+    
+      - **AvailabilityZone** *(string) --* 
+
+        For regional NAT gateways only: The Availability Zone where this specific NAT gateway configuration will be active. Each AZ in a regional NAT gateway has its own configuration to handle outbound NAT traffic from that AZ.
+
+         
+
+        A regional NAT gateway is a single NAT Gateway that works across multiple availability zones (AZs) in your VPC, providing redundancy, scalability and availability across all the AZs in a Region.
+
+        
+
+      
+      - **AvailabilityZoneId** *(string) --* 
+
+        For regional NAT gateways only: The ID of the Availability Zone where this specific NAT gateway configuration will be active. Each AZ in a regional NAT gateway has its own configuration to handle outbound NAT traffic from that AZ. Use this instead of AvailabilityZone for consistent identification of AZs across Amazon Web Services Regions.
+
+         
+
+        A regional NAT gateway is a single NAT Gateway that works across multiple availability zones (AZs) in your VPC, providing redundancy, scalability and availability across all the AZs in a Region.
+
+        
+
+      
+      - **AllocationIds** *(list) --* 
+
+        The allocation IDs of the Elastic IP addresses (EIPs) to be used for handling outbound NAT traffic in this specific Availability Zone.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type TagSpecifications: list
+  :param TagSpecifications: 
+
+    The tags to assign to the NAT gateway.
+
+    
+
+  
+    - *(dict) --* 
+
+      The tags to apply to a resource when the resource is being created. When you specify a tag, you must specify the resource type to tag, otherwise the request will fail.
+
+       
+
+      .. note::
+
+        
+
+        The ``Valid Values`` lists all the resource types that can be tagged. However, the action you're using might not support tagging all of these resource types. If you try to tag a resource type that is unsupported for the action you're using, you'll get an error.
+
+        
+
+      
+
+    
+      - **ResourceType** *(string) --* 
+
+        The type of resource to tag on creation.
+
+        
+
+      
+      - **Tags** *(list) --* 
+
+        The tags to apply to the resource.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes a tag.
+
+          
+
+        
+          - **Key** *(string) --* 
+
+            The key of the tag.
+
+             
+
+            Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+            
+
+          
+          - **Value** *(string) --* 
+
+            The value of the tag.
+
+             
+
+            Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+            
+
+          
+        
+    
+    
+
+  :type ConnectivityType: string
+  :param ConnectivityType: 
+
+    Indicates whether the NAT gateway supports public or private connectivity. The default is public connectivity.
+
+    
+
+  
+  :type PrivateIpAddress: string
+  :param PrivateIpAddress: 
+
+    The private IPv4 address to assign to the NAT gateway. If you don't provide an address, a private IPv4 address will be automatically assigned.
+
+    
+
+  
+  :type SecondaryAllocationIds: list
+  :param SecondaryAllocationIds: 
+
+    Secondary EIP allocation IDs. For more information, see `Create a NAT gateway <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-working-with.html>`__ in the *Amazon VPC User Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type SecondaryPrivateIpAddresses: list
+  :param SecondaryPrivateIpAddresses: 
+
+    Secondary private IPv4 addresses. For more information about secondary addresses, see `Create a NAT gateway <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-working-with.html>`__ in the *Amazon VPC User Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type SecondaryPrivateIpAddressCount: integer
+  :param SecondaryPrivateIpAddressCount: 
+
+    [Private NAT gateway only] The number of secondary private IPv4 addresses you want to assign to the NAT gateway. For more information about secondary addresses, see `Create a NAT gateway <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-working-with.html>`__ in the *Amazon VPC User Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ClientToken': 'string',
+          'NatGateway': {
+              'CreateTime': datetime(2015, 1, 1),
+              'DeleteTime': datetime(2015, 1, 1),
+              'FailureCode': 'string',
+              'FailureMessage': 'string',
+              'NatGatewayAddresses': [
+                  {
+                      'AllocationId': 'string',
+                      'NetworkInterfaceId': 'string',
+                      'PrivateIp': 'string',
+                      'PublicIp': 'string',
+                      'AssociationId': 'string',
+                      'IsPrimary': True|False,
+                      'FailureMessage': 'string',
+                      'Status': 'assigning'|'unassigning'|'associating'|'disassociating'|'succeeded'|'failed',
+                      'AvailabilityZone': 'string',
+                      'AvailabilityZoneId': 'string'
+                  },
+              ],
+              'NatGatewayId': 'string',
+              'ProvisionedBandwidth': {
+                  'ProvisionTime': datetime(2015, 1, 1),
+                  'Provisioned': 'string',
+                  'RequestTime': datetime(2015, 1, 1),
+                  'Requested': 'string',
+                  'Status': 'string'
+              },
+              'State': 'pending'|'failed'|'available'|'deleting'|'deleted',
+              'SubnetId': 'string',
+              'VpcId': 'string',
+              'Tags': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'ConnectivityType': 'private'|'public',
+              'AvailabilityMode': 'zonal'|'regional',
+              'AutoScalingIps': 'enabled'|'disabled',
+              'AutoProvisionZones': 'enabled'|'disabled',
+              'AttachedAppliances': [
+                  {
+                      'Type': 'network-firewall-proxy',
+                      'ApplianceArn': 'string',
+                      'VpcEndpointId': 'string',
+                      'AttachmentState': 'attaching'|'attached'|'detaching'|'detached'|'attach-failed'|'detach-failed',
+                      'ModificationState': 'modifying'|'completed'|'failed',
+                      'FailureCode': 'string',
+                      'FailureMessage': 'string'
+                  },
+              ],
+              'RouteTableId': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ClientToken** *(string) --* 
+
+        Unique, case-sensitive identifier to ensure the idempotency of the request. Only returned if a client token was provided in the request.
+
+        
+      
+
+      - **NatGateway** *(dict) --* 
+
+        Information about the NAT gateway.
+
+        
+        
+
+        - **CreateTime** *(datetime) --* 
+
+          The date and time the NAT gateway was created.
+
+          
+        
+
+        - **DeleteTime** *(datetime) --* 
+
+          The date and time the NAT gateway was deleted, if applicable.
+
+          
+        
+
+        - **FailureCode** *(string) --* 
+
+          If the NAT gateway could not be created, specifies the error code for the failure. ( ``InsufficientFreeAddressesInSubnet`` | ``Gateway.NotAttached`` | ``InvalidAllocationID.NotFound`` | ``Resource.AlreadyAssociated`` | ``InternalError`` | ``InvalidSubnetID.NotFound``)
+
+          
+        
+
+        - **FailureMessage** *(string) --* 
+
+          If the NAT gateway could not be created, specifies the error message for the failure, that corresponds to the error code.
+
+           
+
+          
+          * For InsufficientFreeAddressesInSubnet: "Subnet has insufficient free addresses to create this NAT gateway"
+           
+          * For Gateway.NotAttached: "Network vpc-xxxxxxxx has no Internet gateway attached"
+           
+          * For InvalidAllocationID.NotFound: "Elastic IP address eipalloc-xxxxxxxx could not be associated with this NAT gateway"
+           
+          * For Resource.AlreadyAssociated: "Elastic IP address eipalloc-xxxxxxxx is already associated"
+           
+          * For InternalError: "Network interface eni-xxxxxxxx, created and used internally by this NAT gateway is in an invalid state. Please try again."
+           
+          * For InvalidSubnetID.NotFound: "The specified subnet subnet-xxxxxxxx does not exist or could not be found."
+          
+
+          
+        
+
+        - **NatGatewayAddresses** *(list) --* 
+
+          Information about the IP addresses and network interface associated with the NAT gateway.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes the IP addresses and network interface associated with a NAT gateway.
+
+            
+            
+
+            - **AllocationId** *(string) --* 
+
+              [Public NAT gateway only] The allocation ID of the Elastic IP address that's associated with the NAT gateway.
+
+              
+            
+
+            - **NetworkInterfaceId** *(string) --* 
+
+              The ID of the network interface associated with the NAT gateway.
+
+              
+            
+
+            - **PrivateIp** *(string) --* 
+
+              The private IP address associated with the NAT gateway.
+
+              
+            
+
+            - **PublicIp** *(string) --* 
+
+              [Public NAT gateway only] The Elastic IP address associated with the NAT gateway.
+
+              
+            
+
+            - **AssociationId** *(string) --* 
+
+              [Public NAT gateway only] The association ID of the Elastic IP address that's associated with the NAT gateway.
+
+              
+            
+
+            - **IsPrimary** *(boolean) --* 
+
+              Defines if the IP address is the primary address.
+
+              
+            
+
+            - **FailureMessage** *(string) --* 
+
+              The address failure message.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The address status.
+
+              
+            
+
+            - **AvailabilityZone** *(string) --* 
+
+              The Availability Zone where this Elastic IP address (EIP) is being used to handle outbound NAT traffic.
+
+              
+            
+
+            - **AvailabilityZoneId** *(string) --* 
+
+              The ID of the Availability Zone where this Elastic IP address (EIP) is being used to handle outbound NAT traffic. Use this instead of AvailabilityZone for consistent identification of AZs across Amazon Web Services Regions.
+
+              
+        
+      
+        
+
+        - **NatGatewayId** *(string) --* 
+
+          The ID of the NAT gateway.
+
+          
+        
+
+        - **ProvisionedBandwidth** *(dict) --* 
+
+          Reserved. If you need to sustain traffic greater than the `documented limits <https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html#vpc-limits-gateways>`__, contact Amazon Web Services Support.
+
+          
+          
+
+          - **ProvisionTime** *(datetime) --* 
+
+            Reserved.
+
+            
+          
+
+          - **Provisioned** *(string) --* 
+
+            Reserved.
+
+            
+          
+
+          - **RequestTime** *(datetime) --* 
+
+            Reserved.
+
+            
+          
+
+          - **Requested** *(string) --* 
+
+            Reserved.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            Reserved.
+
+            
+      
+        
+
+        - **State** *(string) --* 
+
+          The state of the NAT gateway.
+
+           
+
+          
+          * ``pending``: The NAT gateway is being created and is not ready to process traffic.
+           
+          * ``failed``: The NAT gateway could not be created. Check the ``failureCode`` and ``failureMessage`` fields for the reason.
+           
+          * ``available``: The NAT gateway is able to process traffic. This status remains until you delete the NAT gateway, and does not indicate the health of the NAT gateway.
+           
+          * ``deleting``: The NAT gateway is in the process of being terminated and may still be processing traffic.
+           
+          * ``deleted``: The NAT gateway has been terminated and is no longer processing traffic.
+          
+
+          
+        
+
+        - **SubnetId** *(string) --* 
+
+          The ID of the subnet in which the NAT gateway is located.
+
+          
+        
+
+        - **VpcId** *(string) --* 
+
+          The ID of the VPC in which the NAT gateway is located.
+
+          
+        
+
+        - **Tags** *(list) --* 
+
+          The tags for the NAT gateway.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes a tag.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The key of the tag.
+
+               
+
+              Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The value of the tag.
+
+               
+
+              Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+              
+        
+      
+        
+
+        - **ConnectivityType** *(string) --* 
+
+          Indicates whether the NAT gateway supports public or private connectivity.
+
+          
+        
+
+        - **AvailabilityMode** *(string) --* 
+
+          Indicates whether this is a zonal (single-AZ) or regional (multi-AZ) NAT gateway.
+
+           
+
+          A zonal NAT gateway is a NAT Gateway that provides redundancy and scalability within a single availability zone. A regional NAT gateway is a single NAT Gateway that works across multiple availability zones (AZs) in your VPC, providing redundancy, scalability and availability across all the AZs in a Region.
+
+           
+
+          For more information, see `Regional NAT gateways for automatic multi-AZ expansion <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateways-regional.html>`__ in the *Amazon VPC User Guide*.
+
+          
+        
+
+        - **AutoScalingIps** *(string) --* 
+
+          For regional NAT gateways only: Indicates whether Amazon Web Services automatically allocates additional Elastic IP addresses (EIPs) in an AZ when the NAT gateway needs more ports due to increased concurrent connections to a single destination from that AZ.
+
+           
+
+          For more information, see `Regional NAT gateways for automatic multi-AZ expansion <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateways-regional.html>`__ in the *Amazon VPC User Guide*.
+
+          
+        
+
+        - **AutoProvisionZones** *(string) --* 
+
+          For regional NAT gateways only: Indicates whether Amazon Web Services automatically manages AZ coverage. When enabled, the NAT gateway associates EIPs in all AZs where your VPC has subnets to handle outbound NAT traffic, expands to new AZs when you create subnets there, and retracts from AZs where you've removed all subnets. When disabled, you must manually manage which AZs the NAT gateway supports and their corresponding EIPs.
+
+           
+
+          A regional NAT gateway is a single NAT Gateway that works across multiple availability zones (AZs) in your VPC, providing redundancy, scalability and availability across all the AZs in a Region.
+
+           
+
+          For more information, see `Regional NAT gateways for automatic multi-AZ expansion <https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateways-regional.html>`__ in the *Amazon VPC User Guide*.
+
+          
+        
+
+        - **AttachedAppliances** *(list) --* 
+
+          The proxy appliances attached to the NAT Gateway for filtering and inspecting traffic to prevent data exfiltration.
+
+          
+          
+
+          - *(dict) --* 
+
+            Information about an appliance attached to a NAT Gateway, providing managed security solutions for traffic filtering and inspection.
+
+            
+            
+
+            - **Type** *(string) --* 
+
+              The type of appliance attached to the NAT Gateway. For network firewall proxy functionality, this will be "network-firewall-proxy".
+
+              
+            
+
+            - **ApplianceArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the attached appliance, identifying the specific proxy or security appliance resource.
+
+              
+            
+
+            - **VpcEndpointId** *(string) --* 
+
+              The VPC endpoint ID used to route traffic from application VPCs to the proxy for inspection and filtering.
+
+              
+            
+
+            - **AttachmentState** *(string) --* 
+
+              The current attachment state of the appliance.
+
+              
+            
+
+            - **ModificationState** *(string) --* 
+
+              The current modification state of the appliance.
+
+              
+            
+
+            - **FailureCode** *(string) --* 
+
+              The failure code if the appliance attachment or modification operation failed.
+
+              
+            
+
+            - **FailureMessage** *(string) --* 
+
+              A descriptive message explaining the failure if the appliance attachment or modification operation failed.
+
+              
+        
+      
+        
+
+        - **RouteTableId** *(string) --* 
+
+          For regional NAT gateways only, this is the ID of the NAT gateway.
+
+          
+    
+  
+
+  **Examples**
+
+  This example creates a NAT gateway in subnet subnet-1a2b3c4d and associates an Elastic IP address with the allocation ID eipalloc-37fc1a52 with the NAT gateway.
+  ::
+
+    response = client.create_nat_gateway(
+        AllocationId='eipalloc-37fc1a52',
+        SubnetId='subnet-1a2b3c4d',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'NatGateway': {
+            'CreateTime': datetime(2015, 12, 17, 12, 45, 26, 3, 351, 0),
+            'NatGatewayAddresses': [
+                {
+                    'AllocationId': 'eipalloc-37fc1a52',
+                },
+            ],
+            'NatGatewayId': 'nat-08d48af2a8e83edfd',
+            'State': 'pending',
+            'SubnetId': 'subnet-1a2b3c4d',
+            'VpcId': 'vpc-1122aabb',
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

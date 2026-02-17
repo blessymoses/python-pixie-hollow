@@ -1,0 +1,247 @@
+:doc:`CostOptimizationHub <../../cost-optimization-hub>` / Client / list_efficiency_metrics
+
+***********************
+list_efficiency_metrics
+***********************
+
+
+
+.. py:method:: CostOptimizationHub.Client.list_efficiency_metrics(**kwargs)
+
+  
+
+  Returns cost efficiency metrics aggregated over time and optionally grouped by a specified dimension. The metrics provide insights into your cost optimization progress by tracking estimated savings, spending, and measures how effectively you're optimizing your Cloud resources.
+
+   
+
+  The operation supports both daily and monthly time granularities and allows grouping results by account ID, Amazon Web Services Region. Results are returned as time-series data, enabling you to analyze trends in your cost optimization performance over the specified time period.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cost-optimization-hub-2022-07-26/ListEfficiencyMetrics>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_efficiency_metrics(
+        groupBy='string',
+        granularity='Daily'|'Monthly',
+        timePeriod={
+            'start': 'string',
+            'end': 'string'
+        },
+        maxResults=123,
+        orderBy={
+            'dimension': 'string',
+            'order': 'Asc'|'Desc'
+        },
+        nextToken='string'
+    )
+    
+  :type groupBy: string
+  :param groupBy: 
+
+    The dimension by which to group the cost efficiency metrics. Valid values include account ID, Amazon Web Services Region. When no grouping is specified, metrics are aggregated across all resources in the specified time period.
+
+    
+
+  
+  :type granularity: string
+  :param granularity: **[REQUIRED]** 
+
+    The time granularity for the cost efficiency metrics. Specify ``Daily`` for metrics aggregated by day, or ``Monthly`` for metrics aggregated by month.
+
+    
+
+  
+  :type timePeriod: dict
+  :param timePeriod: **[REQUIRED]** 
+
+    The time period for which to retrieve the cost efficiency metrics. The start date is inclusive and the end date is exclusive. Dates can be specified in either YYYY-MM-DD format or YYYY-MM format depending on the desired granularity.
+
+    
+
+  
+    - **start** *(string) --* **[REQUIRED]** 
+
+      The beginning of the time period (inclusive). Specify the date in ISO 8601 format, such as 2024-01-01.
+
+      
+
+    
+    - **end** *(string) --* **[REQUIRED]** 
+
+      The end of the time period (exclusive). Specify the date in ISO 8601 format, such as 2024-12-31.
+
+      
+
+    
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of groups to return in the response. Valid values range from 0 to 1000. Use in conjunction with ``nextToken`` to paginate through results when the total number of groups exceeds this limit.
+
+    
+
+  
+  :type orderBy: dict
+  :param orderBy: 
+
+    The ordering specification for the results. Defines which dimension to sort by and whether to sort in ascending or descending order.
+
+    
+
+  
+    - **dimension** *(string) --* 
+
+      Sorts by dimension values.
+
+      
+
+    
+    - **order** *(string) --* 
+
+      The order that's used to sort the data.
+
+      
+
+    
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The token to retrieve the next page of results. This value is returned in the response when the number of groups exceeds the specified ``maxResults`` value.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'efficiencyMetricsByGroup': [
+              {
+                  'metricsByTime': [
+                      {
+                          'score': 123.0,
+                          'savings': 123.0,
+                          'spend': 123.0,
+                          'timestamp': 'string'
+                      },
+                  ],
+                  'group': 'string',
+                  'message': 'string'
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **efficiencyMetricsByGroup** *(list) --* 
+
+        A list of cost efficiency metrics grouped by the specified dimension. Each group contains time-series data points with cost efficiency, potential savings, and optimzable spend for the specified time period.
+
+        
+        
+
+        - *(dict) --* 
+
+          An individual group's cost efficiency metrics over time.
+
+          
+          
+
+          - **metricsByTime** *(list) --* 
+
+            A list of time-series data points containing efficiency metrics for this group. Each data point includes an efficiency score, estimated savings, spending, and a timestamp corresponding to the specified granularity. This field is null when efficiency metrics cannot be calculated for the group, in which case the message field provides an explanation.
+
+            
+            
+
+            - *(dict) --* 
+
+              A single time-series data point containing efficiency metrics.
+
+              
+              
+
+              - **score** *(float) --* 
+
+                The efficiency score for this time period. The score represents a measure of how effectively the cloud resources are being optimized, with higher scores indicating better optimization performance.
+
+                
+              
+
+              - **savings** *(float) --* 
+
+                The estimated savings amount for this time period, representing the potential cost reduction achieved through optimization recommendations.
+
+                
+              
+
+              - **spend** *(float) --* 
+
+                The total spending amount for this time period.
+
+                
+              
+
+              - **timestamp** *(string) --* 
+
+                The timestamp for this data point. The format depends on the granularity: YYYY-MM-DD for daily metrics, or YYYY-MM for monthly metrics.
+
+                
+          
+        
+          
+
+          - **group** *(string) --* 
+
+            The value of the grouping dimension for this set of metrics. For example, if grouped by account ID, this field contains the account ID. If no grouping is specified, this field is empty.
+
+            
+          
+
+          - **message** *(string) --* 
+
+            An explanation of why efficiency metrics could not be calculated for this group when the metricsByTime field is null. Common reasons include insufficient or inconclusive cost and usage data during the specified time period. This field is null or empty when metrics are successfully calculated.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The token to retrieve the next page of results. When this value is present in the response, additional groups are available. Pass this token in the ``nextToken`` parameter of a subsequent request to retrieve the next page.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CostOptimizationHub.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CostOptimizationHub.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CostOptimizationHub.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CostOptimizationHub.Client.exceptions.ThrottlingException`
+
+  

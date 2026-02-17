@@ -1,0 +1,614 @@
+:doc:`IoT <../../iot>` / Client / create_job
+
+**********
+create_job
+**********
+
+
+
+.. py:method:: IoT.Client.create_job(**kwargs)
+
+  
+
+  Creates a job.
+
+   
+
+  Requires permission to access the `CreateJob <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions>`__ action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iot-2015-05-28/CreateJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_job(
+        jobId='string',
+        targets=[
+            'string',
+        ],
+        documentSource='string',
+        document='string',
+        description='string',
+        presignedUrlConfig={
+            'roleArn': 'string',
+            'expiresInSec': 123
+        },
+        targetSelection='CONTINUOUS'|'SNAPSHOT',
+        jobExecutionsRolloutConfig={
+            'maximumPerMinute': 123,
+            'exponentialRate': {
+                'baseRatePerMinute': 123,
+                'incrementFactor': 123.0,
+                'rateIncreaseCriteria': {
+                    'numberOfNotifiedThings': 123,
+                    'numberOfSucceededThings': 123
+                }
+            }
+        },
+        abortConfig={
+            'criteriaList': [
+                {
+                    'failureType': 'FAILED'|'REJECTED'|'TIMED_OUT'|'ALL',
+                    'action': 'CANCEL',
+                    'thresholdPercentage': 123.0,
+                    'minNumberOfExecutedThings': 123
+                },
+            ]
+        },
+        timeoutConfig={
+            'inProgressTimeoutInMinutes': 123
+        },
+        tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        namespaceId='string',
+        jobTemplateArn='string',
+        jobExecutionsRetryConfig={
+            'criteriaList': [
+                {
+                    'failureType': 'FAILED'|'TIMED_OUT'|'ALL',
+                    'numberOfRetries': 123
+                },
+            ]
+        },
+        documentParameters={
+            'string': 'string'
+        },
+        schedulingConfig={
+            'startTime': 'string',
+            'endTime': 'string',
+            'endBehavior': 'STOP_ROLLOUT'|'CANCEL'|'FORCE_CANCEL',
+            'maintenanceWindows': [
+                {
+                    'startTime': 'string',
+                    'durationInMinutes': 123
+                },
+            ]
+        },
+        destinationPackageVersions=[
+            'string',
+        ]
+    )
+    
+  :type jobId: string
+  :param jobId: **[REQUIRED]** 
+
+    A job identifier which must be unique for your account. We recommend using a UUID. Alpha-numeric characters, "-" and "_" are valid for use here.
+
+    
+
+  
+  :type targets: list
+  :param targets: **[REQUIRED]** 
+
+    A list of things and thing groups to which the job should be sent.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type documentSource: string
+  :param documentSource: 
+
+    An S3 link, or S3 object URL, to the job document. The link is an Amazon S3 object URL and is required if you don't specify a value for ``document``.
+
+     
+
+    For example, ``--document-source https://s3.region-code.amazonaws.com/example-firmware/device-firmware.1.0``
+
+     
+
+    For more information, see `Methods for accessing a bucket <https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html>`__.
+
+    
+
+  
+  :type document: string
+  :param document: 
+
+    The job document. Required if you don't specify a value for ``documentSource``.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    A short text description of the job.
+
+    
+
+  
+  :type presignedUrlConfig: dict
+  :param presignedUrlConfig: 
+
+    Configuration information for pre-signed S3 URLs.
+
+    
+
+  
+    - **roleArn** *(string) --* 
+
+      The ARN of an IAM role that grants permission to download files from the S3 bucket where the job data/updates are stored. The role must also grant permission for IoT to download the files.
+
+       
+
+      .. warning::
+
+         
+
+        For information about addressing the confused deputy problem, see `cross-service confused deputy prevention <https://docs.aws.amazon.com/iot/latest/developerguide/cross-service-confused-deputy-prevention.html>`__ in the *Amazon Web Services IoT Core developer guide*.
+
+        
+
+      
+
+    
+    - **expiresInSec** *(integer) --* 
+
+      How long (in seconds) pre-signed URLs are valid. Valid values are 60 - 3600, the default value is 3600 seconds. Pre-signed URLs are generated when Jobs receives an MQTT request for the job document.
+
+      
+
+    
+  
+  :type targetSelection: string
+  :param targetSelection: 
+
+    Specifies whether the job will continue to run (CONTINUOUS), or will be complete after all those things specified as targets have completed the job (SNAPSHOT). If continuous, the job may also be run on a thing when a change is detected in a target. For example, a job will run on a thing when the thing is added to a target group, even after the job was completed by all things originally in the group.
+
+     
+
+    .. note::
+
+      
+
+      We recommend that you use continuous jobs instead of snapshot jobs for dynamic thing group targets. By using continuous jobs, devices that join the group receive the job execution even after the job has been created.
+
+      
+
+    
+
+  
+  :type jobExecutionsRolloutConfig: dict
+  :param jobExecutionsRolloutConfig: 
+
+    Allows you to create a staged rollout of the job.
+
+    
+
+  
+    - **maximumPerMinute** *(integer) --* 
+
+      The maximum number of things that will be notified of a pending job, per minute. This parameter allows you to create a staged rollout.
+
+      
+
+    
+    - **exponentialRate** *(dict) --* 
+
+      The rate of increase for a job rollout. This parameter allows you to define an exponential rate for a job rollout.
+
+      
+
+    
+      - **baseRatePerMinute** *(integer) --* **[REQUIRED]** 
+
+        The minimum number of things that will be notified of a pending job, per minute at the start of job rollout. This parameter allows you to define the initial rate of rollout.
+
+        
+
+      
+      - **incrementFactor** *(float) --* **[REQUIRED]** 
+
+        The exponential factor to increase the rate of rollout for a job.
+
+         
+
+        Amazon Web Services IoT Core supports up to one digit after the decimal (for example, 1.5, but not 1.55).
+
+        
+
+      
+      - **rateIncreaseCriteria** *(dict) --* **[REQUIRED]** 
+
+        The criteria to initiate the increase in rate of rollout for a job.
+
+        
+
+      
+        - **numberOfNotifiedThings** *(integer) --* 
+
+          The threshold for number of notified things that will initiate the increase in rate of rollout.
+
+          
+
+        
+        - **numberOfSucceededThings** *(integer) --* 
+
+          The threshold for number of succeeded things that will initiate the increase in rate of rollout.
+
+          
+
+        
+      
+    
+  
+  :type abortConfig: dict
+  :param abortConfig: 
+
+    Allows you to create the criteria to abort a job.
+
+    
+
+  
+    - **criteriaList** *(list) --* **[REQUIRED]** 
+
+      The list of criteria that determine when and how to abort the job.
+
+      
+
+    
+      - *(dict) --* 
+
+        The criteria that determine when and how a job abort takes place.
+
+        
+
+      
+        - **failureType** *(string) --* **[REQUIRED]** 
+
+          The type of job execution failures that can initiate a job abort.
+
+          
+
+        
+        - **action** *(string) --* **[REQUIRED]** 
+
+          The type of job action to take to initiate the job abort.
+
+          
+
+        
+        - **thresholdPercentage** *(float) --* **[REQUIRED]** 
+
+          The minimum percentage of job execution failures that must occur to initiate the job abort.
+
+           
+
+          Amazon Web Services IoT Core supports up to two digits after the decimal (for example, 10.9 and 10.99, but not 10.999).
+
+          
+
+        
+        - **minNumberOfExecutedThings** *(integer) --* **[REQUIRED]** 
+
+          The minimum number of things which must receive job execution notifications before the job can be aborted.
+
+          
+
+        
+      
+  
+  
+  :type timeoutConfig: dict
+  :param timeoutConfig: 
+
+    Specifies the amount of time each device has to finish its execution of the job. The timer is started when the job execution status is set to ``IN_PROGRESS``. If the job execution status is not set to another terminal state before the time expires, it will be automatically set to ``TIMED_OUT``.
+
+    
+
+  
+    - **inProgressTimeoutInMinutes** *(integer) --* 
+
+      Specifies the amount of time, in minutes, this device has to finish execution of this job. The timeout interval can be anywhere between 1 minute and 7 days (1 to 10080 minutes). The in progress timer can't be updated and will apply to all job executions for the job. Whenever a job execution remains in the IN_PROGRESS status for longer than this interval, the job execution will fail and switch to the terminal ``TIMED_OUT`` status.
+
+      
+
+    
+  
+  :type tags: list
+  :param tags: 
+
+    Metadata which can be used to manage the job.
+
+    
+
+  
+    - *(dict) --* 
+
+      A set of key/value pairs that are used to manage the resource.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The tag's key.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The tag's value.
+
+        
+
+      
+    
+
+  :type namespaceId: string
+  :param namespaceId: 
+
+    The namespace used to indicate that a job is a customer-managed job.
+
+     
+
+    When you specify a value for this parameter, Amazon Web Services IoT Core sends jobs notifications to MQTT topics that contain the value in the following format.
+
+     
+
+    ``$aws/things/THING_NAME/jobs/JOB_ID/notify-namespace-NAMESPACE_ID/``
+
+     
+
+    .. note::
+
+      
+
+      The ``namespaceId`` feature is only supported by IoT Greengrass at this time. For more information, see `Setting up IoT Greengrass core devices. <https://docs.aws.amazon.com/greengrass/v2/developerguide/setting-up.html>`__
+
+      
+
+    
+
+  
+  :type jobTemplateArn: string
+  :param jobTemplateArn: 
+
+    The ARN of the job template used to create the job.
+
+    
+
+  
+  :type jobExecutionsRetryConfig: dict
+  :param jobExecutionsRetryConfig: 
+
+    Allows you to create the criteria to retry a job.
+
+    
+
+  
+    - **criteriaList** *(list) --* **[REQUIRED]** 
+
+      The list of criteria that determines how many retries are allowed for each failure type for a job.
+
+      
+
+    
+      - *(dict) --* 
+
+        The criteria that determines how many retries are allowed for each failure type for a job.
+
+        
+
+      
+        - **failureType** *(string) --* **[REQUIRED]** 
+
+          The type of job execution failures that can initiate a job retry.
+
+          
+
+        
+        - **numberOfRetries** *(integer) --* **[REQUIRED]** 
+
+          The number of retries allowed for a failure type for the job.
+
+          
+
+        
+      
+  
+  
+  :type documentParameters: dict
+  :param documentParameters: 
+
+    Parameters of an Amazon Web Services managed template that you can specify to create the job document.
+
+     
+
+    .. note::
+
+      
+
+      ``documentParameters`` can only be used when creating jobs from Amazon Web Services managed templates. This parameter can't be used with custom job templates or to create jobs from them.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type schedulingConfig: dict
+  :param schedulingConfig: 
+
+    The configuration that allows you to schedule a job for a future date and time in addition to specifying the end behavior for each job execution.
+
+    
+
+  
+    - **startTime** *(string) --* 
+
+      The time a job will begin rollout of the job document to all devices in the target group for a job. The ``startTime`` can be scheduled up to a year in advance and must be scheduled a minimum of thirty minutes from the current time. The date and time format for the ``startTime`` is YYYY-MM-DD for the date and HH:MM for the time.
+
+       
+
+      For more information on the syntax for ``startTime`` when using an API command or the Command Line Interface, see `Timestamp <https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-parameters-types.html#parameter-type-timestamp>`__.
+
+      
+
+    
+    - **endTime** *(string) --* 
+
+      The time a job will stop rollout of the job document to all devices in the target group for a job. The ``endTime`` must take place no later than two years from the current time and be scheduled a minimum of thirty minutes from the current time. The minimum duration between ``startTime`` and ``endTime`` is thirty minutes. The maximum duration between ``startTime`` and ``endTime`` is two years. The date and time format for the ``endTime`` is YYYY-MM-DD for the date and HH:MM for the time.
+
+       
+
+      For more information on the syntax for ``endTime`` when using an API command or the Command Line Interface, see `Timestamp <https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-parameters-types.html#parameter-type-timestamp>`__.
+
+      
+
+    
+    - **endBehavior** *(string) --* 
+
+      Specifies the end behavior for all job executions after a job reaches the selected ``endTime``. If ``endTime`` is not selected when creating the job, then ``endBehavior`` does not apply.
+
+      
+
+    
+    - **maintenanceWindows** *(list) --* 
+
+      An optional configuration within the ``SchedulingConfig`` to setup a recurring maintenance window with a predetermined start time and duration for the rollout of a job document to all devices in a target group for a job.
+
+      
+
+    
+      - *(dict) --* 
+
+        An optional configuration within the ``SchedulingConfig`` to setup a recurring maintenance window with a predetermined start time and duration for the rollout of a job document to all devices in a target group for a job.
+
+        
+
+      
+        - **startTime** *(string) --* **[REQUIRED]** 
+
+          Displays the start time of the next maintenance window.
+
+          
+
+        
+        - **durationInMinutes** *(integer) --* **[REQUIRED]** 
+
+          Displays the duration of the next maintenance window.
+
+          
+
+        
+      
+  
+  
+  :type destinationPackageVersions: list
+  :param destinationPackageVersions: 
+
+    The package version Amazon Resource Names (ARNs) that are installed on the device when the job successfully completes. The package version must be in either the Published or Deprecated state when the job deploys. For more information, see `Package version lifecycle <https://docs.aws.amazon.com/iot/latest/developerguide/preparing-to-use-software-package-catalog.html#package-version-lifecycle>`__.
+
+     
+
+    **Note:**The following Length Constraints relates to a single ARN. Up to 25 package version ARNs are allowed.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobArn': 'string',
+          'jobId': 'string',
+          'description': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobArn** *(string) --* 
+
+        The job ARN.
+
+        
+      
+
+      - **jobId** *(string) --* 
+
+        The unique identifier you assigned to this job.
+
+        
+      
+
+      - **description** *(string) --* 
+
+        The job description.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoT.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ServiceUnavailableException`
+
+  

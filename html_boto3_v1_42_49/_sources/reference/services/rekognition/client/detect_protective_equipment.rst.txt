@@ -1,0 +1,481 @@
+:doc:`Rekognition <../../rekognition>` / Client / detect_protective_equipment
+
+***************************
+detect_protective_equipment
+***************************
+
+
+
+.. py:method:: Rekognition.Client.detect_protective_equipment(**kwargs)
+
+  
+
+  Detects Personal Protective Equipment (PPE) worn by people detected in an image. Amazon Rekognition can detect the following types of PPE.
+
+   
+
+  
+  * Face cover
+   
+  * Hand cover
+   
+  * Head cover
+  
+
+   
+
+  You pass the input image as base64-encoded image bytes or as a reference to an image in an Amazon S3 bucket. The image must be either a PNG or JPG formatted file.
+
+   
+
+  ``DetectProtectiveEquipment`` detects PPE worn by up to 15 persons detected in an image.
+
+   
+
+  For each person detected in the image the API returns an array of body parts (face, head, left-hand, right-hand). For each body part, an array of detected items of PPE is returned, including an indicator of whether or not the PPE covers the body part. The API returns the confidence it has in each detection (person, PPE, body part and body part coverage). It also returns a bounding box (  BoundingBox) for each detected person and each detected item of PPE.
+
+   
+
+  You can optionally request a summary of detected PPE items with the ``SummarizationAttributes`` input parameter. The summary provides the following information.
+
+   
+
+  
+  * The persons detected as wearing all of the types of PPE that you specify.
+   
+  * The persons detected as not wearing all of the types PPE that you specify.
+   
+  * The persons detected where PPE adornment could not be determined.
+  
+
+   
+
+  This is a stateless API operation. That is, the operation does not persist any data.
+
+   
+
+  This operation requires permissions to perform the ``rekognition:DetectProtectiveEquipment`` action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rekognition-2016-06-27/DetectProtectiveEquipment>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.detect_protective_equipment(
+        Image={
+            'Bytes': b'bytes',
+            'S3Object': {
+                'Bucket': 'string',
+                'Name': 'string',
+                'Version': 'string'
+            }
+        },
+        SummarizationAttributes={
+            'MinConfidence': ...,
+            'RequiredEquipmentTypes': [
+                'FACE_COVER'|'HAND_COVER'|'HEAD_COVER',
+            ]
+        }
+    )
+    
+  :type Image: dict
+  :param Image: **[REQUIRED]** 
+
+    The image in which you want to detect PPE on detected persons. The image can be passed as image bytes or you can reference an image stored in an Amazon S3 bucket.
+
+    
+
+  
+    - **Bytes** *(bytes) --* 
+
+      Blob of image bytes up to 5 MBs. Note that the maximum image size you can pass to ``DetectCustomLabels`` is 4MB.
+
+      
+
+    
+    - **S3Object** *(dict) --* 
+
+      Identifies an S3 object as the image source.
+
+      
+
+    
+      - **Bucket** *(string) --* 
+
+        Name of the S3 bucket.
+
+        
+
+      
+      - **Name** *(string) --* 
+
+        S3 object key name.
+
+        
+
+      
+      - **Version** *(string) --* 
+
+        If the bucket is versioning enabled, you can specify the object version.
+
+        
+
+      
+    
+  
+  :type SummarizationAttributes: dict
+  :param SummarizationAttributes: 
+
+    An array of PPE types that you want to summarize.
+
+    
+
+  
+    - **MinConfidence** *(float) --* **[REQUIRED]** 
+
+      The minimum confidence level for which you want summary information. The confidence level applies to person detection, body part detection, equipment detection, and body part coverage. Amazon Rekognition doesn't return summary information with a confidence than this specified value. There isn't a default value.
+
+       
+
+      Specify a ``MinConfidence`` value that is between 50-100% as ``DetectProtectiveEquipment`` returns predictions only where the detection confidence is between 50% - 100%. If you specify a value that is less than 50%, the results are the same specifying a value of 50%.
+
+      
+
+    
+    - **RequiredEquipmentTypes** *(list) --* **[REQUIRED]** 
+
+      An array of personal protective equipment types for which you want summary information. If a person is detected wearing a required requipment type, the person's ID is added to the ``PersonsWithRequiredEquipment`` array field returned in  ProtectiveEquipmentSummary by ``DetectProtectiveEquipment``.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ProtectiveEquipmentModelVersion': 'string',
+          'Persons': [
+              {
+                  'BodyParts': [
+                      {
+                          'Name': 'FACE'|'HEAD'|'LEFT_HAND'|'RIGHT_HAND',
+                          'Confidence': ...,
+                          'EquipmentDetections': [
+                              {
+                                  'BoundingBox': {
+                                      'Width': ...,
+                                      'Height': ...,
+                                      'Left': ...,
+                                      'Top': ...
+                                  },
+                                  'Confidence': ...,
+                                  'Type': 'FACE_COVER'|'HAND_COVER'|'HEAD_COVER',
+                                  'CoversBodyPart': {
+                                      'Confidence': ...,
+                                      'Value': True|False
+                                  }
+                              },
+                          ]
+                      },
+                  ],
+                  'BoundingBox': {
+                      'Width': ...,
+                      'Height': ...,
+                      'Left': ...,
+                      'Top': ...
+                  },
+                  'Confidence': ...,
+                  'Id': 123
+              },
+          ],
+          'Summary': {
+              'PersonsWithRequiredEquipment': [
+                  123,
+              ],
+              'PersonsWithoutRequiredEquipment': [
+                  123,
+              ],
+              'PersonsIndeterminate': [
+                  123,
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ProtectiveEquipmentModelVersion** *(string) --* 
+
+        The version number of the PPE detection model used to detect PPE in the image.
+
+        
+      
+
+      - **Persons** *(list) --* 
+
+        An array of persons detected in the image (including persons not wearing PPE).
+
+        
+        
+
+        - *(dict) --* 
+
+          A person detected by a call to  DetectProtectiveEquipment. The API returns all persons detected in the input image in an array of ``ProtectiveEquipmentPerson`` objects.
+
+          
+          
+
+          - **BodyParts** *(list) --* 
+
+            An array of body parts detected on a person's body (including body parts without PPE).
+
+            
+            
+
+            - *(dict) --* 
+
+              Information about a body part detected by  DetectProtectiveEquipment that contains PPE. An array of ``ProtectiveEquipmentBodyPart`` objects is returned for each person detected by ``DetectProtectiveEquipment``.
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The detected body part.
+
+                
+              
+
+              - **Confidence** *(float) --* 
+
+                The confidence that Amazon Rekognition has in the detection accuracy of the detected body part.
+
+                
+              
+
+              - **EquipmentDetections** *(list) --* 
+
+                An array of Personal Protective Equipment items detected around a body part.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Information about an item of Personal Protective Equipment (PPE) detected by  DetectProtectiveEquipment. For more information, see  DetectProtectiveEquipment.
+
+                  
+                  
+
+                  - **BoundingBox** *(dict) --* 
+
+                    A bounding box surrounding the item of detected PPE.
+
+                    
+                    
+
+                    - **Width** *(float) --* 
+
+                      Width of the bounding box as a ratio of the overall image width.
+
+                      
+                    
+
+                    - **Height** *(float) --* 
+
+                      Height of the bounding box as a ratio of the overall image height.
+
+                      
+                    
+
+                    - **Left** *(float) --* 
+
+                      Left coordinate of the bounding box as a ratio of overall image width.
+
+                      
+                    
+
+                    - **Top** *(float) --* 
+
+                      Top coordinate of the bounding box as a ratio of overall image height.
+
+                      
+                
+                  
+
+                  - **Confidence** *(float) --* 
+
+                    The confidence that Amazon Rekognition has that the bounding box ( ``BoundingBox``) contains an item of PPE.
+
+                    
+                  
+
+                  - **Type** *(string) --* 
+
+                    The type of detected PPE.
+
+                    
+                  
+
+                  - **CoversBodyPart** *(dict) --* 
+
+                    Information about the body part covered by the detected PPE.
+
+                    
+                    
+
+                    - **Confidence** *(float) --* 
+
+                      The confidence that Amazon Rekognition has in the value of ``Value``.
+
+                      
+                    
+
+                    - **Value** *(boolean) --* 
+
+                      True if the PPE covers the corresponding body part, otherwise false.
+
+                      
+                
+              
+            
+          
+        
+          
+
+          - **BoundingBox** *(dict) --* 
+
+            A bounding box around the detected person.
+
+            
+            
+
+            - **Width** *(float) --* 
+
+              Width of the bounding box as a ratio of the overall image width.
+
+              
+            
+
+            - **Height** *(float) --* 
+
+              Height of the bounding box as a ratio of the overall image height.
+
+              
+            
+
+            - **Left** *(float) --* 
+
+              Left coordinate of the bounding box as a ratio of overall image width.
+
+              
+            
+
+            - **Top** *(float) --* 
+
+              Top coordinate of the bounding box as a ratio of overall image height.
+
+              
+        
+          
+
+          - **Confidence** *(float) --* 
+
+            The confidence that Amazon Rekognition has that the bounding box contains a person.
+
+            
+          
+
+          - **Id** *(integer) --* 
+
+            The identifier for the detected person. The identifier is only unique for a single call to ``DetectProtectiveEquipment``.
+
+            
+      
+    
+      
+
+      - **Summary** *(dict) --* 
+
+        Summary information for the types of PPE specified in the ``SummarizationAttributes`` input parameter.
+
+        
+        
+
+        - **PersonsWithRequiredEquipment** *(list) --* 
+
+          An array of IDs for persons who are wearing detected personal protective equipment.
+
+          
+          
+
+          - *(integer) --* 
+      
+        
+
+        - **PersonsWithoutRequiredEquipment** *(list) --* 
+
+          An array of IDs for persons who are not wearing all of the types of PPE specified in the ``RequiredEquipmentTypes`` field of the detected personal protective equipment.
+
+          
+          
+
+          - *(integer) --* 
+      
+        
+
+        - **PersonsIndeterminate** *(list) --* 
+
+          An array of IDs for persons where it was not possible to determine if they are wearing personal protective equipment.
+
+          
+          
+
+          - *(integer) --* 
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidS3ObjectException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ImageTooLargeException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ProvisionedThroughputExceededException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidImageFormatException`
+
+  

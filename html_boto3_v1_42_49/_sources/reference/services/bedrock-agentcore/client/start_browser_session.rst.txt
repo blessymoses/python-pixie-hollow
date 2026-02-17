@@ -1,0 +1,452 @@
+:doc:`BedrockAgentCore <../../bedrock-agentcore>` / Client / start_browser_session
+
+*********************
+start_browser_session
+*********************
+
+
+
+.. py:method:: BedrockAgentCore.Client.start_browser_session(**kwargs)
+
+  
+
+  Creates and initializes a browser session in Amazon Bedrock AgentCore. The session enables agents to navigate and interact with web content, extract information from websites, and perform web-based tasks as part of their response generation.
+
+   
+
+  To create a session, you must specify a browser identifier and a name. You can also configure the viewport dimensions to control the visible area of web content. The session remains active until it times out or you explicitly stop it using the ``StopBrowserSession`` operation.
+
+   
+
+  The following operations are related to ``StartBrowserSession``:
+
+   
+
+  
+  * `GetBrowserSession <https://docs.aws.amazon.com/bedrock-agentcore/latest/APIReference/API_GetBrowserSession.html>`__
+   
+  * `UpdateBrowserStream <https://docs.aws.amazon.com/bedrock-agentcore/latest/APIReference/API_UpdateBrowserStream.html>`__
+   
+  * `SaveBrowserSessionProfile <https://docs.aws.amazon.com/bedrock-agentcore/latest/APIReference/API_SaveBrowserSessionProfile.html>`__
+   
+  * `StopBrowserSession <https://docs.aws.amazon.com/bedrock-agentcore/latest/APIReference/API_StopBrowserSession.html>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agentcore-2024-02-28/StartBrowserSession>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_browser_session(
+        traceId='string',
+        traceParent='string',
+        browserIdentifier='string',
+        name='string',
+        sessionTimeoutSeconds=123,
+        viewPort={
+            'width': 123,
+            'height': 123
+        },
+        extensions=[
+            {
+                'location': {
+                    's3': {
+                        'bucket': 'string',
+                        'prefix': 'string',
+                        'versionId': 'string'
+                    }
+                }
+            },
+        ],
+        profileConfiguration={
+            'profileIdentifier': 'string'
+        },
+        proxyConfiguration={
+            'proxies': [
+                {
+                    'externalProxy': {
+                        'server': 'string',
+                        'port': 123,
+                        'domainPatterns': [
+                            'string',
+                        ],
+                        'credentials': {
+                            'basicAuth': {
+                                'secretArn': 'string'
+                            }
+                        }
+                    }
+                },
+            ],
+            'bypass': {
+                'domainPatterns': [
+                    'string',
+                ]
+            }
+        },
+        clientToken='string'
+    )
+    
+  :type traceId: string
+  :param traceId: 
+
+    The trace identifier for request tracking.
+
+    
+
+  
+  :type traceParent: string
+  :param traceParent: 
+
+    The parent trace information for distributed tracing.
+
+    
+
+  
+  :type browserIdentifier: string
+  :param browserIdentifier: **[REQUIRED]** 
+
+    The unique identifier of the browser to use for this session. This identifier specifies which browser environment to initialize for the session.
+
+    
+
+  
+  :type name: string
+  :param name: 
+
+    The name of the browser session. This name helps you identify and manage the session. The name does not need to be unique.
+
+    
+
+  
+  :type sessionTimeoutSeconds: integer
+  :param sessionTimeoutSeconds: 
+
+    The time in seconds after which the session automatically terminates if there is no activity. The default value is 3600 seconds (1 hour). The minimum allowed value is 60 seconds, and the maximum allowed value is 28800 seconds (8 hours).
+
+    
+
+  
+  :type viewPort: dict
+  :param viewPort: 
+
+    The dimensions of the browser viewport for this session. This determines the visible area of the web content and affects how web pages are rendered. If not specified, Amazon Bedrock AgentCore uses a default viewport size.
+
+    
+
+  
+    - **width** *(integer) --* **[REQUIRED]** 
+
+      The width of the viewport in pixels. This value determines the horizontal dimension of the visible area. Valid values range from 800 to 1920 pixels.
+
+      
+
+    
+    - **height** *(integer) --* **[REQUIRED]** 
+
+      The height of the viewport in pixels. This value determines the vertical dimension of the visible area. Valid values range from 600 to 1080 pixels.
+
+      
+
+    
+  
+  :type extensions: list
+  :param extensions: 
+
+    A list of browser extensions to load into the browser session.
+
+    
+
+  
+    - *(dict) --* 
+
+      Browser extension configuration.
+
+      
+
+    
+      - **location** *(dict) --* **[REQUIRED]** 
+
+        The location where the browser extension files are stored. This specifies the source from which the extension will be loaded and installed.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``s3``. 
+
+      
+        - **s3** *(dict) --* 
+
+          The Amazon S3 location of the resource. Use this when the resource is stored in an Amazon S3 bucket.
+
+          
+
+        
+          - **bucket** *(string) --* **[REQUIRED]** 
+
+            The name of the Amazon S3 bucket where the resource is stored.
+
+            
+
+          
+          - **prefix** *(string) --* **[REQUIRED]** 
+
+            The name of the Amazon S3 prefix/key where the resource is stored.
+
+            
+
+          
+          - **versionId** *(string) --* 
+
+            The name of the Amazon S3 version ID where the resource is stored (Optional).
+
+            
+
+          
+        
+      
+    
+
+  :type profileConfiguration: dict
+  :param profileConfiguration: 
+
+    The browser profile configuration to use for this session. A browser profile contains persistent data such as cookies and local storage that can be reused across multiple browser sessions. If specified, the session initializes with the profile's stored data, enabling continuity for tasks that require authentication or personalized settings.
+
+    
+
+  
+    - **profileIdentifier** *(string) --* **[REQUIRED]** 
+
+      The unique identifier of the browser profile. This identifier is used to reference the profile when starting new browser sessions or saving session data to the profile.
+
+      
+
+    
+  
+  :type proxyConfiguration: dict
+  :param proxyConfiguration: 
+
+    Optional proxy configuration for routing browser traffic through customer-specified proxy servers. When provided, enables HTTP Basic authentication via Amazon Web Services Secrets Manager and domain-based routing rules. Requires ``secretsmanager:GetSecretValue`` IAM permission for the specified secret ARNs.
+
+    
+
+  
+    - **proxies** *(list) --* **[REQUIRED]** 
+
+      An array of 1-5 proxy server configurations for domain-based routing. Each proxy can specify which domains it handles via ``domainPatterns``, enabling flexible routing of different traffic through different proxies based on destination domain.
+
+      
+
+    
+      - *(dict) --* 
+
+        Union type representing different proxy configurations. Currently supports external customer-managed proxies.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``externalProxy``. 
+
+      
+        - **externalProxy** *(dict) --* 
+
+          Configuration for an external customer-managed proxy server.
+
+          
+
+        
+          - **server** *(string) --* **[REQUIRED]** 
+
+            The hostname of the proxy server. Must be a valid DNS hostname (maximum 253 characters).
+
+            
+
+          
+          - **port** *(integer) --* **[REQUIRED]** 
+
+            The port number of the proxy server. Valid range: 1-65535.
+
+            
+
+          
+          - **domainPatterns** *(list) --* 
+
+            Optional array of domain patterns that should route through this specific proxy. Supports ``.example.com`` for subdomain matching (matches any subdomain of example.com) or ``example.com`` for exact domain matching. If omitted, this proxy acts as a catch-all for domains not matched by other proxies. Maximum 100 patterns per proxy, each up to 253 characters.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+          - **credentials** *(dict) --* 
+
+            Optional authentication credentials for the proxy server. If omitted, the proxy is accessed without authentication (useful for IP-allowlisted proxies).
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``basicAuth``. 
+
+          
+            - **basicAuth** *(dict) --* 
+
+              HTTP Basic Authentication credentials (username and password) stored in Amazon Web Services Secrets Manager.
+
+              
+
+            
+              - **secretArn** *(string) --* **[REQUIRED]** 
+
+                The Amazon Resource Name (ARN) of the Amazon Web Services Secrets Manager secret containing proxy credentials. The secret must be a JSON object with ``username`` and ``password`` string fields that meet validation requirements. The caller must have ``secretsmanager:GetSecretValue`` permission for this ARN. Example secret format: ``{"username": "proxy_user", "password": "secure_password"}``
+
+                
+
+              
+            
+          
+        
+      
+  
+    - **bypass** *(dict) --* 
+
+      Optional configuration for domains that should bypass all proxies and connect directly to their destination, like the internet. Takes precedence over all proxy routing rules.
+
+      
+
+    
+      - **domainPatterns** *(list) --* 
+
+        Array of domain patterns that should bypass the proxy. Supports ``.amazonaws.com`` for subdomain matching or ``amazonaws.com`` for exact domain matching. Requests to these domains connect directly without using any proxy. Maximum 253 characters per pattern.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier to ensure that the API request completes no more than one time. If this token matches a previous request, Amazon Bedrock AgentCore ignores the request, but does not return an error. This parameter helps prevent the creation of duplicate sessions if there are temporary network issues.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'browserIdentifier': 'string',
+          'sessionId': 'string',
+          'createdAt': datetime(2015, 1, 1),
+          'streams': {
+              'automationStream': {
+                  'streamEndpoint': 'string',
+                  'streamStatus': 'ENABLED'|'DISABLED'
+              },
+              'liveViewStream': {
+                  'streamEndpoint': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **browserIdentifier** *(string) --* 
+
+        The identifier of the browser.
+
+        
+      
+
+      - **sessionId** *(string) --* 
+
+        The unique identifier of the created browser session.
+
+        
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The timestamp when the browser session was created.
+
+        
+      
+
+      - **streams** *(dict) --* 
+
+        The streams associated with this browser session. These include the automation stream and live view stream.
+
+        
+        
+
+        - **automationStream** *(dict) --* 
+
+          The stream that enables programmatic control of the browser. This stream allows agents to perform actions such as navigating to URLs, clicking elements, and filling forms.
+
+          
+          
+
+          - **streamEndpoint** *(string) --* 
+
+            The endpoint URL for the automation stream. This URL is used to establish a WebSocket connection to the stream for sending commands and receiving responses.
+
+            
+          
+
+          - **streamStatus** *(string) --* 
+
+            The current status of the automation stream. This indicates whether the stream is available for use. Possible values include ACTIVE, CONNECTING, and DISCONNECTED.
+
+            
+      
+        
+
+        - **liveViewStream** *(dict) --* 
+
+          The stream that provides a visual representation of the browser content. This stream allows agents to observe the current state of the browser, including rendered web pages and visual elements.
+
+          
+          
+
+          - **streamEndpoint** *(string) --* 
+
+            The endpoint URL for the live view stream. This URL is used to establish a connection to receive visual updates from the browser session.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.InternalServerException`
+
+  

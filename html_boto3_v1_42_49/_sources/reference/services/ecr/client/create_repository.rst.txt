@@ -1,0 +1,425 @@
+:doc:`ECR <../../ecr>` / Client / create_repository
+
+*****************
+create_repository
+*****************
+
+
+
+.. py:method:: ECR.Client.create_repository(**kwargs)
+
+  
+
+  Creates a repository. For more information, see `Amazon ECR repositories <https://docs.aws.amazon.com/AmazonECR/latest/userguide/Repositories.html>`__ in the *Amazon Elastic Container Registry User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ecr-2015-09-21/CreateRepository>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_repository(
+        registryId='string',
+        repositoryName='string',
+        tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        imageTagMutability='MUTABLE'|'IMMUTABLE'|'IMMUTABLE_WITH_EXCLUSION'|'MUTABLE_WITH_EXCLUSION',
+        imageTagMutabilityExclusionFilters=[
+            {
+                'filterType': 'WILDCARD',
+                'filter': 'string'
+            },
+        ],
+        imageScanningConfiguration={
+            'scanOnPush': True|False
+        },
+        encryptionConfiguration={
+            'encryptionType': 'AES256'|'KMS'|'KMS_DSSE',
+            'kmsKey': 'string'
+        }
+    )
+    
+  :type registryId: string
+  :param registryId: 
+
+    The Amazon Web Services account ID associated with the registry to create the repository. If you do not specify a registry, the default registry is assumed.
+
+    
+
+  
+  :type repositoryName: string
+  :param repositoryName: **[REQUIRED]** 
+
+    The name to use for the repository. The repository name may be specified on its own (such as ``nginx-web-app``) or it can be prepended with a namespace to group the repository into a category (such as ``project-a/nginx-web-app``).
+
+     
+
+    The repository name must start with a letter and can only contain lowercase letters, numbers, hyphens, underscores, and forward slashes.
+
+    
+
+  
+  :type tags: list
+  :param tags: 
+
+    The metadata that you apply to the repository to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define. Tag keys can have a maximum character length of 128 characters, and tag values can have a maximum length of 256 characters.
+
+    
+
+  
+    - *(dict) --* 
+
+      The metadata to apply to a resource to help you categorize and organize them. Each tag consists of a key and a value, both of which you define. Tag keys can have a maximum character length of 128 characters, and tag values can have a maximum length of 256 characters.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        A ``value`` acts as a descriptor within a tag category (key).
+
+        
+
+      
+    
+
+  :type imageTagMutability: string
+  :param imageTagMutability: 
+
+    The tag mutability setting for the repository. If this parameter is omitted, the default setting of ``MUTABLE`` will be used which will allow image tags to be overwritten. If ``IMMUTABLE`` is specified, all image tags within the repository will be immutable which will prevent them from being overwritten.
+
+    
+
+  
+  :type imageTagMutabilityExclusionFilters: list
+  :param imageTagMutabilityExclusionFilters: 
+
+    A list of filters that specify which image tags should be excluded from the repository's image tag mutability setting.
+
+    
+
+  
+    - *(dict) --* 
+
+      A filter that specifies which image tags should be excluded from the repository's image tag mutability setting.
+
+      
+
+    
+      - **filterType** *(string) --* **[REQUIRED]** 
+
+        The type of filter to apply for excluding image tags from mutability settings.
+
+        
+
+      
+      - **filter** *(string) --* **[REQUIRED]** 
+
+        The filter value used to match image tags for exclusion from mutability settings.
+
+        
+
+      
+    
+
+  :type imageScanningConfiguration: dict
+  :param imageScanningConfiguration: 
+
+    .. warning::
+
+      
+
+      The ``imageScanningConfiguration`` parameter is being deprecated, in favor of specifying the image scanning configuration at the registry level. For more information, see ``PutRegistryScanningConfiguration``.
+
+       
+
+     
+
+    The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.
+
+    
+
+  
+    - **scanOnPush** *(boolean) --* 
+
+      The setting that determines whether images are scanned after being pushed to a repository. If set to ``true``, images will be scanned after being pushed. If this parameter is not specified, it will default to ``false`` and images will not be scanned unless a scan is manually started with the `API_StartImageScan <https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_StartImageScan.html>`__ API.
+
+      
+
+    
+  
+  :type encryptionConfiguration: dict
+  :param encryptionConfiguration: 
+
+    The encryption configuration for the repository. This determines how the contents of your repository are encrypted at rest.
+
+    
+
+  
+    - **encryptionType** *(string) --* **[REQUIRED]** 
+
+      The encryption type to use.
+
+       
+
+      If you use the ``KMS`` encryption type, the contents of the repository will be encrypted using server-side encryption with Key Management Service key stored in KMS. When you use KMS to encrypt your data, you can either use the default Amazon Web Services managed KMS key for Amazon ECR, or specify your own KMS key, which you already created.
+
+       
+
+      If you use the ``KMS_DSSE`` encryption type, the contents of the repository will be encrypted with two layers of encryption using server-side encryption with the KMS Management Service key stored in KMS. Similar to the ``KMS`` encryption type, you can either use the default Amazon Web Services managed KMS key for Amazon ECR, or specify your own KMS key, which you've already created.
+
+       
+
+      If you use the ``AES256`` encryption type, Amazon ECR uses server-side encryption with Amazon S3-managed encryption keys which encrypts the images in the repository using an AES256 encryption algorithm.
+
+       
+
+      For more information, see `Amazon ECR encryption at rest <https://docs.aws.amazon.com/AmazonECR/latest/userguide/encryption-at-rest.html>`__ in the *Amazon Elastic Container Registry User Guide*.
+
+      
+
+    
+    - **kmsKey** *(string) --* 
+
+      If you use the ``KMS`` encryption type, specify the KMS key to use for encryption. The alias, key ID, or full ARN of the KMS key can be specified. The key must exist in the same Region as the repository. If no key is specified, the default Amazon Web Services managed KMS key for Amazon ECR will be used.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'repository': {
+              'repositoryArn': 'string',
+              'registryId': 'string',
+              'repositoryName': 'string',
+              'repositoryUri': 'string',
+              'createdAt': datetime(2015, 1, 1),
+              'imageTagMutability': 'MUTABLE'|'IMMUTABLE'|'IMMUTABLE_WITH_EXCLUSION'|'MUTABLE_WITH_EXCLUSION',
+              'imageTagMutabilityExclusionFilters': [
+                  {
+                      'filterType': 'WILDCARD',
+                      'filter': 'string'
+                  },
+              ],
+              'imageScanningConfiguration': {
+                  'scanOnPush': True|False
+              },
+              'encryptionConfiguration': {
+                  'encryptionType': 'AES256'|'KMS'|'KMS_DSSE',
+                  'kmsKey': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **repository** *(dict) --* 
+
+        The repository that was created.
+
+        
+        
+
+        - **repositoryArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) that identifies the repository. The ARN contains the ``arn:aws:ecr`` namespace, followed by the region of the repository, Amazon Web Services account ID of the repository owner, repository namespace, and repository name. For example, ``arn:aws:ecr:region:012345678910:repository-namespace/repository-name``.
+
+          
+        
+
+        - **registryId** *(string) --* 
+
+          The Amazon Web Services account ID associated with the registry that contains the repository.
+
+          
+        
+
+        - **repositoryName** *(string) --* 
+
+          The name of the repository.
+
+          
+        
+
+        - **repositoryUri** *(string) --* 
+
+          The URI for the repository. You can use this URI for container image ``push`` and ``pull`` operations.
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The date and time, in JavaScript date format, when the repository was created.
+
+          
+        
+
+        - **imageTagMutability** *(string) --* 
+
+          The tag mutability setting for the repository.
+
+          
+        
+
+        - **imageTagMutabilityExclusionFilters** *(list) --* 
+
+          A list of filters that specify which image tags are excluded from the repository's image tag mutability setting.
+
+          
+          
+
+          - *(dict) --* 
+
+            A filter that specifies which image tags should be excluded from the repository's image tag mutability setting.
+
+            
+            
+
+            - **filterType** *(string) --* 
+
+              The type of filter to apply for excluding image tags from mutability settings.
+
+              
+            
+
+            - **filter** *(string) --* 
+
+              The filter value used to match image tags for exclusion from mutability settings.
+
+              
+        
+      
+        
+
+        - **imageScanningConfiguration** *(dict) --* 
+
+          The image scanning configuration for a repository.
+
+          
+          
+
+          - **scanOnPush** *(boolean) --* 
+
+            The setting that determines whether images are scanned after being pushed to a repository. If set to ``true``, images will be scanned after being pushed. If this parameter is not specified, it will default to ``false`` and images will not be scanned unless a scan is manually started with the `API_StartImageScan <https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_StartImageScan.html>`__ API.
+
+            
+      
+        
+
+        - **encryptionConfiguration** *(dict) --* 
+
+          The encryption configuration for the repository. This determines how the contents of your repository are encrypted at rest.
+
+          
+          
+
+          - **encryptionType** *(string) --* 
+
+            The encryption type to use.
+
+             
+
+            If you use the ``KMS`` encryption type, the contents of the repository will be encrypted using server-side encryption with Key Management Service key stored in KMS. When you use KMS to encrypt your data, you can either use the default Amazon Web Services managed KMS key for Amazon ECR, or specify your own KMS key, which you already created.
+
+             
+
+            If you use the ``KMS_DSSE`` encryption type, the contents of the repository will be encrypted with two layers of encryption using server-side encryption with the KMS Management Service key stored in KMS. Similar to the ``KMS`` encryption type, you can either use the default Amazon Web Services managed KMS key for Amazon ECR, or specify your own KMS key, which you've already created.
+
+             
+
+            If you use the ``AES256`` encryption type, Amazon ECR uses server-side encryption with Amazon S3-managed encryption keys which encrypts the images in the repository using an AES256 encryption algorithm.
+
+             
+
+            For more information, see `Amazon ECR encryption at rest <https://docs.aws.amazon.com/AmazonECR/latest/userguide/encryption-at-rest.html>`__ in the *Amazon Elastic Container Registry User Guide*.
+
+            
+          
+
+          - **kmsKey** *(string) --* 
+
+            If you use the ``KMS`` encryption type, specify the KMS key to use for encryption. The alias, key ID, or full ARN of the KMS key can be specified. The key must exist in the same Region as the repository. If no key is specified, the default Amazon Web Services managed KMS key for Amazon ECR will be used.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ECR.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.InvalidTagParameterException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.TooManyTagsException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.RepositoryAlreadyExistsException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.KmsException`
+
+  
+
+  **Examples**
+
+  This example creates a repository called nginx-web-app inside the project-a namespace in the default registry for an account.
+  ::
+
+    response = client.create_repository(
+        repositoryName='project-a/nginx-web-app',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'repository': {
+            'registryId': '012345678901',
+            'repositoryArn': 'arn:aws:ecr:us-west-2:012345678901:repository/project-a/nginx-web-app',
+            'repositoryName': 'project-a/nginx-web-app',
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

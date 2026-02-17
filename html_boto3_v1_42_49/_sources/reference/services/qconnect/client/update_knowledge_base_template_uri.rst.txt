@@ -1,0 +1,622 @@
+:doc:`QConnect <../../qconnect>` / Client / update_knowledge_base_template_uri
+
+**********************************
+update_knowledge_base_template_uri
+**********************************
+
+
+
+.. py:method:: QConnect.Client.update_knowledge_base_template_uri(**kwargs)
+
+  
+
+  Updates the template URI of a knowledge base. This is only supported for knowledge bases of type EXTERNAL. Include a single variable in ``${variable}`` format; this interpolated by Amazon Q in Connect using ingested content. For example, if you ingest a Salesforce article, it has an ``Id`` value, and you can set the template URI to ``https://myInstanceName.lightning.force.com/lightning/r/Knowledge__kav/*${Id}*/view``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/qconnect-2020-10-19/UpdateKnowledgeBaseTemplateUri>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_knowledge_base_template_uri(
+        knowledgeBaseId='string',
+        templateUri='string'
+    )
+    
+  :type knowledgeBaseId: string
+  :param knowledgeBaseId: **[REQUIRED]** 
+
+    The identifier of the knowledge base. This should not be a QUICK_RESPONSES type knowledge base. Can be either the ID or the ARN. URLs cannot contain the ARN.
+
+    
+
+  
+  :type templateUri: string
+  :param templateUri: **[REQUIRED]** 
+
+    The template URI to update.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'knowledgeBase': {
+              'knowledgeBaseId': 'string',
+              'knowledgeBaseArn': 'string',
+              'name': 'string',
+              'knowledgeBaseType': 'EXTERNAL'|'CUSTOM'|'QUICK_RESPONSES'|'MESSAGE_TEMPLATES'|'MANAGED',
+              'status': 'CREATE_IN_PROGRESS'|'CREATE_FAILED'|'ACTIVE'|'DELETE_IN_PROGRESS'|'DELETE_FAILED'|'DELETED',
+              'lastContentModificationTime': datetime(2015, 1, 1),
+              'vectorIngestionConfiguration': {
+                  'chunkingConfiguration': {
+                      'chunkingStrategy': 'FIXED_SIZE'|'NONE'|'HIERARCHICAL'|'SEMANTIC',
+                      'fixedSizeChunkingConfiguration': {
+                          'maxTokens': 123,
+                          'overlapPercentage': 123
+                      },
+                      'hierarchicalChunkingConfiguration': {
+                          'levelConfigurations': [
+                              {
+                                  'maxTokens': 123
+                              },
+                          ],
+                          'overlapTokens': 123
+                      },
+                      'semanticChunkingConfiguration': {
+                          'maxTokens': 123,
+                          'bufferSize': 123,
+                          'breakpointPercentileThreshold': 123
+                      }
+                  },
+                  'parsingConfiguration': {
+                      'parsingStrategy': 'BEDROCK_FOUNDATION_MODEL',
+                      'bedrockFoundationModelConfiguration': {
+                          'modelArn': 'string',
+                          'parsingPrompt': {
+                              'parsingPromptText': 'string'
+                          }
+                      }
+                  }
+              },
+              'sourceConfiguration': {
+                  'appIntegrations': {
+                      'appIntegrationArn': 'string',
+                      'objectFields': [
+                          'string',
+                      ]
+                  },
+                  'managedSourceConfiguration': {
+                      'webCrawlerConfiguration': {
+                          'urlConfiguration': {
+                              'seedUrls': [
+                                  {
+                                      'url': 'string'
+                                  },
+                              ]
+                          },
+                          'crawlerLimits': {
+                              'rateLimit': 123
+                          },
+                          'inclusionFilters': [
+                              'string',
+                          ],
+                          'exclusionFilters': [
+                              'string',
+                          ],
+                          'scope': 'HOST_ONLY'|'SUBDOMAINS'
+                      }
+                  }
+              },
+              'renderingConfiguration': {
+                  'templateUri': 'string'
+              },
+              'serverSideEncryptionConfiguration': {
+                  'kmsKeyId': 'string'
+              },
+              'description': 'string',
+              'tags': {
+                  'string': 'string'
+              },
+              'ingestionStatus': 'SYNC_FAILED'|'SYNCING_IN_PROGRESS'|'SYNC_SUCCESS'|'CREATE_IN_PROGRESS',
+              'ingestionFailureReasons': [
+                  'string',
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **knowledgeBase** *(dict) --* 
+
+        The knowledge base to update.
+
+        
+        
+
+        - **knowledgeBaseId** *(string) --* 
+
+          The identifier of the knowledge base.
+
+          
+        
+
+        - **knowledgeBaseArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the knowledge base.
+
+          
+        
+
+        - **name** *(string) --* 
+
+          The name of the knowledge base.
+
+          
+        
+
+        - **knowledgeBaseType** *(string) --* 
+
+          The type of knowledge base.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The status of the knowledge base.
+
+          
+        
+
+        - **lastContentModificationTime** *(datetime) --* 
+
+          An epoch timestamp indicating the most recent content modification inside the knowledge base. If no content exists in a knowledge base, this value is unset.
+
+          
+        
+
+        - **vectorIngestionConfiguration** *(dict) --* 
+
+          Contains details about how to ingest the documents in a data source.
+
+          
+          
+
+          - **chunkingConfiguration** *(dict) --* 
+
+            Details about how to chunk the documents in the data source. A chunk refers to an excerpt from a data source that is returned when the knowledge base that it belongs to is queried.
+
+            
+            
+
+            - **chunkingStrategy** *(string) --* 
+
+              Knowledge base can split your source data into chunks. A chunk refers to an excerpt from a data source that is returned when the knowledge base that it belongs to is queried. You have the following options for chunking your data. If you opt for ``NONE``, then you may want to pre-process your files by splitting them up such that each file corresponds to a chunk.
+
+              
+            
+
+            - **fixedSizeChunkingConfiguration** *(dict) --* 
+
+              Configurations for when you choose fixed-size chunking. If you set the ``chunkingStrategy`` as ``NONE``, exclude this field.
+
+              
+              
+
+              - **maxTokens** *(integer) --* 
+
+                The maximum number of tokens to include in a chunk.
+
+                
+              
+
+              - **overlapPercentage** *(integer) --* 
+
+                The percentage of overlap between adjacent chunks of a data source.
+
+                
+          
+            
+
+            - **hierarchicalChunkingConfiguration** *(dict) --* 
+
+              Settings for hierarchical document chunking for a data source. Hierarchical chunking splits documents into layers of chunks where the first layer contains large chunks, and the second layer contains smaller chunks derived from the first layer.
+
+              
+              
+
+              - **levelConfigurations** *(list) --* 
+
+                Token settings for each layer.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Token settings for each layer.
+
+                  
+                  
+
+                  - **maxTokens** *(integer) --* 
+
+                    The maximum number of tokens that a chunk can contain in this layer.
+
+                    
+              
+            
+              
+
+              - **overlapTokens** *(integer) --* 
+
+                The number of tokens to repeat across chunks in the same layer.
+
+                
+          
+            
+
+            - **semanticChunkingConfiguration** *(dict) --* 
+
+              Settings for semantic document chunking for a data source. Semantic chunking splits a document into smaller documents based on groups of similar content derived from the text with natural language processing.
+
+              
+              
+
+              - **maxTokens** *(integer) --* 
+
+                The maximum number of tokens that a chunk can contain.
+
+                
+              
+
+              - **bufferSize** *(integer) --* 
+
+                The buffer size.
+
+                
+              
+
+              - **breakpointPercentileThreshold** *(integer) --* 
+
+                The dissimilarity threshold for splitting chunks.
+
+                
+          
+        
+          
+
+          - **parsingConfiguration** *(dict) --* 
+
+            A custom parser for data source documents.
+
+            
+            
+
+            - **parsingStrategy** *(string) --* 
+
+              The parsing strategy for the data source.
+
+              
+            
+
+            - **bedrockFoundationModelConfiguration** *(dict) --* 
+
+              Settings for a foundation model used to parse documents for a data source.
+
+              
+              
+
+              - **modelArn** *(string) --* 
+
+                The ARN of the foundation model.
+
+                
+              
+
+              - **parsingPrompt** *(dict) --* 
+
+                Instructions for interpreting the contents of a document.
+
+                
+                
+
+                - **parsingPromptText** *(string) --* 
+
+                  Instructions for interpreting the contents of a document.
+
+                  
+            
+          
+        
+      
+        
+
+        - **sourceConfiguration** *(dict) --* 
+
+          Source configuration information about the knowledge base.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``appIntegrations``, ``managedSourceConfiguration``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+        
+          
+
+          - **appIntegrations** *(dict) --* 
+
+            Configuration information for Amazon AppIntegrations to automatically ingest content.
+
+            
+            
+
+            - **appIntegrationArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the AppIntegrations DataIntegration to use for ingesting content.
+
+               
+
+              
+              * For `Salesforce <https://developer.salesforce.com/docs/atlas.en-us.knowledge_dev.meta/knowledge_dev/sforce_api_objects_knowledge__kav.htm>`__, your AppIntegrations DataIntegration must have an ObjectConfiguration if objectFields is not provided, including at least ``Id``, ``ArticleNumber``, ``VersionNumber``, ``Title``, ``PublishStatus``, and ``IsDeleted`` as source fields.
+               
+              * For `ServiceNow <https://developer.servicenow.com/dev.do#!/reference/api/rome/rest/knowledge-management-api>`__, your AppIntegrations DataIntegration must have an ObjectConfiguration if objectFields is not provided, including at least ``number``, ``short_description``, ``sys_mod_count``, ``workflow_state``, and ``active`` as source fields.
+               
+              * For `Zendesk <https://developer.zendesk.com/api-reference/help_center/help-center-api/articles/>`__, your AppIntegrations DataIntegration must have an ObjectConfiguration if ``objectFields`` is not provided, including at least ``id``, ``title``, ``updated_at``, and ``draft`` as source fields.
+               
+              * For `SharePoint <https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/sharepoint-net-server-csom-jsom-and-rest-api-index>`__, your AppIntegrations DataIntegration must have a FileConfiguration, including only file extensions that are among ``docx``, ``pdf``, ``html``, ``htm``, and ``txt``.
+               
+              * For `Amazon S3 <http://aws.amazon.com/s3/>`__, the ObjectConfiguration and FileConfiguration of your AppIntegrations DataIntegration must be null. The ``SourceURI`` of your DataIntegration must use the following format: ``s3://your_s3_bucket_name``. 
+
+              .. warning::
+
+                The bucket policy of the corresponding S3 bucket must allow the Amazon Web Services principal ``app-integrations.amazonaws.com`` to perform ``s3:ListBucket``, ``s3:GetObject``, and ``s3:GetBucketLocation`` against the bucket.
+
+              
+              
+
+              
+            
+
+            - **objectFields** *(list) --* 
+
+              The fields from the source that are made available to your agents in Amazon Q in Connect. Optional if ObjectConfiguration is included in the provided DataIntegration.
+
+               
+
+              
+              * For `Salesforce <https://developer.salesforce.com/docs/atlas.en-us.knowledge_dev.meta/knowledge_dev/sforce_api_objects_knowledge__kav.htm>`__, you must include at least ``Id``, ``ArticleNumber``, ``VersionNumber``, ``Title``, ``PublishStatus``, and ``IsDeleted``.
+               
+              * For `ServiceNow <https://developer.servicenow.com/dev.do#!/reference/api/rome/rest/knowledge-management-api>`__, you must include at least ``number``, ``short_description``, ``sys_mod_count``, ``workflow_state``, and ``active``.
+               
+              * For `Zendesk <https://developer.zendesk.com/api-reference/help_center/help-center-api/articles/>`__, you must include at least ``id``, ``title``, ``updated_at``, and ``draft``.
+              
+
+               
+
+              Make sure to include additional fields. These fields are indexed and used to source recommendations.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **managedSourceConfiguration** *(dict) --* 
+
+            Source configuration for managed resources.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``webCrawlerConfiguration``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **webCrawlerConfiguration** *(dict) --* 
+
+              Configuration data for web crawler data source.
+
+              
+              
+
+              - **urlConfiguration** *(dict) --* 
+
+                The configuration of the URL/URLs for the web content that you want to crawl. You should be authorized to crawl the URLs.
+
+                
+                
+
+                - **seedUrls** *(list) --* 
+
+                  List of URLs for crawling.
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    A URL for crawling.
+
+                    
+                    
+
+                    - **url** *(string) --* 
+
+                      URL for crawling
+
+                      
+                
+              
+            
+              
+
+              - **crawlerLimits** *(dict) --* 
+
+                The configuration of crawl limits for the web URLs.
+
+                
+                
+
+                - **rateLimit** *(integer) --* 
+
+                  Rate of web URLs retrieved per minute.
+
+                  
+            
+              
+
+              - **inclusionFilters** *(list) --* 
+
+                A list of one or more inclusion regular expression patterns to include certain URLs. If you specify an inclusion and exclusion filter/pattern and both match a URL, the exclusion filter takes precedence and the web content of the URL isn’t crawled.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **exclusionFilters** *(list) --* 
+
+                A list of one or more exclusion regular expression patterns to exclude certain URLs. If you specify an inclusion and exclusion filter/pattern and both match a URL, the exclusion filter takes precedence and the web content of the URL isn’t crawled.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **scope** *(string) --* 
+
+                The scope of what is crawled for your URLs. You can choose to crawl only web pages that belong to the same host or primary domain. For example, only web pages that contain the seed URL ``https://docs.aws.amazon.com/bedrock/latest/userguide/`` and no other domains. You can choose to include sub domains in addition to the host or primary domain. For example, web pages that contain ``aws.amazon.com`` can also include sub domain ``docs.aws.amazon.com``.
+
+                
+          
+        
+      
+        
+
+        - **renderingConfiguration** *(dict) --* 
+
+          Information about how to render the content.
+
+          
+          
+
+          - **templateUri** *(string) --* 
+
+            A URI template containing exactly one variable in ``${variableName} ``format. This can only be set for ``EXTERNAL`` knowledge bases. For Salesforce, ServiceNow, and Zendesk, the variable must be one of the following:
+
+             
+
+            
+            * Salesforce: ``Id``, ``ArticleNumber``, ``VersionNumber``, ``Title``, ``PublishStatus``, or ``IsDeleted``
+             
+            * ServiceNow: ``number``, ``short_description``, ``sys_mod_count``, ``workflow_state``, or ``active``
+             
+            * Zendesk: ``id``, ``title``, ``updated_at``, or ``draft``
+            
+
+             
+
+            The variable is replaced with the actual value for a piece of content when calling `GetContent <https://docs.aws.amazon.com/amazon-q-connect/latest/APIReference/API_GetContent.html>`__.
+
+            
+      
+        
+
+        - **serverSideEncryptionConfiguration** *(dict) --* 
+
+          The configuration information for the customer managed key used for encryption.
+
+           
+
+          This KMS key must have a policy that allows ``kms:CreateGrant``, ``kms:DescribeKey``, ``kms:Decrypt``, and ``kms:GenerateDataKey*`` permissions to the IAM identity using the key to invoke Amazon Q in Connect.
+
+           
+
+          For more information about setting up a customer managed key for Amazon Q in Connect, see `Enable Amazon Q in Connect for your instance <https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html>`__.
+
+          
+          
+
+          - **kmsKeyId** *(string) --* 
+
+            The customer managed key used for encryption. For more information about setting up a customer managed key for Amazon Q in Connect, see `Enable Amazon Q in Connect for your instance <https://docs.aws.amazon.com/connect/latest/adminguide/enable-q.html>`__. For information about valid ID values, see `Key identifiers (KeyId) <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id>`__.
+
+            
+      
+        
+
+        - **description** *(string) --* 
+
+          The description.
+
+          
+        
+
+        - **tags** *(dict) --* 
+
+          The tags used to organize, track, or control access for this resource.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **ingestionStatus** *(string) --* 
+
+          Status of ingestion on data source.
+
+          
+        
+
+        - **ingestionFailureReasons** *(list) --* 
+
+          List of failure reasons on ingestion per file.
+
+          
+          
+
+          - *(string) --* 
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`QConnect.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`QConnect.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`QConnect.Client.exceptions.ResourceNotFoundException`
+
+  

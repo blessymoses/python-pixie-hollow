@@ -1,0 +1,289 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / import_stacks_to_stack_set
+
+**************************
+import_stacks_to_stack_set
+**************************
+
+
+
+.. py:method:: CloudFormation.Client.import_stacks_to_stack_set(**kwargs)
+
+  
+
+  Import existing stacks into a new StackSets. Use the stack import operation to import up to 10 stacks into a new StackSet in the same account as the source stack or in a different administrator account and Region, by specifying the stack ID of the stack you intend to import.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/ImportStacksToStackSet>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.import_stacks_to_stack_set(
+        StackSetName='string',
+        StackIds=[
+            'string',
+        ],
+        StackIdsUrl='string',
+        OrganizationalUnitIds=[
+            'string',
+        ],
+        OperationPreferences={
+            'RegionConcurrencyType': 'SEQUENTIAL'|'PARALLEL',
+            'RegionOrder': [
+                'string',
+            ],
+            'FailureToleranceCount': 123,
+            'FailureTolerancePercentage': 123,
+            'MaxConcurrentCount': 123,
+            'MaxConcurrentPercentage': 123,
+            'ConcurrencyMode': 'STRICT_FAILURE_TOLERANCE'|'SOFT_FAILURE_TOLERANCE'
+        },
+        OperationId='string',
+        CallAs='SELF'|'DELEGATED_ADMIN'
+    )
+    
+  :type StackSetName: string
+  :param StackSetName: **[REQUIRED]** 
+
+    The name of the StackSet. The name must be unique in the Region where you create your StackSet.
+
+    
+
+  
+  :type StackIds: list
+  :param StackIds: 
+
+    The IDs of the stacks you are importing into a StackSet. You import up to 10 stacks per StackSet at a time.
+
+     
+
+    Specify either ``StackIds`` or ``StackIdsUrl``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type StackIdsUrl: string
+  :param StackIdsUrl: 
+
+    The Amazon S3 URL which contains list of stack ids to be inputted.
+
+     
+
+    Specify either ``StackIds`` or ``StackIdsUrl``.
+
+    
+
+  
+  :type OrganizationalUnitIds: list
+  :param OrganizationalUnitIds: 
+
+    The list of OU ID's to which the imported stacks must be mapped as deployment targets.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type OperationPreferences: dict
+  :param OperationPreferences: 
+
+    The user-specified preferences for how CloudFormation performs a StackSet operation.
+
+     
+
+    For more information about maximum concurrent accounts and failure tolerance, see `StackSet operation options <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html#stackset-ops-options>`__.
+
+    
+
+  
+    - **RegionConcurrencyType** *(string) --* 
+
+      The concurrency type of deploying StackSets operations in Regions, could be in parallel or one Region at a time.
+
+      
+
+    
+    - **RegionOrder** *(list) --* 
+
+      The order of the Regions where you want to perform the stack operation.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **FailureToleranceCount** *(integer) --* 
+
+      The number of accounts per Region this operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **FailureTolerancePercentage** *(integer) --* 
+
+      The percentage of accounts per Region this stack operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds *down* to the next whole number.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **MaxConcurrentCount** *(integer) --* 
+
+      The maximum number of accounts in which to perform this operation at one time. This can depend on the value of ``FailureToleranceCount`` depending on your ``ConcurrencyMode``. ``MaxConcurrentCount`` is at most one more than the ``FailureToleranceCount`` if you're using ``STRICT_FAILURE_TOLERANCE``.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **MaxConcurrentPercentage** *(integer) --* 
+
+      The maximum percentage of accounts in which to perform this operation at one time.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds down to the next whole number. This is true except in cases where rounding down would result is zero. In this case, CloudFormation sets the number as one instead.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **ConcurrencyMode** *(string) --* 
+
+      Specifies how the concurrency level behaves during the operation execution.
+
+       
+
+      
+      * ``STRICT_FAILURE_TOLERANCE``: This option dynamically lowers the concurrency level to ensure the number of failed accounts never exceeds the value of ``FailureToleranceCount`` +1. The initial actual concurrency is set to the lower of either the value of the ``MaxConcurrentCount``, or the value of ``FailureToleranceCount`` +1. The actual concurrency is then reduced proportionally by the number of failures. This is the default behavior. If failure tolerance or Maximum concurrent accounts are set to percentages, the behavior is similar.
+       
+      * ``SOFT_FAILURE_TOLERANCE``: This option decouples ``FailureToleranceCount`` from the actual concurrency. This allows StackSet operations to run at the concurrency level set by the ``MaxConcurrentCount`` value, or ``MaxConcurrentPercentage``, regardless of the number of failures.
+      
+
+      
+
+    
+  
+  :type OperationId: string
+  :param OperationId: 
+
+    A unique, user defined, identifier for the StackSet operation.
+
+    This field is autopopulated if not provided.
+
+  
+  :type CallAs: string
+  :param CallAs: 
+
+    By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+     
+
+    
+    * If you are signed in to the management account, specify ``SELF``.
+     
+    * For service managed StackSets, specify ``DELEGATED_ADMIN``.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'OperationId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **OperationId** *(string) --* 
+
+        The unique identifier for the StackSet operation.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackSetNotFoundException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.InvalidOperationException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationInProgressException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationIdAlreadyExistsException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackNotFoundException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StaleRequestException`
+
+  

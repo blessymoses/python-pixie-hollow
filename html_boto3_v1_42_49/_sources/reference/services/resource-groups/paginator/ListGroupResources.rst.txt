@@ -1,0 +1,321 @@
+:doc:`ResourceGroups <../../resource-groups>` / Paginator / ListGroupResources
+
+******************
+ListGroupResources
+******************
+
+
+
+.. py:class:: ResourceGroups.Paginator.ListGroupResources
+
+  ::
+
+    
+    paginator = client.get_paginator('list_group_resources')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`ResourceGroups.Client.list_group_resources`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/resource-groups-2017-11-27/ListGroupResources>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          GroupName='string',
+          Group='string',
+          Filters=[
+              {
+                  'Name': 'resource-type',
+                  'Values': [
+                      'string',
+                  ]
+              },
+          ],
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type GroupName: string
+    :param GroupName: 
+
+      .. warning::
+
+        
+
+        Deprecated - don't use this parameter. Use the ``Group`` request field instead.
+
+        
+
+      
+
+    
+    :type Group: string
+    :param Group: 
+
+      The name or the Amazon resource name (ARN) of the resource group.
+
+      
+
+    
+    :type Filters: list
+    :param Filters: 
+
+      Filters, formatted as  ResourceFilter objects, that you want to apply to a ``ListGroupResources`` operation. Filters the results to include only those of the specified resource types.
+
+       
+
+      
+      * ``resource-type`` - Filter resources by their type. Specify up to five resource types in the format ``AWS::ServiceCode::ResourceType``. For example, ``AWS::EC2::Instance``, or ``AWS::S3::Bucket``.
+      
+
+       
+
+      When you specify a ``resource-type`` filter for ``ListGroupResources``, Resource Groups validates your filter resource types against the types that are defined in the query associated with the group. For example, if a group contains only S3 buckets because its query specifies only that resource type, but your ``resource-type`` filter includes EC2 instances, AWS Resource Groups does not filter for EC2 instances. In this case, a ``ListGroupResources`` request returns a ``BadRequestException`` error with a message similar to the following:
+
+       
+
+      ``The resource types specified as filters in the request are not valid.``
+
+       
+
+      The error includes a list of resource types that failed the validation because they are not part of the query associated with the group. This validation doesn't occur when the group query specifies ``AWS::AllSupported``, because a group based on such a query can contain any of the allowed resource types for the query type (tag-based or Amazon CloudFront stack-based queries).
+
+      
+
+    
+      - *(dict) --* 
+
+        A filter name and value pair that is used to obtain more specific results from a list of resources.
+
+        
+
+      
+        - **Name** *(string) --* **[REQUIRED]** 
+
+          The name of the filter. Filter names are case-sensitive.
+
+          
+
+        
+        - **Values** *(list) --* **[REQUIRED]** 
+
+          One or more filter values. Allowed filter values vary by resource filter name, and are case-sensitive.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+  
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'Resources': [
+                {
+                    'Identifier': {
+                        'ResourceArn': 'string',
+                        'ResourceType': 'string'
+                    },
+                    'Status': {
+                        'Name': 'PENDING'
+                    }
+                },
+            ],
+            'ResourceIdentifiers': [
+                {
+                    'ResourceArn': 'string',
+                    'ResourceType': 'string'
+                },
+            ],
+            'QueryErrors': [
+                {
+                    'ErrorCode': 'CLOUDFORMATION_STACK_INACTIVE'|'CLOUDFORMATION_STACK_NOT_EXISTING'|'CLOUDFORMATION_STACK_UNASSUMABLE_ROLE'|'RESOURCE_TYPE_NOT_SUPPORTED',
+                    'Message': 'string'
+                },
+            ]
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **Resources** *(list) --* 
+
+          An array of resources from which you can determine each resource's identity, type, and group membership status.
+
+          
+          
+
+          - *(dict) --* 
+
+            A structure returned by the  ListGroupResources operation that contains identity and group membership status information for one of the resources in the group.
+
+            
+            
+
+            - **Identifier** *(dict) --* 
+
+              A structure that contains the ARN of a resource and its resource type.
+
+              
+              
+
+              - **ResourceArn** *(string) --* 
+
+                The Amazon resource name (ARN) of a resource.
+
+                
+              
+
+              - **ResourceType** *(string) --* 
+
+                The resource type of a resource, such as ``AWS::EC2::Instance``.
+
+                
+          
+            
+
+            - **Status** *(dict) --* 
+
+              A structure that contains the status of this resource's membership in the group.
+
+               
+
+              .. note::
+
+                
+
+                This field is present in the response only if the group is of type ``AWS::EC2::HostManagement``.
+
+                
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The current status.
+
+                
+          
+        
+      
+        
+
+        - **ResourceIdentifiers** *(list) --* 
+
+          .. warning::
+
+            
+
+            Deprecated - don't use this parameter. Use the ``Resources`` response field instead.
+
+            
+
+          
+          
+
+          - *(dict) --* 
+
+            A structure that contains the ARN of a resource and its resource type.
+
+            
+            
+
+            - **ResourceArn** *(string) --* 
+
+              The Amazon resource name (ARN) of a resource.
+
+              
+            
+
+            - **ResourceType** *(string) --* 
+
+              The resource type of a resource, such as ``AWS::EC2::Instance``.
+
+              
+        
+      
+        
+
+        - **QueryErrors** *(list) --* 
+
+          A list of ``QueryError`` objects. Each error contains an ``ErrorCode`` and ``Message``. Possible values for ErrorCode are ``CLOUDFORMATION_STACK_INACTIVE``, ``CLOUDFORMATION_STACK_NOT_EXISTING``, ``CLOUDFORMATION_STACK_UNASSUMABLE_ROLE`` and ``RESOURCE_TYPE_NOT_SUPPORTED``.
+
+          
+          
+
+          - *(dict) --* 
+
+            A two-part error structure that can occur in ``ListGroupResources`` or ``SearchResources``.
+
+            
+            
+
+            - **ErrorCode** *(string) --* 
+
+              Specifies the error code that was raised.
+
+              
+            
+
+            - **Message** *(string) --* 
+
+              A message that explains the ``ErrorCode``.
+
+              
+        
+      
+    

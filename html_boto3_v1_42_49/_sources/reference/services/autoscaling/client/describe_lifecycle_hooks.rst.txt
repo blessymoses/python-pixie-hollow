@@ -1,0 +1,207 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / describe_lifecycle_hooks
+
+************************
+describe_lifecycle_hooks
+************************
+
+
+
+.. py:method:: AutoScaling.Client.describe_lifecycle_hooks(**kwargs)
+
+  
+
+  Gets information about the lifecycle hooks for the specified Auto Scaling group.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DescribeLifecycleHooks>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_lifecycle_hooks(
+        AutoScalingGroupName='string',
+        LifecycleHookNames=[
+            'string',
+        ]
+    )
+    
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: **[REQUIRED]** 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type LifecycleHookNames: list
+  :param LifecycleHookNames: 
+
+    The names of one or more lifecycle hooks. If you omit this property, all lifecycle hooks are described.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'LifecycleHooks': [
+              {
+                  'LifecycleHookName': 'string',
+                  'AutoScalingGroupName': 'string',
+                  'LifecycleTransition': 'string',
+                  'NotificationTargetARN': 'string',
+                  'RoleARN': 'string',
+                  'NotificationMetadata': 'string',
+                  'HeartbeatTimeout': 123,
+                  'GlobalTimeout': 123,
+                  'DefaultResult': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **LifecycleHooks** *(list) --* 
+
+        The lifecycle hooks for the specified group.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a lifecycle hook. A lifecycle hook lets you create solutions that are aware of events in the Auto Scaling instance lifecycle, and then perform a custom action on instances when the corresponding lifecycle event occurs.
+
+          
+          
+
+          - **LifecycleHookName** *(string) --* 
+
+            The name of the lifecycle hook.
+
+            
+          
+
+          - **AutoScalingGroupName** *(string) --* 
+
+            The name of the Auto Scaling group for the lifecycle hook.
+
+            
+          
+
+          - **LifecycleTransition** *(string) --* 
+
+            The lifecycle transition.
+
+             
+
+            Valid values: ``autoscaling:EC2_INSTANCE_LAUNCHING`` | ``autoscaling:EC2_INSTANCE_TERMINATING``
+
+            
+          
+
+          - **NotificationTargetARN** *(string) --* 
+
+            The ARN of the target that Amazon EC2 Auto Scaling sends notifications to when an instance is in a wait state for the lifecycle hook.
+
+            
+          
+
+          - **RoleARN** *(string) --* 
+
+            The ARN of the IAM role that allows the Auto Scaling group to publish to the specified notification target (an Amazon SNS topic or an Amazon SQS queue).
+
+            
+          
+
+          - **NotificationMetadata** *(string) --* 
+
+            Additional information that is included any time Amazon EC2 Auto Scaling sends a message to the notification target.
+
+            
+          
+
+          - **HeartbeatTimeout** *(integer) --* 
+
+            The maximum time, in seconds, that can elapse before the lifecycle hook times out. If the lifecycle hook times out, Amazon EC2 Auto Scaling performs the action that you specified in the ``DefaultResult`` property.
+
+            
+          
+
+          - **GlobalTimeout** *(integer) --* 
+
+            The maximum time, in seconds, that an instance can remain in a wait state. The maximum is 172800 seconds (48 hours) or 100 times ``HeartbeatTimeout``, whichever is smaller.
+
+            
+          
+
+          - **DefaultResult** *(string) --* 
+
+            The action the Auto Scaling group takes when the lifecycle hook timeout elapses or if an unexpected failure occurs.
+
+             
+
+            Valid values: ``CONTINUE`` | ``ABANDON``
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+
+  **Examples**
+
+  This example describes the lifecycle hooks for the specified Auto Scaling group.
+  ::
+
+    response = client.describe_lifecycle_hooks(
+        AutoScalingGroupName='my-auto-scaling-group',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'LifecycleHooks': [
+            {
+                'AutoScalingGroupName': 'my-auto-scaling-group',
+                'DefaultResult': 'ABANDON',
+                'GlobalTimeout': 172800,
+                'HeartbeatTimeout': 3600,
+                'LifecycleHookName': 'my-lifecycle-hook',
+                'LifecycleTransition': 'autoscaling:EC2_INSTANCE_LAUNCHING',
+                'NotificationTargetARN': 'arn:aws:sns:us-west-2:123456789012:my-sns-topic',
+                'RoleARN': 'arn:aws:iam::123456789012:role/my-auto-scaling-role',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

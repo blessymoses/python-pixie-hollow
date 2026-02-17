@@ -1,0 +1,1437 @@
+:doc:`DataZone <../../datazone>` / Client / search
+
+******
+search
+******
+
+
+
+.. py:method:: DataZone.Client.search(**kwargs)
+
+  
+
+  Searches for assets in Amazon DataZone.
+
+   
+
+  Search in Amazon DataZone is a powerful capability that enables users to discover and explore data assets, glossary terms, and data products across their organization. It provides both basic and advanced search functionality, allowing users to find resources based on names, descriptions, metadata, and other attributes. Search can be scoped to specific types of resources (like assets, glossary terms, or data products) and can be filtered using various criteria such as creation date, owner, or status. The search functionality is essential for making the wealth of data resources in an organization discoverable and usable, helping users find the right data for their needs quickly and efficiently.
+
+   
+
+  Many search commands in Amazon DataZone are paginated, including ``search`` and ``search-types``. When the result set is large, Amazon DataZone returns a ``nextToken`` in the response. This token can be used to retrieve the next page of results.
+
+   
+
+  Prerequisites:
+
+   
+
+  
+  * The --domain-identifier must refer to an existing Amazon DataZone domain.
+   
+  * --search-scope must be one of: ASSET, GLOSSARY_TERM, DATA_PRODUCT, or GLOSSARY.
+   
+  * The user must have search permissions in the specified domain.
+   
+  * If using --filters, ensure that the JSON is well-formed and that each filter includes valid attribute and value keys.
+   
+  * For paginated results, be prepared to use --next-token to fetch additional pages.
+  
+
+   
+
+  To run a standard free-text search, the ``searchText`` parameter must be supplied. By default, all searchable fields are indexed for semantic search and will return semantic matches for SearchListings queries. To prevent semantic search indexing for a custom form attribute, see the `CreateFormType API documentation <https://docs.aws.amazon.com/datazone/latest/APIReference/API_CreateFormType.html>`__. To run a lexical search query, enclose the query with double quotes (""). This will disable semantic search even for fields that have semantic search enabled and will only return results that contain the keywords wrapped by double quotes (order of tokens in the query is not enforced). Free-text search is supported for all attributes annotated with @amazon.datazone#searchable.
+
+   
+
+  To run a filtered search, provide filter clause using the ``filters`` parameter. To filter on glossary terms, use the special attribute ``__DataZoneGlossaryTerms``. To filter on an indexed numeric attribute (i.e., a numeric attribute annotated with ``@amazon.datazone#sortable``), provide a filter using the ``intValue`` parameter. The filters parameter can also be used to run more advanced free-text searches that target specific attributes (attributes must be annotated with ``@amazon.datazone#searchable`` for free-text search). Create/update timestamp filtering is supported using the special ``creationTime``/ ``lastUpdatedTime`` attributes. Filter types can be mixed and matched to power complex queries.
+
+   
+
+  To find out whether an attribute has been annotated and indexed for a given search type, use the GetFormType API to retrieve the form containing the attribute.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/datazone-2018-05-10/Search>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.search(
+        domainIdentifier='string',
+        owningProjectIdentifier='string',
+        maxResults=123,
+        nextToken='string',
+        searchScope='ASSET'|'GLOSSARY'|'GLOSSARY_TERM'|'DATA_PRODUCT',
+        searchText='string',
+        searchIn=[
+            {
+                'attribute': 'string'
+            },
+        ],
+        filters={
+            'filter': {
+                'attribute': 'string',
+                'value': 'string',
+                'intValue': 123,
+                'operator': 'EQ'|'LE'|'LT'|'GE'|'GT'|'TEXT_SEARCH'
+            },
+            'and': [
+                {'... recursive ...'},
+            ],
+            'or': [
+                {'... recursive ...'},
+            ]
+        },
+        sort={
+            'attribute': 'string',
+            'order': 'ASCENDING'|'DESCENDING'
+        },
+        additionalAttributes=[
+            'FORMS'|'TIME_SERIES_DATA_POINT_FORMS'|'TEXT_MATCH_RATIONALE',
+        ]
+    )
+    
+  :type domainIdentifier: string
+  :param domainIdentifier: **[REQUIRED]** 
+
+    The identifier of the Amazon DataZone domain.
+
+    
+
+  
+  :type owningProjectIdentifier: string
+  :param owningProjectIdentifier: 
+
+    The identifier of the owning project specified for the search.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of results to return in a single call to ``Search``. When the number of results to be listed is greater than the value of ``MaxResults``, the response contains a ``NextToken`` value that you can use in a subsequent call to ``Search`` to list the next set of results.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    When the number of results is greater than the default value for the ``MaxResults`` parameter, or if you explicitly specify a value for ``MaxResults`` that is less than the number of results, the response includes a pagination token named ``NextToken``. You can specify this ``NextToken`` value in a subsequent call to ``Search`` to list the next set of results.
+
+    
+
+  
+  :type searchScope: string
+  :param searchScope: **[REQUIRED]** 
+
+    The scope of the search.
+
+    
+
+  
+  :type searchText: string
+  :param searchText: 
+
+    Specifies the text for which to search.
+
+    
+
+  
+  :type searchIn: list
+  :param searchIn: 
+
+    The details of the search.
+
+    
+
+  
+    - *(dict) --* 
+
+      The details of the search.
+
+      
+
+    
+      - **attribute** *(string) --* **[REQUIRED]** 
+
+        The search attribute.
+
+        
+
+      
+    
+
+  :type filters: dict
+  :param filters: 
+
+    Specifies the search filters.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``filter``, ``and``, ``or``. 
+
+  
+    - **filter** *(dict) --* 
+
+      A search filter in Amazon DataZone.
+
+      
+
+    
+      - **attribute** *(string) --* **[REQUIRED]** 
+
+        A search filter attribute in Amazon DataZone.
+
+        
+
+      
+      - **value** *(string) --* 
+
+        A search filter string value in Amazon DataZone.
+
+        
+
+      
+      - **intValue** *(integer) --* 
+
+        A search filter integer value in Amazon DataZone.
+
+        
+
+      
+      - **operator** *(string) --* 
+
+        Specifies the search filter operator.
+
+        
+
+      
+    
+    - **and** *(list) --* 
+
+      The 'and' search filter clause in Amazon DataZone.
+
+      
+
+    
+      - *(dict) --* 
+
+        A search filter clause in Amazon DataZone.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``filter``, ``and``, ``or``. 
+
+      
+  
+    - **or** *(list) --* 
+
+      The 'or' search filter clause in Amazon DataZone.
+
+      
+
+    
+      - *(dict) --* 
+
+        A search filter clause in Amazon DataZone.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``filter``, ``and``, ``or``. 
+
+      
+  
+  
+  :type sort: dict
+  :param sort: 
+
+    Specifies the way in which the search results are to be sorted.
+
+    
+
+  
+    - **attribute** *(string) --* **[REQUIRED]** 
+
+      The attribute detail of the way to sort search results.
+
+      
+
+    
+    - **order** *(string) --* 
+
+      The order detail of the wya to sort search results.
+
+      
+
+    
+  
+  :type additionalAttributes: list
+  :param additionalAttributes: 
+
+    Specifies additional attributes for the ``Search`` action.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'items': [
+              {
+                  'glossaryItem': {
+                      'domainId': 'string',
+                      'id': 'string',
+                      'name': 'string',
+                      'owningProjectId': 'string',
+                      'description': 'string',
+                      'status': 'DISABLED'|'ENABLED',
+                      'usageRestrictions': [
+                          'ASSET_GOVERNED_TERMS',
+                      ],
+                      'createdAt': datetime(2015, 1, 1),
+                      'createdBy': 'string',
+                      'updatedAt': datetime(2015, 1, 1),
+                      'updatedBy': 'string',
+                      'additionalAttributes': {
+                          'matchRationale': [
+                              {
+                                  'textMatches': [
+                                      {
+                                          'attribute': 'string',
+                                          'text': 'string',
+                                          'matchOffsets': [
+                                              {
+                                                  'startOffset': 123,
+                                                  'endOffset': 123
+                                              },
+                                          ]
+                                      },
+                                  ]
+                              },
+                          ]
+                      }
+                  },
+                  'glossaryTermItem': {
+                      'domainId': 'string',
+                      'glossaryId': 'string',
+                      'id': 'string',
+                      'name': 'string',
+                      'shortDescription': 'string',
+                      'usageRestrictions': [
+                          'ASSET_GOVERNED_TERMS',
+                      ],
+                      'longDescription': 'string',
+                      'termRelations': {
+                          'isA': [
+                              'string',
+                          ],
+                          'classifies': [
+                              'string',
+                          ]
+                      },
+                      'status': 'ENABLED'|'DISABLED',
+                      'createdAt': datetime(2015, 1, 1),
+                      'createdBy': 'string',
+                      'updatedAt': datetime(2015, 1, 1),
+                      'updatedBy': 'string',
+                      'additionalAttributes': {
+                          'matchRationale': [
+                              {
+                                  'textMatches': [
+                                      {
+                                          'attribute': 'string',
+                                          'text': 'string',
+                                          'matchOffsets': [
+                                              {
+                                                  'startOffset': 123,
+                                                  'endOffset': 123
+                                              },
+                                          ]
+                                      },
+                                  ]
+                              },
+                          ]
+                      }
+                  },
+                  'assetItem': {
+                      'domainId': 'string',
+                      'identifier': 'string',
+                      'name': 'string',
+                      'typeIdentifier': 'string',
+                      'typeRevision': 'string',
+                      'externalIdentifier': 'string',
+                      'description': 'string',
+                      'createdAt': datetime(2015, 1, 1),
+                      'createdBy': 'string',
+                      'firstRevisionCreatedAt': datetime(2015, 1, 1),
+                      'firstRevisionCreatedBy': 'string',
+                      'glossaryTerms': [
+                          'string',
+                      ],
+                      'owningProjectId': 'string',
+                      'additionalAttributes': {
+                          'formsOutput': [
+                              {
+                                  'formName': 'string',
+                                  'typeName': 'string',
+                                  'typeRevision': 'string',
+                                  'content': 'string'
+                              },
+                          ],
+                          'readOnlyFormsOutput': [
+                              {
+                                  'formName': 'string',
+                                  'typeName': 'string',
+                                  'typeRevision': 'string',
+                                  'content': 'string'
+                              },
+                          ],
+                          'latestTimeSeriesDataPointFormsOutput': [
+                              {
+                                  'formName': 'string',
+                                  'typeIdentifier': 'string',
+                                  'typeRevision': 'string',
+                                  'timestamp': datetime(2015, 1, 1),
+                                  'contentSummary': 'string',
+                                  'id': 'string'
+                              },
+                          ],
+                          'matchRationale': [
+                              {
+                                  'textMatches': [
+                                      {
+                                          'attribute': 'string',
+                                          'text': 'string',
+                                          'matchOffsets': [
+                                              {
+                                                  'startOffset': 123,
+                                                  'endOffset': 123
+                                              },
+                                          ]
+                                      },
+                                  ]
+                              },
+                          ]
+                      },
+                      'governedGlossaryTerms': [
+                          'string',
+                      ]
+                  },
+                  'dataProductItem': {
+                      'domainId': 'string',
+                      'id': 'string',
+                      'name': 'string',
+                      'owningProjectId': 'string',
+                      'description': 'string',
+                      'glossaryTerms': [
+                          'string',
+                      ],
+                      'createdAt': datetime(2015, 1, 1),
+                      'createdBy': 'string',
+                      'firstRevisionCreatedAt': datetime(2015, 1, 1),
+                      'firstRevisionCreatedBy': 'string',
+                      'additionalAttributes': {
+                          'matchRationale': [
+                              {
+                                  'textMatches': [
+                                      {
+                                          'attribute': 'string',
+                                          'text': 'string',
+                                          'matchOffsets': [
+                                              {
+                                                  'startOffset': 123,
+                                                  'endOffset': 123
+                                              },
+                                          ]
+                                      },
+                                  ]
+                              },
+                          ]
+                      }
+                  }
+              },
+          ],
+          'nextToken': 'string',
+          'totalMatchCount': 123
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **items** *(list) --* 
+
+        The results of the ``Search`` action.
+
+        
+        
+
+        - *(dict) --* 
+
+          The details of the search results.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``glossaryItem``, ``glossaryTermItem``, ``assetItem``, ``dataProductItem``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+        
+          
+
+          - **glossaryItem** *(dict) --* 
+
+            The glossary item included in the search results.
+
+            
+            
+
+            - **domainId** *(string) --* 
+
+              The identifier of the Amazon DataZone domain in which the business glossary exists.
+
+              
+            
+
+            - **id** *(string) --* 
+
+              The identifier of the glossary.
+
+              
+            
+
+            - **name** *(string) --* 
+
+              The name of the glossary.
+
+              
+            
+
+            - **owningProjectId** *(string) --* 
+
+              The identifier of the project that owns the business glosary.
+
+              
+            
+
+            - **description** *(string) --* 
+
+              The business glossary description.
+
+              
+            
+
+            - **status** *(string) --* 
+
+              The business glossary status.
+
+              
+            
+
+            - **usageRestrictions** *(list) --* 
+
+              The usage restrictions associated with a goverened glossary term.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **createdAt** *(datetime) --* 
+
+              The timestamp of when the glossary was created.
+
+              
+            
+
+            - **createdBy** *(string) --* 
+
+              The Amazon DataZone user who created the glossary.
+
+              
+            
+
+            - **updatedAt** *(datetime) --* 
+
+              The timestamp of when the business glossary was updated.
+
+              
+            
+
+            - **updatedBy** *(string) --* 
+
+              The Amazon DataZone user who updated the business glossary.
+
+              
+            
+
+            - **additionalAttributes** *(dict) --* 
+
+              The additional attributes of an Amazon DataZone glossary.
+
+              
+              
+
+              - **matchRationale** *(list) --* 
+
+                List of rationales indicating why this item was matched by search.
+
+                
+                
+
+                - *(dict) --* 
+
+                  A rationale indicating why this item was matched by search.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``textMatches``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **textMatches** *(list) --* 
+
+                    A list of TextMatchItems.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      A structure indicating matched terms for an attribute.
+
+                      
+                      
+
+                      - **attribute** *(string) --* 
+
+                        The name of the attribute.
+
+                        
+                      
+
+                      - **text** *(string) --* 
+
+                        Snippet of attribute text containing highlighted content.
+
+                        
+                      
+
+                      - **matchOffsets** *(list) --* 
+
+                        List of offsets indicating matching terms in the TextMatchItem text.
+
+                        
+                        
+
+                        - *(dict) --* 
+
+                          The offset of a matched term.
+
+                          
+                          
+
+                          - **startOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the start position (inclusive) of a matched term.
+
+                            
+                          
+
+                          - **endOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the end position (exclusive) of a matched term.
+
+                            
+                      
+                    
+                  
+                
+              
+            
+          
+        
+          
+
+          - **glossaryTermItem** *(dict) --* 
+
+            The glossary term item included in the search results.
+
+            
+            
+
+            - **domainId** *(string) --* 
+
+              The identifier of the Amazon DataZone domain in which the business glossary exists.
+
+              
+            
+
+            - **glossaryId** *(string) --* 
+
+              The identifier of the business glossary to which the term belongs.
+
+              
+            
+
+            - **id** *(string) --* 
+
+              The identifier of the business glossary term.
+
+              
+            
+
+            - **name** *(string) --* 
+
+              The name of the business glossary term.
+
+              
+            
+
+            - **shortDescription** *(string) --* 
+
+              The short description of the business glossary term.
+
+              
+            
+
+            - **usageRestrictions** *(list) --* 
+
+              The usage restrictions associated with a goverened glossary term.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **longDescription** *(string) --* 
+
+              The long description of the business glossary term.
+
+              
+            
+
+            - **termRelations** *(dict) --* 
+
+              The relations of the business glossary term.
+
+              
+              
+
+              - **isA** *(list) --* 
+
+                The ``isA`` property of the term relations.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **classifies** *(list) --* 
+
+                The classifies of the term relations.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+            
+
+            - **status** *(string) --* 
+
+              The status of the business glossary term.
+
+              
+            
+
+            - **createdAt** *(datetime) --* 
+
+              The timestamp of when a business glossary term was created.
+
+              
+            
+
+            - **createdBy** *(string) --* 
+
+              The Amazon DataZone user who created the business glossary.
+
+              
+            
+
+            - **updatedAt** *(datetime) --* 
+
+              The timestamp of when a business glossary term was updated.
+
+              
+            
+
+            - **updatedBy** *(string) --* 
+
+              The Amazon DataZone user who updated the business glossary term.
+
+              
+            
+
+            - **additionalAttributes** *(dict) --* 
+
+              The additional attributes of an Amazon DataZone glossary term.
+
+              
+              
+
+              - **matchRationale** *(list) --* 
+
+                List of rationales indicating why this item was matched by search.
+
+                
+                
+
+                - *(dict) --* 
+
+                  A rationale indicating why this item was matched by search.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``textMatches``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **textMatches** *(list) --* 
+
+                    A list of TextMatchItems.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      A structure indicating matched terms for an attribute.
+
+                      
+                      
+
+                      - **attribute** *(string) --* 
+
+                        The name of the attribute.
+
+                        
+                      
+
+                      - **text** *(string) --* 
+
+                        Snippet of attribute text containing highlighted content.
+
+                        
+                      
+
+                      - **matchOffsets** *(list) --* 
+
+                        List of offsets indicating matching terms in the TextMatchItem text.
+
+                        
+                        
+
+                        - *(dict) --* 
+
+                          The offset of a matched term.
+
+                          
+                          
+
+                          - **startOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the start position (inclusive) of a matched term.
+
+                            
+                          
+
+                          - **endOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the end position (exclusive) of a matched term.
+
+                            
+                      
+                    
+                  
+                
+              
+            
+          
+        
+          
+
+          - **assetItem** *(dict) --* 
+
+            The asset item included in the search results.
+
+            
+            
+
+            - **domainId** *(string) --* 
+
+              The identifier of the Amazon DataZone domain in which the inventory asset exists.
+
+              
+            
+
+            - **identifier** *(string) --* 
+
+              the identifier of the Amazon DataZone inventory asset.
+
+              
+            
+
+            - **name** *(string) --* 
+
+              The name of the Amazon DataZone inventory asset.
+
+              
+            
+
+            - **typeIdentifier** *(string) --* 
+
+              The identifier of the asset type of the specified Amazon DataZone inventory asset.
+
+              
+            
+
+            - **typeRevision** *(string) --* 
+
+              The revision of the inventory asset type.
+
+              
+            
+
+            - **externalIdentifier** *(string) --* 
+
+              The external identifier of the Amazon DataZone inventory asset.
+
+              
+            
+
+            - **description** *(string) --* 
+
+              The description of an Amazon DataZone inventory asset.
+
+              
+            
+
+            - **createdAt** *(datetime) --* 
+
+              The timestamp of when the Amazon DataZone inventory asset was created.
+
+              
+            
+
+            - **createdBy** *(string) --* 
+
+              The Amazon DataZone user who created the inventory asset.
+
+              
+            
+
+            - **firstRevisionCreatedAt** *(datetime) --* 
+
+              The timestamp of when the first revision of the inventory asset was created.
+
+              
+            
+
+            - **firstRevisionCreatedBy** *(string) --* 
+
+              The Amazon DataZone user who created the first revision of the inventory asset.
+
+              
+            
+
+            - **glossaryTerms** *(list) --* 
+
+              The glossary terms attached to the Amazon DataZone inventory asset.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **owningProjectId** *(string) --* 
+
+              The identifier of the Amazon DataZone project that owns the inventory asset.
+
+              
+            
+
+            - **additionalAttributes** *(dict) --* 
+
+              The additional attributes of a Amazon DataZone inventory asset.
+
+              
+              
+
+              - **formsOutput** *(list) --* 
+
+                The forms included in the additional attributes of an inventory asset.
+
+                
+                
+
+                - *(dict) --* 
+
+                  The details of a metadata form.
+
+                  
+                  
+
+                  - **formName** *(string) --* 
+
+                    The name of the metadata form.
+
+                    
+                  
+
+                  - **typeName** *(string) --* 
+
+                    The name of the metadata form type.
+
+                    
+                  
+
+                  - **typeRevision** *(string) --* 
+
+                    The revision of the metadata form type.
+
+                    
+                  
+
+                  - **content** *(string) --* 
+
+                    The content of the metadata form.
+
+                    
+              
+            
+              
+
+              - **readOnlyFormsOutput** *(list) --* 
+
+                The read-only forms included in the additional attributes of an inventory asset.
+
+                
+                
+
+                - *(dict) --* 
+
+                  The details of a metadata form.
+
+                  
+                  
+
+                  - **formName** *(string) --* 
+
+                    The name of the metadata form.
+
+                    
+                  
+
+                  - **typeName** *(string) --* 
+
+                    The name of the metadata form type.
+
+                    
+                  
+
+                  - **typeRevision** *(string) --* 
+
+                    The revision of the metadata form type.
+
+                    
+                  
+
+                  - **content** *(string) --* 
+
+                    The content of the metadata form.
+
+                    
+              
+            
+              
+
+              - **latestTimeSeriesDataPointFormsOutput** *(list) --* 
+
+                The latest time series data points forms included in the additional attributes of an asset.
+
+                
+                
+
+                - *(dict) --* 
+
+                  The summary of the time series data points form.
+
+                  
+                  
+
+                  - **formName** *(string) --* 
+
+                    The name of the time series data points summary form.
+
+                    
+                  
+
+                  - **typeIdentifier** *(string) --* 
+
+                    The type ID of the time series data points summary form.
+
+                    
+                  
+
+                  - **typeRevision** *(string) --* 
+
+                    The type revision of the time series data points summary form.
+
+                    
+                  
+
+                  - **timestamp** *(datetime) --* 
+
+                    The timestamp of the time series data points summary form.
+
+                    
+                  
+
+                  - **contentSummary** *(string) --* 
+
+                    The content of the summary of the time series data points form.
+
+                    
+                  
+
+                  - **id** *(string) --* 
+
+                    The ID of the time series data points summary form.
+
+                    
+              
+            
+              
+
+              - **matchRationale** *(list) --* 
+
+                List of rationales indicating why this item was matched by search.
+
+                
+                
+
+                - *(dict) --* 
+
+                  A rationale indicating why this item was matched by search.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``textMatches``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **textMatches** *(list) --* 
+
+                    A list of TextMatchItems.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      A structure indicating matched terms for an attribute.
+
+                      
+                      
+
+                      - **attribute** *(string) --* 
+
+                        The name of the attribute.
+
+                        
+                      
+
+                      - **text** *(string) --* 
+
+                        Snippet of attribute text containing highlighted content.
+
+                        
+                      
+
+                      - **matchOffsets** *(list) --* 
+
+                        List of offsets indicating matching terms in the TextMatchItem text.
+
+                        
+                        
+
+                        - *(dict) --* 
+
+                          The offset of a matched term.
+
+                          
+                          
+
+                          - **startOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the start position (inclusive) of a matched term.
+
+                            
+                          
+
+                          - **endOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the end position (exclusive) of a matched term.
+
+                            
+                      
+                    
+                  
+                
+              
+            
+          
+            
+
+            - **governedGlossaryTerms** *(list) --* 
+
+              The restricted glossary terms accociated with an asset.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **dataProductItem** *(dict) --* 
+
+            The data product.
+
+            
+            
+
+            - **domainId** *(string) --* 
+
+              The ID of the domain where the data product lives.
+
+              
+            
+
+            - **id** *(string) --* 
+
+              The ID of the data product.
+
+              
+            
+
+            - **name** *(string) --* 
+
+              The name of the data product.
+
+              
+            
+
+            - **owningProjectId** *(string) --* 
+
+              The ID of the owning project of the data product.
+
+              
+            
+
+            - **description** *(string) --* 
+
+              The description of the data product.
+
+              
+            
+
+            - **glossaryTerms** *(list) --* 
+
+              The glossary terms of the data product.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **createdAt** *(datetime) --* 
+
+              The timestamp at which the data product was created.
+
+              
+            
+
+            - **createdBy** *(string) --* 
+
+              The user who created the data product.
+
+              
+            
+
+            - **firstRevisionCreatedAt** *(datetime) --* 
+
+              The timestamp at which first revision of the data product was created.
+
+              
+            
+
+            - **firstRevisionCreatedBy** *(string) --* 
+
+              The user who created the first revision of the data product.
+
+              
+            
+
+            - **additionalAttributes** *(dict) --* 
+
+              The additional attributes of an Amazon DataZone data product.
+
+              
+              
+
+              - **matchRationale** *(list) --* 
+
+                List of rationales indicating why this item was matched by search.
+
+                
+                
+
+                - *(dict) --* 
+
+                  A rationale indicating why this item was matched by search.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``textMatches``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **textMatches** *(list) --* 
+
+                    A list of TextMatchItems.
+
+                    
+                    
+
+                    - *(dict) --* 
+
+                      A structure indicating matched terms for an attribute.
+
+                      
+                      
+
+                      - **attribute** *(string) --* 
+
+                        The name of the attribute.
+
+                        
+                      
+
+                      - **text** *(string) --* 
+
+                        Snippet of attribute text containing highlighted content.
+
+                        
+                      
+
+                      - **matchOffsets** *(list) --* 
+
+                        List of offsets indicating matching terms in the TextMatchItem text.
+
+                        
+                        
+
+                        - *(dict) --* 
+
+                          The offset of a matched term.
+
+                          
+                          
+
+                          - **startOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the start position (inclusive) of a matched term.
+
+                            
+                          
+
+                          - **endOffset** *(integer) --* 
+
+                            The 0-indexed number indicating the end position (exclusive) of a matched term.
+
+                            
+                      
+                    
+                  
+                
+              
+            
+          
+        
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        When the number of results is greater than the default value for the ``MaxResults`` parameter, or if you explicitly specify a value for ``MaxResults`` that is less than the number of results, the response includes a pagination token named ``NextToken``. You can specify this ``NextToken`` value in a subsequent call to ``Search`` to list the next set of results.
+
+        
+      
+
+      - **totalMatchCount** *(integer) --* 
+
+        Total number of search results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DataZone.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`DataZone.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`DataZone.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`DataZone.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`DataZone.Client.exceptions.UnauthorizedException`
+
+  

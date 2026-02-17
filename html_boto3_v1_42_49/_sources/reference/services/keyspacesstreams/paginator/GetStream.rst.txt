@@ -1,0 +1,264 @@
+:doc:`KeyspacesStreams <../../keyspacesstreams>` / Paginator / GetStream
+
+*********
+GetStream
+*********
+
+
+
+.. py:class:: KeyspacesStreams.Paginator.GetStream
+
+  ::
+
+    
+    paginator = client.get_paginator('get_stream')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`KeyspacesStreams.Client.get_stream`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/keyspacesstreams-2024-09-09/GetStream>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          streamArn='string',
+          shardFilter={
+              'type': 'CHILD_SHARDS',
+              'shardId': 'string'
+          },
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type streamArn: string
+    :param streamArn: **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of the stream for which detailed information is requested. This uniquely identifies the specific stream you want to get information about.
+
+      
+
+    
+    :type shardFilter: dict
+    :param shardFilter: 
+
+      Optional filter criteria to apply when retrieving shards. You can filter shards based on their state or other attributes to narrow down the results returned by the ``GetStream`` operation.
+
+      
+
+    
+      - **type** *(string) --* 
+
+        The type of shard filter to use, which determines how the shardId parameter is interpreted.
+
+        
+
+      
+      - **shardId** *(string) --* 
+
+        The identifier of a specific shard used to filter results based on the specified filter type.
+
+        
+
+      
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'streamArn': 'string',
+            'streamLabel': 'string',
+            'streamStatus': 'ENABLING'|'ENABLED'|'DISABLING'|'DISABLED',
+            'streamViewType': 'NEW_IMAGE'|'OLD_IMAGE'|'NEW_AND_OLD_IMAGES'|'KEYS_ONLY',
+            'creationRequestDateTime': datetime(2015, 1, 1),
+            'keyspaceName': 'string',
+            'tableName': 'string',
+            'shards': [
+                {
+                    'shardId': 'string',
+                    'sequenceNumberRange': {
+                        'startingSequenceNumber': 'string',
+                        'endingSequenceNumber': 'string'
+                    },
+                    'parentShardIds': [
+                        'string',
+                    ]
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **streamArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) that uniquely identifies the stream within Amazon Keyspaces. This ARN can be used in other API operations to reference this specific stream.
+
+          
+        
+
+        - **streamLabel** *(string) --* 
+
+          A timestamp that serves as a unique identifier for this stream, used for debugging and monitoring purposes. The stream label represents the point in time when the stream was created.
+
+          
+        
+
+        - **streamStatus** *(string) --* 
+
+          The current status of the stream. Values can be ``ENABLING``, ``ENABLED``, ``DISABLING``, or ``DISABLED``. Operations on the stream depend on its current status.
+
+          
+        
+
+        - **streamViewType** *(string) --* 
+
+          The format of the data records in this stream. Currently, this can be one of the following options:
+
+           
+
+          
+          * ``NEW_AND_OLD_IMAGES`` - both versions of the row, before and after the change. This is the default.
+           
+          * ``NEW_IMAGE`` - the version of the row after the change.
+           
+          * ``OLD_IMAGE`` - the version of the row before the change.
+           
+          * ``KEYS_ONLY`` - the partition and clustering keys of the row that was changed.
+          
+
+          
+        
+
+        - **creationRequestDateTime** *(datetime) --* 
+
+          The date and time when the request to create this stream was issued. The value is represented in ISO 8601 format.
+
+          
+        
+
+        - **keyspaceName** *(string) --* 
+
+          The name of the keyspace containing the table associated with this stream. The keyspace name is part of the table's hierarchical identifier in Amazon Keyspaces.
+
+          
+        
+
+        - **tableName** *(string) --* 
+
+          The name of the table associated with this stream. The stream captures changes to rows in this Amazon Keyspaces table.
+
+          
+        
+
+        - **shards** *(list) --* 
+
+          An array of shard objects associated with this stream. Each shard contains a subset of the stream's data records and has its own unique identifier. The collection of shards represents the complete stream data.
+
+          
+          
+
+          - *(dict) --* 
+
+            Represents a uniquely identified group of change records within a change data capture stream for Amazon Keyspaces.
+
+            
+            
+
+            - **shardId** *(string) --* 
+
+              A unique identifier for this shard within the stream.
+
+              
+            
+
+            - **sequenceNumberRange** *(dict) --* 
+
+              The range of sequence numbers contained within this shard.
+
+              
+              
+
+              - **startingSequenceNumber** *(string) --* 
+
+                The starting sequence number of the range.
+
+                
+              
+
+              - **endingSequenceNumber** *(string) --* 
+
+                The ending sequence number of the range, which may be null for open-ended ranges.
+
+                
+          
+            
+
+            - **parentShardIds** *(list) --* 
+
+              The identifiers of parent shards that this shard evolved from, if this shard was created through resharding.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

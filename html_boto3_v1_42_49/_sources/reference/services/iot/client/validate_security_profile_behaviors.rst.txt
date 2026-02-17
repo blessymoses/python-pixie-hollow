@@ -1,0 +1,355 @@
+:doc:`IoT <../../iot>` / Client / validate_security_profile_behaviors
+
+***********************************
+validate_security_profile_behaviors
+***********************************
+
+
+
+.. py:method:: IoT.Client.validate_security_profile_behaviors(**kwargs)
+
+  
+
+  Validates a Device Defender security profile behaviors specification.
+
+   
+
+  Requires permission to access the `ValidateSecurityProfileBehaviors <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions>`__ action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iot-2015-05-28/ValidateSecurityProfileBehaviors>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.validate_security_profile_behaviors(
+        behaviors=[
+            {
+                'name': 'string',
+                'metric': 'string',
+                'metricDimension': {
+                    'dimensionName': 'string',
+                    'operator': 'IN'|'NOT_IN'
+                },
+                'criteria': {
+                    'comparisonOperator': 'less-than'|'less-than-equals'|'greater-than'|'greater-than-equals'|'in-cidr-set'|'not-in-cidr-set'|'in-port-set'|'not-in-port-set'|'in-set'|'not-in-set',
+                    'value': {
+                        'count': 123,
+                        'cidrs': [
+                            'string',
+                        ],
+                        'ports': [
+                            123,
+                        ],
+                        'number': 123.0,
+                        'numbers': [
+                            123.0,
+                        ],
+                        'strings': [
+                            'string',
+                        ]
+                    },
+                    'durationSeconds': 123,
+                    'consecutiveDatapointsToAlarm': 123,
+                    'consecutiveDatapointsToClear': 123,
+                    'statisticalThreshold': {
+                        'statistic': 'string'
+                    },
+                    'mlDetectionConfig': {
+                        'confidenceLevel': 'LOW'|'MEDIUM'|'HIGH'
+                    }
+                },
+                'suppressAlerts': True|False,
+                'exportMetric': True|False
+            },
+        ]
+    )
+    
+  :type behaviors: list
+  :param behaviors: **[REQUIRED]** 
+
+    Specifies the behaviors that, when violated by a device (thing), cause an alert.
+
+    
+
+  
+    - *(dict) --* 
+
+      A Device Defender security profile behavior.
+
+      
+
+    
+      - **name** *(string) --* **[REQUIRED]** 
+
+        The name you've given to the behavior.
+
+        
+
+      
+      - **metric** *(string) --* 
+
+        What is measured by the behavior.
+
+        
+
+      
+      - **metricDimension** *(dict) --* 
+
+        The dimension for a metric in your behavior. For example, using a ``TOPIC_FILTER`` dimension, you can narrow down the scope of the metric to only MQTT topics where the name matches the pattern specified in the dimension. This can't be used with custom metrics.
+
+        
+
+      
+        - **dimensionName** *(string) --* **[REQUIRED]** 
+
+          A unique identifier for the dimension.
+
+          
+
+        
+        - **operator** *(string) --* 
+
+          Defines how the ``dimensionValues`` of a dimension are interpreted. For example, for dimension type TOPIC_FILTER, the ``IN`` operator, a message will be counted only if its topic matches one of the topic filters. With ``NOT_IN`` operator, a message will be counted only if it doesn't match any of the topic filters. The operator is optional: if it's not provided (is ``null``), it will be interpreted as ``IN``.
+
+          
+
+        
+      
+      - **criteria** *(dict) --* 
+
+        The criteria that determine if a device is behaving normally in regard to the ``metric``.
+
+         
+
+        .. note::
+
+          
+
+          In the IoT console, you can choose to be sent an alert through Amazon SNS when IoT Device Defender detects that a device is behaving anomalously.
+
+          
+
+        
+
+      
+        - **comparisonOperator** *(string) --* 
+
+          The operator that relates the thing measured ( ``metric``) to the criteria (containing a ``value`` or ``statisticalThreshold``). Valid operators include:
+
+           
+
+          
+          * ``string-list``: ``in-set`` and ``not-in-set``
+           
+          * ``number-list``: ``in-set`` and ``not-in-set``
+           
+          * ``ip-address-list``: ``in-cidr-set`` and ``not-in-cidr-set``
+           
+          * ``number``: ``less-than``, ``less-than-equals``, ``greater-than``, and ``greater-than-equals``
+          
+
+          
+
+        
+        - **value** *(dict) --* 
+
+          The value to be compared with the ``metric``.
+
+          
+
+        
+          - **count** *(integer) --* 
+
+            If the ``comparisonOperator`` calls for a numeric value, use this to specify that numeric value to be compared with the ``metric``.
+
+            
+
+          
+          - **cidrs** *(list) --* 
+
+            If the ``comparisonOperator`` calls for a set of CIDRs, use this to specify that set to be compared with the ``metric``.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+          - **ports** *(list) --* 
+
+            If the ``comparisonOperator`` calls for a set of ports, use this to specify that set to be compared with the ``metric``.
+
+            
+
+          
+            - *(integer) --* 
+
+            
+        
+          - **number** *(float) --* 
+
+            The numeral value of a metric.
+
+            
+
+          
+          - **numbers** *(list) --* 
+
+            The numeral values of a metric.
+
+            
+
+          
+            - *(float) --* 
+
+            
+        
+          - **strings** *(list) --* 
+
+            The string values of a metric.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+        
+        - **durationSeconds** *(integer) --* 
+
+          Use this to specify the time duration over which the behavior is evaluated, for those criteria that have a time dimension (for example, ``NUM_MESSAGES_SENT``). For a ``statisticalThreshhold`` metric comparison, measurements from all devices are accumulated over this time duration before being used to calculate percentiles, and later, measurements from an individual device are also accumulated over this time duration before being given a percentile rank. Cannot be used with list-based metric datatypes.
+
+          
+
+        
+        - **consecutiveDatapointsToAlarm** *(integer) --* 
+
+          If a device is in violation of the behavior for the specified number of consecutive datapoints, an alarm occurs. If not specified, the default is 1.
+
+          
+
+        
+        - **consecutiveDatapointsToClear** *(integer) --* 
+
+          If an alarm has occurred and the offending device is no longer in violation of the behavior for the specified number of consecutive datapoints, the alarm is cleared. If not specified, the default is 1.
+
+          
+
+        
+        - **statisticalThreshold** *(dict) --* 
+
+          A statistical ranking (percentile)that indicates a threshold value by which a behavior is determined to be in compliance or in violation of the behavior.
+
+          
+
+        
+          - **statistic** *(string) --* 
+
+            The percentile that resolves to a threshold value by which compliance with a behavior is determined. Metrics are collected over the specified period ( ``durationSeconds``) from all reporting devices in your account and statistical ranks are calculated. Then, the measurements from a device are collected over the same period. If the accumulated measurements from the device fall above or below ( ``comparisonOperator``) the value associated with the percentile specified, then the device is considered to be in compliance with the behavior, otherwise a violation occurs.
+
+            
+
+          
+        
+        - **mlDetectionConfig** *(dict) --* 
+
+          The configuration of an ML Detect
+
+          
+
+        
+          - **confidenceLevel** *(string) --* **[REQUIRED]** 
+
+            The sensitivity of anomalous behavior evaluation. Can be ``Low``, ``Medium``, or ``High``.
+
+            
+
+          
+        
+      
+      - **suppressAlerts** *(boolean) --* 
+
+        Suppresses alerts.
+
+        
+
+      
+      - **exportMetric** *(boolean) --* 
+
+        Value indicates exporting metrics related to the behavior when it is true.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'valid': True|False,
+          'validationErrors': [
+              {
+                  'errorMessage': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **valid** *(boolean) --* 
+
+        True if the behaviors were valid.
+
+        
+      
+
+      - **validationErrors** *(list) --* 
+
+        The list of any errors found in the behaviors.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about an error found in a behavior specification.
+
+          
+          
+
+          - **errorMessage** *(string) --* 
+
+            The description of an error found in the behaviors.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`IoT.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.InternalFailureException`
+
+  

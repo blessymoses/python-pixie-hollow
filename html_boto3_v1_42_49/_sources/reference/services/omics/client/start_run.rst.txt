@@ -1,0 +1,372 @@
+:doc:`Omics <../../omics>` / Client / start_run
+
+*********
+start_run
+*********
+
+
+
+.. py:method:: Omics.Client.start_run(**kwargs)
+
+  
+
+  Starts a new run and returns details about the run, or duplicates an existing run. A run is a single invocation of a workflow. If you provide request IDs, Amazon Web Services HealthOmics identifies duplicate requests and starts the run only once. Monitor the progress of the run by calling the ``GetRun`` API operation.
+
+   
+
+  To start a new run, the following inputs are required:
+
+   
+
+  
+  * A service role ARN ( ``roleArn``).
+   
+  * The run's workflow ID ( ``workflowId``, not the ``uuid`` or ``runId``).
+   
+  * An Amazon S3 location ( ``outputUri``) where the run outputs will be saved.
+   
+  * All required workflow parameters ( ``parameter``), which can include optional parameters from the parameter template. The run cannot include any parameters that are not defined in the parameter template. To see all possible parameters, use the ``GetRun`` API operation.
+   
+  * For runs with a ``STATIC`` (default) storage type, specify the required storage capacity (in gibibytes). A storage capacity value is not required for runs that use ``DYNAMIC`` storage.
+  
+
+   
+
+  ``StartRun`` can also duplicate an existing run using the run's default values. You can modify these default values and/or add other optional inputs. To duplicate a run, the following inputs are required:
+
+   
+
+  
+  * A service role ARN ( ``roleArn``).
+   
+  * The ID of the run to duplicate ( ``runId``).
+   
+  * An Amazon S3 location where the run outputs will be saved ( ``outputUri``).
+  
+
+   
+
+  To learn more about the optional parameters for ``StartRun``, see `Starting a run <https://docs.aws.amazon.com/omics/latest/dev/starting-a-run.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+   
+
+  Use the ``retentionMode`` input to control how long the metadata for each run is stored in CloudWatch. There are two retention modes:
+
+   
+
+  
+  * Specify ``REMOVE`` to automatically remove the oldest runs when you reach the maximum service retention limit for runs. It is recommended that you use the ``REMOVE`` mode to initiate major run requests so that your runs do not fail when you reach the limit.
+   
+  * The ``retentionMode`` is set to the ``RETAIN`` mode by default, which allows you to manually remove runs after reaching the maximum service retention limit. Under this setting, you cannot create additional runs until you remove the excess runs.
+  
+
+   
+
+  To learn more about the retention modes, see `Run retention mode <https://docs.aws.amazon.com/omics/latest/dev/run-retention.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+   
+
+  You can use Amazon Q CLI to analyze run logs and make performance optimization recommendations. To get started, see the `Amazon Web Services HealthOmics MCP server <https://github.com/awslabs/mcp/tree/main/src/aws-healthomics-mcp-server>`__ on GitHub.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/omics-2022-11-28/StartRun>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_run(
+        workflowId='string',
+        workflowType='PRIVATE'|'READY2RUN',
+        runId='string',
+        roleArn='string',
+        name='string',
+        cacheId='string',
+        cacheBehavior='CACHE_ON_FAILURE'|'CACHE_ALWAYS',
+        runGroupId='string',
+        priority=123,
+        parameters={...}|[...]|123|123.4|'string'|True|None,
+        storageCapacity=123,
+        outputUri='string',
+        logLevel='OFF'|'FATAL'|'ERROR'|'ALL',
+        tags={
+            'string': 'string'
+        },
+        requestId='string',
+        retentionMode='RETAIN'|'REMOVE',
+        storageType='STATIC'|'DYNAMIC',
+        workflowOwnerId='string',
+        workflowVersionName='string'
+    )
+    
+  :type workflowId: string
+  :param workflowId: 
+
+    The run's workflow ID. The ``workflowId`` is not the UUID.
+
+    
+
+  
+  :type workflowType: string
+  :param workflowType: 
+
+    The run's workflow type. The ``workflowType`` must be specified if you are running a ``READY2RUN`` workflow. If you are running a ``PRIVATE`` workflow (default), you do not need to include the workflow type.
+
+    
+
+  
+  :type runId: string
+  :param runId: 
+
+    The ID of a run to duplicate.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: **[REQUIRED]** 
+
+    A service role for the run. The ``roleArn`` requires access to Amazon Web Services HealthOmics, S3, Cloudwatch logs, and EC2. An example ``roleArn`` is ``arn:aws:iam::123456789012:role/omics-service-role-serviceRole-W8O1XMPL7QZ``. In this example, the AWS account ID is ``123456789012`` and the role name is ``omics-service-role-serviceRole-W8O1XMPL7QZ``.
+
+    
+
+  
+  :type name: string
+  :param name: 
+
+    A name for the run. This is recommended to view and organize runs in the Amazon Web Services HealthOmics console and CloudWatch logs.
+
+    
+
+  
+  :type cacheId: string
+  :param cacheId: 
+
+    Identifier of the cache associated with this run. If you don't specify a cache ID, no task outputs are cached for this run.
+
+    
+
+  
+  :type cacheBehavior: string
+  :param cacheBehavior: 
+
+    The cache behavior for the run. You specify this value if you want to override the default behavior for the cache. You had set the default value when you created the cache. For more information, see `Run cache behavior <https://docs.aws.amazon.com/omics/latest/dev/how-run-cache.html#run-cache-behavior>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  :type runGroupId: string
+  :param runGroupId: 
+
+    The run's group ID. Use a run group to cap the compute resources (and number of concurrent runs) for the runs that you add to the run group.
+
+    
+
+  
+  :type priority: integer
+  :param priority: 
+
+    Use the run priority (highest: 1) to establish the order of runs in a run group when you start a run. If multiple runs share the same priority, the run that was initiated first will have the higher priority. Runs that do not belong to a run group can be assigned a priority. The priorities of these runs are ranked among other runs that are not in a run group. For more information, see `Run priority <https://docs.aws.amazon.com/omics/latest/dev/creating-run-groups.html#run-priority>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  :type parameters: :ref:`document<document>`
+  :param parameters: 
+
+    Parameters for the run. The run needs all required parameters and can include optional parameters. The run cannot include any parameters that are not defined in the parameter template. To retrieve parameters from the run, use the GetRun API operation.
+
+    
+
+  
+  :type storageCapacity: integer
+  :param storageCapacity: 
+
+    The ``STATIC`` storage capacity (in gibibytes, GiB) for this run. The default run storage capacity is 1200 GiB. If your requested storage capacity is unavailable, the system rounds up the value to the nearest 1200 GiB multiple. If the requested storage capacity is still unavailable, the system rounds up the value to the nearest 2400 GiB multiple. This field is not required if the storage type is ``DYNAMIC`` (the system ignores any value that you enter).
+
+    
+
+  
+  :type outputUri: string
+  :param outputUri: **[REQUIRED]** 
+
+    An output S3 URI for the run. The S3 bucket must be in the same region as the workflow. The role ARN must have permission to write to this S3 bucket.
+
+    
+
+  
+  :type logLevel: string
+  :param logLevel: 
+
+    A log level for the run.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    Tags for the run. You can add up to 50 tags per run. For more information, see `Adding a tag <https://docs.aws.amazon.com/omics/latest/dev/add-a-tag.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type requestId: string
+  :param requestId: **[REQUIRED]** 
+
+    An idempotency token used to dedupe retry requests so that duplicate runs are not created.
+
+    This field is autopopulated if not provided.
+
+  
+  :type retentionMode: string
+  :param retentionMode: 
+
+    The retention mode for the run. The default value is ``RETAIN``.
+
+     
+
+    Amazon Web Services HealthOmics stores a fixed number of runs that are available to the console and API. In the default mode ( ``RETAIN``), you need to remove runs manually when the number of run exceeds the maximum. If you set the retention mode to ``REMOVE``, Amazon Web Services HealthOmics automatically removes runs (that have mode set to ``REMOVE``) when the number of run exceeds the maximum. All run logs are available in CloudWatch logs, if you need information about a run that is no longer available to the API.
+
+     
+
+    For more information about retention mode, see `Specifying run retention mode <https://docs.aws.amazon.com/omics/latest/dev/starting-a-run.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  :type storageType: string
+  :param storageType: 
+
+    The storage type for the run. If you set the storage type to ``DYNAMIC``, Amazon Web Services HealthOmics dynamically scales the storage up or down, based on file system utilization. By default, the run uses ``STATIC`` storage type, which allocates a fixed amount of storage. For more information about ``DYNAMIC`` and ``STATIC`` storage, see `Run storage types <https://docs.aws.amazon.com/omics/latest/dev/workflows-run-types.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  :type workflowOwnerId: string
+  :param workflowOwnerId: 
+
+    The 12-digit account ID of the workflow owner that is used for running a shared workflow. The workflow owner ID can be retrieved using the ``GetShare`` API operation. If you are the workflow owner, you do not need to include this ID.
+
+    
+
+  
+  :type workflowVersionName: string
+  :param workflowVersionName: 
+
+    The name of the workflow version. Use workflow versions to track and organize changes to the workflow. If your workflow has multiple versions, the run uses the default version unless you specify a version name. To learn more, see `Workflow versioning <https://docs.aws.amazon.com/omics/latest/dev/workflow-versions.html>`__ in the *Amazon Web Services HealthOmics User Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'arn': 'string',
+          'id': 'string',
+          'status': 'PENDING'|'STARTING'|'RUNNING'|'STOPPING'|'COMPLETED'|'DELETED'|'CANCELLED'|'FAILED',
+          'tags': {
+              'string': 'string'
+          },
+          'uuid': 'string',
+          'runOutputUri': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **arn** *(string) --* 
+
+        Unique resource identifier for the run.
+
+        
+      
+
+      - **id** *(string) --* 
+
+        The run's ID.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The run's status.
+
+        
+      
+
+      - **tags** *(dict) --* 
+
+        The run's tags.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+      
+
+      - **uuid** *(string) --* 
+
+        The universally unique identifier for a run.
+
+        
+      
+
+      - **runOutputUri** *(string) --* 
+
+        The destination for workflow outputs.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Omics.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Omics.Client.exceptions.RequestTimeoutException`
+
+  

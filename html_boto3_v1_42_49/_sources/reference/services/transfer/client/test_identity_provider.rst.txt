@@ -1,0 +1,184 @@
+:doc:`Transfer <../../transfer>` / Client / test_identity_provider
+
+**********************
+test_identity_provider
+**********************
+
+
+
+.. py:method:: Transfer.Client.test_identity_provider(**kwargs)
+
+  
+
+  If the ``IdentityProviderType`` of a file transfer protocol-enabled server is ``AWS_DIRECTORY_SERVICE`` or ``API_Gateway``, tests whether your identity provider is set up successfully. We highly recommend that you call this operation to test your authentication method as soon as you create your server. By doing so, you can troubleshoot issues with the identity provider integration to ensure that your users can successfully use the service.
+
+   
+
+  The ``ServerId`` and ``UserName`` parameters are required. The ``ServerProtocol``, ``SourceIp``, and ``UserPassword`` are all optional.
+
+   
+
+  Note the following:
+
+   
+
+  
+  * You cannot use ``TestIdentityProvider`` if the ``IdentityProviderType`` of your server is ``SERVICE_MANAGED``.
+   
+  * ``TestIdentityProvider`` does not work with keys: it only accepts passwords.
+   
+  * ``TestIdentityProvider`` can test the password operation for a custom Identity Provider that handles keys and passwords.
+   
+  * If you provide any incorrect values for any parameters, the ``Response`` field is empty.
+   
+  * If you provide a server ID for a server that uses service-managed users, you get an error: ``An error occurred (InvalidRequestException) when calling the TestIdentityProvider operation: s-server-ID not configured for external auth``
+   
+  * If you enter a Server ID for the ``--server-id`` parameter that does not identify an actual Transfer server, you receive the following error: ``An error occurred (ResourceNotFoundException) when calling the TestIdentityProvider operation: Unknown server``. It is possible your sever is in a different region. You can specify a region by adding the following: ``--region region-code``, such as ``--region us-east-2`` to specify a server in **US East (Ohio)**.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/transfer-2018-11-05/TestIdentityProvider>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.test_identity_provider(
+        ServerId='string',
+        ServerProtocol='SFTP'|'FTP'|'FTPS'|'AS2',
+        SourceIp='string',
+        UserName='string',
+        UserPassword='string'
+    )
+    
+  :type ServerId: string
+  :param ServerId: **[REQUIRED]** 
+
+    A system-assigned identifier for a specific server. That server's user authentication method is tested with a user name and password.
+
+    
+
+  
+  :type ServerProtocol: string
+  :param ServerProtocol: 
+
+    The type of file transfer protocol to be tested.
+
+     
+
+    The available protocols are:
+
+     
+
+    
+    * Secure Shell (SSH) File Transfer Protocol (SFTP)
+     
+    * File Transfer Protocol Secure (FTPS)
+     
+    * File Transfer Protocol (FTP)
+     
+    * Applicability Statement 2 (AS2)
+    
+
+    
+
+  
+  :type SourceIp: string
+  :param SourceIp: 
+
+    The source IP address of the account to be tested.
+
+    
+
+  
+  :type UserName: string
+  :param UserName: **[REQUIRED]** 
+
+    The name of the account to be tested.
+
+    
+
+  
+  :type UserPassword: string
+  :param UserPassword: 
+
+    The password of the account to be tested.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Response': 'string',
+          'StatusCode': 123,
+          'Message': 'string',
+          'Url': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Response** *(string) --* 
+
+        The response that is returned from your API Gateway or your Lambda function.
+
+        
+      
+
+      - **StatusCode** *(integer) --* 
+
+        The HTTP status code that is the response from your API Gateway or your Lambda function.
+
+        
+      
+
+      - **Message** *(string) --* 
+
+        A message that indicates whether the test was successful or not.
+
+         
+
+        .. note::
+
+          
+
+          If an empty string is returned, the most likely cause is that the authentication failed due to an incorrect username or password.
+
+          
+
+        
+      
+
+      - **Url** *(string) --* 
+
+        The endpoint of the service used to authenticate a user.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Transfer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.InternalServiceError`
+
+  
+  *   :py:class:`Transfer.Client.exceptions.ServiceUnavailableException`
+
+  

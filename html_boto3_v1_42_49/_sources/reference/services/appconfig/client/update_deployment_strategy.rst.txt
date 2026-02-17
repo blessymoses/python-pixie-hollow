@@ -1,0 +1,228 @@
+:doc:`AppConfig <../../appconfig>` / Client / update_deployment_strategy
+
+**************************
+update_deployment_strategy
+**************************
+
+
+
+.. py:method:: AppConfig.Client.update_deployment_strategy(**kwargs)
+
+  
+
+  Updates a deployment strategy.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/appconfig-2019-10-09/UpdateDeploymentStrategy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_deployment_strategy(
+        DeploymentStrategyId='string',
+        Description='string',
+        DeploymentDurationInMinutes=123,
+        FinalBakeTimeInMinutes=123,
+        GrowthFactor=...,
+        GrowthType='LINEAR'|'EXPONENTIAL'
+    )
+    
+  :type DeploymentStrategyId: string
+  :param DeploymentStrategyId: **[REQUIRED]** 
+
+    The deployment strategy ID.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A description of the deployment strategy.
+
+    
+
+  
+  :type DeploymentDurationInMinutes: integer
+  :param DeploymentDurationInMinutes: 
+
+    Total amount of time for a deployment to last.
+
+    
+
+  
+  :type FinalBakeTimeInMinutes: integer
+  :param FinalBakeTimeInMinutes: 
+
+    The amount of time that AppConfig monitors for alarms before considering the deployment to be complete and no longer eligible for automatic rollback.
+
+    
+
+  
+  :type GrowthFactor: float
+  :param GrowthFactor: 
+
+    The percentage of targets to receive a deployed configuration during each interval.
+
+    
+
+  
+  :type GrowthType: string
+  :param GrowthType: 
+
+    The algorithm used to define how percentage grows over time. AppConfig supports the following growth types:
+
+     
+
+    **Linear**: For this type, AppConfig processes the deployment by increments of the growth factor evenly distributed over the deployment time. For example, a linear deployment that uses a growth factor of 20 initially makes the configuration available to 20 percent of the targets. After 1/5th of the deployment time has passed, the system updates the percentage to 40 percent. This continues until 100% of the targets are set to receive the deployed configuration.
+
+     
+
+    **Exponential**: For this type, AppConfig processes the deployment exponentially using the following formula: ``G*(2^N)``. In this formula, ``G`` is the growth factor specified by the user and ``N`` is the number of steps until the configuration is deployed to all targets. For example, if you specify a growth factor of 2, then the system rolls out the configuration as follows:
+
+     
+
+    ``2*(2^0)``
+
+     
+
+    ``2*(2^1)``
+
+     
+
+    ``2*(2^2)``
+
+     
+
+    Expressed numerically, the deployment rolls out as follows: 2% of the targets, 4% of the targets, 8% of the targets, and continues until the configuration has been deployed to all targets.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Id': 'string',
+          'Name': 'string',
+          'Description': 'string',
+          'DeploymentDurationInMinutes': 123,
+          'GrowthType': 'LINEAR'|'EXPONENTIAL',
+          'GrowthFactor': ...,
+          'FinalBakeTimeInMinutes': 123,
+          'ReplicateTo': 'NONE'|'SSM_DOCUMENT'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Id** *(string) --* 
+
+        The deployment strategy ID.
+
+        
+      
+
+      - **Name** *(string) --* 
+
+        The name of the deployment strategy.
+
+        
+      
+
+      - **Description** *(string) --* 
+
+        The description of the deployment strategy.
+
+        
+      
+
+      - **DeploymentDurationInMinutes** *(integer) --* 
+
+        Total amount of time the deployment lasted.
+
+        
+      
+
+      - **GrowthType** *(string) --* 
+
+        The algorithm used to define how percentage grew over time.
+
+        
+      
+
+      - **GrowthFactor** *(float) --* 
+
+        The percentage of targets that received a deployed configuration during each interval.
+
+        
+      
+
+      - **FinalBakeTimeInMinutes** *(integer) --* 
+
+        The amount of time that AppConfig monitored for alarms before considering the deployment to be complete and no longer eligible for automatic rollback.
+
+        
+      
+
+      - **ReplicateTo** *(string) --* 
+
+        Save the deployment strategy to a Systems Manager (SSM) document.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AppConfig.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`AppConfig.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AppConfig.Client.exceptions.InternalServerException`
+
+  
+
+  **Examples**
+
+  The following update-deployment-strategy example updates final bake time to 20 minutes in the specified deployment strategy. ::
+
+  ::
+
+    response = client.update_deployment_strategy(
+        DeploymentStrategyId='1225qzk',
+        FinalBakeTimeInMinutes=20,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'DeploymentDurationInMinutes': 15,
+        'FinalBakeTimeInMinutes': 20,
+        'GrowthFactor': 25,
+        'GrowthType': 'LINEAR',
+        'Id': '1225qzk',
+        'Name': 'Example-Deployment',
+        'ReplicateTo': 'SSM_DOCUMENT',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

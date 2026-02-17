@@ -1,0 +1,121 @@
+:doc:`CodeArtifact <../../codeartifact>` / Client / get_authorization_token
+
+***********************
+get_authorization_token
+***********************
+
+
+
+.. py:method:: CodeArtifact.Client.get_authorization_token(**kwargs)
+
+  
+
+  Generates a temporary authorization token for accessing repositories in the domain. This API requires the ``codeartifact:GetAuthorizationToken`` and ``sts:GetServiceBearerToken`` permissions. For more information about authorization tokens, see `CodeArtifact authentication and tokens <https://docs.aws.amazon.com/codeartifact/latest/ug/tokens-authentication.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    CodeArtifact authorization tokens are valid for a period of 12 hours when created with the ``login`` command. You can call ``login`` periodically to refresh the token. When you create an authorization token with the ``GetAuthorizationToken`` API, you can set a custom authorization period, up to a maximum of 12 hours, with the ``durationSeconds`` parameter.
+
+     
+
+    The authorization period begins after ``login`` or ``GetAuthorizationToken`` is called. If ``login`` or ``GetAuthorizationToken`` is called while assuming a role, the token lifetime is independent of the maximum session duration of the role. For example, if you call ``sts assume-role`` and specify a session duration of 15 minutes, then generate a CodeArtifact authorization token, the token will be valid for the full authorization period even though this is longer than the 15-minute session duration.
+
+     
+
+    See `Using IAM Roles <https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use.html>`__ for more information on controlling session duration.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codeartifact-2018-09-22/GetAuthorizationToken>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_authorization_token(
+        domain='string',
+        domainOwner='string',
+        durationSeconds=123
+    )
+    
+  :type domain: string
+  :param domain: **[REQUIRED]** 
+
+    The name of the domain that is in scope for the generated authorization token.
+
+    
+
+  
+  :type domainOwner: string
+  :param domainOwner: 
+
+    The 12-digit account number of the Amazon Web Services account that owns the domain. It does not include dashes or spaces.
+
+    
+
+  
+  :type durationSeconds: integer
+  :param durationSeconds: 
+
+    The time, in seconds, that the generated authorization token is valid. Valid values are ``0`` and any number between ``900`` (15 minutes) and ``43200`` (12 hours). A value of ``0`` will set the expiration of the authorization token to the same expiration of the user's role's temporary credentials.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'authorizationToken': 'string',
+          'expiration': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **authorizationToken** *(string) --* 
+
+        The returned authentication token.
+
+        
+      
+
+      - **expiration** *(datetime) --* 
+
+        A timestamp that specifies the date and time the authorization token expires.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CodeArtifact.Client.exceptions.ValidationException`
+
+  

@@ -1,0 +1,323 @@
+:doc:`CleanRoomsService <../../cleanrooms>` / Client / update_collaboration_change_request
+
+***********************************
+update_collaboration_change_request
+***********************************
+
+
+
+.. py:method:: CleanRoomsService.Client.update_collaboration_change_request(**kwargs)
+
+  
+
+  Updates an existing collaboration change request. This operation allows approval actions for pending change requests in collaborations (APPROVE, DENY, CANCEL, COMMIT).
+
+   
+
+  For change requests without automatic approval, a member in the collaboration can manually APPROVE or DENY a change request. The collaboration owner can manually CANCEL or COMMIT a change request.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/UpdateCollaborationChangeRequest>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_collaboration_change_request(
+        collaborationIdentifier='string',
+        changeRequestIdentifier='string',
+        action='APPROVE'|'DENY'|'CANCEL'|'COMMIT'
+    )
+    
+  :type collaborationIdentifier: string
+  :param collaborationIdentifier: **[REQUIRED]** 
+
+    The unique identifier of the collaboration that contains the change request to be updated.
+
+    
+
+  
+  :type changeRequestIdentifier: string
+  :param changeRequestIdentifier: **[REQUIRED]** 
+
+    The unique identifier of the specific change request to be updated within the collaboration.
+
+    
+
+  
+  :type action: string
+  :param action: **[REQUIRED]** 
+
+    The action to perform on the change request. Valid values include APPROVE (approve the change), DENY (reject the change), CANCEL (cancel the request), and COMMIT (commit after the request is approved).
+
+     
+
+    For change requests without automatic approval, a member in the collaboration can manually APPROVE or DENY a change request. The collaboration owner can manually CANCEL or COMMIT a change request.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'collaborationChangeRequest': {
+              'id': 'string',
+              'collaborationId': 'string',
+              'createTime': datetime(2015, 1, 1),
+              'updateTime': datetime(2015, 1, 1),
+              'status': 'PENDING'|'APPROVED'|'CANCELLED'|'DENIED'|'COMMITTED',
+              'isAutoApproved': True|False,
+              'changes': [
+                  {
+                      'specificationType': 'MEMBER'|'COLLABORATION',
+                      'specification': {
+                          'member': {
+                              'accountId': 'string',
+                              'memberAbilities': [
+                                  'CAN_QUERY'|'CAN_RECEIVE_RESULTS'|'CAN_RUN_JOB',
+                              ],
+                              'displayName': 'string'
+                          },
+                          'collaboration': {
+                              'autoApprovedChangeTypes': [
+                                  'ADD_MEMBER'|'GRANT_RECEIVE_RESULTS_ABILITY'|'REVOKE_RECEIVE_RESULTS_ABILITY',
+                              ]
+                          }
+                      },
+                      'types': [
+                          'ADD_MEMBER'|'GRANT_RECEIVE_RESULTS_ABILITY'|'REVOKE_RECEIVE_RESULTS_ABILITY'|'EDIT_AUTO_APPROVED_CHANGE_TYPES',
+                      ]
+                  },
+              ],
+              'approvals': {
+                  'string': {
+                      'status': 'APPROVED'|'DENIED'|'PENDING'
+                  }
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **collaborationChangeRequest** *(dict) --* 
+
+        Represents a request to modify a collaboration. Change requests enable structured modifications to collaborations after they have been created.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          The unique identifier for the change request.
+
+          
+        
+
+        - **collaborationId** *(string) --* 
+
+          The unique identifier for the collaboration being modified.
+
+          
+        
+
+        - **createTime** *(datetime) --* 
+
+          The time when the change request was created.
+
+          
+        
+
+        - **updateTime** *(datetime) --* 
+
+          The time when the change request was last updated.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The current status of the change request. Valid values are ``PENDING``, ``APPROVED``, ``DENIED``, ``COMMITTED``, and ``CANCELLED``.
+
+          
+        
+
+        - **isAutoApproved** *(boolean) --* 
+
+          Whether the change request was automatically approved based on the collaboration's auto-approval settings.
+
+          
+        
+
+        - **changes** *(list) --* 
+
+          The list of changes specified in this change request.
+
+          
+          
+
+          - *(dict) --* 
+
+            Represents a single change within a collaboration change request, containing the change identifier and specification.
+
+            
+            
+
+            - **specificationType** *(string) --* 
+
+              The type of specification for this change.
+
+              
+            
+
+            - **specification** *(dict) --* 
+
+              The specification details for this change.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``member``, ``collaboration``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **member** *(dict) --* 
+
+                The member change specification when the change type is ``MEMBER``.
+
+                
+                
+
+                - **accountId** *(string) --* 
+
+                  The Amazon Web Services account ID of the member to add to the collaboration.
+
+                  
+                
+
+                - **memberAbilities** *(list) --* 
+
+                  The abilities granted to the collaboration member. These determine what actions the member can perform within the collaboration.
+
+                   
+
+                  .. note::
+
+                    
+
+                    The following values are currently not supported: ``CAN_QUERY``, ``CAN_RECEIVE_RESULTS,`` and ``CAN_RUN_JOB``.
+
+                     
+
+                    Set the value of ``memberAbilities`` to ``[]`` to allow a member to contribute data.
+
+                    
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **displayName** *(string) --* 
+
+                  Specifies the display name that will be shown for this member in the collaboration. While this field is required when inviting new members, it becomes optional when modifying abilities of existing collaboration members.
+
+                  
+            
+              
+
+              - **collaboration** *(dict) --* 
+
+                The collaboration configuration changes being requested. Currently, this only supports modifying which change types are auto-approved for the collaboration.
+
+                
+                
+
+                - **autoApprovedChangeTypes** *(list) --* 
+
+                  Defines requested updates to properties of the collaboration. Currently, this only supports modifying which change types are auto-approved for the collaboration.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **types** *(list) --* 
+
+              The list of change types that were applied.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **approvals** *(dict) --* 
+
+          A list of approval details from collaboration members, including approval status and multi-party approval workflow information.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(dict) --* 
+
+              Contains detailed information about the approval state of a given member in the collaboration for a given collaboration change request.
+
+              
+              
+
+              - **status** *(string) --* 
+
+                The approval status of a member's vote on the change request. Valid values are PENDING (if they haven't voted), APPROVED, or DENIED.
+
+                
+          
+      
+    
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.AccessDeniedException`
+
+  

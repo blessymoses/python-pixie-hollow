@@ -1,0 +1,1257 @@
+:doc:`AgentsforBedrockRuntime <../../bedrock-agent-runtime>` / Client / invoke_flow
+
+***********
+invoke_flow
+***********
+
+
+
+.. py:method:: AgentsforBedrockRuntime.Client.invoke_flow(**kwargs)
+
+  
+
+  Invokes an alias of a flow to run the inputs that you specify and return the output of each node as a stream. If there's an error, the error is returned. For more information, see `Test a flow in Amazon Bedrock <https://docs.aws.amazon.com/bedrock/latest/userguide/flows-test.html>`__ in the `Amazon Bedrock User Guide <https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-service.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    The CLI doesn't support streaming operations in Amazon Bedrock, including ``InvokeFlow``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/InvokeFlow>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.invoke_flow(
+        enableTrace=True|False,
+        executionId='string',
+        flowAliasIdentifier='string',
+        flowIdentifier='string',
+        inputs=[
+            {
+                'content': {
+                    'document': {...}|[...]|123|123.4|'string'|True|None
+                },
+                'nodeInputName': 'string',
+                'nodeName': 'string',
+                'nodeOutputName': 'string'
+            },
+        ],
+        modelPerformanceConfiguration={
+            'performanceConfig': {
+                'latency': 'standard'|'optimized'
+            }
+        }
+    )
+    
+  :type enableTrace: boolean
+  :param enableTrace: 
+
+    Specifies whether to return the trace for the flow or not. Traces track inputs and outputs for nodes in the flow. For more information, see `Track each step in your prompt flow by viewing its trace in Amazon Bedrock <https://docs.aws.amazon.com/bedrock/latest/userguide/flows-trace.html>`__.
+
+    
+
+  
+  :type executionId: string
+  :param executionId: 
+
+    The unique identifier for the current flow execution. If you don't provide a value, Amazon Bedrock creates the identifier for you.
+
+    
+
+  
+  :type flowAliasIdentifier: string
+  :param flowAliasIdentifier: **[REQUIRED]** 
+
+    The unique identifier of the flow alias.
+
+    
+
+  
+  :type flowIdentifier: string
+  :param flowIdentifier: **[REQUIRED]** 
+
+    The unique identifier of the flow.
+
+    
+
+  
+  :type inputs: list
+  :param inputs: **[REQUIRED]** 
+
+    A list of objects, each containing information about an input into the flow.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains information about an input into the prompt flow and where to send it.
+
+      
+
+    
+      - **content** *(dict) --* **[REQUIRED]** 
+
+        Contains information about an input into the prompt flow.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``document``. 
+
+      
+        - **document** (:ref:`document<document>`) -- 
+
+          The input to send to the prompt flow input node.
+
+          
+
+        
+      
+      - **nodeInputName** *(string) --* 
+
+        The name of the input from the flow input node.
+
+        
+
+      
+      - **nodeName** *(string) --* **[REQUIRED]** 
+
+        The name of the flow input node that begins the prompt flow.
+
+        
+
+      
+      - **nodeOutputName** *(string) --* 
+
+        The name of the output from the flow input node that begins the prompt flow.
+
+        
+
+      
+    
+
+  :type modelPerformanceConfiguration: dict
+  :param modelPerformanceConfiguration: 
+
+    Model performance settings for the request.
+
+    
+
+  
+    - **performanceConfig** *(dict) --* 
+
+      The latency configuration for the model.
+
+      
+
+    
+      - **latency** *(string) --* 
+
+        To use a latency-optimized version of the model, set to ``optimized``.
+
+        
+
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+
+    The response of this operation contains an :class:`.EventStream` member. When iterated the :class:`.EventStream` will yield events based on the structure below, where only one of the top level keys will be present for any given event.
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'executionId': 'string',
+          'responseStream': EventStream({
+              'accessDeniedException': {
+                  'message': 'string'
+              },
+              'badGatewayException': {
+                  'message': 'string',
+                  'resourceName': 'string'
+              },
+              'conflictException': {
+                  'message': 'string'
+              },
+              'dependencyFailedException': {
+                  'message': 'string',
+                  'resourceName': 'string'
+              },
+              'flowCompletionEvent': {
+                  'completionReason': 'SUCCESS'|'INPUT_REQUIRED'
+              },
+              'flowMultiTurnInputRequestEvent': {
+                  'content': {
+                      'document': {...}|[...]|123|123.4|'string'|True|None
+                  },
+                  'nodeName': 'string',
+                  'nodeType': 'FlowInputNode'|'FlowOutputNode'|'LambdaFunctionNode'|'KnowledgeBaseNode'|'PromptNode'|'ConditionNode'|'LexNode'
+              },
+              'flowOutputEvent': {
+                  'content': {
+                      'document': {...}|[...]|123|123.4|'string'|True|None
+                  },
+                  'nodeName': 'string',
+                  'nodeType': 'FlowInputNode'|'FlowOutputNode'|'LambdaFunctionNode'|'KnowledgeBaseNode'|'PromptNode'|'ConditionNode'|'LexNode'
+              },
+              'flowTraceEvent': {
+                  'trace': {
+                      'conditionNodeResultTrace': {
+                          'nodeName': 'string',
+                          'satisfiedConditions': [
+                              {
+                                  'conditionName': 'string'
+                              },
+                          ],
+                          'timestamp': datetime(2015, 1, 1)
+                      },
+                      'nodeActionTrace': {
+                          'nodeName': 'string',
+                          'operationName': 'string',
+                          'operationRequest': {...}|[...]|123|123.4|'string'|True|None,
+                          'operationResponse': {...}|[...]|123|123.4|'string'|True|None,
+                          'requestId': 'string',
+                          'serviceName': 'string',
+                          'timestamp': datetime(2015, 1, 1)
+                      },
+                      'nodeDependencyTrace': {
+                          'nodeName': 'string',
+                          'timestamp': datetime(2015, 1, 1),
+                          'traceElements': {
+                              'agentTraces': [
+                                  {
+                                      'agentAliasId': 'string',
+                                      'agentId': 'string',
+                                      'agentVersion': 'string',
+                                      'callerChain': [
+                                          {
+                                              'agentAliasArn': 'string'
+                                          },
+                                      ],
+                                      'collaboratorName': 'string',
+                                      'eventTime': datetime(2015, 1, 1),
+                                      'sessionId': 'string',
+                                      'trace': {
+                                          'customOrchestrationTrace': {
+                                              'event': {
+                                                  'text': 'string'
+                                              },
+                                              'traceId': 'string'
+                                          },
+                                          'failureTrace': {
+                                              'failureCode': 123,
+                                              'failureReason': 'string',
+                                              'metadata': {
+                                                  'clientRequestId': 'string',
+                                                  'endTime': datetime(2015, 1, 1),
+                                                  'operationTotalTimeMs': 123,
+                                                  'startTime': datetime(2015, 1, 1),
+                                                  'totalTimeMs': 123,
+                                                  'usage': {
+                                                      'inputTokens': 123,
+                                                      'outputTokens': 123
+                                                  }
+                                              },
+                                              'traceId': 'string'
+                                          },
+                                          'guardrailTrace': {
+                                              'action': 'INTERVENED'|'NONE',
+                                              'inputAssessments': [
+                                                  {
+                                                      'contentPolicy': {
+                                                          'filters': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'confidence': 'NONE'|'LOW'|'MEDIUM'|'HIGH',
+                                                                  'type': 'INSULTS'|'HATE'|'SEXUAL'|'VIOLENCE'|'MISCONDUCT'|'PROMPT_ATTACK'
+                                                              },
+                                                          ]
+                                                      },
+                                                      'sensitiveInformationPolicy': {
+                                                          'piiEntities': [
+                                                              {
+                                                                  'action': 'BLOCKED'|'ANONYMIZED',
+                                                                  'match': 'string',
+                                                                  'type': 'ADDRESS'|'AGE'|'AWS_ACCESS_KEY'|'AWS_SECRET_KEY'|'CA_HEALTH_NUMBER'|'CA_SOCIAL_INSURANCE_NUMBER'|'CREDIT_DEBIT_CARD_CVV'|'CREDIT_DEBIT_CARD_EXPIRY'|'CREDIT_DEBIT_CARD_NUMBER'|'DRIVER_ID'|'EMAIL'|'INTERNATIONAL_BANK_ACCOUNT_NUMBER'|'IP_ADDRESS'|'LICENSE_PLATE'|'MAC_ADDRESS'|'NAME'|'PASSWORD'|'PHONE'|'PIN'|'SWIFT_CODE'|'UK_NATIONAL_HEALTH_SERVICE_NUMBER'|'UK_NATIONAL_INSURANCE_NUMBER'|'UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER'|'URL'|'USERNAME'|'US_BANK_ACCOUNT_NUMBER'|'US_BANK_ROUTING_NUMBER'|'US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER'|'US_PASSPORT_NUMBER'|'US_SOCIAL_SECURITY_NUMBER'|'VEHICLE_IDENTIFICATION_NUMBER'
+                                                              },
+                                                          ],
+                                                          'regexes': [
+                                                              {
+                                                                  'action': 'BLOCKED'|'ANONYMIZED',
+                                                                  'match': 'string',
+                                                                  'name': 'string',
+                                                                  'regex': 'string'
+                                                              },
+                                                          ]
+                                                      },
+                                                      'topicPolicy': {
+                                                          'topics': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'name': 'string',
+                                                                  'type': 'DENY'
+                                                              },
+                                                          ]
+                                                      },
+                                                      'wordPolicy': {
+                                                          'customWords': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'match': 'string'
+                                                              },
+                                                          ],
+                                                          'managedWordLists': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'match': 'string',
+                                                                  'type': 'PROFANITY'
+                                                              },
+                                                          ]
+                                                      }
+                                                  },
+                                              ],
+                                              'metadata': {
+                                                  'clientRequestId': 'string',
+                                                  'endTime': datetime(2015, 1, 1),
+                                                  'operationTotalTimeMs': 123,
+                                                  'startTime': datetime(2015, 1, 1),
+                                                  'totalTimeMs': 123,
+                                                  'usage': {
+                                                      'inputTokens': 123,
+                                                      'outputTokens': 123
+                                                  }
+                                              },
+                                              'outputAssessments': [
+                                                  {
+                                                      'contentPolicy': {
+                                                          'filters': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'confidence': 'NONE'|'LOW'|'MEDIUM'|'HIGH',
+                                                                  'type': 'INSULTS'|'HATE'|'SEXUAL'|'VIOLENCE'|'MISCONDUCT'|'PROMPT_ATTACK'
+                                                              },
+                                                          ]
+                                                      },
+                                                      'sensitiveInformationPolicy': {
+                                                          'piiEntities': [
+                                                              {
+                                                                  'action': 'BLOCKED'|'ANONYMIZED',
+                                                                  'match': 'string',
+                                                                  'type': 'ADDRESS'|'AGE'|'AWS_ACCESS_KEY'|'AWS_SECRET_KEY'|'CA_HEALTH_NUMBER'|'CA_SOCIAL_INSURANCE_NUMBER'|'CREDIT_DEBIT_CARD_CVV'|'CREDIT_DEBIT_CARD_EXPIRY'|'CREDIT_DEBIT_CARD_NUMBER'|'DRIVER_ID'|'EMAIL'|'INTERNATIONAL_BANK_ACCOUNT_NUMBER'|'IP_ADDRESS'|'LICENSE_PLATE'|'MAC_ADDRESS'|'NAME'|'PASSWORD'|'PHONE'|'PIN'|'SWIFT_CODE'|'UK_NATIONAL_HEALTH_SERVICE_NUMBER'|'UK_NATIONAL_INSURANCE_NUMBER'|'UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER'|'URL'|'USERNAME'|'US_BANK_ACCOUNT_NUMBER'|'US_BANK_ROUTING_NUMBER'|'US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER'|'US_PASSPORT_NUMBER'|'US_SOCIAL_SECURITY_NUMBER'|'VEHICLE_IDENTIFICATION_NUMBER'
+                                                              },
+                                                          ],
+                                                          'regexes': [
+                                                              {
+                                                                  'action': 'BLOCKED'|'ANONYMIZED',
+                                                                  'match': 'string',
+                                                                  'name': 'string',
+                                                                  'regex': 'string'
+                                                              },
+                                                          ]
+                                                      },
+                                                      'topicPolicy': {
+                                                          'topics': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'name': 'string',
+                                                                  'type': 'DENY'
+                                                              },
+                                                          ]
+                                                      },
+                                                      'wordPolicy': {
+                                                          'customWords': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'match': 'string'
+                                                              },
+                                                          ],
+                                                          'managedWordLists': [
+                                                              {
+                                                                  'action': 'BLOCKED',
+                                                                  'match': 'string',
+                                                                  'type': 'PROFANITY'
+                                                              },
+                                                          ]
+                                                      }
+                                                  },
+                                              ],
+                                              'traceId': 'string'
+                                          },
+                                          'orchestrationTrace': {
+                                              'invocationInput': {
+                                                  'actionGroupInvocationInput': {
+                                                      'actionGroupName': 'string',
+                                                      'apiPath': 'string',
+                                                      'executionType': 'LAMBDA'|'RETURN_CONTROL',
+                                                      'function': 'string',
+                                                      'invocationId': 'string',
+                                                      'parameters': [
+                                                          {
+                                                              'name': 'string',
+                                                              'type': 'string',
+                                                              'value': 'string'
+                                                          },
+                                                      ],
+                                                      'requestBody': {
+                                                          'content': {
+                                                              'string': [
+                                                                  {
+                                                                      'name': 'string',
+                                                                      'type': 'string',
+                                                                      'value': 'string'
+                                                                  },
+                                                              ]
+                                                          }
+                                                      },
+                                                      'verb': 'string'
+                                                  },
+                                                  'agentCollaboratorInvocationInput': {
+                                                      'agentCollaboratorAliasArn': 'string',
+                                                      'agentCollaboratorName': 'string',
+                                                      'input': {
+                                                          'returnControlResults': {
+                                                              'invocationId': 'string',
+                                                              'returnControlInvocationResults': [
+                                                                  {
+                                                                      'apiResult': {
+                                                                          'actionGroup': 'string',
+                                                                          'agentId': 'string',
+                                                                          'apiPath': 'string',
+                                                                          'confirmationState': 'CONFIRM'|'DENY',
+                                                                          'httpMethod': 'string',
+                                                                          'httpStatusCode': 123,
+                                                                          'responseBody': {
+                                                                              'string': {
+                                                                                  'body': 'string',
+                                                                                  'images': [
+                                                                                      {
+                                                                                          'format': 'png'|'jpeg'|'gif'|'webp',
+                                                                                          'source': {
+                                                                                              'bytes': b'bytes'
+                                                                                          }
+                                                                                      },
+                                                                                  ]
+                                                                              }
+                                                                          },
+                                                                          'responseState': 'FAILURE'|'REPROMPT'
+                                                                      },
+                                                                      'functionResult': {
+                                                                          'actionGroup': 'string',
+                                                                          'agentId': 'string',
+                                                                          'confirmationState': 'CONFIRM'|'DENY',
+                                                                          'function': 'string',
+                                                                          'responseBody': {
+                                                                              'string': {
+                                                                                  'body': 'string',
+                                                                                  'images': [
+                                                                                      {
+                                                                                          'format': 'png'|'jpeg'|'gif'|'webp',
+                                                                                          'source': {
+                                                                                              'bytes': b'bytes'
+                                                                                          }
+                                                                                      },
+                                                                                  ]
+                                                                              }
+                                                                          },
+                                                                          'responseState': 'FAILURE'|'REPROMPT'
+                                                                      }
+                                                                  },
+                                                              ]
+                                                          },
+                                                          'text': 'string',
+                                                          'type': 'TEXT'|'RETURN_CONTROL'
+                                                      }
+                                                  },
+                                                  'codeInterpreterInvocationInput': {
+                                                      'code': 'string',
+                                                      'files': [
+                                                          'string',
+                                                      ]
+                                                  },
+                                                  'invocationType': 'ACTION_GROUP'|'KNOWLEDGE_BASE'|'FINISH'|'ACTION_GROUP_CODE_INTERPRETER'|'AGENT_COLLABORATOR',
+                                                  'knowledgeBaseLookupInput': {
+                                                      'knowledgeBaseId': 'string',
+                                                      'text': 'string'
+                                                  },
+                                                  'traceId': 'string'
+                                              },
+                                              'modelInvocationInput': {
+                                                  'foundationModel': 'string',
+                                                  'inferenceConfiguration': {
+                                                      'maximumLength': 123,
+                                                      'stopSequences': [
+                                                          'string',
+                                                      ],
+                                                      'temperature': ...,
+                                                      'topK': 123,
+                                                      'topP': ...
+                                                  },
+                                                  'overrideLambda': 'string',
+                                                  'parserMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'promptCreationMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'text': 'string',
+                                                  'traceId': 'string',
+                                                  'type': 'PRE_PROCESSING'|'ORCHESTRATION'|'KNOWLEDGE_BASE_RESPONSE_GENERATION'|'POST_PROCESSING'|'ROUTING_CLASSIFIER'
+                                              },
+                                              'modelInvocationOutput': {
+                                                  'metadata': {
+                                                      'clientRequestId': 'string',
+                                                      'endTime': datetime(2015, 1, 1),
+                                                      'operationTotalTimeMs': 123,
+                                                      'startTime': datetime(2015, 1, 1),
+                                                      'totalTimeMs': 123,
+                                                      'usage': {
+                                                          'inputTokens': 123,
+                                                          'outputTokens': 123
+                                                      }
+                                                  },
+                                                  'rawResponse': {
+                                                      'content': 'string'
+                                                  },
+                                                  'reasoningContent': {
+                                                      'reasoningText': {
+                                                          'signature': 'string',
+                                                          'text': 'string'
+                                                      },
+                                                      'redactedContent': b'bytes'
+                                                  },
+                                                  'traceId': 'string'
+                                              },
+                                              'observation': {
+                                                  'actionGroupInvocationOutput': {
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'text': 'string'
+                                                  },
+                                                  'agentCollaboratorInvocationOutput': {
+                                                      'agentCollaboratorAliasArn': 'string',
+                                                      'agentCollaboratorName': 'string',
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'output': {
+                                                          'returnControlPayload': {
+                                                              'invocationId': 'string',
+                                                              'invocationInputs': [
+                                                                  {
+                                                                      'apiInvocationInput': {
+                                                                          'actionGroup': 'string',
+                                                                          'actionInvocationType': 'RESULT'|'USER_CONFIRMATION'|'USER_CONFIRMATION_AND_RESULT',
+                                                                          'agentId': 'string',
+                                                                          'apiPath': 'string',
+                                                                          'collaboratorName': 'string',
+                                                                          'httpMethod': 'string',
+                                                                          'parameters': [
+                                                                              {
+                                                                                  'name': 'string',
+                                                                                  'type': 'string',
+                                                                                  'value': 'string'
+                                                                              },
+                                                                          ],
+                                                                          'requestBody': {
+                                                                              'content': {
+                                                                                  'string': {
+                                                                                      'properties': [
+                                                                                          {
+                                                                                              'name': 'string',
+                                                                                              'type': 'string',
+                                                                                              'value': 'string'
+                                                                                          },
+                                                                                      ]
+                                                                                  }
+                                                                              }
+                                                                          }
+                                                                      },
+                                                                      'functionInvocationInput': {
+                                                                          'actionGroup': 'string',
+                                                                          'actionInvocationType': 'RESULT'|'USER_CONFIRMATION'|'USER_CONFIRMATION_AND_RESULT',
+                                                                          'agentId': 'string',
+                                                                          'collaboratorName': 'string',
+                                                                          'function': 'string',
+                                                                          'parameters': [
+                                                                              {
+                                                                                  'name': 'string',
+                                                                                  'type': 'string',
+                                                                                  'value': 'string'
+                                                                              },
+                                                                          ]
+                                                                      }
+                                                                  },
+                                                              ]
+                                                          },
+                                                          'text': 'string',
+                                                          'type': 'TEXT'|'RETURN_CONTROL'
+                                                      }
+                                                  },
+                                                  'codeInterpreterInvocationOutput': {
+                                                      'executionError': 'string',
+                                                      'executionOutput': 'string',
+                                                      'executionTimeout': True|False,
+                                                      'files': [
+                                                          'string',
+                                                      ],
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      }
+                                                  },
+                                                  'finalResponse': {
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'text': 'string'
+                                                  },
+                                                  'knowledgeBaseLookupOutput': {
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'retrievedReferences': [
+                                                          {
+                                                              'content': {
+                                                                  'audio': {
+                                                                      's3Uri': 'string',
+                                                                      'transcription': 'string'
+                                                                  },
+                                                                  'byteContent': 'string',
+                                                                  'row': [
+                                                                      {
+                                                                          'columnName': 'string',
+                                                                          'columnValue': 'string',
+                                                                          'type': 'BLOB'|'BOOLEAN'|'DOUBLE'|'NULL'|'LONG'|'STRING'
+                                                                      },
+                                                                  ],
+                                                                  'text': 'string',
+                                                                  'type': 'TEXT'|'IMAGE'|'ROW'|'AUDIO'|'VIDEO',
+                                                                  'video': {
+                                                                      's3Uri': 'string',
+                                                                      'summary': 'string'
+                                                                  }
+                                                              },
+                                                              'location': {
+                                                                  'confluenceLocation': {
+                                                                      'url': 'string'
+                                                                  },
+                                                                  'customDocumentLocation': {
+                                                                      'id': 'string'
+                                                                  },
+                                                                  'kendraDocumentLocation': {
+                                                                      'uri': 'string'
+                                                                  },
+                                                                  's3Location': {
+                                                                      'uri': 'string'
+                                                                  },
+                                                                  'salesforceLocation': {
+                                                                      'url': 'string'
+                                                                  },
+                                                                  'sharePointLocation': {
+                                                                      'url': 'string'
+                                                                  },
+                                                                  'sqlLocation': {
+                                                                      'query': 'string'
+                                                                  },
+                                                                  'type': 'S3'|'WEB'|'CONFLUENCE'|'SALESFORCE'|'SHAREPOINT'|'CUSTOM'|'KENDRA'|'SQL',
+                                                                  'webLocation': {
+                                                                      'url': 'string'
+                                                                  }
+                                                              },
+                                                              'metadata': {
+                                                                  'string': {...}|[...]|123|123.4|'string'|True|None
+                                                              }
+                                                          },
+                                                      ]
+                                                  },
+                                                  'repromptResponse': {
+                                                      'source': 'ACTION_GROUP'|'KNOWLEDGE_BASE'|'PARSER',
+                                                      'text': 'string'
+                                                  },
+                                                  'traceId': 'string',
+                                                  'type': 'ACTION_GROUP'|'AGENT_COLLABORATOR'|'KNOWLEDGE_BASE'|'FINISH'|'ASK_USER'|'REPROMPT'
+                                              },
+                                              'rationale': {
+                                                  'text': 'string',
+                                                  'traceId': 'string'
+                                              }
+                                          },
+                                          'postProcessingTrace': {
+                                              'modelInvocationInput': {
+                                                  'foundationModel': 'string',
+                                                  'inferenceConfiguration': {
+                                                      'maximumLength': 123,
+                                                      'stopSequences': [
+                                                          'string',
+                                                      ],
+                                                      'temperature': ...,
+                                                      'topK': 123,
+                                                      'topP': ...
+                                                  },
+                                                  'overrideLambda': 'string',
+                                                  'parserMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'promptCreationMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'text': 'string',
+                                                  'traceId': 'string',
+                                                  'type': 'PRE_PROCESSING'|'ORCHESTRATION'|'KNOWLEDGE_BASE_RESPONSE_GENERATION'|'POST_PROCESSING'|'ROUTING_CLASSIFIER'
+                                              },
+                                              'modelInvocationOutput': {
+                                                  'metadata': {
+                                                      'clientRequestId': 'string',
+                                                      'endTime': datetime(2015, 1, 1),
+                                                      'operationTotalTimeMs': 123,
+                                                      'startTime': datetime(2015, 1, 1),
+                                                      'totalTimeMs': 123,
+                                                      'usage': {
+                                                          'inputTokens': 123,
+                                                          'outputTokens': 123
+                                                      }
+                                                  },
+                                                  'parsedResponse': {
+                                                      'text': 'string'
+                                                  },
+                                                  'rawResponse': {
+                                                      'content': 'string'
+                                                  },
+                                                  'reasoningContent': {
+                                                      'reasoningText': {
+                                                          'signature': 'string',
+                                                          'text': 'string'
+                                                      },
+                                                      'redactedContent': b'bytes'
+                                                  },
+                                                  'traceId': 'string'
+                                              }
+                                          },
+                                          'preProcessingTrace': {
+                                              'modelInvocationInput': {
+                                                  'foundationModel': 'string',
+                                                  'inferenceConfiguration': {
+                                                      'maximumLength': 123,
+                                                      'stopSequences': [
+                                                          'string',
+                                                      ],
+                                                      'temperature': ...,
+                                                      'topK': 123,
+                                                      'topP': ...
+                                                  },
+                                                  'overrideLambda': 'string',
+                                                  'parserMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'promptCreationMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'text': 'string',
+                                                  'traceId': 'string',
+                                                  'type': 'PRE_PROCESSING'|'ORCHESTRATION'|'KNOWLEDGE_BASE_RESPONSE_GENERATION'|'POST_PROCESSING'|'ROUTING_CLASSIFIER'
+                                              },
+                                              'modelInvocationOutput': {
+                                                  'metadata': {
+                                                      'clientRequestId': 'string',
+                                                      'endTime': datetime(2015, 1, 1),
+                                                      'operationTotalTimeMs': 123,
+                                                      'startTime': datetime(2015, 1, 1),
+                                                      'totalTimeMs': 123,
+                                                      'usage': {
+                                                          'inputTokens': 123,
+                                                          'outputTokens': 123
+                                                      }
+                                                  },
+                                                  'parsedResponse': {
+                                                      'isValid': True|False,
+                                                      'rationale': 'string'
+                                                  },
+                                                  'rawResponse': {
+                                                      'content': 'string'
+                                                  },
+                                                  'reasoningContent': {
+                                                      'reasoningText': {
+                                                          'signature': 'string',
+                                                          'text': 'string'
+                                                      },
+                                                      'redactedContent': b'bytes'
+                                                  },
+                                                  'traceId': 'string'
+                                              }
+                                          },
+                                          'routingClassifierTrace': {
+                                              'invocationInput': {
+                                                  'actionGroupInvocationInput': {
+                                                      'actionGroupName': 'string',
+                                                      'apiPath': 'string',
+                                                      'executionType': 'LAMBDA'|'RETURN_CONTROL',
+                                                      'function': 'string',
+                                                      'invocationId': 'string',
+                                                      'parameters': [
+                                                          {
+                                                              'name': 'string',
+                                                              'type': 'string',
+                                                              'value': 'string'
+                                                          },
+                                                      ],
+                                                      'requestBody': {
+                                                          'content': {
+                                                              'string': [
+                                                                  {
+                                                                      'name': 'string',
+                                                                      'type': 'string',
+                                                                      'value': 'string'
+                                                                  },
+                                                              ]
+                                                          }
+                                                      },
+                                                      'verb': 'string'
+                                                  },
+                                                  'agentCollaboratorInvocationInput': {
+                                                      'agentCollaboratorAliasArn': 'string',
+                                                      'agentCollaboratorName': 'string',
+                                                      'input': {
+                                                          'returnControlResults': {
+                                                              'invocationId': 'string',
+                                                              'returnControlInvocationResults': [
+                                                                  {
+                                                                      'apiResult': {
+                                                                          'actionGroup': 'string',
+                                                                          'agentId': 'string',
+                                                                          'apiPath': 'string',
+                                                                          'confirmationState': 'CONFIRM'|'DENY',
+                                                                          'httpMethod': 'string',
+                                                                          'httpStatusCode': 123,
+                                                                          'responseBody': {
+                                                                              'string': {
+                                                                                  'body': 'string',
+                                                                                  'images': [
+                                                                                      {
+                                                                                          'format': 'png'|'jpeg'|'gif'|'webp',
+                                                                                          'source': {
+                                                                                              'bytes': b'bytes'
+                                                                                          }
+                                                                                      },
+                                                                                  ]
+                                                                              }
+                                                                          },
+                                                                          'responseState': 'FAILURE'|'REPROMPT'
+                                                                      },
+                                                                      'functionResult': {
+                                                                          'actionGroup': 'string',
+                                                                          'agentId': 'string',
+                                                                          'confirmationState': 'CONFIRM'|'DENY',
+                                                                          'function': 'string',
+                                                                          'responseBody': {
+                                                                              'string': {
+                                                                                  'body': 'string',
+                                                                                  'images': [
+                                                                                      {
+                                                                                          'format': 'png'|'jpeg'|'gif'|'webp',
+                                                                                          'source': {
+                                                                                              'bytes': b'bytes'
+                                                                                          }
+                                                                                      },
+                                                                                  ]
+                                                                              }
+                                                                          },
+                                                                          'responseState': 'FAILURE'|'REPROMPT'
+                                                                      }
+                                                                  },
+                                                              ]
+                                                          },
+                                                          'text': 'string',
+                                                          'type': 'TEXT'|'RETURN_CONTROL'
+                                                      }
+                                                  },
+                                                  'codeInterpreterInvocationInput': {
+                                                      'code': 'string',
+                                                      'files': [
+                                                          'string',
+                                                      ]
+                                                  },
+                                                  'invocationType': 'ACTION_GROUP'|'KNOWLEDGE_BASE'|'FINISH'|'ACTION_GROUP_CODE_INTERPRETER'|'AGENT_COLLABORATOR',
+                                                  'knowledgeBaseLookupInput': {
+                                                      'knowledgeBaseId': 'string',
+                                                      'text': 'string'
+                                                  },
+                                                  'traceId': 'string'
+                                              },
+                                              'modelInvocationInput': {
+                                                  'foundationModel': 'string',
+                                                  'inferenceConfiguration': {
+                                                      'maximumLength': 123,
+                                                      'stopSequences': [
+                                                          'string',
+                                                      ],
+                                                      'temperature': ...,
+                                                      'topK': 123,
+                                                      'topP': ...
+                                                  },
+                                                  'overrideLambda': 'string',
+                                                  'parserMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'promptCreationMode': 'DEFAULT'|'OVERRIDDEN',
+                                                  'text': 'string',
+                                                  'traceId': 'string',
+                                                  'type': 'PRE_PROCESSING'|'ORCHESTRATION'|'KNOWLEDGE_BASE_RESPONSE_GENERATION'|'POST_PROCESSING'|'ROUTING_CLASSIFIER'
+                                              },
+                                              'modelInvocationOutput': {
+                                                  'metadata': {
+                                                      'clientRequestId': 'string',
+                                                      'endTime': datetime(2015, 1, 1),
+                                                      'operationTotalTimeMs': 123,
+                                                      'startTime': datetime(2015, 1, 1),
+                                                      'totalTimeMs': 123,
+                                                      'usage': {
+                                                          'inputTokens': 123,
+                                                          'outputTokens': 123
+                                                      }
+                                                  },
+                                                  'rawResponse': {
+                                                      'content': 'string'
+                                                  },
+                                                  'traceId': 'string'
+                                              },
+                                              'observation': {
+                                                  'actionGroupInvocationOutput': {
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'text': 'string'
+                                                  },
+                                                  'agentCollaboratorInvocationOutput': {
+                                                      'agentCollaboratorAliasArn': 'string',
+                                                      'agentCollaboratorName': 'string',
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'output': {
+                                                          'returnControlPayload': {
+                                                              'invocationId': 'string',
+                                                              'invocationInputs': [
+                                                                  {
+                                                                      'apiInvocationInput': {
+                                                                          'actionGroup': 'string',
+                                                                          'actionInvocationType': 'RESULT'|'USER_CONFIRMATION'|'USER_CONFIRMATION_AND_RESULT',
+                                                                          'agentId': 'string',
+                                                                          'apiPath': 'string',
+                                                                          'collaboratorName': 'string',
+                                                                          'httpMethod': 'string',
+                                                                          'parameters': [
+                                                                              {
+                                                                                  'name': 'string',
+                                                                                  'type': 'string',
+                                                                                  'value': 'string'
+                                                                              },
+                                                                          ],
+                                                                          'requestBody': {
+                                                                              'content': {
+                                                                                  'string': {
+                                                                                      'properties': [
+                                                                                          {
+                                                                                              'name': 'string',
+                                                                                              'type': 'string',
+                                                                                              'value': 'string'
+                                                                                          },
+                                                                                      ]
+                                                                                  }
+                                                                              }
+                                                                          }
+                                                                      },
+                                                                      'functionInvocationInput': {
+                                                                          'actionGroup': 'string',
+                                                                          'actionInvocationType': 'RESULT'|'USER_CONFIRMATION'|'USER_CONFIRMATION_AND_RESULT',
+                                                                          'agentId': 'string',
+                                                                          'collaboratorName': 'string',
+                                                                          'function': 'string',
+                                                                          'parameters': [
+                                                                              {
+                                                                                  'name': 'string',
+                                                                                  'type': 'string',
+                                                                                  'value': 'string'
+                                                                              },
+                                                                          ]
+                                                                      }
+                                                                  },
+                                                              ]
+                                                          },
+                                                          'text': 'string',
+                                                          'type': 'TEXT'|'RETURN_CONTROL'
+                                                      }
+                                                  },
+                                                  'codeInterpreterInvocationOutput': {
+                                                      'executionError': 'string',
+                                                      'executionOutput': 'string',
+                                                      'executionTimeout': True|False,
+                                                      'files': [
+                                                          'string',
+                                                      ],
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      }
+                                                  },
+                                                  'finalResponse': {
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'text': 'string'
+                                                  },
+                                                  'knowledgeBaseLookupOutput': {
+                                                      'metadata': {
+                                                          'clientRequestId': 'string',
+                                                          'endTime': datetime(2015, 1, 1),
+                                                          'operationTotalTimeMs': 123,
+                                                          'startTime': datetime(2015, 1, 1),
+                                                          'totalTimeMs': 123,
+                                                          'usage': {
+                                                              'inputTokens': 123,
+                                                              'outputTokens': 123
+                                                          }
+                                                      },
+                                                      'retrievedReferences': [
+                                                          {
+                                                              'content': {
+                                                                  'audio': {
+                                                                      's3Uri': 'string',
+                                                                      'transcription': 'string'
+                                                                  },
+                                                                  'byteContent': 'string',
+                                                                  'row': [
+                                                                      {
+                                                                          'columnName': 'string',
+                                                                          'columnValue': 'string',
+                                                                          'type': 'BLOB'|'BOOLEAN'|'DOUBLE'|'NULL'|'LONG'|'STRING'
+                                                                      },
+                                                                  ],
+                                                                  'text': 'string',
+                                                                  'type': 'TEXT'|'IMAGE'|'ROW'|'AUDIO'|'VIDEO',
+                                                                  'video': {
+                                                                      's3Uri': 'string',
+                                                                      'summary': 'string'
+                                                                  }
+                                                              },
+                                                              'location': {
+                                                                  'confluenceLocation': {
+                                                                      'url': 'string'
+                                                                  },
+                                                                  'customDocumentLocation': {
+                                                                      'id': 'string'
+                                                                  },
+                                                                  'kendraDocumentLocation': {
+                                                                      'uri': 'string'
+                                                                  },
+                                                                  's3Location': {
+                                                                      'uri': 'string'
+                                                                  },
+                                                                  'salesforceLocation': {
+                                                                      'url': 'string'
+                                                                  },
+                                                                  'sharePointLocation': {
+                                                                      'url': 'string'
+                                                                  },
+                                                                  'sqlLocation': {
+                                                                      'query': 'string'
+                                                                  },
+                                                                  'type': 'S3'|'WEB'|'CONFLUENCE'|'SALESFORCE'|'SHAREPOINT'|'CUSTOM'|'KENDRA'|'SQL',
+                                                                  'webLocation': {
+                                                                      'url': 'string'
+                                                                  }
+                                                              },
+                                                              'metadata': {
+                                                                  'string': {...}|[...]|123|123.4|'string'|True|None
+                                                              }
+                                                          },
+                                                      ]
+                                                  },
+                                                  'repromptResponse': {
+                                                      'source': 'ACTION_GROUP'|'KNOWLEDGE_BASE'|'PARSER',
+                                                      'text': 'string'
+                                                  },
+                                                  'traceId': 'string',
+                                                  'type': 'ACTION_GROUP'|'AGENT_COLLABORATOR'|'KNOWLEDGE_BASE'|'FINISH'|'ASK_USER'|'REPROMPT'
+                                              }
+                                          }
+                                      }
+                                  },
+                              ]
+                          }
+                      },
+                      'nodeInputTrace': {
+                          'fields': [
+                              {
+                                  'category': 'LoopCondition'|'ReturnValueToLoopStart'|'ExitLoop',
+                                  'content': {
+                                      'document': {...}|[...]|123|123.4|'string'|True|None
+                                  },
+                                  'executionChain': [
+                                      {
+                                          'index': 123,
+                                          'nodeName': 'string',
+                                          'type': 'Iterator'|'Loop'
+                                      },
+                                  ],
+                                  'nodeInputName': 'string',
+                                  'source': {
+                                      'expression': 'string',
+                                      'nodeName': 'string',
+                                      'outputFieldName': 'string'
+                                  },
+                                  'type': 'String'|'Number'|'Boolean'|'Object'|'Array'
+                              },
+                          ],
+                          'nodeName': 'string',
+                          'timestamp': datetime(2015, 1, 1)
+                      },
+                      'nodeOutputTrace': {
+                          'fields': [
+                              {
+                                  'content': {
+                                      'document': {...}|[...]|123|123.4|'string'|True|None
+                                  },
+                                  'next': [
+                                      {
+                                          'inputFieldName': 'string',
+                                          'nodeName': 'string'
+                                      },
+                                  ],
+                                  'nodeOutputName': 'string',
+                                  'type': 'String'|'Number'|'Boolean'|'Object'|'Array'
+                              },
+                          ],
+                          'nodeName': 'string',
+                          'timestamp': datetime(2015, 1, 1)
+                      }
+                  }
+              },
+              'internalServerException': {
+                  'message': 'string',
+                  'reason': 'string'
+              },
+              'resourceNotFoundException': {
+                  'message': 'string'
+              },
+              'serviceQuotaExceededException': {
+                  'message': 'string'
+              },
+              'throttlingException': {
+                  'message': 'string'
+              },
+              'validationException': {
+                  'message': 'string'
+              }
+          })
+      }
+      
+
+    **Response Structure**
+    ::
+
+        # This section is too large to render.
+        # Please see the AWS API Documentation linked below.
+
+    `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-runtime-2023-07-26/InvokeFlow>`_
+
+
+    
+  **Exceptions**
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.DependencyFailedException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.BadGatewayException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AgentsforBedrockRuntime.Client.exceptions.ServiceQuotaExceededException`
+
+  

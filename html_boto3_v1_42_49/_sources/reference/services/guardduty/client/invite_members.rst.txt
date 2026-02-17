@@ -1,0 +1,149 @@
+:doc:`GuardDuty <../../guardduty>` / Client / invite_members
+
+**************
+invite_members
+**************
+
+
+
+.. py:method:: GuardDuty.Client.invite_members(**kwargs)
+
+  
+
+  Invites Amazon Web Services accounts to become members of an organization administered by the Amazon Web Services account that invokes this API. If you are using Amazon Web Services Organizations to manage your GuardDuty environment, this step is not needed. For more information, see `Managing accounts with organizations <https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_organizations.html>`__.
+
+   
+
+  To invite Amazon Web Services accounts, the first step is to ensure that GuardDuty has been enabled in the potential member accounts. You can now invoke this API to add accounts by invitation. The invited accounts can either accept or decline the invitation from their GuardDuty accounts. Each invited Amazon Web Services account can choose to accept the invitation from only one Amazon Web Services account. For more information, see `Managing GuardDuty accounts by invitation <https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_invitations.html>`__.
+
+   
+
+  After the invite has been accepted and you choose to disassociate a member account (by using `DisassociateMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_DisassociateMembers.html>`__) from your account, the details of the member account obtained by invoking `CreateMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_CreateMembers.html>`__, including the associated email addresses, will be retained. This is done so that you can invoke InviteMembers without the need to invoke `CreateMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_CreateMembers.html>`__ again. To remove the details associated with a member account, you must also invoke `DeleteMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_DeleteMembers.html>`__.
+
+   
+
+  If you disassociate a member account that was added by invitation, the member account details obtained from this API, including the associated email addresses, will be retained. This is done so that the delegated administrator can invoke the `InviteMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_InviteMembers.html>`__ API without the need to invoke the CreateMembers API again. To remove the details associated with a member account, the delegated administrator must invoke the `DeleteMembers <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_DeleteMembers.html>`__ API.
+
+   
+
+  When the member accounts added through Organizations are later disassociated, you (administrator) can't invite them by calling the InviteMembers API. You can create an association with these member accounts again only by calling the CreateMembers API.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/guardduty-2017-11-28/InviteMembers>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.invite_members(
+        DetectorId='string',
+        AccountIds=[
+            'string',
+        ],
+        DisableEmailNotification=True|False,
+        Message='string'
+    )
+    
+  :type DetectorId: string
+  :param DetectorId: **[REQUIRED]** 
+
+    The unique ID of the detector of the GuardDuty account with which you want to invite members.
+
+     
+
+    To find the ``detectorId`` in the current Region, see the Settings page in the GuardDuty console, or run the `ListDetectors <https://docs.aws.amazon.com/guardduty/latest/APIReference/API_ListDetectors.html>`__ API.
+
+    
+
+  
+  :type AccountIds: list
+  :param AccountIds: **[REQUIRED]** 
+
+    A list of account IDs of the accounts that you want to invite to GuardDuty as members.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type DisableEmailNotification: boolean
+  :param DisableEmailNotification: 
+
+    A Boolean value that specifies whether you want to disable email notification to the accounts that you are inviting to GuardDuty as members.
+
+    
+
+  
+  :type Message: string
+  :param Message: 
+
+    The invitation message that you want to send to the accounts that you're inviting to GuardDuty as members.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'UnprocessedAccounts': [
+              {
+                  'AccountId': 'string',
+                  'Result': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **UnprocessedAccounts** *(list) --* 
+
+        A list of objects that contain the unprocessed account and a result string that explains why it was unprocessed.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about the accounts that weren't processed.
+
+          
+          
+
+          - **AccountId** *(string) --* 
+
+            The Amazon Web Services account ID.
+
+            
+          
+
+          - **Result** *(string) --* 
+
+            A reason why the account hasn't been processed.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GuardDuty.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`GuardDuty.Client.exceptions.InternalServerErrorException`
+
+  

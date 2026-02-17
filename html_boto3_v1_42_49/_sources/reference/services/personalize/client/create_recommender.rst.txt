@@ -1,0 +1,320 @@
+:doc:`Personalize <../../personalize>` / Client / create_recommender
+
+******************
+create_recommender
+******************
+
+
+
+.. py:method:: Personalize.Client.create_recommender(**kwargs)
+
+  
+
+  Creates a recommender with the recipe (a Domain dataset group use case) you specify. You create recommenders for a Domain dataset group and specify the recommender's Amazon Resource Name (ARN) when you make a `GetRecommendations <https://docs.aws.amazon.com/personalize/latest/dg/API_RS_GetRecommendations.html>`__ request.
+
+   
+
+  **Minimum recommendation requests per second**
+
+   
+
+  .. warning::
+
+     
+
+    A high ``minRecommendationRequestsPerSecond`` will increase your bill. We recommend starting with 1 for ``minRecommendationRequestsPerSecond`` (the default). Track your usage using Amazon CloudWatch metrics, and increase the ``minRecommendationRequestsPerSecond`` as necessary.
+
+     
+
+   
+
+  When you create a recommender, you can configure the recommender's minimum recommendation requests per second. The minimum recommendation requests per second ( ``minRecommendationRequestsPerSecond``) specifies the baseline recommendation request throughput provisioned by Amazon Personalize. The default minRecommendationRequestsPerSecond is ``1``. A recommendation request is a single ``GetRecommendations`` operation. Request throughput is measured in requests per second and Amazon Personalize uses your requests per second to derive your requests per hour and the price of your recommender usage.
+
+   
+
+  If your requests per second increases beyond ``minRecommendationRequestsPerSecond``, Amazon Personalize auto-scales the provisioned capacity up and down, but never below ``minRecommendationRequestsPerSecond``. There's a short time delay while the capacity is increased that might cause loss of requests.
+
+   
+
+  Your bill is the greater of either the minimum requests per hour (based on minRecommendationRequestsPerSecond) or the actual number of requests. The actual request throughput used is calculated as the average requests/second within a one-hour window. We recommend starting with the default ``minRecommendationRequestsPerSecond``, track your usage using Amazon CloudWatch metrics, and then increase the ``minRecommendationRequestsPerSecond`` as necessary.
+
+   
+
+  **Status**
+
+   
+
+  A recommender can be in one of the following states:
+
+   
+
+  
+  * CREATE PENDING > CREATE IN_PROGRESS > ACTIVE -or- CREATE FAILED
+   
+  * STOP PENDING > STOP IN_PROGRESS > INACTIVE > START PENDING > START IN_PROGRESS > ACTIVE
+   
+  * DELETE PENDING > DELETE IN_PROGRESS
+  
+
+   
+
+  To get the recommender status, call `DescribeRecommender <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeRecommender.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    Wait until the ``status`` of the recommender is ``ACTIVE`` before asking the recommender for recommendations.
+
+    
+
+   
+
+  **Related APIs**
+
+   
+
+  
+  * `ListRecommenders <https://docs.aws.amazon.com/personalize/latest/dg/API_ListRecommenders.html>`__
+   
+  * `DescribeRecommender <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeRecommender.html>`__
+   
+  * `UpdateRecommender <https://docs.aws.amazon.com/personalize/latest/dg/API_UpdateRecommender.html>`__
+   
+  * `DeleteRecommender <https://docs.aws.amazon.com/personalize/latest/dg/API_DeleteRecommender.html>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/personalize-2018-05-22/CreateRecommender>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_recommender(
+        name='string',
+        datasetGroupArn='string',
+        recipeArn='string',
+        recommenderConfig={
+            'itemExplorationConfig': {
+                'string': 'string'
+            },
+            'minRecommendationRequestsPerSecond': 123,
+            'trainingDataConfig': {
+                'excludedDatasetColumns': {
+                    'string': [
+                        'string',
+                    ]
+                },
+                'includedDatasetColumns': {
+                    'string': [
+                        'string',
+                    ]
+                }
+            },
+            'enableMetadataWithRecommendations': True|False
+        },
+        tags=[
+            {
+                'tagKey': 'string',
+                'tagValue': 'string'
+            },
+        ]
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the recommender.
+
+    
+
+  
+  :type datasetGroupArn: string
+  :param datasetGroupArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the destination domain dataset group for the recommender.
+
+    
+
+  
+  :type recipeArn: string
+  :param recipeArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the recipe that the recommender will use. For a recommender, a recipe is a Domain dataset group use case. Only Domain dataset group use cases can be used to create a recommender. For information about use cases see `Choosing recommender use cases <https://docs.aws.amazon.com/personalize/latest/dg/domain-use-cases.html>`__.
+
+    
+
+  
+  :type recommenderConfig: dict
+  :param recommenderConfig: 
+
+    The configuration details of the recommender.
+
+    
+
+  
+    - **itemExplorationConfig** *(dict) --* 
+
+      Specifies the exploration configuration hyperparameters, including ``explorationWeight`` and ``explorationItemAgeCutOff``, you want to use to configure the amount of item exploration Amazon Personalize uses when recommending items. Provide ``itemExplorationConfig`` data only if your recommenders generate personalized recommendations for a user (not popular items or similar items).
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+    - **minRecommendationRequestsPerSecond** *(integer) --* 
+
+      Specifies the requested minimum provisioned recommendation requests per second that Amazon Personalize will support. A high ``minRecommendationRequestsPerSecond`` will increase your bill. We recommend starting with 1 for ``minRecommendationRequestsPerSecond`` (the default). Track your usage using Amazon CloudWatch metrics, and increase the ``minRecommendationRequestsPerSecond`` as necessary.
+
+      
+
+    
+    - **trainingDataConfig** *(dict) --* 
+
+      Specifies the training data configuration to use when creating a domain recommender.
+
+      
+
+    
+      - **excludedDatasetColumns** *(dict) --* 
+
+        Specifies the columns to exclude from training. Each key is a dataset type, and each value is a list of columns. Exclude columns to control what data Amazon Personalize uses to generate recommendations.
+
+         
+
+        For example, you might have a column that you want to use only to filter recommendations. You can exclude this column from training and Amazon Personalize considers it only when filtering.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(list) --* 
+
+          
+            - *(string) --* 
+
+            
+        
+    
+  
+      - **includedDatasetColumns** *(dict) --* 
+
+        A map that specifies which columns to include from each dataset during training. The map can contain up to 3 entries, where each key is a dataset name (maximum length of 256 characters, must contain only letters and underscores) and each value is an array of up to 50 column names. Column names can be up to 150 characters long, must start with a letter or underscore, and can contain only letters, numbers, and underscores.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(list) --* 
+
+          
+            - *(string) --* 
+
+            
+        
+    
+  
+    
+    - **enableMetadataWithRecommendations** *(boolean) --* 
+
+      Whether metadata with recommendations is enabled for the recommender. If enabled, you can specify the columns from your Items dataset in your request for recommendations. Amazon Personalize returns this data for each item in the recommendation response. For information about enabling metadata for a recommender, see `Enabling metadata in recommendations for a recommender <https://docs.aws.amazon.com/personalize/latest/dg/creating-recommenders.html#create-recommender-return-metadata>`__.
+
+       
+
+      If you enable metadata in recommendations, you will incur additional costs. For more information, see `Amazon Personalize pricing <https://aws.amazon.com/personalize/pricing/>`__.
+
+      
+
+    
+  
+  :type tags: list
+  :param tags: 
+
+    A list of `tags <https://docs.aws.amazon.com/personalize/latest/dg/tagging-resources.html>`__ to apply to the recommender.
+
+    
+
+  
+    - *(dict) --* 
+
+      The optional metadata that you apply to resources to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define. For more information see `Tagging Amazon Personalize resources <https://docs.aws.amazon.com/personalize/latest/dg/tagging-resources.html>`__.
+
+      
+
+    
+      - **tagKey** *(string) --* **[REQUIRED]** 
+
+        One part of a key-value pair that makes up a tag. A key is a general label that acts like a category for more specific tag values.
+
+        
+
+      
+      - **tagValue** *(string) --* **[REQUIRED]** 
+
+        The optional part of a key-value pair that makes up a tag. A value acts as a descriptor within a tag category (key).
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'recommenderArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **recommenderArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the recommender.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.TooManyTagsException`
+
+  

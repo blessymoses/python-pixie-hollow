@@ -1,0 +1,226 @@
+:doc:`ElasticLoadBalancingv2 <../../elbv2>` / Client / register_targets
+
+****************
+register_targets
+****************
+
+
+
+.. py:method:: ElasticLoadBalancingv2.Client.register_targets(**kwargs)
+
+  
+
+  Registers the specified targets with the specified target group.
+
+   
+
+  If the target is an EC2 instance, it must be in the ``running`` state when you register it.
+
+   
+
+  By default, the load balancer routes requests to registered targets using the protocol and port for the target group. Alternatively, you can override the port for a target when you register it. You can register each EC2 instance or IP address with the same target group multiple times using different ports.
+
+   
+
+  For more information, see the following:
+
+   
+
+  
+  * `Register targets for your Application Load Balancer <https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-register-targets.html>`__
+   
+  * `Register targets for your Network Load Balancer <https://docs.aws.amazon.com/elasticloadbalancing/latest/network/target-group-register-targets.html>`__
+   
+  * `Register targets for your Gateway Load Balancer <https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/target-group-register-targets.html>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticloadbalancingv2-2015-12-01/RegisterTargets>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.register_targets(
+        TargetGroupArn='string',
+        Targets=[
+            {
+                'Id': 'string',
+                'Port': 123,
+                'AvailabilityZone': 'string',
+                'QuicServerId': 'string'
+            },
+        ]
+    )
+    
+  :type TargetGroupArn: string
+  :param TargetGroupArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the target group.
+
+    
+
+  
+  :type Targets: list
+  :param Targets: **[REQUIRED]** 
+
+    The targets.
+
+    
+
+  
+    - *(dict) --* 
+
+      Information about a target.
+
+      
+
+    
+      - **Id** *(string) --* **[REQUIRED]** 
+
+        The ID of the target. If the target type of the target group is ``instance``, specify an instance ID. If the target type is ``ip``, specify an IP address. If the target type is ``lambda``, specify the ARN of the Lambda function. If the target type is ``alb``, specify the ARN of the Application Load Balancer target.
+
+        
+
+      
+      - **Port** *(integer) --* 
+
+        The port on which the target is listening. If the target group protocol is GENEVE, the supported port is 6081. If the target type is ``alb``, the targeted Application Load Balancer must have at least one listener whose port matches the target group port. This parameter is not used if the target is a Lambda function.
+
+        
+
+      
+      - **AvailabilityZone** *(string) --* 
+
+        An Availability Zone or ``all``. This determines whether the target receives traffic from the load balancer nodes in the specified Availability Zone or from all enabled Availability Zones for the load balancer.
+
+         
+
+        For Application Load Balancer target groups, the specified Availability Zone value is only applicable when cross-zone load balancing is off. Otherwise the parameter is ignored and treated as ``all``.
+
+         
+
+        This parameter is not supported if the target type of the target group is ``instance`` or ``alb``.
+
+         
+
+        If the target type is ``ip`` and the IP address is in a subnet of the VPC for the target group, the Availability Zone is automatically detected and this parameter is optional. If the IP address is outside the VPC, this parameter is required.
+
+         
+
+        For Application Load Balancer target groups with cross-zone load balancing off, if the target type is ``ip`` and the IP address is outside of the VPC for the target group, this should be an Availability Zone inside the VPC for the target group.
+
+         
+
+        If the target type is ``lambda``, this parameter is optional and the only supported value is ``all``.
+
+        
+
+      
+      - **QuicServerId** *(string) --* 
+
+        The server ID for the targets. This value is required if the protocol is ``QUIC`` or ``TCP_QUIC`` and can't be used with other protocols.
+
+         
+
+        The ID consists of the ``0x`` prefix followed by 16 hexadecimal characters. Any letters must be lowercase. The value must be unique at the listener level. You can't modify the server ID for a registered target. You must deregister the target and then provide a new server ID when you register the target again.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`ElasticLoadBalancingv2.Client.exceptions.TargetGroupNotFoundException`
+
+  
+  *   :py:class:`ElasticLoadBalancingv2.Client.exceptions.TooManyTargetsException`
+
+  
+  *   :py:class:`ElasticLoadBalancingv2.Client.exceptions.InvalidTargetException`
+
+  
+  *   :py:class:`ElasticLoadBalancingv2.Client.exceptions.TooManyRegistrationsForTargetIdException`
+
+  
+
+  **Examples**
+
+  This example registers the specified instances with the specified target group.
+  ::
+
+    response = client.register_targets(
+        TargetGroupArn='arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067',
+        Targets=[
+            {
+                'Id': 'i-80c8dd94',
+            },
+            {
+                'Id': 'i-ceddcd4d',
+            },
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example registers the specified instance with the specified target group using multiple ports. This enables you to register ECS containers on the same instance as targets in the target group.
+  ::
+
+    response = client.register_targets(
+        TargetGroupArn='arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-new-targets/3bb63f11dfb0faf9',
+        Targets=[
+            {
+                'Id': 'i-80c8dd94',
+                'Port': 80,
+            },
+            {
+                'Id': 'i-80c8dd94',
+                'Port': 766,
+            },
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

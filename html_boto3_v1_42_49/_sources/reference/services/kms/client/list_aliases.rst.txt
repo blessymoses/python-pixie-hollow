@@ -1,0 +1,300 @@
+:doc:`KMS <../../kms>` / Client / list_aliases
+
+************
+list_aliases
+************
+
+
+
+.. py:method:: KMS.Client.list_aliases(**kwargs)
+
+  
+
+  Gets a list of aliases in the caller's Amazon Web Services account and region. For more information about aliases, see  CreateAlias.
+
+   
+
+  By default, the ``ListAliases`` operation returns all aliases in the account and region. To get only the aliases associated with a particular KMS key, use the ``KeyId`` parameter.
+
+   
+
+  The ``ListAliases`` response can include aliases that you created and associated with your customer managed keys, and aliases that Amazon Web Services created and associated with Amazon Web Services managed keys in your account. You can recognize Amazon Web Services aliases because their names have the format ``aws/<service-name>``, such as ``aws/dynamodb``.
+
+   
+
+  The response might also include aliases that have no ``TargetKeyId`` field. These are predefined aliases that Amazon Web Services has created but has not yet associated with a KMS key. Aliases that Amazon Web Services creates in your account, including predefined aliases, do not count against your `KMS aliases quota <https://docs.aws.amazon.com/kms/latest/developerguide/resource-limits.html#aliases-per-key>`__.
+
+   
+
+  **Cross-account use**: No. ``ListAliases`` does not return aliases in other Amazon Web Services accounts.
+
+   
+
+  **Required permissions**: `kms\:ListAliases <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (IAM policy)
+
+   
+
+  For details, see `Controlling access to aliases <https://docs.aws.amazon.com/kms/latest/developerguide/alias-access.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  CreateAlias
+   
+  *  DeleteAlias
+   
+  *  UpdateAlias
+  
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ListAliases>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_aliases(
+        KeyId='string',
+        Limit=123,
+        Marker='string'
+    )
+    
+  :type KeyId: string
+  :param KeyId: 
+
+    Lists only aliases that are associated with the specified KMS key. Enter a KMS key in your Amazon Web Services account.
+
+     
+
+    This parameter is optional. If you omit it, ``ListAliases`` returns all aliases in the account and Region.
+
+     
+
+    Specify the key ID or key ARN of the KMS key.
+
+     
+
+    For example:
+
+     
+
+    
+    * Key ID: ``1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Key ARN: ``arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``
+    
+
+     
+
+    To get the key ID and key ARN for a KMS key, use  ListKeys or  DescribeKey.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not return more than the specified number of items, but it might return fewer.
+
+     
+
+    This value is optional. If you include a value, it must be between 1 and 100, inclusive. If you do not include a value, it defaults to 50.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    Use this parameter in a subsequent request after you receive a response with truncated results. Set it to the value of ``NextMarker`` from the truncated response you just received.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Aliases': [
+              {
+                  'AliasName': 'string',
+                  'AliasArn': 'string',
+                  'TargetKeyId': 'string',
+                  'CreationDate': datetime(2015, 1, 1),
+                  'LastUpdatedDate': datetime(2015, 1, 1)
+              },
+          ],
+          'NextMarker': 'string',
+          'Truncated': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Aliases** *(list) --* 
+
+        A list of aliases.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about an alias.
+
+          
+          
+
+          - **AliasName** *(string) --* 
+
+            String that contains the alias. This value begins with ``alias/``.
+
+            
+          
+
+          - **AliasArn** *(string) --* 
+
+            String that contains the key ARN.
+
+            
+          
+
+          - **TargetKeyId** *(string) --* 
+
+            String that contains the key identifier of the KMS key associated with the alias.
+
+            
+          
+
+          - **CreationDate** *(datetime) --* 
+
+            Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+
+            
+          
+
+          - **LastUpdatedDate** *(datetime) --* 
+
+            Date and time that the alias was most recently associated with a KMS key in the account and Region. Formatted as Unix time.
+
+            
+      
+    
+      
+
+      - **NextMarker** *(string) --* 
+
+        When ``Truncated`` is true, this element is present and contains the value to use for the ``Marker`` parameter in a subsequent request.
+
+        
+      
+
+      - **Truncated** *(boolean) --* 
+
+        A flag that indicates whether there are more items in the list. When this value is true, the list in this response is truncated. To get more items, pass the value of the ``NextMarker`` element in this response to the ``Marker`` parameter in a subsequent request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.DependencyTimeoutException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidMarkerException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidArnException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+
+  **Examples**
+
+  The following example lists aliases.
+  ::
+
+    response = client.list_aliases(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        # A list of aliases, including the key ID of the KMS key that each alias refers to.
+        'Aliases': [
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/aws/acm',
+                'AliasName': 'alias/aws/acm',
+                'TargetKeyId': 'da03f6f7-d279-427a-9cae-de48d07e5b66',
+            },
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/aws/ebs',
+                'AliasName': 'alias/aws/ebs',
+                'TargetKeyId': '25a217e7-7170-4b8c-8bf6-045ea5f70e5b',
+            },
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/aws/rds',
+                'AliasName': 'alias/aws/rds',
+                'TargetKeyId': '7ec3104e-c3f2-4b5c-bf42-bfc4772c6685',
+            },
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/aws/redshift',
+                'AliasName': 'alias/aws/redshift',
+                'TargetKeyId': '08f7a25a-69e2-4fb5-8f10-393db27326fa',
+            },
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/aws/s3',
+                'AliasName': 'alias/aws/s3',
+                'TargetKeyId': 'd2b0f1a3-580d-4f79-b836-bc983be8cfa5',
+            },
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/example1',
+                'AliasName': 'alias/example1',
+                'TargetKeyId': '4da1e216-62d0-46c5-a7c0-5f3a3d2f8046',
+            },
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/example2',
+                'AliasName': 'alias/example2',
+                'TargetKeyId': 'f32fef59-2cc2-445b-8573-2d73328acbee',
+            },
+            {
+                'AliasArn': 'arn:aws:kms:us-east-2:111122223333:alias/example3',
+                'AliasName': 'alias/example3',
+                'TargetKeyId': '1374ef38-d34e-4d5f-b2c9-4e0daee38855',
+            },
+        ],
+        # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
+        'Truncated': False,
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,235 @@
+:doc:`RAM <../../ram>` / Client / replace_permission_associations
+
+*******************************
+replace_permission_associations
+*******************************
+
+
+
+.. py:method:: RAM.Client.replace_permission_associations(**kwargs)
+
+  
+
+  Updates all resource shares that use a managed permission to a different managed permission. This operation always applies the default version of the target managed permission. You can optionally specify that the update applies to only resource shares that currently use a specified version. This enables you to update to the latest version, without changing the which managed permission is used.
+
+   
+
+  You can use this operation to update all of your resource shares to use the current default version of the permission by specifying the same value for the ``fromPermissionArn`` and ``toPermissionArn`` parameters.
+
+   
+
+  You can use the optional ``fromPermissionVersion`` parameter to update only those resources that use a specified version of the managed permission to the new managed permission.
+
+   
+
+  .. warning::
+
+     
+
+    To successfully perform this operation, you must have permission to update the resource-based policy on all affected resource types.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ram-2018-01-04/ReplacePermissionAssociations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.replace_permission_associations(
+        fromPermissionArn='string',
+        fromPermissionVersion=123,
+        toPermissionArn='string',
+        clientToken='string'
+    )
+    
+  :type fromPermissionArn: string
+  :param fromPermissionArn: **[REQUIRED]** 
+
+    Specifies the `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the managed permission that you want to replace.
+
+    
+
+  
+  :type fromPermissionVersion: integer
+  :param fromPermissionVersion: 
+
+    Specifies that you want to updated the permissions for only those resource shares that use the specified version of the managed permission.
+
+    
+
+  
+  :type toPermissionArn: string
+  :param toPermissionArn: **[REQUIRED]** 
+
+    Specifies the ARN of the managed permission that you want to associate with resource shares in place of the one specified by ``fromPerssionArn`` and ``fromPermissionVersion``.
+
+     
+
+    The operation always associates the version that is currently the default for the specified managed permission.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    Specifies a unique, case-sensitive identifier that you provide to ensure the idempotency of the request. This lets you safely retry the request without accidentally performing the same operation a second time. Passing the same value to a later call to an operation requires that you also pass the same value for all other parameters. We recommend that you use a `UUID type of value. <https://wikipedia.org/wiki/Universally_unique_identifier>`__.
+
+     
+
+    If you don't provide this value, then Amazon Web Services generates a random one for you.
+
+     
+
+    If you retry the operation with the same ``ClientToken``, but with different parameters, the retry fails with an ``IdempotentParameterMismatch`` error.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'replacePermissionAssociationsWork': {
+              'id': 'string',
+              'fromPermissionArn': 'string',
+              'fromPermissionVersion': 'string',
+              'toPermissionArn': 'string',
+              'toPermissionVersion': 'string',
+              'status': 'IN_PROGRESS'|'COMPLETED'|'FAILED',
+              'statusMessage': 'string',
+              'creationTime': datetime(2015, 1, 1),
+              'lastUpdatedTime': datetime(2015, 1, 1)
+          },
+          'clientToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **replacePermissionAssociationsWork** *(dict) --* 
+
+        Specifies a data structure that you can use to track the asynchronous tasks that RAM performs to complete this operation. You can use the  ListReplacePermissionAssociationsWork operation and pass the ``id`` value returned in this structure.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          The unique identifier for the background task associated with one  ReplacePermissionAssociations request.
+
+          
+        
+
+        - **fromPermissionArn** *(string) --* 
+
+          The `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the managed permission that this background task is replacing.
+
+          
+        
+
+        - **fromPermissionVersion** *(string) --* 
+
+          The version of the managed permission that this background task is replacing.
+
+          
+        
+
+        - **toPermissionArn** *(string) --* 
+
+          The ARN of the managed permission that this background task is associating with the resource shares in place of the managed permission and version specified in ``fromPermissionArn`` and ``fromPermissionVersion``.
+
+          
+        
+
+        - **toPermissionVersion** *(string) --* 
+
+          The version of the managed permission that this background task is associating with the resource shares. This is always the version that is currently the default for this managed permission.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          Specifies the current status of the background tasks for the specified ID. The output is one of the following strings:
+
+           
+
+          
+          * ``IN_PROGRESS``
+           
+          * ``COMPLETED``
+           
+          * ``FAILED``
+          
+
+          
+        
+
+        - **statusMessage** *(string) --* 
+
+          Specifies the reason for a ``FAILED`` status. This field is present only when there ``status`` is ``FAILED``.
+
+          
+        
+
+        - **creationTime** *(datetime) --* 
+
+          The date and time when this asynchronous background task was created.
+
+          
+        
+
+        - **lastUpdatedTime** *(datetime) --* 
+
+          The date and time when the status of this background task was last updated.
+
+          
+    
+      
+
+      - **clientToken** *(string) --* 
+
+        The idempotency identifier associated with this request. If you want to repeat the same operation in an idempotent manner then you must include this value in the ``clientToken`` request parameter of that later call. All other parameters must also have the same values that you used in the first call.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`RAM.Client.exceptions.MalformedArnException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ServerInternalException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.OperationNotPermittedException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.UnknownResourceException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidClientTokenException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.IdempotentParameterMismatchException`
+
+  

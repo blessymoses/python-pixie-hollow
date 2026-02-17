@@ -1,0 +1,383 @@
+:doc:`KMS <../../kms>` / Client / decrypt
+
+*******
+decrypt
+*******
+
+
+
+.. py:method:: KMS.Client.decrypt(**kwargs)
+
+  
+
+  Decrypts ciphertext that was encrypted by a KMS key using any of the following operations:
+
+   
+
+  
+  *  Encrypt
+   
+  *  GenerateDataKey
+   
+  *  GenerateDataKeyPair
+   
+  *  GenerateDataKeyWithoutPlaintext
+   
+  *  GenerateDataKeyPairWithoutPlaintext
+  
+
+   
+
+  You can use this operation to decrypt ciphertext that was encrypted under a symmetric encryption KMS key or an asymmetric encryption KMS key. When the KMS key is asymmetric, you must specify the KMS key and the encryption algorithm that was used to encrypt the ciphertext. For information about asymmetric KMS keys, see `Asymmetric KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  The ``Decrypt`` operation also decrypts ciphertext that was encrypted outside of KMS by the public key in an KMS asymmetric KMS key. However, it cannot decrypt symmetric ciphertext produced by other libraries, such as the `Amazon Web Services Encryption SDK <https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/>`__ or `Amazon S3 client-side encryption <https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingClientSideEncryption.html>`__. These libraries return a ciphertext format that is incompatible with KMS.
+
+   
+
+  If the ciphertext was encrypted under a symmetric encryption KMS key, the ``KeyId`` parameter is optional. KMS can get this information from metadata that it adds to the symmetric ciphertext blob. This feature adds durability to your implementation by ensuring that authorized users can decrypt ciphertext decades after it was encrypted, even if they've lost track of the key ID. However, specifying the KMS key is always recommended as a best practice. When you use the ``KeyId`` parameter to specify a KMS key, KMS only uses the KMS key you specify. If the ciphertext was encrypted under a different KMS key, the ``Decrypt`` operation fails. This practice ensures that you use the KMS key that you intend.
+
+   
+
+  Whenever possible, use key policies to give users permission to call the ``Decrypt`` operation on a particular KMS key, instead of using IAM policies. Otherwise, you might create an IAM policy that gives the user ``Decrypt`` permission on all KMS keys. This user could decrypt ciphertext that was encrypted by KMS keys in other accounts if the key policy for the cross-account KMS key permits it. If you must use an IAM policy for ``Decrypt`` permissions, limit the user to particular KMS keys or particular trusted accounts. For details, see `Best practices for IAM policies <https://docs.aws.amazon.com/kms/latest/developerguide/iam-policies.html#iam-policies-best-practices>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  ``Decrypt`` also supports `Amazon Web Services Nitro Enclaves <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave.html>`__ and NitroTPM, which provide attested environments in Amazon EC2. To call ``Decrypt`` for a Nitro enclave or NitroTPM, use the `Amazon Web Services Nitro Enclaves SDK <https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk>`__ or any Amazon Web Services SDK. Use the ``Recipient`` parameter to provide the attestation document for the attested environment. Instead of the plaintext data, the response includes the plaintext data encrypted with the public key from the attestation document ( ``CiphertextForRecipient``). For information about the interaction between KMS and Amazon Web Services Nitro Enclaves or Amazon Web Services NitroTPM, see `Cryptographic attestation support in KMS <https://docs.aws.amazon.com/kms/latest/developerguide/cryptographic-attestation.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  The KMS key that you use for this operation must be in a compatible key state. For details, see `Key states of KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Cross-account use**: Yes. If you use the ``KeyId`` parameter to identify a KMS key in a different Amazon Web Services account, specify the key ARN or the alias ARN of the KMS key.
+
+   
+
+  **Required permissions**: `kms\:Decrypt <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (key policy)
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  Encrypt
+   
+  *  GenerateDataKey
+   
+  *  GenerateDataKeyPair
+   
+  *  ReEncrypt
+  
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/Decrypt>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.decrypt(
+        CiphertextBlob=b'bytes',
+        EncryptionContext={
+            'string': 'string'
+        },
+        GrantTokens=[
+            'string',
+        ],
+        KeyId='string',
+        EncryptionAlgorithm='SYMMETRIC_DEFAULT'|'RSAES_OAEP_SHA_1'|'RSAES_OAEP_SHA_256'|'SM2PKE',
+        Recipient={
+            'KeyEncryptionAlgorithm': 'RSAES_OAEP_SHA_256',
+            'AttestationDocument': b'bytes'
+        },
+        DryRun=True|False
+    )
+    
+  :type CiphertextBlob: bytes
+  :param CiphertextBlob: **[REQUIRED]** 
+
+    Ciphertext to be decrypted. The blob includes metadata.
+
+    
+
+  
+  :type EncryptionContext: dict
+  :param EncryptionContext: 
+
+    Specifies the encryption context to use when decrypting the data. An encryption context is valid only for `cryptographic operations <https://docs.aws.amazon.com/kms/latest/developerguide/kms-cryptography.html#cryptographic-operations>`__ with a symmetric encryption KMS key. The standard asymmetric encryption algorithms and HMAC algorithms that KMS uses do not support an encryption context.
+
+     
+
+    An *encryption context* is a collection of non-secret key-value pairs that represent additional authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact case-sensitive match) encryption context to decrypt the data. An encryption context is supported only on operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys, an encryption context is optional, but it is strongly recommended.
+
+     
+
+    For more information, see `Encryption context <https://docs.aws.amazon.com/kms/latest/developerguide/encrypt_context.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type GrantTokens: list
+  :param GrantTokens: 
+
+    A list of grant tokens.
+
+     
+
+    Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved *eventual consistency*. For more information, see `Grant token <https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token>`__ and `Using a grant token <https://docs.aws.amazon.com/kms/latest/developerguide/using-grant-token.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type KeyId: string
+  :param KeyId: 
+
+    Specifies the KMS key that KMS uses to decrypt the ciphertext.
+
+     
+
+    Enter a key ID of the KMS key that was used to encrypt the ciphertext. If you identify a different KMS key, the ``Decrypt`` operation throws an ``IncorrectKeyException``.
+
+     
+
+    This parameter is required only when the ciphertext was encrypted under an asymmetric KMS key. If you used a symmetric encryption KMS key, KMS can get the KMS key from metadata that it adds to the symmetric ciphertext blob. However, it is always recommended as a best practice. This practice ensures that you use the KMS key that you intend.
+
+     
+
+    To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with ``"alias/"``. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN or alias ARN.
+
+     
+
+    For example:
+
+     
+
+    
+    * Key ID: ``1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Key ARN: ``arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Alias name: ``alias/ExampleAlias``
+     
+    * Alias ARN: ``arn:aws:kms:us-east-2:111122223333:alias/ExampleAlias``
+    
+
+     
+
+    To get the key ID and key ARN for a KMS key, use  ListKeys or  DescribeKey. To get the alias name and alias ARN, use  ListAliases.
+
+    
+
+  
+  :type EncryptionAlgorithm: string
+  :param EncryptionAlgorithm: 
+
+    Specifies the encryption algorithm that will be used to decrypt the ciphertext. Specify the same algorithm that was used to encrypt the data. If you specify a different algorithm, the ``Decrypt`` operation fails.
+
+     
+
+    This parameter is required only when the ciphertext was encrypted under an asymmetric KMS key. The default value, ``SYMMETRIC_DEFAULT``, represents the only supported algorithm that is valid for symmetric encryption KMS keys.
+
+    
+
+  
+  :type Recipient: dict
+  :param Recipient: 
+
+    A signed `attestation document <https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave-concepts.html#term-attestdoc>`__ from an Amazon Web Services Nitro enclave or NitroTPM, and the encryption algorithm to use with the public key in the attestation document. The only valid encryption algorithm is ``RSAES_OAEP_SHA_256``.
+
+     
+
+    This parameter supports the `Amazon Web Services Nitro Enclaves SDK <https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk>`__ or any Amazon Web Services SDK for Amazon Web Services Nitro Enclaves. It supports any Amazon Web Services SDK for Amazon Web Services NitroTPM.
+
+     
+
+    When you use this parameter, instead of returning the plaintext data, KMS encrypts the plaintext data with the public key in the attestation document, and returns the resulting ciphertext in the ``CiphertextForRecipient`` field in the response. This ciphertext can be decrypted only with the private key in the attested environment. The ``Plaintext`` field in the response is null or empty.
+
+     
+
+    For information about the interaction between KMS and Amazon Web Services Nitro Enclaves or Amazon Web Services NitroTPM, see `Cryptographic attestation support in KMS <https://docs.aws.amazon.com/kms/latest/developerguide/cryptographic-attestation.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+    - **KeyEncryptionAlgorithm** *(string) --* 
+
+      The encryption algorithm that KMS should use with the public key for an Amazon Web Services Nitro Enclave or NitroTPM to encrypt plaintext values for the response. The only valid value is ``RSAES_OAEP_SHA_256``.
+
+      
+
+    
+    - **AttestationDocument** *(bytes) --* 
+
+      The attestation document for an Amazon Web Services Nitro Enclave or a NitroTPM. This document includes the enclave's public key.
+
+      
+
+    
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks if your request will succeed. ``DryRun`` is an optional parameter.
+
+     
+
+    To learn more about how to use this parameter, see `Testing your permissions <https://docs.aws.amazon.com/kms/latest/developerguide/testing-permissions.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'KeyId': 'string',
+          'Plaintext': b'bytes',
+          'EncryptionAlgorithm': 'SYMMETRIC_DEFAULT'|'RSAES_OAEP_SHA_1'|'RSAES_OAEP_SHA_256'|'SM2PKE',
+          'CiphertextForRecipient': b'bytes',
+          'KeyMaterialId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **KeyId** *(string) --* 
+
+        The Amazon Resource Name ( `key ARN <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN>`__) of the KMS key that was used to decrypt the ciphertext.
+
+        
+      
+
+      - **Plaintext** *(bytes) --* 
+
+        Decrypted plaintext data. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded. Otherwise, it is not Base64-encoded.
+
+         
+
+        If the response includes the ``CiphertextForRecipient`` field, the ``Plaintext`` field is null or empty.
+
+        
+      
+
+      - **EncryptionAlgorithm** *(string) --* 
+
+        The encryption algorithm that was used to decrypt the ciphertext.
+
+        
+      
+
+      - **CiphertextForRecipient** *(bytes) --* 
+
+        The plaintext data encrypted with the public key from the attestation document. This ciphertext can be decrypted only by using a private key from the attested environment.
+
+         
+
+        This field is included in the response only when the ``Recipient`` parameter in the request includes a valid attestation document from an Amazon Web Services Nitro enclave or NitroTPM. For information about the interaction between KMS and Amazon Web Services Nitro Enclaves or Amazon Web Services NitroTPM, see `Cryptographic attestation support in KMS <https://docs.aws.amazon.com/kms/latest/developerguide/cryptographic-attestation.html>`__ in the *Key Management Service Developer Guide*.
+
+        
+      
+
+      - **KeyMaterialId** *(string) --* 
+
+        The identifier of the key material used to decrypt the ciphertext. This field is present only when the operation uses a symmetric encryption KMS key. This field is omitted if the request includes the ``Recipient`` parameter.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DisabledException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidCiphertextException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KeyUnavailableException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.IncorrectKeyException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidKeyUsageException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DependencyTimeoutException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidGrantTokenException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInvalidStateException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DryRunOperationException`
+
+  
+
+  **Examples**
+
+  The following example decrypts data that was encrypted with a KMS key.
+  ::
+
+    response = client.decrypt(
+        # The encrypted data (ciphertext).
+        CiphertextBlob='<binary data>',
+        # A key identifier for the KMS key to use to decrypt the data.
+        KeyId='arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        # The Amazon Resource Name (ARN) of the KMS key that was used to decrypt the data.
+        'KeyId': 'arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab',
+        # The decrypted (plaintext) data.
+        'Plaintext': '<binary data>',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

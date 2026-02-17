@@ -1,0 +1,338 @@
+:doc:`ECR <../../ecr>` / Client / get_lifecycle_policy_preview
+
+****************************
+get_lifecycle_policy_preview
+****************************
+
+
+
+.. py:method:: ECR.Client.get_lifecycle_policy_preview(**kwargs)
+
+  
+
+  Retrieves the results of the lifecycle policy preview request for the specified repository.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ecr-2015-09-21/GetLifecyclePolicyPreview>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_lifecycle_policy_preview(
+        registryId='string',
+        repositoryName='string',
+        imageIds=[
+            {
+                'imageDigest': 'string',
+                'imageTag': 'string'
+            },
+        ],
+        nextToken='string',
+        maxResults=123,
+        filter={
+            'tagStatus': 'TAGGED'|'UNTAGGED'|'ANY'
+        }
+    )
+    
+  :type registryId: string
+  :param registryId: 
+
+    The Amazon Web Services account ID associated with the registry that contains the repository. If you do not specify a registry, the default registry is assumed.
+
+    
+
+  
+  :type repositoryName: string
+  :param repositoryName: **[REQUIRED]** 
+
+    The name of the repository.
+
+    
+
+  
+  :type imageIds: list
+  :param imageIds: 
+
+    The list of imageIDs to be included.
+
+    
+
+  
+    - *(dict) --* 
+
+      An object with identifying information for an image in an Amazon ECR repository.
+
+      
+
+    
+      - **imageDigest** *(string) --* 
+
+        The ``sha256`` digest of the image manifest.
+
+        
+
+      
+      - **imageTag** *(string) --* 
+
+        The tag used for the image.
+
+        
+
+      
+    
+
+  :type nextToken: string
+  :param nextToken: 
+
+    The ``nextToken`` value returned from a previous paginated  ``GetLifecyclePolicyPreviewRequest`` request where ``maxResults`` was used and the results exceeded the value of that parameter. Pagination continues from the end of the previous results that returned the ``nextToken`` value. This value is  ``null`` when there are no more results to return. This option cannot be used when you specify images with ``imageIds``.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of repository results returned by ``GetLifecyclePolicyPreviewRequest`` in paginated output. When this parameter is used, ``GetLifecyclePolicyPreviewRequest`` only returns  ``maxResults`` results in a single page along with a ``nextToken``  response element. The remaining results of the initial request can be seen by sending another ``GetLifecyclePolicyPreviewRequest`` request with the returned ``nextToken``  value. This value can be between 1 and 100. If this parameter is not used, then ``GetLifecyclePolicyPreviewRequest`` returns up to 100 results and a ``nextToken`` value, if applicable. This option cannot be used when you specify images with ``imageIds``.
+
+    
+
+  
+  :type filter: dict
+  :param filter: 
+
+    An optional parameter that filters results based on image tag status and all tags, if tagged.
+
+    
+
+  
+    - **tagStatus** *(string) --* 
+
+      The tag status of the image.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'registryId': 'string',
+          'repositoryName': 'string',
+          'lifecyclePolicyText': 'string',
+          'status': 'IN_PROGRESS'|'COMPLETE'|'EXPIRED'|'FAILED',
+          'nextToken': 'string',
+          'previewResults': [
+              {
+                  'imageTags': [
+                      'string',
+                  ],
+                  'imageDigest': 'string',
+                  'imagePushedAt': datetime(2015, 1, 1),
+                  'action': {
+                      'type': 'EXPIRE'|'TRANSITION',
+                      'targetStorageClass': 'ARCHIVE'
+                  },
+                  'appliedRulePriority': 123,
+                  'storageClass': 'ARCHIVE'|'STANDARD'
+              },
+          ],
+          'summary': {
+              'expiringImageTotalCount': 123,
+              'transitioningImageTotalCounts': [
+                  {
+                      'targetStorageClass': 'ARCHIVE',
+                      'imageTotalCount': 123
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **registryId** *(string) --* 
+
+        The registry ID associated with the request.
+
+        
+      
+
+      - **repositoryName** *(string) --* 
+
+        The repository name associated with the request.
+
+        
+      
+
+      - **lifecyclePolicyText** *(string) --* 
+
+        The JSON lifecycle policy text.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The status of the lifecycle policy preview request.
+
+        
+      
+
+      - **nextToken** *(string) --* 
+
+        The ``nextToken`` value to include in a future ``GetLifecyclePolicyPreview`` request. When the results of a ``GetLifecyclePolicyPreview`` request exceed ``maxResults``, this value can be used to retrieve the next page of results. This value is ``null`` when there are no more results to return.
+
+        
+      
+
+      - **previewResults** *(list) --* 
+
+        The results of the lifecycle policy preview request.
+
+        
+        
+
+        - *(dict) --* 
+
+          The result of the lifecycle policy preview.
+
+          
+          
+
+          - **imageTags** *(list) --* 
+
+            The list of tags associated with this image.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **imageDigest** *(string) --* 
+
+            The ``sha256`` digest of the image manifest.
+
+            
+          
+
+          - **imagePushedAt** *(datetime) --* 
+
+            The date and time, expressed in standard JavaScript date format, at which the current image was pushed to the repository.
+
+            
+          
+
+          - **action** *(dict) --* 
+
+            The type of action to be taken.
+
+            
+            
+
+            - **type** *(string) --* 
+
+              The type of action to be taken.
+
+              
+            
+
+            - **targetStorageClass** *(string) --* 
+
+              The target storage class for the action. This is only present when the ``type`` is ``TRANSITION.``
+
+              
+        
+          
+
+          - **appliedRulePriority** *(integer) --* 
+
+            The priority of the applied rule.
+
+            
+          
+
+          - **storageClass** *(string) --* 
+
+            The storage class of the image.
+
+            
+      
+    
+      
+
+      - **summary** *(dict) --* 
+
+        The list of images that is returned as a result of the action.
+
+        
+        
+
+        - **expiringImageTotalCount** *(integer) --* 
+
+          The number of expiring images.
+
+          
+        
+
+        - **transitioningImageTotalCounts** *(list) --* 
+
+          The total count of images that will be transitioned to each storage class. This field is only present if at least one image will be transitoned in the summary.
+
+          
+          
+
+          - *(dict) --* 
+
+            The total count of images transitioning to a storage class.
+
+            
+            
+
+            - **targetStorageClass** *(string) --* 
+
+              The target storage class.
+
+              
+            
+
+            - **imageTotalCount** *(integer) --* 
+
+              The total number of images transitioning to the storage class.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ECR.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.RepositoryNotFoundException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.LifecyclePolicyPreviewNotFoundException`
+
+  
+  *   :py:class:`ECR.Client.exceptions.ValidationException`
+
+  

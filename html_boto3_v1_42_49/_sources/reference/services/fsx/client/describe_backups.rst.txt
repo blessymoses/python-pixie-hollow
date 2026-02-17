@@ -1,0 +1,894 @@
+:doc:`FSx <../../fsx>` / Client / describe_backups
+
+****************
+describe_backups
+****************
+
+
+
+.. py:method:: FSx.Client.describe_backups(**kwargs)
+
+  
+
+  Returns the description of a specific Amazon FSx backup, if a ``BackupIds`` value is provided for that backup. Otherwise, it returns all backups owned by your Amazon Web Services account in the Amazon Web Services Region of the endpoint that you're calling.
+
+   
+
+  When retrieving all backups, you can optionally specify the ``MaxResults`` parameter to limit the number of backups in a response. If more backups remain, Amazon FSx returns a ``NextToken`` value in the response. In this case, send a later request with the ``NextToken`` request parameter set to the value of the ``NextToken`` value from the last response.
+
+   
+
+  This operation is used in an iterative process to retrieve a list of your backups. ``DescribeBackups`` is called first without a ``NextToken`` value. Then the operation continues to be called with the ``NextToken`` parameter set to the value of the last ``NextToken`` value until a response has no ``NextToken`` value.
+
+   
+
+  When using this operation, keep the following in mind:
+
+   
+
+  
+  * The operation might return fewer than the ``MaxResults`` value of backup descriptions while still including a ``NextToken`` value.
+   
+  * The order of the backups returned in the response of one ``DescribeBackups`` call and the order of the backups returned across the responses of a multi-call iteration is unspecified.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/fsx-2018-03-01/DescribeBackups>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_backups(
+        BackupIds=[
+            'string',
+        ],
+        Filters=[
+            {
+                'Name': 'file-system-id'|'backup-type'|'file-system-type'|'volume-id'|'data-repository-type'|'file-cache-id'|'file-cache-type',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type BackupIds: list
+  :param BackupIds: 
+
+    The IDs of the backups that you want to retrieve. This parameter value overrides any filters. If any IDs aren't found, a ``BackupNotFound`` error occurs.
+
+    
+
+  
+    - *(string) --* 
+
+      The ID of the source backup. Specifies the backup that you are copying.
+
+      
+
+    
+
+  :type Filters: list
+  :param Filters: 
+
+    The filters structure. The supported names are ``file-system-id``, ``backup-type``, ``file-system-type``, and ``volume-id``.
+
+    
+
+  
+    - *(dict) --* 
+
+      A filter used to restrict the results of describe calls. You can use multiple filters to return results that meet all applied filter requirements.
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The name for this filter.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The values of the filter. These are all the values for any of the applied filters.
+
+        
+
+      
+        - *(string) --* 
+
+          The value for a filter.
+
+          
+
+        
+    
+    
+
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    Maximum number of backups to return in the response. This parameter value must be greater than 0. The number of items that Amazon FSx returns is the minimum of the ``MaxResults`` parameter specified in the request and the service's internal maximum number of items per page.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    An opaque pagination token returned from a previous ``DescribeBackups`` operation. If a token is present, the operation continues the list from where the returning call left off.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Backups': [
+              {
+                  'BackupId': 'string',
+                  'Lifecycle': 'AVAILABLE'|'CREATING'|'TRANSFERRING'|'DELETED'|'FAILED'|'PENDING'|'COPYING',
+                  'FailureDetails': {
+                      'Message': 'string'
+                  },
+                  'Type': 'AUTOMATIC'|'USER_INITIATED'|'AWS_BACKUP',
+                  'ProgressPercent': 123,
+                  'CreationTime': datetime(2015, 1, 1),
+                  'KmsKeyId': 'string',
+                  'ResourceARN': 'string',
+                  'Tags': [
+                      {
+                          'Key': 'string',
+                          'Value': 'string'
+                      },
+                  ],
+                  'FileSystem': {
+                      'OwnerId': 'string',
+                      'CreationTime': datetime(2015, 1, 1),
+                      'FileSystemId': 'string',
+                      'FileSystemType': 'WINDOWS'|'LUSTRE'|'ONTAP'|'OPENZFS',
+                      'Lifecycle': 'AVAILABLE'|'CREATING'|'FAILED'|'DELETING'|'MISCONFIGURED'|'UPDATING'|'MISCONFIGURED_UNAVAILABLE',
+                      'FailureDetails': {
+                          'Message': 'string'
+                      },
+                      'StorageCapacity': 123,
+                      'StorageType': 'SSD'|'HDD'|'INTELLIGENT_TIERING',
+                      'VpcId': 'string',
+                      'SubnetIds': [
+                          'string',
+                      ],
+                      'NetworkInterfaceIds': [
+                          'string',
+                      ],
+                      'DNSName': 'string',
+                      'KmsKeyId': 'string',
+                      'ResourceARN': 'string',
+                      'Tags': [
+                          {
+                              'Key': 'string',
+                              'Value': 'string'
+                          },
+                      ],
+                      'WindowsConfiguration': {
+                          'ActiveDirectoryId': 'string',
+                          'SelfManagedActiveDirectoryConfiguration': {
+                              'DomainName': 'string',
+                              'OrganizationalUnitDistinguishedName': 'string',
+                              'FileSystemAdministratorsGroup': 'string',
+                              'UserName': 'string',
+                              'DnsIps': [
+                                  'string',
+                              ],
+                              'DomainJoinServiceAccountSecret': 'string'
+                          },
+                          'DeploymentType': 'MULTI_AZ_1'|'SINGLE_AZ_1'|'SINGLE_AZ_2',
+                          'RemoteAdministrationEndpoint': 'string',
+                          'PreferredSubnetId': 'string',
+                          'PreferredFileServerIp': 'string',
+                          'ThroughputCapacity': 123,
+                          'MaintenanceOperationsInProgress': [
+                              'PATCHING'|'BACKING_UP',
+                          ],
+                          'WeeklyMaintenanceStartTime': 'string',
+                          'DailyAutomaticBackupStartTime': 'string',
+                          'AutomaticBackupRetentionDays': 123,
+                          'CopyTagsToBackups': True|False,
+                          'Aliases': [
+                              {
+                                  'Name': 'string',
+                                  'Lifecycle': 'AVAILABLE'|'CREATING'|'DELETING'|'CREATE_FAILED'|'DELETE_FAILED'
+                              },
+                          ],
+                          'AuditLogConfiguration': {
+                              'FileAccessAuditLogLevel': 'DISABLED'|'SUCCESS_ONLY'|'FAILURE_ONLY'|'SUCCESS_AND_FAILURE',
+                              'FileShareAccessAuditLogLevel': 'DISABLED'|'SUCCESS_ONLY'|'FAILURE_ONLY'|'SUCCESS_AND_FAILURE',
+                              'AuditLogDestination': 'string'
+                          },
+                          'DiskIopsConfiguration': {
+                              'Mode': 'AUTOMATIC'|'USER_PROVISIONED',
+                              'Iops': 123
+                          },
+                          'PreferredFileServerIpv6': 'string',
+                          'FsrmConfiguration': {
+                              'FsrmServiceEnabled': True|False,
+                              'EventLogDestination': 'string'
+                          }
+                      },
+                      'LustreConfiguration': {
+                          'WeeklyMaintenanceStartTime': 'string',
+                          'DataRepositoryConfiguration': {
+                              'Lifecycle': 'CREATING'|'AVAILABLE'|'MISCONFIGURED'|'UPDATING'|'DELETING'|'FAILED',
+                              'ImportPath': 'string',
+                              'ExportPath': 'string',
+                              'ImportedFileChunkSize': 123,
+                              'AutoImportPolicy': 'NONE'|'NEW'|'NEW_CHANGED'|'NEW_CHANGED_DELETED',
+                              'FailureDetails': {
+                                  'Message': 'string'
+                              }
+                          },
+                          'DeploymentType': 'SCRATCH_1'|'SCRATCH_2'|'PERSISTENT_1'|'PERSISTENT_2',
+                          'PerUnitStorageThroughput': 123,
+                          'MountName': 'string',
+                          'DailyAutomaticBackupStartTime': 'string',
+                          'AutomaticBackupRetentionDays': 123,
+                          'CopyTagsToBackups': True|False,
+                          'DriveCacheType': 'NONE'|'READ',
+                          'DataCompressionType': 'NONE'|'LZ4',
+                          'LogConfiguration': {
+                              'Level': 'DISABLED'|'WARN_ONLY'|'ERROR_ONLY'|'WARN_ERROR',
+                              'Destination': 'string'
+                          },
+                          'RootSquashConfiguration': {
+                              'RootSquash': 'string',
+                              'NoSquashNids': [
+                                  'string',
+                              ]
+                          },
+                          'MetadataConfiguration': {
+                              'Iops': 123,
+                              'Mode': 'AUTOMATIC'|'USER_PROVISIONED'
+                          },
+                          'EfaEnabled': True|False,
+                          'ThroughputCapacity': 123,
+                          'DataReadCacheConfiguration': {
+                              'SizingMode': 'NO_CACHE'|'USER_PROVISIONED'|'PROPORTIONAL_TO_THROUGHPUT_CAPACITY',
+                              'SizeGiB': 123
+                          }
+                      },
+                      'AdministrativeActions': [
+                          {
+                              'AdministrativeActionType': 'FILE_SYSTEM_UPDATE'|'STORAGE_OPTIMIZATION'|'FILE_SYSTEM_ALIAS_ASSOCIATION'|'FILE_SYSTEM_ALIAS_DISASSOCIATION'|'VOLUME_UPDATE'|'SNAPSHOT_UPDATE'|'RELEASE_NFS_V3_LOCKS'|'VOLUME_RESTORE'|'THROUGHPUT_OPTIMIZATION'|'IOPS_OPTIMIZATION'|'STORAGE_TYPE_OPTIMIZATION'|'MISCONFIGURED_STATE_RECOVERY'|'VOLUME_UPDATE_WITH_SNAPSHOT'|'VOLUME_INITIALIZE_WITH_SNAPSHOT'|'DOWNLOAD_DATA_FROM_BACKUP',
+                              'ProgressPercent': 123,
+                              'RequestTime': datetime(2015, 1, 1),
+                              'Status': 'FAILED'|'IN_PROGRESS'|'PENDING'|'COMPLETED'|'UPDATED_OPTIMIZING'|'OPTIMIZING'|'PAUSED'|'CANCELLED',
+                              'TargetFileSystemValues': {'... recursive ...'},
+                              'FailureDetails': {
+                                  'Message': 'string'
+                              },
+                              'TargetVolumeValues': {
+                                  'CreationTime': datetime(2015, 1, 1),
+                                  'FileSystemId': 'string',
+                                  'Lifecycle': 'CREATING'|'CREATED'|'DELETING'|'FAILED'|'MISCONFIGURED'|'PENDING'|'AVAILABLE',
+                                  'Name': 'string',
+                                  'OntapConfiguration': {
+                                      'FlexCacheEndpointType': 'NONE'|'ORIGIN'|'CACHE',
+                                      'JunctionPath': 'string',
+                                      'SecurityStyle': 'UNIX'|'NTFS'|'MIXED',
+                                      'SizeInMegabytes': 123,
+                                      'StorageEfficiencyEnabled': True|False,
+                                      'StorageVirtualMachineId': 'string',
+                                      'StorageVirtualMachineRoot': True|False,
+                                      'TieringPolicy': {
+                                          'CoolingPeriod': 123,
+                                          'Name': 'SNAPSHOT_ONLY'|'AUTO'|'ALL'|'NONE'
+                                      },
+                                      'UUID': 'string',
+                                      'OntapVolumeType': 'RW'|'DP'|'LS',
+                                      'SnapshotPolicy': 'string',
+                                      'CopyTagsToBackups': True|False,
+                                      'SnaplockConfiguration': {
+                                          'AuditLogVolume': True|False,
+                                          'AutocommitPeriod': {
+                                              'Type': 'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'NONE',
+                                              'Value': 123
+                                          },
+                                          'PrivilegedDelete': 'DISABLED'|'ENABLED'|'PERMANENTLY_DISABLED',
+                                          'RetentionPeriod': {
+                                              'DefaultRetention': {
+                                                  'Type': 'SECONDS'|'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'INFINITE'|'UNSPECIFIED',
+                                                  'Value': 123
+                                              },
+                                              'MinimumRetention': {
+                                                  'Type': 'SECONDS'|'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'INFINITE'|'UNSPECIFIED',
+                                                  'Value': 123
+                                              },
+                                              'MaximumRetention': {
+                                                  'Type': 'SECONDS'|'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'INFINITE'|'UNSPECIFIED',
+                                                  'Value': 123
+                                              }
+                                          },
+                                          'SnaplockType': 'COMPLIANCE'|'ENTERPRISE',
+                                          'VolumeAppendModeEnabled': True|False
+                                      },
+                                      'VolumeStyle': 'FLEXVOL'|'FLEXGROUP',
+                                      'AggregateConfiguration': {
+                                          'Aggregates': [
+                                              'string',
+                                          ],
+                                          'TotalConstituents': 123
+                                      },
+                                      'SizeInBytes': 123
+                                  },
+                                  'ResourceARN': 'string',
+                                  'Tags': [
+                                      {
+                                          'Key': 'string',
+                                          'Value': 'string'
+                                      },
+                                  ],
+                                  'VolumeId': 'string',
+                                  'VolumeType': 'ONTAP'|'OPENZFS',
+                                  'LifecycleTransitionReason': {
+                                      'Message': 'string'
+                                  },
+                                  'AdministrativeActions': {'... recursive ...'},
+                                  'OpenZFSConfiguration': {
+                                      'ParentVolumeId': 'string',
+                                      'VolumePath': 'string',
+                                      'StorageCapacityReservationGiB': 123,
+                                      'StorageCapacityQuotaGiB': 123,
+                                      'RecordSizeKiB': 123,
+                                      'DataCompressionType': 'NONE'|'ZSTD'|'LZ4',
+                                      'CopyTagsToSnapshots': True|False,
+                                      'OriginSnapshot': {
+                                          'SnapshotARN': 'string',
+                                          'CopyStrategy': 'CLONE'|'FULL_COPY'|'INCREMENTAL_COPY'
+                                      },
+                                      'ReadOnly': True|False,
+                                      'NfsExports': [
+                                          {
+                                              'ClientConfigurations': [
+                                                  {
+                                                      'Clients': 'string',
+                                                      'Options': [
+                                                          'string',
+                                                      ]
+                                                  },
+                                              ]
+                                          },
+                                      ],
+                                      'UserAndGroupQuotas': [
+                                          {
+                                              'Type': 'USER'|'GROUP',
+                                              'Id': 123,
+                                              'StorageCapacityQuotaGiB': 123
+                                          },
+                                      ],
+                                      'RestoreToSnapshot': 'string',
+                                      'DeleteIntermediateSnaphots': True|False,
+                                      'DeleteClonedVolumes': True|False,
+                                      'DeleteIntermediateData': True|False,
+                                      'SourceSnapshotARN': 'string',
+                                      'DestinationSnapshot': 'string',
+                                      'CopyStrategy': 'CLONE'|'FULL_COPY'|'INCREMENTAL_COPY'
+                                  }
+                              },
+                              'TargetSnapshotValues': {
+                                  'ResourceARN': 'string',
+                                  'SnapshotId': 'string',
+                                  'Name': 'string',
+                                  'VolumeId': 'string',
+                                  'CreationTime': datetime(2015, 1, 1),
+                                  'Lifecycle': 'PENDING'|'CREATING'|'DELETING'|'AVAILABLE',
+                                  'LifecycleTransitionReason': {
+                                      'Message': 'string'
+                                  },
+                                  'Tags': [
+                                      {
+                                          'Key': 'string',
+                                          'Value': 'string'
+                                      },
+                                  ],
+                                  'AdministrativeActions': {'... recursive ...'}
+                              },
+                              'TotalTransferBytes': 123,
+                              'RemainingTransferBytes': 123,
+                              'Message': 'string'
+                          },
+                      ],
+                      'OntapConfiguration': {
+                          'AutomaticBackupRetentionDays': 123,
+                          'DailyAutomaticBackupStartTime': 'string',
+                          'DeploymentType': 'MULTI_AZ_1'|'SINGLE_AZ_1'|'SINGLE_AZ_2'|'MULTI_AZ_2',
+                          'EndpointIpAddressRange': 'string',
+                          'Endpoints': {
+                              'Intercluster': {
+                                  'DNSName': 'string',
+                                  'IpAddresses': [
+                                      'string',
+                                  ],
+                                  'Ipv6Addresses': [
+                                      'string',
+                                  ]
+                              },
+                              'Management': {
+                                  'DNSName': 'string',
+                                  'IpAddresses': [
+                                      'string',
+                                  ],
+                                  'Ipv6Addresses': [
+                                      'string',
+                                  ]
+                              }
+                          },
+                          'DiskIopsConfiguration': {
+                              'Mode': 'AUTOMATIC'|'USER_PROVISIONED',
+                              'Iops': 123
+                          },
+                          'PreferredSubnetId': 'string',
+                          'RouteTableIds': [
+                              'string',
+                          ],
+                          'ThroughputCapacity': 123,
+                          'WeeklyMaintenanceStartTime': 'string',
+                          'FsxAdminPassword': 'string',
+                          'HAPairs': 123,
+                          'ThroughputCapacityPerHAPair': 123,
+                          'EndpointIpv6AddressRange': 'string'
+                      },
+                      'FileSystemTypeVersion': 'string',
+                      'OpenZFSConfiguration': {
+                          'AutomaticBackupRetentionDays': 123,
+                          'CopyTagsToBackups': True|False,
+                          'CopyTagsToVolumes': True|False,
+                          'DailyAutomaticBackupStartTime': 'string',
+                          'DeploymentType': 'SINGLE_AZ_1'|'SINGLE_AZ_2'|'SINGLE_AZ_HA_1'|'SINGLE_AZ_HA_2'|'MULTI_AZ_1',
+                          'ThroughputCapacity': 123,
+                          'WeeklyMaintenanceStartTime': 'string',
+                          'DiskIopsConfiguration': {
+                              'Mode': 'AUTOMATIC'|'USER_PROVISIONED',
+                              'Iops': 123
+                          },
+                          'RootVolumeId': 'string',
+                          'PreferredSubnetId': 'string',
+                          'EndpointIpAddressRange': 'string',
+                          'EndpointIpv6AddressRange': 'string',
+                          'RouteTableIds': [
+                              'string',
+                          ],
+                          'EndpointIpAddress': 'string',
+                          'EndpointIpv6Address': 'string',
+                          'ReadCacheConfiguration': {
+                              'SizingMode': 'NO_CACHE'|'USER_PROVISIONED'|'PROPORTIONAL_TO_THROUGHPUT_CAPACITY',
+                              'SizeGiB': 123
+                          }
+                      },
+                      'NetworkType': 'IPV4'|'DUAL'
+                  },
+                  'DirectoryInformation': {
+                      'DomainName': 'string',
+                      'ActiveDirectoryId': 'string',
+                      'ResourceARN': 'string'
+                  },
+                  'OwnerId': 'string',
+                  'SourceBackupId': 'string',
+                  'SourceBackupRegion': 'string',
+                  'ResourceType': 'FILE_SYSTEM'|'VOLUME',
+                  'Volume': {
+                      'CreationTime': datetime(2015, 1, 1),
+                      'FileSystemId': 'string',
+                      'Lifecycle': 'CREATING'|'CREATED'|'DELETING'|'FAILED'|'MISCONFIGURED'|'PENDING'|'AVAILABLE',
+                      'Name': 'string',
+                      'OntapConfiguration': {
+                          'FlexCacheEndpointType': 'NONE'|'ORIGIN'|'CACHE',
+                          'JunctionPath': 'string',
+                          'SecurityStyle': 'UNIX'|'NTFS'|'MIXED',
+                          'SizeInMegabytes': 123,
+                          'StorageEfficiencyEnabled': True|False,
+                          'StorageVirtualMachineId': 'string',
+                          'StorageVirtualMachineRoot': True|False,
+                          'TieringPolicy': {
+                              'CoolingPeriod': 123,
+                              'Name': 'SNAPSHOT_ONLY'|'AUTO'|'ALL'|'NONE'
+                          },
+                          'UUID': 'string',
+                          'OntapVolumeType': 'RW'|'DP'|'LS',
+                          'SnapshotPolicy': 'string',
+                          'CopyTagsToBackups': True|False,
+                          'SnaplockConfiguration': {
+                              'AuditLogVolume': True|False,
+                              'AutocommitPeriod': {
+                                  'Type': 'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'NONE',
+                                  'Value': 123
+                              },
+                              'PrivilegedDelete': 'DISABLED'|'ENABLED'|'PERMANENTLY_DISABLED',
+                              'RetentionPeriod': {
+                                  'DefaultRetention': {
+                                      'Type': 'SECONDS'|'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'INFINITE'|'UNSPECIFIED',
+                                      'Value': 123
+                                  },
+                                  'MinimumRetention': {
+                                      'Type': 'SECONDS'|'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'INFINITE'|'UNSPECIFIED',
+                                      'Value': 123
+                                  },
+                                  'MaximumRetention': {
+                                      'Type': 'SECONDS'|'MINUTES'|'HOURS'|'DAYS'|'MONTHS'|'YEARS'|'INFINITE'|'UNSPECIFIED',
+                                      'Value': 123
+                                  }
+                              },
+                              'SnaplockType': 'COMPLIANCE'|'ENTERPRISE',
+                              'VolumeAppendModeEnabled': True|False
+                          },
+                          'VolumeStyle': 'FLEXVOL'|'FLEXGROUP',
+                          'AggregateConfiguration': {
+                              'Aggregates': [
+                                  'string',
+                              ],
+                              'TotalConstituents': 123
+                          },
+                          'SizeInBytes': 123
+                      },
+                      'ResourceARN': 'string',
+                      'Tags': [
+                          {
+                              'Key': 'string',
+                              'Value': 'string'
+                          },
+                      ],
+                      'VolumeId': 'string',
+                      'VolumeType': 'ONTAP'|'OPENZFS',
+                      'LifecycleTransitionReason': {
+                          'Message': 'string'
+                      },
+                      'AdministrativeActions': [
+                          {
+                              'AdministrativeActionType': 'FILE_SYSTEM_UPDATE'|'STORAGE_OPTIMIZATION'|'FILE_SYSTEM_ALIAS_ASSOCIATION'|'FILE_SYSTEM_ALIAS_DISASSOCIATION'|'VOLUME_UPDATE'|'SNAPSHOT_UPDATE'|'RELEASE_NFS_V3_LOCKS'|'VOLUME_RESTORE'|'THROUGHPUT_OPTIMIZATION'|'IOPS_OPTIMIZATION'|'STORAGE_TYPE_OPTIMIZATION'|'MISCONFIGURED_STATE_RECOVERY'|'VOLUME_UPDATE_WITH_SNAPSHOT'|'VOLUME_INITIALIZE_WITH_SNAPSHOT'|'DOWNLOAD_DATA_FROM_BACKUP',
+                              'ProgressPercent': 123,
+                              'RequestTime': datetime(2015, 1, 1),
+                              'Status': 'FAILED'|'IN_PROGRESS'|'PENDING'|'COMPLETED'|'UPDATED_OPTIMIZING'|'OPTIMIZING'|'PAUSED'|'CANCELLED',
+                              'TargetFileSystemValues': {
+                                  'OwnerId': 'string',
+                                  'CreationTime': datetime(2015, 1, 1),
+                                  'FileSystemId': 'string',
+                                  'FileSystemType': 'WINDOWS'|'LUSTRE'|'ONTAP'|'OPENZFS',
+                                  'Lifecycle': 'AVAILABLE'|'CREATING'|'FAILED'|'DELETING'|'MISCONFIGURED'|'UPDATING'|'MISCONFIGURED_UNAVAILABLE',
+                                  'FailureDetails': {
+                                      'Message': 'string'
+                                  },
+                                  'StorageCapacity': 123,
+                                  'StorageType': 'SSD'|'HDD'|'INTELLIGENT_TIERING',
+                                  'VpcId': 'string',
+                                  'SubnetIds': [
+                                      'string',
+                                  ],
+                                  'NetworkInterfaceIds': [
+                                      'string',
+                                  ],
+                                  'DNSName': 'string',
+                                  'KmsKeyId': 'string',
+                                  'ResourceARN': 'string',
+                                  'Tags': [
+                                      {
+                                          'Key': 'string',
+                                          'Value': 'string'
+                                      },
+                                  ],
+                                  'WindowsConfiguration': {
+                                      'ActiveDirectoryId': 'string',
+                                      'SelfManagedActiveDirectoryConfiguration': {
+                                          'DomainName': 'string',
+                                          'OrganizationalUnitDistinguishedName': 'string',
+                                          'FileSystemAdministratorsGroup': 'string',
+                                          'UserName': 'string',
+                                          'DnsIps': [
+                                              'string',
+                                          ],
+                                          'DomainJoinServiceAccountSecret': 'string'
+                                      },
+                                      'DeploymentType': 'MULTI_AZ_1'|'SINGLE_AZ_1'|'SINGLE_AZ_2',
+                                      'RemoteAdministrationEndpoint': 'string',
+                                      'PreferredSubnetId': 'string',
+                                      'PreferredFileServerIp': 'string',
+                                      'ThroughputCapacity': 123,
+                                      'MaintenanceOperationsInProgress': [
+                                          'PATCHING'|'BACKING_UP',
+                                      ],
+                                      'WeeklyMaintenanceStartTime': 'string',
+                                      'DailyAutomaticBackupStartTime': 'string',
+                                      'AutomaticBackupRetentionDays': 123,
+                                      'CopyTagsToBackups': True|False,
+                                      'Aliases': [
+                                          {
+                                              'Name': 'string',
+                                              'Lifecycle': 'AVAILABLE'|'CREATING'|'DELETING'|'CREATE_FAILED'|'DELETE_FAILED'
+                                          },
+                                      ],
+                                      'AuditLogConfiguration': {
+                                          'FileAccessAuditLogLevel': 'DISABLED'|'SUCCESS_ONLY'|'FAILURE_ONLY'|'SUCCESS_AND_FAILURE',
+                                          'FileShareAccessAuditLogLevel': 'DISABLED'|'SUCCESS_ONLY'|'FAILURE_ONLY'|'SUCCESS_AND_FAILURE',
+                                          'AuditLogDestination': 'string'
+                                      },
+                                      'DiskIopsConfiguration': {
+                                          'Mode': 'AUTOMATIC'|'USER_PROVISIONED',
+                                          'Iops': 123
+                                      },
+                                      'PreferredFileServerIpv6': 'string',
+                                      'FsrmConfiguration': {
+                                          'FsrmServiceEnabled': True|False,
+                                          'EventLogDestination': 'string'
+                                      }
+                                  },
+                                  'LustreConfiguration': {
+                                      'WeeklyMaintenanceStartTime': 'string',
+                                      'DataRepositoryConfiguration': {
+                                          'Lifecycle': 'CREATING'|'AVAILABLE'|'MISCONFIGURED'|'UPDATING'|'DELETING'|'FAILED',
+                                          'ImportPath': 'string',
+                                          'ExportPath': 'string',
+                                          'ImportedFileChunkSize': 123,
+                                          'AutoImportPolicy': 'NONE'|'NEW'|'NEW_CHANGED'|'NEW_CHANGED_DELETED',
+                                          'FailureDetails': {
+                                              'Message': 'string'
+                                          }
+                                      },
+                                      'DeploymentType': 'SCRATCH_1'|'SCRATCH_2'|'PERSISTENT_1'|'PERSISTENT_2',
+                                      'PerUnitStorageThroughput': 123,
+                                      'MountName': 'string',
+                                      'DailyAutomaticBackupStartTime': 'string',
+                                      'AutomaticBackupRetentionDays': 123,
+                                      'CopyTagsToBackups': True|False,
+                                      'DriveCacheType': 'NONE'|'READ',
+                                      'DataCompressionType': 'NONE'|'LZ4',
+                                      'LogConfiguration': {
+                                          'Level': 'DISABLED'|'WARN_ONLY'|'ERROR_ONLY'|'WARN_ERROR',
+                                          'Destination': 'string'
+                                      },
+                                      'RootSquashConfiguration': {
+                                          'RootSquash': 'string',
+                                          'NoSquashNids': [
+                                              'string',
+                                          ]
+                                      },
+                                      'MetadataConfiguration': {
+                                          'Iops': 123,
+                                          'Mode': 'AUTOMATIC'|'USER_PROVISIONED'
+                                      },
+                                      'EfaEnabled': True|False,
+                                      'ThroughputCapacity': 123,
+                                      'DataReadCacheConfiguration': {
+                                          'SizingMode': 'NO_CACHE'|'USER_PROVISIONED'|'PROPORTIONAL_TO_THROUGHPUT_CAPACITY',
+                                          'SizeGiB': 123
+                                      }
+                                  },
+                                  'AdministrativeActions': {'... recursive ...'},
+                                  'OntapConfiguration': {
+                                      'AutomaticBackupRetentionDays': 123,
+                                      'DailyAutomaticBackupStartTime': 'string',
+                                      'DeploymentType': 'MULTI_AZ_1'|'SINGLE_AZ_1'|'SINGLE_AZ_2'|'MULTI_AZ_2',
+                                      'EndpointIpAddressRange': 'string',
+                                      'Endpoints': {
+                                          'Intercluster': {
+                                              'DNSName': 'string',
+                                              'IpAddresses': [
+                                                  'string',
+                                              ],
+                                              'Ipv6Addresses': [
+                                                  'string',
+                                              ]
+                                          },
+                                          'Management': {
+                                              'DNSName': 'string',
+                                              'IpAddresses': [
+                                                  'string',
+                                              ],
+                                              'Ipv6Addresses': [
+                                                  'string',
+                                              ]
+                                          }
+                                      },
+                                      'DiskIopsConfiguration': {
+                                          'Mode': 'AUTOMATIC'|'USER_PROVISIONED',
+                                          'Iops': 123
+                                      },
+                                      'PreferredSubnetId': 'string',
+                                      'RouteTableIds': [
+                                          'string',
+                                      ],
+                                      'ThroughputCapacity': 123,
+                                      'WeeklyMaintenanceStartTime': 'string',
+                                      'FsxAdminPassword': 'string',
+                                      'HAPairs': 123,
+                                      'ThroughputCapacityPerHAPair': 123,
+                                      'EndpointIpv6AddressRange': 'string'
+                                  },
+                                  'FileSystemTypeVersion': 'string',
+                                  'OpenZFSConfiguration': {
+                                      'AutomaticBackupRetentionDays': 123,
+                                      'CopyTagsToBackups': True|False,
+                                      'CopyTagsToVolumes': True|False,
+                                      'DailyAutomaticBackupStartTime': 'string',
+                                      'DeploymentType': 'SINGLE_AZ_1'|'SINGLE_AZ_2'|'SINGLE_AZ_HA_1'|'SINGLE_AZ_HA_2'|'MULTI_AZ_1',
+                                      'ThroughputCapacity': 123,
+                                      'WeeklyMaintenanceStartTime': 'string',
+                                      'DiskIopsConfiguration': {
+                                          'Mode': 'AUTOMATIC'|'USER_PROVISIONED',
+                                          'Iops': 123
+                                      },
+                                      'RootVolumeId': 'string',
+                                      'PreferredSubnetId': 'string',
+                                      'EndpointIpAddressRange': 'string',
+                                      'EndpointIpv6AddressRange': 'string',
+                                      'RouteTableIds': [
+                                          'string',
+                                      ],
+                                      'EndpointIpAddress': 'string',
+                                      'EndpointIpv6Address': 'string',
+                                      'ReadCacheConfiguration': {
+                                          'SizingMode': 'NO_CACHE'|'USER_PROVISIONED'|'PROPORTIONAL_TO_THROUGHPUT_CAPACITY',
+                                          'SizeGiB': 123
+                                      }
+                                  },
+                                  'NetworkType': 'IPV4'|'DUAL'
+                              },
+                              'FailureDetails': {
+                                  'Message': 'string'
+                              },
+                              'TargetVolumeValues': {'... recursive ...'},
+                              'TargetSnapshotValues': {
+                                  'ResourceARN': 'string',
+                                  'SnapshotId': 'string',
+                                  'Name': 'string',
+                                  'VolumeId': 'string',
+                                  'CreationTime': datetime(2015, 1, 1),
+                                  'Lifecycle': 'PENDING'|'CREATING'|'DELETING'|'AVAILABLE',
+                                  'LifecycleTransitionReason': {
+                                      'Message': 'string'
+                                  },
+                                  'Tags': [
+                                      {
+                                          'Key': 'string',
+                                          'Value': 'string'
+                                      },
+                                  ],
+                                  'AdministrativeActions': {'... recursive ...'}
+                              },
+                              'TotalTransferBytes': 123,
+                              'RemainingTransferBytes': 123,
+                              'Message': 'string'
+                          },
+                      ],
+                      'OpenZFSConfiguration': {
+                          'ParentVolumeId': 'string',
+                          'VolumePath': 'string',
+                          'StorageCapacityReservationGiB': 123,
+                          'StorageCapacityQuotaGiB': 123,
+                          'RecordSizeKiB': 123,
+                          'DataCompressionType': 'NONE'|'ZSTD'|'LZ4',
+                          'CopyTagsToSnapshots': True|False,
+                          'OriginSnapshot': {
+                              'SnapshotARN': 'string',
+                              'CopyStrategy': 'CLONE'|'FULL_COPY'|'INCREMENTAL_COPY'
+                          },
+                          'ReadOnly': True|False,
+                          'NfsExports': [
+                              {
+                                  'ClientConfigurations': [
+                                      {
+                                          'Clients': 'string',
+                                          'Options': [
+                                              'string',
+                                          ]
+                                      },
+                                  ]
+                              },
+                          ],
+                          'UserAndGroupQuotas': [
+                              {
+                                  'Type': 'USER'|'GROUP',
+                                  'Id': 123,
+                                  'StorageCapacityQuotaGiB': 123
+                              },
+                          ],
+                          'RestoreToSnapshot': 'string',
+                          'DeleteIntermediateSnaphots': True|False,
+                          'DeleteClonedVolumes': True|False,
+                          'DeleteIntermediateData': True|False,
+                          'SourceSnapshotARN': 'string',
+                          'DestinationSnapshot': 'string',
+                          'CopyStrategy': 'CLONE'|'FULL_COPY'|'INCREMENTAL_COPY'
+                      }
+                  },
+                  'SizeInBytes': 123
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+
+    **Response Structure**
+    ::
+
+        # This section is too large to render.
+        # Please see the AWS API Documentation linked below.
+
+    `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/fsx-2018-03-01/DescribeBackups>`_
+
+
+    
+  **Exceptions**
+  
+  *   :py:class:`FSx.Client.exceptions.BadRequest`
+
+  
+  *   :py:class:`FSx.Client.exceptions.FileSystemNotFound`
+
+  
+  *   :py:class:`FSx.Client.exceptions.VolumeNotFound`
+
+  
+  *   :py:class:`FSx.Client.exceptions.BackupNotFound`
+
+  
+  *   :py:class:`FSx.Client.exceptions.InternalServerError`
+
+  
+
+  **Examples**
+
+  This operation describes all of the Amazon FSx backups in an account.
+  ::
+
+    response = client.describe_backups(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Backups': [
+            {
+                'BackupId': 'backup-03e3c82e0183b7b6b',
+                'CreationTime': datetime(2016, 12, 16, 6, 38, 44, 4, 351, 0),
+                'FileSystem': {
+                    'FileSystemId': 'fs-0498eed5fe91001ec',
+                    'OwnerId': '012345678912',
+                    'StorageCapacity': 300,
+                    'WindowsConfiguration': {
+                        'ActiveDirectoryId': 'd-1234abcd12',
+                        'AutomaticBackupRetentionDays': 30,
+                        'DailyAutomaticBackupStartTime': '05:00',
+                        'WeeklyMaintenanceStartTime': '1:05:00',
+                    },
+                },
+                'Lifecycle': 'AVAILABLE',
+                'ResourceARN': 'arn:aws:fsx:us-east-1:012345678912:backup/backup-03e3c82e0183b7b6b',
+                'Tags': [
+                    {
+                        'Key': 'Name',
+                        'Value': 'MyBackup',
+                    },
+                ],
+                'Type': 'USER_INITIATED',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

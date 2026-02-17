@@ -1,0 +1,253 @@
+:doc:`SageMaker <../../sagemaker>` / Client / update_cluster_software
+
+***********************
+update_cluster_software
+***********************
+
+
+
+.. py:method:: SageMaker.Client.update_cluster_software(**kwargs)
+
+  
+
+  Updates the platform software of a SageMaker HyperPod cluster for security patching. To learn how to use this API, see `Update the SageMaker HyperPod platform software of a cluster <https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-operate.html#sagemaker-hyperpod-operate-cli-command-update-cluster-software>`__.
+
+   
+
+  .. warning::
+
+     
+
+    The ``UpgradeClusterSoftware`` API call may impact your SageMaker HyperPod cluster uptime and availability. Plan accordingly to mitigate potential disruptions to your workloads.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/UpdateClusterSoftware>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_cluster_software(
+        ClusterName='string',
+        InstanceGroups=[
+            {
+                'InstanceGroupName': 'string'
+            },
+        ],
+        DeploymentConfig={
+            'RollingUpdatePolicy': {
+                'MaximumBatchSize': {
+                    'Type': 'INSTANCE_COUNT'|'CAPACITY_PERCENTAGE',
+                    'Value': 123
+                },
+                'RollbackMaximumBatchSize': {
+                    'Type': 'INSTANCE_COUNT'|'CAPACITY_PERCENTAGE',
+                    'Value': 123
+                }
+            },
+            'WaitIntervalInSeconds': 123,
+            'AutoRollbackConfiguration': [
+                {
+                    'AlarmName': 'string'
+                },
+            ]
+        },
+        ImageId='string'
+    )
+    
+  :type ClusterName: string
+  :param ClusterName: **[REQUIRED]** 
+
+    Specify the name or the Amazon Resource Name (ARN) of the SageMaker HyperPod cluster you want to update for security patching.
+
+    
+
+  
+  :type InstanceGroups: list
+  :param InstanceGroups: 
+
+    The array of instance groups for which to update AMI versions.
+
+    
+
+  
+    - *(dict) --* 
+
+      The configuration that describes specifications of the instance groups to update.
+
+      
+
+    
+      - **InstanceGroupName** *(string) --* **[REQUIRED]** 
+
+        The name of the instance group to update.
+
+        
+
+      
+    
+
+  :type DeploymentConfig: dict
+  :param DeploymentConfig: 
+
+    The configuration to use when updating the AMI versions.
+
+    
+
+  
+    - **RollingUpdatePolicy** *(dict) --* 
+
+      The policy that SageMaker uses when updating the AMI versions of the cluster.
+
+      
+
+    
+      - **MaximumBatchSize** *(dict) --* **[REQUIRED]** 
+
+        The maximum amount of instances in the cluster that SageMaker can update at a time.
+
+        
+
+      
+        - **Type** *(string) --* **[REQUIRED]** 
+
+          Specifies whether SageMaker should process the update by amount or percentage of instances.
+
+          
+
+        
+        - **Value** *(integer) --* **[REQUIRED]** 
+
+          Specifies the amount or percentage of instances SageMaker updates at a time.
+
+          
+
+        
+      
+      - **RollbackMaximumBatchSize** *(dict) --* 
+
+        The maximum amount of instances in the cluster that SageMaker can roll back at a time.
+
+        
+
+      
+        - **Type** *(string) --* **[REQUIRED]** 
+
+          Specifies whether SageMaker should process the update by amount or percentage of instances.
+
+          
+
+        
+        - **Value** *(integer) --* **[REQUIRED]** 
+
+          Specifies the amount or percentage of instances SageMaker updates at a time.
+
+          
+
+        
+      
+    
+    - **WaitIntervalInSeconds** *(integer) --* 
+
+      The duration in seconds that SageMaker waits before updating more instances in the cluster.
+
+      
+
+    
+    - **AutoRollbackConfiguration** *(list) --* 
+
+      An array that contains the alarms that SageMaker monitors to know whether to roll back the AMI update.
+
+      
+
+    
+      - *(dict) --* 
+
+        The details of the alarm to monitor during the AMI update.
+
+        
+
+      
+        - **AlarmName** *(string) --* **[REQUIRED]** 
+
+          The name of the alarm.
+
+          
+
+        
+      
+  
+  
+  :type ImageId: string
+  :param ImageId: 
+
+    When configuring your HyperPod cluster, you can specify an image ID using one of the following options:
+
+     
+
+    
+    * ``HyperPodPublicAmiId``: Use a HyperPod public AMI
+     
+    * ``CustomAmiId``: Use your custom AMI
+     
+    * ``default``: Use the default latest system image
+    
+
+     
+
+    If you choose to use a custom AMI ( ``CustomAmiId``), ensure it meets the following requirements:
+
+     
+
+    
+    * Encryption: The custom AMI must be unencrypted.
+     
+    * Ownership: The custom AMI must be owned by the same Amazon Web Services account that is creating the HyperPod cluster.
+     
+    * Volume support: Only the primary AMI snapshot volume is supported; additional AMI volumes are not supported.
+    
+
+     
+
+    When updating the instance group's AMI through the ``UpdateClusterSoftware`` operation, if an instance group uses a custom AMI, you must provide an ``ImageId`` or use the default as input. Note that if you don't specify an instance group in your ``UpdateClusterSoftware`` request, then all of the instance groups are patched with the specified image.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ClusterArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ClusterArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the SageMaker HyperPod cluster being updated for security patching.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SageMaker.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`SageMaker.Client.exceptions.ResourceNotFound`
+
+  

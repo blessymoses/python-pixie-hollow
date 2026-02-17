@@ -1,0 +1,250 @@
+:doc:`Batch <../../batch>` / Client / get_job_queue_snapshot
+
+**********************
+get_job_queue_snapshot
+**********************
+
+
+
+.. py:method:: Batch.Client.get_job_queue_snapshot(**kwargs)
+
+  
+
+  Provides a list of the first 100 ``RUNNABLE`` jobs associated to a single job queue and includes capacity utilization, including total usage and breakdown by share for fairshare scheduling job queues.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/GetJobQueueSnapshot>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_job_queue_snapshot(
+        jobQueue='string'
+    )
+    
+  :type jobQueue: string
+  :param jobQueue: **[REQUIRED]** 
+
+    The job queue’s name or full queue Amazon Resource Name (ARN).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'frontOfQueue': {
+              'jobs': [
+                  {
+                      'jobArn': 'string',
+                      'earliestTimeAtPosition': 123
+                  },
+              ],
+              'lastUpdatedAt': 123
+          },
+          'queueUtilization': {
+              'totalCapacityUsage': [
+                  {
+                      'capacityUnit': 'string',
+                      'quantity': 123.0
+                  },
+              ],
+              'fairshareUtilization': {
+                  'activeShareCount': 123,
+                  'topCapacityUtilization': [
+                      {
+                          'shareIdentifier': 'string',
+                          'capacityUsage': [
+                              {
+                                  'capacityUnit': 'string',
+                                  'quantity': 123.0
+                              },
+                          ]
+                      },
+                  ]
+              },
+              'lastUpdatedAt': 123
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **frontOfQueue** *(dict) --* 
+
+        The list of the first 100 ``RUNNABLE`` jobs in each job queue. For first-in-first-out (FIFO) job queues, jobs are ordered based on their submission time. For fair-share scheduling (FSS) job queues, jobs are ordered based on their job priority and share usage.
+
+        
+        
+
+        - **jobs** *(list) --* 
+
+          The Amazon Resource Names (ARNs) of the first 100 ``RUNNABLE`` jobs in a named job queue. For first-in-first-out (FIFO) job queues, jobs are ordered based on their submission time. For fair-share scheduling (FSS) job queues, jobs are ordered based on their job priority and share usage.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object that represents summary details for the first 100 ``RUNNABLE`` jobs in a job queue.
+
+            
+            
+
+            - **jobArn** *(string) --* 
+
+              The ARN for a job in a named job queue.
+
+              
+            
+
+            - **earliestTimeAtPosition** *(integer) --* 
+
+              The Unix timestamp (in milliseconds) for when the job transitioned to its current position in the job queue.
+
+              
+        
+      
+        
+
+        - **lastUpdatedAt** *(integer) --* 
+
+          The Unix timestamp (in milliseconds) for when each of the first 100 ``RUNNABLE`` jobs were last updated.
+
+          
+    
+      
+
+      - **queueUtilization** *(dict) --* 
+
+        The job queue's capacity utilization, including total usage and breakdown by fairshare scheduling queue.
+
+        
+        
+
+        - **totalCapacityUsage** *(list) --* 
+
+          The total capacity usage for the entire job queue, for both first-in, first-out (FIFO) and fairshare scheduling job queue.
+
+          
+          
+
+          - *(dict) --* 
+
+            The configured capacity usage for a job queue snapshot, including the unit of measure and quantity of resources being used.
+
+            
+            
+
+            - **capacityUnit** *(string) --* 
+
+              The unit of measure for the capacity usage. For compute jobs, this is ``VCPU`` for Amazon EC2 and ``cpu`` for Amazon EKS. For service jobs, this is ``NUM_INSTANCES``.
+
+              
+            
+
+            - **quantity** *(float) --* 
+
+              The quantity of capacity being used in the queue snapshot, measured in the units specified by ``capacityUnit``.
+
+              
+        
+      
+        
+
+        - **fairshareUtilization** *(dict) --* 
+
+          The utilization information for a fairshare scheduling job queues, including active share count and top capacity utilization by share.
+
+          
+          
+
+          - **activeShareCount** *(integer) --* 
+
+            The total number of active shares in the fairshare scheduling job queue that are currently utilizing capacity.
+
+            
+          
+
+          - **topCapacityUtilization** *(list) --* 
+
+            A list of the top 20 shares with the highest capacity utilization, ordered by usage amount.
+
+            
+            
+
+            - *(dict) --* 
+
+              The capacity utilization for a specific share in a fairshare scheduling job queue, including the share identifier and its current usage.
+
+              
+              
+
+              - **shareIdentifier** *(string) --* 
+
+                The share identifier for the fairshare scheduling job queue.
+
+                
+              
+
+              - **capacityUsage** *(list) --* 
+
+                The capacity usage information for this share, including the unit of measure and quantity being used. This is ``VCPU`` for Amazon EC2 and ``cpu`` for Amazon EKS.
+
+                
+                
+
+                - *(dict) --* 
+
+                  The capacity usage for a fairshare scheduling job queue.
+
+                  
+                  
+
+                  - **capacityUnit** *(string) --* 
+
+                    The unit of measure for the capacity usage. For compute jobs, this is ``VCPU`` for Amazon EC2 and ``cpu`` for Amazon EKS. For service jobs, this is ``NUM_INSTANCES``.
+
+                    
+                  
+
+                  - **quantity** *(float) --* 
+
+                    The quantity of capacity being used, measured in the units specified by ``capacityUnit``.
+
+                    
+              
+            
+          
+        
+      
+        
+
+        - **lastUpdatedAt** *(integer) --* 
+
+          The Unix timestamp (in milliseconds) for when the queue utilization information was last updated.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Batch.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`Batch.Client.exceptions.ServerException`
+
+  

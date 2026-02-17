@@ -1,0 +1,215 @@
+:doc:`Organizations <../../organizations>` / Client / list_children
+
+*************
+list_children
+*************
+
+
+
+.. py:method:: Organizations.Client.list_children(**kwargs)
+
+  
+
+  Lists all of the organizational units (OUs) or accounts that are contained in the specified parent OU or root. This operation, along with  ListParents enables you to traverse the tree structure that makes up this root.
+
+   
+
+  .. note::
+
+    
+
+    When calling List* operations, always check the ``NextToken`` response parameter value, even if you receive an empty result set. These operations can occasionally return an empty set of results even when more results are available. Continue making requests until ``NextToken`` returns null. A null ``NextToken`` value indicates that you have retrieved all available results.
+
+    
+
+   
+
+  You can only call this operation from the management account or a member account that is a delegated administrator.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/ListChildren>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_children(
+        ParentId='string',
+        ChildType='ACCOUNT'|'ORGANIZATIONAL_UNIT',
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type ParentId: string
+  :param ParentId: **[REQUIRED]** 
+
+    The unique identifier (ID) for the parent root or OU whose children you want to list.
+
+     
+
+    The `regex pattern <http://wikipedia.org/wiki/regex>`__ for a parent ID string requires one of the following:
+
+     
+
+    
+    * **Root** - A string that begins with "r-" followed by from 4 to 32 lowercase letters or digits.
+     
+    * **Organizational unit (OU)** - A string that begins with "ou-" followed by from 4 to 32 lowercase letters or digits (the ID of the root that the OU is in). This string is followed by a second "-" dash and from 8 to 32 additional lowercase letters or digits.
+    
+
+    
+
+  
+  :type ChildType: string
+  :param ChildType: **[REQUIRED]** 
+
+    Filters the output to include only the specified child type.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The parameter for receiving additional results if you receive a ``NextToken`` response in a previous request. A ``NextToken`` response indicates that more output is available. Set this parameter to the value of the previous call's ``NextToken`` response to indicate where the output should continue from.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return in the response. If more results exist than the specified ``MaxResults`` value, a token is included in the response so that you can retrieve the remaining results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Children': [
+              {
+                  'Id': 'string',
+                  'Type': 'ACCOUNT'|'ORGANIZATIONAL_UNIT'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Children** *(list) --* 
+
+        The list of children of the specified parent container.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains a list of child entities, either OUs or accounts.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The unique identifier (ID) of this child entity.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ for a child ID string requires one of the following:
+
+             
+
+            
+            * **Account** - A string that consists of exactly 12 digits.
+             
+            * **Organizational unit (OU)** - A string that begins with "ou-" followed by from 4 to 32 lowercase letters or digits (the ID of the root that contains the OU). This string is followed by a second "-" dash and from 8 to 32 additional lowercase letters or digits.
+            
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The type of this child entity.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If present, indicates that more output is available than is included in the current response. Use this value in the ``NextToken`` request parameter in a subsequent call to the operation to get the next part of the output. You should repeat this until the ``NextToken`` response element comes back as ``null``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ParentNotFoundException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+
+  **Examples**
+
+  The following example shows how to request a list of the child OUs in a parent root or OU:/n/n
+  ::
+
+    response = client.list_children(
+        ChildType='ORGANIZATIONAL_UNIT',
+        ParentId='ou-examplerootid111-exampleouid111',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Children': [
+            {
+                'Id': 'ou-examplerootid111-exampleouid111',
+                'Type': 'ORGANIZATIONAL_UNIT',
+            },
+            {
+                'Id': 'ou-examplerootid111-exampleouid222',
+                'Type': 'ORGANIZATIONAL_UNIT',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

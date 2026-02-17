@@ -1,0 +1,255 @@
+:doc:`GameLift <../../gamelift>` / Client / update_fleet_capacity
+
+*********************
+update_fleet_capacity
+*********************
+
+
+
+.. py:method:: GameLift.Client.update_fleet_capacity(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Container
+
+   
+
+  Updates capacity settings for a managed EC2 fleet or managed container fleet. For these fleets, you adjust capacity by changing the number of instances in the fleet. Fleet capacity determines the number of game sessions and players that the fleet can host based on its configuration. For fleets with multiple locations, use this operation to manage capacity settings in each location individually.
+
+   
+
+  
+  * Minimum/maximum size: Set hard limits on the number of Amazon EC2 instances allowed. If Amazon GameLift Servers receives a request--either through manual update or automatic scaling--it won't change the capacity to a value outside of this range.
+   
+  * Desired capacity: As an alternative to automatic scaling, manually set the number of Amazon EC2 instances to be maintained. Before changing a fleet's desired capacity, check the maximum capacity of the fleet's Amazon EC2 instance type by calling `DescribeEC2InstanceLimits <https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeEC2InstanceLimits.html>`__.
+  
+
+   
+
+  To update capacity for a fleet's home Region, or if the fleet has no remote locations, omit the ``Location`` parameter. The fleet must be in ``ACTIVE`` status.
+
+   
+
+  To update capacity for a fleet's remote location, set the ``Location`` parameter to the location to update. The location must be in ``ACTIVE`` status.
+
+   
+
+  If successful, Amazon GameLift Servers updates the capacity settings and returns the identifiers for the updated fleet and/or location. If a requested change to desired capacity exceeds the instance type's limit, the ``LimitExceeded`` exception occurs.
+
+   
+
+  Updates often prompt an immediate change in fleet capacity, such as when current capacity is different than the new desired capacity or outside the new limits. In this scenario, Amazon GameLift Servers automatically initiates steps to add or remove instances in the fleet location. You can track a fleet's current capacity by calling `DescribeFleetCapacity <https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetCapacity.html>`__ or `DescribeFleetLocationCapacity <https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeFleetLocationCapacity.html>`__.
+
+   
+
+  Use ManagedCapacityConfiguration with the "SCALE_TO_AND_FROM_ZERO" ZeroCapacityStrategy to enable Amazon GameLift Servers to fully manage the MinSize value, switching between 0 and 1 based on game session activity. This is ideal for eliminating compute costs during periods of no game activity. It is particularly beneficial during development when you're away from your desk, iterating on builds for extended periods, in production environments serving low-traffic locations, or for games with long, predictable downtime windows. By automatically managing capacity between 0 and 1 instances, you avoid paying for idle instances while maintaining the ability to serve game sessions when demand arrives. Note that while scale-out is triggered immediately upon receiving a game session request, actual game session availability depends on your server process startup time, so this approach works best with multi-location Fleets where cold-start latency is tolerable. With a "MANUAL" ZeroCapacityStrategy Amazon GameLift Servers will not modify Fleet MinSize values automatically and will not scale out from zero instances in response to game sessions. This is configurable per-location.
+
+   
+
+  **Learn more**
+
+   
+
+  `Scaling fleet capacity <https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-manage-capacity.html>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/UpdateFleetCapacity>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_fleet_capacity(
+        FleetId='string',
+        DesiredInstances=123,
+        MinSize=123,
+        MaxSize=123,
+        Location='string',
+        ManagedCapacityConfiguration={
+            'ZeroCapacityStrategy': 'MANUAL'|'SCALE_TO_AND_FROM_ZERO',
+            'ScaleInAfterInactivityMinutes': 123
+        }
+    )
+    
+  :type FleetId: string
+  :param FleetId: **[REQUIRED]** 
+
+    A unique identifier for the fleet to update capacity settings for. You can use either the fleet ID or ARN value.
+
+    
+
+  
+  :type DesiredInstances: integer
+  :param DesiredInstances: 
+
+    The number of Amazon EC2 instances you want to maintain in the specified fleet location. This value must fall between the minimum and maximum size limits. Changes in desired instance value can take up to 1 minute to be reflected when viewing the fleet's capacity settings.
+
+    
+
+  
+  :type MinSize: integer
+  :param MinSize: 
+
+    The minimum number of instances that are allowed in the specified fleet location. If this parameter is not set, the default is 0. This parameter cannot be set when using a ManagedCapacityConfiguration where ZeroCapacityStrategy has a value of SCALE_TO_AND_FROM_ZERO.
+
+    
+
+  
+  :type MaxSize: integer
+  :param MaxSize: 
+
+    The maximum number of instances that are allowed in the specified fleet location. If this parameter is not set, the default is 1.
+
+    
+
+  
+  :type Location: string
+  :param Location: 
+
+    The name of a remote location to update fleet capacity settings for, in the form of an Amazon Web Services Region code such as ``us-west-2``.
+
+    
+
+  
+  :type ManagedCapacityConfiguration: dict
+  :param ManagedCapacityConfiguration: 
+
+    Configuration for Amazon GameLift Servers-managed capacity scaling options.
+
+    
+
+  
+    - **ZeroCapacityStrategy** *(string) --* 
+
+      The strategy Amazon GameLift Servers will use to automatically scale your capacity to and from zero instances in response to game session activity. Game session activity refers to any active running sessions or game session requests.
+
+       
+
+      Possible ZeroCapacityStrategy types include:
+
+       
+
+      
+      * **MANUAL** -- (default value) Amazon GameLift Servers will not update capacity to and from zero on your behalf.
+       
+      * **SCALE_TO_AND_FROM_ZERO** -- Amazon GameLift Servers will automatically scale out MinSize and DesiredInstances from 0 to 1 in response to a game session request, and will scale in MinSize and DesiredInstances to 0 after a period with no game session activity. The duration of this scale in period can be configured using ScaleInAfterInactivityMinutes.
+      
+
+      
+
+    
+    - **ScaleInAfterInactivityMinutes** *(integer) --* 
+
+      Length of time, in minutes, that Amazon GameLift Servers will wait before scaling in your MinSize and DesiredInstances to 0 after a period with no game session activity. Default: 30 minutes.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FleetId': 'string',
+          'FleetArn': 'string',
+          'Location': 'string',
+          'ManagedCapacityConfiguration': {
+              'ZeroCapacityStrategy': 'MANUAL'|'SCALE_TO_AND_FROM_ZERO',
+              'ScaleInAfterInactivityMinutes': 123
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FleetId** *(string) --* 
+
+        A unique identifier for the fleet that was updated.
+
+        
+      
+
+      - **FleetArn** *(string) --* 
+
+        The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers fleet resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::fleet/fleet-a1234567-b8c9-0d1e-2fa3-b45c6d7e8912``.
+
+        
+      
+
+      - **Location** *(string) --* 
+
+        The remote location being updated, expressed as an Amazon Web Services Region code, such as ``us-west-2``.
+
+        
+      
+
+      - **ManagedCapacityConfiguration** *(dict) --* 
+
+        Configuration for Amazon GameLift Servers-managed capacity scaling options.
+
+        
+        
+
+        - **ZeroCapacityStrategy** *(string) --* 
+
+          The strategy Amazon GameLift Servers will use to automatically scale your capacity to and from zero instances in response to game session activity. Game session activity refers to any active running sessions or game session requests.
+
+           
+
+          Possible ZeroCapacityStrategy types include:
+
+           
+
+          
+          * **MANUAL** -- (default value) Amazon GameLift Servers will not update capacity to and from zero on your behalf.
+           
+          * **SCALE_TO_AND_FROM_ZERO** -- Amazon GameLift Servers will automatically scale out MinSize and DesiredInstances from 0 to 1 in response to a game session request, and will scale in MinSize and DesiredInstances to 0 after a period with no game session activity. The duration of this scale in period can be configured using ScaleInAfterInactivityMinutes.
+          
+
+          
+        
+
+        - **ScaleInAfterInactivityMinutes** *(integer) --* 
+
+          Length of time, in minutes, that Amazon GameLift Servers will wait before scaling in your MinSize and DesiredInstances to 0 after a period with no game session activity. Default: 30 minutes.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidFleetStatusException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  

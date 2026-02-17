@@ -1,0 +1,271 @@
+:doc:`KMS <../../kms>` / Client / list_key_rotations
+
+******************
+list_key_rotations
+******************
+
+
+
+.. py:method:: KMS.Client.list_key_rotations(**kwargs)
+
+  
+
+  Returns information about the key materials associated with the specified KMS key. You can use the optional ``IncludeKeyMaterial`` parameter to control which key materials are included in the response.
+
+   
+
+  You must specify the KMS key in all requests. You can refine the key rotations list by limiting the number of rotations returned.
+
+   
+
+  For detailed information about automatic and on-demand key rotations, see `Rotate KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Cross-account use**: No. You cannot perform this operation on a KMS key in a different Amazon Web Services account.
+
+   
+
+  **Required permissions**: `kms\:ListKeyRotations <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (key policy)
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  EnableKeyRotation
+   
+  *  DeleteImportedKeyMaterial
+   
+  *  DisableKeyRotation
+   
+  *  GetKeyRotationStatus
+   
+  *  ImportKeyMaterial
+   
+  *  RotateKeyOnDemand
+  
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ListKeyRotations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_key_rotations(
+        KeyId='string',
+        IncludeKeyMaterial='ALL_KEY_MATERIAL'|'ROTATIONS_ONLY',
+        Limit=123,
+        Marker='string'
+    )
+    
+  :type KeyId: string
+  :param KeyId: **[REQUIRED]** 
+
+    Gets the key rotations for the specified KMS key.
+
+     
+
+    Specify the key ID or key ARN of the KMS key.
+
+     
+
+    For example:
+
+     
+
+    
+    * Key ID: ``1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Key ARN: ``arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``
+    
+
+     
+
+    To get the key ID and key ARN for a KMS key, use  ListKeys or  DescribeKey.
+
+    
+
+  
+  :type IncludeKeyMaterial: string
+  :param IncludeKeyMaterial: 
+
+    Use this optional parameter to control which key materials associated with this key are listed in the response. The default value of this parameter is ``ROTATIONS_ONLY``. If you omit this parameter, KMS returns information on the key materials created by automatic or on-demand key rotation. When you specify a value of ``ALL_KEY_MATERIAL``, KMS adds the first key material and any imported key material pending rotation to the response. This parameter can only be used with KMS keys that support automatic or on-demand key rotation.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not return more than the specified number of items, but it might return fewer.
+
+     
+
+    This value is optional. If you include a value, it must be between 1 and 1000, inclusive. If you do not include a value, it defaults to 100.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    Use this parameter in a subsequent request after you receive a response with truncated results. Set it to the value of ``NextMarker`` from the truncated response you just received.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Rotations': [
+              {
+                  'KeyId': 'string',
+                  'KeyMaterialId': 'string',
+                  'KeyMaterialDescription': 'string',
+                  'ImportState': 'IMPORTED'|'PENDING_IMPORT',
+                  'KeyMaterialState': 'NON_CURRENT'|'CURRENT'|'PENDING_ROTATION'|'PENDING_MULTI_REGION_IMPORT_AND_ROTATION',
+                  'ExpirationModel': 'KEY_MATERIAL_EXPIRES'|'KEY_MATERIAL_DOES_NOT_EXPIRE',
+                  'ValidTo': datetime(2015, 1, 1),
+                  'RotationDate': datetime(2015, 1, 1),
+                  'RotationType': 'AUTOMATIC'|'ON_DEMAND'
+              },
+          ],
+          'NextMarker': 'string',
+          'Truncated': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Rotations** *(list) --* 
+
+        A list of completed key material rotations. When the optional input parameter ``IncludeKeyMaterial`` is specified with a value of ``ALL_KEY_MATERIAL``, this list includes the first key material and any imported key material pending rotation.
+
+        
+        
+
+        - *(dict) --* 
+
+          Each entry contains information about one of the key materials associated with a KMS key.
+
+          
+          
+
+          - **KeyId** *(string) --* 
+
+            Unique identifier of the key.
+
+            
+          
+
+          - **KeyMaterialId** *(string) --* 
+
+            Unique identifier of the key material.
+
+            
+          
+
+          - **KeyMaterialDescription** *(string) --* 
+
+            User-specified description of the key material. This field is only present for symmetric encryption KMS keys with ``EXTERNAL`` origin.
+
+            
+          
+
+          - **ImportState** *(string) --* 
+
+            Indicates if the key material is currently imported into KMS. It has two possible values: ``IMPORTED`` or ``PENDING_IMPORT``. This field is only present for symmetric encryption KMS keys with ``EXTERNAL`` origin.
+
+            
+          
+
+          - **KeyMaterialState** *(string) --* 
+
+            There are four possible values for this field: ``CURRENT``, ``NON_CURRENT``, ``PENDING_MULTI_REGION_IMPORT_AND_ROTATION`` and ``PENDING_ROTATION``. KMS uses ``CURRENT`` key material for both encryption and decryption and ``NON_CURRENT`` key material only for decryption. ``PENDING_ROTATION`` identifies key material that has been imported for on-demand key rotation but the rotation hasn't completed. The key material state ``PENDING_MULTI_REGION_IMPORT_AND_ROTATION`` is unique to multi-region, symmetric encryption keys with imported key material. It indicates key material that has been imported into the primary Region key but not all of the replica Region keys. When this key material is imported in to all of the replica Region keys, the key material state will change to ``PENDING_ROTATION``. Key material in ``PENDING_MULTI_REGION_IMPORT_AND_ROTATION`` or ``PENDING_ROTATION`` state is not permanently associated with the KMS key. You can delete this key material and import different key material in its place. The ``PENDING_MULTI_REGION_IMPORT_AND_ROTATION`` and ``PENDING_ROTATION`` values are only used in symmetric encryption keys with imported key material. The other values, ``CURRENT`` and ``NON_CURRENT``, are used for all KMS keys that support automatic or on-demand key rotation.
+
+            
+          
+
+          - **ExpirationModel** *(string) --* 
+
+            Indicates if the key material is configured to automatically expire. There are two possible values for this field: ``KEY_MATERIAL_EXPIRES`` and ``KEY_MATERIAL_DOES_NOT_EXPIRE``. For any key material that expires, the expiration date and time is indicated in ``ValidTo``. This field is only present for symmetric encryption KMS keys with ``EXTERNAL`` origin.
+
+            
+          
+
+          - **ValidTo** *(datetime) --* 
+
+            Date and time at which the key material expires. This field is only present for symmetric encryption KMS keys with ``EXTERNAL`` origin in rotation list entries with an ``ExpirationModel`` value of ``KEY_MATERIAL_EXPIRES``.
+
+            
+          
+
+          - **RotationDate** *(datetime) --* 
+
+            Date and time that the key material rotation completed. Formatted as Unix time. This field is not present for the first key material or an imported key material in ``PENDING_ROTATION`` state.
+
+            
+          
+
+          - **RotationType** *(string) --* 
+
+            Identifies whether the key material rotation was a scheduled `automatic rotation <https://docs.aws.amazon.com/kms/latest/developerguide/rotating-keys-enable-disable.html>`__ or an `on-demand rotation <https://docs.aws.amazon.com/kms/latest/developerguide/rotating-keys-on-demand.html>`__. This field is not present for the first key material or an imported key material in ``PENDING_ROTATION`` state.
+
+            
+      
+    
+      
+
+      - **NextMarker** *(string) --* 
+
+        When ``Truncated`` is true, this element is present and contains the value to use for the ``Marker`` parameter in a subsequent request.
+
+        
+      
+
+      - **Truncated** *(boolean) --* 
+
+        A flag that indicates whether there are more items in the list. When this value is true, the list in this response is truncated. To get more items, pass the value of the ``NextMarker`` element in this response to the ``Marker`` parameter in a subsequent request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidArnException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidMarkerException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInvalidStateException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.UnsupportedOperationException`
+
+  

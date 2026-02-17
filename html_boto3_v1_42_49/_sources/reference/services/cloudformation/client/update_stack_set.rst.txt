@@ -1,0 +1,764 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / update_stack_set
+
+****************
+update_stack_set
+****************
+
+
+
+.. py:method:: CloudFormation.Client.update_stack_set(**kwargs)
+
+  
+
+  Updates the StackSet and associated stack instances in the specified accounts and Amazon Web Services Regions.
+
+   
+
+  Even if the StackSet operation created by updating the StackSet fails (completely or partially, below or above a specified failure tolerance), the StackSet is updated with your changes. Subsequent  CreateStackInstances calls on the specified StackSet use the updated StackSet.
+
+   
+
+  .. note::
+
+    
+
+    The maximum number of organizational unit (OUs) supported by a ``UpdateStackSet`` operation is 50.
+
+     
+
+    If you need more than 50, consider the following options:
+
+     
+
+    
+    * *Batch processing:* If you don't want to expose your OU hierarchy, split up the operations into multiple calls with less than 50 OUs each.
+     
+    * *Parent OU strategy:* If you don't mind exposing the OU hierarchy, target a parent OU that contains all desired child OUs.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/UpdateStackSet>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_stack_set(
+        StackSetName='string',
+        Description='string',
+        TemplateBody='string',
+        TemplateURL='string',
+        UsePreviousTemplate=True|False,
+        Parameters=[
+            {
+                'ParameterKey': 'string',
+                'ParameterValue': 'string',
+                'UsePreviousValue': True|False,
+                'ResolvedValue': 'string'
+            },
+        ],
+        Capabilities=[
+            'CAPABILITY_IAM'|'CAPABILITY_NAMED_IAM'|'CAPABILITY_AUTO_EXPAND',
+        ],
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        OperationPreferences={
+            'RegionConcurrencyType': 'SEQUENTIAL'|'PARALLEL',
+            'RegionOrder': [
+                'string',
+            ],
+            'FailureToleranceCount': 123,
+            'FailureTolerancePercentage': 123,
+            'MaxConcurrentCount': 123,
+            'MaxConcurrentPercentage': 123,
+            'ConcurrencyMode': 'STRICT_FAILURE_TOLERANCE'|'SOFT_FAILURE_TOLERANCE'
+        },
+        AdministrationRoleARN='string',
+        ExecutionRoleName='string',
+        DeploymentTargets={
+            'Accounts': [
+                'string',
+            ],
+            'AccountsUrl': 'string',
+            'OrganizationalUnitIds': [
+                'string',
+            ],
+            'AccountFilterType': 'NONE'|'INTERSECTION'|'DIFFERENCE'|'UNION'
+        },
+        PermissionModel='SERVICE_MANAGED'|'SELF_MANAGED',
+        AutoDeployment={
+            'Enabled': True|False,
+            'RetainStacksOnAccountRemoval': True|False,
+            'DependsOn': [
+                'string',
+            ]
+        },
+        OperationId='string',
+        Accounts=[
+            'string',
+        ],
+        Regions=[
+            'string',
+        ],
+        CallAs='SELF'|'DELEGATED_ADMIN',
+        ManagedExecution={
+            'Active': True|False
+        }
+    )
+    
+  :type StackSetName: string
+  :param StackSetName: **[REQUIRED]** 
+
+    The name or unique ID of the StackSet that you want to update.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A brief description of updates that you are making.
+
+    
+
+  
+  :type TemplateBody: string
+  :param TemplateBody: 
+
+    The structure that contains the template body, with a minimum length of 1 byte and a maximum length of 51,200 bytes.
+
+     
+
+    Conditional: You must specify only one of the following parameters: ``TemplateBody`` or ``TemplateURL``—or set ``UsePreviousTemplate`` to true.
+
+    
+
+  
+  :type TemplateURL: string
+  :param TemplateURL: 
+
+    The URL of a file that contains the template body. The URL must point to a template (maximum size: 1 MB) that is located in an Amazon S3 bucket or a Systems Manager document. The location for an Amazon S3 bucket must start with ``https://``. S3 static website URLs are not supported.
+
+     
+
+    Conditional: You must specify only one of the following parameters: ``TemplateBody`` or ``TemplateURL``—or set ``UsePreviousTemplate`` to true.
+
+    
+
+  
+  :type UsePreviousTemplate: boolean
+  :param UsePreviousTemplate: 
+
+    Use the existing template that's associated with the StackSet that you're updating.
+
+     
+
+    Conditional: You must specify only one of the following parameters: ``TemplateBody`` or ``TemplateURL``—or set ``UsePreviousTemplate`` to true.
+
+    
+
+  
+  :type Parameters: list
+  :param Parameters: 
+
+    A list of input parameters for the StackSet template.
+
+    
+
+  
+    - *(dict) --* 
+
+      The ``Parameter`` data type.
+
+      
+
+    
+      - **ParameterKey** *(string) --* 
+
+        The key associated with the parameter. If you don't specify a key and value for a particular parameter, CloudFormation uses the default value that's specified in your template.
+
+        
+
+      
+      - **ParameterValue** *(string) --* 
+
+        The input value associated with the parameter.
+
+        
+
+      
+      - **UsePreviousValue** *(boolean) --* 
+
+        During a stack update, use the existing parameter value that the stack is using for a given parameter key. If you specify ``true``, do not specify a parameter value.
+
+        
+
+      
+      - **ResolvedValue** *(string) --* 
+
+        Read-only. The value that corresponds to a Systems Manager parameter key. This field is returned only for Systems Manager parameter types in the template. For more information, see `Specify existing resources at runtime with CloudFormation-supplied parameter types <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-supplied-parameter-types.html>`__ in the *CloudFormation User Guide*.
+
+        
+
+      
+    
+
+  :type Capabilities: list
+  :param Capabilities: 
+
+    In some cases, you must explicitly acknowledge that your stack template contains certain capabilities in order for CloudFormation to update the StackSet and its associated stack instances.
+
+     
+
+    
+    * ``CAPABILITY_IAM`` and ``CAPABILITY_NAMED_IAM`` Some stack templates might include resources that can affect permissions in your Amazon Web Services account, for example, by creating new IAM users. For those stacks sets, you must explicitly acknowledge this by specifying one of these capabilities. The following IAM resources require you to specify either the ``CAPABILITY_IAM`` or ``CAPABILITY_NAMED_IAM`` capability. 
+
+      
+      * If you have IAM resources, you can specify either capability.
+       
+      * If you have IAM resources with custom names, you *must* specify ``CAPABILITY_NAMED_IAM``.
+       
+      * If you don't specify either of these capabilities, CloudFormation returns an ``InsufficientCapabilities`` error.
+      
+
+     
+
+    If your stack template contains these resources, we recommend that you review all permissions associated with them and edit their permissions if necessary.
+
+     
+
+      
+      * `AWS\:\:IAM\:\:AccessKey <https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-iam-accesskey.html>`__
+       
+      * `AWS\:\:IAM\:\:Group <https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-iam-group.html>`__
+       
+      * `AWS\:\:IAM\:\:InstanceProfile <https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-iam-instanceprofile.html>`__
+       
+      * `AWS\:\:IAM\:\:Policy <https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-iam-policy.html>`__
+       
+      * `AWS\:\:IAM\:\:Role <https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-iam-role.html>`__
+       
+      * `AWS\:\:IAM\:\:User <https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-iam-user.html>`__
+       
+      * `AWS\:\:IAM\:\:UserToGroupAddition <https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-iam-usertogroupaddition.html>`__
+      
+
+     
+
+    For more information, see `Acknowledging IAM resources in CloudFormation templates <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/control-access-with-iam.html#using-iam-capabilities>`__.
+
+    
+     
+    * ``CAPABILITY_AUTO_EXPAND`` Some templates reference macros. If your StackSet template references one or more macros, you must update the StackSet directly from the processed template, without first reviewing the resulting changes in a change set. To update the StackSet directly, you must acknowledge this capability. For more information, see `Perform custom processing on CloudFormation templates with template macros <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-macros.html>`__. 
+
+    .. warning::
+
+      StackSets with service-managed permissions do not currently support the use of macros in templates. (This includes the `AWS\:\:Include <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-include.html>`__ and `AWS\:\:Serverless <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html>`__ transforms, which are macros hosted by CloudFormation.) Even if you specify this capability for a StackSet with service-managed permissions, if you reference a macro in your template the StackSet operation will fail.
+
+    
+    
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type Tags: list
+  :param Tags: 
+
+    The key-value pairs to associate with this StackSet and the stacks created from it. CloudFormation also propagates these tags to supported resources that are created in the stacks. You can specify a maximum number of 50 tags.
+
+     
+
+    If you specify tags for this parameter, those tags replace any list of tags that are currently associated with this StackSet. This means:
+
+     
+
+    
+    * If you don't specify this parameter, CloudFormation doesn't modify the stack's tags.
+     
+    * If you specify *any* tags using this parameter, you must specify *all* the tags that you want associated with this StackSet, even tags you've specified before (for example, when creating the StackSet or during a previous update of the StackSet.). Any tags that you don't include in the updated list of tags are removed from the StackSet, and therefore from the stacks and resources as well.
+     
+    * If you specify an empty value, CloudFormation removes all currently associated tags.
+    
+
+     
+
+    If you specify new tags as part of an ``UpdateStackSet`` action, CloudFormation checks to see if you have the required IAM permission to tag resources. If you omit tags that are currently associated with the StackSet from the list of tags you specify, CloudFormation assumes that you want to remove those tags from the StackSet, and checks to see if you have permission to untag resources. If you don't have the necessary permission(s), the entire ``UpdateStackSet`` action fails with an ``access denied`` error, and the StackSet is not updated.
+
+    
+
+  
+    - *(dict) --* 
+
+      The Tag type enables you to specify a key-value pair that can be used to store information about an CloudFormation stack.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        A string used to identify this tag. You can specify a maximum of 128 characters for a tag key. Tags owned by Amazon Web Services have the reserved prefix: ``aws:``.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        A string that contains the value for this tag. You can specify a maximum of 256 characters for a tag value.
+
+        
+
+      
+    
+
+  :type OperationPreferences: dict
+  :param OperationPreferences: 
+
+    Preferences for how CloudFormation performs this StackSet operation.
+
+    
+
+  
+    - **RegionConcurrencyType** *(string) --* 
+
+      The concurrency type of deploying StackSets operations in Regions, could be in parallel or one Region at a time.
+
+      
+
+    
+    - **RegionOrder** *(list) --* 
+
+      The order of the Regions where you want to perform the stack operation.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **FailureToleranceCount** *(integer) --* 
+
+      The number of accounts per Region this operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **FailureTolerancePercentage** *(integer) --* 
+
+      The percentage of accounts per Region this stack operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds *down* to the next whole number.
+
+       
+
+      You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+       
+
+      By default, ``0`` is specified.
+
+      
+
+    
+    - **MaxConcurrentCount** *(integer) --* 
+
+      The maximum number of accounts in which to perform this operation at one time. This can depend on the value of ``FailureToleranceCount`` depending on your ``ConcurrencyMode``. ``MaxConcurrentCount`` is at most one more than the ``FailureToleranceCount`` if you're using ``STRICT_FAILURE_TOLERANCE``.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **MaxConcurrentPercentage** *(integer) --* 
+
+      The maximum percentage of accounts in which to perform this operation at one time.
+
+       
+
+      When calculating the number of accounts based on the specified percentage, CloudFormation rounds down to the next whole number. This is true except in cases where rounding down would result is zero. In this case, CloudFormation sets the number as one instead.
+
+       
+
+      Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+       
+
+      You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+       
+
+      By default, ``1`` is specified.
+
+      
+
+    
+    - **ConcurrencyMode** *(string) --* 
+
+      Specifies how the concurrency level behaves during the operation execution.
+
+       
+
+      
+      * ``STRICT_FAILURE_TOLERANCE``: This option dynamically lowers the concurrency level to ensure the number of failed accounts never exceeds the value of ``FailureToleranceCount`` +1. The initial actual concurrency is set to the lower of either the value of the ``MaxConcurrentCount``, or the value of ``FailureToleranceCount`` +1. The actual concurrency is then reduced proportionally by the number of failures. This is the default behavior. If failure tolerance or Maximum concurrent accounts are set to percentages, the behavior is similar.
+       
+      * ``SOFT_FAILURE_TOLERANCE``: This option decouples ``FailureToleranceCount`` from the actual concurrency. This allows StackSet operations to run at the concurrency level set by the ``MaxConcurrentCount`` value, or ``MaxConcurrentPercentage``, regardless of the number of failures.
+      
+
+      
+
+    
+  
+  :type AdministrationRoleARN: string
+  :param AdministrationRoleARN: 
+
+    [Self-managed permissions] The Amazon Resource Name (ARN) of the IAM role to use to update this StackSet.
+
+     
+
+    Specify an IAM role only if you are using customized administrator roles to control which users or groups can manage specific StackSets within the same administrator account. For more information, see `Grant self-managed permissions <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs-self-managed.html>`__ in the *CloudFormation User Guide*.
+
+     
+
+    If you specified a customized administrator role when you created the StackSet, you must specify a customized administrator role, even if it is the same customized administrator role used with this StackSet previously.
+
+    
+
+  
+  :type ExecutionRoleName: string
+  :param ExecutionRoleName: 
+
+    [Self-managed permissions] The name of the IAM execution role to use to update the stack set. If you do not specify an execution role, CloudFormation uses the ``AWSCloudFormationStackSetExecutionRole`` role for the StackSet operation.
+
+     
+
+    Specify an IAM role only if you are using customized execution roles to control which stack resources users and groups can include in their StackSets.
+
+     
+
+    If you specify a customized execution role, CloudFormation uses that role to update the stack. If you do not specify a customized execution role, CloudFormation performs the update using the role previously associated with the StackSet, so long as you have permissions to perform operations on the StackSet.
+
+    
+
+  
+  :type DeploymentTargets: dict
+  :param DeploymentTargets: 
+
+    [Service-managed permissions] The Organizations accounts in which to update associated stack instances.
+
+     
+
+    To update all the stack instances associated with this StackSet, do not specify ``DeploymentTargets`` or ``Regions``.
+
+     
+
+    If the StackSet update includes changes to the template (that is, if ``TemplateBody`` or ``TemplateURL`` is specified), or the ``Parameters``, CloudFormation marks all stack instances with a status of ``OUTDATED`` prior to updating the stack instances in the specified accounts and Amazon Web Services Regions. If the StackSet update doesn't include changes to the template or parameters, CloudFormation updates the stack instances in the specified accounts and Regions, while leaving all other stack instances with their existing stack instance status.
+
+    
+
+  
+    - **Accounts** *(list) --* 
+
+      The Amazon Web Services account IDs where you want to perform stack operations. How these accounts are used depends on the ``AccountFilterType`` property.
+
+       
+
+      If you have many account numbers, you can provide those accounts using the ``AccountsUrl`` property instead.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AccountsUrl** *(string) --* 
+
+      The Amazon S3 URL path to a file that contains a list of Amazon Web Services account IDs. The file format must be either ``.csv`` or ``.txt``, and the data can be comma-separated or new-line-separated. There is currently a 10MB limit for the data (approximately 800,000 accounts).
+
+       
+
+      This property serves the same purpose as ``Accounts`` but allows you to specify a large number of accounts.
+
+      
+
+    
+    - **OrganizationalUnitIds** *(list) --* 
+
+      The organization root ID or organizational unit (OU) IDs where you want to perform stack operations. CloudFormation will perform operations on accounts within these OUs and their child OUs.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AccountFilterType** *(string) --* 
+
+      Refines which accounts will have stack operations performed on them by specifying how to use the ``Accounts`` and ``OrganizationalUnitIds`` properties together.
+
+       
+
+      The following values determine how CloudFormation selects target accounts:
+
+       
+
+      
+      * ``INTERSECTION``: Performs stack operations only on specific individual accounts within the selected OUs. Only accounts that are both specified in the ``Accounts`` property and belong to the specified OUs will be targeted.
+       
+      * ``DIFFERENCE``: Performs stack operations on all accounts in the selected OUs except for specific accounts listed in the ``Accounts`` property. This enables you to exclude certain accounts within an OU, such as suspended accounts.
+       
+      * ``UNION``: Performs stack operations on the specified OUs plus additional individual accounts listed in the ``Accounts`` property. This is the default value if ``AccountFilterType`` is not provided. This lets you target an entire OU and individual accounts from a different OU in one request. Note that ``UNION`` is not supported for ``CreateStackInstances`` operations.
+       
+      * ``NONE``: Performs stack operations on all accounts in the specified organizational units (OUs).
+      
+
+      
+
+    
+  
+  :type PermissionModel: string
+  :param PermissionModel: 
+
+    Describes how the IAM roles required for StackSet operations are created. You cannot modify ``PermissionModel`` if there are stack instances associated with your stack set.
+
+     
+
+    
+    * With ``self-managed`` permissions, you must create the administrator and execution roles required to deploy to target accounts. For more information, see `Grant self-managed permissions <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs-self-managed.html>`__.
+     
+    * With ``service-managed`` permissions, StackSets automatically creates the IAM roles required to deploy to accounts managed by Organizations. For more information, see `Activate trusted access for StackSets with Organizations <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-activate-trusted-access.html>`__.
+    
+
+    
+
+  
+  :type AutoDeployment: dict
+  :param AutoDeployment: 
+
+    [Service-managed permissions] Describes whether StackSets automatically deploys to Organizations accounts that are added to a target organization or organizational unit (OU). For more information, see `Enable or disable automatic deployments for StackSets in Organizations <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-manage-auto-deployment.html>`__ in the *CloudFormation User Guide*.
+
+     
+
+    If you specify ``AutoDeployment``, don't specify ``DeploymentTargets`` or ``Regions``.
+
+    
+
+  
+    - **Enabled** *(boolean) --* 
+
+      If set to ``true``, StackSets automatically deploys additional stack instances to Organizations accounts that are added to a target organization or organizational unit (OU) in the specified Regions. If an account is removed from a target organization or OU, StackSets deletes stack instances from the account in the specified Regions.
+
+      
+
+    
+    - **RetainStacksOnAccountRemoval** *(boolean) --* 
+
+      If set to ``true``, stack resources are retained when an account is removed from a target organization or OU. If set to ``false``, stack resources are deleted. Specify only if ``Enabled`` is set to ``True``.
+
+      
+
+    
+    - **DependsOn** *(list) --* 
+
+      A list of StackSet ARNs that this StackSet depends on for auto-deployment operations. When auto-deployment is triggered, operations will be sequenced to ensure all dependencies complete successfully before this StackSet's operation begins.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type OperationId: string
+  :param OperationId: 
+
+    The unique ID for this StackSet operation.
+
+     
+
+    The operation ID also functions as an idempotency token, to ensure that CloudFormation performs the StackSet operation only once, even if you retry the request multiple times. You might retry StackSet operation requests to ensure that CloudFormation successfully received them.
+
+     
+
+    If you don't specify an operation ID, CloudFormation generates one automatically.
+
+     
+
+    Repeating this StackSet operation with a new operation ID retries all stack instances whose status is ``OUTDATED``.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Accounts: list
+  :param Accounts: 
+
+    [Self-managed permissions] The accounts in which to update associated stack instances. If you specify accounts, you must also specify the Amazon Web Services Regions in which to update StackSet instances.
+
+     
+
+    To update *all* the stack instances associated with this StackSet, don't specify the ``Accounts`` or ``Regions`` properties.
+
+     
+
+    If the StackSet update includes changes to the template (that is, if the ``TemplateBody`` or ``TemplateURL`` properties are specified), or the ``Parameters`` property, CloudFormation marks all stack instances with a status of ``OUTDATED`` prior to updating the stack instances in the specified accounts and Amazon Web Services Regions. If the StackSet update does not include changes to the template or parameters, CloudFormation updates the stack instances in the specified accounts and Amazon Web Services Regions, while leaving all other stack instances with their existing stack instance status.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type Regions: list
+  :param Regions: 
+
+    The Amazon Web Services Regions in which to update associated stack instances. If you specify Regions, you must also specify accounts in which to update StackSet instances.
+
+     
+
+    To update *all* the stack instances associated with this StackSet, do not specify the ``Accounts`` or ``Regions`` properties.
+
+     
+
+    If the StackSet update includes changes to the template (that is, if the ``TemplateBody`` or ``TemplateURL`` properties are specified), or the ``Parameters`` property, CloudFormation marks all stack instances with a status of ``OUTDATED`` prior to updating the stack instances in the specified accounts and Regions. If the StackSet update does not include changes to the template or parameters, CloudFormation updates the stack instances in the specified accounts and Regions, while leaving all other stack instances with their existing stack instance status.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type CallAs: string
+  :param CallAs: 
+
+    [Service-managed permissions] Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account.
+
+     
+
+    By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+     
+
+    
+    * If you are signed in to the management account, specify ``SELF``.
+     
+    * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+    
+
+    
+
+  
+  :type ManagedExecution: dict
+  :param ManagedExecution: 
+
+    Describes whether CloudFormation performs non-conflicting operations concurrently and queues conflicting operations.
+
+    
+
+  
+    - **Active** *(boolean) --* 
+
+      When ``true``, CloudFormation performs non-conflicting operations concurrently and queues conflicting operations. After conflicting operations finish, CloudFormation starts queued operations in request order.
+
+       
+
+      .. note::
+
+        
+
+        If there are already running or queued operations, CloudFormation queues all incoming operations even if they are non-conflicting.
+
+         
+
+        You can't modify your StackSet's execution configuration while there are running or queued operations for that StackSet.
+
+        
+
+       
+
+      When ``false`` (default), StackSets performs one operation at a time in request order.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'OperationId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **OperationId** *(string) --* 
+
+        The unique ID for this StackSet operation.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackSetNotFoundException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationInProgressException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.OperationIdAlreadyExistsException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StaleRequestException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.InvalidOperationException`
+
+  
+  *   :py:class:`CloudFormation.Client.exceptions.StackInstanceNotFoundException`
+
+  

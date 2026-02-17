@@ -1,0 +1,142 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / complete_lifecycle_action
+
+*************************
+complete_lifecycle_action
+*************************
+
+
+
+.. py:method:: AutoScaling.Client.complete_lifecycle_action(**kwargs)
+
+  
+
+  Completes the lifecycle action for the specified token or instance with the specified result.
+
+   
+
+  This step is a part of the procedure for adding a lifecycle hook to an Auto Scaling group:
+
+   
+
+   
+  * (Optional) Create a launch template or launch configuration with a user data script that runs while an instance is in a wait state due to a lifecycle hook.
+   
+  * (Optional) Create a Lambda function and a rule that allows Amazon EventBridge to invoke your Lambda function when an instance is put into a wait state due to a lifecycle hook.
+   
+  * (Optional) Create a notification target and an IAM role. The target can be either an Amazon SQS queue or an Amazon SNS topic. The role allows Amazon EC2 Auto Scaling to publish lifecycle notifications to the target.
+   
+  * Create the lifecycle hook. Specify whether the hook is used when the instances launch or terminate.
+   
+  * If you need more time, record the lifecycle action heartbeat to keep the instance in a wait state.
+   
+  * If you finish before the timeout period ends, send a callback by using the `CompleteLifecycleAction <https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_CompleteLifecycleAction.html>`__ API call.
+   
+
+   
+
+  For more information, see `Complete a lifecycle action <https://docs.aws.amazon.com/autoscaling/ec2/userguide/completing-lifecycle-hooks.html>`__ in the *Amazon EC2 Auto Scaling User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/CompleteLifecycleAction>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.complete_lifecycle_action(
+        LifecycleHookName='string',
+        AutoScalingGroupName='string',
+        LifecycleActionToken='string',
+        LifecycleActionResult='string',
+        InstanceId='string'
+    )
+    
+  :type LifecycleHookName: string
+  :param LifecycleHookName: **[REQUIRED]** 
+
+    The name of the lifecycle hook.
+
+    
+
+  
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: **[REQUIRED]** 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type LifecycleActionToken: string
+  :param LifecycleActionToken: 
+
+    A universally unique identifier (UUID) that identifies a specific lifecycle action associated with an instance. Amazon EC2 Auto Scaling sends this token to the notification target you specified when you created the lifecycle hook.
+
+    
+
+  
+  :type LifecycleActionResult: string
+  :param LifecycleActionResult: **[REQUIRED]** 
+
+    The action for the group to take. You can specify either ``CONTINUE`` or ``ABANDON``.
+
+    
+
+  
+  :type InstanceId: string
+  :param InstanceId: 
+
+    The ID of the instance.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+
+  **Examples**
+
+  This example notifies Auto Scaling that the specified lifecycle action is complete so that it can finish launching or terminating the instance.
+  ::
+
+    response = client.complete_lifecycle_action(
+        AutoScalingGroupName='my-auto-scaling-group',
+        LifecycleActionResult='CONTINUE',
+        LifecycleActionToken='bcd2f1b8-9a78-44d3-8a7a-4dd07d7cf635',
+        LifecycleHookName='my-lifecycle-hook',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,290 @@
+:doc:`KinesisAnalytics <../../kinesisanalytics>` / Client / add_application_reference_data_source
+
+*************************************
+add_application_reference_data_source
+*************************************
+
+
+
+.. py:method:: KinesisAnalytics.Client.add_application_reference_data_source(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This documentation is for version 1 of the Amazon Kinesis Data Analytics API, which only supports SQL applications. Version 2 of the API supports SQL and Java applications. For more information about version 2, see `Amazon Kinesis Data Analytics API V2 Documentation </kinesisanalytics/latest/apiv2/Welcome.html>`__.
+
+    
+
+   
+
+  Adds a reference data source to an existing application.
+
+   
+
+  Amazon Kinesis Analytics reads reference data (that is, an Amazon S3 object) and creates an in-application table within your application. In the request, you provide the source (S3 bucket name and object key name), name of the in-application table to create, and the necessary mapping information that describes how data in Amazon S3 object maps to columns in the resulting in-application table.
+
+   
+
+  For conceptual information, see `Configuring Application Input <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/how-it-works-input.html>`__. For the limits on data sources you can add to your application, see `Limits <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/limits.html>`__.
+
+   
+
+  This operation requires permissions to perform the ``kinesisanalytics:AddApplicationOutput`` action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kinesisanalytics-2015-08-14/AddApplicationReferenceDataSource>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.add_application_reference_data_source(
+        ApplicationName='string',
+        CurrentApplicationVersionId=123,
+        ReferenceDataSource={
+            'TableName': 'string',
+            'S3ReferenceDataSource': {
+                'BucketARN': 'string',
+                'FileKey': 'string',
+                'ReferenceRoleARN': 'string'
+            },
+            'ReferenceSchema': {
+                'RecordFormat': {
+                    'RecordFormatType': 'JSON'|'CSV',
+                    'MappingParameters': {
+                        'JSONMappingParameters': {
+                            'RecordRowPath': 'string'
+                        },
+                        'CSVMappingParameters': {
+                            'RecordRowDelimiter': 'string',
+                            'RecordColumnDelimiter': 'string'
+                        }
+                    }
+                },
+                'RecordEncoding': 'string',
+                'RecordColumns': [
+                    {
+                        'Name': 'string',
+                        'Mapping': 'string',
+                        'SqlType': 'string'
+                    },
+                ]
+            }
+        }
+    )
+    
+  :type ApplicationName: string
+  :param ApplicationName: **[REQUIRED]** 
+
+    Name of an existing application.
+
+    
+
+  
+  :type CurrentApplicationVersionId: integer
+  :param CurrentApplicationVersionId: **[REQUIRED]** 
+
+    Version of the application for which you are adding the reference data source. You can use the `DescribeApplication <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_DescribeApplication.html>`__ operation to get the current application version. If the version specified is not the current version, the ``ConcurrentModificationException`` is returned.
+
+    
+
+  
+  :type ReferenceDataSource: dict
+  :param ReferenceDataSource: **[REQUIRED]** 
+
+    The reference data source can be an object in your Amazon S3 bucket. Amazon Kinesis Analytics reads the object and copies the data into the in-application table that is created. You provide an S3 bucket, object key name, and the resulting in-application table that is created. You must also provide an IAM role with the necessary permissions that Amazon Kinesis Analytics can assume to read the object from your S3 bucket on your behalf.
+
+    
+
+  
+    - **TableName** *(string) --* **[REQUIRED]** 
+
+      Name of the in-application table to create.
+
+      
+
+    
+    - **S3ReferenceDataSource** *(dict) --* 
+
+      Identifies the S3 bucket and object that contains the reference data. Also identifies the IAM role Amazon Kinesis Analytics can assume to read this object on your behalf. An Amazon Kinesis Analytics application loads reference data only once. If the data changes, you call the ``UpdateApplication`` operation to trigger reloading of data into your application.
+
+      
+
+    
+      - **BucketARN** *(string) --* **[REQUIRED]** 
+
+        Amazon Resource Name (ARN) of the S3 bucket.
+
+        
+
+      
+      - **FileKey** *(string) --* **[REQUIRED]** 
+
+        Object key name containing reference data.
+
+        
+
+      
+      - **ReferenceRoleARN** *(string) --* **[REQUIRED]** 
+
+        ARN of the IAM role that the service can assume to read data on your behalf. This role must have permission for the ``s3:GetObject`` action on the object and trust policy that allows Amazon Kinesis Analytics service principal to assume this role.
+
+        
+
+      
+    
+    - **ReferenceSchema** *(dict) --* **[REQUIRED]** 
+
+      Describes the format of the data in the streaming source, and how each data element maps to corresponding columns created in the in-application stream.
+
+      
+
+    
+      - **RecordFormat** *(dict) --* **[REQUIRED]** 
+
+        Specifies the format of the records on the streaming source.
+
+        
+
+      
+        - **RecordFormatType** *(string) --* **[REQUIRED]** 
+
+          The type of record format.
+
+          
+
+        
+        - **MappingParameters** *(dict) --* 
+
+          When configuring application input at the time of creating or updating an application, provides additional mapping information specific to the record format (such as JSON, CSV, or record fields delimited by some delimiter) on the streaming source.
+
+          
+
+        
+          - **JSONMappingParameters** *(dict) --* 
+
+            Provides additional mapping information when JSON is the record format on the streaming source.
+
+            
+
+          
+            - **RecordRowPath** *(string) --* **[REQUIRED]** 
+
+              Path to the top-level parent that contains the records.
+
+              
+
+            
+          
+          - **CSVMappingParameters** *(dict) --* 
+
+            Provides additional mapping information when the record format uses delimiters (for example, CSV).
+
+            
+
+          
+            - **RecordRowDelimiter** *(string) --* **[REQUIRED]** 
+
+              Row delimiter. For example, in a CSV format, *'\n'* is the typical row delimiter.
+
+              
+
+            
+            - **RecordColumnDelimiter** *(string) --* **[REQUIRED]** 
+
+              Column delimiter. For example, in a CSV format, a comma (",") is the typical column delimiter.
+
+              
+
+            
+          
+        
+      
+      - **RecordEncoding** *(string) --* 
+
+        Specifies the encoding of the records in the streaming source. For example, UTF-8.
+
+        
+
+      
+      - **RecordColumns** *(list) --* **[REQUIRED]** 
+
+        A list of ``RecordColumn`` objects.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes the mapping of each data element in the streaming source to the corresponding column in the in-application stream.
+
+           
+
+          Also used to describe the format of the reference data source.
+
+          
+
+        
+          - **Name** *(string) --* **[REQUIRED]** 
+
+            Name of the column created in the in-application input stream or reference table.
+
+            
+
+          
+          - **Mapping** *(string) --* 
+
+            Reference to the data element in the streaming input or the reference data source. This element is required if the `RecordFormatType <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/API_RecordFormat.html#analytics-Type-RecordFormat-RecordFormatTypel>`__ is ``JSON``.
+
+            
+
+          
+          - **SqlType** *(string) --* **[REQUIRED]** 
+
+            Type of column created in the in-application input stream or reference table.
+
+            
+
+          
+        
+    
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.InvalidArgumentException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`KinesisAnalytics.Client.exceptions.UnsupportedOperationException`
+
+  

@@ -1,0 +1,351 @@
+:doc:`VerifiedPermissions <../../verifiedpermissions>` / Client / batch_get_policy
+
+****************
+batch_get_policy
+****************
+
+
+
+.. py:method:: VerifiedPermissions.Client.batch_get_policy(**kwargs)
+
+  
+
+  Retrieves information about a group (batch) of policies.
+
+   
+
+  .. note::
+
+    
+
+    The ``BatchGetPolicy`` operation doesn't have its own IAM permission. To authorize this operation for Amazon Web Services principals, include the permission ``verifiedpermissions:GetPolicy`` in their IAM policies.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/verifiedpermissions-2021-12-01/BatchGetPolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_policy(
+        requests=[
+            {
+                'policyStoreId': 'string',
+                'policyId': 'string'
+            },
+        ]
+    )
+    
+  :type requests: list
+  :param requests: **[REQUIRED]** 
+
+    An array of up to 100 policies you want information about.
+
+    
+
+  
+    - *(dict) --* 
+
+      Information about a policy that you include in a ``BatchGetPolicy`` API request.
+
+      
+
+    
+      - **policyStoreId** *(string) --* **[REQUIRED]** 
+
+        The identifier of the policy store where the policy you want information about is stored.
+
+        
+
+      
+      - **policyId** *(string) --* **[REQUIRED]** 
+
+        The identifier of the policy you want information about.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'results': [
+              {
+                  'policyStoreId': 'string',
+                  'policyId': 'string',
+                  'policyType': 'STATIC'|'TEMPLATE_LINKED',
+                  'definition': {
+                      'static': {
+                          'description': 'string',
+                          'statement': 'string'
+                      },
+                      'templateLinked': {
+                          'policyTemplateId': 'string',
+                          'principal': {
+                              'entityType': 'string',
+                              'entityId': 'string'
+                          },
+                          'resource': {
+                              'entityType': 'string',
+                              'entityId': 'string'
+                          }
+                      }
+                  },
+                  'createdDate': datetime(2015, 1, 1),
+                  'lastUpdatedDate': datetime(2015, 1, 1)
+              },
+          ],
+          'errors': [
+              {
+                  'code': 'POLICY_STORE_NOT_FOUND'|'POLICY_NOT_FOUND',
+                  'policyStoreId': 'string',
+                  'policyId': 'string',
+                  'message': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **results** *(list) --* 
+
+        Information about the policies listed in the request that were successfully returned. These results are returned in the order they were requested.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about a policy returned from a ``BatchGetPolicy`` API request.
+
+          
+          
+
+          - **policyStoreId** *(string) --* 
+
+            The identifier of the policy store where the policy you want information about is stored.
+
+            
+          
+
+          - **policyId** *(string) --* 
+
+            The identifier of the policy you want information about.
+
+            
+          
+
+          - **policyType** *(string) --* 
+
+            The type of the policy. This is one of the following values:
+
+             
+
+            
+            * ``STATIC``
+             
+            * ``TEMPLATE_LINKED``
+            
+
+            
+          
+
+          - **definition** *(dict) --* 
+
+            The policy definition of an item in the list of policies returned.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``static``, ``templateLinked``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **static** *(dict) --* 
+
+              Information about a static policy that wasn't created with a policy template.
+
+              
+              
+
+              - **description** *(string) --* 
+
+                A description of the static policy.
+
+                
+              
+
+              - **statement** *(string) --* 
+
+                The content of the static policy written in the Cedar policy language.
+
+                
+          
+            
+
+            - **templateLinked** *(dict) --* 
+
+              Information about a template-linked policy that was created by instantiating a policy template.
+
+              
+              
+
+              - **policyTemplateId** *(string) --* 
+
+                The unique identifier of the policy template used to create this policy.
+
+                
+              
+
+              - **principal** *(dict) --* 
+
+                The principal associated with this template-linked policy. Verified Permissions substitutes this principal for the ``?principal`` placeholder in the policy template when it evaluates an authorization request.
+
+                
+                
+
+                - **entityType** *(string) --* 
+
+                  The type of an entity.
+
+                   
+
+                  Example: ``"entityType":"typeName"``
+
+                  
+                
+
+                - **entityId** *(string) --* 
+
+                  The identifier of an entity.
+
+                   
+
+                  ``"entityId":"identifier"``
+
+                  
+            
+              
+
+              - **resource** *(dict) --* 
+
+                The resource associated with this template-linked policy. Verified Permissions substitutes this resource for the ``?resource`` placeholder in the policy template when it evaluates an authorization request.
+
+                
+                
+
+                - **entityType** *(string) --* 
+
+                  The type of an entity.
+
+                   
+
+                  Example: ``"entityType":"typeName"``
+
+                  
+                
+
+                - **entityId** *(string) --* 
+
+                  The identifier of an entity.
+
+                   
+
+                  ``"entityId":"identifier"``
+
+                  
+            
+          
+        
+          
+
+          - **createdDate** *(datetime) --* 
+
+            The date and time the policy was created.
+
+            
+          
+
+          - **lastUpdatedDate** *(datetime) --* 
+
+            The date and time the policy was most recently updated.
+
+            
+      
+    
+      
+
+      - **errors** *(list) --* 
+
+        Information about the policies from the request that resulted in an error. These results are returned in the order they were requested.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the information about an error resulting from a ``BatchGetPolicy`` API call.
+
+          
+          
+
+          - **code** *(string) --* 
+
+            The error code that was returned.
+
+            
+          
+
+          - **policyStoreId** *(string) --* 
+
+            The identifier of the policy store associated with the failed request.
+
+            
+          
+
+          - **policyId** *(string) --* 
+
+            The identifier of the policy associated with the failed request.
+
+            
+          
+
+          - **message** *(string) --* 
+
+            A detailed error message.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`VerifiedPermissions.Client.exceptions.InternalServerException`
+
+  

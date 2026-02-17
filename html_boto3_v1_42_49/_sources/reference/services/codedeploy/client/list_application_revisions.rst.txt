@@ -1,0 +1,400 @@
+:doc:`CodeDeploy <../../codedeploy>` / Client / list_application_revisions
+
+**************************
+list_application_revisions
+**************************
+
+
+
+.. py:method:: CodeDeploy.Client.list_application_revisions(**kwargs)
+
+  
+
+  Lists information about revisions for an application.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codedeploy-2014-10-06/ListApplicationRevisions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_application_revisions(
+        applicationName='string',
+        sortBy='registerTime'|'firstUsedTime'|'lastUsedTime',
+        sortOrder='ascending'|'descending',
+        s3Bucket='string',
+        s3KeyPrefix='string',
+        deployed='include'|'exclude'|'ignore',
+        nextToken='string'
+    )
+    
+  :type applicationName: string
+  :param applicationName: **[REQUIRED]** 
+
+    The name of an CodeDeploy application associated with the user or Amazon Web Services account.
+
+    
+
+  
+  :type sortBy: string
+  :param sortBy: 
+
+    The column name to use to sort the list results:
+
+     
+
+    
+    * ``registerTime``: Sort by the time the revisions were registered with CodeDeploy.
+     
+    * ``firstUsedTime``: Sort by the time the revisions were first used in a deployment.
+     
+    * ``lastUsedTime``: Sort by the time the revisions were last used in a deployment.
+    
+
+     
+
+    If not specified or set to null, the results are returned in an arbitrary order.
+
+    
+
+  
+  :type sortOrder: string
+  :param sortOrder: 
+
+    The order in which to sort the list results:
+
+     
+
+    
+    * ``ascending``: ascending order.
+     
+    * ``descending``: descending order.
+    
+
+     
+
+    If not specified, the results are sorted in ascending order.
+
+     
+
+    If set to null, the results are sorted in an arbitrary order.
+
+    
+
+  
+  :type s3Bucket: string
+  :param s3Bucket: 
+
+    An Amazon S3 bucket name to limit the search for revisions.
+
+     
+
+    If set to null, all of the user's buckets are searched.
+
+    
+
+  
+  :type s3KeyPrefix: string
+  :param s3KeyPrefix: 
+
+    A key prefix for the set of Amazon S3 objects to limit the search for revisions.
+
+    
+
+  
+  :type deployed: string
+  :param deployed: 
+
+    Whether to list revisions based on whether the revision is the target revision of a deployment group:
+
+     
+
+    
+    * ``include``: List revisions that are target revisions of a deployment group.
+     
+    * ``exclude``: Do not list revisions that are target revisions of a deployment group.
+     
+    * ``ignore``: List all revisions.
+    
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    An identifier returned from the previous ``ListApplicationRevisions`` call. It can be used to return the next set of applications in the list.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'revisions': [
+              {
+                  'revisionType': 'S3'|'GitHub'|'String'|'AppSpecContent',
+                  's3Location': {
+                      'bucket': 'string',
+                      'key': 'string',
+                      'bundleType': 'tar'|'tgz'|'zip'|'YAML'|'JSON',
+                      'version': 'string',
+                      'eTag': 'string'
+                  },
+                  'gitHubLocation': {
+                      'repository': 'string',
+                      'commitId': 'string'
+                  },
+                  'string': {
+                      'content': 'string',
+                      'sha256': 'string'
+                  },
+                  'appSpecContent': {
+                      'content': 'string',
+                      'sha256': 'string'
+                  }
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the output of a ``ListApplicationRevisions`` operation.
+
+      
+      
+
+      - **revisions** *(list) --* 
+
+        A list of locations that contain the matching revisions.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about the location of an application revision.
+
+          
+          
+
+          - **revisionType** *(string) --* 
+
+            The type of application revision:
+
+             
+
+            
+            * S3: An application revision stored in Amazon S3.
+             
+            * GitHub: An application revision stored in GitHub (EC2/On-premises deployments only).
+             
+            * String: A YAML-formatted or JSON-formatted string (Lambda deployments only).
+             
+            * AppSpecContent: An ``AppSpecContent`` object that contains the contents of an AppSpec file for an Lambda or Amazon ECS deployment. The content is formatted as JSON or YAML stored as a RawString.
+            
+
+            
+          
+
+          - **s3Location** *(dict) --* 
+
+            Information about the location of a revision stored in Amazon S3.
+
+            
+            
+
+            - **bucket** *(string) --* 
+
+              The name of the Amazon S3 bucket where the application revision is stored.
+
+              
+            
+
+            - **key** *(string) --* 
+
+              The name of the Amazon S3 object that represents the bundled artifacts for the application revision.
+
+              
+            
+
+            - **bundleType** *(string) --* 
+
+              The file type of the application revision. Must be one of the following:
+
+               
+
+              
+              * ``tar``: A tar archive file.
+               
+              * ``tgz``: A compressed tar archive file.
+               
+              * ``zip``: A zip archive file.
+               
+              * ``YAML``: A YAML-formatted file.
+               
+              * ``JSON``: A JSON-formatted file.
+              
+
+              
+            
+
+            - **version** *(string) --* 
+
+              A specific version of the Amazon S3 object that represents the bundled artifacts for the application revision.
+
+               
+
+              If the version is not specified, the system uses the most recent version by default.
+
+              
+            
+
+            - **eTag** *(string) --* 
+
+              The ETag of the Amazon S3 object that represents the bundled artifacts for the application revision.
+
+               
+
+              If the ETag is not specified as an input parameter, ETag validation of the object is skipped.
+
+              
+        
+          
+
+          - **gitHubLocation** *(dict) --* 
+
+            Information about the location of application artifacts stored in GitHub.
+
+            
+            
+
+            - **repository** *(string) --* 
+
+              The GitHub account and repository pair that stores a reference to the commit that represents the bundled artifacts for the application revision.
+
+               
+
+              Specified as account/repository.
+
+              
+            
+
+            - **commitId** *(string) --* 
+
+              The SHA1 commit ID of the GitHub commit that represents the bundled artifacts for the application revision.
+
+              
+        
+          
+
+          - **string** *(dict) --* 
+
+            Information about the location of an Lambda deployment revision stored as a RawString.
+
+            
+            
+
+            - **content** *(string) --* 
+
+              The YAML-formatted or JSON-formatted revision string. It includes information about which Lambda function to update and optional Lambda functions that validate deployment lifecycle events.
+
+              
+            
+
+            - **sha256** *(string) --* 
+
+              The SHA256 hash value of the revision content.
+
+              
+        
+          
+
+          - **appSpecContent** *(dict) --* 
+
+            The content of an AppSpec file for an Lambda or Amazon ECS deployment. The content is formatted as JSON or YAML and stored as a RawString.
+
+            
+            
+
+            - **content** *(string) --* 
+
+              The YAML-formatted or JSON-formatted revision string.
+
+               
+
+              For an Lambda deployment, the content includes a Lambda function name, the alias for its original version, and the alias for its replacement version. The deployment shifts traffic from the original version of the Lambda function to the replacement version.
+
+               
+
+              For an Amazon ECS deployment, the content includes the task name, information about the load balancer that serves traffic to the container, and more.
+
+               
+
+              For both types of deployments, the content can specify Lambda functions that run at specified hooks, such as ``BeforeInstall``, during a deployment.
+
+              
+            
+
+            - **sha256** *(string) --* 
+
+              The SHA256 hash value of the revision content.
+
+              
+        
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        If a large amount of information is returned, an identifier is also returned. It can be used in a subsequent list application revisions call to return the next set of application revisions in the list.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.ApplicationDoesNotExistException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.ApplicationNameRequiredException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidApplicationNameException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidSortByException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidSortOrderException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidBucketNameFilterException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidKeyPrefixFilterException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.BucketNameFilterRequiredException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidDeployedStateFilterException`
+
+  
+  *   :py:class:`CodeDeploy.Client.exceptions.InvalidNextTokenException`
+
+  

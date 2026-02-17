@@ -1,0 +1,251 @@
+:doc:`BedrockAgentCoreControl <../../bedrock-agentcore-control>` / Client / create_policy
+
+*************
+create_policy
+*************
+
+
+
+.. py:method:: BedrockAgentCoreControl.Client.create_policy(**kwargs)
+
+  
+
+  Creates a policy within the AgentCore Policy system. Policies provide real-time, deterministic control over agentic interactions with AgentCore Gateway. Using the Cedar policy language, you can define fine-grained policies that specify which interactions with Gateway tools are permitted based on input parameters and OAuth claims, ensuring agents operate within defined boundaries and business rules. The policy is validated during creation against the Cedar schema generated from the Gateway's tools' input schemas, which defines the available tools, their parameters, and expected data types. This is an asynchronous operation. Use the `GetPolicy <https://docs.aws.amazon.com/bedrock-agentcore-control/latest/APIReference/API_GetPolicy.html>`__ operation to poll the ``status`` field to track completion.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agentcore-control-2023-06-05/CreatePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_policy(
+        name='string',
+        definition={
+            'cedar': {
+                'statement': 'string'
+            }
+        },
+        description='string',
+        validationMode='FAIL_ON_ANY_FINDINGS'|'IGNORE_ALL_FINDINGS',
+        policyEngineId='string',
+        clientToken='string'
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The customer-assigned immutable name for the policy. Must be unique within the account. This name is used for policy identification and cannot be changed after creation.
+
+    
+
+  
+  :type definition: dict
+  :param definition: **[REQUIRED]** 
+
+    The Cedar policy statement that defines the access control rules. This contains the actual policy logic written in Cedar policy language, specifying effect (permit or forbid), principals, actions, resources, and conditions for agent behavior control.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``cedar``. 
+
+  
+    - **cedar** *(dict) --* 
+
+      The Cedar policy definition within the policy definition structure. This contains the Cedar policy statement that defines the authorization logic using Cedar's human-readable, analyzable policy language. Cedar policies specify principals (who can access), actions (what operations are allowed), resources (what can be accessed), and optional conditions for fine-grained control. Cedar provides a formal policy language designed for authorization with deterministic evaluation, making policies testable, reviewable, and auditable. All Cedar policies follow a default-deny model where actions are denied unless explicitly permitted, and forbid policies always override permit policies.
+
+      
+
+    
+      - **statement** *(string) --* **[REQUIRED]** 
+
+        The Cedar policy statement that defines the authorization logic. This statement follows Cedar syntax and specifies principals, actions, resources, and conditions that determine when access should be allowed or denied.
+
+        
+
+      
+    
+  
+  :type description: string
+  :param description: 
+
+    A human-readable description of the policy's purpose and functionality (1-4,096 characters). This helps policy administrators understand the policy's intent, business rules, and operational scope. Use this field to document why the policy exists, what business requirement it addresses, and any special considerations for maintenance. Clear descriptions are essential for policy governance, auditing, and troubleshooting.
+
+    
+
+  
+  :type validationMode: string
+  :param validationMode: 
+
+    The validation mode for the policy creation. Determines how Cedar analyzer validation results are handled during policy creation. FAIL_ON_ANY_FINDINGS (default) runs the Cedar analyzer to validate the policy against the Cedar schema and tool context, failing creation if the analyzer detects any validation issues to ensure strict conformance. IGNORE_ALL_FINDINGS runs the Cedar analyzer but allows policy creation even if validation issues are detected, useful for testing or when the policy schema is evolving. Use FAIL_ON_ANY_FINDINGS for production policies to ensure correctness, and IGNORE_ALL_FINDINGS only when you understand and accept the analyzer findings.
+
+    
+
+  
+  :type policyEngineId: string
+  :param policyEngineId: **[REQUIRED]** 
+
+    The identifier of the policy engine which contains this policy. Policy engines group related policies and provide the execution context for policy evaluation.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier to ensure the idempotency of the request. The AWS SDK automatically generates this token, so you don't need to provide it in most cases. If you retry a request with the same client token, the service returns the same response without creating a duplicate policy.
+
+    This field is autopopulated if not provided.
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'policyId': 'string',
+          'name': 'string',
+          'policyEngineId': 'string',
+          'definition': {
+              'cedar': {
+                  'statement': 'string'
+              }
+          },
+          'description': 'string',
+          'createdAt': datetime(2015, 1, 1),
+          'updatedAt': datetime(2015, 1, 1),
+          'policyArn': 'string',
+          'status': 'CREATING'|'ACTIVE'|'UPDATING'|'DELETING'|'CREATE_FAILED'|'UPDATE_FAILED'|'DELETE_FAILED',
+          'statusReasons': [
+              'string',
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **policyId** *(string) --* 
+
+        The unique identifier for the created policy. This is a system-generated identifier consisting of the user name plus a 10-character generated suffix, used for all subsequent policy operations.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The customer-assigned name of the created policy. This matches the name provided in the request and serves as the human-readable identifier for the policy.
+
+        
+      
+
+      - **policyEngineId** *(string) --* 
+
+        The identifier of the policy engine that manages this policy. This confirms the policy engine assignment and is used for policy evaluation routing.
+
+        
+      
+
+      - **definition** *(dict) --* 
+
+        The Cedar policy statement that was created. This is the validated policy definition that will be used for agent behavior control and access decisions.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``cedar``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **cedar** *(dict) --* 
+
+          The Cedar policy definition within the policy definition structure. This contains the Cedar policy statement that defines the authorization logic using Cedar's human-readable, analyzable policy language. Cedar policies specify principals (who can access), actions (what operations are allowed), resources (what can be accessed), and optional conditions for fine-grained control. Cedar provides a formal policy language designed for authorization with deterministic evaluation, making policies testable, reviewable, and auditable. All Cedar policies follow a default-deny model where actions are denied unless explicitly permitted, and forbid policies always override permit policies.
+
+          
+          
+
+          - **statement** *(string) --* 
+
+            The Cedar policy statement that defines the authorization logic. This statement follows Cedar syntax and specifies principals, actions, resources, and conditions that determine when access should be allowed or denied.
+
+            
+      
+    
+      
+
+      - **description** *(string) --* 
+
+        The human-readable description of the policy's purpose and functionality. This helps administrators understand and manage the policy.
+
+        
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The timestamp when the policy was created. This is automatically set by the service and used for auditing and lifecycle management.
+
+        
+      
+
+      - **updatedAt** *(datetime) --* 
+
+        The timestamp when the policy was last updated. For newly created policies, this matches the createdAt timestamp.
+
+        
+      
+
+      - **policyArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the created policy. This globally unique identifier can be used for cross-service references and IAM policy statements.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The current status of the policy. A status of ``ACTIVE`` indicates the policy is ready for use.
+
+        
+      
+
+      - **statusReasons** *(list) --* 
+
+        Additional information about the policy status. This provides details about any failures or the current state of the policy creation process.
+
+        
+        
+
+        - *(string) --* 
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.InternalServerException`
+
+  

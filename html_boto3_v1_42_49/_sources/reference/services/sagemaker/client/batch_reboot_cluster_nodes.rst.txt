@@ -1,0 +1,287 @@
+:doc:`SageMaker <../../sagemaker>` / Client / batch_reboot_cluster_nodes
+
+**************************
+batch_reboot_cluster_nodes
+**************************
+
+
+
+.. py:method:: SageMaker.Client.batch_reboot_cluster_nodes(**kwargs)
+
+  
+
+  Reboots specific nodes within a SageMaker HyperPod cluster using a soft recovery mechanism. ``BatchRebootClusterNodes`` performs a graceful reboot of the specified nodes by calling the Amazon Elastic Compute Cloud ``RebootInstances`` API, which attempts to cleanly shut down the operating system before restarting the instance.
+
+   
+
+  This operation is useful for recovering from transient issues or applying certain configuration changes that require a restart.
+
+   
+
+  .. note::
+
+    
+
+    
+    * Rebooting a node may cause temporary service interruption for workloads running on that node. Ensure your workloads can handle node restarts or use appropriate scheduling to minimize impact.
+     
+    * You can reboot up to 25 nodes in a single request.
+     
+    * For SageMaker HyperPod clusters using the Slurm workload manager, ensure rebooting nodes will not disrupt critical cluster operations.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/BatchRebootClusterNodes>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_reboot_cluster_nodes(
+        ClusterName='string',
+        NodeIds=[
+            'string',
+        ],
+        NodeLogicalIds=[
+            'string',
+        ]
+    )
+    
+  :type ClusterName: string
+  :param ClusterName: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of the SageMaker HyperPod cluster containing the nodes to reboot.
+
+    
+
+  
+  :type NodeIds: list
+  :param NodeIds: 
+
+    A list of EC2 instance IDs to reboot using soft recovery. You can specify between 1 and 25 instance IDs.
+
+     
+
+    .. note::
+
+      
+
+      
+      * Either ``NodeIds`` or ``NodeLogicalIds`` must be provided (or both), but at least one is required.
+       
+      * Each instance ID must follow the pattern ``i-`` followed by 17 hexadecimal characters (for example, ``i-0123456789abcdef0``).
+      
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type NodeLogicalIds: list
+  :param NodeLogicalIds: 
+
+    A list of logical node IDs to reboot using soft recovery. You can specify between 1 and 25 logical node IDs.
+
+     
+
+    The ``NodeLogicalId`` is a unique identifier that persists throughout the node's lifecycle and can be used to track nodes that are still being provisioned and don't yet have an EC2 instance ID assigned.
+
+     
+
+    .. warning::
+
+       
+
+      
+      * This parameter is only supported for clusters using ``Continuous`` as the ``NodeProvisioningMode``. For clusters using the default provisioning mode, use ``NodeIds`` instead.
+       
+      * Either ``NodeIds`` or ``NodeLogicalIds`` must be provided (or both), but at least one is required.
+      
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Successful': [
+              'string',
+          ],
+          'Failed': [
+              {
+                  'NodeId': 'string',
+                  'ErrorCode': 'InstanceIdNotFound'|'InvalidInstanceStatus'|'InstanceIdInUse'|'InternalServerError',
+                  'Message': 'string'
+              },
+          ],
+          'FailedNodeLogicalIds': [
+              {
+                  'NodeLogicalId': 'string',
+                  'ErrorCode': 'InstanceIdNotFound'|'InvalidInstanceStatus'|'InstanceIdInUse'|'InternalServerError',
+                  'Message': 'string'
+              },
+          ],
+          'SuccessfulNodeLogicalIds': [
+              'string',
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Successful** *(list) --* 
+
+        A list of EC2 instance IDs for which the reboot operation was successfully initiated.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **Failed** *(list) --* 
+
+        A list of errors encountered for EC2 instance IDs that could not be rebooted. Each error includes the instance ID, an error code, and a descriptive message.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents an error encountered when rebooting a node from a SageMaker HyperPod cluster.
+
+          
+          
+
+          - **NodeId** *(string) --* 
+
+            The EC2 instance ID of the node that encountered an error during the reboot operation.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code associated with the error encountered when rebooting a node.
+
+             
+
+            Possible values:
+
+             
+
+            
+            * ``InstanceIdNotFound``: The instance does not exist in the specified cluster.
+             
+            * ``InvalidInstanceStatus``: The instance is in a state that does not allow rebooting. Wait for the instance to finish any ongoing changes before retrying.
+             
+            * ``InstanceIdInUse``: Another operation is already in progress for this node. Wait for the operation to complete before retrying.
+             
+            * ``InternalServerError``: An internal error occurred while processing this node.
+            
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A human-readable message describing the error encountered when rebooting a node.
+
+            
+      
+    
+      
+
+      - **FailedNodeLogicalIds** *(list) --* 
+
+        A list of errors encountered for logical node IDs that could not be rebooted. Each error includes the logical node ID, an error code, and a descriptive message. This field is only present when ``NodeLogicalIds`` were provided in the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents an error encountered when rebooting a node (identified by its logical node ID) from a SageMaker HyperPod cluster.
+
+          
+          
+
+          - **NodeLogicalId** *(string) --* 
+
+            The logical node ID of the node that encountered an error during the reboot operation.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code associated with the error encountered when rebooting a node by logical node ID.
+
+             
+
+            Possible values:
+
+             
+
+            
+            * ``InstanceIdNotFound``: The node does not exist in the specified cluster.
+             
+            * ``InvalidInstanceStatus``: The node is in a state that does not allow rebooting. Wait for the node to finish any ongoing changes before retrying.
+             
+            * ``InstanceIdInUse``: Another operation is already in progress for this node. Wait for the operation to complete before retrying.
+             
+            * ``InternalServerError``: An internal error occurred while processing this node.
+            
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A human-readable message describing the error encountered when rebooting a node by logical node ID.
+
+            
+      
+    
+      
+
+      - **SuccessfulNodeLogicalIds** *(list) --* 
+
+        A list of logical node IDs for which the reboot operation was successfully initiated. This field is only present when ``NodeLogicalIds`` were provided in the request.
+
+        
+        
+
+        - *(string) --* 
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SageMaker.Client.exceptions.ResourceNotFound`
+
+  

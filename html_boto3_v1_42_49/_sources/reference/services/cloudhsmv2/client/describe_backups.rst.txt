@@ -1,0 +1,330 @@
+:doc:`CloudHSMV2 <../../cloudhsmv2>` / Client / describe_backups
+
+****************
+describe_backups
+****************
+
+
+
+.. py:method:: CloudHSMV2.Client.describe_backups(**kwargs)
+
+  
+
+  Gets information about backups of CloudHSM clusters. Lists either the backups you own or the backups shared with you when the Shared parameter is true.
+
+   
+
+  This is a paginated operation, which means that each response might contain only a subset of all the backups. When the response contains only a subset of backups, it includes a ``NextToken`` value. Use this value in a subsequent ``DescribeBackups`` request to get more backups. When you receive a response with no ``NextToken`` (or an empty or null value), that means there are no more backups to get.
+
+   
+
+  **Cross-account use:** Yes. Customers can describe backups in other Amazon Web Services accounts that are shared with them.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudhsmv2-2017-04-28/DescribeBackups>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_backups(
+        NextToken='string',
+        MaxResults=123,
+        Filters={
+            'string': [
+                'string',
+            ]
+        },
+        Shared=True|False,
+        SortAscending=True|False
+    )
+    
+  :type NextToken: string
+  :param NextToken: 
+
+    The ``NextToken`` value that you received in the previous response. Use this value to get more backups.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of backups to return in the response. When there are more backups than the number you specify, the response contains a ``NextToken`` value.
+
+    
+
+  
+  :type Filters: dict
+  :param Filters: 
+
+    One or more filters to limit the items returned in the response.
+
+     
+
+    Use the ``backupIds`` filter to return only the specified backups. Specify backups by their backup identifier (ID).
+
+     
+
+    Use the ``sourceBackupIds`` filter to return only the backups created from a source backup. The ``sourceBackupID`` of a source backup is returned by the  CopyBackupToRegion operation.
+
+     
+
+    Use the ``clusterIds`` filter to return only the backups for the specified clusters. Specify clusters by their cluster identifier (ID).
+
+     
+
+    Use the ``states`` filter to return only backups that match the specified state.
+
+     
+
+    Use the ``neverExpires`` filter to return backups filtered by the value in the ``neverExpires`` parameter. ``True`` returns all backups exempt from the backup retention policy. ``False`` returns all backups with a backup retention policy defined at the cluster.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(list) --* 
+
+      
+        - *(string) --* 
+
+        
+    
+
+
+  :type Shared: boolean
+  :param Shared: 
+
+    Describe backups that are shared with you.
+
+     
+
+    .. note::
+
+      
+
+      By default when using this option, the command returns backups that have been shared using a standard Resource Access Manager resource share. In order for a backup that was shared using the PutResourcePolicy command to be returned, the share must be promoted to a standard resource share using the RAM `PromoteResourceShareCreatedFromPolicy <https://docs.aws.amazon.com/cli/latest/reference/ram/promote-resource-share-created-from-policy.html>`__ API operation. For more information about sharing backups, see `Working with shared backups <https://docs.aws.amazon.com/cloudhsm/latest/userguide/sharing.html>`__ in the CloudHSM User Guide.
+
+      
+
+    
+
+  
+  :type SortAscending: boolean
+  :param SortAscending: 
+
+    Designates whether or not to sort the return backups by ascending chronological order of generation.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Backups': [
+              {
+                  'BackupId': 'string',
+                  'BackupArn': 'string',
+                  'BackupState': 'CREATE_IN_PROGRESS'|'READY'|'DELETED'|'PENDING_DELETION',
+                  'ClusterId': 'string',
+                  'CreateTimestamp': datetime(2015, 1, 1),
+                  'CopyTimestamp': datetime(2015, 1, 1),
+                  'NeverExpires': True|False,
+                  'SourceRegion': 'string',
+                  'SourceBackup': 'string',
+                  'SourceCluster': 'string',
+                  'DeleteTimestamp': datetime(2015, 1, 1),
+                  'TagList': [
+                      {
+                          'Key': 'string',
+                          'Value': 'string'
+                      },
+                  ],
+                  'HsmType': 'string',
+                  'Mode': 'FIPS'|'NON_FIPS'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Backups** *(list) --* 
+
+        A list of backups.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about a backup of an CloudHSM cluster. All backup objects contain the ``BackupId``, ``BackupState``, ``ClusterId``, and ``CreateTimestamp`` parameters. Backups that were copied into a destination region additionally contain the ``CopyTimestamp``, ``SourceBackup``, ``SourceCluster``, and ``SourceRegion`` parameters. A backup that is pending deletion will include the ``DeleteTimestamp`` parameter.
+
+          
+          
+
+          - **BackupId** *(string) --* 
+
+            The identifier (ID) of the backup.
+
+            
+          
+
+          - **BackupArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the backup.
+
+            
+          
+
+          - **BackupState** *(string) --* 
+
+            The state of the backup.
+
+            
+          
+
+          - **ClusterId** *(string) --* 
+
+            The identifier (ID) of the cluster that was backed up.
+
+            
+          
+
+          - **CreateTimestamp** *(datetime) --* 
+
+            The date and time when the backup was created.
+
+            
+          
+
+          - **CopyTimestamp** *(datetime) --* 
+
+            The date and time when the backup was copied from a source backup.
+
+            
+          
+
+          - **NeverExpires** *(boolean) --* 
+
+            Specifies whether the service should exempt a backup from the retention policy for the cluster. ``True`` exempts a backup from the retention policy. ``False`` means the service applies the backup retention policy defined at the cluster.
+
+            
+          
+
+          - **SourceRegion** *(string) --* 
+
+            The AWS Region that contains the source backup from which the new backup was copied.
+
+            
+          
+
+          - **SourceBackup** *(string) --* 
+
+            The identifier (ID) of the source backup from which the new backup was copied.
+
+            
+          
+
+          - **SourceCluster** *(string) --* 
+
+            The identifier (ID) of the cluster containing the source backup from which the new backup was copied.
+
+            
+          
+
+          - **DeleteTimestamp** *(datetime) --* 
+
+            The date and time when the backup will be permanently deleted.
+
+            
+          
+
+          - **TagList** *(list) --* 
+
+            The list of tags for the backup.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains a tag. A tag is a key-value pair.
+
+              
+              
+
+              - **Key** *(string) --* 
+
+                The key of the tag.
+
+                
+              
+
+              - **Value** *(string) --* 
+
+                The value of the tag.
+
+                
+          
+        
+          
+
+          - **HsmType** *(string) --* 
+
+            The HSM type used to create the backup.
+
+            
+          
+
+          - **Mode** *(string) --* 
+
+            The mode of the cluster that was backed up.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        An opaque string that indicates that the response contains only a subset of backups. Use this value in a subsequent ``DescribeBackups`` request to get more backups.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudHSMV2.Client.exceptions.CloudHsmAccessDeniedException`
+
+  
+  *   :py:class:`CloudHSMV2.Client.exceptions.CloudHsmInternalFailureException`
+
+  
+  *   :py:class:`CloudHSMV2.Client.exceptions.CloudHsmInvalidRequestException`
+
+  
+  *   :py:class:`CloudHSMV2.Client.exceptions.CloudHsmResourceNotFoundException`
+
+  
+  *   :py:class:`CloudHSMV2.Client.exceptions.CloudHsmServiceException`
+
+  
+  *   :py:class:`CloudHSMV2.Client.exceptions.CloudHsmTagException`
+
+  

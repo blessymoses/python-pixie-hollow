@@ -1,0 +1,224 @@
+:doc:`ServiceDiscovery <../../servicediscovery>` / Client / list_instances
+
+**************
+list_instances
+**************
+
+
+
+.. py:method:: ServiceDiscovery.Client.list_instances(**kwargs)
+
+  
+
+  Lists summary information about the instances that you registered by using a specified service.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/servicediscovery-2017-03-14/ListInstances>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_instances(
+        ServiceId='string',
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type ServiceId: string
+  :param ServiceId: **[REQUIRED]** 
+
+    The ID or Amazon Resource Name (ARN) of the service that you want to list instances for. For services created in a shared namespace, specify the service ARN. For more information about shared namespaces, see `Cross-account Cloud Map namespace sharing <https://docs.aws.amazon.com/cloud-map/latest/dg/sharing-namespaces.html>`__ in the *Cloud Map Developer Guide*.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    For the first ``ListInstances`` request, omit this value.
+
+     
+
+    If more than ``MaxResults`` instances match the specified criteria, you can submit another ``ListInstances`` request to get the next group of results. Specify the value of ``NextToken`` from the previous response in the next request.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of instances that you want Cloud Map to return in the response to a ``ListInstances`` request. If you don't specify a value for ``MaxResults``, Cloud Map returns up to 100 instances.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ResourceOwner': 'string',
+          'Instances': [
+              {
+                  'Id': 'string',
+                  'Attributes': {
+                      'string': 'string'
+                  },
+                  'CreatedByAccount': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ResourceOwner** *(string) --* 
+
+        The ID of the Amazon Web Services account that created the namespace that contains the specified service. If this isn't your account ID, it's the ID of the account that shared the namespace with your account.
+
+        
+      
+
+      - **Instances** *(list) --* 
+
+        Summary information about the instances that are associated with the specified service.
+
+        
+        
+
+        - *(dict) --* 
+
+          A complex type that contains information about the instances that you registered by using a specified service.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The ID for an instance that you created by using a specified service.
+
+            
+          
+
+          - **Attributes** *(dict) --* 
+
+            A string map that contains the following information:
+
+             
+
+            
+            * The attributes that are associated with the instance.
+             
+            * For each attribute, the applicable value.
+            
+
+             
+
+            Supported attribute keys include the following:
+
+              AWS_ALIAS_DNS_NAME  
+
+            For an alias record that routes traffic to an Elastic Load Balancing load balancer, the DNS name that's associated with the load balancer.
+
+              AWS_EC2_INSTANCE_ID (HTTP namespaces only)  
+
+            The Amazon EC2 instance ID for the instance. When the ``AWS_EC2_INSTANCE_ID`` attribute is specified, then the ``AWS_INSTANCE_IPV4`` attribute contains the primary private IPv4 address.
+
+              AWS_INIT_HEALTH_STATUS  
+
+            If the service configuration includes ``HealthCheckCustomConfig``, you can optionally use ``AWS_INIT_HEALTH_STATUS`` to specify the initial status of the custom health check, ``HEALTHY`` or ``UNHEALTHY``. If you don't specify a value for ``AWS_INIT_HEALTH_STATUS``, the initial status is ``HEALTHY``.
+
+              AWS_INSTANCE_CNAME  
+
+            For a ``CNAME`` record, the domain name that Route 53 returns in response to DNS queries (for example, ``example.com``).
+
+              AWS_INSTANCE_IPV4  
+
+            For an ``A`` record, the IPv4 address that Route 53 returns in response to DNS queries (for example, ``192.0.2.44``).
+
+              AWS_INSTANCE_IPV6  
+
+            For an ``AAAA`` record, the IPv6 address that Route 53 returns in response to DNS queries (for example, ``2001:0db8:85a3:0000:0000:abcd:0001:2345``).
+
+              AWS_INSTANCE_PORT  
+
+            For an ``SRV`` record, the value that Route 53 returns for the port. In addition, if the service includes ``HealthCheckConfig``, the port on the endpoint that Route 53 sends requests to.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+          
+
+          - **CreatedByAccount** *(string) --* 
+
+            The ID of the Amazon Web Services account that registered the instance. If this isn't your account ID, it's the ID of the account that shared the namespace with your account or the ID of another account with which the namespace has been shared. For more information about shared namespaces, see `Cross-account Cloud Map namespace sharing <https://docs.aws.amazon.com/cloud-map/latest/dg/sharing-namespaces.html>`__ in the *Cloud Map Developer Guide*.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If more than ``MaxResults`` instances match the specified criteria, you can submit another ``ListInstances`` request to get the next group of results. Specify the value of ``NextToken`` from the previous response in the next request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ServiceDiscovery.Client.exceptions.ServiceNotFound`
+
+  
+  *   :py:class:`ServiceDiscovery.Client.exceptions.InvalidInput`
+
+  
+
+  **Examples**
+
+  Example: List service instances
+  ::
+
+    response = client.list_instances(
+        ServiceId='srv-qzpwvt2tfqcegapy',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Instances': [
+            {
+                'Attributes': {
+                    'AWS_INSTANCE_IPV4': '172.2.1.3',
+                    'AWS_INSTANCE_PORT': '808',
+                },
+                'Id': 'i-06bdabbae60f65a4e',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

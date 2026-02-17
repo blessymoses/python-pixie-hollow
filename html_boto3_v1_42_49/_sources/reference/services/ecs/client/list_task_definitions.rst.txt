@@ -1,0 +1,188 @@
+:doc:`ECS <../../ecs>` / Client / list_task_definitions
+
+*********************
+list_task_definitions
+*********************
+
+
+
+.. py:method:: ECS.Client.list_task_definitions(**kwargs)
+
+  
+
+  Returns a list of task definitions that are registered to your account. You can filter the results by family name with the ``familyPrefix`` parameter or by status with the ``status`` parameter.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListTaskDefinitions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_task_definitions(
+        familyPrefix='string',
+        status='ACTIVE'|'INACTIVE'|'DELETE_IN_PROGRESS',
+        sort='ASC'|'DESC',
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type familyPrefix: string
+  :param familyPrefix: 
+
+    The full family name to filter the ``ListTaskDefinitions`` results with. Specifying a ``familyPrefix`` limits the listed task definitions to task definition revisions that belong to that family.
+
+    
+
+  
+  :type status: string
+  :param status: 
+
+    The task definition status to filter the ``ListTaskDefinitions`` results with. By default, only ``ACTIVE`` task definitions are listed. By setting this parameter to ``INACTIVE``, you can view task definitions that are ``INACTIVE`` as long as an active task or service still references them. If you paginate the resulting output, be sure to keep the ``status`` value constant in each subsequent request.
+
+    
+
+  
+  :type sort: string
+  :param sort: 
+
+    The order to sort the results in. Valid values are ``ASC`` and ``DESC``. By default, ( ``ASC``) task definitions are listed lexicographically by family name and in ascending numerical order by revision so that the newest task definitions in a family are listed last. Setting this parameter to ``DESC`` reverses the sort order on family name and revision. This is so that the newest task definitions in a family are listed first.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The ``nextToken`` value returned from a ``ListTaskDefinitions`` request indicating that more results are available to fulfill the request and further calls will be needed. If ``maxResults`` was provided, it is possible the number of results to be fewer than ``maxResults``.
+
+     
+
+    .. note::
+
+      
+
+      This token should be treated as an opaque identifier that is only used to retrieve the next items in a list and not for other programmatic purposes.
+
+      
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of task definition results that ``ListTaskDefinitions`` returned in paginated output. When this parameter is used, ``ListTaskDefinitions`` only returns ``maxResults`` results in a single page along with a ``nextToken`` response element. The remaining results of the initial request can be seen by sending another ``ListTaskDefinitions`` request with the returned ``nextToken`` value. This value can be between 1 and 100. If this parameter isn't used, then ``ListTaskDefinitions`` returns up to 100 results and a ``nextToken`` value if applicable.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'taskDefinitionArns': [
+              'string',
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **taskDefinitionArns** *(list) --* 
+
+        The list of task definition Amazon Resource Name (ARN) entries for the ``ListTaskDefinitions`` request.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The ``nextToken`` value to include in a future ``ListTaskDefinitions`` request. When the results of a ``ListTaskDefinitions`` request exceed ``maxResults``, this value can be used to retrieve the next page of results. This value is ``null`` when there are no more results to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ECS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.InvalidParameterException`
+
+  
+
+  **Examples**
+
+  This example lists all of your registered task definitions.
+  ::
+
+    response = client.list_task_definitions(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'taskDefinitionArns': [
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/sleep300:2',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/sleep360:1',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:3',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:4',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:5',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:6',
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example lists the task definition revisions of a specified family.
+  ::
+
+    response = client.list_task_definitions(
+        familyPrefix='wordpress',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'taskDefinitionArns': [
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:3',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:4',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:5',
+            'arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/wordpress:6',
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

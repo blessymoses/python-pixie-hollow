@@ -1,0 +1,249 @@
+:doc:`ARCZonalShift <../../arc-zonal-shift>` / Client / start_zonal_shift
+
+*****************
+start_zonal_shift
+*****************
+
+
+
+.. py:method:: ARCZonalShift.Client.start_zonal_shift(**kwargs)
+
+  
+
+  You start a zonal shift to temporarily move load balancer traffic away from an Availability Zone in an Amazon Web Services Region, to help your application recover immediately, for example, from a developer's bad code deployment or from an Amazon Web Services infrastructure failure in a single Availability Zone. You can start a zonal shift in ARC only for managed resources in your Amazon Web Services account in an Amazon Web Services Region. Resources are automatically registered with ARC by Amazon Web Services services.
+
+   
+
+  Amazon Application Recovery Controller currently supports enabling the following resources for zonal shift and zonal autoshift:
+
+   
+
+  
+  * `Amazon EC2 Auto Scaling groups <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.ec2-auto-scaling-groups.html>`__
+   
+  * `Amazon Elastic Kubernetes Service <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.eks.html>`__
+   
+  * `Application Load Balancer <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.app-load-balancers.html>`__
+   
+  * `Network Load Balancer <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.network-load-balancers.html>`__
+  
+
+   
+
+  When you start a zonal shift, traffic for the resource is no longer routed to the Availability Zone. The zonal shift is created immediately in ARC. However, it can take a short time, typically up to a few minutes, for existing, in-progress connections in the Availability Zone to complete.
+
+   
+
+  For more information, see `Zonal shift <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.html>`__ in the Amazon Application Recovery Controller Developer Guide.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/arc-zonal-shift-2022-10-30/StartZonalShift>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_zonal_shift(
+        resourceIdentifier='string',
+        awayFrom='string',
+        expiresIn='string',
+        comment='string'
+    )
+    
+  :type resourceIdentifier: string
+  :param resourceIdentifier: **[REQUIRED]** 
+
+    The identifier for the resource that Amazon Web Services shifts traffic for. The identifier is the Amazon Resource Name (ARN) for the resource.
+
+     
+
+    Amazon Application Recovery Controller currently supports enabling the following resources for zonal shift and zonal autoshift:
+
+     
+
+    
+    * `Amazon EC2 Auto Scaling groups <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.ec2-auto-scaling-groups.html>`__
+     
+    * `Amazon Elastic Kubernetes Service <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.eks.html>`__
+     
+    * `Application Load Balancer <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.app-load-balancers.html>`__
+     
+    * `Network Load Balancer <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.network-load-balancers.html>`__
+    
+
+    
+
+  
+  :type awayFrom: string
+  :param awayFrom: **[REQUIRED]** 
+
+    The Availability Zone (for example, ``use1-az1``) that traffic is moved away from for a resource when you start a zonal shift. Until the zonal shift expires or you cancel it, traffic for the resource is instead moved to other Availability Zones in the Amazon Web Services Region.
+
+    
+
+  
+  :type expiresIn: string
+  :param expiresIn: **[REQUIRED]** 
+
+    The length of time that you want a zonal shift to be active, which ARC converts to an expiry time (expiration time). Zonal shifts are temporary. You can set a zonal shift to be active initially for up to three days (72 hours).
+
+     
+
+    If you want to still keep traffic away from an Availability Zone, you can update the zonal shift and set a new expiration. You can also cancel a zonal shift, before it expires, for example, if you're ready to restore traffic to the Availability Zone.
+
+     
+
+    To set a length of time for a zonal shift to be active, specify a whole number, and then one of the following, with no space:
+
+     
+
+    
+    * **A lowercase letter m:** To specify that the value is in minutes.
+     
+    * **A lowercase letter h:** To specify that the value is in hours.
+    
+
+     
+
+    For example: ``20h`` means the zonal shift expires in 20 hours. ``120m`` means the zonal shift expires in 120 minutes (2 hours).
+
+    
+
+  
+  :type comment: string
+  :param comment: **[REQUIRED]** 
+
+    A comment that you enter about the zonal shift. Only the latest comment is retained; no comment history is maintained. A new comment overwrites any existing comment string.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'zonalShiftId': 'string',
+          'resourceIdentifier': 'string',
+          'awayFrom': 'string',
+          'expiryTime': datetime(2015, 1, 1),
+          'startTime': datetime(2015, 1, 1),
+          'status': 'ACTIVE'|'EXPIRED'|'CANCELED',
+          'comment': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **zonalShiftId** *(string) --* 
+
+        The identifier of a zonal shift.
+
+        
+      
+
+      - **resourceIdentifier** *(string) --* 
+
+        The identifier for the resource that Amazon Web Services shifts traffic for. The identifier is the Amazon Resource Name (ARN) for the resource.
+
+         
+
+        Amazon Application Recovery Controller currently supports enabling the following resources for zonal shift and zonal autoshift:
+
+         
+
+        
+        * `Amazon EC2 Auto Scaling groups <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.ec2-auto-scaling-groups.html>`__
+         
+        * `Amazon Elastic Kubernetes Service <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.eks.html>`__
+         
+        * `Application Load Balancer <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.app-load-balancers.html>`__
+         
+        * `Network Load Balancer <https://docs.aws.amazon.com/r53recovery/latest/dg/arc-zonal-shift.resource-types.network-load-balancers.html>`__
+        
+
+        
+      
+
+      - **awayFrom** *(string) --* 
+
+        The Availability Zone (for example, ``use1-az1``) that traffic is moved away from for a resource when you start a zonal shift. Until the zonal shift expires or you cancel it, traffic for the resource is instead moved to other Availability Zones in the Amazon Web Services Region.
+
+        
+      
+
+      - **expiryTime** *(datetime) --* 
+
+        The expiry time (expiration time) for a customer-initiated zonal shift. A zonal shift is temporary and must be set to expire when you start the zonal shift. You can initially set a zonal shift to expire in a maximum of three days (72 hours). However, you can update a zonal shift to set a new expiration at any time.
+
+         
+
+        When you start a zonal shift, you specify how long you want it to be active, which ARC converts to an expiry time (expiration time). You can cancel a zonal shift when you're ready to restore traffic to the Availability Zone, or just wait for it to expire. Or you can update the zonal shift to specify another length of time to expire in.
+
+        
+      
+
+      - **startTime** *(datetime) --* 
+
+        The time (UTC) when the zonal shift starts.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        A status for a zonal shift.
+
+         
+
+        The ``Status`` for a zonal shift can have one of the following values:
+
+         
+
+        
+        * **ACTIVE:** The zonal shift has been started and is active.
+         
+        * **EXPIRED:** The zonal shift has expired (the expiry time was exceeded).
+         
+        * **CANCELED:** The zonal shift was canceled.
+        
+
+        
+      
+
+      - **comment** *(string) --* 
+
+        A comment that you enter about the zonal shift. Only the latest comment is retained; no comment history is maintained. A new comment overwrites any existing comment string.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ARCZonalShift.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ARCZonalShift.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`ARCZonalShift.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ARCZonalShift.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ARCZonalShift.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ARCZonalShift.Client.exceptions.ValidationException`
+
+  

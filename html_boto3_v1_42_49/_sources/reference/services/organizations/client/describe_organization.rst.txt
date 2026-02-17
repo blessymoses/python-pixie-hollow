@@ -1,0 +1,237 @@
+:doc:`Organizations <../../organizations>` / Client / describe_organization
+
+*********************
+describe_organization
+*********************
+
+
+
+.. py:method:: Organizations.Client.describe_organization()
+
+  
+
+  Retrieves information about the organization that the user's account belongs to.
+
+   
+
+  You can call this operation from any account in a organization.
+
+   
+
+  .. note::
+
+    
+
+    Even if a policy type is shown as available in the organization, you can disable it separately at the root level with  DisablePolicyType. Use  ListRoots to see the status of policy types for a specified root.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/DescribeOrganization>`_  
+
+
+  **Request Syntax**
+
+  ::
+
+    response = client.describe_organization()
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Organization': {
+              'Id': 'string',
+              'Arn': 'string',
+              'FeatureSet': 'ALL'|'CONSOLIDATED_BILLING',
+              'MasterAccountArn': 'string',
+              'MasterAccountId': 'string',
+              'MasterAccountEmail': 'string',
+              'AvailablePolicyTypes': [
+                  {
+                      'Type': 'SERVICE_CONTROL_POLICY'|'RESOURCE_CONTROL_POLICY'|'TAG_POLICY'|'BACKUP_POLICY'|'AISERVICES_OPT_OUT_POLICY'|'CHATBOT_POLICY'|'DECLARATIVE_POLICY_EC2'|'SECURITYHUB_POLICY'|'INSPECTOR_POLICY'|'UPGRADE_ROLLOUT_POLICY'|'BEDROCK_POLICY'|'S3_POLICY'|'NETWORK_SECURITY_DIRECTOR_POLICY',
+                      'Status': 'ENABLED'|'PENDING_ENABLE'|'PENDING_DISABLE'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Organization** *(dict) --* 
+
+        A structure that contains information about the organization.
+
+         
+
+        .. warning::
+
+           
+
+          The ``AvailablePolicyTypes`` part of the response is deprecated, and you shouldn't use it in your apps. It doesn't include any policy type supported by Organizations other than SCPs. In the China (Ningxia) Region, no policy type is included. To determine which policy types are enabled in your organization, use the ``ListRoots`` operation.
+
+          
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          The unique identifier (ID) of an organization.
+
+           
+
+          The `regex pattern <http://wikipedia.org/wiki/regex>`__ for an organization ID string requires "o-" followed by from 10 to 32 lowercase letters or digits.
+
+          
+        
+
+        - **Arn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of an organization.
+
+           
+
+          For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+          
+        
+
+        - **FeatureSet** *(string) --* 
+
+          Specifies the functionality that currently is available to the organization. If set to "ALL", then all features are enabled and policies can be applied to accounts in the organization. If set to "CONSOLIDATED_BILLING", then only consolidated billing functionality is available. For more information, see `Enabling all features in your organization <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html>`__ in the *Organizations User Guide*.
+
+          
+        
+
+        - **MasterAccountArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the account that is designated as the management account for the organization.
+
+           
+
+          For more information about ARNs in Organizations, see `ARN Formats Supported by Organizations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html#awsorganizations-resources-for-iam-policies>`__ in the *Amazon Web Services Service Authorization Reference*.
+
+          
+        
+
+        - **MasterAccountId** *(string) --* 
+
+          The unique identifier (ID) of the management account of an organization.
+
+           
+
+          The `regex pattern <http://wikipedia.org/wiki/regex>`__ for an account ID string requires exactly 12 digits.
+
+          
+        
+
+        - **MasterAccountEmail** *(string) --* 
+
+          The email address that is associated with the Amazon Web Services account that is designated as the management account for the organization.
+
+          
+        
+
+        - **AvailablePolicyTypes** *(list) --* 
+
+          .. warning::
+
+            
+
+            Do not use. This field is deprecated and doesn't provide complete information about the policies in your organization.
+
+             
+
+           
+
+          To determine the policies that are enabled and available for use in your organization, use the  ListRoots operation instead.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains information about a policy type and its status in the associated root.
+
+            
+            
+
+            - **Type** *(string) --* 
+
+              The name of the policy type.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The status of the policy type as it relates to the associated root. To attach a policy of the specified type to a root or to an OU or account in that root, it must be available in the organization and enabled for that root.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+
+  **Examples**
+
+  The following example shows how to request information about the current user's organization:/n/n
+  ::
+
+    response = client.describe_organization(
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Organization': {
+            'Arn': 'arn:aws:organizations::111111111111:organization/o-exampleorgid',
+            'AvailablePolicyTypes': [
+                {
+                    'Status': 'ENABLED',
+                    'Type': 'SERVICE_CONTROL_POLICY',
+                },
+            ],
+            'FeatureSet': 'ALL',
+            'Id': 'o-exampleorgid',
+            'MasterAccountArn': 'arn:aws:organizations::111111111111:account/o-exampleorgid/111111111111',
+            'MasterAccountEmail': 'bill@example.com',
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

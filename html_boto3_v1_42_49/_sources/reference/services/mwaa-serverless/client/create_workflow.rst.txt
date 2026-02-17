@@ -1,0 +1,321 @@
+:doc:`MWAAServerless <../../mwaa-serverless>` / Client / create_workflow
+
+***************
+create_workflow
+***************
+
+
+
+.. py:method:: MWAAServerless.Client.create_workflow(**kwargs)
+
+  
+
+  Creates a new workflow in Amazon Managed Workflows for Apache Airflow Serverless. This operation initializes a workflow with the specified configuration including the workflow definition, execution role, and optional settings for encryption, logging, and networking. You must provide the workflow definition as a YAML file stored in Amazon S3 that defines the DAG structure using supported Amazon Web Services operators. Amazon Managed Workflows for Apache Airflow Serverless automatically creates the first version of the workflow and sets up the necessary execution environment with multi-tenant isolation and security controls.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/mwaa-serverless-2024-07-26/CreateWorkflow>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_workflow(
+        Name='string',
+        ClientToken='string',
+        DefinitionS3Location={
+            'Bucket': 'string',
+            'ObjectKey': 'string',
+            'VersionId': 'string'
+        },
+        RoleArn='string',
+        Description='string',
+        EncryptionConfiguration={
+            'Type': 'AWS_MANAGED_KEY'|'CUSTOMER_MANAGED_KEY',
+            'KmsKeyId': 'string'
+        },
+        LoggingConfiguration={
+            'LogGroupName': 'string'
+        },
+        EngineVersion=123,
+        NetworkConfiguration={
+            'SecurityGroupIds': [
+                'string',
+            ],
+            'SubnetIds': [
+                'string',
+            ]
+        },
+        Tags={
+            'string': 'string'
+        },
+        TriggerMode='string'
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name of the workflow. You must use unique workflow names within your Amazon Web Services account. The service generates a unique identifier that is appended to ensure temporal uniqueness across the account lifecycle.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. This token prevents duplicate workflow creation requests.
+
+    This field is autopopulated if not provided.
+
+  
+  :type DefinitionS3Location: dict
+  :param DefinitionS3Location: **[REQUIRED]** 
+
+    The Amazon S3 location where the workflow definition file is stored. This must point to a valid YAML file that defines the workflow structure using supported Amazon Web Services operators and tasks. Amazon Managed Workflows for Apache Airflow Serverless takes a snapshot of the definition at creation time, so subsequent changes to the Amazon S3 object will not affect the workflow unless you create a new version. In your YAML definition, include task dependencies, scheduling information, and operator configurations that are compatible with the Amazon Managed Workflows for Apache Airflow Serverless execution environment.
+
+    
+
+  
+    - **Bucket** *(string) --* **[REQUIRED]** 
+
+      The name of the Amazon S3 bucket that contains the workflow definition file.
+
+      
+
+    
+    - **ObjectKey** *(string) --* **[REQUIRED]** 
+
+      The key (name) of the workflow definition file within the S3 bucket.
+
+      
+
+    
+    - **VersionId** *(string) --* 
+
+      Optional. The version ID of the workflow definition file in Amazon S3. If not specified, the latest version is used.
+
+      
+
+    
+  
+  :type RoleArn: string
+  :param RoleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the IAM role that Amazon Managed Workflows for Apache Airflow Serverless assumes when executing the workflow. This role must have the necessary permissions to access the required Amazon Web Services services and resources that your workflow tasks will interact with. The role is used for task execution in the isolated, multi-tenant environment and should follow the principle of least privilege. Amazon Managed Workflows for Apache Airflow Serverless validates role access during workflow creation but runtime permission checks are performed by the target services.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    An optional description of the workflow that you can use to provide additional context about the workflow's purpose and functionality.
+
+    
+
+  
+  :type EncryptionConfiguration: dict
+  :param EncryptionConfiguration: 
+
+    The configuration for encrypting workflow data at rest and in transit. Specifies the encryption type and optional KMS key for customer-managed encryption.
+
+    
+
+  
+    - **Type** *(string) --* **[REQUIRED]** 
+
+      The type of encryption to use. Values are ``AWS_MANAGED_KEY`` (Amazon Web Services manages the encryption key) or ``CUSTOMER_MANAGED_KEY`` (you provide a KMS key).
+
+      
+
+    
+    - **KmsKeyId** *(string) --* 
+
+      The ID or ARN of the Amazon Web Services KMS key to use for encryption. Required when ``Type`` is ``CUSTOMER_MANAGED_KEY``.
+
+      
+
+    
+  
+  :type LoggingConfiguration: dict
+  :param LoggingConfiguration: 
+
+    The configuration for workflow logging. Specifies the CloudWatch log group where workflow execution logs are stored. Amazon Managed Workflows for Apache Airflow Serverless automatically exports worker logs and task-level information to the specified log group in your account using remote logging functionality. This provides comprehensive observability for debugging and monitoring workflow execution across the distributed, serverless environment.
+
+    
+
+  
+    - **LogGroupName** *(string) --* **[REQUIRED]** 
+
+      The name of the CloudWatch log group where workflow execution logs are stored.
+
+      
+
+    
+  
+  :type EngineVersion: integer
+  :param EngineVersion: 
+
+    The version of the Amazon Managed Workflows for Apache Airflow Serverless engine that you want to use for this workflow. This determines the feature set, supported operators, and execution environment capabilities available to your workflow. Amazon Managed Workflows for Apache Airflow Serverless maintains backward compatibility across versions while introducing new features and improvements. Currently supports version 1 with plans for additional versions as the service evolves.
+
+    
+
+  
+  :type NetworkConfiguration: dict
+  :param NetworkConfiguration: 
+
+    Network configuration for the workflow execution environment, including VPC security groups and subnets for secure network access. When specified, Amazon Managed Workflows for Apache Airflow Serverless deploys ECS worker tasks in your customer VPC to provide secure connectivity to your resources. If not specified, tasks run in the service's default worker VPC with network isolation from other customers. This configuration enables secure access to VPC-only resources like RDS databases or private endpoints.
+
+    
+
+  
+    - **SecurityGroupIds** *(list) --* 
+
+      A list of VPC security group IDs to associate with the workflow execution environment.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **SubnetIds** *(list) --* 
+
+      A list of VPC subnet IDs where the workflow execution environment is deployed.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type Tags: dict
+  :param Tags: 
+
+    A map of tags to assign to the workflow resource. Tags are key-value pairs that are used for resource organization and cost allocation.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type TriggerMode: string
+  :param TriggerMode: 
+
+    The trigger mode for the workflow execution.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'WorkflowArn': 'string',
+          'CreatedAt': datetime(2015, 1, 1),
+          'RevisionId': 'string',
+          'WorkflowStatus': 'READY'|'DELETING',
+          'WorkflowVersion': 'string',
+          'IsLatestVersion': True|False,
+          'Warnings': [
+              'string',
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **WorkflowArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the newly created workflow. This ARN uniquely identifies the workflow resource.
+
+        
+      
+
+      - **CreatedAt** *(datetime) --* 
+
+        The timestamp when the workflow was created, in ISO 8601 date-time format.
+
+        
+      
+
+      - **RevisionId** *(string) --* 
+
+        A unique identifier for this revision of the workflow configuration. This ID changes when the workflow is updated and you can use it for optimistic concurrency control in update operations. The revision ID helps prevent conflicting updates and ensures that updates are applied to the expected version of the workflow configuration.
+
+        
+      
+
+      - **WorkflowStatus** *(string) --* 
+
+        The current status of the workflow. Possible values are ``READY`` (workflow is ready to run) and ``DELETING`` (workflow is being deleted).
+
+        
+      
+
+      - **WorkflowVersion** *(string) --* 
+
+        The version identifier of the workflow. This is a service-generated alphanumeric string that uniquely identifies this version of the workflow. Amazon Managed Workflows for Apache Airflow Serverless uses a version-first approach where each workflow can have multiple immutable versions, which allows you to maintain different configurations and roll back to previous versions as needed. The version identifier is used in ARNs and API operations to reference specific workflow versions.
+
+        
+      
+
+      - **IsLatestVersion** *(boolean) --* 
+
+        A Boolean flag that indicates whether this workflow version is the latest version of the workflow.
+
+        
+      
+
+      - **Warnings** *(list) --* 
+
+        Warning messages generated during workflow creation.
+
+        
+        
+
+        - *(string) --* 
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`MWAAServerless.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`MWAAServerless.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`MWAAServerless.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`MWAAServerless.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`MWAAServerless.Client.exceptions.OperationTimeoutException`
+
+  
+  *   :py:class:`MWAAServerless.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`MWAAServerless.Client.exceptions.ServiceQuotaExceededException`
+
+  

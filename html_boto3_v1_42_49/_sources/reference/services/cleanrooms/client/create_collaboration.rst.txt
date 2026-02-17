@@ -1,0 +1,867 @@
+:doc:`CleanRoomsService <../../cleanrooms>` / Client / create_collaboration
+
+********************
+create_collaboration
+********************
+
+
+
+.. py:method:: CleanRoomsService.Client.create_collaboration(**kwargs)
+
+  
+
+  Creates a new collaboration.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cleanrooms-2022-02-17/CreateCollaboration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_collaboration(
+        members=[
+            {
+                'accountId': 'string',
+                'memberAbilities': [
+                    'CAN_QUERY'|'CAN_RECEIVE_RESULTS'|'CAN_RUN_JOB',
+                ],
+                'mlMemberAbilities': {
+                    'customMLMemberAbilities': [
+                        'CAN_RECEIVE_MODEL_OUTPUT'|'CAN_RECEIVE_INFERENCE_OUTPUT',
+                    ]
+                },
+                'displayName': 'string',
+                'paymentConfiguration': {
+                    'queryCompute': {
+                        'isResponsible': True|False
+                    },
+                    'machineLearning': {
+                        'modelTraining': {
+                            'isResponsible': True|False
+                        },
+                        'modelInference': {
+                            'isResponsible': True|False
+                        },
+                        'syntheticDataGeneration': {
+                            'isResponsible': True|False
+                        }
+                    },
+                    'jobCompute': {
+                        'isResponsible': True|False
+                    }
+                }
+            },
+        ],
+        name='string',
+        description='string',
+        creatorMemberAbilities=[
+            'CAN_QUERY'|'CAN_RECEIVE_RESULTS'|'CAN_RUN_JOB',
+        ],
+        creatorMLMemberAbilities={
+            'customMLMemberAbilities': [
+                'CAN_RECEIVE_MODEL_OUTPUT'|'CAN_RECEIVE_INFERENCE_OUTPUT',
+            ]
+        },
+        creatorDisplayName='string',
+        dataEncryptionMetadata={
+            'allowCleartext': True|False,
+            'allowDuplicates': True|False,
+            'allowJoinsOnColumnsWithDifferentNames': True|False,
+            'preserveNulls': True|False
+        },
+        queryLogStatus='ENABLED'|'DISABLED',
+        jobLogStatus='ENABLED'|'DISABLED',
+        tags={
+            'string': 'string'
+        },
+        creatorPaymentConfiguration={
+            'queryCompute': {
+                'isResponsible': True|False
+            },
+            'machineLearning': {
+                'modelTraining': {
+                    'isResponsible': True|False
+                },
+                'modelInference': {
+                    'isResponsible': True|False
+                },
+                'syntheticDataGeneration': {
+                    'isResponsible': True|False
+                }
+            },
+            'jobCompute': {
+                'isResponsible': True|False
+            }
+        },
+        analyticsEngine='SPARK'|'CLEAN_ROOMS_SQL',
+        autoApprovedChangeRequestTypes=[
+            'ADD_MEMBER'|'GRANT_RECEIVE_RESULTS_ABILITY'|'REVOKE_RECEIVE_RESULTS_ABILITY',
+        ],
+        allowedResultRegions=[
+            'us-west-1'|'us-west-2'|'us-east-1'|'us-east-2'|'af-south-1'|'ap-east-1'|'ap-east-2'|'ap-south-2'|'ap-southeast-1'|'ap-southeast-2'|'ap-southeast-3'|'ap-southeast-5'|'ap-southeast-4'|'ap-southeast-7'|'ap-south-1'|'ap-northeast-3'|'ap-northeast-1'|'ap-northeast-2'|'ca-central-1'|'ca-west-1'|'eu-south-1'|'eu-west-3'|'eu-south-2'|'eu-central-2'|'eu-central-1'|'eu-north-1'|'eu-west-1'|'eu-west-2'|'me-south-1'|'me-central-1'|'il-central-1'|'sa-east-1'|'mx-central-1',
+        ],
+        isMetricsEnabled=True|False
+    )
+    
+  :type members: list
+  :param members: **[REQUIRED]** 
+
+    A list of initial members, not including the creator. This list is immutable.
+
+    
+
+  
+    - *(dict) --* 
+
+      Basic metadata used to construct a new member.
+
+      
+
+    
+      - **accountId** *(string) --* **[REQUIRED]** 
+
+        The identifier used to reference members of the collaboration. Currently only supports Amazon Web Services account ID.
+
+        
+
+      
+      - **memberAbilities** *(list) --* **[REQUIRED]** 
+
+        The abilities granted to the collaboration member.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **mlMemberAbilities** *(dict) --* 
+
+        The ML abilities granted to the collaboration member.
+
+        
+
+      
+        - **customMLMemberAbilities** *(list) --* **[REQUIRED]** 
+
+          The custom ML member abilities for a collaboration member.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+      - **displayName** *(string) --* **[REQUIRED]** 
+
+        The member's display name.
+
+        
+
+      
+      - **paymentConfiguration** *(dict) --* 
+
+        The collaboration member's payment responsibilities set by the collaboration creator.
+
+         
+
+        If the collaboration creator hasn't speciﬁed anyone as the member paying for query compute costs, then the member who can query is the default payer.
+
+        
+
+      
+        - **queryCompute** *(dict) --* **[REQUIRED]** 
+
+          The collaboration member's payment responsibilities set by the collaboration creator for query compute costs.
+
+          
+
+        
+          - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+            Indicates whether the collaboration creator has configured the collaboration member to pay for query compute costs ( ``TRUE``) or has not configured the collaboration member to pay for query compute costs ( ``FALSE``).
+
+             
+
+            Exactly one member can be configured to pay for query compute costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+             
+
+            If the collaboration creator hasn't specified anyone as the member paying for query compute costs, then the member who can query is the default payer. An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can query.
+
+            
+
+          
+        
+        - **machineLearning** *(dict) --* 
+
+          An object representing the collaboration member's machine learning payment responsibilities set by the collaboration creator.
+
+          
+
+        
+          - **modelTraining** *(dict) --* 
+
+            The payment responsibilities accepted by the member for model training.
+
+            
+
+          
+            - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+              Indicates whether the collaboration creator has configured the collaboration member to pay for model training costs ( ``TRUE``) or has not configured the collaboration member to pay for model training costs ( ``FALSE``).
+
+               
+
+              Exactly one member can be configured to pay for model training costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+               
+
+              If the collaboration creator hasn't specified anyone as the member paying for model training costs, then the member who can query is the default payer. An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can query.
+
+              
+
+            
+          
+          - **modelInference** *(dict) --* 
+
+            The payment responsibilities accepted by the member for model inference.
+
+            
+
+          
+            - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+              Indicates whether the collaboration creator has configured the collaboration member to pay for model inference costs ( ``TRUE``) or has not configured the collaboration member to pay for model inference costs ( ``FALSE``).
+
+               
+
+              Exactly one member can be configured to pay for model inference costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+               
+
+              If the collaboration creator hasn't specified anyone as the member paying for model inference costs, then the member who can query is the default payer. An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can query.
+
+              
+
+            
+          
+          - **syntheticDataGeneration** *(dict) --* 
+
+            The payment configuration for machine learning synthetic data generation.
+
+            
+
+          
+            - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+              Indicates who is responsible for paying for synthetic data generation.
+
+              
+
+            
+          
+        
+        - **jobCompute** *(dict) --* 
+
+          The compute configuration for the job.
+
+          
+
+        
+          - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+            Indicates whether the collaboration creator has configured the collaboration member to pay for query and job compute costs ( ``TRUE``) or has not configured the collaboration member to pay for query and job compute costs ( ``FALSE``).
+
+             
+
+            Exactly one member can be configured to pay for query and job compute costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+             
+
+            An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can run queries and jobs.
+
+            
+
+          
+        
+      
+    
+
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The display name for a collaboration.
+
+    
+
+  
+  :type description: string
+  :param description: **[REQUIRED]** 
+
+    A description of the collaboration provided by the collaboration owner.
+
+    
+
+  
+  :type creatorMemberAbilities: list
+  :param creatorMemberAbilities: **[REQUIRED]** 
+
+    The abilities granted to the collaboration creator.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type creatorMLMemberAbilities: dict
+  :param creatorMLMemberAbilities: 
+
+    The ML abilities granted to the collaboration creator.
+
+    
+
+  
+    - **customMLMemberAbilities** *(list) --* **[REQUIRED]** 
+
+      The custom ML member abilities for a collaboration member.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type creatorDisplayName: string
+  :param creatorDisplayName: **[REQUIRED]** 
+
+    The display name of the collaboration creator.
+
+    
+
+  
+  :type dataEncryptionMetadata: dict
+  :param dataEncryptionMetadata: 
+
+    The settings for client-side encryption with Cryptographic Computing for Clean Rooms.
+
+    
+
+  
+    - **allowCleartext** *(boolean) --* **[REQUIRED]** 
+
+      Indicates whether encrypted tables can contain cleartext data ( ``TRUE``) or are to cryptographically process every column ( ``FALSE``).
+
+      
+
+    
+    - **allowDuplicates** *(boolean) --* **[REQUIRED]** 
+
+      Indicates whether Fingerprint columns can contain duplicate entries ( ``TRUE``) or are to contain only non-repeated values ( ``FALSE``).
+
+      
+
+    
+    - **allowJoinsOnColumnsWithDifferentNames** *(boolean) --* **[REQUIRED]** 
+
+      Indicates whether Fingerprint columns can be joined on any other Fingerprint column with a different name ( ``TRUE``) or can only be joined on Fingerprint columns of the same name ( ``FALSE``).
+
+      
+
+    
+    - **preserveNulls** *(boolean) --* **[REQUIRED]** 
+
+      Indicates whether NULL values are to be copied as NULL to encrypted tables ( ``TRUE``) or cryptographically processed ( ``FALSE``).
+
+      
+
+    
+  
+  :type queryLogStatus: string
+  :param queryLogStatus: **[REQUIRED]** 
+
+    An indicator as to whether query logging has been enabled or disabled for the collaboration.
+
+     
+
+    When ``ENABLED``, Clean Rooms logs details about queries run within this collaboration and those logs can be viewed in Amazon CloudWatch Logs. The default value is ``DISABLED``.
+
+    
+
+  
+  :type jobLogStatus: string
+  :param jobLogStatus: 
+
+    Specifies whether job logs are enabled for this collaboration.
+
+     
+
+    When ``ENABLED``, Clean Rooms logs details about jobs run within this collaboration; those logs can be viewed in Amazon CloudWatch Logs. The default value is ``DISABLED``.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    An optional label that you can assign to a resource when you create it. Each tag consists of a key and an optional value, both of which you define. When you use tagging, you can also use tag-based access control in IAM policies to control access to this resource.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type creatorPaymentConfiguration: dict
+  :param creatorPaymentConfiguration: 
+
+    The collaboration creator's payment responsibilities set by the collaboration creator.
+
+     
+
+    If the collaboration creator hasn't specified anyone as the member paying for query compute costs, then the member who can query is the default payer.
+
+    
+
+  
+    - **queryCompute** *(dict) --* **[REQUIRED]** 
+
+      The collaboration member's payment responsibilities set by the collaboration creator for query compute costs.
+
+      
+
+    
+      - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+        Indicates whether the collaboration creator has configured the collaboration member to pay for query compute costs ( ``TRUE``) or has not configured the collaboration member to pay for query compute costs ( ``FALSE``).
+
+         
+
+        Exactly one member can be configured to pay for query compute costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+         
+
+        If the collaboration creator hasn't specified anyone as the member paying for query compute costs, then the member who can query is the default payer. An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can query.
+
+        
+
+      
+    
+    - **machineLearning** *(dict) --* 
+
+      An object representing the collaboration member's machine learning payment responsibilities set by the collaboration creator.
+
+      
+
+    
+      - **modelTraining** *(dict) --* 
+
+        The payment responsibilities accepted by the member for model training.
+
+        
+
+      
+        - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+          Indicates whether the collaboration creator has configured the collaboration member to pay for model training costs ( ``TRUE``) or has not configured the collaboration member to pay for model training costs ( ``FALSE``).
+
+           
+
+          Exactly one member can be configured to pay for model training costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+           
+
+          If the collaboration creator hasn't specified anyone as the member paying for model training costs, then the member who can query is the default payer. An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can query.
+
+          
+
+        
+      
+      - **modelInference** *(dict) --* 
+
+        The payment responsibilities accepted by the member for model inference.
+
+        
+
+      
+        - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+          Indicates whether the collaboration creator has configured the collaboration member to pay for model inference costs ( ``TRUE``) or has not configured the collaboration member to pay for model inference costs ( ``FALSE``).
+
+           
+
+          Exactly one member can be configured to pay for model inference costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+           
+
+          If the collaboration creator hasn't specified anyone as the member paying for model inference costs, then the member who can query is the default payer. An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can query.
+
+          
+
+        
+      
+      - **syntheticDataGeneration** *(dict) --* 
+
+        The payment configuration for machine learning synthetic data generation.
+
+        
+
+      
+        - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+          Indicates who is responsible for paying for synthetic data generation.
+
+          
+
+        
+      
+    
+    - **jobCompute** *(dict) --* 
+
+      The compute configuration for the job.
+
+      
+
+    
+      - **isResponsible** *(boolean) --* **[REQUIRED]** 
+
+        Indicates whether the collaboration creator has configured the collaboration member to pay for query and job compute costs ( ``TRUE``) or has not configured the collaboration member to pay for query and job compute costs ( ``FALSE``).
+
+         
+
+        Exactly one member can be configured to pay for query and job compute costs. An error is returned if the collaboration creator sets a ``TRUE`` value for more than one member in the collaboration.
+
+         
+
+        An error is returned if the collaboration creator sets a ``FALSE`` value for the member who can run queries and jobs.
+
+        
+
+      
+    
+  
+  :type analyticsEngine: string
+  :param analyticsEngine: 
+
+    The analytics engine.
+
+     
+
+    .. note::
+
+      
+
+      After July 16, 2025, the ``CLEAN_ROOMS_SQL`` parameter will no longer be available.
+
+      
+
+    
+
+  
+  :type autoApprovedChangeRequestTypes: list
+  :param autoApprovedChangeRequestTypes: 
+
+    The types of change requests that are automatically approved for this collaboration.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type allowedResultRegions: list
+  :param allowedResultRegions: 
+
+    The Amazon Web Services Regions where collaboration query results can be stored. When specified, results can only be written to these Regions. This parameter enables you to meet your compliance and data governance requirements, and implement regional data governance policies.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type isMetricsEnabled: boolean
+  :param isMetricsEnabled: 
+
+    An indicator as to whether metrics have been enabled or disabled for the collaboration.
+
+     
+
+    When ``true``, collaboration members can opt in to Amazon CloudWatch metrics for their membership queries. The default value is ``false``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'collaboration': {
+              'id': 'string',
+              'arn': 'string',
+              'name': 'string',
+              'description': 'string',
+              'creatorAccountId': 'string',
+              'creatorDisplayName': 'string',
+              'createTime': datetime(2015, 1, 1),
+              'updateTime': datetime(2015, 1, 1),
+              'memberStatus': 'INVITED'|'ACTIVE'|'LEFT'|'REMOVED',
+              'membershipId': 'string',
+              'membershipArn': 'string',
+              'dataEncryptionMetadata': {
+                  'allowCleartext': True|False,
+                  'allowDuplicates': True|False,
+                  'allowJoinsOnColumnsWithDifferentNames': True|False,
+                  'preserveNulls': True|False
+              },
+              'queryLogStatus': 'ENABLED'|'DISABLED',
+              'jobLogStatus': 'ENABLED'|'DISABLED',
+              'analyticsEngine': 'SPARK'|'CLEAN_ROOMS_SQL',
+              'autoApprovedChangeTypes': [
+                  'ADD_MEMBER'|'GRANT_RECEIVE_RESULTS_ABILITY'|'REVOKE_RECEIVE_RESULTS_ABILITY',
+              ],
+              'allowedResultRegions': [
+                  'us-west-1'|'us-west-2'|'us-east-1'|'us-east-2'|'af-south-1'|'ap-east-1'|'ap-east-2'|'ap-south-2'|'ap-southeast-1'|'ap-southeast-2'|'ap-southeast-3'|'ap-southeast-5'|'ap-southeast-4'|'ap-southeast-7'|'ap-south-1'|'ap-northeast-3'|'ap-northeast-1'|'ap-northeast-2'|'ca-central-1'|'ca-west-1'|'eu-south-1'|'eu-west-3'|'eu-south-2'|'eu-central-2'|'eu-central-1'|'eu-north-1'|'eu-west-1'|'eu-west-2'|'me-south-1'|'me-central-1'|'il-central-1'|'sa-east-1'|'mx-central-1',
+              ],
+              'isMetricsEnabled': True|False
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **collaboration** *(dict) --* 
+
+        The collaboration.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          The unique ID for the collaboration.
+
+          
+        
+
+        - **arn** *(string) --* 
+
+          The unique ARN for the collaboration.
+
+          
+        
+
+        - **name** *(string) --* 
+
+          A human-readable identifier provided by the collaboration owner. Display names are not unique.
+
+          
+        
+
+        - **description** *(string) --* 
+
+          A description of the collaboration provided by the collaboration owner.
+
+          
+        
+
+        - **creatorAccountId** *(string) --* 
+
+          The identifier used to reference members of the collaboration. Currently only supports Amazon Web Services account ID.
+
+          
+        
+
+        - **creatorDisplayName** *(string) --* 
+
+          A display name of the collaboration creator.
+
+          
+        
+
+        - **createTime** *(datetime) --* 
+
+          The time when the collaboration was created.
+
+          
+        
+
+        - **updateTime** *(datetime) --* 
+
+          The time the collaboration metadata was last updated.
+
+          
+        
+
+        - **memberStatus** *(string) --* 
+
+          The status of a member in a collaboration.
+
+          
+        
+
+        - **membershipId** *(string) --* 
+
+          The unique ID for your membership within the collaboration.
+
+          
+        
+
+        - **membershipArn** *(string) --* 
+
+          The unique ARN for your membership within the collaboration.
+
+          
+        
+
+        - **dataEncryptionMetadata** *(dict) --* 
+
+          The settings for client-side encryption for cryptographic computing.
+
+          
+          
+
+          - **allowCleartext** *(boolean) --* 
+
+            Indicates whether encrypted tables can contain cleartext data ( ``TRUE``) or are to cryptographically process every column ( ``FALSE``).
+
+            
+          
+
+          - **allowDuplicates** *(boolean) --* 
+
+            Indicates whether Fingerprint columns can contain duplicate entries ( ``TRUE``) or are to contain only non-repeated values ( ``FALSE``).
+
+            
+          
+
+          - **allowJoinsOnColumnsWithDifferentNames** *(boolean) --* 
+
+            Indicates whether Fingerprint columns can be joined on any other Fingerprint column with a different name ( ``TRUE``) or can only be joined on Fingerprint columns of the same name ( ``FALSE``).
+
+            
+          
+
+          - **preserveNulls** *(boolean) --* 
+
+            Indicates whether NULL values are to be copied as NULL to encrypted tables ( ``TRUE``) or cryptographically processed ( ``FALSE``).
+
+            
+      
+        
+
+        - **queryLogStatus** *(string) --* 
+
+          An indicator as to whether query logging has been enabled or disabled for the collaboration.
+
+           
+
+          When ``ENABLED``, Clean Rooms logs details about queries run within this collaboration and those logs can be viewed in Amazon CloudWatch Logs. The default value is ``DISABLED``.
+
+          
+        
+
+        - **jobLogStatus** *(string) --* 
+
+          An indicator as to whether job logging has been enabled or disabled for the collaboration.
+
+           
+
+          When ``ENABLED``, Clean Rooms logs details about jobs run within this collaboration and those logs can be viewed in Amazon CloudWatch Logs. The default value is ``DISABLED``.
+
+          
+        
+
+        - **analyticsEngine** *(string) --* 
+
+          The analytics engine for the collaboration.
+
+           
+
+          .. note::
+
+            
+
+            After July 16, 2025, the ``CLEAN_ROOMS_SQL`` parameter will no longer be available.
+
+            
+
+          
+        
+
+        - **autoApprovedChangeTypes** *(list) --* 
+
+          The types of change requests that are automatically approved for this collaboration.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **allowedResultRegions** *(list) --* 
+
+          The Amazon Web Services Regions where collaboration query results can be stored. Returns the list of Region identifiers that were specified when the collaboration was created. This list is used to enforce regional storage policies and compliance requirements.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **isMetricsEnabled** *(boolean) --* 
+
+          An indicator as to whether metrics are enabled for the collaboration.
+
+           
+
+          When ``true``, collaboration members can opt in to Amazon CloudWatch metrics for their membership queries.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CleanRoomsService.Client.exceptions.AccessDeniedException`
+
+  

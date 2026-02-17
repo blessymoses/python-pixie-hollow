@@ -1,0 +1,227 @@
+:doc:`kendra <../../kendra>` / Client / describe_query_suggestions_config
+
+*********************************
+describe_query_suggestions_config
+*********************************
+
+
+
+.. py:method:: kendra.Client.describe_query_suggestions_config(**kwargs)
+
+  
+
+  Gets information on the settings of query suggestions for an index.
+
+   
+
+  This is used to check the current settings applied to query suggestions.
+
+   
+
+  ``DescribeQuerySuggestionsConfig`` is currently not supported in the Amazon Web Services GovCloud (US-West) region.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kendra-2019-02-03/DescribeQuerySuggestionsConfig>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_query_suggestions_config(
+        IndexId='string'
+    )
+    
+  :type IndexId: string
+  :param IndexId: **[REQUIRED]** 
+
+    The identifier of the index with query suggestions that you want to get information on.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Mode': 'ENABLED'|'LEARN_ONLY',
+          'Status': 'ACTIVE'|'UPDATING',
+          'QueryLogLookBackWindowInDays': 123,
+          'IncludeQueriesWithoutUserInformation': True|False,
+          'MinimumNumberOfQueryingUsers': 123,
+          'MinimumQueryCount': 123,
+          'LastSuggestionsBuildTime': datetime(2015, 1, 1),
+          'LastClearTime': datetime(2015, 1, 1),
+          'TotalSuggestionsCount': 123,
+          'AttributeSuggestionsConfig': {
+              'SuggestableConfigList': [
+                  {
+                      'AttributeName': 'string',
+                      'Suggestable': True|False
+                  },
+              ],
+              'AttributeSuggestionsMode': 'ACTIVE'|'INACTIVE'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Mode** *(string) --* 
+
+        Whether query suggestions are currently in ``ENABLED`` mode or ``LEARN_ONLY`` mode.
+
+         
+
+        By default, Amazon Kendra enables query suggestions. ``LEARN_ONLY`` turns off query suggestions for your users. You can change the mode using the `UpdateQuerySuggestionsConfig <https://docs.aws.amazon.com/kendra/latest/dg/API_UpdateQuerySuggestionsConfig.html>`__ API.
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        Whether the status of query suggestions settings is currently ``ACTIVE`` or ``UPDATING``.
+
+         
+
+        Active means the current settings apply and Updating means your changed settings are in the process of applying.
+
+        
+      
+
+      - **QueryLogLookBackWindowInDays** *(integer) --* 
+
+        How recent your queries are in your query log time window (in days).
+
+        
+      
+
+      - **IncludeQueriesWithoutUserInformation** *(boolean) --* 
+
+        ``TRUE`` to use all queries, otherwise use only queries that include user information to generate the query suggestions.
+
+        
+      
+
+      - **MinimumNumberOfQueryingUsers** *(integer) --* 
+
+        The minimum number of unique users who must search a query in order for the query to be eligible to suggest to your users.
+
+        
+      
+
+      - **MinimumQueryCount** *(integer) --* 
+
+        The minimum number of times a query must be searched in order for the query to be eligible to suggest to your users.
+
+        
+      
+
+      - **LastSuggestionsBuildTime** *(datetime) --* 
+
+        The Unix timestamp when query suggestions for an index was last updated.
+
+         
+
+        Amazon Kendra automatically updates suggestions every 24 hours, after you change a setting or after you apply a `block list <https://docs.aws.amazon.com/kendra/latest/dg/query-suggestions.html#query-suggestions-blocklist>`__.
+
+        
+      
+
+      - **LastClearTime** *(datetime) --* 
+
+        The Unix timestamp when query suggestions for an index was last cleared.
+
+         
+
+        After you clear suggestions, Amazon Kendra learns new suggestions based on new queries added to the query log from the time you cleared suggestions. Amazon Kendra only considers re-occurences of a query from the time you cleared suggestions.
+
+        
+      
+
+      - **TotalSuggestionsCount** *(integer) --* 
+
+        The current total count of query suggestions for an index.
+
+         
+
+        This count can change when you update your query suggestions settings, if you filter out certain queries from suggestions using a block list, and as the query log accumulates more queries for Amazon Kendra to learn from.
+
+         
+
+        If the count is much lower than you expected, it could be because Amazon Kendra needs more queries in the query history to learn from or your current query suggestions settings are too strict.
+
+        
+      
+
+      - **AttributeSuggestionsConfig** *(dict) --* 
+
+        Configuration information for the document fields/attributes that you want to base query suggestions on.
+
+        
+        
+
+        - **SuggestableConfigList** *(list) --* 
+
+          The list of fields/attributes that you want to set as suggestible for query suggestions.
+
+          
+          
+
+          - *(dict) --* 
+
+            Provides the configuration information for a document field/attribute that you want to base query suggestions on.
+
+            
+            
+
+            - **AttributeName** *(string) --* 
+
+              The name of the document field/attribute.
+
+              
+            
+
+            - **Suggestable** *(boolean) --* 
+
+              ``TRUE`` means the document field/attribute is suggestible, so the contents within the field can be used for query suggestions.
+
+              
+        
+      
+        
+
+        - **AttributeSuggestionsMode** *(string) --* 
+
+          The mode is set to either ``ACTIVE`` or ``INACTIVE``. If the ``Mode`` for query history is set to ``ENABLED`` when calling `UpdateQuerySuggestionsConfig <https://docs.aws.amazon.com/kendra/latest/dg/API_UpdateQuerySuggestionsConfig.html>`__ and ``AttributeSuggestionsMode`` to use fields/attributes is set to ``ACTIVE``, and you haven't set your ``SuggestionTypes`` preference to ``DOCUMENT_ATTRIBUTES``, then Amazon Kendra uses the query history.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`kendra.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.InternalServerException`
+
+  

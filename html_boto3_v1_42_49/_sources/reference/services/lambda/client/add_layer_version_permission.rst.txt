@@ -1,0 +1,178 @@
+:doc:`Lambda <../../lambda>` / Client / add_layer_version_permission
+
+****************************
+add_layer_version_permission
+****************************
+
+
+
+.. py:method:: Lambda.Client.add_layer_version_permission(**kwargs)
+
+  
+
+  Adds permissions to the resource-based policy of a version of an `Lambda layer <https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html>`__. Use this action to grant layer usage permission to other accounts. You can grant permission to a single account, all accounts in an organization, or all Amazon Web Services accounts.
+
+   
+
+  To revoke permission, call  RemoveLayerVersionPermission with the statement ID that you specified when you added it.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/AddLayerVersionPermission>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.add_layer_version_permission(
+        LayerName='string',
+        VersionNumber=123,
+        StatementId='string',
+        Action='string',
+        Principal='string',
+        OrganizationId='string',
+        RevisionId='string'
+    )
+    
+  :type LayerName: string
+  :param LayerName: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of the layer.
+
+    
+
+  
+  :type VersionNumber: integer
+  :param VersionNumber: **[REQUIRED]** 
+
+    The version number.
+
+    
+
+  
+  :type StatementId: string
+  :param StatementId: **[REQUIRED]** 
+
+    An identifier that distinguishes the policy from others on the same layer version.
+
+    
+
+  
+  :type Action: string
+  :param Action: **[REQUIRED]** 
+
+    The API action that grants access to the layer. For example, ``lambda:GetLayerVersion``.
+
+    
+
+  
+  :type Principal: string
+  :param Principal: **[REQUIRED]** 
+
+    An account ID, or ``*`` to grant layer usage permission to all accounts in an organization, or all Amazon Web Services accounts (if ``organizationId`` is not specified). For the last case, make sure that you really do want all Amazon Web Services accounts to have usage permission to this layer.
+
+    
+
+  
+  :type OrganizationId: string
+  :param OrganizationId: 
+
+    With the principal set to ``*``, grant permission to all accounts in the specified organization.
+
+    
+
+  
+  :type RevisionId: string
+  :param RevisionId: 
+
+    Only update the policy if the revision ID matches the ID specified. Use this option to avoid modifying a policy that has changed since you last read it.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Statement': 'string',
+          'RevisionId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Statement** *(string) --* 
+
+        The permission statement.
+
+        
+      
+
+      - **RevisionId** *(string) --* 
+
+        A unique identifier for the current revision of the policy.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Lambda.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.ResourceConflictException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.PolicyLengthExceededException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Lambda.Client.exceptions.PreconditionFailedException`
+
+  
+
+  **Examples**
+
+  The following example grants permission for the account 223456789012 to use version 1 of a layer named my-layer.
+  ::
+
+    response = client.add_layer_version_permission(
+        Action='lambda:GetLayerVersion',
+        LayerName='my-layer',
+        Principal='223456789012',
+        StatementId='xaccount',
+        VersionNumber=1,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'RevisionId': '35d87451-f796-4a3f-a618-95a3671b0a0c',
+        'Statement': '{"Sid":"xaccount","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::223456789012:root"},"Action":"lambda:GetLayerVersion","Resource":"arn:aws:lambda:us-east-2:123456789012:layer:my-layer:1"}',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

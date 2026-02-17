@@ -1,0 +1,366 @@
+:doc:`DocDB <../../docdb>` / Client / create_global_cluster
+
+*********************
+create_global_cluster
+*********************
+
+
+
+.. py:method:: DocDB.Client.create_global_cluster(**kwargs)
+
+  
+
+  Creates an Amazon DocumentDB global cluster that can span multiple multiple Amazon Web Services Regions. The global cluster contains one primary cluster with read-write capability, and up-to 10 read-only secondary clusters. Global clusters uses storage-based fast replication across regions with latencies less than one second, using dedicated infrastructure with no impact to your workload’s performance.
+
+   
+
+  
+
+   
+
+  You can create a global cluster that is initially empty, and then add a primary and a secondary to it. Or you can specify an existing cluster during the create operation, and this cluster becomes the primary of the global cluster.
+
+   
+
+  .. note::
+
+    
+
+    This action only applies to Amazon DocumentDB clusters.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/docdb-2014-10-31/CreateGlobalCluster>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_global_cluster(
+        GlobalClusterIdentifier='string',
+        SourceDBClusterIdentifier='string',
+        Engine='string',
+        EngineVersion='string',
+        DeletionProtection=True|False,
+        DatabaseName='string',
+        StorageEncrypted=True|False
+    )
+    
+  :type GlobalClusterIdentifier: string
+  :param GlobalClusterIdentifier: **[REQUIRED]** 
+
+    The cluster identifier of the new global cluster.
+
+    
+
+  
+  :type SourceDBClusterIdentifier: string
+  :param SourceDBClusterIdentifier: 
+
+    The Amazon Resource Name (ARN) to use as the primary cluster of the global cluster. This parameter is optional.
+
+    
+
+  
+  :type Engine: string
+  :param Engine: 
+
+    The name of the database engine to be used for this cluster.
+
+    
+
+  
+  :type EngineVersion: string
+  :param EngineVersion: 
+
+    The engine version of the global cluster.
+
+    
+
+  
+  :type DeletionProtection: boolean
+  :param DeletionProtection: 
+
+    The deletion protection setting for the new global cluster. The global cluster can't be deleted when deletion protection is enabled.
+
+    
+
+  
+  :type DatabaseName: string
+  :param DatabaseName: 
+
+    The name for your database of up to 64 alpha-numeric characters. If you do not provide a name, Amazon DocumentDB will not create a database in the global cluster you are creating.
+
+    
+
+  
+  :type StorageEncrypted: boolean
+  :param StorageEncrypted: 
+
+    The storage encryption setting for the new global cluster.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GlobalCluster': {
+              'GlobalClusterIdentifier': 'string',
+              'GlobalClusterResourceId': 'string',
+              'GlobalClusterArn': 'string',
+              'Status': 'string',
+              'Engine': 'string',
+              'EngineVersion': 'string',
+              'DatabaseName': 'string',
+              'StorageEncrypted': True|False,
+              'DeletionProtection': True|False,
+              'GlobalClusterMembers': [
+                  {
+                      'DBClusterArn': 'string',
+                      'Readers': [
+                          'string',
+                      ],
+                      'IsWriter': True|False,
+                      'SynchronizationStatus': 'connected'|'pending-resync'
+                  },
+              ],
+              'FailoverState': {
+                  'Status': 'pending'|'failing-over'|'cancelling',
+                  'FromDbClusterArn': 'string',
+                  'ToDbClusterArn': 'string',
+                  'IsDataLossAllowed': True|False
+              },
+              'TagList': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GlobalCluster** *(dict) --* 
+
+        A data type representing an Amazon DocumentDB global cluster.
+
+        
+        
+
+        - **GlobalClusterIdentifier** *(string) --* 
+
+          Contains a user-supplied global cluster identifier. This identifier is the unique key that identifies a global cluster.
+
+          
+        
+
+        - **GlobalClusterResourceId** *(string) --* 
+
+          The Amazon Web Services RegionRegion-unique, immutable identifier for the global database cluster. This identifier is found in CloudTrail log entries whenever the KMS customer master key (CMK) for the cluster is accessed.
+
+          
+        
+
+        - **GlobalClusterArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) for the global cluster.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          Specifies the current state of this global cluster.
+
+          
+        
+
+        - **Engine** *(string) --* 
+
+          The Amazon DocumentDB database engine used by the global cluster.
+
+          
+        
+
+        - **EngineVersion** *(string) --* 
+
+          Indicates the database engine version.
+
+          
+        
+
+        - **DatabaseName** *(string) --* 
+
+          The default database name within the new global cluster.
+
+          
+        
+
+        - **StorageEncrypted** *(boolean) --* 
+
+          The storage encryption setting for the global cluster.
+
+          
+        
+
+        - **DeletionProtection** *(boolean) --* 
+
+          The deletion protection setting for the new global cluster.
+
+          
+        
+
+        - **GlobalClusterMembers** *(list) --* 
+
+          The list of cluster IDs for secondary clusters within the global cluster. Currently limited to one item.
+
+          
+          
+
+          - *(dict) --* 
+
+            A data structure with information about any primary and secondary clusters associated with an Amazon DocumentDB global clusters.
+
+            
+            
+
+            - **DBClusterArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) for each Amazon DocumentDB cluster.
+
+              
+            
+
+            - **Readers** *(list) --* 
+
+              The Amazon Resource Name (ARN) for each read-only secondary cluster associated with the Amazon DocumentDB global cluster.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **IsWriter** *(boolean) --* 
+
+              Specifies whether the Amazon DocumentDB cluster is the primary cluster (that is, has read-write capability) for the Amazon DocumentDB global cluster with which it is associated.
+
+              
+            
+
+            - **SynchronizationStatus** *(string) --* 
+
+              The status of synchronization of each Amazon DocumentDB cluster in the global cluster.
+
+              
+        
+      
+        
+
+        - **FailoverState** *(dict) --* 
+
+          A data object containing all properties for the current state of an in-process or pending switchover or failover process for this global cluster. This object is empty unless the ``SwitchoverGlobalCluster`` or ``FailoverGlobalCluster`` operation was called on this global cluster.
+
+          
+          
+
+          - **Status** *(string) --* 
+
+            The current status of the global cluster. Possible values are as follows:
+
+             
+
+            
+            * **pending** – The service received a request to switch over or fail over the global cluster. The global cluster's primary cluster and the specified secondary cluster are being verified before the operation starts.
+             
+            * **failing-over** – The chosen secondary cluster is being promoted to become the new primary cluster to fail over the global cluster.
+             
+            * **cancelling** – The request to switch over or fail over the global cluster was cancelled and the primary cluster and the selected secondary cluster are returning to their previous states.
+            
+
+            
+          
+
+          - **FromDbClusterArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Amazon DocumentDB cluster that is currently being demoted, and which is associated with this state.
+
+            
+          
+
+          - **ToDbClusterArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Amazon DocumentDB cluster that is currently being promoted, and which is associated with this state.
+
+            
+          
+
+          - **IsDataLossAllowed** *(boolean) --* 
+
+            Indicates whether the operation is a global switchover or a global failover. If data loss is allowed, then the operation is a global failover. Otherwise, it's a switchover.
+
+            
+      
+        
+
+        - **TagList** *(list) --* 
+
+          A list of global cluster tags.
+
+          
+          
+
+          - *(dict) --* 
+
+            Metadata assigned to an Amazon DocumentDB resource consisting of a key-value pair.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with " ``aws:``" or " ``rds:``". The string can contain only the set of Unicode letters, digits, white space, '_', '.', '/', '=', '+', '-' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-]*)$").
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with " ``aws:``" or " ``rds:``". The string can contain only the set of Unicode letters, digits, white space, '_', '.', '/', '=', '+', '-' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-]*)$").
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`DocDB.Client.exceptions.GlobalClusterAlreadyExistsFault`
+
+  
+  *   :py:class:`DocDB.Client.exceptions.GlobalClusterQuotaExceededFault`
+
+  
+  *   :py:class:`DocDB.Client.exceptions.InvalidDBClusterStateFault`
+
+  
+  *   :py:class:`DocDB.Client.exceptions.DBClusterNotFoundFault`
+
+  

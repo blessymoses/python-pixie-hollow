@@ -1,0 +1,309 @@
+:doc:`StorageGateway <../../storagegateway>` / Client / describe_tapes
+
+**************
+describe_tapes
+**************
+
+
+
+.. py:method:: StorageGateway.Client.describe_tapes(**kwargs)
+
+  
+
+  Returns a description of virtual tapes that correspond to the specified Amazon Resource Names (ARNs). If ``TapeARN`` is not specified, returns a description of the virtual tapes associated with the specified gateway. This operation is only supported for the tape gateway type.
+
+   
+
+  The operation supports pagination. By default, the operation returns a maximum of up to 100 tapes. You can optionally specify the ``Limit`` field in the body to limit the number of tapes in the response. If the number of tapes returned in the response is truncated, the response includes a ``Marker`` field. You can use this ``Marker`` value in your subsequent request to retrieve the next set of tapes.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DescribeTapes>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_tapes(
+        GatewayARN='string',
+        TapeARNs=[
+            'string',
+        ],
+        Marker='string',
+        Limit=123
+    )
+    
+  :type GatewayARN: string
+  :param GatewayARN: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the gateway. Use the  ListGateways operation to return a list of gateways for your account and Amazon Web Services Region.
+
+    
+
+  
+  :type TapeARNs: list
+  :param TapeARNs: 
+
+    Specifies one or more unique Amazon Resource Names (ARNs) that represent the virtual tapes you want to describe. If this parameter is not specified, Tape gateway returns a description of all virtual tapes associated with the specified gateway.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type Marker: string
+  :param Marker: 
+
+    A marker value, obtained in a previous call to ``DescribeTapes``. This marker indicates which page of results to retrieve.
+
+     
+
+    If not specified, the first page of results is retrieved.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    Specifies that the number of virtual tapes described be limited to the specified number.
+
+     
+
+    .. note::
+
+      
+
+      Amazon Web Services may impose its own limit, if this field is not set.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Tapes': [
+              {
+                  'TapeARN': 'string',
+                  'TapeBarcode': 'string',
+                  'TapeCreatedDate': datetime(2015, 1, 1),
+                  'TapeSizeInBytes': 123,
+                  'TapeStatus': 'string',
+                  'VTLDevice': 'string',
+                  'Progress': 123.0,
+                  'TapeUsedInBytes': 123,
+                  'KMSKey': 'string',
+                  'PoolId': 'string',
+                  'Worm': True|False,
+                  'RetentionStartDate': datetime(2015, 1, 1),
+                  'PoolEntryDate': datetime(2015, 1, 1)
+              },
+          ],
+          'Marker': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      DescribeTapesOutput
+
+      
+      
+
+      - **Tapes** *(list) --* 
+
+        An array of virtual tape descriptions.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a virtual tape object.
+
+          
+          
+
+          - **TapeARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the virtual tape.
+
+            
+          
+
+          - **TapeBarcode** *(string) --* 
+
+            The barcode that identifies a specific virtual tape.
+
+            
+          
+
+          - **TapeCreatedDate** *(datetime) --* 
+
+            The date the virtual tape was created.
+
+            
+          
+
+          - **TapeSizeInBytes** *(integer) --* 
+
+            The size, in bytes, of the virtual tape capacity.
+
+            
+          
+
+          - **TapeStatus** *(string) --* 
+
+            The current state of the virtual tape.
+
+            
+          
+
+          - **VTLDevice** *(string) --* 
+
+            The virtual tape library (VTL) device that the virtual tape is associated with.
+
+            
+          
+
+          - **Progress** *(float) --* 
+
+            For archiving virtual tapes, indicates how much data remains to be uploaded before archiving is complete.
+
+             
+
+            Range: 0 (not started) to 100 (complete).
+
+            
+          
+
+          - **TapeUsedInBytes** *(integer) --* 
+
+            The size, in bytes, of data stored on the virtual tape.
+
+             
+
+            .. note::
+
+              
+
+              This value is not available for tapes created prior to May 13, 2015.
+
+              
+
+            
+          
+
+          - **KMSKey** *(string) --* 
+
+            Optional. The Amazon Resource Name (ARN) of a symmetric customer master key (CMK) used for Amazon S3 server-side encryption. Storage Gateway does not support asymmetric CMKs. This value must be set if ``KMSEncrypted`` is ``true``, or if ``EncryptionType`` is ``SseKms`` or ``DsseKms``.
+
+            
+          
+
+          - **PoolId** *(string) --* 
+
+            The ID of the pool that contains tapes that will be archived. The tapes in this pool are archived in the S3 storage class that is associated with the pool. When you use your backup application to eject the tape, the tape is archived directly into the storage class (S3 Glacier or S3 Glacier Deep Archive) that corresponds to the pool.
+
+            
+          
+
+          - **Worm** *(boolean) --* 
+
+            If the tape is archived as write-once-read-many (WORM), this value is ``true``.
+
+            
+          
+
+          - **RetentionStartDate** *(datetime) --* 
+
+            The date that the tape is first archived with tape retention lock enabled.
+
+            
+          
+
+          - **PoolEntryDate** *(datetime) --* 
+
+            The date that the tape enters a custom tape pool.
+
+            
+      
+    
+      
+
+      - **Marker** *(string) --* 
+
+        An opaque string that can be used as part of a subsequent ``DescribeTapes`` call to retrieve the next page of results.
+
+         
+
+        If a response does not contain a marker, then there are no more results to be retrieved.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InvalidGatewayRequestException`
+
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InternalServerError`
+
+  
+
+  **Examples**
+
+  Returns a description of the specified Amazon Resource Name (ARN) of virtual tapes. If a TapeARN is not specified, returns a description of all virtual tapes.
+  ::
+
+    response = client.describe_tapes(
+        GatewayARN='arn:aws:storagegateway:us-east-1:999999999999:gateway/sgw-12A3456B',
+        Limit=2,
+        Marker='1',
+        TapeARNs=[
+            'arn:aws:storagegateway:us-east-1:999999999999:tape/TEST04A2A1',
+            'arn:aws:storagegateway:us-east-1:999999999999:tape/TEST05A2A0',
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Marker': '1',
+        'Tapes': [
+            {
+                'TapeARN': 'arn:aws:storagegateway:us-east-1:999999999999:tape/TEST04A2A1',
+                'TapeBarcode': 'TEST04A2A1',
+                'TapeSizeInBytes': 107374182400,
+                'TapeStatus': 'AVAILABLE',
+            },
+            {
+                'TapeARN': 'arn:aws:storagegateway:us-east-1:999999999999:tape/TEST05A2A0',
+                'TapeBarcode': 'TEST05A2A0',
+                'TapeSizeInBytes': 107374182400,
+                'TapeStatus': 'AVAILABLE',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

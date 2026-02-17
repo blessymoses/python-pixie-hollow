@@ -1,0 +1,328 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / put_log_events
+
+**************
+put_log_events
+**************
+
+
+
+.. py:method:: CloudWatchLogs.Client.put_log_events(**kwargs)
+
+  
+
+  Uploads a batch of log events to the specified log stream.
+
+   
+
+  .. warning::
+
+     
+
+    The sequence token is now ignored in ``PutLogEvents`` actions. ``PutLogEvents`` actions are always accepted and never return ``InvalidSequenceTokenException`` or ``DataAlreadyAcceptedException`` even if the sequence token is not valid. You can use parallel ``PutLogEvents`` actions on the same log stream.
+
+     
+
+   
+
+  The batch of events must satisfy the following constraints:
+
+   
+
+  
+  * The maximum batch size is 1,048,576 bytes. This size is calculated as the sum of all event messages in UTF-8, plus 26 bytes for each log event.
+   
+  * Events more than 2 hours in the future are rejected while processing remaining valid events.
+   
+  * Events older than 14 days or preceding the log group's retention period are rejected while processing remaining valid events.
+   
+  * The log events in the batch must be in chronological order by their timestamp. The timestamp is the time that the event occurred, expressed as the number of milliseconds after ``Jan 1, 1970 00:00:00 UTC``. (In Amazon Web Services Tools for PowerShell and the Amazon Web Services SDK for .NET, the timestamp is specified in .NET format: ``yyyy-mm-ddThh:mm:ss``. For example, ``2017-09-15T13:45:30``.)
+   
+  * A batch of log events in a single request must be in a chronological order. Otherwise, the operation fails.
+   
+  * Each log event can be no larger than 1 MB.
+   
+  * The maximum number of log events in a batch is 10,000.
+   
+  * For valid events (within 14 days in the past to 2 hours in future), the time span in a single batch cannot exceed 24 hours. Otherwise, the operation fails.
+  
+
+   
+
+  .. warning::
+
+     
+
+    The quota of five requests per second per log stream has been removed. Instead, ``PutLogEvents`` actions are throttled based on a per-second per-account quota. You can request an increase to the per-second throttling quota by using the Service Quotas service.
+
+     
+
+   
+
+  If a call to ``PutLogEvents`` returns "UnrecognizedClientException" the most likely cause is a non-valid Amazon Web Services access key ID or secret key.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/PutLogEvents>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_log_events(
+        logGroupName='string',
+        logStreamName='string',
+        logEvents=[
+            {
+                'timestamp': 123,
+                'message': 'string'
+            },
+        ],
+        sequenceToken='string',
+        entity={
+            'keyAttributes': {
+                'string': 'string'
+            },
+            'attributes': {
+                'string': 'string'
+            }
+        }
+    )
+    
+  :type logGroupName: string
+  :param logGroupName: **[REQUIRED]** 
+
+    The name of the log group.
+
+    
+
+  
+  :type logStreamName: string
+  :param logStreamName: **[REQUIRED]** 
+
+    The name of the log stream.
+
+    
+
+  
+  :type logEvents: list
+  :param logEvents: **[REQUIRED]** 
+
+    The log events.
+
+    
+
+  
+    - *(dict) --* 
+
+      Represents a log event, which is a record of activity that was recorded by the application or resource being monitored.
+
+      
+
+    
+      - **timestamp** *(integer) --* **[REQUIRED]** 
+
+        The time the event occurred, expressed as the number of milliseconds after ``Jan 1, 1970 00:00:00 UTC``.
+
+        
+
+      
+      - **message** *(string) --* **[REQUIRED]** 
+
+        The raw event message. Each log event can be no larger than 1 MB.
+
+        
+
+      
+    
+
+  :type sequenceToken: string
+  :param sequenceToken: 
+
+    The sequence token obtained from the response of the previous ``PutLogEvents`` call.
+
+     
+
+    .. warning::
+
+       
+
+      The ``sequenceToken`` parameter is now ignored in ``PutLogEvents`` actions. ``PutLogEvents`` actions are now accepted and never return ``InvalidSequenceTokenException`` or ``DataAlreadyAcceptedException`` even if the sequence token is not valid.
+
+      
+
+    
+
+  
+  :type entity: dict
+  :param entity: 
+
+    The entity associated with the log events.
+
+    
+
+  
+    - **keyAttributes** *(dict) --* 
+
+      The attributes of the entity which identify the specific entity, as a list of key-value pairs. Entities with the same ``keyAttributes`` are considered to be the same entity.
+
+       
+
+      There are five allowed attributes (key names): ``Type``, ``ResourceType``, ``Identifier`` ``Name``, and ``Environment``.
+
+       
+
+      For details about how to use the key attributes, see `How to add related information to telemetry <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/adding-your-own-related-telemetry.html>`__ in the *CloudWatch User Guide*.
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+    - **attributes** *(dict) --* 
+
+      Additional attributes of the entity that are not used to specify the identity of the entity. A list of key-value pairs.
+
+       
+
+      For details about how to use the attributes, see `How to add related information to telemetry <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/adding-your-own-related-telemetry.html>`__ in the *CloudWatch User Guide*.
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'nextSequenceToken': 'string',
+          'rejectedLogEventsInfo': {
+              'tooNewLogEventStartIndex': 123,
+              'tooOldLogEventEndIndex': 123,
+              'expiredLogEventEndIndex': 123
+          },
+          'rejectedEntityInfo': {
+              'errorType': 'InvalidEntity'|'InvalidTypeValue'|'InvalidKeyAttributes'|'InvalidAttributes'|'EntitySizeTooLarge'|'UnsupportedLogGroupType'|'MissingRequiredFields'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **nextSequenceToken** *(string) --* 
+
+        The next sequence token.
+
+         
+
+        .. warning::
+
+           
+
+          This field has been deprecated.
+
+           
+
+          The sequence token is now ignored in ``PutLogEvents`` actions. ``PutLogEvents`` actions are always accepted even if the sequence token is not valid. You can use parallel ``PutLogEvents`` actions on the same log stream and you do not need to wait for the response of a previous ``PutLogEvents`` action to obtain the ``nextSequenceToken`` value.
+
+          
+
+        
+      
+
+      - **rejectedLogEventsInfo** *(dict) --* 
+
+        The rejected events.
+
+        
+        
+
+        - **tooNewLogEventStartIndex** *(integer) --* 
+
+          The index of the first log event that is too new. This field is inclusive.
+
+          
+        
+
+        - **tooOldLogEventEndIndex** *(integer) --* 
+
+          The index of the last log event that is too old. This field is exclusive.
+
+          
+        
+
+        - **expiredLogEventEndIndex** *(integer) --* 
+
+          The expired log events.
+
+          
+    
+      
+
+      - **rejectedEntityInfo** *(dict) --* 
+
+        Information about why the entity is rejected when calling ``PutLogEvents``. Only returned when the entity is rejected.
+
+         
+
+        .. note::
+
+          
+
+          When the entity is rejected, the events may still be accepted.
+
+          
+
+        
+        
+
+        - **errorType** *(string) --* 
+
+          The type of error that caused the rejection of the entity when calling ``PutLogEvents``.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidSequenceTokenException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.DataAlreadyAcceptedException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.UnrecognizedClientException`
+
+  

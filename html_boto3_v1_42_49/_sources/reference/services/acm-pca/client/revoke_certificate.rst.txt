@@ -1,0 +1,119 @@
+:doc:`ACMPCA <../../acm-pca>` / Client / revoke_certificate
+
+******************
+revoke_certificate
+******************
+
+
+
+.. py:method:: ACMPCA.Client.revoke_certificate(**kwargs)
+
+  
+
+  Revokes a certificate that was issued inside Amazon Web Services Private CA. If you enable a certificate revocation list (CRL) when you create or update your private CA, information about the revoked certificates will be included in the CRL. Amazon Web Services Private CA writes the CRL to an S3 bucket that you specify. A CRL is typically updated approximately 30 minutes after a certificate is revoked. If for any reason the CRL update fails, Amazon Web Services Private CA attempts makes further attempts every 15 minutes. With Amazon CloudWatch, you can create alarms for the metrics ``CRLGenerated`` and ``MisconfiguredCRLBucket``. For more information, see `Supported CloudWatch Metrics <https://docs.aws.amazon.com/privateca/latest/userguide/PcaCloudWatch.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    Both Amazon Web Services Private CA and the IAM principal must have permission to write to the S3 bucket that you specify. If the IAM principal making the call does not have permission to write to the bucket, then an exception is thrown. For more information, see `Access policies for CRLs in Amazon S3 <https://docs.aws.amazon.com/privateca/latest/userguide/crl-planning.html#s3-policies>`__.
+
+    
+
+   
+
+  Amazon Web Services Private CA also writes revocation information to the audit report. For more information, see `CreateCertificateAuthorityAuditReport <https://docs.aws.amazon.com/privateca/latest/APIReference/API_CreateCertificateAuthorityAuditReport.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    You cannot revoke a root CA self-signed certificate.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/RevokeCertificate>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.revoke_certificate(
+        CertificateAuthorityArn='string',
+        CertificateSerial='string',
+        RevocationReason='UNSPECIFIED'|'KEY_COMPROMISE'|'CERTIFICATE_AUTHORITY_COMPROMISE'|'AFFILIATION_CHANGED'|'SUPERSEDED'|'CESSATION_OF_OPERATION'|'PRIVILEGE_WITHDRAWN'|'A_A_COMPROMISE'
+    )
+    
+  :type CertificateAuthorityArn: string
+  :param CertificateAuthorityArn: **[REQUIRED]** 
+
+    Amazon Resource Name (ARN) of the private CA that issued the certificate to be revoked. This must be of the form:
+
+     
+
+    ``arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012``
+
+    
+
+  
+  :type CertificateSerial: string
+  :param CertificateSerial: **[REQUIRED]** 
+
+    Serial number of the certificate to be revoked. This must be in hexadecimal format. You can retrieve the serial number by calling `GetCertificate <https://docs.aws.amazon.com/privateca/latest/APIReference/API_GetCertificate.html>`__ with the Amazon Resource Name (ARN) of the certificate you want and the ARN of your private CA. The **GetCertificate** action retrieves the certificate in the PEM format. You can use the following OpenSSL command to list the certificate in text format and copy the hexadecimal serial number.
+
+     
+
+    ``openssl x509 -in file_path -text -noout``
+
+     
+
+    You can also copy the serial number from the console or use the `DescribeCertificate <https://docs.aws.amazon.com/acm/latest/APIReference/API_DescribeCertificate.html>`__ action in the *Certificate Manager API Reference*.
+
+    
+
+  
+  :type RevocationReason: string
+  :param RevocationReason: **[REQUIRED]** 
+
+    Specifies why you revoked the certificate.
+
+    
+
+  
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`ACMPCA.Client.exceptions.RequestAlreadyProcessedException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.InvalidArnException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.InvalidStateException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.RequestFailedException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`ACMPCA.Client.exceptions.RequestInProgressException`
+
+  

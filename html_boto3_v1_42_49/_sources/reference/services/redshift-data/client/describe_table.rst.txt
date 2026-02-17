@@ -1,0 +1,312 @@
+:doc:`RedshiftDataAPIService <../../redshift-data>` / Client / describe_table
+
+**************
+describe_table
+**************
+
+
+
+.. py:method:: RedshiftDataAPIService.Client.describe_table(**kwargs)
+
+  
+
+  Describes the detailed information about a table from metadata in the cluster. The information includes its columns. A token is returned to page through the column list. Depending on the authorization method, use one of the following combinations of request parameters:
+
+   
+
+  
+  * Secrets Manager - when connecting to a cluster, provide the ``secret-arn`` of a secret stored in Secrets Manager which has ``username`` and ``password``. The specified secret contains credentials to connect to the ``database`` you specify. When you are connecting to a cluster, you also supply the database name, If you provide a cluster identifier ( ``dbClusterIdentifier``), it must match the cluster identifier stored in the secret. When you are connecting to a serverless workgroup, you also supply the database name.
+   
+  * Temporary credentials - when connecting to your data warehouse, choose one of the following options: 
+
+    
+    * When connecting to a serverless workgroup, specify the workgroup name and database name. The database user name is derived from the IAM identity. For example, ``arn:iam::123456789012:user:foo`` has the database user name ``IAM:foo``. Also, permission to call the ``redshift-serverless:GetCredentials`` operation is required.
+     
+    * When connecting to a cluster as an IAM identity, specify the cluster identifier and the database name. The database user name is derived from the IAM identity. For example, ``arn:iam::123456789012:user:foo`` has the database user name ``IAM:foo``. Also, permission to call the ``redshift:GetClusterCredentialsWithIAM`` operation is required.
+     
+    * When connecting to a cluster as a database user, specify the cluster identifier, the database name, and the database user name. Also, permission to call the ``redshift:GetClusterCredentials`` operation is required.
+    
+
+  
+  
+
+   
+
+  For more information about the Amazon Redshift Data API and CLI usage examples, see `Using the Amazon Redshift Data API <https://docs.aws.amazon.com/redshift/latest/mgmt/data-api.html>`__ in the *Amazon Redshift Management Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/redshift-data-2019-12-20/DescribeTable>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_table(
+        ClusterIdentifier='string',
+        SecretArn='string',
+        DbUser='string',
+        Database='string',
+        ConnectedDatabase='string',
+        Schema='string',
+        Table='string',
+        NextToken='string',
+        MaxResults=123,
+        WorkgroupName='string'
+    )
+    
+  :type ClusterIdentifier: string
+  :param ClusterIdentifier: 
+
+    The cluster identifier. This parameter is required when connecting to a cluster and authenticating using either Secrets Manager or temporary credentials.
+
+    
+
+  
+  :type SecretArn: string
+  :param SecretArn: 
+
+    The name or ARN of the secret that enables access to the database. This parameter is required when authenticating using Secrets Manager.
+
+    
+
+  
+  :type DbUser: string
+  :param DbUser: 
+
+    The database user name. This parameter is required when connecting to a cluster as a database user and authenticating using temporary credentials.
+
+    
+
+  
+  :type Database: string
+  :param Database: **[REQUIRED]** 
+
+    The name of the database that contains the tables to be described. If ``ConnectedDatabase`` is not specified, this is also the database to connect to with your authentication credentials.
+
+    
+
+  
+  :type ConnectedDatabase: string
+  :param ConnectedDatabase: 
+
+    A database name. The connected database is specified when you connect with your authentication credentials.
+
+    
+
+  
+  :type Schema: string
+  :param Schema: 
+
+    The schema that contains the table. If no schema is specified, then matching tables for all schemas are returned.
+
+    
+
+  
+  :type Table: string
+  :param Table: 
+
+    The table name. If no table is specified, then all tables for all matching schemas are returned. If no table and no schema is specified, then all tables for all schemas in the database are returned
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A value that indicates the starting point for the next set of response records in a subsequent request. If a value is returned in a response, you can retrieve the next set of records by providing this returned NextToken value in the next NextToken parameter and retrying the command. If the NextToken field is empty, all response records have been retrieved for the request.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of tables to return in the response. If more tables exist than fit in one response, then ``NextToken`` is returned to page through the results.
+
+    
+
+  
+  :type WorkgroupName: string
+  :param WorkgroupName: 
+
+    The serverless workgroup name or Amazon Resource Name (ARN). This parameter is required when connecting to a serverless workgroup and authenticating using either Secrets Manager or temporary credentials.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'TableName': 'string',
+          'ColumnList': [
+              {
+                  'isCaseSensitive': True|False,
+                  'isCurrency': True|False,
+                  'isSigned': True|False,
+                  'label': 'string',
+                  'name': 'string',
+                  'nullable': 123,
+                  'precision': 123,
+                  'scale': 123,
+                  'schemaName': 'string',
+                  'tableName': 'string',
+                  'typeName': 'string',
+                  'length': 123,
+                  'columnDefault': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **TableName** *(string) --* 
+
+        The table name.
+
+        
+      
+
+      - **ColumnList** *(list) --* 
+
+        A list of columns in the table.
+
+        
+        
+
+        - *(dict) --* 
+
+          The properties (metadata) of a column.
+
+          
+          
+
+          - **isCaseSensitive** *(boolean) --* 
+
+            A value that indicates whether the column is case-sensitive.
+
+            
+          
+
+          - **isCurrency** *(boolean) --* 
+
+            A value that indicates whether the column contains currency values.
+
+            
+          
+
+          - **isSigned** *(boolean) --* 
+
+            A value that indicates whether an integer column is signed.
+
+            
+          
+
+          - **label** *(string) --* 
+
+            The label for the column.
+
+            
+          
+
+          - **name** *(string) --* 
+
+            The name of the column.
+
+            
+          
+
+          - **nullable** *(integer) --* 
+
+            A value that indicates whether the column is nullable.
+
+            
+          
+
+          - **precision** *(integer) --* 
+
+            The precision value of a decimal number column.
+
+            
+          
+
+          - **scale** *(integer) --* 
+
+            The scale value of a decimal number column.
+
+            
+          
+
+          - **schemaName** *(string) --* 
+
+            The name of the schema that contains the table that includes the column.
+
+            
+          
+
+          - **tableName** *(string) --* 
+
+            The name of the table that includes the column.
+
+            
+          
+
+          - **typeName** *(string) --* 
+
+            The database-specific data type of the column.
+
+            
+          
+
+          - **length** *(integer) --* 
+
+            The length of the column.
+
+            
+          
+
+          - **columnDefault** *(string) --* 
+
+            The default value of the column.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        A value that indicates the starting point for the next set of response records in a subsequent request. If a value is returned in a response, you can retrieve the next set of records by providing this returned NextToken value in the next NextToken parameter and retrying the command. If the NextToken field is empty, all response records have been retrieved for the request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.QueryTimeoutException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`RedshiftDataAPIService.Client.exceptions.DatabaseConnectionException`
+
+  

@@ -1,0 +1,874 @@
+:doc:`CodeBuild <../../codebuild>` / Client / create_webhook
+
+**************
+create_webhook
+**************
+
+
+
+.. py:method:: CodeBuild.Client.create_webhook(**kwargs)
+
+  
+
+  For an existing CodeBuild build project that has its source code stored in a GitHub or Bitbucket repository, enables CodeBuild to start rebuilding the source code every time a code change is pushed to the repository.
+
+   
+
+  .. warning::
+
+     
+
+    If you enable webhooks for an CodeBuild project, and the project is used as a build step in CodePipeline, then two identical builds are created for each commit. One build is triggered through webhooks, and one through CodePipeline. Because billing is on a per-build basis, you are billed for both builds. Therefore, if you are using CodePipeline, we recommend that you disable webhooks in CodeBuild. In the CodeBuild console, clear the Webhook box. For more information, see step 5 in `Change a Build Project's Settings <https://docs.aws.amazon.com/codebuild/latest/userguide/change-project.html#change-project-console>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codebuild-2016-10-06/CreateWebhook>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_webhook(
+        projectName='string',
+        branchFilter='string',
+        filterGroups=[
+            [
+                {
+                    'type': 'EVENT'|'BASE_REF'|'HEAD_REF'|'ACTOR_ACCOUNT_ID'|'FILE_PATH'|'COMMIT_MESSAGE'|'WORKFLOW_NAME'|'TAG_NAME'|'RELEASE_NAME'|'REPOSITORY_NAME'|'ORGANIZATION_NAME',
+                    'pattern': 'string',
+                    'excludeMatchedPattern': True|False
+                },
+            ],
+        ],
+        buildType='BUILD'|'BUILD_BATCH'|'RUNNER_BUILDKITE_BUILD',
+        manualCreation=True|False,
+        scopeConfiguration={
+            'name': 'string',
+            'domain': 'string',
+            'scope': 'GITHUB_ORGANIZATION'|'GITHUB_GLOBAL'|'GITLAB_GROUP'
+        },
+        pullRequestBuildPolicy={
+            'requiresCommentApproval': 'DISABLED'|'ALL_PULL_REQUESTS'|'FORK_PULL_REQUESTS',
+            'approverRoles': [
+                'GITHUB_READ'|'GITHUB_TRIAGE'|'GITHUB_WRITE'|'GITHUB_MAINTAIN'|'GITHUB_ADMIN'|'GITLAB_GUEST'|'GITLAB_PLANNER'|'GITLAB_REPORTER'|'GITLAB_DEVELOPER'|'GITLAB_MAINTAINER'|'GITLAB_OWNER'|'BITBUCKET_READ'|'BITBUCKET_WRITE'|'BITBUCKET_ADMIN',
+            ]
+        }
+    )
+    
+  :type projectName: string
+  :param projectName: **[REQUIRED]** 
+
+    The name of the CodeBuild project.
+
+    
+
+  
+  :type branchFilter: string
+  :param branchFilter: 
+
+    A regular expression used to determine which repository branches are built when a webhook is triggered. If the name of a branch matches the regular expression, then it is built. If ``branchFilter`` is empty, then all branches are built.
+
+     
+
+    .. note::
+
+      
+
+      It is recommended that you use ``filterGroups`` instead of ``branchFilter``.
+
+      
+
+    
+
+  
+  :type filterGroups: list
+  :param filterGroups: 
+
+    An array of arrays of ``WebhookFilter`` objects used to determine which webhooks are triggered. At least one ``WebhookFilter`` in the array must specify ``EVENT`` as its ``type``.
+
+     
+
+    For a build to be triggered, at least one filter group in the ``filterGroups`` array must pass. For a filter group to pass, each of its filters must pass.
+
+    
+
+  
+    - *(list) --* 
+
+    
+      - *(dict) --* 
+
+        A filter used to determine which webhooks trigger a build.
+
+        
+
+      
+        - **type** *(string) --* **[REQUIRED]** 
+
+          The type of webhook filter. There are 11 webhook filter types: ``EVENT``, ``ACTOR_ACCOUNT_ID``, ``HEAD_REF``, ``BASE_REF``, ``FILE_PATH``, ``COMMIT_MESSAGE``, ``TAG_NAME``, ``RELEASE_NAME``, ``REPOSITORY_NAME``, ``ORGANIZATION_NAME``, and ``WORKFLOW_NAME``.
+
+           
+
+          
+          * EVENT 
+
+            
+            * A webhook event triggers a build when the provided ``pattern`` matches one of nine event types: ``PUSH``, ``PULL_REQUEST_CREATED``, ``PULL_REQUEST_UPDATED``, ``PULL_REQUEST_CLOSED``, ``PULL_REQUEST_REOPENED``, ``PULL_REQUEST_MERGED``, ``RELEASED``, ``PRERELEASED``, and ``WORKFLOW_JOB_QUEUED``. The ``EVENT`` patterns are specified as a comma-separated string. For example, ``PUSH, PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED`` filters all push, pull request created, and pull request updated events. 
+
+            .. note::
+
+              Types ``PULL_REQUEST_REOPENED`` and ``WORKFLOW_JOB_QUEUED`` work with GitHub and GitHub Enterprise only. Types ``RELEASED`` and ``PRERELEASED`` work with GitHub only.
+
+            
+            
+
+          
+           
+          * ACTOR_ACCOUNT_ID 
+
+            
+            * A webhook event triggers a build when a GitHub, GitHub Enterprise, or Bitbucket account ID matches the regular expression ``pattern``.
+            
+
+          
+           
+          * HEAD_REF 
+
+            
+            * A webhook event triggers a build when the head reference matches the regular expression ``pattern``. For example, ``refs/heads/branch-name`` and ``refs/tags/tag-name``. 
+
+            .. note::
+
+              Works with GitHub and GitHub Enterprise push, GitHub and GitHub Enterprise pull request, Bitbucket push, and Bitbucket pull request events.
+
+            
+            
+
+          
+           
+          * BASE_REF 
+
+            
+            * A webhook event triggers a build when the base reference matches the regular expression ``pattern``. For example, ``refs/heads/branch-name``. 
+
+            .. note::
+
+              Works with pull request events only.
+
+            
+            
+
+          
+           
+          * FILE_PATH 
+
+            
+            * A webhook triggers a build when the path of a changed file matches the regular expression ``pattern``. 
+
+            .. note::
+
+              Works with push and pull request events only.
+
+            
+            
+
+          
+           
+          * COMMIT_MESSAGE 
+
+            
+            * A webhook triggers a build when the head commit message matches the regular expression ``pattern``. 
+
+            .. note::
+
+              Works with push and pull request events only.
+
+            
+            
+
+          
+           
+          * TAG_NAME 
+
+            
+            * A webhook triggers a build when the tag name of the release matches the regular expression ``pattern``. 
+
+            .. note::
+
+              Works with ``RELEASED`` and ``PRERELEASED`` events only.
+
+            
+            
+
+          
+           
+          * RELEASE_NAME 
+
+            
+            * A webhook triggers a build when the release name matches the regular expression ``pattern``. 
+
+            .. note::
+
+              Works with ``RELEASED`` and ``PRERELEASED`` events only.
+
+            
+            
+
+          
+           
+          * REPOSITORY_NAME 
+
+            
+            * A webhook triggers a build when the repository name matches the regular expression ``pattern``. 
+
+            .. note::
+
+              Works with GitHub global or organization webhooks only.
+
+            
+            
+
+          
+           
+          * ORGANIZATION_NAME 
+
+            
+            * A webhook triggers a build when the organization name matches the regular expression ``pattern``. 
+
+            .. note::
+
+              Works with GitHub global webhooks only.
+
+            
+            
+
+          
+           
+          * WORKFLOW_NAME 
+
+            
+            * A webhook triggers a build when the workflow name matches the regular expression ``pattern``. 
+
+            .. note::
+
+              Works with ``WORKFLOW_JOB_QUEUED`` events only.
+
+             
+
+            .. note::
+
+              For CodeBuild-hosted Buildkite runner builds, WORKFLOW_NAME filters will filter by pipeline name.
+
+            
+            
+
+          
+          
+
+          
+
+        
+        - **pattern** *(string) --* **[REQUIRED]** 
+
+          For a ``WebHookFilter`` that uses ``EVENT`` type, a comma-separated string that specifies one or more events. For example, the webhook filter ``PUSH, PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED`` allows all push, pull request created, and pull request updated events to trigger a build.
+
+           
+
+          For a ``WebHookFilter`` that uses any of the other filter types, a regular expression pattern. For example, a ``WebHookFilter`` that uses ``HEAD_REF`` for its ``type`` and the pattern ``^refs/heads/`` triggers a build when the head reference is a branch with a reference name ``refs/heads/branch-name``.
+
+          
+
+        
+        - **excludeMatchedPattern** *(boolean) --* 
+
+          Used to indicate that the ``pattern`` determines which webhook events do not trigger a build. If true, then a webhook event that does not match the ``pattern`` triggers a build. If false, then a webhook event that matches the ``pattern`` triggers a build.
+
+          
+
+        
+      
+  
+
+  :type buildType: string
+  :param buildType: 
+
+    Specifies the type of build this webhook will trigger.
+
+     
+
+    .. note::
+
+      
+
+      ``RUNNER_BUILDKITE_BUILD`` is only available for ``NO_SOURCE`` source type projects configured for Buildkite runner builds. For more information about CodeBuild-hosted Buildkite runner builds, see `Tutorial\: Configure a CodeBuild-hosted Buildkite runner <https://docs.aws.amazon.com/codebuild/latest/userguide/sample-runner-buildkite.html>`__ in the *CodeBuild user guide*.
+
+      
+
+    
+
+  
+  :type manualCreation: boolean
+  :param manualCreation: 
+
+    If manualCreation is true, CodeBuild doesn't create a webhook in GitHub and instead returns ``payloadUrl`` and ``secret`` values for the webhook. The ``payloadUrl`` and ``secret`` values in the output can be used to manually create a webhook within GitHub.
+
+     
+
+    .. note::
+
+      
+
+      ``manualCreation`` is only available for GitHub webhooks.
+
+      
+
+    
+
+  
+  :type scopeConfiguration: dict
+  :param scopeConfiguration: 
+
+    The scope configuration for global or organization webhooks.
+
+     
+
+    .. note::
+
+      
+
+      Global or organization webhooks are only available for GitHub and Github Enterprise webhooks.
+
+      
+
+    
+
+  
+    - **name** *(string) --* **[REQUIRED]** 
+
+      The name of either the group, enterprise, or organization that will send webhook events to CodeBuild, depending on the type of webhook.
+
+      
+
+    
+    - **domain** *(string) --* 
+
+      The domain of the GitHub Enterprise organization or the GitLab Self Managed group. Note that this parameter is only required if your project's source type is GITHUB_ENTERPRISE or GITLAB_SELF_MANAGED.
+
+      
+
+    
+    - **scope** *(string) --* **[REQUIRED]** 
+
+      The type of scope for a GitHub or GitLab webhook. The scope default is GITHUB_ORGANIZATION.
+
+      
+
+    
+  
+  :type pullRequestBuildPolicy: dict
+  :param pullRequestBuildPolicy: 
+
+    A PullRequestBuildPolicy object that defines comment-based approval requirements for triggering builds on pull requests. This policy helps control when automated builds are executed based on contributor permissions and approval workflows.
+
+    
+
+  
+    - **requiresCommentApproval** *(string) --* **[REQUIRED]** 
+
+      Specifies when comment-based approval is required before triggering a build on pull requests. This setting determines whether builds run automatically or require explicit approval through comments.
+
+       
+
+      
+      * *DISABLED*: Builds trigger automatically without requiring comment approval
+       
+      * *ALL_PULL_REQUESTS*: All pull requests require comment approval before builds execute (unless contributor is one of the approver roles)
+       
+      * *FORK_PULL_REQUESTS*: Only pull requests from forked repositories require comment approval (unless contributor is one of the approver roles)
+      
+
+      
+
+    
+    - **approverRoles** *(list) --* 
+
+      List of repository roles that have approval privileges for pull request builds when comment approval is required. Only users with these roles can provide valid comment approvals. If a pull request contributor is one of these roles, their pull request builds will trigger automatically. This field is only applicable when ``requiresCommentApproval`` is not *DISABLED*.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'webhook': {
+              'url': 'string',
+              'payloadUrl': 'string',
+              'secret': 'string',
+              'branchFilter': 'string',
+              'filterGroups': [
+                  [
+                      {
+                          'type': 'EVENT'|'BASE_REF'|'HEAD_REF'|'ACTOR_ACCOUNT_ID'|'FILE_PATH'|'COMMIT_MESSAGE'|'WORKFLOW_NAME'|'TAG_NAME'|'RELEASE_NAME'|'REPOSITORY_NAME'|'ORGANIZATION_NAME',
+                          'pattern': 'string',
+                          'excludeMatchedPattern': True|False
+                      },
+                  ],
+              ],
+              'buildType': 'BUILD'|'BUILD_BATCH'|'RUNNER_BUILDKITE_BUILD',
+              'manualCreation': True|False,
+              'lastModifiedSecret': datetime(2015, 1, 1),
+              'scopeConfiguration': {
+                  'name': 'string',
+                  'domain': 'string',
+                  'scope': 'GITHUB_ORGANIZATION'|'GITHUB_GLOBAL'|'GITLAB_GROUP'
+              },
+              'status': 'CREATING'|'CREATE_FAILED'|'ACTIVE'|'DELETING',
+              'statusMessage': 'string',
+              'pullRequestBuildPolicy': {
+                  'requiresCommentApproval': 'DISABLED'|'ALL_PULL_REQUESTS'|'FORK_PULL_REQUESTS',
+                  'approverRoles': [
+                      'GITHUB_READ'|'GITHUB_TRIAGE'|'GITHUB_WRITE'|'GITHUB_MAINTAIN'|'GITHUB_ADMIN'|'GITLAB_GUEST'|'GITLAB_PLANNER'|'GITLAB_REPORTER'|'GITLAB_DEVELOPER'|'GITLAB_MAINTAINER'|'GITLAB_OWNER'|'BITBUCKET_READ'|'BITBUCKET_WRITE'|'BITBUCKET_ADMIN',
+                  ]
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **webhook** *(dict) --* 
+
+        Information about a webhook that connects repository events to a build project in CodeBuild.
+
+        
+        
+
+        - **url** *(string) --* 
+
+          The URL to the webhook.
+
+          
+        
+
+        - **payloadUrl** *(string) --* 
+
+          The CodeBuild endpoint where webhook events are sent.
+
+          
+        
+
+        - **secret** *(string) --* 
+
+          The secret token of the associated repository.
+
+           
+
+          .. note::
+
+            
+
+            A Bitbucket webhook does not support ``secret``.
+
+            
+
+          
+        
+
+        - **branchFilter** *(string) --* 
+
+          A regular expression used to determine which repository branches are built when a webhook is triggered. If the name of a branch matches the regular expression, then it is built. If ``branchFilter`` is empty, then all branches are built.
+
+           
+
+          .. note::
+
+            
+
+            It is recommended that you use ``filterGroups`` instead of ``branchFilter``.
+
+            
+
+          
+        
+
+        - **filterGroups** *(list) --* 
+
+          An array of arrays of ``WebhookFilter`` objects used to determine which webhooks are triggered. At least one ``WebhookFilter`` in the array must specify ``EVENT`` as its ``type``.
+
+           
+
+          For a build to be triggered, at least one filter group in the ``filterGroups`` array must pass. For a filter group to pass, each of its filters must pass.
+
+          
+          
+
+          - *(list) --* 
+            
+
+            - *(dict) --* 
+
+              A filter used to determine which webhooks trigger a build.
+
+              
+              
+
+              - **type** *(string) --* 
+
+                The type of webhook filter. There are 11 webhook filter types: ``EVENT``, ``ACTOR_ACCOUNT_ID``, ``HEAD_REF``, ``BASE_REF``, ``FILE_PATH``, ``COMMIT_MESSAGE``, ``TAG_NAME``, ``RELEASE_NAME``, ``REPOSITORY_NAME``, ``ORGANIZATION_NAME``, and ``WORKFLOW_NAME``.
+
+                 
+
+                
+                * EVENT 
+
+                  
+                  * A webhook event triggers a build when the provided ``pattern`` matches one of nine event types: ``PUSH``, ``PULL_REQUEST_CREATED``, ``PULL_REQUEST_UPDATED``, ``PULL_REQUEST_CLOSED``, ``PULL_REQUEST_REOPENED``, ``PULL_REQUEST_MERGED``, ``RELEASED``, ``PRERELEASED``, and ``WORKFLOW_JOB_QUEUED``. The ``EVENT`` patterns are specified as a comma-separated string. For example, ``PUSH, PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED`` filters all push, pull request created, and pull request updated events. 
+
+                  .. note::
+
+                    Types ``PULL_REQUEST_REOPENED`` and ``WORKFLOW_JOB_QUEUED`` work with GitHub and GitHub Enterprise only. Types ``RELEASED`` and ``PRERELEASED`` work with GitHub only.
+
+                  
+                  
+
+                
+                 
+                * ACTOR_ACCOUNT_ID 
+
+                  
+                  * A webhook event triggers a build when a GitHub, GitHub Enterprise, or Bitbucket account ID matches the regular expression ``pattern``.
+                  
+
+                
+                 
+                * HEAD_REF 
+
+                  
+                  * A webhook event triggers a build when the head reference matches the regular expression ``pattern``. For example, ``refs/heads/branch-name`` and ``refs/tags/tag-name``. 
+
+                  .. note::
+
+                    Works with GitHub and GitHub Enterprise push, GitHub and GitHub Enterprise pull request, Bitbucket push, and Bitbucket pull request events.
+
+                  
+                  
+
+                
+                 
+                * BASE_REF 
+
+                  
+                  * A webhook event triggers a build when the base reference matches the regular expression ``pattern``. For example, ``refs/heads/branch-name``. 
+
+                  .. note::
+
+                    Works with pull request events only.
+
+                  
+                  
+
+                
+                 
+                * FILE_PATH 
+
+                  
+                  * A webhook triggers a build when the path of a changed file matches the regular expression ``pattern``. 
+
+                  .. note::
+
+                    Works with push and pull request events only.
+
+                  
+                  
+
+                
+                 
+                * COMMIT_MESSAGE 
+
+                  
+                  * A webhook triggers a build when the head commit message matches the regular expression ``pattern``. 
+
+                  .. note::
+
+                    Works with push and pull request events only.
+
+                  
+                  
+
+                
+                 
+                * TAG_NAME 
+
+                  
+                  * A webhook triggers a build when the tag name of the release matches the regular expression ``pattern``. 
+
+                  .. note::
+
+                    Works with ``RELEASED`` and ``PRERELEASED`` events only.
+
+                  
+                  
+
+                
+                 
+                * RELEASE_NAME 
+
+                  
+                  * A webhook triggers a build when the release name matches the regular expression ``pattern``. 
+
+                  .. note::
+
+                    Works with ``RELEASED`` and ``PRERELEASED`` events only.
+
+                  
+                  
+
+                
+                 
+                * REPOSITORY_NAME 
+
+                  
+                  * A webhook triggers a build when the repository name matches the regular expression ``pattern``. 
+
+                  .. note::
+
+                    Works with GitHub global or organization webhooks only.
+
+                  
+                  
+
+                
+                 
+                * ORGANIZATION_NAME 
+
+                  
+                  * A webhook triggers a build when the organization name matches the regular expression ``pattern``. 
+
+                  .. note::
+
+                    Works with GitHub global webhooks only.
+
+                  
+                  
+
+                
+                 
+                * WORKFLOW_NAME 
+
+                  
+                  * A webhook triggers a build when the workflow name matches the regular expression ``pattern``. 
+
+                  .. note::
+
+                    Works with ``WORKFLOW_JOB_QUEUED`` events only.
+
+                   
+
+                  .. note::
+
+                    For CodeBuild-hosted Buildkite runner builds, WORKFLOW_NAME filters will filter by pipeline name.
+
+                  
+                  
+
+                
+                
+
+                
+              
+
+              - **pattern** *(string) --* 
+
+                For a ``WebHookFilter`` that uses ``EVENT`` type, a comma-separated string that specifies one or more events. For example, the webhook filter ``PUSH, PULL_REQUEST_CREATED, PULL_REQUEST_UPDATED`` allows all push, pull request created, and pull request updated events to trigger a build.
+
+                 
+
+                For a ``WebHookFilter`` that uses any of the other filter types, a regular expression pattern. For example, a ``WebHookFilter`` that uses ``HEAD_REF`` for its ``type`` and the pattern ``^refs/heads/`` triggers a build when the head reference is a branch with a reference name ``refs/heads/branch-name``.
+
+                
+              
+
+              - **excludeMatchedPattern** *(boolean) --* 
+
+                Used to indicate that the ``pattern`` determines which webhook events do not trigger a build. If true, then a webhook event that does not match the ``pattern`` triggers a build. If false, then a webhook event that matches the ``pattern`` triggers a build.
+
+                
+          
+        
+      
+        
+
+        - **buildType** *(string) --* 
+
+          Specifies the type of build this webhook will trigger.
+
+           
+
+          .. note::
+
+            
+
+            ``RUNNER_BUILDKITE_BUILD`` is only available for ``NO_SOURCE`` source type projects configured for Buildkite runner builds. For more information about CodeBuild-hosted Buildkite runner builds, see `Tutorial\: Configure a CodeBuild-hosted Buildkite runner <https://docs.aws.amazon.com/codebuild/latest/userguide/sample-runner-buildkite.html>`__ in the *CodeBuild user guide*.
+
+            
+
+          
+        
+
+        - **manualCreation** *(boolean) --* 
+
+          If manualCreation is true, CodeBuild doesn't create a webhook in GitHub and instead returns ``payloadUrl`` and ``secret`` values for the webhook. The ``payloadUrl`` and ``secret`` values in the output can be used to manually create a webhook within GitHub.
+
+           
+
+          .. note::
+
+            
+
+            manualCreation is only available for GitHub webhooks.
+
+            
+
+          
+        
+
+        - **lastModifiedSecret** *(datetime) --* 
+
+          A timestamp that indicates the last time a repository's secret token was modified.
+
+          
+        
+
+        - **scopeConfiguration** *(dict) --* 
+
+          The scope configuration for global or organization webhooks.
+
+           
+
+          .. note::
+
+            
+
+            Global or organization webhooks are only available for GitHub and Github Enterprise webhooks.
+
+            
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of either the group, enterprise, or organization that will send webhook events to CodeBuild, depending on the type of webhook.
+
+            
+          
+
+          - **domain** *(string) --* 
+
+            The domain of the GitHub Enterprise organization or the GitLab Self Managed group. Note that this parameter is only required if your project's source type is GITHUB_ENTERPRISE or GITLAB_SELF_MANAGED.
+
+            
+          
+
+          - **scope** *(string) --* 
+
+            The type of scope for a GitHub or GitLab webhook. The scope default is GITHUB_ORGANIZATION.
+
+            
+      
+        
+
+        - **status** *(string) --* 
+
+          The status of the webhook. Valid values include:
+
+           
+
+          
+          * ``CREATING``: The webhook is being created.
+           
+          * ``CREATE_FAILED``: The webhook has failed to create.
+           
+          * ``ACTIVE``: The webhook has succeeded and is active.
+           
+          * ``DELETING``: The webhook is being deleted.
+          
+
+          
+        
+
+        - **statusMessage** *(string) --* 
+
+          A message associated with the status of a webhook.
+
+          
+        
+
+        - **pullRequestBuildPolicy** *(dict) --* 
+
+          A PullRequestBuildPolicy object that defines comment-based approval requirements for triggering builds on pull requests. This policy helps control when automated builds are executed based on contributor permissions and approval workflows.
+
+          
+          
+
+          - **requiresCommentApproval** *(string) --* 
+
+            Specifies when comment-based approval is required before triggering a build on pull requests. This setting determines whether builds run automatically or require explicit approval through comments.
+
+             
+
+            
+            * *DISABLED*: Builds trigger automatically without requiring comment approval
+             
+            * *ALL_PULL_REQUESTS*: All pull requests require comment approval before builds execute (unless contributor is one of the approver roles)
+             
+            * *FORK_PULL_REQUESTS*: Only pull requests from forked repositories require comment approval (unless contributor is one of the approver roles)
+            
+
+            
+          
+
+          - **approverRoles** *(list) --* 
+
+            List of repository roles that have approval privileges for pull request builds when comment approval is required. Only users with these roles can provide valid comment approvals. If a pull request contributor is one of these roles, their pull request builds will trigger automatically. This field is only applicable when ``requiresCommentApproval`` is not *DISABLED*.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeBuild.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`CodeBuild.Client.exceptions.OAuthProviderException`
+
+  
+  *   :py:class:`CodeBuild.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`CodeBuild.Client.exceptions.ResourceNotFoundException`
+
+  

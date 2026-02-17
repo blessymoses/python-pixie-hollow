@@ -1,0 +1,257 @@
+:doc:`AppConfig <../../appconfig>` / Client / create_deployment_strategy
+
+**************************
+create_deployment_strategy
+**************************
+
+
+
+.. py:method:: AppConfig.Client.create_deployment_strategy(**kwargs)
+
+  
+
+  Creates a deployment strategy that defines important criteria for rolling out your configuration to the designated targets. A deployment strategy includes the overall duration required, a percentage of targets to receive the deployment during each interval, an algorithm that defines how percentage grows, and bake time.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/appconfig-2019-10-09/CreateDeploymentStrategy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_deployment_strategy(
+        Name='string',
+        Description='string',
+        DeploymentDurationInMinutes=123,
+        FinalBakeTimeInMinutes=123,
+        GrowthFactor=...,
+        GrowthType='LINEAR'|'EXPONENTIAL',
+        ReplicateTo='NONE'|'SSM_DOCUMENT',
+        Tags={
+            'string': 'string'
+        }
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A name for the deployment strategy.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A description of the deployment strategy.
+
+    
+
+  
+  :type DeploymentDurationInMinutes: integer
+  :param DeploymentDurationInMinutes: **[REQUIRED]** 
+
+    Total amount of time for a deployment to last.
+
+    
+
+  
+  :type FinalBakeTimeInMinutes: integer
+  :param FinalBakeTimeInMinutes: 
+
+    Specifies the amount of time AppConfig monitors for Amazon CloudWatch alarms after the configuration has been deployed to 100% of its targets, before considering the deployment to be complete. If an alarm is triggered during this time, AppConfig rolls back the deployment. You must configure permissions for AppConfig to roll back based on CloudWatch alarms. For more information, see `Configuring permissions for rollback based on Amazon CloudWatch alarms <https://docs.aws.amazon.com/appconfig/latest/userguide/getting-started-with-appconfig-cloudwatch-alarms-permissions.html>`__ in the *AppConfig User Guide*.
+
+    
+
+  
+  :type GrowthFactor: float
+  :param GrowthFactor: **[REQUIRED]** 
+
+    The percentage of targets to receive a deployed configuration during each interval.
+
+    
+
+  
+  :type GrowthType: string
+  :param GrowthType: 
+
+    The algorithm used to define how percentage grows over time. AppConfig supports the following growth types:
+
+     
+
+    **Linear**: For this type, AppConfig processes the deployment by dividing the total number of targets by the value specified for ``Step percentage``. For example, a linear deployment that uses a ``Step percentage`` of 10 deploys the configuration to 10 percent of the hosts. After those deployments are complete, the system deploys the configuration to the next 10 percent. This continues until 100% of the targets have successfully received the configuration.
+
+     
+
+    **Exponential**: For this type, AppConfig processes the deployment exponentially using the following formula: ``G*(2^N)``. In this formula, ``G`` is the growth factor specified by the user and ``N`` is the number of steps until the configuration is deployed to all targets. For example, if you specify a growth factor of 2, then the system rolls out the configuration as follows:
+
+     
+
+    ``2*(2^0)``
+
+     
+
+    ``2*(2^1)``
+
+     
+
+    ``2*(2^2)``
+
+     
+
+    Expressed numerically, the deployment rolls out as follows: 2% of the targets, 4% of the targets, 8% of the targets, and continues until the configuration has been deployed to all targets.
+
+    
+
+  
+  :type ReplicateTo: string
+  :param ReplicateTo: 
+
+    Save the deployment strategy to a Systems Manager (SSM) document.
+
+    
+
+  
+  :type Tags: dict
+  :param Tags: 
+
+    Metadata to assign to the deployment strategy. Tags help organize and categorize your AppConfig resources. Each tag consists of a key and an optional value, both of which you define.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Id': 'string',
+          'Name': 'string',
+          'Description': 'string',
+          'DeploymentDurationInMinutes': 123,
+          'GrowthType': 'LINEAR'|'EXPONENTIAL',
+          'GrowthFactor': ...,
+          'FinalBakeTimeInMinutes': 123,
+          'ReplicateTo': 'NONE'|'SSM_DOCUMENT'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Id** *(string) --* 
+
+        The deployment strategy ID.
+
+        
+      
+
+      - **Name** *(string) --* 
+
+        The name of the deployment strategy.
+
+        
+      
+
+      - **Description** *(string) --* 
+
+        The description of the deployment strategy.
+
+        
+      
+
+      - **DeploymentDurationInMinutes** *(integer) --* 
+
+        Total amount of time the deployment lasted.
+
+        
+      
+
+      - **GrowthType** *(string) --* 
+
+        The algorithm used to define how percentage grew over time.
+
+        
+      
+
+      - **GrowthFactor** *(float) --* 
+
+        The percentage of targets that received a deployed configuration during each interval.
+
+        
+      
+
+      - **FinalBakeTimeInMinutes** *(integer) --* 
+
+        The amount of time that AppConfig monitored for alarms before considering the deployment to be complete and no longer eligible for automatic rollback.
+
+        
+      
+
+      - **ReplicateTo** *(string) --* 
+
+        Save the deployment strategy to a Systems Manager (SSM) document.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AppConfig.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AppConfig.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`AppConfig.Client.exceptions.BadRequestException`
+
+  
+
+  **Examples**
+
+  The following create-deployment-strategy example creates a deployment strategy called Example-Deployment that takes 15 minutes and deploys the configuration to 25% of the application at a time. The strategy is also copied to an SSM Document.
+  ::
+
+    response = client.create_deployment_strategy(
+        DeploymentDurationInMinutes=15,
+        GrowthFactor=25,
+        Name='Example-Deployment',
+        ReplicateTo='SSM_DOCUMENT',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'DeploymentDurationInMinutes': 15,
+        'FinalBakeTimeInMinutes': 0,
+        'GrowthFactor': 25,
+        'GrowthType': 'LINEAR',
+        'Id': '1225qzk',
+        'Name': 'Example-Deployment',
+        'ReplicateTo': 'SSM_DOCUMENT',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

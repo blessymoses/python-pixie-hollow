@@ -1,0 +1,282 @@
+:doc:`Personalize <../../personalize>` / Client / list_recommenders
+
+*****************
+list_recommenders
+*****************
+
+
+
+.. py:method:: Personalize.Client.list_recommenders(**kwargs)
+
+  
+
+  Returns a list of recommenders in a given Domain dataset group. When a Domain dataset group is not specified, all the recommenders associated with the account are listed. The response provides the properties for each recommender, including the Amazon Resource Name (ARN). For more information on recommenders, see `CreateRecommender <https://docs.aws.amazon.com/personalize/latest/dg/API_CreateRecommender.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/personalize-2018-05-22/ListRecommenders>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_recommenders(
+        datasetGroupArn='string',
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type datasetGroupArn: string
+  :param datasetGroupArn: 
+
+    The Amazon Resource Name (ARN) of the Domain dataset group to list the recommenders for. When a Domain dataset group is not specified, all the recommenders associated with the account are listed.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    A token returned from the previous call to ``ListRecommenders`` for getting the next set of recommenders (if they exist).
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of recommenders to return.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'recommenders': [
+              {
+                  'name': 'string',
+                  'recommenderArn': 'string',
+                  'datasetGroupArn': 'string',
+                  'recipeArn': 'string',
+                  'recommenderConfig': {
+                      'itemExplorationConfig': {
+                          'string': 'string'
+                      },
+                      'minRecommendationRequestsPerSecond': 123,
+                      'trainingDataConfig': {
+                          'excludedDatasetColumns': {
+                              'string': [
+                                  'string',
+                              ]
+                          },
+                          'includedDatasetColumns': {
+                              'string': [
+                                  'string',
+                              ]
+                          }
+                      },
+                      'enableMetadataWithRecommendations': True|False
+                  },
+                  'status': 'string',
+                  'creationDateTime': datetime(2015, 1, 1),
+                  'lastUpdatedDateTime': datetime(2015, 1, 1)
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **recommenders** *(list) --* 
+
+        A list of the recommenders.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides a summary of the properties of the recommender.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the recommender.
+
+            
+          
+
+          - **recommenderArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the recommender.
+
+            
+          
+
+          - **datasetGroupArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Domain dataset group that contains the recommender.
+
+            
+          
+
+          - **recipeArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the recipe (Domain dataset group use case) that the recommender was created for.
+
+            
+          
+
+          - **recommenderConfig** *(dict) --* 
+
+            The configuration details of the recommender.
+
+            
+            
+
+            - **itemExplorationConfig** *(dict) --* 
+
+              Specifies the exploration configuration hyperparameters, including ``explorationWeight`` and ``explorationItemAgeCutOff``, you want to use to configure the amount of item exploration Amazon Personalize uses when recommending items. Provide ``itemExplorationConfig`` data only if your recommenders generate personalized recommendations for a user (not popular items or similar items).
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **minRecommendationRequestsPerSecond** *(integer) --* 
+
+              Specifies the requested minimum provisioned recommendation requests per second that Amazon Personalize will support. A high ``minRecommendationRequestsPerSecond`` will increase your bill. We recommend starting with 1 for ``minRecommendationRequestsPerSecond`` (the default). Track your usage using Amazon CloudWatch metrics, and increase the ``minRecommendationRequestsPerSecond`` as necessary.
+
+              
+            
+
+            - **trainingDataConfig** *(dict) --* 
+
+              Specifies the training data configuration to use when creating a domain recommender.
+
+              
+              
+
+              - **excludedDatasetColumns** *(dict) --* 
+
+                Specifies the columns to exclude from training. Each key is a dataset type, and each value is a list of columns. Exclude columns to control what data Amazon Personalize uses to generate recommendations.
+
+                 
+
+                For example, you might have a column that you want to use only to filter recommendations. You can exclude this column from training and Amazon Personalize considers it only when filtering.
+
+                
+                
+
+                - *(string) --* 
+                  
+
+                  - *(list) --* 
+                    
+
+                    - *(string) --* 
+                
+            
+          
+              
+
+              - **includedDatasetColumns** *(dict) --* 
+
+                A map that specifies which columns to include from each dataset during training. The map can contain up to 3 entries, where each key is a dataset name (maximum length of 256 characters, must contain only letters and underscores) and each value is an array of up to 50 column names. Column names can be up to 150 characters long, must start with a letter or underscore, and can contain only letters, numbers, and underscores.
+
+                
+                
+
+                - *(string) --* 
+                  
+
+                  - *(list) --* 
+                    
+
+                    - *(string) --* 
+                
+            
+          
+          
+            
+
+            - **enableMetadataWithRecommendations** *(boolean) --* 
+
+              Whether metadata with recommendations is enabled for the recommender. If enabled, you can specify the columns from your Items dataset in your request for recommendations. Amazon Personalize returns this data for each item in the recommendation response. For information about enabling metadata for a recommender, see `Enabling metadata in recommendations for a recommender <https://docs.aws.amazon.com/personalize/latest/dg/creating-recommenders.html#create-recommender-return-metadata>`__.
+
+               
+
+              If you enable metadata in recommendations, you will incur additional costs. For more information, see `Amazon Personalize pricing <https://aws.amazon.com/personalize/pricing/>`__.
+
+              
+        
+          
+
+          - **status** *(string) --* 
+
+            The status of the recommender. A recommender can be in one of the following states:
+
+             
+
+            
+            * CREATE PENDING > CREATE IN_PROGRESS > ACTIVE -or- CREATE FAILED
+             
+            * STOP PENDING > STOP IN_PROGRESS > INACTIVE > START PENDING > START IN_PROGRESS > ACTIVE
+             
+            * DELETE PENDING > DELETE IN_PROGRESS
+            
+
+            
+          
+
+          - **creationDateTime** *(datetime) --* 
+
+            The date and time (in Unix format) that the recommender was created.
+
+            
+          
+
+          - **lastUpdatedDateTime** *(datetime) --* 
+
+            The date and time (in Unix format) that the recommender was last updated.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        A token for getting the next set of recommenders (if they exist).
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidNextTokenException`
+
+  

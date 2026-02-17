@@ -1,0 +1,640 @@
+:doc:`VPCLattice <../../vpc-lattice>` / Client / create_rule
+
+***********
+create_rule
+***********
+
+
+
+.. py:method:: VPCLattice.Client.create_rule(**kwargs)
+
+  
+
+  Creates a listener rule. Each listener has a default rule for checking connection requests, but you can define additional rules. Each rule consists of a priority, one or more actions, and one or more conditions. For more information, see `Listener rules <https://docs.aws.amazon.com/vpc-lattice/latest/ug/listeners.html#listener-rules>`__ in the *Amazon VPC Lattice User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/vpc-lattice-2022-11-30/CreateRule>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_rule(
+        serviceIdentifier='string',
+        listenerIdentifier='string',
+        name='string',
+        match={
+            'httpMatch': {
+                'method': 'string',
+                'pathMatch': {
+                    'match': {
+                        'exact': 'string',
+                        'prefix': 'string'
+                    },
+                    'caseSensitive': True|False
+                },
+                'headerMatches': [
+                    {
+                        'name': 'string',
+                        'match': {
+                            'exact': 'string',
+                            'prefix': 'string',
+                            'contains': 'string'
+                        },
+                        'caseSensitive': True|False
+                    },
+                ]
+            }
+        },
+        priority=123,
+        action={
+            'forward': {
+                'targetGroups': [
+                    {
+                        'targetGroupIdentifier': 'string',
+                        'weight': 123
+                    },
+                ]
+            },
+            'fixedResponse': {
+                'statusCode': 123
+            }
+        },
+        clientToken='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type serviceIdentifier: string
+  :param serviceIdentifier: **[REQUIRED]** 
+
+    The ID or ARN of the service.
+
+    
+
+  
+  :type listenerIdentifier: string
+  :param listenerIdentifier: **[REQUIRED]** 
+
+    The ID or ARN of the listener.
+
+    
+
+  
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the rule. The name must be unique within the listener. The valid characters are a-z, 0-9, and hyphens (-). You can't use a hyphen as the first or last character, or immediately after another hyphen.
+
+    
+
+  
+  :type match: dict
+  :param match: **[REQUIRED]** 
+
+    The rule match.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``httpMatch``. 
+
+  
+    - **httpMatch** *(dict) --* 
+
+      The HTTP criteria that a rule must match.
+
+      
+
+    
+      - **method** *(string) --* 
+
+        The HTTP method type.
+
+        
+
+      
+      - **pathMatch** *(dict) --* 
+
+        The path match.
+
+        
+
+      
+        - **match** *(dict) --* **[REQUIRED]** 
+
+          The type of path match.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``exact``, ``prefix``. 
+
+        
+          - **exact** *(string) --* 
+
+            An exact match of the path.
+
+            
+
+          
+          - **prefix** *(string) --* 
+
+            A prefix match of the path.
+
+            
+
+          
+        
+        - **caseSensitive** *(boolean) --* 
+
+          Indicates whether the match is case sensitive.
+
+          
+
+        
+      
+      - **headerMatches** *(list) --* 
+
+        The header matches. Matches incoming requests with rule based on request header value before applying rule action.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes the constraints for a header match. Matches incoming requests with rule based on request header value before applying rule action.
+
+          
+
+        
+          - **name** *(string) --* **[REQUIRED]** 
+
+            The name of the header.
+
+            
+
+          
+          - **match** *(dict) --* **[REQUIRED]** 
+
+            The header match type.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``exact``, ``prefix``, ``contains``. 
+
+          
+            - **exact** *(string) --* 
+
+              An exact type match.
+
+              
+
+            
+            - **prefix** *(string) --* 
+
+              A prefix type match. Matches the value with the prefix.
+
+              
+
+            
+            - **contains** *(string) --* 
+
+              A contains type match.
+
+              
+
+            
+          
+          - **caseSensitive** *(boolean) --* 
+
+            Indicates whether the match is case sensitive.
+
+            
+
+          
+        
+    
+    
+  
+  :type priority: integer
+  :param priority: **[REQUIRED]** 
+
+    The priority assigned to the rule. Each rule for a specific listener must have a unique priority. The lower the priority number the higher the priority.
+
+    
+
+  
+  :type action: dict
+  :param action: **[REQUIRED]** 
+
+    The action for the default rule.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``forward``, ``fixedResponse``. 
+
+  
+    - **forward** *(dict) --* 
+
+      The forward action. Traffic that matches the rule is forwarded to the specified target groups.
+
+      
+
+    
+      - **targetGroups** *(list) --* **[REQUIRED]** 
+
+        The target groups. Traffic matching the rule is forwarded to the specified target groups. With forward actions, you can assign a weight that controls the prioritization and selection of each target group. This means that requests are distributed to individual target groups based on their weights. For example, if two target groups have the same weight, each target group receives half of the traffic.
+
+         
+
+        The default value is 1. This means that if only one target group is provided, there is no need to set the weight; 100% of the traffic goes to that target group.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes the weight of a target group.
+
+          
+
+        
+          - **targetGroupIdentifier** *(string) --* **[REQUIRED]** 
+
+            The ID or ARN of the target group.
+
+            
+
+          
+          - **weight** *(integer) --* 
+
+            Only required if you specify multiple target groups for a forward action. The weight determines how requests are distributed to the target group. For example, if you specify two target groups, each with a weight of 10, each target group receives half the requests. If you specify two target groups, one with a weight of 10 and the other with a weight of 20, the target group with a weight of 20 receives twice as many requests as the other target group. If there's only one target group specified, then the default value is 100.
+
+            
+
+          
+        
+    
+    
+    - **fixedResponse** *(dict) --* 
+
+      The fixed response action. The rule returns a custom HTTP response.
+
+      
+
+    
+      - **statusCode** *(integer) --* **[REQUIRED]** 
+
+        The HTTP response code. Only ``404`` and ``500`` status codes are supported.
+
+        
+
+      
+    
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. If you retry a request that completed successfully using the same client token and parameters, the retry succeeds without performing any actions. If the parameters aren't identical, the retry fails.
+
+    This field is autopopulated if not provided.
+
+  
+  :type tags: dict
+  :param tags: 
+
+    The tags for the rule.
+
+    
+
+  
+    - *(string) --* 
+
+      The key of the tag.
+
+       
+
+      Constraints: Tag keys are case-sensitive and accept a maximum of 128 Unicode characters. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @ May not begin with ``aws:``.
+
+      
+
+    
+      - *(string) --* 
+
+        The value of the tag.
+
+         
+
+        Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @
+
+        
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'arn': 'string',
+          'id': 'string',
+          'name': 'string',
+          'match': {
+              'httpMatch': {
+                  'method': 'string',
+                  'pathMatch': {
+                      'match': {
+                          'exact': 'string',
+                          'prefix': 'string'
+                      },
+                      'caseSensitive': True|False
+                  },
+                  'headerMatches': [
+                      {
+                          'name': 'string',
+                          'match': {
+                              'exact': 'string',
+                              'prefix': 'string',
+                              'contains': 'string'
+                          },
+                          'caseSensitive': True|False
+                      },
+                  ]
+              }
+          },
+          'priority': 123,
+          'action': {
+              'forward': {
+                  'targetGroups': [
+                      {
+                          'targetGroupIdentifier': 'string',
+                          'weight': 123
+                      },
+                  ]
+              },
+              'fixedResponse': {
+                  'statusCode': 123
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **arn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the rule.
+
+        
+      
+
+      - **id** *(string) --* 
+
+        The ID of the rule.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The name of the rule.
+
+        
+      
+
+      - **match** *(dict) --* 
+
+        The rule match. The ``RuleMatch`` must be an ``HttpMatch``. This means that the rule should be an exact match on HTTP constraints which are made up of the HTTP method, path, and header.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``httpMatch``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **httpMatch** *(dict) --* 
+
+          The HTTP criteria that a rule must match.
+
+          
+          
+
+          - **method** *(string) --* 
+
+            The HTTP method type.
+
+            
+          
+
+          - **pathMatch** *(dict) --* 
+
+            The path match.
+
+            
+            
+
+            - **match** *(dict) --* 
+
+              The type of path match.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``exact``, ``prefix``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                            'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+            
+              
+
+              - **exact** *(string) --* 
+
+                An exact match of the path.
+
+                
+              
+
+              - **prefix** *(string) --* 
+
+                A prefix match of the path.
+
+                
+          
+            
+
+            - **caseSensitive** *(boolean) --* 
+
+              Indicates whether the match is case sensitive.
+
+              
+        
+          
+
+          - **headerMatches** *(list) --* 
+
+            The header matches. Matches incoming requests with rule based on request header value before applying rule action.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes the constraints for a header match. Matches incoming requests with rule based on request header value before applying rule action.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the header.
+
+                
+              
+
+              - **match** *(dict) --* 
+
+                The header match type.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``exact``, ``prefix``, ``contains``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+              
+                
+
+                - **exact** *(string) --* 
+
+                  An exact type match.
+
+                  
+                
+
+                - **prefix** *(string) --* 
+
+                  A prefix type match. Matches the value with the prefix.
+
+                  
+                
+
+                - **contains** *(string) --* 
+
+                  A contains type match.
+
+                  
+            
+              
+
+              - **caseSensitive** *(boolean) --* 
+
+                Indicates whether the match is case sensitive.
+
+                
+          
+        
+      
+    
+      
+
+      - **priority** *(integer) --* 
+
+        The priority assigned to the rule. The lower the priority number the higher the priority.
+
+        
+      
+
+      - **action** *(dict) --* 
+
+        The rule action.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``forward``, ``fixedResponse``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **forward** *(dict) --* 
+
+          The forward action. Traffic that matches the rule is forwarded to the specified target groups.
+
+          
+          
+
+          - **targetGroups** *(list) --* 
+
+            The target groups. Traffic matching the rule is forwarded to the specified target groups. With forward actions, you can assign a weight that controls the prioritization and selection of each target group. This means that requests are distributed to individual target groups based on their weights. For example, if two target groups have the same weight, each target group receives half of the traffic.
+
+             
+
+            The default value is 1. This means that if only one target group is provided, there is no need to set the weight; 100% of the traffic goes to that target group.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes the weight of a target group.
+
+              
+              
+
+              - **targetGroupIdentifier** *(string) --* 
+
+                The ID or ARN of the target group.
+
+                
+              
+
+              - **weight** *(integer) --* 
+
+                Only required if you specify multiple target groups for a forward action. The weight determines how requests are distributed to the target group. For example, if you specify two target groups, each with a weight of 10, each target group receives half the requests. If you specify two target groups, one with a weight of 10 and the other with a weight of 20, the target group with a weight of 20 receives twice as many requests as the other target group. If there's only one target group specified, then the default value is 100.
+
+                
+          
+        
+      
+        
+
+        - **fixedResponse** *(dict) --* 
+
+          The fixed response action. The rule returns a custom HTTP response.
+
+          
+          
+
+          - **statusCode** *(integer) --* 
+
+            The HTTP response code. Only ``404`` and ``500`` status codes are supported.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`VPCLattice.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`VPCLattice.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`VPCLattice.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`VPCLattice.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`VPCLattice.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`VPCLattice.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`VPCLattice.Client.exceptions.InternalServerException`
+
+  

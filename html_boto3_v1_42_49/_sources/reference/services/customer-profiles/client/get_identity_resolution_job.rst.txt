@@ -1,0 +1,324 @@
+:doc:`CustomerProfiles <../../customer-profiles>` / Client / get_identity_resolution_job
+
+***************************
+get_identity_resolution_job
+***************************
+
+
+
+.. py:method:: CustomerProfiles.Client.get_identity_resolution_job(**kwargs)
+
+  
+
+  Returns information about an Identity Resolution Job in a specific domain.
+
+   
+
+  Identity Resolution Jobs are set up using the Amazon Connect admin console. For more information, see `Use Identity Resolution to consolidate similar profiles <https://docs.aws.amazon.com/connect/latest/adminguide/use-identity-resolution.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/customer-profiles-2020-08-15/GetIdentityResolutionJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_identity_resolution_job(
+        DomainName='string',
+        JobId='string'
+    )
+    
+  :type DomainName: string
+  :param DomainName: **[REQUIRED]** 
+
+    The unique name of the domain.
+
+    
+
+  
+  :type JobId: string
+  :param JobId: **[REQUIRED]** 
+
+    The unique identifier of the Identity Resolution Job.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DomainName': 'string',
+          'JobId': 'string',
+          'Status': 'PENDING'|'PREPROCESSING'|'FIND_MATCHING'|'MERGING'|'COMPLETED'|'PARTIAL_SUCCESS'|'FAILED',
+          'Message': 'string',
+          'JobStartTime': datetime(2015, 1, 1),
+          'JobEndTime': datetime(2015, 1, 1),
+          'LastUpdatedAt': datetime(2015, 1, 1),
+          'JobExpirationTime': datetime(2015, 1, 1),
+          'AutoMerging': {
+              'Enabled': True|False,
+              'Consolidation': {
+                  'MatchingAttributesList': [
+                      [
+                          'string',
+                      ],
+                  ]
+              },
+              'ConflictResolution': {
+                  'ConflictResolvingModel': 'RECENCY'|'SOURCE',
+                  'SourceName': 'string'
+              },
+              'MinAllowedConfidenceScoreForMerging': 123.0
+          },
+          'ExportingLocation': {
+              'S3Exporting': {
+                  'S3BucketName': 'string',
+                  'S3KeyName': 'string'
+              }
+          },
+          'JobStats': {
+              'NumberOfProfilesReviewed': 123,
+              'NumberOfMatchesFound': 123,
+              'NumberOfMergesDone': 123
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DomainName** *(string) --* 
+
+        The unique name of the domain.
+
+        
+      
+
+      - **JobId** *(string) --* 
+
+        The unique identifier of the Identity Resolution Job.
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        The status of the Identity Resolution Job.
+
+         
+
+        
+        * ``PENDING``: The Identity Resolution Job is scheduled but has not started yet. If you turn off the Identity Resolution feature in your domain, jobs in the ``PENDING`` state are deleted.
+         
+        * ``PREPROCESSING``: The Identity Resolution Job is loading your data.
+         
+        * ``FIND_MATCHING``: The Identity Resolution Job is using the machine learning model to identify profiles that belong to the same matching group.
+         
+        * ``MERGING``: The Identity Resolution Job is merging duplicate profiles.
+         
+        * ``COMPLETED``: The Identity Resolution Job completed successfully.
+         
+        * ``PARTIAL_SUCCESS``: There's a system error and not all of the data is merged. The Identity Resolution Job writes a message indicating the source of the problem.
+         
+        * ``FAILED``: The Identity Resolution Job did not merge any data. It writes a message indicating the source of the problem.
+        
+
+        
+      
+
+      - **Message** *(string) --* 
+
+        The error messages that are generated when the Identity Resolution Job runs.
+
+        
+      
+
+      - **JobStartTime** *(datetime) --* 
+
+        The timestamp of when the Identity Resolution Job was started or will be started.
+
+        
+      
+
+      - **JobEndTime** *(datetime) --* 
+
+        The timestamp of when the Identity Resolution Job was completed.
+
+        
+      
+
+      - **LastUpdatedAt** *(datetime) --* 
+
+        The timestamp of when the Identity Resolution Job was most recently edited.
+
+        
+      
+
+      - **JobExpirationTime** *(datetime) --* 
+
+        The timestamp of when the Identity Resolution Job will expire.
+
+        
+      
+
+      - **AutoMerging** *(dict) --* 
+
+        Configuration settings for how to perform the auto-merging of profiles.
+
+        
+        
+
+        - **Enabled** *(boolean) --* 
+
+          The flag that enables the auto-merging of duplicate profiles.
+
+          
+        
+
+        - **Consolidation** *(dict) --* 
+
+          A list of matching attributes that represent matching criteria. If two profiles meet at least one of the requirements in the matching attributes list, they will be merged.
+
+          
+          
+
+          - **MatchingAttributesList** *(list) --* 
+
+            A list of matching criteria.
+
+            
+            
+
+            - *(list) --* 
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **ConflictResolution** *(dict) --* 
+
+          How the auto-merging process should resolve conflicts between different profiles. For example, if Profile A and Profile B have the same ``FirstName`` and ``LastName`` (and that is the matching criteria), which ``EmailAddress`` should be used?
+
+          
+          
+
+          - **ConflictResolvingModel** *(string) --* 
+
+            How the auto-merging process should resolve conflicts between different profiles.
+
+             
+
+            
+            * ``RECENCY``: Uses the data that was most recently updated.
+             
+            * ``SOURCE``: Uses the data from a specific source. For example, if a company has been aquired or two departments have merged, data from the specified source is used. If two duplicate profiles are from the same source, then ``RECENCY`` is used again.
+            
+
+            
+          
+
+          - **SourceName** *(string) --* 
+
+            The ``ObjectType`` name that is used to resolve profile merging conflicts when choosing ``SOURCE`` as the ``ConflictResolvingModel``.
+
+            
+      
+        
+
+        - **MinAllowedConfidenceScoreForMerging** *(float) --* 
+
+          A number between 0 and 1 that represents the minimum confidence score required for profiles within a matching group to be merged during the auto-merge process. A higher score means higher similarity required to merge profiles.
+
+          
+    
+      
+
+      - **ExportingLocation** *(dict) --* 
+
+        The S3 location where the Identity Resolution Job writes result files.
+
+        
+        
+
+        - **S3Exporting** *(dict) --* 
+
+          Information about the S3 location where Identity Resolution Jobs write result files.
+
+          
+          
+
+          - **S3BucketName** *(string) --* 
+
+            The name of the S3 bucket name where Identity Resolution Jobs write result files.
+
+            
+          
+
+          - **S3KeyName** *(string) --* 
+
+            The S3 key name of the location where Identity Resolution Jobs write result files.
+
+            
+      
+    
+      
+
+      - **JobStats** *(dict) --* 
+
+        Statistics about the Identity Resolution Job.
+
+        
+        
+
+        - **NumberOfProfilesReviewed** *(integer) --* 
+
+          The number of profiles reviewed.
+
+          
+        
+
+        - **NumberOfMatchesFound** *(integer) --* 
+
+          The number of matches found.
+
+          
+        
+
+        - **NumberOfMergesDone** *(integer) --* 
+
+          The number of merges completed.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.InternalServerException`
+
+  

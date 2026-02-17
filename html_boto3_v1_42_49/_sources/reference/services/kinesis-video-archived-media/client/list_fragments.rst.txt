@@ -1,0 +1,256 @@
+:doc:`KinesisVideoArchivedMedia <../../kinesis-video-archived-media>` / Client / list_fragments
+
+**************
+list_fragments
+**************
+
+
+
+.. py:method:: KinesisVideoArchivedMedia.Client.list_fragments(**kwargs)
+
+  
+
+  Returns a list of  Fragment objects from the specified stream and timestamp range within the archived data.
+
+   
+
+  Listing fragments is eventually consistent. This means that even if the producer receives an acknowledgment that a fragment is persisted, the result might not be returned immediately from a request to ``ListFragments``. However, results are typically available in less than one second.
+
+   
+
+  .. note::
+
+    
+
+    You must first call the ``GetDataEndpoint`` API to get an endpoint. Then send the ``ListFragments`` requests to this endpoint using the `--endpoint-url parameter <https://docs.aws.amazon.com/cli/latest/reference/>`__.
+
+    
+
+   
+
+  .. warning::
+
+     
+
+    If an error is thrown after invoking a Kinesis Video Streams archived media API, in addition to the HTTP status code and the response body, it includes the following pieces of information:
+
+     
+
+    
+    * ``x-amz-ErrorType`` HTTP header – contains a more specific error type in addition to what the HTTP status code provides.
+     
+    * ``x-amz-RequestId`` HTTP header – if you want to report an issue to Amazon Web Services, the support team can better diagnose the problem if given the Request Id.
+    
+
+     
+
+    Both the HTTP status code and the ErrorType header can be utilized to make programmatic decisions about whether errors are retry-able and under what conditions, as well as provide information on what actions the client programmer might need to take in order to successfully try again.
+
+     
+
+    For more information, see the **Errors** section at the bottom of this topic, as well as `Common Errors <https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/CommonErrors.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kinesis-video-archived-media-2017-09-30/ListFragments>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_fragments(
+        StreamName='string',
+        StreamARN='string',
+        MaxResults=123,
+        NextToken='string',
+        FragmentSelector={
+            'FragmentSelectorType': 'PRODUCER_TIMESTAMP'|'SERVER_TIMESTAMP',
+            'TimestampRange': {
+                'StartTimestamp': datetime(2015, 1, 1),
+                'EndTimestamp': datetime(2015, 1, 1)
+            }
+        }
+    )
+    
+  :type StreamName: string
+  :param StreamName: 
+
+    The name of the stream from which to retrieve a fragment list. Specify either this parameter or the ``StreamARN`` parameter.
+
+    
+
+  
+  :type StreamARN: string
+  :param StreamARN: 
+
+    The Amazon Resource Name (ARN) of the stream from which to retrieve a fragment list. Specify either this parameter or the ``StreamName`` parameter.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The total number of fragments to return. If the total number of fragments available is more than the value specified in ``max-results``, then a  ListFragmentsOutput$NextToken is provided in the output that you can use to resume pagination.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A token to specify where to start paginating. This is the  ListFragmentsOutput$NextToken from a previously truncated response.
+
+    
+
+  
+  :type FragmentSelector: dict
+  :param FragmentSelector: 
+
+    Describes the timestamp range and timestamp origin for the range of fragments to return.
+
+     
+
+    .. note::
+
+      
+
+      This is only required when the ``NextToken`` isn't passed in the API.
+
+      
+
+    
+
+  
+    - **FragmentSelectorType** *(string) --* **[REQUIRED]** 
+
+      The origin of the timestamps to use (Server or Producer).
+
+      
+
+    
+    - **TimestampRange** *(dict) --* **[REQUIRED]** 
+
+      The range of timestamps to return.
+
+      
+
+    
+      - **StartTimestamp** *(datetime) --* **[REQUIRED]** 
+
+        The starting timestamp in the range of timestamps for which to return fragments.
+
+        
+
+      
+      - **EndTimestamp** *(datetime) --* **[REQUIRED]** 
+
+        The ending timestamp in the range of timestamps for which to return fragments.
+
+        
+
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Fragments': [
+              {
+                  'FragmentNumber': 'string',
+                  'FragmentSizeInBytes': 123,
+                  'ProducerTimestamp': datetime(2015, 1, 1),
+                  'ServerTimestamp': datetime(2015, 1, 1),
+                  'FragmentLengthInMilliseconds': 123
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Fragments** *(list) --* 
+
+        A list of archived  Fragment objects from the stream that meet the selector criteria. Results are in no specific order, even across pages.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents a segment of video or other time-delimited data.
+
+          
+          
+
+          - **FragmentNumber** *(string) --* 
+
+            The unique identifier of the fragment. This value monotonically increases based on the ingestion order.
+
+            
+          
+
+          - **FragmentSizeInBytes** *(integer) --* 
+
+            The total fragment size, including information about the fragment and contained media data.
+
+            
+          
+
+          - **ProducerTimestamp** *(datetime) --* 
+
+            The timestamp from the producer corresponding to the fragment.
+
+            
+          
+
+          - **ServerTimestamp** *(datetime) --* 
+
+            The timestamp from the Amazon Web Services server corresponding to the fragment.
+
+            
+          
+
+          - **FragmentLengthInMilliseconds** *(integer) --* 
+
+            The playback duration or other time value associated with the fragment.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If the returned list is truncated, the operation returns this token to use to retrieve the next page of results. This value is ``null`` when there are no more results to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KinesisVideoArchivedMedia.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`KinesisVideoArchivedMedia.Client.exceptions.InvalidArgumentException`
+
+  
+  *   :py:class:`KinesisVideoArchivedMedia.Client.exceptions.ClientLimitExceededException`
+
+  
+  *   :py:class:`KinesisVideoArchivedMedia.Client.exceptions.NotAuthorizedException`
+
+  

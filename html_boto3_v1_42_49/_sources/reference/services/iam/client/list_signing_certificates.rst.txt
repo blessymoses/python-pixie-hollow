@@ -1,0 +1,210 @@
+:doc:`IAM <../../iam>` / Client / list_signing_certificates
+
+*************************
+list_signing_certificates
+*************************
+
+
+
+.. py:method:: IAM.Client.list_signing_certificates(**kwargs)
+
+  
+
+  Returns information about the signing certificates associated with the specified IAM user. If none exists, the operation returns an empty list.
+
+   
+
+  Although each user is limited to a small number of signing certificates, you can still paginate the results using the ``MaxItems`` and ``Marker`` parameters.
+
+   
+
+  If the ``UserName`` field is not specified, the user name is determined implicitly based on the Amazon Web Services access key ID used to sign the request for this operation. This operation works for access keys under the Amazon Web Services account. Consequently, you can use this operation to manage Amazon Web Services account root user credentials even if the Amazon Web Services account has no associated users.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/ListSigningCertificates>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_signing_certificates(
+        UserName='string',
+        Marker='string',
+        MaxItems=123
+    )
+    
+  :type UserName: string
+  :param UserName: 
+
+    The name of the IAM user whose signing certificates you want to examine.
+
+     
+
+    This parameter allows (through its `regex pattern <http://wikipedia.org/wiki/regex>`__) a string of characters consisting of upper and lowercase alphanumeric characters with no spaces. You can also include any of the following characters: _+=,.@-
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    Use this parameter only when paginating results and only after you receive a response indicating that the results are truncated. Set it to the value of the ``Marker`` element in the response that you received to indicate where the next call should start.
+
+    
+
+  
+  :type MaxItems: integer
+  :param MaxItems: 
+
+    Use this only when paginating results to indicate the maximum number of items you want in the response. If additional items exist beyond the maximum you specify, the ``IsTruncated`` response element is ``true``.
+
+     
+
+    If you do not include this parameter, the number of items defaults to 100. Note that IAM might return fewer results, even when there are more results available. In that case, the ``IsTruncated`` response element returns ``true``, and ``Marker`` contains a value to include in the subsequent call that tells the service where to continue from.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Certificates': [
+              {
+                  'UserName': 'string',
+                  'CertificateId': 'string',
+                  'CertificateBody': 'string',
+                  'Status': 'Active'|'Inactive'|'Expired',
+                  'UploadDate': datetime(2015, 1, 1)
+              },
+          ],
+          'IsTruncated': True|False,
+          'Marker': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains the response to a successful `ListSigningCertificates <https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSigningCertificates.html>`__ request.
+
+      
+      
+
+      - **Certificates** *(list) --* 
+
+        A list of the user's signing certificate information.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about an X.509 signing certificate.
+
+           
+
+          This data type is used as a response element in the `UploadSigningCertificate <https://docs.aws.amazon.com/IAM/latest/APIReference/API_UploadSigningCertificate.html>`__ and `ListSigningCertificates <https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListSigningCertificates.html>`__ operations.
+
+          
+          
+
+          - **UserName** *(string) --* 
+
+            The name of the user the signing certificate is associated with.
+
+            
+          
+
+          - **CertificateId** *(string) --* 
+
+            The ID for the signing certificate.
+
+            
+          
+
+          - **CertificateBody** *(string) --* 
+
+            The contents of the signing certificate.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the signing certificate. ``Active`` means that the key is valid for API calls, while ``Inactive`` means it is not.
+
+            
+          
+
+          - **UploadDate** *(datetime) --* 
+
+            The date when the signing certificate was uploaded.
+
+            
+      
+    
+      
+
+      - **IsTruncated** *(boolean) --* 
+
+        A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the ``Marker`` request parameter to retrieve more items. Note that IAM might return fewer than the ``MaxItems`` number of results even when there are more results available. We recommend that you check ``IsTruncated`` after every call to ensure that you receive all your results.
+
+        
+      
+
+      - **Marker** *(string) --* 
+
+        When ``IsTruncated`` is ``true``, this element is present and contains the value to use for the ``Marker`` parameter in a subsequent pagination request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IAM.Client.exceptions.NoSuchEntityException`
+
+  
+  *   :py:class:`IAM.Client.exceptions.ServiceFailureException`
+
+  
+
+  **Examples**
+
+  The following command lists the signing certificates for the IAM user named Bob.
+  ::
+
+    response = client.list_signing_certificates(
+        UserName='Bob',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Certificates': [
+            {
+                'CertificateBody': '-----BEGIN CERTIFICATE-----<certificate-body>-----END CERTIFICATE-----',
+                'CertificateId': 'TA7SMP42TDN5Z26OBPJE7EXAMPLE',
+                'Status': 'Active',
+                'UploadDate': datetime(2013, 6, 6, 21, 40, 8, 3, 157, 0),
+                'UserName': 'Bob',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

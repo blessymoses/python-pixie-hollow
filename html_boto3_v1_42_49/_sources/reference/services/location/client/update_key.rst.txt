@@ -1,0 +1,380 @@
+:doc:`LocationService <../../location>` / Client / update_key
+
+**********
+update_key
+**********
+
+
+
+.. py:method:: LocationService.Client.update_key(**kwargs)
+
+  
+
+  Updates the specified properties of a given API key resource.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/UpdateKey>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_key(
+        KeyName='string',
+        Description='string',
+        ExpireTime=datetime(2015, 1, 1),
+        NoExpiry=True|False,
+        ForceUpdate=True|False,
+        Restrictions={
+            'AllowActions': [
+                'string',
+            ],
+            'AllowResources': [
+                'string',
+            ],
+            'AllowReferers': [
+                'string',
+            ],
+            'AllowAndroidApps': [
+                {
+                    'Package': 'string',
+                    'CertificateFingerprint': 'string'
+                },
+            ],
+            'AllowAppleApps': [
+                {
+                    'BundleId': 'string'
+                },
+            ]
+        }
+    )
+    
+  :type KeyName: string
+  :param KeyName: **[REQUIRED]** 
+
+    The name of the API key resource to update.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    Updates the description for the API key resource.
+
+    
+
+  
+  :type ExpireTime: datetime
+  :param ExpireTime: 
+
+    Updates the timestamp for when the API key resource will expire in `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``.
+
+    
+
+  
+  :type NoExpiry: boolean
+  :param NoExpiry: 
+
+    Whether the API key should expire. Set to ``true`` to set the API key to have no expiration time.
+
+    
+
+  
+  :type ForceUpdate: boolean
+  :param ForceUpdate: 
+
+    The boolean flag to be included for updating ``ExpireTime`` or ``Restrictions`` details.
+
+     
+
+    Must be set to ``true`` to update an API key resource that has been used in the past 7 days.
+
+     
+
+    ``False`` if force update is not preferred
+
+     
+
+    Default value: ``False``
+
+    
+
+  
+  :type Restrictions: dict
+  :param Restrictions: 
+
+    Updates the API key restrictions for the API key resource.
+
+    
+
+  
+    - **AllowActions** *(list) --* **[REQUIRED]** 
+
+      A list of allowed actions that an API key resource grants permissions to perform. You must have at least one action for each type of resource. For example, if you have a place resource, you must include at least one place action.
+
+       
+
+      The following are valid values for the actions.
+
+       
+
+      
+      * **Map actions** 
+
+        
+        * ``geo:GetMap*`` - Allows all actions needed for map rendering.
+         
+        * ``geo-maps:GetTile`` - Allows retrieving map tiles.
+         
+        * ``geo-maps:GetStaticMap`` - Allows retrieving static map images.
+         
+        * ``geo-maps:*`` - Allows all actions related to map functionalities.
+        
+
+      
+       
+      * **Place actions** 
+
+        
+        * ``geo:SearchPlaceIndexForText`` - Allows geocoding.
+         
+        * ``geo:SearchPlaceIndexForPosition`` - Allows reverse geocoding.
+         
+        * ``geo:SearchPlaceIndexForSuggestions`` - Allows generating suggestions from text.
+         
+        * ``GetPlace`` - Allows finding a place by place ID.
+         
+        * ``geo-places:Geocode`` - Allows geocoding using place information.
+         
+        * ``geo-places:ReverseGeocode`` - Allows reverse geocoding from location coordinates.
+         
+        * ``geo-places:SearchNearby`` - Allows searching for places near a location.
+         
+        * ``geo-places:SearchText`` - Allows searching for places based on text input.
+         
+        * ``geo-places:Autocomplete`` - Allows auto-completion of place names based on text input.
+         
+        * ``geo-places:Suggest`` - Allows generating suggestions for places based on partial input.
+         
+        * ``geo-places:GetPlace`` - Allows finding a place by its ID.
+         
+        * ``geo-places:*`` - Allows all actions related to place services.
+        
+
+      
+       
+      * **Route actions** 
+
+        
+        * ``geo:CalculateRoute`` - Allows point to point routing.
+         
+        * ``geo:CalculateRouteMatrix`` - Allows calculating a matrix of routes.
+         
+        * ``geo-routes:CalculateRoutes`` - Allows calculating multiple routes between points.
+         
+        * ``geo-routes:CalculateRouteMatrix`` - Allows calculating a matrix of routes between points.
+         
+        * ``geo-routes:CalculateIsolines`` - Allows calculating isolines for a given area.
+         
+        * ``geo-routes:OptimizeWaypoints`` - Allows optimizing the order of waypoints in a route.
+         
+        * ``geo-routes:SnapToRoads`` - Allows snapping a route to the nearest roads.
+         
+        * ``geo-routes:*`` - Allows all actions related to routing functionalities.
+        
+
+      
+      
+
+       
+
+      .. note::
+
+        
+
+        You must use these strings exactly. For example, to provide access to map rendering, the only valid action is ``geo:GetMap*`` as an input to the list. ``["geo:GetMap*"]`` is valid but ``["geo:GetMapTile"]`` is not. Similarly, you cannot use ``["geo:SearchPlaceIndexFor*"]`` - you must list each of the Place actions separately.
+
+        
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AllowResources** *(list) --* **[REQUIRED]** 
+
+      A list of allowed resource ARNs that a API key bearer can perform actions on.
+
+       
+
+      
+      * The ARN must be the correct ARN for a map, place, or route ARN. You may include wildcards in the resource-id to match multiple resources of the same type.
+       
+      * The resources must be in the same ``partition``, ``region``, and ``account-id`` as the key that is being created.
+       
+      * Other than wildcards, you must include the full ARN, including the ``arn``, ``partition``, ``service``, ``region``, ``account-id`` and ``resource-id`` delimited by colons (:).
+       
+      * No spaces allowed, even with wildcards. For example, ``arn:aws:geo:region:account-id:map/ExampleMap*``.
+      
+
+       
+
+      For more information about ARN format, see `Amazon Resource Names (ARNs) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AllowReferers** *(list) --* 
+
+      An optional list of allowed HTTP referers for which requests must originate from. Requests using this API key from other domains will not be allowed.
+
+       
+
+      Requirements:
+
+       
+
+      
+      * Contain only alphanumeric characters (A–Z, a–z, 0–9) or any symbols in this list ``$\-._+!*`(),;/?:@=&``
+       
+      * May contain a percent (%) if followed by 2 hexadecimal digits (A-F, a-f, 0-9); this is used for URL encoding purposes.
+       
+      * May contain wildcard characters question mark (?) and asterisk (*). Question mark (?) will replace any single character (including hexadecimal digits). Asterisk (*) will replace any multiple characters (including multiple hexadecimal digits).
+       
+      * No spaces allowed. For example, ``https://example.com``.
+      
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **AllowAndroidApps** *(list) --* 
+
+      An optional list of allowed Android applications for which requests must originate from. Requests using this API key from other sources will not be allowed.
+
+      
+
+    
+      - *(dict) --* 
+
+        Unique identifying information for an Android app. Consists of a package name and a 20 byte SHA-1 certificate fingerprint.
+
+        
+
+      
+        - **Package** *(string) --* **[REQUIRED]** 
+
+          Unique package name for an Android app.
+
+          
+
+        
+        - **CertificateFingerprint** *(string) --* **[REQUIRED]** 
+
+          20 byte SHA-1 certificate fingerprint associated with the Android app signing certificate.
+
+          
+
+        
+      
+  
+    - **AllowAppleApps** *(list) --* 
+
+      An optional list of allowed Apple applications for which requests must originate from. Requests using this API key from other sources will not be allowed.
+
+      
+
+    
+      - *(dict) --* 
+
+        Unique identifying information for an Apple app (iOS, macOS, tvOS and watchOS). Consists of an Apple Bundle ID.
+
+        
+
+      
+        - **BundleId** *(string) --* **[REQUIRED]** 
+
+          The unique identifier of the app across all Apple platforms (iOS, macOS, tvOS, watchOS, etc.)
+
+          
+
+        
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'KeyArn': 'string',
+          'KeyName': 'string',
+          'UpdateTime': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **KeyArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) for the API key resource. Used when you need to specify a resource across all Amazon Web Services.
+
+         
+
+        
+        * Format example: ``arn:aws:geo:region:account-id:key/ExampleKey``
+        
+
+        
+      
+
+      - **KeyName** *(string) --* 
+
+        The name of the API key resource.
+
+        
+      
+
+      - **UpdateTime** *(datetime) --* 
+
+        The timestamp for when the API key resource was last updated in `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`LocationService.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`LocationService.Client.exceptions.ThrottlingException`
+
+  

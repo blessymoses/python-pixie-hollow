@@ -1,0 +1,181 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / create_import_task
+
+******************
+create_import_task
+******************
+
+
+
+.. py:method:: CloudWatchLogs.Client.create_import_task(**kwargs)
+
+  
+
+  Starts an import from a data source to CloudWatch Log and creates a managed log group as the destination for the imported data. Currently, `CloudTrail Event Data Store <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/query-event-data-store.html>`__ is the only supported data source.
+
+   
+
+  The import task must satisfy the following constraints:
+
+   
+
+  
+  * The specified source must be in an ACTIVE state.
+   
+  * The API caller must have permissions to access the data in the provided source and to perform iam:PassRole on the provided import role which has the same permissions, as described below.
+   
+  * The provided IAM role must trust the "cloudtrail.amazonaws.com" principal and have the following permissions: 
+
+    
+    * cloudtrail:GetEventDataStoreData
+     
+    * logs:CreateLogGroup
+     
+    * logs:CreateLogStream
+     
+    * logs:PutResourcePolicy
+     
+    * (If source has an associated AWS KMS Key) kms:Decrypt
+     
+    * (If source has an associated AWS KMS Key) kms:GenerateDataKey
+    
+
+   
+
+  Example IAM policy for provided import role:
+
+   
+
+  ``[ { "Effect": "Allow", "Action": "iam:PassRole", "Resource": "arn:aws:iam::123456789012:role/apiCallerCredentials", "Condition": { "StringLike": { "iam:AssociatedResourceARN": "arn:aws:logs:us-east-1:123456789012:log-group:aws/cloudtrail/f1d45bff-d0e3-4868-b5d9-2eb678aa32fb:*" } } }, { "Effect": "Allow", "Action": [ "cloudtrail:GetEventDataStoreData" ], "Resource": [ "arn:aws:cloudtrail:us-east-1:123456789012:eventdatastore/f1d45bff-d0e3-4868-b5d9-2eb678aa32fb" ] }, { "Effect": "Allow", "Action": [ "logs:CreateImportTask", "logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutResourcePolicy" ], "Resource": [ "arn:aws:logs:us-east-1:123456789012:log-group:/aws/cloudtrail/*" ] }, { "Effect": "Allow", "Action": [ "kms:Decrypt", "kms:GenerateDataKey" ], "Resource": [ "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012" ] } ]``
+
+  
+   
+  * If the import source has a customer managed key, the "cloudtrail.amazonaws.com" principal needs permissions to perform kms:Decrypt and kms:GenerateDataKey.
+   
+  * There can be no more than 3 active imports per account at a given time.
+   
+  * The startEventTime must be less than or equal to endEventTime.
+   
+  * The data being imported must be within the specified source's retention period.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/CreateImportTask>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_import_task(
+        importSourceArn='string',
+        importRoleArn='string',
+        importFilter={
+            'startEventTime': 123,
+            'endEventTime': 123
+        }
+    )
+    
+  :type importSourceArn: string
+  :param importSourceArn: **[REQUIRED]** 
+
+    The ARN of the source to import from.
+
+    
+
+  
+  :type importRoleArn: string
+  :param importRoleArn: **[REQUIRED]** 
+
+    The ARN of the IAM role that grants CloudWatch Logs permission to import from the CloudTrail Lake Event Data Store.
+
+    
+
+  
+  :type importFilter: dict
+  :param importFilter: 
+
+    Optional filters to constrain the import by CloudTrail event time. Times are specified in Unix timestamp milliseconds. The range of data being imported must be within the specified source's retention period.
+
+    
+
+  
+    - **startEventTime** *(integer) --* 
+
+      The start of the time range for events to import, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.
+
+      
+
+    
+    - **endEventTime** *(integer) --* 
+
+      The end of the time range for events to import, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'importId': 'string',
+          'importDestinationArn': 'string',
+          'creationTime': 123
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **importId** *(string) --* 
+
+        A unique identifier for the import task.
+
+        
+      
+
+      - **importDestinationArn** *(string) --* 
+
+        The ARN of the CloudWatch Logs log group created as the destination for the imported events.
+
+        
+      
+
+      - **creationTime** *(integer) --* 
+
+        The timestamp when the import task was created, expressed as the number of milliseconds after Jan 1, 1970 00:00:00 UTC.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidOperationException`
+
+  

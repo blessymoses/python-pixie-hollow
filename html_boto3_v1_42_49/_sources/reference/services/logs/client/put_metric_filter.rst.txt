@@ -1,0 +1,238 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / put_metric_filter
+
+*****************
+put_metric_filter
+*****************
+
+
+
+.. py:method:: CloudWatchLogs.Client.put_metric_filter(**kwargs)
+
+  
+
+  Creates or updates a metric filter and associates it with the specified log group. With metric filters, you can configure rules to extract metric data from log events ingested through `PutLogEvents <https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutLogEvents.html>`__.
+
+   
+
+  The maximum number of metric filters that can be associated with a log group is 100.
+
+   
+
+  Using regular expressions in filter patterns is supported. For these filters, there is a quota of two regular expression patterns within a single filter pattern. There is also a quota of five regular expression patterns per log group. For more information about using regular expressions in filter patterns, see `Filter pattern syntax for metric filters, subscription filters, filter log events, and Live Tail <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html>`__.
+
+   
+
+  When you create a metric filter, you can also optionally assign a unit and dimensions to the metric that is created.
+
+   
+
+  .. warning::
+
+     
+
+    Metrics extracted from log events are charged as custom metrics. To prevent unexpected high charges, do not specify high-cardinality fields such as ``IPAddress`` or ``requestID`` as dimensions. Each different value found for a dimension is treated as a separate metric and accrues charges as a separate custom metric.
+
+     
+
+    CloudWatch Logs might disable a metric filter if it generates 1,000 different name/value pairs for your specified dimensions within one hour.
+
+     
+
+    You can also set up a billing alarm to alert you if your charges are higher than expected. For more information, see `Creating a Billing Alarm to Monitor Your Estimated Amazon Web Services Charges <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/PutMetricFilter>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_metric_filter(
+        logGroupName='string',
+        filterName='string',
+        filterPattern='string',
+        metricTransformations=[
+            {
+                'metricName': 'string',
+                'metricNamespace': 'string',
+                'metricValue': 'string',
+                'defaultValue': 123.0,
+                'dimensions': {
+                    'string': 'string'
+                },
+                'unit': 'Seconds'|'Microseconds'|'Milliseconds'|'Bytes'|'Kilobytes'|'Megabytes'|'Gigabytes'|'Terabytes'|'Bits'|'Kilobits'|'Megabits'|'Gigabits'|'Terabits'|'Percent'|'Count'|'Bytes/Second'|'Kilobytes/Second'|'Megabytes/Second'|'Gigabytes/Second'|'Terabytes/Second'|'Bits/Second'|'Kilobits/Second'|'Megabits/Second'|'Gigabits/Second'|'Terabits/Second'|'Count/Second'|'None'
+            },
+        ],
+        applyOnTransformedLogs=True|False,
+        fieldSelectionCriteria='string',
+        emitSystemFieldDimensions=[
+            'string',
+        ]
+    )
+    
+  :type logGroupName: string
+  :param logGroupName: **[REQUIRED]** 
+
+    The name of the log group.
+
+    
+
+  
+  :type filterName: string
+  :param filterName: **[REQUIRED]** 
+
+    A name for the metric filter.
+
+    
+
+  
+  :type filterPattern: string
+  :param filterPattern: **[REQUIRED]** 
+
+    A filter pattern for extracting metric data out of ingested log events.
+
+    
+
+  
+  :type metricTransformations: list
+  :param metricTransformations: **[REQUIRED]** 
+
+    A collection of information that defines how metric data gets emitted.
+
+    
+
+  
+    - *(dict) --* 
+
+      Indicates how to transform ingested log events to metric data in a CloudWatch metric.
+
+      
+
+    
+      - **metricName** *(string) --* **[REQUIRED]** 
+
+        The name of the CloudWatch metric.
+
+        
+
+      
+      - **metricNamespace** *(string) --* **[REQUIRED]** 
+
+        A custom namespace to contain your metric in CloudWatch. Use namespaces to group together metrics that are similar. For more information, see `Namespaces <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Namespace>`__.
+
+        
+
+      
+      - **metricValue** *(string) --* **[REQUIRED]** 
+
+        The value to publish to the CloudWatch metric when a filter pattern matches a log event.
+
+        
+
+      
+      - **defaultValue** *(float) --* 
+
+        (Optional) The value to emit when a filter pattern does not match a log event. This value can be null.
+
+        
+
+      
+      - **dimensions** *(dict) --* 
+
+        The fields to use as dimensions for the metric. One metric filter can include as many as three dimensions.
+
+         
+
+        .. warning::
+
+           
+
+          Metrics extracted from log events are charged as custom metrics. To prevent unexpected high charges, do not specify high-cardinality fields such as ``IPAddress`` or ``requestID`` as dimensions. Each different value found for a dimension is treated as a separate metric and accrues charges as a separate custom metric.
+
+           
+
+          CloudWatch Logs disables a metric filter if it generates 1000 different name/value pairs for your specified dimensions within a certain amount of time. This helps to prevent accidental high charges.
+
+           
+
+          You can also set up a billing alarm to alert you if your charges are higher than expected. For more information, see `Creating a Billing Alarm to Monitor Your Estimated Amazon Web Services Charges <https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html>`__.
+
+          
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+      - **unit** *(string) --* 
+
+        The unit to assign to the metric. If you omit this, the unit is set as ``None``.
+
+        
+
+      
+    
+
+  :type applyOnTransformedLogs: boolean
+  :param applyOnTransformedLogs: 
+
+    This parameter is valid only for log groups that have an active log transformer. For more information about log transformers, see `PutTransformer <https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutTransformer.html>`__.
+
+     
+
+    If the log group uses either a log-group level or account-level transformer, and you specify ``true``, the metric filter will be applied on the transformed version of the log events instead of the original ingested log events.
+
+    
+
+  
+  :type fieldSelectionCriteria: string
+  :param fieldSelectionCriteria: 
+
+    A filter expression that specifies which log events should be processed by this metric filter based on system fields such as source account and source region. Uses selection criteria syntax with operators like ``=``, ``!=``, ``AND``, ``OR``, ``IN``, ``NOT IN``. Example: ``@aws.region = "us-east-1"`` or ``@aws.account IN ["123456789012", "987654321098"]``. Maximum length: 2000 characters.
+
+    
+
+  
+  :type emitSystemFieldDimensions: list
+  :param emitSystemFieldDimensions: 
+
+    A list of system fields to emit as additional dimensions in the generated metrics. Valid values are ``@aws.account`` and ``@aws.region``. These dimensions help identify the source of centralized log data and count toward the total dimension limit for metric filters.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.OperationAbortedException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.InvalidOperationException`
+
+  

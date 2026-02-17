@@ -1,0 +1,703 @@
+:doc:`FSx <../../fsx>` / Client / create_storage_virtual_machine
+
+******************************
+create_storage_virtual_machine
+******************************
+
+
+
+.. py:method:: FSx.Client.create_storage_virtual_machine(**kwargs)
+
+  
+
+  Creates a storage virtual machine (SVM) for an Amazon FSx for ONTAP file system.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/fsx-2018-03-01/CreateStorageVirtualMachine>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_storage_virtual_machine(
+        ActiveDirectoryConfiguration={
+            'NetBiosName': 'string',
+            'SelfManagedActiveDirectoryConfiguration': {
+                'DomainName': 'string',
+                'OrganizationalUnitDistinguishedName': 'string',
+                'FileSystemAdministratorsGroup': 'string',
+                'UserName': 'string',
+                'Password': 'string',
+                'DnsIps': [
+                    'string',
+                ],
+                'DomainJoinServiceAccountSecret': 'string'
+            }
+        },
+        ClientRequestToken='string',
+        FileSystemId='string',
+        Name='string',
+        SvmAdminPassword='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        RootVolumeSecurityStyle='UNIX'|'NTFS'|'MIXED'
+    )
+    
+  :type ActiveDirectoryConfiguration: dict
+  :param ActiveDirectoryConfiguration: 
+
+    Describes the self-managed Microsoft Active Directory to which you want to join the SVM. Joining an Active Directory provides user authentication and access control for SMB clients, including Microsoft Windows and macOS clients accessing the file system.
+
+    
+
+  
+    - **NetBiosName** *(string) --* **[REQUIRED]** 
+
+      The NetBIOS name of the Active Directory computer object that will be created for your SVM.
+
+      
+
+    
+    - **SelfManagedActiveDirectoryConfiguration** *(dict) --* 
+
+      The configuration that Amazon FSx uses to join a FSx for Windows File Server file system or an FSx for ONTAP storage virtual machine (SVM) to a self-managed (including on-premises) Microsoft Active Directory (AD) directory. For more information, see `Using Amazon FSx for Windows with your self-managed Microsoft Active Directory <https://docs.aws.amazon.com/fsx/latest/WindowsGuide/self-managed-AD.html>`__ or `Managing FSx for ONTAP SVMs <https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/managing-svms.html>`__.
+
+      
+
+    
+      - **DomainName** *(string) --* **[REQUIRED]** 
+
+        The fully qualified domain name of the self-managed AD directory, such as ``corp.example.com``.
+
+        
+
+      
+      - **OrganizationalUnitDistinguishedName** *(string) --* 
+
+        (Optional) The fully qualified distinguished name of the organizational unit within your self-managed AD directory. Amazon FSx only accepts OU as the direct parent of the file system. An example is ``OU=FSx,DC=yourdomain,DC=corp,DC=com``. To learn more, see `RFC 2253 <https://tools.ietf.org/html/rfc2253>`__. If none is provided, the FSx file system is created in the default location of your self-managed AD directory.
+
+         
+
+        .. warning::
+
+           
+
+          Only Organizational Unit (OU) objects can be the direct parent of the file system that you're creating.
+
+          
+
+        
+
+      
+      - **FileSystemAdministratorsGroup** *(string) --* 
+
+        (Optional) The name of the domain group whose members are granted administrative privileges for the file system. Administrative privileges include taking ownership of files and folders, setting audit controls (audit ACLs) on files and folders, and administering the file system remotely by using the FSx Remote PowerShell. The group that you specify must already exist in your domain. If you don't provide one, your AD domain's Domain Admins group is used.
+
+        
+
+      
+      - **UserName** *(string) --* 
+
+        The user name for the service account on your self-managed AD domain that Amazon FSx will use to join to your AD domain. This account must have the permission to join computers to the domain in the organizational unit provided in ``OrganizationalUnitDistinguishedName``, or in the default location of your AD domain.
+
+        
+
+      
+      - **Password** *(string) --* 
+
+        The password for the service account on your self-managed AD domain that Amazon FSx will use to join to your AD domain.
+
+        
+
+      
+      - **DnsIps** *(list) --* **[REQUIRED]** 
+
+        A list of up to three IP addresses of DNS servers or domain controllers in the self-managed AD directory.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **DomainJoinServiceAccountSecret** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the Amazon Web Services Secrets Manager secret containing the self-managed Active Directory domain join service account credentials. When provided, Amazon FSx uses the credentials stored in this secret to join the file system to your self-managed Active Directory domain.
+
+         
+
+        The secret must contain two key-value pairs:
+
+         
+
+        
+        * ``CUSTOMER_MANAGED_ACTIVE_DIRECTORY_USERNAME`` - The username for the service account
+         
+        * ``CUSTOMER_MANAGED_ACTIVE_DIRECTORY_PASSWORD`` - The password for the service account
+        
+
+         
+
+        For more information, see `Using Amazon FSx for Windows with your self-managed Microsoft Active Directory <https://docs.aws.amazon.com/fsx/latest/WindowsGuide/self-manage-prereqs.html>`__ or `Using Amazon FSx for ONTAP with your self-managed Microsoft Active Directory <https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/self-manage-prereqs.html>`__.
+
+        
+
+      
+    
+  
+  :type ClientRequestToken: string
+  :param ClientRequestToken: 
+
+    (Optional) An idempotency token for resource creation, in a string of up to 63 ASCII characters. This token is automatically filled on your behalf when you use the Command Line Interface (CLI) or an Amazon Web Services SDK.
+
+    This field is autopopulated if not provided.
+
+  
+  :type FileSystemId: string
+  :param FileSystemId: **[REQUIRED]** 
+
+    The globally unique ID of the file system, assigned by Amazon FSx.
+
+    
+
+  
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name of the SVM.
+
+    
+
+  
+  :type SvmAdminPassword: string
+  :param SvmAdminPassword: 
+
+    The password to use when managing the SVM using the NetApp ONTAP CLI or REST API. If you do not specify a password, you can still use the file system's ``fsxadmin`` user to manage the SVM.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of ``Tag`` values, with a maximum of 50 elements.
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies a key-value pair for a resource tag.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        A value that specifies the ``TagKey``, the name of the tag. Tag keys must be unique for the resource to which they are attached.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        A value that specifies the ``TagValue``, the value assigned to the corresponding tag key. Tag values can be null and don't have to be unique in a tag set. For example, you can have a key-value pair in a tag set of ``finances : April`` and also of ``payroll : April``.
+
+        
+
+      
+    
+
+  :type RootVolumeSecurityStyle: string
+  :param RootVolumeSecurityStyle: 
+
+    The security style of the root volume of the SVM. Specify one of the following values:
+
+     
+
+    
+    * ``UNIX`` if the file system is managed by a UNIX administrator, the majority of users are NFS clients, and an application accessing the data uses a UNIX user as the service account.
+     
+    * ``NTFS`` if the file system is managed by a Microsoft Windows administrator, the majority of users are SMB clients, and an application accessing the data uses a Microsoft Windows user as the service account.
+     
+    * ``MIXED`` This is an advanced setting. For more information, see `Volume security style <https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/volume-security-style.html>`__ in the Amazon FSx for NetApp ONTAP User Guide.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'StorageVirtualMachine': {
+              'ActiveDirectoryConfiguration': {
+                  'NetBiosName': 'string',
+                  'SelfManagedActiveDirectoryConfiguration': {
+                      'DomainName': 'string',
+                      'OrganizationalUnitDistinguishedName': 'string',
+                      'FileSystemAdministratorsGroup': 'string',
+                      'UserName': 'string',
+                      'DnsIps': [
+                          'string',
+                      ],
+                      'DomainJoinServiceAccountSecret': 'string'
+                  }
+              },
+              'CreationTime': datetime(2015, 1, 1),
+              'Endpoints': {
+                  'Iscsi': {
+                      'DNSName': 'string',
+                      'IpAddresses': [
+                          'string',
+                      ],
+                      'Ipv6Addresses': [
+                          'string',
+                      ]
+                  },
+                  'Management': {
+                      'DNSName': 'string',
+                      'IpAddresses': [
+                          'string',
+                      ],
+                      'Ipv6Addresses': [
+                          'string',
+                      ]
+                  },
+                  'Nfs': {
+                      'DNSName': 'string',
+                      'IpAddresses': [
+                          'string',
+                      ],
+                      'Ipv6Addresses': [
+                          'string',
+                      ]
+                  },
+                  'Smb': {
+                      'DNSName': 'string',
+                      'IpAddresses': [
+                          'string',
+                      ],
+                      'Ipv6Addresses': [
+                          'string',
+                      ]
+                  }
+              },
+              'FileSystemId': 'string',
+              'Lifecycle': 'CREATED'|'CREATING'|'DELETING'|'FAILED'|'MISCONFIGURED'|'PENDING',
+              'Name': 'string',
+              'ResourceARN': 'string',
+              'StorageVirtualMachineId': 'string',
+              'Subtype': 'DEFAULT'|'DP_DESTINATION'|'SYNC_DESTINATION'|'SYNC_SOURCE',
+              'UUID': 'string',
+              'Tags': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'LifecycleTransitionReason': {
+                  'Message': 'string'
+              },
+              'RootVolumeSecurityStyle': 'UNIX'|'NTFS'|'MIXED'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **StorageVirtualMachine** *(dict) --* 
+
+        Returned after a successful ``CreateStorageVirtualMachine`` operation; describes the SVM just created.
+
+        
+        
+
+        - **ActiveDirectoryConfiguration** *(dict) --* 
+
+          Describes the Microsoft Active Directory configuration to which the SVM is joined, if applicable.
+
+          
+          
+
+          - **NetBiosName** *(string) --* 
+
+            The NetBIOS name of the AD computer object to which the SVM is joined.
+
+            
+          
+
+          - **SelfManagedActiveDirectoryConfiguration** *(dict) --* 
+
+            The configuration of the self-managed Microsoft Active Directory (AD) directory to which the Windows File Server or ONTAP storage virtual machine (SVM) instance is joined.
+
+            
+            
+
+            - **DomainName** *(string) --* 
+
+              The fully qualified domain name of the self-managed AD directory.
+
+              
+            
+
+            - **OrganizationalUnitDistinguishedName** *(string) --* 
+
+              The fully qualified distinguished name of the organizational unit within the self-managed AD directory to which the Windows File Server or ONTAP storage virtual machine (SVM) instance is joined.
+
+              
+            
+
+            - **FileSystemAdministratorsGroup** *(string) --* 
+
+              The name of the domain group whose members have administrative privileges for the FSx file system.
+
+              
+            
+
+            - **UserName** *(string) --* 
+
+              The user name for the service account on your self-managed AD domain that FSx uses to join to your AD domain.
+
+              
+            
+
+            - **DnsIps** *(list) --* 
+
+              A list of up to three IP addresses of DNS servers or domain controllers in the self-managed AD directory.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **DomainJoinServiceAccountSecret** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the Amazon Web Services Secrets Manager secret containing the service account credentials used to join the file system to your self-managed Active Directory domain.
+
+              
+        
+      
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          The time that the resource was created, in seconds (since 1970-01-01T00:00:00Z), also known as Unix time.
+
+          
+        
+
+        - **Endpoints** *(dict) --* 
+
+          The endpoints that are used to access data or to manage the SVM using the NetApp ONTAP CLI, REST API, or NetApp CloudManager. They are the ``Iscsi``, ``Management``, ``Nfs``, and ``Smb`` endpoints.
+
+          
+          
+
+          - **Iscsi** *(dict) --* 
+
+            An endpoint for connecting using the Internet Small Computer Systems Interface (iSCSI) protocol.
+
+            
+            
+
+            - **DNSName** *(string) --* 
+
+              The file system's DNS name. You can mount your file system using its DNS name.
+
+              
+            
+
+            - **IpAddresses** *(list) --* 
+
+              The SVM endpoint's IPv4 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **Ipv6Addresses** *(list) --* 
+
+              The SVM endpoint's IPv6 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **Management** *(dict) --* 
+
+            An endpoint for managing SVMs using the NetApp ONTAP CLI, NetApp ONTAP API, or NetApp CloudManager.
+
+            
+            
+
+            - **DNSName** *(string) --* 
+
+              The file system's DNS name. You can mount your file system using its DNS name.
+
+              
+            
+
+            - **IpAddresses** *(list) --* 
+
+              The SVM endpoint's IPv4 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **Ipv6Addresses** *(list) --* 
+
+              The SVM endpoint's IPv6 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **Nfs** *(dict) --* 
+
+            An endpoint for connecting using the Network File System (NFS) protocol.
+
+            
+            
+
+            - **DNSName** *(string) --* 
+
+              The file system's DNS name. You can mount your file system using its DNS name.
+
+              
+            
+
+            - **IpAddresses** *(list) --* 
+
+              The SVM endpoint's IPv4 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **Ipv6Addresses** *(list) --* 
+
+              The SVM endpoint's IPv6 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **Smb** *(dict) --* 
+
+            An endpoint for connecting using the Server Message Block (SMB) protocol.
+
+            
+            
+
+            - **DNSName** *(string) --* 
+
+              The file system's DNS name. You can mount your file system using its DNS name.
+
+              
+            
+
+            - **IpAddresses** *(list) --* 
+
+              The SVM endpoint's IPv4 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **Ipv6Addresses** *(list) --* 
+
+              The SVM endpoint's IPv6 addresses.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **FileSystemId** *(string) --* 
+
+          The globally unique ID of the file system, assigned by Amazon FSx.
+
+          
+        
+
+        - **Lifecycle** *(string) --* 
+
+          Describes the SVM's lifecycle status.
+
+           
+
+          
+          * ``CREATED`` - The SVM is fully available for use.
+           
+          * ``CREATING`` - Amazon FSx is creating the new SVM.
+           
+          * ``DELETING`` - Amazon FSx is deleting an existing SVM.
+           
+          * ``FAILED`` - Amazon FSx was unable to create the SVM.
+           
+          * ``MISCONFIGURED`` - The SVM is in a failed but recoverable state.
+           
+          * ``PENDING`` - Amazon FSx has not started creating the SVM.
+          
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          The name of the SVM, if provisioned.
+
+          
+        
+
+        - **ResourceARN** *(string) --* 
+
+          The Amazon Resource Name (ARN) for a given resource. ARNs uniquely identify Amazon Web Services resources. We require an ARN when you need to specify a resource unambiguously across all of Amazon Web Services. For more information, see `Amazon Resource Names (ARNs) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ in the *Amazon Web Services General Reference*.
+
+          
+        
+
+        - **StorageVirtualMachineId** *(string) --* 
+
+          The SVM's system generated unique ID.
+
+          
+        
+
+        - **Subtype** *(string) --* 
+
+          Describes the SVM's subtype.
+
+          
+        
+
+        - **UUID** *(string) --* 
+
+          The SVM's UUID (universally unique identifier).
+
+          
+        
+
+        - **Tags** *(list) --* 
+
+          A list of ``Tag`` values, with a maximum of 50 elements.
+
+          
+          
+
+          - *(dict) --* 
+
+            Specifies a key-value pair for a resource tag.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              A value that specifies the ``TagKey``, the name of the tag. Tag keys must be unique for the resource to which they are attached.
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              A value that specifies the ``TagValue``, the value assigned to the corresponding tag key. Tag values can be null and don't have to be unique in a tag set. For example, you can have a key-value pair in a tag set of ``finances : April`` and also of ``payroll : April``.
+
+              
+        
+      
+        
+
+        - **LifecycleTransitionReason** *(dict) --* 
+
+          Describes why the SVM lifecycle state changed.
+
+          
+          
+
+          - **Message** *(string) --* 
+
+            A detailed error message.
+
+            
+      
+        
+
+        - **RootVolumeSecurityStyle** *(string) --* 
+
+          The security style of the root volume of the SVM.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`FSx.Client.exceptions.ActiveDirectoryError`
+
+  
+  *   :py:class:`FSx.Client.exceptions.BadRequest`
+
+  
+  *   :py:class:`FSx.Client.exceptions.FileSystemNotFound`
+
+  
+  *   :py:class:`FSx.Client.exceptions.IncompatibleParameterError`
+
+  
+  *   :py:class:`FSx.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`FSx.Client.exceptions.ServiceLimitExceeded`
+
+  
+  *   :py:class:`FSx.Client.exceptions.UnsupportedOperation`
+
+  

@@ -1,0 +1,508 @@
+:doc:`ComputeOptimizer <../../compute-optimizer>` / Paginator / GetRecommendationPreferences
+
+****************************
+GetRecommendationPreferences
+****************************
+
+
+
+.. py:class:: ComputeOptimizer.Paginator.GetRecommendationPreferences
+
+  ::
+
+    
+    paginator = client.get_paginator('get_recommendation_preferences')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`ComputeOptimizer.Client.get_recommendation_preferences`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/compute-optimizer-2019-11-01/GetRecommendationPreferences>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          resourceType='Ec2Instance'|'AutoScalingGroup'|'EbsVolume'|'LambdaFunction'|'NotApplicable'|'EcsService'|'License'|'RdsDBInstance'|'AuroraDBClusterStorage'|'Idle',
+          scope={
+              'name': 'Organization'|'AccountId'|'ResourceArn',
+              'value': 'string'
+          },
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type resourceType: string
+    :param resourceType: **[REQUIRED]** 
+
+      The target resource type of the recommendation preference for which to return preferences.
+
+       
+
+      The ``Ec2Instance`` option encompasses standalone instances and instances that are part of Amazon EC2 Auto Scaling groups. The ``AutoScalingGroup`` option encompasses only instances that are part of an Amazon EC2 Auto Scaling group.
+
+      
+
+    
+    :type scope: dict
+    :param scope: 
+
+      An object that describes the scope of the recommendation preference to return.
+
+       
+
+      You can return recommendation preferences that are created at the organization level (for management accounts of an organization only), account level, and resource level. For more information, see `Activating enhanced infrastructure metrics <https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html>`__ in the *Compute Optimizer User Guide*.
+
+      
+
+    
+      - **name** *(string) --* 
+
+        The name of the scope.
+
+         
+
+        The following scopes are possible:
+
+         
+
+        
+        * ``Organization`` - Specifies that the recommendation preference applies at the organization level, for all member accounts of an organization.
+         
+        * ``AccountId`` - Specifies that the recommendation preference applies at the account level, for all resources of a given resource type in an account.
+         
+        * ``ResourceArn`` - Specifies that the recommendation preference applies at the individual resource level.
+        
+
+        
+
+      
+      - **value** *(string) --* 
+
+        The value of the scope.
+
+         
+
+        If you specified the ``name`` of the scope as:
+
+         
+
+        
+        * ``Organization`` - The ``value`` must be ``ALL_ACCOUNTS``.
+         
+        * ``AccountId`` - The ``value`` must be a 12-digit Amazon Web Services account ID.
+         
+        * ``ResourceArn`` - The ``value`` must be the Amazon Resource Name (ARN) of an EC2 instance or an Amazon EC2 Auto Scaling group.
+        
+
+         
+
+        Only EC2 instance and Amazon EC2 Auto Scaling group ARNs are currently supported.
+
+        
+
+      
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'recommendationPreferencesDetails': [
+                {
+                    'scope': {
+                        'name': 'Organization'|'AccountId'|'ResourceArn',
+                        'value': 'string'
+                    },
+                    'resourceType': 'Ec2Instance'|'AutoScalingGroup'|'EbsVolume'|'LambdaFunction'|'NotApplicable'|'EcsService'|'License'|'RdsDBInstance'|'AuroraDBClusterStorage'|'Idle',
+                    'enhancedInfrastructureMetrics': 'Active'|'Inactive',
+                    'inferredWorkloadTypes': 'Active'|'Inactive',
+                    'externalMetricsPreference': {
+                        'source': 'Datadog'|'Dynatrace'|'NewRelic'|'Instana'
+                    },
+                    'lookBackPeriod': 'DAYS_14'|'DAYS_32'|'DAYS_93',
+                    'utilizationPreferences': [
+                        {
+                            'metricName': 'CpuUtilization'|'MemoryUtilization',
+                            'metricParameters': {
+                                'threshold': 'P90'|'P95'|'P99_5',
+                                'headroom': 'PERCENT_30'|'PERCENT_20'|'PERCENT_10'|'PERCENT_0'
+                            }
+                        },
+                    ],
+                    'preferredResources': [
+                        {
+                            'name': 'Ec2InstanceTypes',
+                            'includeList': [
+                                'string',
+                            ],
+                            'effectiveIncludeList': [
+                                'string',
+                            ],
+                            'excludeList': [
+                                'string',
+                            ]
+                        },
+                    ],
+                    'savingsEstimationMode': 'AfterDiscounts'|'BeforeDiscounts'
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **recommendationPreferencesDetails** *(list) --* 
+
+          An array of objects that describe recommendation preferences.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes a recommendation preference.
+
+            
+            
+
+            - **scope** *(dict) --* 
+
+              An object that describes the scope of the recommendation preference.
+
+               
+
+              Recommendation preferences can be created at the organization level (for management accounts of an organization only), account level, and resource level. For more information, see `Activating enhanced infrastructure metrics <https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html>`__ in the *Compute Optimizer User Guide*.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the scope.
+
+                 
+
+                The following scopes are possible:
+
+                 
+
+                
+                * ``Organization`` - Specifies that the recommendation preference applies at the organization level, for all member accounts of an organization.
+                 
+                * ``AccountId`` - Specifies that the recommendation preference applies at the account level, for all resources of a given resource type in an account.
+                 
+                * ``ResourceArn`` - Specifies that the recommendation preference applies at the individual resource level.
+                
+
+                
+              
+
+              - **value** *(string) --* 
+
+                The value of the scope.
+
+                 
+
+                If you specified the ``name`` of the scope as:
+
+                 
+
+                
+                * ``Organization`` - The ``value`` must be ``ALL_ACCOUNTS``.
+                 
+                * ``AccountId`` - The ``value`` must be a 12-digit Amazon Web Services account ID.
+                 
+                * ``ResourceArn`` - The ``value`` must be the Amazon Resource Name (ARN) of an EC2 instance or an Amazon EC2 Auto Scaling group.
+                
+
+                 
+
+                Only EC2 instance and Amazon EC2 Auto Scaling group ARNs are currently supported.
+
+                
+          
+            
+
+            - **resourceType** *(string) --* 
+
+              The target resource type of the recommendation preference to create.
+
+               
+
+              The ``Ec2Instance`` option encompasses standalone instances and instances that are part of Amazon EC2 Auto Scaling groups. The ``AutoScalingGroup`` option encompasses only instances that are part of an Amazon EC2 Auto Scaling group.
+
+              
+            
+
+            - **enhancedInfrastructureMetrics** *(string) --* 
+
+              The status of the enhanced infrastructure metrics recommendation preference.
+
+               
+
+              When the recommendations page is refreshed, a status of ``Active`` confirms that the preference is applied to the recommendations, and a status of ``Inactive`` confirms that the preference isn't yet applied to recommendations.
+
+               
+
+              For more information, see `Enhanced infrastructure metrics <https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html>`__ in the *Compute Optimizer User Guide*.
+
+              
+            
+
+            - **inferredWorkloadTypes** *(string) --* 
+
+              The status of the inferred workload types recommendation preference.
+
+               
+
+              When the recommendations page is refreshed, a status of ``Active`` confirms that the preference is applied to the recommendations, and a status of ``Inactive`` confirms that the preference isn't yet applied to recommendations.
+
+              
+            
+
+            - **externalMetricsPreference** *(dict) --* 
+
+              An object that describes the external metrics recommendation preference.
+
+               
+
+              If the preference is applied in the latest recommendation refresh, an object with a valid ``source`` value appears in the response. If the preference isn't applied to the recommendations already, then this object doesn't appear in the response.
+
+              
+              
+
+              - **source** *(string) --* 
+
+                Contains the source options for external metrics preferences.
+
+                
+          
+            
+
+            - **lookBackPeriod** *(string) --* 
+
+              The preference to control the number of days the utilization metrics of the Amazon Web Services resource are analyzed. If the preference isn’t set, this object is null.
+
+              
+            
+
+            - **utilizationPreferences** *(list) --* 
+
+              The preference to control the resource’s CPU utilization threshold, CPU utilization headroom, and memory utilization headroom. If the preference isn’t set, this object is null.
+
+               
+
+              .. note::
+
+                
+
+                This preference is only available for the Amazon EC2 instance resource type.
+
+                
+
+              
+              
+
+              - *(dict) --* 
+
+                The preference to control the resource’s CPU utilization threshold, CPU utilization headroom, and memory utilization headroom.
+
+                 
+
+                .. note::
+
+                  
+
+                  This preference is only available for the Amazon EC2 instance resource type.
+
+                  
+
+                
+                
+
+                - **metricName** *(string) --* 
+
+                  The name of the resource utilization metric name to customize.
+
+                  
+                
+
+                - **metricParameters** *(dict) --* 
+
+                  The parameters to set when customizing the resource utilization thresholds.
+
+                  
+                  
+
+                  - **threshold** *(string) --* 
+
+                    The threshold value used for the specified metric parameter.
+
+                     
+
+                    .. note::
+
+                      
+
+                      You can only specify the threshold value for CPU utilization.
+
+                      
+
+                    
+                  
+
+                  - **headroom** *(string) --* 
+
+                    The headroom value in percentage used for the specified metric parameter.
+
+                     
+
+                    The following lists the valid values for CPU and memory utilization.
+
+                     
+
+                    
+                    * CPU utilization: ``PERCENT_30 | PERCENT_20 | PERCENT_0``
+                     
+                    * Memory utilization: ``PERCENT_30 | PERCENT_20 | PERCENT_10``
+                    
+
+                    
+              
+            
+          
+            
+
+            - **preferredResources** *(list) --* 
+
+              The preference to control which resource type values are considered when generating rightsizing recommendations. This object resolves any wildcard expressions and returns the effective list of candidate resource type values. If the preference isn’t set, this object is null.
+
+              
+              
+
+              - *(dict) --* 
+
+                Describes the effective preferred resources that Compute Optimizer considers as rightsizing recommendation candidates.
+
+                 
+
+                .. note::
+
+                  
+
+                  Compute Optimizer only supports Amazon EC2 instance types.
+
+                  
+
+                
+                
+
+                - **name** *(string) --* 
+
+                  The name of the preferred resource list.
+
+                  
+                
+
+                - **includeList** *(list) --* 
+
+                  The list of preferred resource values that you want considered as rightsizing recommendation candidates.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **effectiveIncludeList** *(list) --* 
+
+                  The expanded version of your preferred resource's include list.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **excludeList** *(list) --* 
+
+                  The list of preferred resources values that you want excluded from rightsizing recommendation candidates.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+          
+            
+
+            - **savingsEstimationMode** *(string) --* 
+
+              Describes the savings estimation mode used for calculating savings opportunity.
+
+               
+
+              Only the account manager or delegated administrator of your organization can activate this preference.
+
+              
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

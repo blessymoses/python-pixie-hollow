@@ -1,0 +1,1235 @@
+:doc:`ConnectCases <../../connectcases>` / Client / search_all_related_items
+
+************************
+search_all_related_items
+************************
+
+
+
+.. py:method:: ConnectCases.Client.search_all_related_items(**kwargs)
+
+  
+
+  Searches for related items across all cases within a domain. This is a global search operation that returns related items from multiple cases, unlike the case-specific `SearchRelatedItems <https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_SearchRelatedItems.html>`__ API.
+
+   
+
+  **Use cases**
+
+   
+
+  Following are common uses cases for this API:
+
+   
+
+  
+  * Find cases with similar issues across the domain. For example, search for all cases containing comments about "product defect" to identify patterns and existing solutions.
+   
+  * Locate all cases associated with specific contacts or orders. For example, find all cases linked to a contactArn to understand the complete customer journey.
+   
+  * Monitor SLA compliance across cases. For example, search for all cases with "Active" SLA status to prioritize remediation efforts.
+  
+
+   
+
+  **Important things to know**
+
+   
+
+  
+  * This API returns case identifiers, not complete case objects. To retrieve full case details, you must make additional calls to the `GetCase <https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_GetCase.html>`__ API for each returned case ID.
+   
+  * This API searches across related items content, not case fields. Use the `SearchCases <https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_SearchCases.html>`__ API to search within case field values.
+  
+
+   
+
+  **Endpoints**: See `Amazon Connect endpoints and quotas <https://docs.aws.amazon.com/general/latest/gr/connect_region.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connectcases-2022-10-03/SearchAllRelatedItems>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.search_all_related_items(
+        domainId='string',
+        maxResults=123,
+        nextToken='string',
+        filters=[
+            {
+                'contact': {
+                    'channel': [
+                        'string',
+                    ],
+                    'contactArn': 'string'
+                },
+                'comment': {}
+                ,
+                'file': {
+                    'fileArn': 'string'
+                },
+                'sla': {
+                    'name': 'string',
+                    'status': 'Active'|'Overdue'|'Met'|'NotMet'
+                },
+                'connectCase': {
+                    'caseId': 'string'
+                },
+                'custom': {
+                    'fields': {
+                        'field': {
+                            'equalTo': {
+                                'id': 'string',
+                                'value': {
+                                    'stringValue': 'string',
+                                    'doubleValue': 123.0,
+                                    'booleanValue': True|False,
+                                    'emptyValue': {}
+                                    ,
+                                    'userArnValue': 'string'
+                                }
+                            },
+                            'contains': {
+                                'id': 'string',
+                                'value': {
+                                    'stringValue': 'string',
+                                    'doubleValue': 123.0,
+                                    'booleanValue': True|False,
+                                    'emptyValue': {}
+                                    ,
+                                    'userArnValue': 'string'
+                                }
+                            },
+                            'greaterThan': {
+                                'id': 'string',
+                                'value': {
+                                    'stringValue': 'string',
+                                    'doubleValue': 123.0,
+                                    'booleanValue': True|False,
+                                    'emptyValue': {}
+                                    ,
+                                    'userArnValue': 'string'
+                                }
+                            },
+                            'greaterThanOrEqualTo': {
+                                'id': 'string',
+                                'value': {
+                                    'stringValue': 'string',
+                                    'doubleValue': 123.0,
+                                    'booleanValue': True|False,
+                                    'emptyValue': {}
+                                    ,
+                                    'userArnValue': 'string'
+                                }
+                            },
+                            'lessThan': {
+                                'id': 'string',
+                                'value': {
+                                    'stringValue': 'string',
+                                    'doubleValue': 123.0,
+                                    'booleanValue': True|False,
+                                    'emptyValue': {}
+                                    ,
+                                    'userArnValue': 'string'
+                                }
+                            },
+                            'lessThanOrEqualTo': {
+                                'id': 'string',
+                                'value': {
+                                    'stringValue': 'string',
+                                    'doubleValue': 123.0,
+                                    'booleanValue': True|False,
+                                    'emptyValue': {}
+                                    ,
+                                    'userArnValue': 'string'
+                                }
+                            }
+                        },
+                        'not': {'... recursive ...'},
+                        'andAll': [
+                            {'... recursive ...'},
+                        ],
+                        'orAll': [
+                            {'... recursive ...'},
+                        ]
+                    }
+                }
+            },
+        ],
+        sorts=[
+            {
+                'sortProperty': 'AssociationTime'|'CaseId',
+                'sortOrder': 'Asc'|'Desc'
+            },
+        ]
+    )
+    
+  :type domainId: string
+  :param domainId: **[REQUIRED]** 
+
+    The unique identifier of the Cases domain.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of results to return per page.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The token for the next set of results. Use the value returned in the previous response in the next request to retrieve the next set of results.
+
+    
+
+  
+  :type filters: list
+  :param filters: 
+
+    The list of types of related items and their parameters to use for filtering. The filters work as an OR condition: caller gets back related items that match any of the specified filter types.
+
+    
+
+  
+    - *(dict) --* 
+
+      The list of types of related items and their parameters to use for filtering.
+
+      .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``contact``, ``comment``, ``file``, ``sla``, ``connectCase``, ``custom``. 
+
+    
+      - **contact** *(dict) --* 
+
+        A filter for related items of type ``Contact``.
+
+        
+
+      
+        - **channel** *(list) --* 
+
+          A list of channels to filter on for related items of type ``Contact``.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+        - **contactArn** *(string) --* 
+
+          A unique identifier of a contact in Amazon Connect.
+
+          
+
+        
+      
+      - **comment** *(dict) --* 
+
+        A filter for related items of type ``Comment``.
+
+        
+
+      
+      
+      - **file** *(dict) --* 
+
+        A filter for related items of this type of ``File``.
+
+        
+
+      
+        - **fileArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the file.
+
+          
+
+        
+      
+      - **sla** *(dict) --* 
+
+        Filter for related items of type ``SLA``.
+
+        
+
+      
+        - **name** *(string) --* 
+
+          Name of an SLA.
+
+          
+
+        
+        - **status** *(string) --* 
+
+          Status of an SLA.
+
+          
+
+        
+      
+      - **connectCase** *(dict) --* 
+
+        Represents the Amazon Connect case to be created as a related item.
+
+        
+
+      
+        - **caseId** *(string) --* 
+
+          A unique identifier of the case.
+
+          
+
+        
+      
+      - **custom** *(dict) --* 
+
+        Represents the content of a ``Custom`` type related item.
+
+        
+
+      
+        - **fields** *(dict) --* 
+
+          Filter conditions for custom fields.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``field``, ``not``, ``andAll``, ``orAll``. 
+
+        
+          - **field** *(dict) --* 
+
+            A filter for fields. Only one value can be provided.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``equalTo``, ``contains``, ``greaterThan``, ``greaterThanOrEqualTo``, ``lessThan``, ``lessThanOrEqualTo``. 
+
+          
+            - **equalTo** *(dict) --* 
+
+              Object containing field identifier and value information.
+
+              
+
+            
+              - **id** *(string) --* **[REQUIRED]** 
+
+                Unique identifier of a field.
+
+                
+
+              
+              - **value** *(dict) --* **[REQUIRED]** 
+
+                Union of potential field value types.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+              
+                - **stringValue** *(string) --* 
+
+                  String value type.
+
+                  
+
+                
+                - **doubleValue** *(float) --* 
+
+                  Can be either null, or have a Double number value type. Only one value can be provided.
+
+                  
+
+                
+                - **booleanValue** *(boolean) --* 
+
+                  Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                  
+
+                
+                - **emptyValue** *(dict) --* 
+
+                  An empty value.
+
+                  
+
+                
+                
+                - **userArnValue** *(string) --* 
+
+                  Represents the user that performed the audit.
+
+                  
+
+                
+              
+            
+            - **contains** *(dict) --* 
+
+              Object containing field identifier and value information.
+
+              
+
+            
+              - **id** *(string) --* **[REQUIRED]** 
+
+                Unique identifier of a field.
+
+                
+
+              
+              - **value** *(dict) --* **[REQUIRED]** 
+
+                Union of potential field value types.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+              
+                - **stringValue** *(string) --* 
+
+                  String value type.
+
+                  
+
+                
+                - **doubleValue** *(float) --* 
+
+                  Can be either null, or have a Double number value type. Only one value can be provided.
+
+                  
+
+                
+                - **booleanValue** *(boolean) --* 
+
+                  Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                  
+
+                
+                - **emptyValue** *(dict) --* 
+
+                  An empty value.
+
+                  
+
+                
+                
+                - **userArnValue** *(string) --* 
+
+                  Represents the user that performed the audit.
+
+                  
+
+                
+              
+            
+            - **greaterThan** *(dict) --* 
+
+              Object containing field identifier and value information.
+
+              
+
+            
+              - **id** *(string) --* **[REQUIRED]** 
+
+                Unique identifier of a field.
+
+                
+
+              
+              - **value** *(dict) --* **[REQUIRED]** 
+
+                Union of potential field value types.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+              
+                - **stringValue** *(string) --* 
+
+                  String value type.
+
+                  
+
+                
+                - **doubleValue** *(float) --* 
+
+                  Can be either null, or have a Double number value type. Only one value can be provided.
+
+                  
+
+                
+                - **booleanValue** *(boolean) --* 
+
+                  Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                  
+
+                
+                - **emptyValue** *(dict) --* 
+
+                  An empty value.
+
+                  
+
+                
+                
+                - **userArnValue** *(string) --* 
+
+                  Represents the user that performed the audit.
+
+                  
+
+                
+              
+            
+            - **greaterThanOrEqualTo** *(dict) --* 
+
+              Object containing field identifier and value information.
+
+              
+
+            
+              - **id** *(string) --* **[REQUIRED]** 
+
+                Unique identifier of a field.
+
+                
+
+              
+              - **value** *(dict) --* **[REQUIRED]** 
+
+                Union of potential field value types.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+              
+                - **stringValue** *(string) --* 
+
+                  String value type.
+
+                  
+
+                
+                - **doubleValue** *(float) --* 
+
+                  Can be either null, or have a Double number value type. Only one value can be provided.
+
+                  
+
+                
+                - **booleanValue** *(boolean) --* 
+
+                  Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                  
+
+                
+                - **emptyValue** *(dict) --* 
+
+                  An empty value.
+
+                  
+
+                
+                
+                - **userArnValue** *(string) --* 
+
+                  Represents the user that performed the audit.
+
+                  
+
+                
+              
+            
+            - **lessThan** *(dict) --* 
+
+              Object containing field identifier and value information.
+
+              
+
+            
+              - **id** *(string) --* **[REQUIRED]** 
+
+                Unique identifier of a field.
+
+                
+
+              
+              - **value** *(dict) --* **[REQUIRED]** 
+
+                Union of potential field value types.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+              
+                - **stringValue** *(string) --* 
+
+                  String value type.
+
+                  
+
+                
+                - **doubleValue** *(float) --* 
+
+                  Can be either null, or have a Double number value type. Only one value can be provided.
+
+                  
+
+                
+                - **booleanValue** *(boolean) --* 
+
+                  Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                  
+
+                
+                - **emptyValue** *(dict) --* 
+
+                  An empty value.
+
+                  
+
+                
+                
+                - **userArnValue** *(string) --* 
+
+                  Represents the user that performed the audit.
+
+                  
+
+                
+              
+            
+            - **lessThanOrEqualTo** *(dict) --* 
+
+              Object containing field identifier and value information.
+
+              
+
+            
+              - **id** *(string) --* **[REQUIRED]** 
+
+                Unique identifier of a field.
+
+                
+
+              
+              - **value** *(dict) --* **[REQUIRED]** 
+
+                Union of potential field value types.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``. 
+
+              
+                - **stringValue** *(string) --* 
+
+                  String value type.
+
+                  
+
+                
+                - **doubleValue** *(float) --* 
+
+                  Can be either null, or have a Double number value type. Only one value can be provided.
+
+                  
+
+                
+                - **booleanValue** *(boolean) --* 
+
+                  Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                  
+
+                
+                - **emptyValue** *(dict) --* 
+
+                  An empty value.
+
+                  
+
+                
+                
+                - **userArnValue** *(string) --* 
+
+                  Represents the user that performed the audit.
+
+                  
+
+                
+              
+            
+          
+          - **not** *(dict) --* 
+
+            Excludes items matching the filter.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``field``, ``not``, ``andAll``, ``orAll``. 
+
+          
+          - **andAll** *(list) --* 
+
+            Provides "and all" filtering.
+
+            
+
+          
+            - *(dict) --* 
+
+              A filter for fields in ``Custom`` type related items. Only one value can be provided.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``field``, ``not``, ``andAll``, ``orAll``. 
+
+            
+        
+          - **orAll** *(list) --* 
+
+            Provides "or all" filtering.
+
+            
+
+          
+            - *(dict) --* 
+
+              A filter for fields in ``Custom`` type related items. Only one value can be provided.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``field``, ``not``, ``andAll``, ``orAll``. 
+
+            
+        
+        
+      
+    
+
+  :type sorts: list
+  :param sorts: 
+
+    A structured set of sort terms to specify the order in which related items should be returned. Supports sorting by association time or case ID. The sorts work in the order specified: first sort term takes precedence over subsequent terms.
+
+    
+
+  
+    - *(dict) --* 
+
+      The order in which all returned related items should be sorted.
+
+      
+
+    
+      - **sortProperty** *(string) --* **[REQUIRED]** 
+
+        Whether related items should be sorted in ascending or descending order.
+
+        
+
+      
+      - **sortOrder** *(string) --* **[REQUIRED]** 
+
+        Whether related items should be sorted by association time or case ID.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'nextToken': 'string',
+          'relatedItems': [
+              {
+                  'relatedItemId': 'string',
+                  'caseId': 'string',
+                  'type': 'Contact'|'Comment'|'File'|'Sla'|'ConnectCase'|'Custom',
+                  'associationTime': datetime(2015, 1, 1),
+                  'content': {
+                      'contact': {
+                          'contactArn': 'string',
+                          'channel': 'string',
+                          'connectedToSystemTime': datetime(2015, 1, 1)
+                      },
+                      'comment': {
+                          'body': 'string',
+                          'contentType': 'Text/Plain'
+                      },
+                      'file': {
+                          'fileArn': 'string'
+                      },
+                      'sla': {
+                          'slaConfiguration': {
+                              'name': 'string',
+                              'type': 'CaseField',
+                              'status': 'Active'|'Overdue'|'Met'|'NotMet',
+                              'fieldId': 'string',
+                              'targetFieldValues': [
+                                  {
+                                      'stringValue': 'string',
+                                      'doubleValue': 123.0,
+                                      'booleanValue': True|False,
+                                      'emptyValue': {},
+                                      'userArnValue': 'string'
+                                  },
+                              ],
+                              'targetTime': datetime(2015, 1, 1),
+                              'completionTime': datetime(2015, 1, 1)
+                          }
+                      },
+                      'connectCase': {
+                          'caseId': 'string'
+                      },
+                      'custom': {
+                          'fields': [
+                              {
+                                  'id': 'string',
+                                  'value': {
+                                      'stringValue': 'string',
+                                      'doubleValue': 123.0,
+                                      'booleanValue': True|False,
+                                      'emptyValue': {},
+                                      'userArnValue': 'string'
+                                  }
+                              },
+                          ]
+                      }
+                  },
+                  'performedBy': {
+                      'userArn': 'string',
+                      'customEntity': 'string'
+                  },
+                  'tags': {
+                      'string': 'string'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **nextToken** *(string) --* 
+
+        The token for the next set of results. This is null if there are no more results to return.
+
+        
+      
+
+      - **relatedItems** *(list) --* 
+
+        A list of items related to a case.
+
+        
+        
+
+        - *(dict) --* 
+
+          A list of items that represent RelatedItems. This data type is similar to `SearchRelatedItemsResponseItem <https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_SearchRelatedItemsResponseItem.html>`__ except Search**All**RelatedItemsResponseItem has a caseId field.
+
+          
+          
+
+          - **relatedItemId** *(string) --* 
+
+            Unique identifier of a related item.
+
+            
+          
+
+          - **caseId** *(string) --* 
+
+            A unique identifier of the case.
+
+            
+          
+
+          - **type** *(string) --* 
+
+            Type of a related item.
+
+            
+          
+
+          - **associationTime** *(datetime) --* 
+
+            Time at which a related item was associated with a case.
+
+            
+          
+
+          - **content** *(dict) --* 
+
+            Represents the content of a particular type of related item.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``contact``, ``comment``, ``file``, ``sla``, ``connectCase``, ``custom``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **contact** *(dict) --* 
+
+              Represents the content of a contact to be returned to agents.
+
+              
+              
+
+              - **contactArn** *(string) --* 
+
+                A unique identifier of a contact in Amazon Connect.
+
+                
+              
+
+              - **channel** *(string) --* 
+
+                A list of channels to filter on for related items of type ``Contact``.
+
+                
+              
+
+              - **connectedToSystemTime** *(datetime) --* 
+
+                The difference between the ``InitiationTimestamp`` and the ``DisconnectTimestamp`` of the contact.
+
+                
+          
+            
+
+            - **comment** *(dict) --* 
+
+              Represents the content of a comment to be returned to agents.
+
+              
+              
+
+              - **body** *(string) --* 
+
+                Text in the body of a ``Comment`` on a case.
+
+                
+              
+
+              - **contentType** *(string) --* 
+
+                Type of the text in the box of a ``Comment`` on a case.
+
+                
+          
+            
+
+            - **file** *(dict) --* 
+
+              Represents the content of a File to be returned to agents.
+
+              
+              
+
+              - **fileArn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of a File in Amazon Connect.
+
+                
+          
+            
+
+            - **sla** *(dict) --* 
+
+              Represents the content of an SLA to be returned to agents.
+
+              
+              
+
+              - **slaConfiguration** *(dict) --* 
+
+                Represents an SLA configuration.
+
+                
+                
+
+                - **name** *(string) --* 
+
+                  Name of an SLA.
+
+                  
+                
+
+                - **type** *(string) --* 
+
+                  Type of SLA.
+
+                  
+                
+
+                - **status** *(string) --* 
+
+                  Status of an SLA.
+
+                  
+                
+
+                - **fieldId** *(string) --* 
+
+                  Unique identifier of a field.
+
+                  
+                
+
+                - **targetFieldValues** *(list) --* 
+
+                  Represents a list of target field values for the fieldId specified in SlaConfiguration.
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    Object to store union of Field values.
+
+                     
+
+                    .. note::
+
+                      
+
+                      The ``Summary`` system field accepts 3000 characters while all other fields accept 500 characters.
+
+                      
+
+                    .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                  
+                    
+
+                    - **stringValue** *(string) --* 
+
+                      String value type.
+
+                      
+                    
+
+                    - **doubleValue** *(float) --* 
+
+                      Can be either null, or have a Double number value type. Only one value can be provided.
+
+                      
+                    
+
+                    - **booleanValue** *(boolean) --* 
+
+                      Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                      
+                    
+
+                    - **emptyValue** *(dict) --* 
+
+                      An empty value.
+
+                      
+                  
+                    
+
+                    - **userArnValue** *(string) --* 
+
+                      Represents the user that performed the audit.
+
+                      
+                
+              
+                
+
+                - **targetTime** *(datetime) --* 
+
+                  Target time by which an SLA should be completed.
+
+                  
+                
+
+                - **completionTime** *(datetime) --* 
+
+                  Time at which an SLA was completed.
+
+                  
+            
+          
+            
+
+            - **connectCase** *(dict) --* 
+
+              Represents the Amazon Connect case to be created as a related item.
+
+              
+              
+
+              - **caseId** *(string) --* 
+
+                A unique identifier of the case.
+
+                
+          
+            
+
+            - **custom** *(dict) --* 
+
+              Represents the content of a ``Custom`` type related item.
+
+              
+              
+
+              - **fields** *(list) --* 
+
+                List of field values for the ``Custom`` related item.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Object for case field values.
+
+                  
+                  
+
+                  - **id** *(string) --* 
+
+                    Unique identifier of a field.
+
+                    
+                  
+
+                  - **value** *(dict) --* 
+
+                    Union of potential field value types.
+
+                    .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``stringValue``, ``doubleValue``, ``booleanValue``, ``emptyValue``, ``userArnValue``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                  
+                    
+
+                    - **stringValue** *(string) --* 
+
+                      String value type.
+
+                      
+                    
+
+                    - **doubleValue** *(float) --* 
+
+                      Can be either null, or have a Double number value type. Only one value can be provided.
+
+                      
+                    
+
+                    - **booleanValue** *(boolean) --* 
+
+                      Can be either null, or have a Boolean value type. Only one value can be provided.
+
+                      
+                    
+
+                    - **emptyValue** *(dict) --* 
+
+                      An empty value.
+
+                      
+                  
+                    
+
+                    - **userArnValue** *(string) --* 
+
+                      Represents the user that performed the audit.
+
+                      
+                
+              
+            
+          
+        
+          
+
+          - **performedBy** *(dict) --* 
+
+            Represents the entity that performed the action.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``userArn``, ``customEntity``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **userArn** *(string) --* 
+
+              Represents the Amazon Connect ARN of the user.
+
+              
+            
+
+            - **customEntity** *(string) --* 
+
+              Any provided entity.
+
+              
+        
+          
+
+          - **tags** *(dict) --* 
+
+            A map of of key-value pairs that represent tags on a resource. Tags are used to organize, track, or control access for this resource.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ConnectCases.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ConnectCases.Client.exceptions.AccessDeniedException`
+
+  

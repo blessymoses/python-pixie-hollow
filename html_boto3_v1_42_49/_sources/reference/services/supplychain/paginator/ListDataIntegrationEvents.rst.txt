@@ -1,0 +1,236 @@
+:doc:`SupplyChain <../../supplychain>` / Paginator / ListDataIntegrationEvents
+
+*************************
+ListDataIntegrationEvents
+*************************
+
+
+
+.. py:class:: SupplyChain.Paginator.ListDataIntegrationEvents
+
+  ::
+
+    
+    paginator = client.get_paginator('list_data_integration_events')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`SupplyChain.Client.list_data_integration_events`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/supplychain-2024-01-01/ListDataIntegrationEvents>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          instanceId='string',
+          eventType='scn.data.forecast'|'scn.data.inventorylevel'|'scn.data.inboundorder'|'scn.data.inboundorderline'|'scn.data.inboundorderlineschedule'|'scn.data.outboundorderline'|'scn.data.outboundshipment'|'scn.data.processheader'|'scn.data.processoperation'|'scn.data.processproduct'|'scn.data.reservation'|'scn.data.shipment'|'scn.data.shipmentstop'|'scn.data.shipmentstoporder'|'scn.data.supplyplan'|'scn.data.dataset',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type instanceId: string
+    :param instanceId: **[REQUIRED]** 
+
+      The Amazon Web Services Supply Chain instance identifier.
+
+      
+
+    
+    :type eventType: string
+    :param eventType: 
+
+      List data integration events for the specified eventType.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'events': [
+                {
+                    'instanceId': 'string',
+                    'eventId': 'string',
+                    'eventType': 'scn.data.forecast'|'scn.data.inventorylevel'|'scn.data.inboundorder'|'scn.data.inboundorderline'|'scn.data.inboundorderlineschedule'|'scn.data.outboundorderline'|'scn.data.outboundshipment'|'scn.data.processheader'|'scn.data.processoperation'|'scn.data.processproduct'|'scn.data.reservation'|'scn.data.shipment'|'scn.data.shipmentstop'|'scn.data.shipmentstoporder'|'scn.data.supplyplan'|'scn.data.dataset',
+                    'eventGroupId': 'string',
+                    'eventTimestamp': datetime(2015, 1, 1),
+                    'datasetTargetDetails': {
+                        'datasetIdentifier': 'string',
+                        'operationType': 'APPEND'|'UPSERT'|'DELETE',
+                        'datasetLoadExecution': {
+                            'status': 'SUCCEEDED'|'IN_PROGRESS'|'FAILED',
+                            'message': 'string'
+                        }
+                    }
+                },
+            ],
+            'NextToken': 'string'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+
+        The response parameters for ListDataIntegrationEvents.
+
+        
+        
+
+        - **events** *(list) --* 
+
+          The list of data integration events.
+
+          
+          
+
+          - *(dict) --* 
+
+            The data integration event details.
+
+            
+            
+
+            - **instanceId** *(string) --* 
+
+              The AWS Supply Chain instance identifier.
+
+              
+            
+
+            - **eventId** *(string) --* 
+
+              The unique event identifier.
+
+              
+            
+
+            - **eventType** *(string) --* 
+
+              The data event type.
+
+              
+            
+
+            - **eventGroupId** *(string) --* 
+
+              Event identifier (for example, orderId for InboundOrder) used for data sharding or partitioning.
+
+              
+            
+
+            - **eventTimestamp** *(datetime) --* 
+
+              The event timestamp (in epoch seconds).
+
+              
+            
+
+            - **datasetTargetDetails** *(dict) --* 
+
+              The target dataset details for a DATASET event type.
+
+              
+              
+
+              - **datasetIdentifier** *(string) --* 
+
+                The datalake dataset ARN identifier.
+
+                
+              
+
+              - **operationType** *(string) --* 
+
+                The target dataset load operation type. The available options are:
+
+                 
+
+                
+                * **APPEND** - Add new records to the dataset. Noted that this operation type will just try to append records as-is without any primary key or partition constraints.
+                 
+                * **UPSERT** - Modify existing records in the dataset with primary key configured, events for datasets without primary keys are not allowed. If event data contains primary keys that match records in the dataset within same partition, then those existing records (in that partition) will be updated. If primary keys do not match, new records will be added. Note that if dataset contain records with duplicate primary key values in the same partition, those duplicate records will be deduped into one updated record.
+                 
+                * **DELETE** - Remove existing records in the dataset with primary key configured, events for datasets without primary keys are not allowed. If event data contains primary keys that match records in the dataset within same partition, then those existing records (in that partition) will be deleted. If primary keys do not match, no actions will be done. Note that if dataset contain records with duplicate primary key values in the same partition, all those duplicates will be removed.
+                
+
+                
+              
+
+              - **datasetLoadExecution** *(dict) --* 
+
+                The target dataset load execution.
+
+                
+                
+
+                - **status** *(string) --* 
+
+                  The event load execution status to target dataset.
+
+                  
+                
+
+                - **message** *(string) --* 
+
+                  The failure message (if any) of failed event load execution to dataset.
+
+                  
+            
+          
+        
+      
+        
+
+        - **NextToken** *(string) --* 
+
+          A token to resume pagination.
+
+          
+    

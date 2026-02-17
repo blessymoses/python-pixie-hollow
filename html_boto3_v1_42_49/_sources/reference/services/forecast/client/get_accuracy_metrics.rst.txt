@@ -1,0 +1,333 @@
+:doc:`ForecastService <../../forecast>` / Client / get_accuracy_metrics
+
+********************
+get_accuracy_metrics
+********************
+
+
+
+.. py:method:: ForecastService.Client.get_accuracy_metrics(**kwargs)
+
+  
+
+  Provides metrics on the accuracy of the models that were trained by the  CreatePredictor operation. Use metrics to see how well the model performed and to decide whether to use the predictor to generate a forecast. For more information, see `Predictor Metrics <https://docs.aws.amazon.com/forecast/latest/dg/metrics.html>`__.
+
+   
+
+  This operation generates metrics for each backtest window that was evaluated. The number of backtest windows ( ``NumberOfBacktestWindows``) is specified using the  EvaluationParameters object, which is optionally included in the ``CreatePredictor`` request. If ``NumberOfBacktestWindows`` isn't specified, the number defaults to one.
+
+   
+
+  The parameters of the ``filling`` method determine which items contribute to the metrics. If you want all items to contribute, specify ``zero``. If you want only those items that have complete data in the range being evaluated to contribute, specify ``nan``. For more information, see  FeaturizationMethod.
+
+   
+
+  .. note::
+
+    
+
+    Before you can get accuracy metrics, the ``Status`` of the predictor must be ``ACTIVE``, signifying that training has completed. To get the status, use the  DescribePredictor operation.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/GetAccuracyMetrics>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_accuracy_metrics(
+        PredictorArn='string'
+    )
+    
+  :type PredictorArn: string
+  :param PredictorArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the predictor to get metrics for.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'PredictorEvaluationResults': [
+              {
+                  'AlgorithmArn': 'string',
+                  'TestWindows': [
+                      {
+                          'TestWindowStart': datetime(2015, 1, 1),
+                          'TestWindowEnd': datetime(2015, 1, 1),
+                          'ItemCount': 123,
+                          'EvaluationType': 'SUMMARY'|'COMPUTED',
+                          'Metrics': {
+                              'RMSE': 123.0,
+                              'WeightedQuantileLosses': [
+                                  {
+                                      'Quantile': 123.0,
+                                      'LossValue': 123.0
+                                  },
+                              ],
+                              'ErrorMetrics': [
+                                  {
+                                      'ForecastType': 'string',
+                                      'WAPE': 123.0,
+                                      'RMSE': 123.0,
+                                      'MASE': 123.0,
+                                      'MAPE': 123.0
+                                  },
+                              ],
+                              'AverageWeightedQuantileLoss': 123.0
+                          }
+                      },
+                  ]
+              },
+          ],
+          'IsAutoPredictor': True|False,
+          'AutoMLOverrideStrategy': 'LatencyOptimized'|'AccuracyOptimized',
+          'OptimizationMetric': 'WAPE'|'RMSE'|'AverageWeightedQuantileLoss'|'MASE'|'MAPE'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **PredictorEvaluationResults** *(list) --* 
+
+        An array of results from evaluating the predictor.
+
+        
+        
+
+        - *(dict) --* 
+
+          The results of evaluating an algorithm. Returned as part of the  GetAccuracyMetrics response.
+
+          
+          
+
+          - **AlgorithmArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the algorithm that was evaluated.
+
+            
+          
+
+          - **TestWindows** *(list) --* 
+
+            The array of test windows used for evaluating the algorithm. The ``NumberOfBacktestWindows`` from the  EvaluationParameters object determines the number of windows in the array.
+
+            
+            
+
+            - *(dict) --* 
+
+              The metrics for a time range within the evaluation portion of a dataset. This object is part of the  EvaluationResult object.
+
+               
+
+              The ``TestWindowStart`` and ``TestWindowEnd`` parameters are determined by the ``BackTestWindowOffset`` parameter of the  EvaluationParameters object.
+
+              
+              
+
+              - **TestWindowStart** *(datetime) --* 
+
+                The timestamp that defines the start of the window.
+
+                
+              
+
+              - **TestWindowEnd** *(datetime) --* 
+
+                The timestamp that defines the end of the window.
+
+                
+              
+
+              - **ItemCount** *(integer) --* 
+
+                The number of data points within the window.
+
+                
+              
+
+              - **EvaluationType** *(string) --* 
+
+                The type of evaluation.
+
+                 
+
+                
+                * ``SUMMARY`` - The average metrics across all windows.
+                 
+                * ``COMPUTED`` - The metrics for the specified window.
+                
+
+                
+              
+
+              - **Metrics** *(dict) --* 
+
+                Provides metrics used to evaluate the performance of a predictor.
+
+                
+                
+
+                - **RMSE** *(float) --* 
+
+                  The root-mean-square error (RMSE).
+
+                  
+                
+
+                - **WeightedQuantileLosses** *(list) --* 
+
+                  An array of weighted quantile losses. Quantiles divide a probability distribution into regions of equal probability. The distribution in this case is the loss function.
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    The weighted loss value for a quantile. This object is part of the  Metrics object.
+
+                    
+                    
+
+                    - **Quantile** *(float) --* 
+
+                      The quantile. Quantiles divide a probability distribution into regions of equal probability. For example, if the distribution was divided into 5 regions of equal probability, the quantiles would be 0.2, 0.4, 0.6, and 0.8.
+
+                      
+                    
+
+                    - **LossValue** *(float) --* 
+
+                      The difference between the predicted value and the actual value over the quantile, weighted (normalized) by dividing by the sum over all quantiles.
+
+                      
+                
+              
+                
+
+                - **ErrorMetrics** *(list) --* 
+
+                  Provides detailed error metrics for each forecast type. Metrics include root-mean square-error (RMSE), mean absolute percentage error (MAPE), mean absolute scaled error (MASE), and weighted average percentage error (WAPE).
+
+                  
+                  
+
+                  - *(dict) --* 
+
+                    Provides detailed error metrics to evaluate the performance of a predictor. This object is part of the  Metrics object.
+
+                    
+                    
+
+                    - **ForecastType** *(string) --* 
+
+                      The Forecast type used to compute WAPE, MAPE, MASE, and RMSE.
+
+                      
+                    
+
+                    - **WAPE** *(float) --* 
+
+                      The weighted absolute percentage error (WAPE).
+
+                      
+                    
+
+                    - **RMSE** *(float) --* 
+
+                      The root-mean-square error (RMSE).
+
+                      
+                    
+
+                    - **MASE** *(float) --* 
+
+                      The Mean Absolute Scaled Error (MASE)
+
+                      
+                    
+
+                    - **MAPE** *(float) --* 
+
+                      The Mean Absolute Percentage Error (MAPE)
+
+                      
+                
+              
+                
+
+                - **AverageWeightedQuantileLoss** *(float) --* 
+
+                  The average value of all weighted quantile losses.
+
+                  
+            
+          
+        
+      
+    
+      
+
+      - **IsAutoPredictor** *(boolean) --* 
+
+        Whether the predictor was created with  CreateAutoPredictor.
+
+        
+      
+
+      - **AutoMLOverrideStrategy** *(string) --* 
+
+        .. note::
+
+          
+
+          The ``LatencyOptimized`` AutoML override strategy is only available in private beta. Contact Amazon Web Services Support or your account manager to learn more about access privileges.
+
+          
+
+         
+
+        The AutoML strategy used to train the predictor. Unless ``LatencyOptimized`` is specified, the AutoML strategy optimizes predictor accuracy.
+
+         
+
+        This parameter is only valid for predictors trained using AutoML.
+
+        
+      
+
+      - **OptimizationMetric** *(string) --* 
+
+        The accuracy metric used to optimize the predictor.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ForecastService.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`ForecastService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ForecastService.Client.exceptions.ResourceInUseException`
+
+  

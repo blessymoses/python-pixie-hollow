@@ -1,0 +1,345 @@
+:doc:`Lightsail <../../lightsail>` / Client / get_instance_access_details
+
+***************************
+get_instance_access_details
+***************************
+
+
+
+.. py:method:: Lightsail.Client.get_instance_access_details(**kwargs)
+
+  
+
+  Returns temporary SSH keys you can use to connect to a specific virtual private server, or *instance*.
+
+   
+
+  The ``get instance access details`` operation supports tag-based access control via resource tags applied to the resource identified by ``instance name``. For more information, see the `Amazon Lightsail Developer Guide <https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-controlling-access-using-tags>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/GetInstanceAccessDetails>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_instance_access_details(
+        instanceName='string',
+        protocol='ssh'|'rdp'
+    )
+    
+  :type instanceName: string
+  :param instanceName: **[REQUIRED]** 
+
+    The name of the instance to access.
+
+    
+
+  
+  :type protocol: string
+  :param protocol: 
+
+    The protocol to use to connect to your instance. Defaults to ``ssh``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'accessDetails': {
+              'certKey': 'string',
+              'expiresAt': datetime(2015, 1, 1),
+              'ipAddress': 'string',
+              'ipv6Addresses': [
+                  'string',
+              ],
+              'password': 'string',
+              'passwordData': {
+                  'ciphertext': 'string',
+                  'keyPairName': 'string'
+              },
+              'privateKey': 'string',
+              'protocol': 'ssh'|'rdp',
+              'instanceName': 'string',
+              'username': 'string',
+              'hostKeys': [
+                  {
+                      'algorithm': 'string',
+                      'publicKey': 'string',
+                      'witnessedAt': datetime(2015, 1, 1),
+                      'fingerprintSHA1': 'string',
+                      'fingerprintSHA256': 'string',
+                      'notValidBefore': datetime(2015, 1, 1),
+                      'notValidAfter': datetime(2015, 1, 1)
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **accessDetails** *(dict) --* 
+
+        An array of key-value pairs containing information about a get instance access request.
+
+        
+        
+
+        - **certKey** *(string) --* 
+
+          For SSH access, the public key to use when accessing your instance For OpenSSH clients (command line SSH), you should save this value to ``tempkey-cert.pub``.
+
+          
+        
+
+        - **expiresAt** *(datetime) --* 
+
+          For SSH access, the date on which the temporary keys expire.
+
+          
+        
+
+        - **ipAddress** *(string) --* 
+
+          The public IP address of the Amazon Lightsail instance.
+
+          
+        
+
+        - **ipv6Addresses** *(list) --* 
+
+          The IPv6 address of the Amazon Lightsail instance.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **password** *(string) --* 
+
+          For RDP access, the password for your Amazon Lightsail instance. Password will be an empty string if the password for your new instance is not ready yet. When you create an instance, it can take up to 15 minutes for the instance to be ready.
+
+           
+
+          .. note::
+
+            
+
+            If you create an instance using any key pair other than the default ( ``LightsailDefaultKeyPair``), ``password`` will always be an empty string.
+
+             
+
+            If you change the Administrator password on the instance, Lightsail will continue to return the original password value. When accessing the instance using RDP, you need to manually enter the Administrator password after changing it from the default.
+
+            
+
+          
+        
+
+        - **passwordData** *(dict) --* 
+
+          For a Windows Server-based instance, an object with the data you can use to retrieve your password. This is only needed if ``password`` is empty and the instance is not new (and therefore the password is not ready yet). When you create an instance, it can take up to 15 minutes for the instance to be ready.
+
+          
+          
+
+          - **ciphertext** *(string) --* 
+
+            The encrypted password. Ciphertext will be an empty string if access to your new instance is not ready yet. When you create an instance, it can take up to 15 minutes for the instance to be ready.
+
+             
+
+            .. note::
+
+              
+
+              If you use the default key pair ( ``LightsailDefaultKeyPair``), the decrypted password will be available in the password field.
+
+               
+
+              If you are using a custom key pair, you need to use your own means of decryption.
+
+               
+
+              If you change the Administrator password on the instance, Lightsail will continue to return the original ciphertext value. When accessing the instance using RDP, you need to manually enter the Administrator password after changing it from the default.
+
+              
+
+            
+          
+
+          - **keyPairName** *(string) --* 
+
+            The name of the key pair that you used when creating your instance. If no key pair name was specified when creating the instance, Lightsail uses the default key pair ( ``LightsailDefaultKeyPair``).
+
+             
+
+            If you are using a custom key pair, you need to use your own means of decrypting your password using the ``ciphertext``. Lightsail creates the ciphertext by encrypting your password with the public key part of this key pair.
+
+            
+      
+        
+
+        - **privateKey** *(string) --* 
+
+          For SSH access, the temporary private key. For OpenSSH clients (command line SSH), you should save this value to ``tempkey``).
+
+          
+        
+
+        - **protocol** *(string) --* 
+
+          The protocol for these Amazon Lightsail instance access details.
+
+          
+        
+
+        - **instanceName** *(string) --* 
+
+          The name of this Amazon Lightsail instance.
+
+          
+        
+
+        - **username** *(string) --* 
+
+          The user name to use when logging in to the Amazon Lightsail instance.
+
+          
+        
+
+        - **hostKeys** *(list) --* 
+
+          Describes the public SSH host keys or the RDP certificate.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes the public SSH host keys or the RDP certificate.
+
+            
+            
+
+            - **algorithm** *(string) --* 
+
+              The SSH host key algorithm or the RDP certificate format.
+
+               
+
+              For SSH host keys, the algorithm may be ``ssh-rsa``, ``ecdsa-sha2-nistp256``, ``ssh-ed25519``, etc. For RDP certificates, the algorithm is always ``x509-cert``.
+
+              
+            
+
+            - **publicKey** *(string) --* 
+
+              The public SSH host key or the RDP certificate.
+
+              
+            
+
+            - **witnessedAt** *(datetime) --* 
+
+              The time that the SSH host key or RDP certificate was recorded by Lightsail.
+
+              
+            
+
+            - **fingerprintSHA1** *(string) --* 
+
+              The SHA-1 fingerprint of the returned SSH host key or RDP certificate.
+
+               
+
+              
+              * Example of an SHA-1 SSH fingerprint: ``SHA1:1CHH6FaAaXjtFOsR/t83vf91SR0``
+               
+              * Example of an SHA-1 RDP fingerprint: ``af:34:51:fe:09:f0:e0:da:b8:4e:56:ca:60:c2:10:ff:38:06:db:45``
+              
+
+              
+            
+
+            - **fingerprintSHA256** *(string) --* 
+
+              The SHA-256 fingerprint of the returned SSH host key or RDP certificate.
+
+               
+
+              
+              * Example of an SHA-256 SSH fingerprint: ``SHA256:KTsMnRBh1IhD17HpdfsbzeGA4jOijm5tyXsMjKVbB8o``
+               
+              * Example of an SHA-256 RDP fingerprint: ``03:9b:36:9f:4b:de:4e:61:70:fc:7c:c9:78:e7:d2:1a:1c:25:a8:0c:91:f6:7c:e4:d6:a0:85:c8:b4:53:99:68``
+              
+
+              
+            
+
+            - **notValidBefore** *(datetime) --* 
+
+              The returned RDP certificate is valid after this point in time.
+
+               
+
+              This value is listed only for RDP certificates.
+
+              
+            
+
+            - **notValidAfter** *(datetime) --* 
+
+              The returned RDP certificate is not valid after this point in time.
+
+               
+
+              This value is listed only for RDP certificates.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Lightsail.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.OperationFailureException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.AccountSetupInProgressException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.RegionSetupInProgressException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.UnauthenticatedException`
+
+  

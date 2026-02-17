@@ -1,0 +1,1560 @@
+:doc:`finspace <../../finspace>` / Client / create_kx_cluster
+
+*****************
+create_kx_cluster
+*****************
+
+
+
+.. py:method:: finspace.Client.create_kx_cluster(**kwargs)
+
+  
+
+  Creates a new kdb cluster.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/finspace-2021-03-12/CreateKxCluster>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_kx_cluster(
+        clientToken='string',
+        environmentId='string',
+        clusterName='string',
+        clusterType='HDB'|'RDB'|'GATEWAY'|'GP'|'TICKERPLANT',
+        tickerplantLogConfiguration={
+            'tickerplantLogVolumes': [
+                'string',
+            ]
+        },
+        databases=[
+            {
+                'databaseName': 'string',
+                'cacheConfigurations': [
+                    {
+                        'cacheType': 'string',
+                        'dbPaths': [
+                            'string',
+                        ],
+                        'dataviewName': 'string'
+                    },
+                ],
+                'changesetId': 'string',
+                'dataviewName': 'string',
+                'dataviewConfiguration': {
+                    'dataviewName': 'string',
+                    'dataviewVersionId': 'string',
+                    'changesetId': 'string',
+                    'segmentConfigurations': [
+                        {
+                            'dbPaths': [
+                                'string',
+                            ],
+                            'volumeName': 'string',
+                            'onDemand': True|False
+                        },
+                    ]
+                }
+            },
+        ],
+        cacheStorageConfigurations=[
+            {
+                'type': 'string',
+                'size': 123
+            },
+        ],
+        autoScalingConfiguration={
+            'minNodeCount': 123,
+            'maxNodeCount': 123,
+            'autoScalingMetric': 'CPU_UTILIZATION_PERCENTAGE',
+            'metricTarget': 123.0,
+            'scaleInCooldownSeconds': 123.0,
+            'scaleOutCooldownSeconds': 123.0
+        },
+        clusterDescription='string',
+        capacityConfiguration={
+            'nodeType': 'string',
+            'nodeCount': 123
+        },
+        releaseLabel='string',
+        vpcConfiguration={
+            'vpcId': 'string',
+            'securityGroupIds': [
+                'string',
+            ],
+            'subnetIds': [
+                'string',
+            ],
+            'ipAddressType': 'IP_V4'
+        },
+        initializationScript='string',
+        commandLineArguments=[
+            {
+                'key': 'string',
+                'value': 'string'
+            },
+        ],
+        code={
+            's3Bucket': 'string',
+            's3Key': 'string',
+            's3ObjectVersion': 'string'
+        },
+        executionRole='string',
+        savedownStorageConfiguration={
+            'type': 'SDS01',
+            'size': 123,
+            'volumeName': 'string'
+        },
+        azMode='SINGLE'|'MULTI',
+        availabilityZoneId='string',
+        tags={
+            'string': 'string'
+        },
+        scalingGroupConfiguration={
+            'scalingGroupName': 'string',
+            'memoryLimit': 123,
+            'memoryReservation': 123,
+            'nodeCount': 123,
+            'cpu': 123.0
+        }
+    )
+    
+  :type clientToken: string
+  :param clientToken: 
+
+    A token that ensures idempotency. This token expires in 10 minutes.
+
+    This field is autopopulated if not provided.
+
+  
+  :type environmentId: string
+  :param environmentId: **[REQUIRED]** 
+
+    A unique identifier for the kdb environment.
+
+    
+
+  
+  :type clusterName: string
+  :param clusterName: **[REQUIRED]** 
+
+    A unique name for the cluster that you want to create.
+
+    
+
+  
+  :type clusterType: string
+  :param clusterType: **[REQUIRED]** 
+
+    Specifies the type of KDB database that is being created. The following types are available:
+
+     
+
+    
+    * HDB – A Historical Database. The data is only accessible with read-only permissions from one of the FinSpace managed kdb databases mounted to the cluster.
+     
+    * RDB – A Realtime Database. This type of database captures all the data from a ticker plant and stores it in memory until the end of day, after which it writes all of its data to a disk and reloads the HDB. This cluster type requires local storage for temporary storage of data during the savedown process. If you specify this field in your request, you must provide the ``savedownStorageConfiguration`` parameter.
+     
+    * GATEWAY – A gateway cluster allows you to access data across processes in kdb systems. It allows you to create your own routing logic using the initialization scripts and custom code. This type of cluster does not require a writable local storage.
+     
+    * GP – A general purpose cluster allows you to quickly iterate on code during development by granting greater access to system commands and enabling a fast reload of custom code. This cluster type can optionally mount databases including cache and savedown storage. For this cluster type, the node count is fixed at 1. It does not support autoscaling and supports only ``SINGLE`` AZ mode.
+     
+    * Tickerplant – A tickerplant cluster allows you to subscribe to feed handlers based on IAM permissions. It can publish to RDBs, other Tickerplants, and real-time subscribers (RTS). Tickerplants can persist messages to log, which is readable by any RDB environment. It supports only single-node that is only one kdb process.
+    
+
+    
+
+  
+  :type tickerplantLogConfiguration: dict
+  :param tickerplantLogConfiguration: 
+
+    A configuration to store Tickerplant logs. It consists of a list of volumes that will be mounted to your cluster. For the cluster type ``Tickerplant``, the location of the TP volume on the cluster will be available by using the global variable ``.aws.tp_log_path``.
+
+    
+
+  
+    - **tickerplantLogVolumes** *(list) --* 
+
+      The name of the volumes for tickerplant logs.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type databases: list
+  :param databases: 
+
+    A list of databases that will be available for querying.
+
+    
+
+  
+    - *(dict) --* 
+
+      The configuration of data that is available for querying from this database.
+
+      
+
+    
+      - **databaseName** *(string) --* **[REQUIRED]** 
+
+        The name of the kdb database. When this parameter is specified in the structure, S3 with the whole database is included by default.
+
+        
+
+      
+      - **cacheConfigurations** *(list) --* 
+
+        Configuration details for the disk cache used to increase performance reading from a kdb database mounted to the cluster.
+
+        
+
+      
+        - *(dict) --* 
+
+          The structure of database cache configuration that is used for mapping database paths to cache types in clusters.
+
+          
+
+        
+          - **cacheType** *(string) --* **[REQUIRED]** 
+
+            The type of disk cache. This parameter is used to map the database path to cache storage. The valid values are:
+
+             
+
+            
+            * CACHE_1000 – This type provides at least 1000 MB/s disk access throughput.
+            
+
+            
+
+          
+          - **dbPaths** *(list) --* **[REQUIRED]** 
+
+            Specifies the portions of database that will be loaded into the cache for access.
+
+            
+
+          
+            - *(string) --* 
+
+            
+        
+          - **dataviewName** *(string) --* 
+
+            The name of the dataview to be used for caching historical data on disk.
+
+            
+
+          
+        
+    
+      - **changesetId** *(string) --* 
+
+        A unique identifier of the changeset that is associated with the cluster.
+
+        
+
+      
+      - **dataviewName** *(string) --* 
+
+        The name of the dataview to be used for caching historical data on disk.
+
+        
+
+      
+      - **dataviewConfiguration** *(dict) --* 
+
+        The configuration of the dataview to be used with specified cluster.
+
+        
+
+      
+        - **dataviewName** *(string) --* 
+
+          The unique identifier of the dataview.
+
+          
+
+        
+        - **dataviewVersionId** *(string) --* 
+
+          The version of the dataview corresponding to a given changeset.
+
+          
+
+        
+        - **changesetId** *(string) --* 
+
+          A unique identifier for the changeset.
+
+          
+
+        
+        - **segmentConfigurations** *(list) --* 
+
+          The db path and volume configuration for the segmented database.
+
+          
+
+        
+          - *(dict) --* 
+
+            The configuration that contains the database path of the data that you want to place on each selected volume. Each segment must have a unique database path for each volume. If you do not explicitly specify any database path for a volume, they are accessible from the cluster through the default S3/object store segment.
+
+            
+
+          
+            - **dbPaths** *(list) --* **[REQUIRED]** 
+
+              The database path of the data that you want to place on each selected volume for the segment. Each segment must have a unique database path for each volume.
+
+              
+
+            
+              - *(string) --* 
+
+              
+          
+            - **volumeName** *(string) --* **[REQUIRED]** 
+
+              The name of the volume where you want to add data.
+
+              
+
+            
+            - **onDemand** *(boolean) --* 
+
+              Enables on-demand caching on the selected database path when a particular file or a column of the database is accessed. When on demand caching is **True**, dataviews perform minimal loading of files on the filesystem as needed. When it is set to **False**, everything is cached. The default value is **False**.
+
+              
+
+            
+          
+      
+      
+    
+
+  :type cacheStorageConfigurations: list
+  :param cacheStorageConfigurations: 
+
+    The configurations for a read only cache storage associated with a cluster. This cache will be stored as an FSx Lustre that reads from the S3 store.
+
+    
+
+  
+    - *(dict) --* 
+
+      The configuration for read only disk cache associated with a cluster.
+
+      
+
+    
+      - **type** *(string) --* **[REQUIRED]** 
+
+        The type of cache storage. The valid values are:
+
+         
+
+        
+        * CACHE_1000 – This type provides at least 1000 MB/s disk access throughput.
+         
+        * CACHE_250 – This type provides at least 250 MB/s disk access throughput.
+         
+        * CACHE_12 – This type provides at least 12 MB/s disk access throughput.
+        
+
+         
+
+        For cache type ``CACHE_1000`` and ``CACHE_250`` you can select cache size as 1200 GB or increments of 2400 GB. For cache type ``CACHE_12`` you can select the cache size in increments of 6000 GB.
+
+        
+
+      
+      - **size** *(integer) --* **[REQUIRED]** 
+
+        The size of cache in Gigabytes.
+
+        
+
+      
+    
+
+  :type autoScalingConfiguration: dict
+  :param autoScalingConfiguration: 
+
+    The configuration based on which FinSpace will scale in or scale out nodes in your cluster.
+
+    
+
+  
+    - **minNodeCount** *(integer) --* 
+
+      The lowest number of nodes to scale. This value must be at least 1 and less than the ``maxNodeCount``. If the nodes in a cluster belong to multiple availability zones, then ``minNodeCount`` must be at least 3.
+
+      
+
+    
+    - **maxNodeCount** *(integer) --* 
+
+      The highest number of nodes to scale. This value cannot be greater than 5.
+
+      
+
+    
+    - **autoScalingMetric** *(string) --* 
+
+      The metric your cluster will track in order to scale in and out. For example, ``CPU_UTILIZATION_PERCENTAGE`` is the average CPU usage across all the nodes in a cluster.
+
+      
+
+    
+    - **metricTarget** *(float) --* 
+
+      The desired value of the chosen ``autoScalingMetric``. When the metric drops below this value, the cluster will scale in. When the metric goes above this value, the cluster will scale out. You can set the target value between 1 and 100 percent.
+
+      
+
+    
+    - **scaleInCooldownSeconds** *(float) --* 
+
+      The duration in seconds that FinSpace will wait after a scale in event before initiating another scaling event.
+
+      
+
+    
+    - **scaleOutCooldownSeconds** *(float) --* 
+
+      The duration in seconds that FinSpace will wait after a scale out event before initiating another scaling event.
+
+      
+
+    
+  
+  :type clusterDescription: string
+  :param clusterDescription: 
+
+    A description of the cluster.
+
+    
+
+  
+  :type capacityConfiguration: dict
+  :param capacityConfiguration: 
+
+    A structure for the metadata of a cluster. It includes information like the CPUs needed, memory of instances, and number of instances.
+
+    
+
+  
+    - **nodeType** *(string) --* 
+
+      The type that determines the hardware of the host computer used for your cluster instance. Each node type offers different memory and storage capabilities. Choose a node type based on the requirements of the application or software that you plan to run on your instance.
+
+       
+
+      You can only specify one of the following values:
+
+       
+
+      
+      * ``kx.s.large`` – The node type with a configuration of 12 GiB memory and 2 vCPUs.
+       
+      * ``kx.s.xlarge`` – The node type with a configuration of 27 GiB memory and 4 vCPUs.
+       
+      * ``kx.s.2xlarge`` – The node type with a configuration of 54 GiB memory and 8 vCPUs.
+       
+      * ``kx.s.4xlarge`` – The node type with a configuration of 108 GiB memory and 16 vCPUs.
+       
+      * ``kx.s.8xlarge`` – The node type with a configuration of 216 GiB memory and 32 vCPUs.
+       
+      * ``kx.s.16xlarge`` – The node type with a configuration of 432 GiB memory and 64 vCPUs.
+       
+      * ``kx.s.32xlarge`` – The node type with a configuration of 864 GiB memory and 128 vCPUs.
+      
+
+      
+
+    
+    - **nodeCount** *(integer) --* 
+
+      The number of instances running in a cluster.
+
+      
+
+    
+  
+  :type releaseLabel: string
+  :param releaseLabel: **[REQUIRED]** 
+
+    The version of FinSpace managed kdb to run.
+
+    
+
+  
+  :type vpcConfiguration: dict
+  :param vpcConfiguration: **[REQUIRED]** 
+
+    Configuration details about the network where the Privatelink endpoint of the cluster resides.
+
+    
+
+  
+    - **vpcId** *(string) --* 
+
+      The identifier of the VPC endpoint.
+
+      
+
+    
+    - **securityGroupIds** *(list) --* 
+
+      The unique identifier of the VPC security group applied to the VPC endpoint ENI for the cluster.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **subnetIds** *(list) --* 
+
+      The identifier of the subnet that the Privatelink VPC endpoint uses to connect to the cluster.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **ipAddressType** *(string) --* 
+
+      The IP address type for cluster network configuration parameters. The following type is available:
+
+       
+
+      
+      * IP_V4 – IP address version 4
+      
+
+      
+
+    
+  
+  :type initializationScript: string
+  :param initializationScript: 
+
+    Specifies a Q program that will be run at launch of a cluster. It is a relative path within *.zip* file that contains the custom code, which will be loaded on the cluster. It must include the file name itself. For example, ``somedir/init.q``.
+
+    
+
+  
+  :type commandLineArguments: list
+  :param commandLineArguments: 
+
+    Defines the key-value pairs to make them available inside the cluster.
+
+    
+
+  
+    - *(dict) --* 
+
+      Defines the key-value pairs to make them available inside the cluster.
+
+      
+
+    
+      - **key** *(string) --* 
+
+        The name of the key.
+
+        
+
+      
+      - **value** *(string) --* 
+
+        The value of the key.
+
+        
+
+      
+    
+
+  :type code: dict
+  :param code: 
+
+    The details of the custom code that you want to use inside a cluster when analyzing a data. It consists of the S3 source bucket, location, S3 object version, and the relative path from where the custom code is loaded into the cluster.
+
+    
+
+  
+    - **s3Bucket** *(string) --* 
+
+      A unique name for the S3 bucket.
+
+      
+
+    
+    - **s3Key** *(string) --* 
+
+      The full S3 path (excluding bucket) to the .zip file. This file contains the code that is loaded onto the cluster when it's started.
+
+      
+
+    
+    - **s3ObjectVersion** *(string) --* 
+
+      The version of an S3 object.
+
+      
+
+    
+  
+  :type executionRole: string
+  :param executionRole: 
+
+    An IAM role that defines a set of permissions associated with a cluster. These permissions are assumed when a cluster attempts to access another cluster.
+
+    
+
+  
+  :type savedownStorageConfiguration: dict
+  :param savedownStorageConfiguration: 
+
+    The size and type of the temporary storage that is used to hold data during the savedown process. This parameter is required when you choose ``clusterType`` as RDB. All the data written to this storage space is lost when the cluster node is restarted.
+
+    
+
+  
+    - **type** *(string) --* 
+
+      The type of writeable storage space for temporarily storing your savedown data. The valid values are:
+
+       
+
+      
+      * SDS01 – This type represents 3000 IOPS and io2 ebs volume type.
+      
+
+      
+
+    
+    - **size** *(integer) --* 
+
+      The size of temporary storage in gibibytes.
+
+      
+
+    
+    - **volumeName** *(string) --* 
+
+      The name of the kdb volume that you want to use as writeable save-down storage for clusters.
+
+      
+
+    
+  
+  :type azMode: string
+  :param azMode: **[REQUIRED]** 
+
+    The number of availability zones you want to assign per cluster. This can be one of the following
+
+     
+
+    
+    * ``SINGLE`` – Assigns one availability zone per cluster.
+     
+    * ``MULTI`` – Assigns all the availability zones per cluster.
+    
+
+    
+
+  
+  :type availabilityZoneId: string
+  :param availabilityZoneId: 
+
+    The availability zone identifiers for the requested regions.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    A list of key-value pairs to label the cluster. You can add up to 50 tags to a cluster.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type scalingGroupConfiguration: dict
+  :param scalingGroupConfiguration: 
+
+    The structure that stores the configuration details of a scaling group.
+
+    
+
+  
+    - **scalingGroupName** *(string) --* **[REQUIRED]** 
+
+      A unique identifier for the kdb scaling group.
+
+      
+
+    
+    - **memoryLimit** *(integer) --* 
+
+      An optional hard limit on the amount of memory a kdb cluster can use.
+
+      
+
+    
+    - **memoryReservation** *(integer) --* **[REQUIRED]** 
+
+      A reservation of the minimum amount of memory that should be available on the scaling group for a kdb cluster to be successfully placed in a scaling group.
+
+      
+
+    
+    - **nodeCount** *(integer) --* **[REQUIRED]** 
+
+      The number of kdb cluster nodes.
+
+      
+
+    
+    - **cpu** *(float) --* 
+
+      The number of vCPUs that you want to reserve for each node of this kdb cluster on the scaling group host.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'environmentId': 'string',
+          'status': 'PENDING'|'CREATING'|'CREATE_FAILED'|'RUNNING'|'UPDATING'|'DELETING'|'DELETED'|'DELETE_FAILED',
+          'statusReason': 'string',
+          'clusterName': 'string',
+          'clusterType': 'HDB'|'RDB'|'GATEWAY'|'GP'|'TICKERPLANT',
+          'tickerplantLogConfiguration': {
+              'tickerplantLogVolumes': [
+                  'string',
+              ]
+          },
+          'volumes': [
+              {
+                  'volumeName': 'string',
+                  'volumeType': 'NAS_1'
+              },
+          ],
+          'databases': [
+              {
+                  'databaseName': 'string',
+                  'cacheConfigurations': [
+                      {
+                          'cacheType': 'string',
+                          'dbPaths': [
+                              'string',
+                          ],
+                          'dataviewName': 'string'
+                      },
+                  ],
+                  'changesetId': 'string',
+                  'dataviewName': 'string',
+                  'dataviewConfiguration': {
+                      'dataviewName': 'string',
+                      'dataviewVersionId': 'string',
+                      'changesetId': 'string',
+                      'segmentConfigurations': [
+                          {
+                              'dbPaths': [
+                                  'string',
+                              ],
+                              'volumeName': 'string',
+                              'onDemand': True|False
+                          },
+                      ]
+                  }
+              },
+          ],
+          'cacheStorageConfigurations': [
+              {
+                  'type': 'string',
+                  'size': 123
+              },
+          ],
+          'autoScalingConfiguration': {
+              'minNodeCount': 123,
+              'maxNodeCount': 123,
+              'autoScalingMetric': 'CPU_UTILIZATION_PERCENTAGE',
+              'metricTarget': 123.0,
+              'scaleInCooldownSeconds': 123.0,
+              'scaleOutCooldownSeconds': 123.0
+          },
+          'clusterDescription': 'string',
+          'capacityConfiguration': {
+              'nodeType': 'string',
+              'nodeCount': 123
+          },
+          'releaseLabel': 'string',
+          'vpcConfiguration': {
+              'vpcId': 'string',
+              'securityGroupIds': [
+                  'string',
+              ],
+              'subnetIds': [
+                  'string',
+              ],
+              'ipAddressType': 'IP_V4'
+          },
+          'initializationScript': 'string',
+          'commandLineArguments': [
+              {
+                  'key': 'string',
+                  'value': 'string'
+              },
+          ],
+          'code': {
+              's3Bucket': 'string',
+              's3Key': 'string',
+              's3ObjectVersion': 'string'
+          },
+          'executionRole': 'string',
+          'lastModifiedTimestamp': datetime(2015, 1, 1),
+          'savedownStorageConfiguration': {
+              'type': 'SDS01',
+              'size': 123,
+              'volumeName': 'string'
+          },
+          'azMode': 'SINGLE'|'MULTI',
+          'availabilityZoneId': 'string',
+          'createdTimestamp': datetime(2015, 1, 1),
+          'scalingGroupConfiguration': {
+              'scalingGroupName': 'string',
+              'memoryLimit': 123,
+              'memoryReservation': 123,
+              'nodeCount': 123,
+              'cpu': 123.0
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **environmentId** *(string) --* 
+
+        A unique identifier for the kdb environment.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The status of cluster creation.
+
+         
+
+        
+        * PENDING – The cluster is pending creation.
+         
+        * CREATING – The cluster creation process is in progress.
+         
+        * CREATE_FAILED – The cluster creation process has failed.
+         
+        * RUNNING – The cluster creation process is running.
+         
+        * UPDATING – The cluster is in the process of being updated.
+         
+        * DELETING – The cluster is in the process of being deleted.
+         
+        * DELETED – The cluster has been deleted.
+         
+        * DELETE_FAILED – The cluster failed to delete.
+        
+
+        
+      
+
+      - **statusReason** *(string) --* 
+
+        The error message when a failed state occurs.
+
+        
+      
+
+      - **clusterName** *(string) --* 
+
+        A unique name for the cluster.
+
+        
+      
+
+      - **clusterType** *(string) --* 
+
+        Specifies the type of KDB database that is being created. The following types are available:
+
+         
+
+        
+        * HDB – A Historical Database. The data is only accessible with read-only permissions from one of the FinSpace managed kdb databases mounted to the cluster.
+         
+        * RDB – A Realtime Database. This type of database captures all the data from a ticker plant and stores it in memory until the end of day, after which it writes all of its data to a disk and reloads the HDB. This cluster type requires local storage for temporary storage of data during the savedown process. If you specify this field in your request, you must provide the ``savedownStorageConfiguration`` parameter.
+         
+        * GATEWAY – A gateway cluster allows you to access data across processes in kdb systems. It allows you to create your own routing logic using the initialization scripts and custom code. This type of cluster does not require a writable local storage.
+         
+        * GP – A general purpose cluster allows you to quickly iterate on code during development by granting greater access to system commands and enabling a fast reload of custom code. This cluster type can optionally mount databases including cache and savedown storage. For this cluster type, the node count is fixed at 1. It does not support autoscaling and supports only ``SINGLE`` AZ mode.
+         
+        * Tickerplant – A tickerplant cluster allows you to subscribe to feed handlers based on IAM permissions. It can publish to RDBs, other Tickerplants, and real-time subscribers (RTS). Tickerplants can persist messages to log, which is readable by any RDB environment. It supports only single-node that is only one kdb process.
+        
+
+        
+      
+
+      - **tickerplantLogConfiguration** *(dict) --* 
+
+        A configuration to store the Tickerplant logs. It consists of a list of volumes that will be mounted to your cluster. For the cluster type ``Tickerplant``, the location of the TP volume on the cluster will be available by using the global variable ``.aws.tp_log_path``.
+
+        
+        
+
+        - **tickerplantLogVolumes** *(list) --* 
+
+          The name of the volumes for tickerplant logs.
+
+          
+          
+
+          - *(string) --* 
+      
+    
+      
+
+      - **volumes** *(list) --* 
+
+        A list of volumes mounted on the cluster.
+
+        
+        
+
+        - *(dict) --* 
+
+          The structure that consists of name and type of volume.
+
+          
+          
+
+          - **volumeName** *(string) --* 
+
+            A unique identifier for the volume.
+
+            
+          
+
+          - **volumeType** *(string) --* 
+
+            The type of file system volume. Currently, FinSpace only supports ``NAS_1`` volume type.
+
+            
+      
+    
+      
+
+      - **databases** *(list) --* 
+
+        A list of databases that will be available for querying.
+
+        
+        
+
+        - *(dict) --* 
+
+          The configuration of data that is available for querying from this database.
+
+          
+          
+
+          - **databaseName** *(string) --* 
+
+            The name of the kdb database. When this parameter is specified in the structure, S3 with the whole database is included by default.
+
+            
+          
+
+          - **cacheConfigurations** *(list) --* 
+
+            Configuration details for the disk cache used to increase performance reading from a kdb database mounted to the cluster.
+
+            
+            
+
+            - *(dict) --* 
+
+              The structure of database cache configuration that is used for mapping database paths to cache types in clusters.
+
+              
+              
+
+              - **cacheType** *(string) --* 
+
+                The type of disk cache. This parameter is used to map the database path to cache storage. The valid values are:
+
+                 
+
+                
+                * CACHE_1000 – This type provides at least 1000 MB/s disk access throughput.
+                
+
+                
+              
+
+              - **dbPaths** *(list) --* 
+
+                Specifies the portions of database that will be loaded into the cache for access.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **dataviewName** *(string) --* 
+
+                The name of the dataview to be used for caching historical data on disk.
+
+                
+          
+        
+          
+
+          - **changesetId** *(string) --* 
+
+            A unique identifier of the changeset that is associated with the cluster.
+
+            
+          
+
+          - **dataviewName** *(string) --* 
+
+            The name of the dataview to be used for caching historical data on disk.
+
+            
+          
+
+          - **dataviewConfiguration** *(dict) --* 
+
+            The configuration of the dataview to be used with specified cluster.
+
+            
+            
+
+            - **dataviewName** *(string) --* 
+
+              The unique identifier of the dataview.
+
+              
+            
+
+            - **dataviewVersionId** *(string) --* 
+
+              The version of the dataview corresponding to a given changeset.
+
+              
+            
+
+            - **changesetId** *(string) --* 
+
+              A unique identifier for the changeset.
+
+              
+            
+
+            - **segmentConfigurations** *(list) --* 
+
+              The db path and volume configuration for the segmented database.
+
+              
+              
+
+              - *(dict) --* 
+
+                The configuration that contains the database path of the data that you want to place on each selected volume. Each segment must have a unique database path for each volume. If you do not explicitly specify any database path for a volume, they are accessible from the cluster through the default S3/object store segment.
+
+                
+                
+
+                - **dbPaths** *(list) --* 
+
+                  The database path of the data that you want to place on each selected volume for the segment. Each segment must have a unique database path for each volume.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **volumeName** *(string) --* 
+
+                  The name of the volume where you want to add data.
+
+                  
+                
+
+                - **onDemand** *(boolean) --* 
+
+                  Enables on-demand caching on the selected database path when a particular file or a column of the database is accessed. When on demand caching is **True**, dataviews perform minimal loading of files on the filesystem as needed. When it is set to **False**, everything is cached. The default value is **False**.
+
+                  
+            
+          
+        
+      
+    
+      
+
+      - **cacheStorageConfigurations** *(list) --* 
+
+        The configurations for a read only cache storage associated with a cluster. This cache will be stored as an FSx Lustre that reads from the S3 store.
+
+        
+        
+
+        - *(dict) --* 
+
+          The configuration for read only disk cache associated with a cluster.
+
+          
+          
+
+          - **type** *(string) --* 
+
+            The type of cache storage. The valid values are:
+
+             
+
+            
+            * CACHE_1000 – This type provides at least 1000 MB/s disk access throughput.
+             
+            * CACHE_250 – This type provides at least 250 MB/s disk access throughput.
+             
+            * CACHE_12 – This type provides at least 12 MB/s disk access throughput.
+            
+
+             
+
+            For cache type ``CACHE_1000`` and ``CACHE_250`` you can select cache size as 1200 GB or increments of 2400 GB. For cache type ``CACHE_12`` you can select the cache size in increments of 6000 GB.
+
+            
+          
+
+          - **size** *(integer) --* 
+
+            The size of cache in Gigabytes.
+
+            
+      
+    
+      
+
+      - **autoScalingConfiguration** *(dict) --* 
+
+        The configuration based on which FinSpace will scale in or scale out nodes in your cluster.
+
+        
+        
+
+        - **minNodeCount** *(integer) --* 
+
+          The lowest number of nodes to scale. This value must be at least 1 and less than the ``maxNodeCount``. If the nodes in a cluster belong to multiple availability zones, then ``minNodeCount`` must be at least 3.
+
+          
+        
+
+        - **maxNodeCount** *(integer) --* 
+
+          The highest number of nodes to scale. This value cannot be greater than 5.
+
+          
+        
+
+        - **autoScalingMetric** *(string) --* 
+
+          The metric your cluster will track in order to scale in and out. For example, ``CPU_UTILIZATION_PERCENTAGE`` is the average CPU usage across all the nodes in a cluster.
+
+          
+        
+
+        - **metricTarget** *(float) --* 
+
+          The desired value of the chosen ``autoScalingMetric``. When the metric drops below this value, the cluster will scale in. When the metric goes above this value, the cluster will scale out. You can set the target value between 1 and 100 percent.
+
+          
+        
+
+        - **scaleInCooldownSeconds** *(float) --* 
+
+          The duration in seconds that FinSpace will wait after a scale in event before initiating another scaling event.
+
+          
+        
+
+        - **scaleOutCooldownSeconds** *(float) --* 
+
+          The duration in seconds that FinSpace will wait after a scale out event before initiating another scaling event.
+
+          
+    
+      
+
+      - **clusterDescription** *(string) --* 
+
+        A description of the cluster.
+
+        
+      
+
+      - **capacityConfiguration** *(dict) --* 
+
+        A structure for the metadata of a cluster. It includes information like the CPUs needed, memory of instances, and number of instances.
+
+        
+        
+
+        - **nodeType** *(string) --* 
+
+          The type that determines the hardware of the host computer used for your cluster instance. Each node type offers different memory and storage capabilities. Choose a node type based on the requirements of the application or software that you plan to run on your instance.
+
+           
+
+          You can only specify one of the following values:
+
+           
+
+          
+          * ``kx.s.large`` – The node type with a configuration of 12 GiB memory and 2 vCPUs.
+           
+          * ``kx.s.xlarge`` – The node type with a configuration of 27 GiB memory and 4 vCPUs.
+           
+          * ``kx.s.2xlarge`` – The node type with a configuration of 54 GiB memory and 8 vCPUs.
+           
+          * ``kx.s.4xlarge`` – The node type with a configuration of 108 GiB memory and 16 vCPUs.
+           
+          * ``kx.s.8xlarge`` – The node type with a configuration of 216 GiB memory and 32 vCPUs.
+           
+          * ``kx.s.16xlarge`` – The node type with a configuration of 432 GiB memory and 64 vCPUs.
+           
+          * ``kx.s.32xlarge`` – The node type with a configuration of 864 GiB memory and 128 vCPUs.
+          
+
+          
+        
+
+        - **nodeCount** *(integer) --* 
+
+          The number of instances running in a cluster.
+
+          
+    
+      
+
+      - **releaseLabel** *(string) --* 
+
+        A version of the FinSpace managed kdb to run.
+
+        
+      
+
+      - **vpcConfiguration** *(dict) --* 
+
+        Configuration details about the network where the Privatelink endpoint of the cluster resides.
+
+        
+        
+
+        - **vpcId** *(string) --* 
+
+          The identifier of the VPC endpoint.
+
+          
+        
+
+        - **securityGroupIds** *(list) --* 
+
+          The unique identifier of the VPC security group applied to the VPC endpoint ENI for the cluster.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **subnetIds** *(list) --* 
+
+          The identifier of the subnet that the Privatelink VPC endpoint uses to connect to the cluster.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **ipAddressType** *(string) --* 
+
+          The IP address type for cluster network configuration parameters. The following type is available:
+
+           
+
+          
+          * IP_V4 – IP address version 4
+          
+
+          
+    
+      
+
+      - **initializationScript** *(string) --* 
+
+        Specifies a Q program that will be run at launch of a cluster. It is a relative path within *.zip* file that contains the custom code, which will be loaded on the cluster. It must include the file name itself. For example, ``somedir/init.q``.
+
+        
+      
+
+      - **commandLineArguments** *(list) --* 
+
+        Defines the key-value pairs to make them available inside the cluster.
+
+        
+        
+
+        - *(dict) --* 
+
+          Defines the key-value pairs to make them available inside the cluster.
+
+          
+          
+
+          - **key** *(string) --* 
+
+            The name of the key.
+
+            
+          
+
+          - **value** *(string) --* 
+
+            The value of the key.
+
+            
+      
+    
+      
+
+      - **code** *(dict) --* 
+
+        The details of the custom code that you want to use inside a cluster when analyzing a data. It consists of the S3 source bucket, location, S3 object version, and the relative path from where the custom code is loaded into the cluster.
+
+        
+        
+
+        - **s3Bucket** *(string) --* 
+
+          A unique name for the S3 bucket.
+
+          
+        
+
+        - **s3Key** *(string) --* 
+
+          The full S3 path (excluding bucket) to the .zip file. This file contains the code that is loaded onto the cluster when it's started.
+
+          
+        
+
+        - **s3ObjectVersion** *(string) --* 
+
+          The version of an S3 object.
+
+          
+    
+      
+
+      - **executionRole** *(string) --* 
+
+        An IAM role that defines a set of permissions associated with a cluster. These permissions are assumed when a cluster attempts to access another cluster.
+
+        
+      
+
+      - **lastModifiedTimestamp** *(datetime) --* 
+
+        The last time that the cluster was modified. The value is determined as epoch time in milliseconds. For example, the value for Monday, November 1, 2021 12:00:00 PM UTC is specified as 1635768000000.
+
+        
+      
+
+      - **savedownStorageConfiguration** *(dict) --* 
+
+        The size and type of the temporary storage that is used to hold data during the savedown process. This parameter is required when you choose ``clusterType`` as RDB. All the data written to this storage space is lost when the cluster node is restarted.
+
+        
+        
+
+        - **type** *(string) --* 
+
+          The type of writeable storage space for temporarily storing your savedown data. The valid values are:
+
+           
+
+          
+          * SDS01 – This type represents 3000 IOPS and io2 ebs volume type.
+          
+
+          
+        
+
+        - **size** *(integer) --* 
+
+          The size of temporary storage in gibibytes.
+
+          
+        
+
+        - **volumeName** *(string) --* 
+
+          The name of the kdb volume that you want to use as writeable save-down storage for clusters.
+
+          
+    
+      
+
+      - **azMode** *(string) --* 
+
+        The number of availability zones you want to assign per cluster. This can be one of the following
+
+         
+
+        
+        * ``SINGLE`` – Assigns one availability zone per cluster.
+         
+        * ``MULTI`` – Assigns all the availability zones per cluster.
+        
+
+        
+      
+
+      - **availabilityZoneId** *(string) --* 
+
+        The availability zone identifiers for the requested regions.
+
+        
+      
+
+      - **createdTimestamp** *(datetime) --* 
+
+        The timestamp at which the cluster was created in FinSpace. The value is determined as epoch time in milliseconds. For example, the value for Monday, November 1, 2021 12:00:00 PM UTC is specified as 1635768000000.
+
+        
+      
+
+      - **scalingGroupConfiguration** *(dict) --* 
+
+        The structure that stores the configuration details of a scaling group.
+
+        
+        
+
+        - **scalingGroupName** *(string) --* 
+
+          A unique identifier for the kdb scaling group.
+
+          
+        
+
+        - **memoryLimit** *(integer) --* 
+
+          An optional hard limit on the amount of memory a kdb cluster can use.
+
+          
+        
+
+        - **memoryReservation** *(integer) --* 
+
+          A reservation of the minimum amount of memory that should be available on the scaling group for a kdb cluster to be successfully placed in a scaling group.
+
+          
+        
+
+        - **nodeCount** *(integer) --* 
+
+          The number of kdb cluster nodes.
+
+          
+        
+
+        - **cpu** *(float) --* 
+
+          The number of vCPUs that you want to reserve for each node of this kdb cluster on the scaling group host.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`finspace.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`finspace.Client.exceptions.AccessDeniedException`
+
+  

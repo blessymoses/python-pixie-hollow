@@ -1,0 +1,1170 @@
+:doc:`CustomerProfiles <../../customer-profiles>` / Client / create_domain
+
+*************
+create_domain
+*************
+
+
+
+.. py:method:: CustomerProfiles.Client.create_domain(**kwargs)
+
+  
+
+  Creates a domain, which is a container for all customer data, such as customer profile attributes, object types, profile keys, and encryption keys. You can create multiple domains, and each domain can have multiple third-party integrations.
+
+   
+
+  Each Amazon Connect instance can be associated with only one domain. Multiple Amazon Connect instances can be associated with one domain.
+
+   
+
+  Use this API or `UpdateDomain <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_UpdateDomain.html>`__ to enable `identity resolution <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_GetMatches.html>`__: set ``Matching`` to true.
+
+   
+
+  To prevent cross-service impersonation when you call this API, see `Cross-service confused deputy prevention <https://docs.aws.amazon.com/connect/latest/adminguide/cross-service-confused-deputy-prevention.html>`__ for sample policies that you should apply.
+
+   
+
+  .. note::
+
+    
+
+    It is not possible to associate a Customer Profiles domain with an Amazon Connect Instance directly from the API. If you would like to create a domain and associate a Customer Profiles domain, use the Amazon Connect admin website. For more information, see `Enable Customer Profiles <https://docs.aws.amazon.com/connect/latest/adminguide/enable-customer-profiles.html#enable-customer-profiles-step1>`__.
+
+     
+
+    Each Amazon Connect instance can be associated with only one domain. Multiple Amazon Connect instances can be associated with one domain.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/customer-profiles-2020-08-15/CreateDomain>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_domain(
+        DomainName='string',
+        DefaultExpirationDays=123,
+        DefaultEncryptionKey='string',
+        DeadLetterQueueUrl='string',
+        Matching={
+            'Enabled': True|False,
+            'JobSchedule': {
+                'DayOfTheWeek': 'SUNDAY'|'MONDAY'|'TUESDAY'|'WEDNESDAY'|'THURSDAY'|'FRIDAY'|'SATURDAY',
+                'Time': 'string'
+            },
+            'AutoMerging': {
+                'Enabled': True|False,
+                'Consolidation': {
+                    'MatchingAttributesList': [
+                        [
+                            'string',
+                        ],
+                    ]
+                },
+                'ConflictResolution': {
+                    'ConflictResolvingModel': 'RECENCY'|'SOURCE',
+                    'SourceName': 'string'
+                },
+                'MinAllowedConfidenceScoreForMerging': 123.0
+            },
+            'ExportingConfig': {
+                'S3Exporting': {
+                    'S3BucketName': 'string',
+                    'S3KeyName': 'string'
+                }
+            }
+        },
+        RuleBasedMatching={
+            'Enabled': True|False,
+            'MatchingRules': [
+                {
+                    'Rule': [
+                        'string',
+                    ]
+                },
+            ],
+            'MaxAllowedRuleLevelForMerging': 123,
+            'MaxAllowedRuleLevelForMatching': 123,
+            'AttributeTypesSelector': {
+                'AttributeMatchingModel': 'ONE_TO_ONE'|'MANY_TO_MANY',
+                'Address': [
+                    'string',
+                ],
+                'PhoneNumber': [
+                    'string',
+                ],
+                'EmailAddress': [
+                    'string',
+                ]
+            },
+            'ConflictResolution': {
+                'ConflictResolvingModel': 'RECENCY'|'SOURCE',
+                'SourceName': 'string'
+            },
+            'ExportingConfig': {
+                'S3Exporting': {
+                    'S3BucketName': 'string',
+                    'S3KeyName': 'string'
+                }
+            }
+        },
+        DataStore={
+            'Enabled': True|False
+        },
+        Tags={
+            'string': 'string'
+        }
+    )
+    
+  :type DomainName: string
+  :param DomainName: **[REQUIRED]** 
+
+    The unique name of the domain.
+
+    
+
+  
+  :type DefaultExpirationDays: integer
+  :param DefaultExpirationDays: **[REQUIRED]** 
+
+    The default number of days until the data within the domain expires.
+
+    
+
+  
+  :type DefaultEncryptionKey: string
+  :param DefaultEncryptionKey: 
+
+    The default encryption key, which is an AWS managed key, is used when no specific type of encryption key is specified. It is used to encrypt all data before it is placed in permanent or semi-permanent storage.
+
+    
+
+  
+  :type DeadLetterQueueUrl: string
+  :param DeadLetterQueueUrl: 
+
+    The URL of the SQS dead letter queue, which is used for reporting errors associated with ingesting data from third party applications. You must set up a policy on the DeadLetterQueue for the SendMessage operation to enable Amazon Connect Customer Profiles to send messages to the DeadLetterQueue.
+
+    
+
+  
+  :type Matching: dict
+  :param Matching: 
+
+    The process of matching duplicate profiles. If ``Matching`` = ``true``, Amazon Connect Customer Profiles starts a weekly batch process called Identity Resolution Job. If you do not specify a date and time for Identity Resolution Job to run, by default it runs every Saturday at 12AM UTC to detect duplicate profiles in your domains.
+
+     
+
+    After the Identity Resolution Job completes, use the `GetMatches <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_GetMatches.html>`__ API to return and review the results. Or, if you have configured ``ExportingConfig`` in the ``MatchingRequest``, you can download the results from S3.
+
+    
+
+  
+    - **Enabled** *(boolean) --* **[REQUIRED]** 
+
+      The flag that enables the matching process of duplicate profiles.
+
+      
+
+    
+    - **JobSchedule** *(dict) --* 
+
+      The day and time when do you want to start the Identity Resolution Job every week.
+
+      
+
+    
+      - **DayOfTheWeek** *(string) --* **[REQUIRED]** 
+
+        The day when the Identity Resolution Job should run every week.
+
+        
+
+      
+      - **Time** *(string) --* **[REQUIRED]** 
+
+        The time when the Identity Resolution Job should run every week.
+
+        
+
+      
+    
+    - **AutoMerging** *(dict) --* 
+
+      Configuration information about the auto-merging process.
+
+      
+
+    
+      - **Enabled** *(boolean) --* **[REQUIRED]** 
+
+        The flag that enables the auto-merging of duplicate profiles.
+
+        
+
+      
+      - **Consolidation** *(dict) --* 
+
+        A list of matching attributes that represent matching criteria. If two profiles meet at least one of the requirements in the matching attributes list, they will be merged.
+
+        
+
+      
+        - **MatchingAttributesList** *(list) --* **[REQUIRED]** 
+
+          A list of matching criteria.
+
+          
+
+        
+          - *(list) --* 
+
+          
+            - *(string) --* 
+
+            
+        
+      
+      
+      - **ConflictResolution** *(dict) --* 
+
+        How the auto-merging process should resolve conflicts between different profiles. For example, if Profile A and Profile B have the same ``FirstName`` and ``LastName`` (and that is the matching criteria), which ``EmailAddress`` should be used?
+
+        
+
+      
+        - **ConflictResolvingModel** *(string) --* **[REQUIRED]** 
+
+          How the auto-merging process should resolve conflicts between different profiles.
+
+           
+
+          
+          * ``RECENCY``: Uses the data that was most recently updated.
+           
+          * ``SOURCE``: Uses the data from a specific source. For example, if a company has been aquired or two departments have merged, data from the specified source is used. If two duplicate profiles are from the same source, then ``RECENCY`` is used again.
+          
+
+          
+
+        
+        - **SourceName** *(string) --* 
+
+          The ``ObjectType`` name that is used to resolve profile merging conflicts when choosing ``SOURCE`` as the ``ConflictResolvingModel``.
+
+          
+
+        
+      
+      - **MinAllowedConfidenceScoreForMerging** *(float) --* 
+
+        A number between 0 and 1 that represents the minimum confidence score required for profiles within a matching group to be merged during the auto-merge process. A higher score means higher similarity required to merge profiles.
+
+        
+
+      
+    
+    - **ExportingConfig** *(dict) --* 
+
+      Configuration information for exporting Identity Resolution results, for example, to an S3 bucket.
+
+      
+
+    
+      - **S3Exporting** *(dict) --* 
+
+        The S3 location where Identity Resolution Jobs write result files.
+
+        
+
+      
+        - **S3BucketName** *(string) --* **[REQUIRED]** 
+
+          The name of the S3 bucket where Identity Resolution Jobs write result files.
+
+          
+
+        
+        - **S3KeyName** *(string) --* 
+
+          The S3 key name of the location where Identity Resolution Jobs write result files.
+
+          
+
+        
+      
+    
+  
+  :type RuleBasedMatching: dict
+  :param RuleBasedMatching: 
+
+    The process of matching duplicate profiles using the Rule-Based matching. If ``RuleBasedMatching`` = true, Amazon Connect Customer Profiles will start to match and merge your profiles according to your configuration in the ``RuleBasedMatchingRequest``. You can use the ``ListRuleBasedMatches`` and ``GetSimilarProfiles`` API to return and review the results. Also, if you have configured ``ExportingConfig`` in the ``RuleBasedMatchingRequest``, you can download the results from S3.
+
+    
+
+  
+    - **Enabled** *(boolean) --* **[REQUIRED]** 
+
+      The flag that enables the rule-based matching process of duplicate profiles.
+
+      
+
+    
+    - **MatchingRules** *(list) --* 
+
+      Configures how the rule-based matching process should match profiles. You can have up to 15 ``MatchingRule`` in the ``MatchingRules``.
+
+      
+
+    
+      - *(dict) --* 
+
+        Specifies how does the rule-based matching process should match profiles. You can choose from the following attributes to build the matching Rule:
+
+         
+
+        
+        * AccountNumber
+         
+        * Address.Address
+         
+        * Address.City
+         
+        * Address.Country
+         
+        * Address.County
+         
+        * Address.PostalCode
+         
+        * Address.State
+         
+        * Address.Province
+         
+        * BirthDate
+         
+        * BusinessName
+         
+        * EmailAddress
+         
+        * FirstName
+         
+        * Gender
+         
+        * LastName
+         
+        * MiddleName
+         
+        * PhoneNumber
+         
+        * Any customized profile attributes that start with the ``Attributes``
+        
+
+        
+
+      
+        - **Rule** *(list) --* **[REQUIRED]** 
+
+          A single rule level of the ``MatchRules``. Configures how the rule-based matching process should match profiles.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+  
+    - **MaxAllowedRuleLevelForMerging** *(integer) --* 
+
+      `MatchingRule <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_MatchingRule.html>`__
+
+      
+
+    
+    - **MaxAllowedRuleLevelForMatching** *(integer) --* 
+
+      Indicates the maximum allowed rule level.
+
+      
+
+    
+    - **AttributeTypesSelector** *(dict) --* 
+
+      Configures information about the ``AttributeTypesSelector`` where the rule-based identity resolution uses to match profiles.
+
+      
+
+    
+      - **AttributeMatchingModel** *(string) --* **[REQUIRED]** 
+
+        Configures the ``AttributeMatchingModel``, you can either choose ``ONE_TO_ONE`` or ``MANY_TO_MANY``.
+
+        
+
+      
+      - **Address** *(list) --* 
+
+        The ``Address`` type. You can choose from ``Address``, ``BusinessAddress``, ``MaillingAddress``, and ``ShippingAddress``.
+
+         
+
+        You only can use the Address type in the ``MatchingRule``. For example, if you want to match profile based on ``BusinessAddress.City`` or ``MaillingAddress.City``, you need to choose the ``BusinessAddress`` and the ``MaillingAddress`` to represent the Address type and specify the ``Address.City`` on the matching rule.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **PhoneNumber** *(list) --* 
+
+        The ``PhoneNumber`` type. You can choose from ``PhoneNumber``, ``HomePhoneNumber``, and ``MobilePhoneNumber``.
+
+         
+
+        You only can use the ``PhoneNumber`` type in the ``MatchingRule``. For example, if you want to match a profile based on ``Phone`` or ``HomePhone``, you need to choose the ``Phone`` and the ``HomePhone`` to represent the ``PhoneNumber`` type and only specify the ``PhoneNumber`` on the matching rule.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **EmailAddress** *(list) --* 
+
+        The ``Email`` type. You can choose from ``EmailAddress``, ``BusinessEmailAddress`` and ``PersonalEmailAddress``.
+
+         
+
+        You only can use the ``EmailAddress`` type in the ``MatchingRule``. For example, if you want to match profile based on ``PersonalEmailAddress`` or ``BusinessEmailAddress``, you need to choose the ``PersonalEmailAddress`` and the ``BusinessEmailAddress`` to represent the ``EmailAddress`` type and only specify the ``EmailAddress`` on the matching rule.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+    - **ConflictResolution** *(dict) --* 
+
+      How the auto-merging process should resolve conflicts between different profiles.
+
+      
+
+    
+      - **ConflictResolvingModel** *(string) --* **[REQUIRED]** 
+
+        How the auto-merging process should resolve conflicts between different profiles.
+
+         
+
+        
+        * ``RECENCY``: Uses the data that was most recently updated.
+         
+        * ``SOURCE``: Uses the data from a specific source. For example, if a company has been aquired or two departments have merged, data from the specified source is used. If two duplicate profiles are from the same source, then ``RECENCY`` is used again.
+        
+
+        
+
+      
+      - **SourceName** *(string) --* 
+
+        The ``ObjectType`` name that is used to resolve profile merging conflicts when choosing ``SOURCE`` as the ``ConflictResolvingModel``.
+
+        
+
+      
+    
+    - **ExportingConfig** *(dict) --* 
+
+      Configuration information about the S3 bucket where Identity Resolution Jobs writes result files.
+
+       
+
+      .. note::
+
+        
+
+        You need to give Customer Profiles service principal write permission to your S3 bucket. Otherwise, you'll get an exception in the API response. For an example policy, see `Amazon Connect Customer Profiles cross-service confused deputy prevention <https://docs.aws.amazon.com/connect/latest/adminguide/cross-service-confused-deputy-prevention.html#customer-profiles-cross-service>`__.
+
+        
+
+      
+
+    
+      - **S3Exporting** *(dict) --* 
+
+        The S3 location where Identity Resolution Jobs write result files.
+
+        
+
+      
+        - **S3BucketName** *(string) --* **[REQUIRED]** 
+
+          The name of the S3 bucket where Identity Resolution Jobs write result files.
+
+          
+
+        
+        - **S3KeyName** *(string) --* 
+
+          The S3 key name of the location where Identity Resolution Jobs write result files.
+
+          
+
+        
+      
+    
+  
+  :type DataStore: dict
+  :param DataStore: 
+
+    Set to true to enabled data store for this domain.
+
+    
+
+  
+    - **Enabled** *(boolean) --* 
+
+      Enabled: Set to true to enabled data store for this domain.
+
+      
+
+    
+  
+  :type Tags: dict
+  :param Tags: 
+
+    The tags used to organize, track, or control access for this resource.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DomainName': 'string',
+          'DefaultExpirationDays': 123,
+          'DefaultEncryptionKey': 'string',
+          'DeadLetterQueueUrl': 'string',
+          'Matching': {
+              'Enabled': True|False,
+              'JobSchedule': {
+                  'DayOfTheWeek': 'SUNDAY'|'MONDAY'|'TUESDAY'|'WEDNESDAY'|'THURSDAY'|'FRIDAY'|'SATURDAY',
+                  'Time': 'string'
+              },
+              'AutoMerging': {
+                  'Enabled': True|False,
+                  'Consolidation': {
+                      'MatchingAttributesList': [
+                          [
+                              'string',
+                          ],
+                      ]
+                  },
+                  'ConflictResolution': {
+                      'ConflictResolvingModel': 'RECENCY'|'SOURCE',
+                      'SourceName': 'string'
+                  },
+                  'MinAllowedConfidenceScoreForMerging': 123.0
+              },
+              'ExportingConfig': {
+                  'S3Exporting': {
+                      'S3BucketName': 'string',
+                      'S3KeyName': 'string'
+                  }
+              }
+          },
+          'RuleBasedMatching': {
+              'Enabled': True|False,
+              'MatchingRules': [
+                  {
+                      'Rule': [
+                          'string',
+                      ]
+                  },
+              ],
+              'Status': 'PENDING'|'IN_PROGRESS'|'ACTIVE',
+              'MaxAllowedRuleLevelForMerging': 123,
+              'MaxAllowedRuleLevelForMatching': 123,
+              'AttributeTypesSelector': {
+                  'AttributeMatchingModel': 'ONE_TO_ONE'|'MANY_TO_MANY',
+                  'Address': [
+                      'string',
+                  ],
+                  'PhoneNumber': [
+                      'string',
+                  ],
+                  'EmailAddress': [
+                      'string',
+                  ]
+              },
+              'ConflictResolution': {
+                  'ConflictResolvingModel': 'RECENCY'|'SOURCE',
+                  'SourceName': 'string'
+              },
+              'ExportingConfig': {
+                  'S3Exporting': {
+                      'S3BucketName': 'string',
+                      'S3KeyName': 'string'
+                  }
+              }
+          },
+          'DataStore': {
+              'Enabled': True|False,
+              'Readiness': {
+                  'ProgressPercentage': 123,
+                  'Message': 'string'
+              }
+          },
+          'CreatedAt': datetime(2015, 1, 1),
+          'LastUpdatedAt': datetime(2015, 1, 1),
+          'Tags': {
+              'string': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DomainName** *(string) --* 
+
+        The unique name of the domain.
+
+        
+      
+
+      - **DefaultExpirationDays** *(integer) --* 
+
+        The default number of days until the data within the domain expires.
+
+        
+      
+
+      - **DefaultEncryptionKey** *(string) --* 
+
+        The default encryption key, which is an AWS managed key, is used when no specific type of encryption key is specified. It is used to encrypt all data before it is placed in permanent or semi-permanent storage.
+
+        
+      
+
+      - **DeadLetterQueueUrl** *(string) --* 
+
+        The URL of the SQS dead letter queue, which is used for reporting errors associated with ingesting data from third party applications.
+
+        
+      
+
+      - **Matching** *(dict) --* 
+
+        The process of matching duplicate profiles. If ``Matching`` = ``true``, Amazon Connect Customer Profiles starts a weekly batch process called Identity Resolution Job. If you do not specify a date and time for Identity Resolution Job to run, by default it runs every Saturday at 12AM UTC to detect duplicate profiles in your domains.
+
+         
+
+        After the Identity Resolution Job completes, use the `GetMatches <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_GetMatches.html>`__ API to return and review the results. Or, if you have configured ``ExportingConfig`` in the ``MatchingRequest``, you can download the results from S3.
+
+        
+        
+
+        - **Enabled** *(boolean) --* 
+
+          The flag that enables the matching process of duplicate profiles.
+
+          
+        
+
+        - **JobSchedule** *(dict) --* 
+
+          The day and time when do you want to start the Identity Resolution Job every week.
+
+          
+          
+
+          - **DayOfTheWeek** *(string) --* 
+
+            The day when the Identity Resolution Job should run every week.
+
+            
+          
+
+          - **Time** *(string) --* 
+
+            The time when the Identity Resolution Job should run every week.
+
+            
+      
+        
+
+        - **AutoMerging** *(dict) --* 
+
+          Configuration information about the auto-merging process.
+
+          
+          
+
+          - **Enabled** *(boolean) --* 
+
+            The flag that enables the auto-merging of duplicate profiles.
+
+            
+          
+
+          - **Consolidation** *(dict) --* 
+
+            A list of matching attributes that represent matching criteria. If two profiles meet at least one of the requirements in the matching attributes list, they will be merged.
+
+            
+            
+
+            - **MatchingAttributesList** *(list) --* 
+
+              A list of matching criteria.
+
+              
+              
+
+              - *(list) --* 
+                
+
+                - *(string) --* 
+            
+          
+        
+          
+
+          - **ConflictResolution** *(dict) --* 
+
+            How the auto-merging process should resolve conflicts between different profiles. For example, if Profile A and Profile B have the same ``FirstName`` and ``LastName`` (and that is the matching criteria), which ``EmailAddress`` should be used?
+
+            
+            
+
+            - **ConflictResolvingModel** *(string) --* 
+
+              How the auto-merging process should resolve conflicts between different profiles.
+
+               
+
+              
+              * ``RECENCY``: Uses the data that was most recently updated.
+               
+              * ``SOURCE``: Uses the data from a specific source. For example, if a company has been aquired or two departments have merged, data from the specified source is used. If two duplicate profiles are from the same source, then ``RECENCY`` is used again.
+              
+
+              
+            
+
+            - **SourceName** *(string) --* 
+
+              The ``ObjectType`` name that is used to resolve profile merging conflicts when choosing ``SOURCE`` as the ``ConflictResolvingModel``.
+
+              
+        
+          
+
+          - **MinAllowedConfidenceScoreForMerging** *(float) --* 
+
+            A number between 0 and 1 that represents the minimum confidence score required for profiles within a matching group to be merged during the auto-merge process. A higher score means higher similarity required to merge profiles.
+
+            
+      
+        
+
+        - **ExportingConfig** *(dict) --* 
+
+          Configuration information for exporting Identity Resolution results, for example, to an S3 bucket.
+
+          
+          
+
+          - **S3Exporting** *(dict) --* 
+
+            The S3 location where Identity Resolution Jobs write result files.
+
+            
+            
+
+            - **S3BucketName** *(string) --* 
+
+              The name of the S3 bucket where Identity Resolution Jobs write result files.
+
+              
+            
+
+            - **S3KeyName** *(string) --* 
+
+              The S3 key name of the location where Identity Resolution Jobs write result files.
+
+              
+        
+      
+    
+      
+
+      - **RuleBasedMatching** *(dict) --* 
+
+        The process of matching duplicate profiles using the Rule-Based matching. If ``RuleBasedMatching`` = true, Amazon Connect Customer Profiles will start to match and merge your profiles according to your configuration in the ``RuleBasedMatchingRequest``. You can use the ``ListRuleBasedMatches`` and ``GetSimilarProfiles`` API to return and review the results. Also, if you have configured ``ExportingConfig`` in the ``RuleBasedMatchingRequest``, you can download the results from S3.
+
+        
+        
+
+        - **Enabled** *(boolean) --* 
+
+          The flag that enables the rule-based matching process of duplicate profiles.
+
+          
+        
+
+        - **MatchingRules** *(list) --* 
+
+          Configures how the rule-based matching process should match profiles. You can have up to 15 ``MatchingRule`` in the ``MatchingRules``.
+
+          
+          
+
+          - *(dict) --* 
+
+            Specifies how does the rule-based matching process should match profiles. You can choose from the following attributes to build the matching Rule:
+
+             
+
+            
+            * AccountNumber
+             
+            * Address.Address
+             
+            * Address.City
+             
+            * Address.Country
+             
+            * Address.County
+             
+            * Address.PostalCode
+             
+            * Address.State
+             
+            * Address.Province
+             
+            * BirthDate
+             
+            * BusinessName
+             
+            * EmailAddress
+             
+            * FirstName
+             
+            * Gender
+             
+            * LastName
+             
+            * MiddleName
+             
+            * PhoneNumber
+             
+            * Any customized profile attributes that start with the ``Attributes``
+            
+
+            
+            
+
+            - **Rule** *(list) --* 
+
+              A single rule level of the ``MatchRules``. Configures how the rule-based matching process should match profiles.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **Status** *(string) --* 
+
+          PENDING
+
+           
+
+          
+          * The first status after configuration a rule-based matching rule. If it is an existing domain, the rule-based Identity Resolution waits one hour before creating the matching rule. If it is a new domain, the system will skip the ``PENDING`` stage.
+          
+
+           
+
+          IN_PROGRESS
+
+           
+
+          
+          * The system is creating the rule-based matching rule. Under this status, the system is evaluating the existing data and you can no longer change the Rule-based matching configuration.
+          
+
+           
+
+          ACTIVE
+
+           
+
+          
+          * The rule is ready to use. You can change the rule a day after the status is in ``ACTIVE``.
+          
+
+          
+        
+
+        - **MaxAllowedRuleLevelForMerging** *(integer) --* 
+
+          `MatchingRule <https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_MatchingRule.html>`__
+
+          
+        
+
+        - **MaxAllowedRuleLevelForMatching** *(integer) --* 
+
+          Indicates the maximum allowed rule level.
+
+          
+        
+
+        - **AttributeTypesSelector** *(dict) --* 
+
+          Configures information about the ``AttributeTypesSelector`` where the rule-based identity resolution uses to match profiles.
+
+          
+          
+
+          - **AttributeMatchingModel** *(string) --* 
+
+            Configures the ``AttributeMatchingModel``, you can either choose ``ONE_TO_ONE`` or ``MANY_TO_MANY``.
+
+            
+          
+
+          - **Address** *(list) --* 
+
+            The ``Address`` type. You can choose from ``Address``, ``BusinessAddress``, ``MaillingAddress``, and ``ShippingAddress``.
+
+             
+
+            You only can use the Address type in the ``MatchingRule``. For example, if you want to match profile based on ``BusinessAddress.City`` or ``MaillingAddress.City``, you need to choose the ``BusinessAddress`` and the ``MaillingAddress`` to represent the Address type and specify the ``Address.City`` on the matching rule.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **PhoneNumber** *(list) --* 
+
+            The ``PhoneNumber`` type. You can choose from ``PhoneNumber``, ``HomePhoneNumber``, and ``MobilePhoneNumber``.
+
+             
+
+            You only can use the ``PhoneNumber`` type in the ``MatchingRule``. For example, if you want to match a profile based on ``Phone`` or ``HomePhone``, you need to choose the ``Phone`` and the ``HomePhone`` to represent the ``PhoneNumber`` type and only specify the ``PhoneNumber`` on the matching rule.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **EmailAddress** *(list) --* 
+
+            The ``Email`` type. You can choose from ``EmailAddress``, ``BusinessEmailAddress`` and ``PersonalEmailAddress``.
+
+             
+
+            You only can use the ``EmailAddress`` type in the ``MatchingRule``. For example, if you want to match profile based on ``PersonalEmailAddress`` or ``BusinessEmailAddress``, you need to choose the ``PersonalEmailAddress`` and the ``BusinessEmailAddress`` to represent the ``EmailAddress`` type and only specify the ``EmailAddress`` on the matching rule.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+        
+
+        - **ConflictResolution** *(dict) --* 
+
+          How the auto-merging process should resolve conflicts between different profiles.
+
+          
+          
+
+          - **ConflictResolvingModel** *(string) --* 
+
+            How the auto-merging process should resolve conflicts between different profiles.
+
+             
+
+            
+            * ``RECENCY``: Uses the data that was most recently updated.
+             
+            * ``SOURCE``: Uses the data from a specific source. For example, if a company has been aquired or two departments have merged, data from the specified source is used. If two duplicate profiles are from the same source, then ``RECENCY`` is used again.
+            
+
+            
+          
+
+          - **SourceName** *(string) --* 
+
+            The ``ObjectType`` name that is used to resolve profile merging conflicts when choosing ``SOURCE`` as the ``ConflictResolvingModel``.
+
+            
+      
+        
+
+        - **ExportingConfig** *(dict) --* 
+
+          Configuration information about the S3 bucket where Identity Resolution Jobs writes result files.
+
+           
+
+          .. note::
+
+            
+
+            You need to give Customer Profiles service principal write permission to your S3 bucket. Otherwise, you'll get an exception in the API response. For an example policy, see `Amazon Connect Customer Profiles cross-service confused deputy prevention <https://docs.aws.amazon.com/connect/latest/adminguide/cross-service-confused-deputy-prevention.html#customer-profiles-cross-service>`__.
+
+            
+
+          
+          
+
+          - **S3Exporting** *(dict) --* 
+
+            The S3 location where Identity Resolution Jobs write result files.
+
+            
+            
+
+            - **S3BucketName** *(string) --* 
+
+              The name of the S3 bucket where Identity Resolution Jobs write result files.
+
+              
+            
+
+            - **S3KeyName** *(string) --* 
+
+              The S3 key name of the location where Identity Resolution Jobs write result files.
+
+              
+        
+      
+    
+      
+
+      - **DataStore** *(dict) --* 
+
+        The data store.
+
+        
+        
+
+        - **Enabled** *(boolean) --* 
+
+          True if data store is enabled for this domain
+
+          
+        
+
+        - **Readiness** *(dict) --* 
+
+          Information indicating if the Calculated Attribute is ready for use by confirming all historical data has been processed and reflected.
+
+          
+          
+
+          - **ProgressPercentage** *(integer) --* 
+
+            Approximately how far the Calculated Attribute creation is from completion.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            Any customer messaging.
+
+            
+      
+    
+      
+
+      - **CreatedAt** *(datetime) --* 
+
+        The timestamp of when the domain was created.
+
+        
+      
+
+      - **LastUpdatedAt** *(datetime) --* 
+
+        The timestamp of when the domain was most recently edited.
+
+        
+      
+
+      - **Tags** *(dict) --* 
+
+        The tags used to organize, track, or control access for this resource.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CustomerProfiles.Client.exceptions.InternalServerException`
+
+  

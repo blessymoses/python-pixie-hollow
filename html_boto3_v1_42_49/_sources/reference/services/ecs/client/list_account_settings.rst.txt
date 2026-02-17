@@ -1,0 +1,275 @@
+:doc:`ECS <../../ecs>` / Client / list_account_settings
+
+*********************
+list_account_settings
+*********************
+
+
+
+.. py:method:: ECS.Client.list_account_settings(**kwargs)
+
+  
+
+  Lists the account settings for a specified principal.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ecs-2014-11-13/ListAccountSettings>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_account_settings(
+        name='serviceLongArnFormat'|'taskLongArnFormat'|'containerInstanceLongArnFormat'|'awsvpcTrunking'|'containerInsights'|'fargateFIPSMode'|'tagResourceAuthorization'|'fargateTaskRetirementWaitPeriod'|'guardDutyActivate'|'defaultLogDriverMode'|'fargateEventWindows',
+        value='string',
+        principalArn='string',
+        effectiveSettings=True|False,
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type name: string
+  :param name: 
+
+    The name of the account setting you want to list the settings for.
+
+    
+
+  
+  :type value: string
+  :param value: 
+
+    The value of the account settings to filter results with. You must also specify an account setting name to use this parameter.
+
+    
+
+  
+  :type principalArn: string
+  :param principalArn: 
+
+    The ARN of the principal, which can be a user, role, or the root user. If this field is omitted, the account settings are listed only for the authenticated user.
+
+     
+
+    In order to use this parameter, you must be the root user, or the principal.
+
+     
+
+    .. note::
+
+      
+
+      Federated users assume the account setting of the root user and can't have explicit account settings set for them.
+
+      
+
+    
+
+  
+  :type effectiveSettings: boolean
+  :param effectiveSettings: 
+
+    Determines whether to return the effective settings. If ``true``, the account settings for the root user or the default setting for the ``principalArn`` are returned. If ``false``, the account settings for the ``principalArn`` are returned if they're set. Otherwise, no account settings are returned.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The ``nextToken`` value returned from a ``ListAccountSettings`` request indicating that more results are available to fulfill the request and further calls will be needed. If ``maxResults`` was provided, it's possible the number of results to be fewer than ``maxResults``.
+
+     
+
+    .. note::
+
+      
+
+      This token should be treated as an opaque identifier that is only used to retrieve the next items in a list and not for other programmatic purposes.
+
+      
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of account setting results returned by ``ListAccountSettings`` in paginated output. When this parameter is used, ``ListAccountSettings`` only returns ``maxResults`` results in a single page along with a ``nextToken`` response element. The remaining results of the initial request can be seen by sending another ``ListAccountSettings`` request with the returned ``nextToken`` value. This value can be between 1 and 10. If this parameter isn't used, then ``ListAccountSettings`` returns up to 10 results and a ``nextToken`` value if applicable.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'settings': [
+              {
+                  'name': 'serviceLongArnFormat'|'taskLongArnFormat'|'containerInstanceLongArnFormat'|'awsvpcTrunking'|'containerInsights'|'fargateFIPSMode'|'tagResourceAuthorization'|'fargateTaskRetirementWaitPeriod'|'guardDutyActivate'|'defaultLogDriverMode'|'fargateEventWindows',
+                  'value': 'string',
+                  'principalArn': 'string',
+                  'type': 'user'|'aws_managed'
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **settings** *(list) --* 
+
+        The account settings for the resource.
+
+        
+        
+
+        - *(dict) --* 
+
+          The current account setting for a resource.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The Amazon ECS resource name.
+
+            
+          
+
+          - **value** *(string) --* 
+
+            Determines whether the account setting is on or off for the specified resource.
+
+            
+          
+
+          - **principalArn** *(string) --* 
+
+            The ARN of the principal. It can be a user, role, or the root user. If this field is omitted, the authenticated user is assumed.
+
+            
+          
+
+          - **type** *(string) --* 
+
+            Indicates whether Amazon Web Services manages the account setting, or if the user manages it.
+
+             
+
+            ``aws_managed`` account settings are read-only, as Amazon Web Services manages such on the customer's behalf. Currently, the ``guardDutyActivate`` account setting is the only one Amazon Web Services manages.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The ``nextToken`` value to include in a future ``ListAccountSettings`` request. When the results of a ``ListAccountSettings`` request exceed ``maxResults``, this value can be used to retrieve the next page of results. This value is ``null`` when there are no more results to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ECS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`ECS.Client.exceptions.InvalidParameterException`
+
+  
+
+  **Examples**
+
+  This example displays the effective account settings for your account.
+  ::
+
+    response = client.list_account_settings(
+        effectiveSettings=True,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'settings': [
+            {
+                'name': 'containerInstanceLongArnFormat',
+                'value': 'disabled',
+                'principalArn': 'arn:aws:iam::<aws_account_id>:user/principalName',
+            },
+            {
+                'name': 'serviceLongArnFormat',
+                'value': 'enabled',
+                'principalArn': 'arn:aws:iam::<aws_account_id>:user/principalName',
+            },
+            {
+                'name': 'taskLongArnFormat',
+                'value': 'disabled',
+                'principalArn': 'arn:aws:iam::<aws_account_id>:user/principalName',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  This example displays the effective account settings for the specified user or role.
+  ::
+
+    response = client.list_account_settings(
+        effectiveSettings=True,
+        principalArn='arn:aws:iam::<aws_account_id>:user/principalName',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'settings': [
+            {
+                'name': 'containerInstanceLongArnFormat',
+                'value': 'disabled',
+                'principalArn': 'arn:aws:iam::<aws_account_id>:user/principalName',
+            },
+            {
+                'name': 'serviceLongArnFormat',
+                'value': 'enabled',
+                'principalArn': 'arn:aws:iam::<aws_account_id>:user/principalName',
+            },
+            {
+                'name': 'taskLongArnFormat',
+                'value': 'disabled',
+                'principalArn': 'arn:aws:iam::<aws_account_id>:user/principalName',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,215 @@
+:doc:`StorageGateway <../../storagegateway>` / Client / list_local_disks
+
+****************
+list_local_disks
+****************
+
+
+
+.. py:method:: StorageGateway.Client.list_local_disks(**kwargs)
+
+  
+
+  Returns a list of the gateway's local disks. To specify which gateway to describe, you use the Amazon Resource Name (ARN) of the gateway in the body of the request.
+
+   
+
+  The request returns a list of all disks, specifying which are configured as working storage, cache storage, or stored volume or not configured at all. The response includes a ``DiskStatus`` field. This field can have a value of present (the disk is available to use), missing (the disk is no longer connected to the gateway), or mismatch (the disk node is occupied by a disk that has incorrect metadata or the disk content is corrupted).
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/ListLocalDisks>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_local_disks(
+        GatewayARN='string'
+    )
+    
+  :type GatewayARN: string
+  :param GatewayARN: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the gateway. Use the  ListGateways operation to return a list of gateways for your account and Amazon Web Services Region.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GatewayARN': 'string',
+          'Disks': [
+              {
+                  'DiskId': 'string',
+                  'DiskPath': 'string',
+                  'DiskNode': 'string',
+                  'DiskStatus': 'string',
+                  'DiskSizeInBytes': 123,
+                  'DiskAllocationType': 'string',
+                  'DiskAllocationResource': 'string',
+                  'DiskAttributeList': [
+                      'string',
+                  ]
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GatewayARN** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the gateway. Use the  ListGateways operation to return a list of gateways for your account and Amazon Web Services Region.
+
+        
+      
+
+      - **Disks** *(list) --* 
+
+        A JSON object containing the following fields:
+
+         
+
+        
+        *  ListLocalDisksOutput$Disks
+        
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents a gateway's local disk.
+
+          
+          
+
+          - **DiskId** *(string) --* 
+
+            The unique device ID or other distinguishing data that identifies a local disk.
+
+            
+          
+
+          - **DiskPath** *(string) --* 
+
+            The path of a local disk in the gateway virtual machine (VM).
+
+            
+          
+
+          - **DiskNode** *(string) --* 
+
+            The device node of a local disk as assigned by the virtualization environment.
+
+            
+          
+
+          - **DiskStatus** *(string) --* 
+
+            A value that represents the status of a local disk.
+
+            
+          
+
+          - **DiskSizeInBytes** *(integer) --* 
+
+            The local disk size in bytes.
+
+            
+          
+
+          - **DiskAllocationType** *(string) --* 
+
+            One of the ``DiskAllocationType`` enumeration values that identifies how a local disk is used.
+
+             
+
+            Valid Values: ``UPLOAD_BUFFER`` | ``CACHE_STORAGE``
+
+            
+          
+
+          - **DiskAllocationResource** *(string) --* 
+
+            The iSCSI qualified name (IQN) that is defined for a disk. This field is not included in the response if the local disk is not defined as an iSCSI target. The format of this field is *targetIqn::LUNNumber::region-volumeId*.
+
+            
+          
+
+          - **DiskAttributeList** *(list) --* 
+
+            A list of values that represents attributes of a local disk.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InvalidGatewayRequestException`
+
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InternalServerError`
+
+  
+
+  **Examples**
+
+  The request returns a list of all disks, specifying which are configured as working storage, cache storage, or stored volume or not configured at all.
+  ::
+
+    response = client.list_local_disks(
+        GatewayARN='arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Disks': [
+            {
+                'DiskAllocationType': 'CACHE_STORAGE',
+                'DiskId': 'pci-0000:03:00.0-scsi-0:0:0:0',
+                'DiskNode': 'SCSI(0:0)',
+                'DiskPath': '/dev/sda',
+                'DiskSizeInBytes': 1099511627776,
+                'DiskStatus': 'missing',
+            },
+            {
+                'DiskAllocationResource': '',
+                'DiskAllocationType': 'UPLOAD_BUFFER',
+                'DiskId': 'pci-0000:03:00.0-scsi-0:0:1:0',
+                'DiskNode': 'SCSI(0:1)',
+                'DiskPath': '/dev/sdb',
+                'DiskSizeInBytes': 1099511627776,
+                'DiskStatus': 'present',
+            },
+        ],
+        'GatewayARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,421 @@
+:doc:`SageMaker <../../sagemaker>` / Client / describe_cluster_event
+
+**********************
+describe_cluster_event
+**********************
+
+
+
+.. py:method:: SageMaker.Client.describe_cluster_event(**kwargs)
+
+  
+
+  Retrieves detailed information about a specific event for a given HyperPod cluster. This functionality is only supported when the ``NodeProvisioningMode`` is set to ``Continuous``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/sagemaker-2017-07-24/DescribeClusterEvent>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_cluster_event(
+        EventId='string',
+        ClusterName='string'
+    )
+    
+  :type EventId: string
+  :param EventId: **[REQUIRED]** 
+
+    The unique identifier (UUID) of the event to describe. This ID can be obtained from the ``ListClusterEvents`` operation.
+
+    
+
+  
+  :type ClusterName: string
+  :param ClusterName: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of the HyperPod cluster associated with the event.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'EventDetails': {
+              'EventId': 'string',
+              'ClusterArn': 'string',
+              'ClusterName': 'string',
+              'InstanceGroupName': 'string',
+              'InstanceId': 'string',
+              'ResourceType': 'Cluster'|'InstanceGroup'|'Instance',
+              'EventTime': datetime(2015, 1, 1),
+              'EventDetails': {
+                  'EventMetadata': {
+                      'Cluster': {
+                          'FailureMessage': 'string',
+                          'EksRoleAccessEntries': [
+                              'string',
+                          ],
+                          'SlrAccessEntry': 'string'
+                      },
+                      'InstanceGroup': {
+                          'FailureMessage': 'string',
+                          'AvailabilityZoneId': 'string',
+                          'CapacityReservation': {
+                              'Arn': 'string',
+                              'Type': 'ODCR'|'CRG'
+                          },
+                          'SubnetId': 'string',
+                          'SecurityGroupIds': [
+                              'string',
+                          ],
+                          'AmiOverride': 'string'
+                      },
+                      'InstanceGroupScaling': {
+                          'InstanceCount': 123,
+                          'TargetCount': 123,
+                          'MinCount': 123,
+                          'FailureMessage': 'string'
+                      },
+                      'Instance': {
+                          'CustomerEni': 'string',
+                          'AdditionalEnis': {
+                              'EfaEnis': [
+                                  'string',
+                              ]
+                          },
+                          'CapacityReservation': {
+                              'Arn': 'string',
+                              'Type': 'ODCR'|'CRG'
+                          },
+                          'FailureMessage': 'string',
+                          'LcsExecutionState': 'string',
+                          'NodeLogicalId': 'string'
+                      }
+                  }
+              },
+              'Description': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **EventDetails** *(dict) --* 
+
+        Detailed information about the requested cluster event, including event metadata for various resource types such as ``Cluster``, ``InstanceGroup``, ``Instance``, and their associated attributes.
+
+        
+        
+
+        - **EventId** *(string) --* 
+
+          The unique identifier (UUID) of the event.
+
+          
+        
+
+        - **ClusterArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the HyperPod cluster associated with the event.
+
+          
+        
+
+        - **ClusterName** *(string) --* 
+
+          The name of the HyperPod cluster associated with the event.
+
+          
+        
+
+        - **InstanceGroupName** *(string) --* 
+
+          The name of the instance group associated with the event, if applicable.
+
+          
+        
+
+        - **InstanceId** *(string) --* 
+
+          The EC2 instance ID associated with the event, if applicable.
+
+          
+        
+
+        - **ResourceType** *(string) --* 
+
+          The type of resource associated with the event. Valid values are ``Cluster``, ``InstanceGroup``, or ``Instance``.
+
+          
+        
+
+        - **EventTime** *(datetime) --* 
+
+          The timestamp when the event occurred.
+
+          
+        
+
+        - **EventDetails** *(dict) --* 
+
+          Additional details about the event, including event-specific metadata.
+
+          
+          
+
+          - **EventMetadata** *(dict) --* 
+
+            Metadata specific to the event, which may include information about the cluster, instance group, or instance involved.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``Cluster``, ``InstanceGroup``, ``InstanceGroupScaling``, ``Instance``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **Cluster** *(dict) --* 
+
+              Metadata specific to cluster-level events.
+
+              
+              
+
+              - **FailureMessage** *(string) --* 
+
+                An error message describing why the cluster level operation (such as creating, updating, or deleting) failed.
+
+                
+              
+
+              - **EksRoleAccessEntries** *(list) --* 
+
+                A list of Amazon EKS IAM role ARNs associated with the cluster. This is created by HyperPod on your behalf and only applies for EKS orchestrated clusters.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **SlrAccessEntry** *(string) --* 
+
+                The Service-Linked Role (SLR) associated with the cluster. This is created by HyperPod on your behalf and only applies for EKS orchestrated clusters.
+
+                
+          
+            
+
+            - **InstanceGroup** *(dict) --* 
+
+              Metadata specific to instance group-level events.
+
+              
+              
+
+              - **FailureMessage** *(string) --* 
+
+                An error message describing why the instance group level operation (such as creating, scaling, or deleting) failed.
+
+                
+              
+
+              - **AvailabilityZoneId** *(string) --* 
+
+                The ID of the Availability Zone where the instance group is located.
+
+                
+              
+
+              - **CapacityReservation** *(dict) --* 
+
+                Information about the Capacity Reservation used by the instance group.
+
+                
+                
+
+                - **Arn** *(string) --* 
+
+                  The Amazon Resource Name (ARN) of the Capacity Reservation.
+
+                  
+                
+
+                - **Type** *(string) --* 
+
+                  The type of Capacity Reservation. Valid values are ``ODCR`` (On-Demand Capacity Reservation) or ``CRG`` (Capacity Reservation Group).
+
+                  
+            
+              
+
+              - **SubnetId** *(string) --* 
+
+                The ID of the subnet where the instance group is located.
+
+                
+              
+
+              - **SecurityGroupIds** *(list) --* 
+
+                A list of security group IDs associated with the instance group.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **AmiOverride** *(string) --* 
+
+                If you use a custom Amazon Machine Image (AMI) for the instance group, this field shows the ID of the custom AMI.
+
+                
+          
+            
+
+            - **InstanceGroupScaling** *(dict) --* 
+
+              Metadata related to instance group scaling events.
+
+              
+              
+
+              - **InstanceCount** *(integer) --* 
+
+                The current number of instances in the group.
+
+                
+              
+
+              - **TargetCount** *(integer) --* 
+
+                The desired number of instances for the group after scaling.
+
+                
+              
+
+              - **MinCount** *(integer) --* 
+
+                Minimum instance count of the instance group.
+
+                
+              
+
+              - **FailureMessage** *(string) --* 
+
+                An error message describing why the scaling operation failed, if applicable.
+
+                
+          
+            
+
+            - **Instance** *(dict) --* 
+
+              Metadata specific to instance-level events.
+
+              
+              
+
+              - **CustomerEni** *(string) --* 
+
+                The ID of the customer-managed Elastic Network Interface (ENI) associated with the instance.
+
+                
+              
+
+              - **AdditionalEnis** *(dict) --* 
+
+                Information about additional Elastic Network Interfaces (ENIs) associated with the instance.
+
+                
+                
+
+                - **EfaEnis** *(list) --* 
+
+                  A list of Elastic Fabric Adapter (EFA) ENIs associated with the instance.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+              
+
+              - **CapacityReservation** *(dict) --* 
+
+                Information about the Capacity Reservation used by the instance.
+
+                
+                
+
+                - **Arn** *(string) --* 
+
+                  The Amazon Resource Name (ARN) of the Capacity Reservation.
+
+                  
+                
+
+                - **Type** *(string) --* 
+
+                  The type of Capacity Reservation. Valid values are ``ODCR`` (On-Demand Capacity Reservation) or ``CRG`` (Capacity Reservation Group).
+
+                  
+            
+              
+
+              - **FailureMessage** *(string) --* 
+
+                An error message describing why the instance creation or update failed, if applicable.
+
+                
+              
+
+              - **LcsExecutionState** *(string) --* 
+
+                The execution state of the Lifecycle Script (LCS) for the instance.
+
+                
+              
+
+              - **NodeLogicalId** *(string) --* 
+
+                The unique logical identifier of the node within the cluster. The ID used here is the same object as in the ``BatchAddClusterNodes`` API.
+
+                
+          
+        
+      
+        
+
+        - **Description** *(string) --* 
+
+          A human-readable description of the event.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SageMaker.Client.exceptions.ResourceNotFound`
+
+  

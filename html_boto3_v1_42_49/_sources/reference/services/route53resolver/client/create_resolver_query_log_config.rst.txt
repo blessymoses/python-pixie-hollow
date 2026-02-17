@@ -1,0 +1,261 @@
+:doc:`Route53Resolver <../../route53resolver>` / Client / create_resolver_query_log_config
+
+********************************
+create_resolver_query_log_config
+********************************
+
+
+
+.. py:method:: Route53Resolver.Client.create_resolver_query_log_config(**kwargs)
+
+  
+
+  Creates a Resolver query logging configuration, which defines where you want Resolver to save DNS query logs that originate in your VPCs. Resolver can log queries only for VPCs that are in the same Region as the query logging configuration.
+
+   
+
+  To specify which VPCs you want to log queries for, you use ``AssociateResolverQueryLogConfig``. For more information, see `AssociateResolverQueryLogConfig <https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53resolver_AssociateResolverQueryLogConfig.html>`__.
+
+   
+
+  You can optionally use Resource Access Manager (RAM) to share a query logging configuration with other Amazon Web Services accounts. The other accounts can then associate VPCs with the configuration. The query logs that Resolver creates for a configuration include all DNS queries that originate in all VPCs that are associated with the configuration.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/route53resolver-2018-04-01/CreateResolverQueryLogConfig>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_resolver_query_log_config(
+        Name='string',
+        DestinationArn='string',
+        CreatorRequestId='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name that you want to give the query logging configuration.
+
+    
+
+  
+  :type DestinationArn: string
+  :param DestinationArn: **[REQUIRED]** 
+
+    The ARN of the resource that you want Resolver to send query logs. You can send query logs to an S3 bucket, a CloudWatch Logs log group, or a Kinesis Data Firehose delivery stream. Examples of valid values include the following:
+
+     
+
+    
+    * **S3 bucket**: ``arn:aws:s3:::amzn-s3-demo-bucket`` You can optionally append a file prefix to the end of the ARN. ``arn:aws:s3:::amzn-s3-demo-bucket/development/``
+     
+    * **CloudWatch Logs log group**: ``arn:aws:logs:us-west-1:123456789012:log-group:/mystack-testgroup-12ABC1AB12A1:*``
+     
+    * **Kinesis Data Firehose delivery stream**: ``arn:aws:kinesis:us-east-2:0123456789:stream/my_stream_name``
+    
+
+    
+
+  
+  :type CreatorRequestId: string
+  :param CreatorRequestId: **[REQUIRED]** 
+
+    A unique string that identifies the request and that allows failed requests to be retried without the risk of running the operation twice. ``CreatorRequestId`` can be any unique string, for example, a date/time stamp.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of the tag keys and values that you want to associate with the query logging configuration.
+
+    
+
+  
+    - *(dict) --* 
+
+      One tag that you want to add to the specified resource. A tag consists of a ``Key`` (a name for the tag) and a ``Value``.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name for the tag. For example, if you want to associate Resolver resources with the account IDs of your customers for billing purposes, the value of ``Key`` might be ``account-id``.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value for the tag. For example, if ``Key`` is ``account-id``, then ``Value`` might be the ID of the customer account that you're creating the resource for.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ResolverQueryLogConfig': {
+              'Id': 'string',
+              'OwnerId': 'string',
+              'Status': 'CREATING'|'CREATED'|'DELETING'|'FAILED',
+              'ShareStatus': 'NOT_SHARED'|'SHARED_WITH_ME'|'SHARED_BY_ME',
+              'AssociationCount': 123,
+              'Arn': 'string',
+              'Name': 'string',
+              'DestinationArn': 'string',
+              'CreatorRequestId': 'string',
+              'CreationTime': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ResolverQueryLogConfig** *(dict) --* 
+
+        Information about the ``CreateResolverQueryLogConfig`` request, including the status of the request.
+
+        
+        
+
+        - **Id** *(string) --* 
+
+          The ID for the query logging configuration.
+
+          
+        
+
+        - **OwnerId** *(string) --* 
+
+          The Amazon Web Services account ID for the account that created the query logging configuration.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The status of the specified query logging configuration. Valid values include the following:
+
+           
+
+          
+          * ``CREATING``: Resolver is creating the query logging configuration.
+           
+          * ``CREATED``: The query logging configuration was successfully created. Resolver is logging queries that originate in the specified VPC.
+           
+          * ``DELETING``: Resolver is deleting this query logging configuration.
+           
+          * ``FAILED``: Resolver can't deliver logs to the location that is specified in the query logging configuration. Here are two common causes: 
+
+            
+            * The specified destination (for example, an Amazon S3 bucket) was deleted.
+             
+            * Permissions don't allow sending logs to the destination.
+            
+
+          
+          
+
+          
+        
+
+        - **ShareStatus** *(string) --* 
+
+          An indication of whether the query logging configuration is shared with other Amazon Web Services accounts, or was shared with the current account by another Amazon Web Services account. Sharing is configured through Resource Access Manager (RAM).
+
+          
+        
+
+        - **AssociationCount** *(integer) --* 
+
+          The number of VPCs that are associated with the query logging configuration.
+
+          
+        
+
+        - **Arn** *(string) --* 
+
+          The ARN for the query logging configuration.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          The name of the query logging configuration.
+
+          
+        
+
+        - **DestinationArn** *(string) --* 
+
+          The ARN of the resource that you want Resolver to send query logs: an Amazon S3 bucket, a CloudWatch Logs log group, or a Kinesis Data Firehose delivery stream.
+
+          
+        
+
+        - **CreatorRequestId** *(string) --* 
+
+          A unique string that identifies the request that created the query logging configuration. The ``CreatorRequestId`` allows failed requests to be retried without the risk of running the operation twice.
+
+          
+        
+
+        - **CreationTime** *(string) --* 
+
+          The date and time that the query logging configuration was created, in Unix time format and Coordinated Universal Time (UTC).
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.ResourceExistsException`
+
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.InternalServiceErrorException`
+
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Route53Resolver.Client.exceptions.AccessDeniedException`
+
+  

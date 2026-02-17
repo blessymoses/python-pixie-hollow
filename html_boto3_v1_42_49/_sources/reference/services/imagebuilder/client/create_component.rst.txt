@@ -1,0 +1,301 @@
+:doc:`imagebuilder <../../imagebuilder>` / Client / create_component
+
+****************
+create_component
+****************
+
+
+
+.. py:method:: imagebuilder.Client.create_component(**kwargs)
+
+  
+
+  Creates a new component that can be used to build, validate, test, and assess your image. The component is based on a YAML document that you specify using exactly one of the following methods:
+
+   
+
+  
+  * Inline, using the ``data`` property in the request body.
+   
+  * A URL that points to a YAML document file stored in Amazon S3, using the ``uri`` property in the request body.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/imagebuilder-2019-12-02/CreateComponent>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_component(
+        name='string',
+        semanticVersion='string',
+        description='string',
+        changeDescription='string',
+        platform='Windows'|'Linux'|'macOS',
+        supportedOsVersions=[
+            'string',
+        ],
+        data='string',
+        uri='string',
+        kmsKeyId='string',
+        tags={
+            'string': 'string'
+        },
+        clientToken='string',
+        dryRun=True|False
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the component.
+
+    
+
+  
+  :type semanticVersion: string
+  :param semanticVersion: **[REQUIRED]** 
+
+    The semantic version of the component. This version follows the semantic version syntax.
+
+     
+
+    .. note::
+
+      
+
+      The semantic version has four nodes: <major>.<minor>.<patch>/<build>. You can assign values for the first three, and can filter on all of them.
+
+       
+
+      **Assignment:** For the first three nodes you can assign any positive integer value, including zero, with an upper limit of 2^30-1, or 1073741823 for each node. Image Builder automatically assigns the build number to the fourth node.
+
+       
+
+      **Patterns:** You can use any numeric pattern that adheres to the assignment requirements for the nodes that you can assign. For example, you might choose a software version pattern, such as 1.0.0, or a date, such as 2021.01.01.
+
+      
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    Describes the contents of the component.
+
+    
+
+  
+  :type changeDescription: string
+  :param changeDescription: 
+
+    The change description of the component. Describes what change has been made in this version, or what makes this version different from other versions of the component.
+
+    
+
+  
+  :type platform: string
+  :param platform: **[REQUIRED]** 
+
+    The operating system platform of the component.
+
+    
+
+  
+  :type supportedOsVersions: list
+  :param supportedOsVersions: 
+
+    The operating system (OS) version supported by the component. If the OS information is available, a prefix match is performed against the base image OS version during image recipe creation.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type data: string
+  :param data: 
+
+    Component ``data`` contains inline YAML document content for the component. Alternatively, you can specify the ``uri`` of a YAML document file stored in Amazon S3. However, you cannot specify both properties.
+
+    
+
+  
+  :type uri: string
+  :param uri: 
+
+    The ``uri`` of a YAML component document file. This must be an S3 URL ( ``s3://bucket/key``), and the requester must have permission to access the S3 bucket it points to. If you use Amazon S3, you can specify component content up to your service quota.
+
+     
+
+    Alternatively, you can specify the YAML document inline, using the component ``data`` property. You cannot specify both properties.
+
+    
+
+  
+  :type kmsKeyId: string
+  :param kmsKeyId: 
+
+    The Amazon Resource Name (ARN) that uniquely identifies the KMS key used to encrypt this component. This can be either the Key ARN or the Alias ARN. For more information, see `Key identifiers (KeyId) <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    The tags that apply to the component.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type clientToken: string
+  :param clientToken: **[REQUIRED]** 
+
+    Unique, case-sensitive identifier you provide to ensure idempotency of the request. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__ in the *Amazon EC2 API Reference*.
+
+    This field is autopopulated if not provided.
+
+  
+  :type dryRun: boolean
+  :param dryRun: 
+
+    Validates the required permissions for the operation and the request parameters, without actually making the request, and provides an error response. Upon a successful request, the error response is ``DryRunOperationException``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'requestId': 'string',
+          'clientToken': 'string',
+          'componentBuildVersionArn': 'string',
+          'latestVersionReferences': {
+              'latestVersionArn': 'string',
+              'latestMajorVersionArn': 'string',
+              'latestMinorVersionArn': 'string',
+              'latestPatchVersionArn': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **requestId** *(string) --* 
+
+        The request ID that uniquely identifies this request.
+
+        
+      
+
+      - **clientToken** *(string) --* 
+
+        The client token that uniquely identifies the request.
+
+        
+      
+
+      - **componentBuildVersionArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the component that the request created.
+
+        
+      
+
+      - **latestVersionReferences** *(dict) --* 
+
+        The resource ARNs with different wildcard variations of semantic versioning.
+
+        
+        
+
+        - **latestVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) of the Image Builder resource.
+
+          
+        
+
+        - **latestMajorVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) with the same ``major`` version of the Image Builder resource.
+
+          
+        
+
+        - **latestMinorVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) with the same ``minor`` version of the Image Builder resource.
+
+          
+        
+
+        - **latestPatchVersionArn** *(string) --* 
+
+          The latest version Amazon Resource Name (ARN) with the same ``patch`` version of the Image Builder resource.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.IdempotentParameterMismatchException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.CallRateLimitExceededException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.InvalidVersionNumberException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.InvalidParameterCombinationException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`imagebuilder.Client.exceptions.DryRunOperationException`
+
+  

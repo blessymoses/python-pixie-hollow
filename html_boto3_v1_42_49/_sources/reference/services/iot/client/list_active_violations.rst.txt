@@ -1,0 +1,558 @@
+:doc:`IoT <../../iot>` / Client / list_active_violations
+
+**********************
+list_active_violations
+**********************
+
+
+
+.. py:method:: IoT.Client.list_active_violations(**kwargs)
+
+  
+
+  Lists the active violations for a given Device Defender security profile.
+
+   
+
+  Requires permission to access the `ListActiveViolations <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions>`__ action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iot-2015-05-28/ListActiveViolations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_active_violations(
+        thingName='string',
+        securityProfileName='string',
+        behaviorCriteriaType='STATIC'|'STATISTICAL'|'MACHINE_LEARNING',
+        listSuppressedAlerts=True|False,
+        verificationState='FALSE_POSITIVE'|'BENIGN_POSITIVE'|'TRUE_POSITIVE'|'UNKNOWN',
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type thingName: string
+  :param thingName: 
+
+    The name of the thing whose active violations are listed.
+
+    
+
+  
+  :type securityProfileName: string
+  :param securityProfileName: 
+
+    The name of the Device Defender security profile for which violations are listed.
+
+    
+
+  
+  :type behaviorCriteriaType: string
+  :param behaviorCriteriaType: 
+
+    The criteria for a behavior.
+
+    
+
+  
+  :type listSuppressedAlerts: boolean
+  :param listSuppressedAlerts: 
+
+    A list of all suppressed alerts.
+
+    
+
+  
+  :type verificationState: string
+  :param verificationState: 
+
+    The verification state of the violation (detect alarm).
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    The token for the next set of results.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of results to return at one time.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'activeViolations': [
+              {
+                  'violationId': 'string',
+                  'thingName': 'string',
+                  'securityProfileName': 'string',
+                  'behavior': {
+                      'name': 'string',
+                      'metric': 'string',
+                      'metricDimension': {
+                          'dimensionName': 'string',
+                          'operator': 'IN'|'NOT_IN'
+                      },
+                      'criteria': {
+                          'comparisonOperator': 'less-than'|'less-than-equals'|'greater-than'|'greater-than-equals'|'in-cidr-set'|'not-in-cidr-set'|'in-port-set'|'not-in-port-set'|'in-set'|'not-in-set',
+                          'value': {
+                              'count': 123,
+                              'cidrs': [
+                                  'string',
+                              ],
+                              'ports': [
+                                  123,
+                              ],
+                              'number': 123.0,
+                              'numbers': [
+                                  123.0,
+                              ],
+                              'strings': [
+                                  'string',
+                              ]
+                          },
+                          'durationSeconds': 123,
+                          'consecutiveDatapointsToAlarm': 123,
+                          'consecutiveDatapointsToClear': 123,
+                          'statisticalThreshold': {
+                              'statistic': 'string'
+                          },
+                          'mlDetectionConfig': {
+                              'confidenceLevel': 'LOW'|'MEDIUM'|'HIGH'
+                          }
+                      },
+                      'suppressAlerts': True|False,
+                      'exportMetric': True|False
+                  },
+                  'lastViolationValue': {
+                      'count': 123,
+                      'cidrs': [
+                          'string',
+                      ],
+                      'ports': [
+                          123,
+                      ],
+                      'number': 123.0,
+                      'numbers': [
+                          123.0,
+                      ],
+                      'strings': [
+                          'string',
+                      ]
+                  },
+                  'violationEventAdditionalInfo': {
+                      'confidenceLevel': 'LOW'|'MEDIUM'|'HIGH'
+                  },
+                  'verificationState': 'FALSE_POSITIVE'|'BENIGN_POSITIVE'|'TRUE_POSITIVE'|'UNKNOWN',
+                  'verificationStateDescription': 'string',
+                  'lastViolationTime': datetime(2015, 1, 1),
+                  'violationStartTime': datetime(2015, 1, 1)
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **activeViolations** *(list) --* 
+
+        The list of active violations.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about an active Device Defender security profile behavior violation.
+
+          
+          
+
+          - **violationId** *(string) --* 
+
+            The ID of the active violation.
+
+            
+          
+
+          - **thingName** *(string) --* 
+
+            The name of the thing responsible for the active violation.
+
+            
+          
+
+          - **securityProfileName** *(string) --* 
+
+            The security profile with the behavior is in violation.
+
+            
+          
+
+          - **behavior** *(dict) --* 
+
+            The behavior that is being violated.
+
+            
+            
+
+            - **name** *(string) --* 
+
+              The name you've given to the behavior.
+
+              
+            
+
+            - **metric** *(string) --* 
+
+              What is measured by the behavior.
+
+              
+            
+
+            - **metricDimension** *(dict) --* 
+
+              The dimension for a metric in your behavior. For example, using a ``TOPIC_FILTER`` dimension, you can narrow down the scope of the metric to only MQTT topics where the name matches the pattern specified in the dimension. This can't be used with custom metrics.
+
+              
+              
+
+              - **dimensionName** *(string) --* 
+
+                A unique identifier for the dimension.
+
+                
+              
+
+              - **operator** *(string) --* 
+
+                Defines how the ``dimensionValues`` of a dimension are interpreted. For example, for dimension type TOPIC_FILTER, the ``IN`` operator, a message will be counted only if its topic matches one of the topic filters. With ``NOT_IN`` operator, a message will be counted only if it doesn't match any of the topic filters. The operator is optional: if it's not provided (is ``null``), it will be interpreted as ``IN``.
+
+                
+          
+            
+
+            - **criteria** *(dict) --* 
+
+              The criteria that determine if a device is behaving normally in regard to the ``metric``.
+
+               
+
+              .. note::
+
+                
+
+                In the IoT console, you can choose to be sent an alert through Amazon SNS when IoT Device Defender detects that a device is behaving anomalously.
+
+                
+
+              
+              
+
+              - **comparisonOperator** *(string) --* 
+
+                The operator that relates the thing measured ( ``metric``) to the criteria (containing a ``value`` or ``statisticalThreshold``). Valid operators include:
+
+                 
+
+                
+                * ``string-list``: ``in-set`` and ``not-in-set``
+                 
+                * ``number-list``: ``in-set`` and ``not-in-set``
+                 
+                * ``ip-address-list``: ``in-cidr-set`` and ``not-in-cidr-set``
+                 
+                * ``number``: ``less-than``, ``less-than-equals``, ``greater-than``, and ``greater-than-equals``
+                
+
+                
+              
+
+              - **value** *(dict) --* 
+
+                The value to be compared with the ``metric``.
+
+                
+                
+
+                - **count** *(integer) --* 
+
+                  If the ``comparisonOperator`` calls for a numeric value, use this to specify that numeric value to be compared with the ``metric``.
+
+                  
+                
+
+                - **cidrs** *(list) --* 
+
+                  If the ``comparisonOperator`` calls for a set of CIDRs, use this to specify that set to be compared with the ``metric``.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **ports** *(list) --* 
+
+                  If the ``comparisonOperator`` calls for a set of ports, use this to specify that set to be compared with the ``metric``.
+
+                  
+                  
+
+                  - *(integer) --* 
+              
+                
+
+                - **number** *(float) --* 
+
+                  The numeral value of a metric.
+
+                  
+                
+
+                - **numbers** *(list) --* 
+
+                  The numeral values of a metric.
+
+                  
+                  
+
+                  - *(float) --* 
+              
+                
+
+                - **strings** *(list) --* 
+
+                  The string values of a metric.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+            
+              
+
+              - **durationSeconds** *(integer) --* 
+
+                Use this to specify the time duration over which the behavior is evaluated, for those criteria that have a time dimension (for example, ``NUM_MESSAGES_SENT``). For a ``statisticalThreshhold`` metric comparison, measurements from all devices are accumulated over this time duration before being used to calculate percentiles, and later, measurements from an individual device are also accumulated over this time duration before being given a percentile rank. Cannot be used with list-based metric datatypes.
+
+                
+              
+
+              - **consecutiveDatapointsToAlarm** *(integer) --* 
+
+                If a device is in violation of the behavior for the specified number of consecutive datapoints, an alarm occurs. If not specified, the default is 1.
+
+                
+              
+
+              - **consecutiveDatapointsToClear** *(integer) --* 
+
+                If an alarm has occurred and the offending device is no longer in violation of the behavior for the specified number of consecutive datapoints, the alarm is cleared. If not specified, the default is 1.
+
+                
+              
+
+              - **statisticalThreshold** *(dict) --* 
+
+                A statistical ranking (percentile)that indicates a threshold value by which a behavior is determined to be in compliance or in violation of the behavior.
+
+                
+                
+
+                - **statistic** *(string) --* 
+
+                  The percentile that resolves to a threshold value by which compliance with a behavior is determined. Metrics are collected over the specified period ( ``durationSeconds``) from all reporting devices in your account and statistical ranks are calculated. Then, the measurements from a device are collected over the same period. If the accumulated measurements from the device fall above or below ( ``comparisonOperator``) the value associated with the percentile specified, then the device is considered to be in compliance with the behavior, otherwise a violation occurs.
+
+                  
+            
+              
+
+              - **mlDetectionConfig** *(dict) --* 
+
+                The configuration of an ML Detect
+
+                
+                
+
+                - **confidenceLevel** *(string) --* 
+
+                  The sensitivity of anomalous behavior evaluation. Can be ``Low``, ``Medium``, or ``High``.
+
+                  
+            
+          
+            
+
+            - **suppressAlerts** *(boolean) --* 
+
+              Suppresses alerts.
+
+              
+            
+
+            - **exportMetric** *(boolean) --* 
+
+              Value indicates exporting metrics related to the behavior when it is true.
+
+              
+        
+          
+
+          - **lastViolationValue** *(dict) --* 
+
+            The value of the metric (the measurement) that caused the most recent violation.
+
+            
+            
+
+            - **count** *(integer) --* 
+
+              If the ``comparisonOperator`` calls for a numeric value, use this to specify that numeric value to be compared with the ``metric``.
+
+              
+            
+
+            - **cidrs** *(list) --* 
+
+              If the ``comparisonOperator`` calls for a set of CIDRs, use this to specify that set to be compared with the ``metric``.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **ports** *(list) --* 
+
+              If the ``comparisonOperator`` calls for a set of ports, use this to specify that set to be compared with the ``metric``.
+
+              
+              
+
+              - *(integer) --* 
+          
+            
+
+            - **number** *(float) --* 
+
+              The numeral value of a metric.
+
+              
+            
+
+            - **numbers** *(list) --* 
+
+              The numeral values of a metric.
+
+              
+              
+
+              - *(float) --* 
+          
+            
+
+            - **strings** *(list) --* 
+
+              The string values of a metric.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **violationEventAdditionalInfo** *(dict) --* 
+
+            The details of a violation event.
+
+            
+            
+
+            - **confidenceLevel** *(string) --* 
+
+              The sensitivity of anomalous behavior evaluation. Can be ``Low``, ``Medium``, or ``High``.
+
+              
+        
+          
+
+          - **verificationState** *(string) --* 
+
+            The verification state of the violation (detect alarm).
+
+            
+          
+
+          - **verificationStateDescription** *(string) --* 
+
+            The description of the verification state of the violation.
+
+            
+          
+
+          - **lastViolationTime** *(datetime) --* 
+
+            The time the most recent violation occurred.
+
+            
+          
+
+          - **violationStartTime** *(datetime) --* 
+
+            The time the violation started.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        A token that can be used to retrieve the next set of results, or ``null`` if there are no additional results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoT.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.InternalFailureException`
+
+  

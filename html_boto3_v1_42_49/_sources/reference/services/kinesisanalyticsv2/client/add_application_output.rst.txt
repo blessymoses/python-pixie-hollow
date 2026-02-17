@@ -1,0 +1,369 @@
+:doc:`KinesisAnalyticsV2 <../../kinesisanalyticsv2>` / Client / add_application_output
+
+**********************
+add_application_output
+**********************
+
+
+
+.. py:method:: KinesisAnalyticsV2.Client.add_application_output(**kwargs)
+
+  
+
+  Adds an external destination to your SQL-based Kinesis Data Analytics application.
+
+   
+
+  If you want Kinesis Data Analytics to deliver data from an in-application stream within your application to an external destination (such as an Kinesis data stream, a Kinesis Data Firehose delivery stream, or an Amazon Lambda function), you add the relevant configuration to your application using this operation. You can configure one or more outputs for your application. Each output configuration maps an in-application stream and an external destination.
+
+   
+
+  You can use one of the output configurations to deliver data from your in-application error stream to an external destination so that you can analyze the errors.
+
+   
+
+  Any configuration update, including adding a streaming source using this operation, results in a new version of the application. You can use the  DescribeApplication operation to find the current application version.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kinesisanalyticsv2-2018-05-23/AddApplicationOutput>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.add_application_output(
+        ApplicationName='string',
+        CurrentApplicationVersionId=123,
+        Output={
+            'Name': 'string',
+            'KinesisStreamsOutput': {
+                'ResourceARN': 'string'
+            },
+            'KinesisFirehoseOutput': {
+                'ResourceARN': 'string'
+            },
+            'LambdaOutput': {
+                'ResourceARN': 'string'
+            },
+            'DestinationSchema': {
+                'RecordFormatType': 'JSON'|'CSV'
+            }
+        }
+    )
+    
+  :type ApplicationName: string
+  :param ApplicationName: **[REQUIRED]** 
+
+    The name of the application to which you want to add the output configuration.
+
+    
+
+  
+  :type CurrentApplicationVersionId: integer
+  :param CurrentApplicationVersionId: **[REQUIRED]** 
+
+    The version of the application to which you want to add the output configuration. You can use the  DescribeApplication operation to get the current application version. If the version specified is not the current version, the ``ConcurrentModificationException`` is returned.
+
+    
+
+  
+  :type Output: dict
+  :param Output: **[REQUIRED]** 
+
+    An array of objects, each describing one output configuration. In the output configuration, you specify the name of an in-application stream, a destination (that is, a Kinesis data stream, a Kinesis Data Firehose delivery stream, or an Amazon Lambda function), and record the formation to use when writing to the destination.
+
+    
+
+  
+    - **Name** *(string) --* **[REQUIRED]** 
+
+      The name of the in-application stream.
+
+      
+
+    
+    - **KinesisStreamsOutput** *(dict) --* 
+
+      Identifies a Kinesis data stream as the destination.
+
+      
+
+    
+      - **ResourceARN** *(string) --* **[REQUIRED]** 
+
+        The ARN of the destination Kinesis data stream to write to.
+
+        
+
+      
+    
+    - **KinesisFirehoseOutput** *(dict) --* 
+
+      Identifies a Kinesis Data Firehose delivery stream as the destination.
+
+      
+
+    
+      - **ResourceARN** *(string) --* **[REQUIRED]** 
+
+        The ARN of the destination delivery stream to write to.
+
+        
+
+      
+    
+    - **LambdaOutput** *(dict) --* 
+
+      Identifies an Amazon Lambda function as the destination.
+
+      
+
+    
+      - **ResourceARN** *(string) --* **[REQUIRED]** 
+
+        The Amazon Resource Name (ARN) of the destination Lambda function to write to.
+
+         
+
+        .. note::
+
+          
+
+          To specify an earlier version of the Lambda function than the latest, include the Lambda function version in the Lambda function ARN. For more information about Lambda ARNs, see `Example ARNs\: Amazon Lambda <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-lambda>`__
+
+          
+
+        
+
+      
+    
+    - **DestinationSchema** *(dict) --* **[REQUIRED]** 
+
+      Describes the data format when records are written to the destination.
+
+      
+
+    
+      - **RecordFormatType** *(string) --* **[REQUIRED]** 
+
+        Specifies the format of the records on the output stream.
+
+        
+
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ApplicationARN': 'string',
+          'ApplicationVersionId': 123,
+          'OutputDescriptions': [
+              {
+                  'OutputId': 'string',
+                  'Name': 'string',
+                  'KinesisStreamsOutputDescription': {
+                      'ResourceARN': 'string',
+                      'RoleARN': 'string'
+                  },
+                  'KinesisFirehoseOutputDescription': {
+                      'ResourceARN': 'string',
+                      'RoleARN': 'string'
+                  },
+                  'LambdaOutputDescription': {
+                      'ResourceARN': 'string',
+                      'RoleARN': 'string'
+                  },
+                  'DestinationSchema': {
+                      'RecordFormatType': 'JSON'|'CSV'
+                  }
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ApplicationARN** *(string) --* 
+
+        The application Amazon Resource Name (ARN).
+
+        
+      
+
+      - **ApplicationVersionId** *(integer) --* 
+
+        The updated application version ID. Kinesis Data Analytics increments this ID when the application is updated.
+
+        
+      
+
+      - **OutputDescriptions** *(list) --* 
+
+        Describes the application output configuration. For more information, see `Configuring Application Output <https://docs.aws.amazon.com/kinesisanalytics/latest/dev/how-it-works-output.html>`__.
+
+        
+        
+
+        - *(dict) --* 
+
+          For a SQL-based Kinesis Data Analytics application, describes the application output configuration, which includes the in-application stream name and the destination where the stream data is written. The destination can be a Kinesis data stream or a Kinesis Data Firehose delivery stream.
+
+          
+          
+
+          - **OutputId** *(string) --* 
+
+            A unique identifier for the output configuration.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The name of the in-application stream that is configured as output.
+
+            
+          
+
+          - **KinesisStreamsOutputDescription** *(dict) --* 
+
+            Describes the Kinesis data stream that is configured as the destination where output is written.
+
+            
+            
+
+            - **ResourceARN** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the Kinesis data stream.
+
+              
+            
+
+            - **RoleARN** *(string) --* 
+
+              The ARN of the IAM role that Kinesis Data Analytics can assume to access the stream.
+
+               
+
+              .. note::
+
+                
+
+                Provided for backward compatibility. Applications that are created with the current API version have an application-level service execution role rather than a resource-level role.
+
+                
+
+              
+        
+          
+
+          - **KinesisFirehoseOutputDescription** *(dict) --* 
+
+            Describes the Kinesis Data Firehose delivery stream that is configured as the destination where output is written.
+
+            
+            
+
+            - **ResourceARN** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the delivery stream.
+
+              
+            
+
+            - **RoleARN** *(string) --* 
+
+              The ARN of the IAM role that Kinesis Data Analytics can assume to access the stream.
+
+               
+
+              .. note::
+
+                
+
+                Provided for backward compatibility. Applications that are created with the current API version have an application-level service execution role rather than a resource-level role.
+
+                
+
+              
+        
+          
+
+          - **LambdaOutputDescription** *(dict) --* 
+
+            Describes the Lambda function that is configured as the destination where output is written.
+
+            
+            
+
+            - **ResourceARN** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the destination Lambda function.
+
+              
+            
+
+            - **RoleARN** *(string) --* 
+
+              The ARN of the IAM role that Kinesis Data Analytics can assume to write to the destination function.
+
+               
+
+              .. note::
+
+                
+
+                Provided for backward compatibility. Applications that are created with the current API version have an application-level service execution role rather than a resource-level role.
+
+                
+
+              
+        
+          
+
+          - **DestinationSchema** *(dict) --* 
+
+            The data format used for writing data to the destination.
+
+            
+            
+
+            - **RecordFormatType** *(string) --* 
+
+              Specifies the format of the records on the output stream.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`KinesisAnalyticsV2.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`KinesisAnalyticsV2.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`KinesisAnalyticsV2.Client.exceptions.InvalidArgumentException`
+
+  
+  *   :py:class:`KinesisAnalyticsV2.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`KinesisAnalyticsV2.Client.exceptions.InvalidRequestException`
+
+  

@@ -1,0 +1,308 @@
+:doc:`Organizations <../../organizations>` / Client / list_create_account_status
+
+**************************
+list_create_account_status
+**************************
+
+
+
+.. py:method:: Organizations.Client.list_create_account_status(**kwargs)
+
+  
+
+  Lists the account creation requests that match the specified status that is currently being tracked for the organization.
+
+   
+
+  .. note::
+
+    
+
+    When calling List* operations, always check the ``NextToken`` response parameter value, even if you receive an empty result set. These operations can occasionally return an empty set of results even when more results are available. Continue making requests until ``NextToken`` returns null. A null ``NextToken`` value indicates that you have retrieved all available results.
+
+    
+
+   
+
+  You can only call this operation from the management account or a member account that is a delegated administrator.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/organizations-2016-11-28/ListCreateAccountStatus>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_create_account_status(
+        States=[
+            'IN_PROGRESS'|'SUCCEEDED'|'FAILED',
+        ],
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type States: list
+  :param States: 
+
+    A list of one or more states that you want included in the response. If this parameter isn't present, all requests are included in the response.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type NextToken: string
+  :param NextToken: 
+
+    The parameter for receiving additional results if you receive a ``NextToken`` response in a previous request. A ``NextToken`` response indicates that more output is available. Set this parameter to the value of the previous call's ``NextToken`` response to indicate where the output should continue from.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return in the response. If more results exist than the specified ``MaxResults`` value, a token is included in the response so that you can retrieve the remaining results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'CreateAccountStatuses': [
+              {
+                  'Id': 'string',
+                  'AccountName': 'string',
+                  'State': 'IN_PROGRESS'|'SUCCEEDED'|'FAILED',
+                  'RequestedTimestamp': datetime(2015, 1, 1),
+                  'CompletedTimestamp': datetime(2015, 1, 1),
+                  'AccountId': 'string',
+                  'GovCloudAccountId': 'string',
+                  'FailureReason': 'ACCOUNT_LIMIT_EXCEEDED'|'EMAIL_ALREADY_EXISTS'|'INVALID_ADDRESS'|'INVALID_EMAIL'|'CONCURRENT_ACCOUNT_MODIFICATION'|'INTERNAL_FAILURE'|'GOVCLOUD_ACCOUNT_ALREADY_EXISTS'|'MISSING_BUSINESS_VALIDATION'|'FAILED_BUSINESS_VALIDATION'|'PENDING_BUSINESS_VALIDATION'|'INVALID_IDENTITY_FOR_BUSINESS_VALIDATION'|'UNKNOWN_BUSINESS_VALIDATION'|'MISSING_PAYMENT_INSTRUMENT'|'INVALID_PAYMENT_INSTRUMENT'|'UPDATE_EXISTING_RESOURCE_POLICY_WITH_TAGS_NOT_SUPPORTED'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **CreateAccountStatuses** *(list) --* 
+
+        A list of objects with details about the requests. Certain elements, such as the accountId number, are present in the output only after the account has been successfully created.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the status about a  CreateAccount or  CreateGovCloudAccount request to create an Amazon Web Services account or an Amazon Web Services GovCloud (US) account in an organization.
+
+          
+          
+
+          - **Id** *(string) --* 
+
+            The unique identifier (ID) that references this request. You get this value from the response of the initial  CreateAccount request to create the account.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ for a create account request ID string requires "car-" followed by from 8 to 32 lowercase letters or digits.
+
+            
+          
+
+          - **AccountName** *(string) --* 
+
+            The account name given to the account when it was created.
+
+            
+          
+
+          - **State** *(string) --* 
+
+            The status of the asynchronous request to create an Amazon Web Services account.
+
+            
+          
+
+          - **RequestedTimestamp** *(datetime) --* 
+
+            The date and time that the request was made for the account creation.
+
+            
+          
+
+          - **CompletedTimestamp** *(datetime) --* 
+
+            The date and time that the account was created and the request completed.
+
+            
+          
+
+          - **AccountId** *(string) --* 
+
+            If the account was created successfully, the unique identifier (ID) of the new account.
+
+             
+
+            The `regex pattern <http://wikipedia.org/wiki/regex>`__ for an account ID string requires exactly 12 digits.
+
+            
+          
+
+          - **GovCloudAccountId** *(string) --* 
+
+            If the account was created successfully, the ID for the new account in the Amazon Web Services GovCloud (US) Region.
+
+            
+          
+
+          - **FailureReason** *(string) --* 
+
+            If the request failed, a description of the reason for the failure.
+
+             
+
+            
+            * ACCOUNT_LIMIT_EXCEEDED: The account couldn't be created because you reached the limit on the number of accounts in your organization.
+             
+            * CONCURRENT_ACCOUNT_MODIFICATION: You already submitted a request with the same information.
+             
+            * EMAIL_ALREADY_EXISTS: The account could not be created because another Amazon Web Services account with that email address already exists.
+             
+            * FAILED_BUSINESS_VALIDATION: The Amazon Web Services account that owns your organization failed to receive business license validation.
+             
+            * GOVCLOUD_ACCOUNT_ALREADY_EXISTS: The account in the Amazon Web Services GovCloud (US) Region could not be created because this Region already includes an account with that email address.
+             
+            * IDENTITY_INVALID_BUSINESS_VALIDATION: The Amazon Web Services account that owns your organization can't complete business license validation because it doesn't have valid identity data.
+             
+            * INVALID_ADDRESS: The account could not be created because the address you provided is not valid.
+             
+            * INVALID_EMAIL: The account could not be created because the email address you provided is not valid.
+             
+            * INVALID_PAYMENT_INSTRUMENT: The Amazon Web Services account that owns your organization does not have a supported payment method associated with the account. Amazon Web Services does not support cards issued by financial institutions in Russia or Belarus. For more information, see `Managing your Amazon Web Services payments <https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/manage-general.html>`__.
+             
+            * INTERNAL_FAILURE: The account could not be created because of an internal failure. Try again later. If the problem persists, contact Amazon Web Services Customer Support.
+             
+            * MISSING_BUSINESS_VALIDATION: The Amazon Web Services account that owns your organization has not received Business Validation.
+             
+            * MISSING_PAYMENT_INSTRUMENT: You must configure the management account with a valid payment method, such as a credit card.
+             
+            * PENDING_BUSINESS_VALIDATION: The Amazon Web Services account that owns your organization is still in the process of completing business license validation.
+             
+            * UNKNOWN_BUSINESS_VALIDATION: The Amazon Web Services account that owns your organization has an unknown issue with business license validation.
+            
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If present, indicates that more output is available than is included in the current response. Use this value in the ``NextToken`` request parameter in a subsequent call to the operation to get the next part of the output. You should repeat this until the ``NextToken`` response element comes back as ``null``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Organizations.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.AWSOrganizationsNotInUseException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`Organizations.Client.exceptions.UnsupportedAPIEndpointException`
+
+  
+
+  **Examples**
+
+  The following example shows a user requesting a list of only the completed account creation requests made for the current organization:
+  ::
+
+    response = client.list_create_account_status(
+        States=[
+            'SUCCEEDED',
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'CreateAccountStatuses': [
+            {
+                'AccountId': '444444444444',
+                'AccountName': 'Developer Test Account',
+                'CompletedTimestamp': datetime(2017, 1, 15, 13, 45, 23, 6, 15, 0),
+                'Id': 'car-exampleaccountcreationrequestid1',
+                'RequestedTimestamp': datetime(2017, 1, 15, 13, 45, 23, 6, 15, 0),
+                'State': 'SUCCEEDED',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  The following example shows a user requesting a list of only the in-progress account creation requests made for the current organization:
+  ::
+
+    response = client.list_create_account_status(
+        States=[
+            'IN_PROGRESS',
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'CreateAccountStatuses': [
+            {
+                'AccountName': 'Production Account',
+                'Id': 'car-exampleaccountcreationrequestid2',
+                'RequestedTimestamp': datetime(2017, 1, 15, 13, 45, 23, 6, 15, 0),
+                'State': 'IN_PROGRESS',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

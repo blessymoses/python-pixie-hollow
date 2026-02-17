@@ -1,0 +1,1000 @@
+:doc:`BedrockAgentCoreControl <../../bedrock-agentcore-control>` / Client / create_gateway
+
+**************
+create_gateway
+**************
+
+
+
+.. py:method:: BedrockAgentCoreControl.Client.create_gateway(**kwargs)
+
+  
+
+  Creates a gateway for Amazon Bedrock Agent. A gateway serves as an integration point between your agent and external services.
+
+   
+
+  If you specify ``CUSTOM_JWT`` as the ``authorizerType``, you must provide an ``authorizerConfiguration``.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agentcore-control-2023-06-05/CreateGateway>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_gateway(
+        name='string',
+        description='string',
+        clientToken='string',
+        roleArn='string',
+        protocolType='MCP',
+        protocolConfiguration={
+            'mcp': {
+                'supportedVersions': [
+                    'string',
+                ],
+                'instructions': 'string',
+                'searchType': 'SEMANTIC'
+            }
+        },
+        authorizerType='CUSTOM_JWT'|'AWS_IAM'|'NONE',
+        authorizerConfiguration={
+            'customJWTAuthorizer': {
+                'discoveryUrl': 'string',
+                'allowedAudience': [
+                    'string',
+                ],
+                'allowedClients': [
+                    'string',
+                ],
+                'allowedScopes': [
+                    'string',
+                ],
+                'customClaims': [
+                    {
+                        'inboundTokenClaimName': 'string',
+                        'inboundTokenClaimValueType': 'STRING'|'STRING_ARRAY',
+                        'authorizingClaimMatchValue': {
+                            'claimMatchValue': {
+                                'matchValueString': 'string',
+                                'matchValueStringList': [
+                                    'string',
+                                ]
+                            },
+                            'claimMatchOperator': 'EQUALS'|'CONTAINS'|'CONTAINS_ANY'
+                        }
+                    },
+                ]
+            }
+        },
+        kmsKeyArn='string',
+        interceptorConfigurations=[
+            {
+                'interceptor': {
+                    'lambda': {
+                        'arn': 'string'
+                    }
+                },
+                'interceptionPoints': [
+                    'REQUEST'|'RESPONSE',
+                ],
+                'inputConfiguration': {
+                    'passRequestHeaders': True|False
+                }
+            },
+        ],
+        policyEngineConfiguration={
+            'arn': 'string',
+            'mode': 'LOG_ONLY'|'ENFORCE'
+        },
+        exceptionLevel='DEBUG',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the gateway. The name must be unique within your account.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    The description of the gateway.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier to ensure that the API request completes no more than one time. If you don't specify this field, a value is randomly generated for you. If this token matches a previous request, the service ignores the request, but doesn't return an error. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__.
+
+    This field is autopopulated if not provided.
+
+  
+  :type roleArn: string
+  :param roleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the IAM role that provides permissions for the gateway to access Amazon Web Services services.
+
+    
+
+  
+  :type protocolType: string
+  :param protocolType: **[REQUIRED]** 
+
+    The protocol type for the gateway.
+
+    
+
+  
+  :type protocolConfiguration: dict
+  :param protocolConfiguration: 
+
+    The configuration settings for the protocol specified in the ``protocolType`` parameter.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``mcp``. 
+
+  
+    - **mcp** *(dict) --* 
+
+      The configuration for the Model Context Protocol (MCP). This protocol enables communication between Amazon Bedrock Agent and external tools.
+
+      
+
+    
+      - **supportedVersions** *(list) --* 
+
+        The supported versions of the Model Context Protocol. This field specifies which versions of the protocol the gateway can use.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **instructions** *(string) --* 
+
+        The instructions for using the Model Context Protocol gateway. These instructions provide guidance on how to interact with the gateway.
+
+        
+
+      
+      - **searchType** *(string) --* 
+
+        The search type for the Model Context Protocol gateway. This field specifies how the gateway handles search operations.
+
+        
+
+      
+    
+  
+  :type authorizerType: string
+  :param authorizerType: **[REQUIRED]** 
+
+    The type of authorizer to use for the gateway.
+
+     
+
+    
+    * ``CUSTOM_JWT`` - Authorize with a bearer token.
+     
+    * ``AWS_IAM`` - Authorize with your Amazon Web Services IAM credentials.
+     
+    * ``NONE`` - No authorization
+    
+
+    
+
+  
+  :type authorizerConfiguration: dict
+  :param authorizerConfiguration: 
+
+    The authorizer configuration for the gateway. Required if ``authorizerType`` is ``CUSTOM_JWT``.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``customJWTAuthorizer``. 
+
+  
+    - **customJWTAuthorizer** *(dict) --* 
+
+      The inbound JWT-based authorization, specifying how incoming requests should be authenticated.
+
+      
+
+    
+      - **discoveryUrl** *(string) --* **[REQUIRED]** 
+
+        This URL is used to fetch OpenID Connect configuration or authorization server metadata for validating incoming tokens.
+
+        
+
+      
+      - **allowedAudience** *(list) --* 
+
+        Represents individual audience values that are validated in the incoming JWT token validation process.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **allowedClients** *(list) --* 
+
+        Represents individual client IDs that are validated in the incoming JWT token validation process.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **allowedScopes** *(list) --* 
+
+        An array of scopes that are allowed to access the token.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **customClaims** *(list) --* 
+
+        An array of objects that define a custom claim validation name, value, and operation
+
+        
+
+      
+        - *(dict) --* 
+
+          Defines the name of a custom claim field and rules for finding matches to authenticate its value.
+
+          
+
+        
+          - **inboundTokenClaimName** *(string) --* **[REQUIRED]** 
+
+            The name of the custom claim field to check.
+
+            
+
+          
+          - **inboundTokenClaimValueType** *(string) --* **[REQUIRED]** 
+
+            The data type of the claim value to check for.
+
+             
+
+            
+            * Use ``STRING`` if you want to find an exact match to a string you define.
+             
+            * Use ``STRING_ARRAY`` if you want to fnd a match to at least one value in an array you define.
+            
+
+            
+
+          
+          - **authorizingClaimMatchValue** *(dict) --* **[REQUIRED]** 
+
+            Defines the value or values to match for and the relationship of the match.
+
+            
+
+          
+            - **claimMatchValue** *(dict) --* **[REQUIRED]** 
+
+              The value or values to match for.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``matchValueString``, ``matchValueStringList``. 
+
+            
+              - **matchValueString** *(string) --* 
+
+                The string value to match for.
+
+                
+
+              
+              - **matchValueStringList** *(list) --* 
+
+                An array of strings to check for a match.
+
+                
+
+              
+                - *(string) --* 
+
+                
+            
+            
+            - **claimMatchOperator** *(string) --* **[REQUIRED]** 
+
+              Defines the relationship between the claim field value and the value or values you're matching for.
+
+              
+
+            
+          
+        
+    
+    
+  
+  :type kmsKeyArn: string
+  :param kmsKeyArn: 
+
+    The Amazon Resource Name (ARN) of the KMS key used to encrypt data associated with the gateway.
+
+    
+
+  
+  :type interceptorConfigurations: list
+  :param interceptorConfigurations: 
+
+    A list of configuration settings for a gateway interceptor. Gateway interceptors allow custom code to be invoked during gateway invocations.
+
+    
+
+  
+    - *(dict) --* 
+
+      The configuration for an interceptor on a gateway. This structure defines settings for an interceptor that will be invoked during the invocation of the gateway.
+
+      
+
+    
+      - **interceptor** *(dict) --* **[REQUIRED]** 
+
+        The infrastructure settings of an interceptor configuration. This structure defines how the interceptor can be invoked.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``lambda``. 
+
+      
+        - **lambda** *(dict) --* 
+
+          The details of the lambda function used for the interceptor.
+
+          
+
+        
+          - **arn** *(string) --* **[REQUIRED]** 
+
+            The arn of the lambda function to be invoked for the interceptor.
+
+            
+
+          
+        
+      
+      - **interceptionPoints** *(list) --* **[REQUIRED]** 
+
+        The supported points of interception. This field specifies which points during the gateway invocation to invoke the interceptor
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **inputConfiguration** *(dict) --* 
+
+        The configuration for the input of the interceptor. This field specifies how the input to the interceptor is constructed
+
+        
+
+      
+        - **passRequestHeaders** *(boolean) --* **[REQUIRED]** 
+
+          Indicates whether to pass request headers as input into the interceptor. When set to true, request headers will be passed.
+
+          
+
+        
+      
+    
+
+  :type policyEngineConfiguration: dict
+  :param policyEngineConfiguration: 
+
+    The policy engine configuration for the gateway. A policy engine is a collection of policies that evaluates and authorizes agent tool calls. When associated with a gateway, the policy engine intercepts all agent requests and determines whether to allow or deny each action based on the defined policies.
+
+    
+
+  
+    - **arn** *(string) --* **[REQUIRED]** 
+
+      The ARN of the policy engine. The policy engine contains Cedar policies that define fine-grained authorization rules specifying who can perform what actions on which resources as agents interact through the gateway.
+
+      
+
+    
+    - **mode** *(string) --* **[REQUIRED]** 
+
+      The enforcement mode for the policy engine. Valid values include:
+
+       
+
+      
+      * ``LOG_ONLY`` - The policy engine evaluates each action against your policies and adds traces on whether tool calls would be allowed or denied, but does not enforce the decision. Use this mode to test and validate policies before enabling enforcement.
+       
+      * ``ENFORCE`` - The policy engine evaluates actions against your policies and enforces decisions by allowing or denying agent operations. Test and validate policies in ``LOG_ONLY`` mode before enabling enforcement to avoid unintended denials or adversely affecting production traffic.
+      
+
+      
+
+    
+  
+  :type exceptionLevel: string
+  :param exceptionLevel: 
+
+    The level of detail in error messages returned when invoking the gateway.
+
+     
+
+    
+    * If the value is ``DEBUG``, granular exception messages are returned to help a user debug the gateway.
+     
+    * If the value is omitted, a generic error message is returned to the end user.
+    
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    A map of key-value pairs to associate with the gateway as metadata tags.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'gatewayArn': 'string',
+          'gatewayId': 'string',
+          'gatewayUrl': 'string',
+          'createdAt': datetime(2015, 1, 1),
+          'updatedAt': datetime(2015, 1, 1),
+          'status': 'CREATING'|'UPDATING'|'UPDATE_UNSUCCESSFUL'|'DELETING'|'READY'|'FAILED',
+          'statusReasons': [
+              'string',
+          ],
+          'name': 'string',
+          'description': 'string',
+          'roleArn': 'string',
+          'protocolType': 'MCP',
+          'protocolConfiguration': {
+              'mcp': {
+                  'supportedVersions': [
+                      'string',
+                  ],
+                  'instructions': 'string',
+                  'searchType': 'SEMANTIC'
+              }
+          },
+          'authorizerType': 'CUSTOM_JWT'|'AWS_IAM'|'NONE',
+          'authorizerConfiguration': {
+              'customJWTAuthorizer': {
+                  'discoveryUrl': 'string',
+                  'allowedAudience': [
+                      'string',
+                  ],
+                  'allowedClients': [
+                      'string',
+                  ],
+                  'allowedScopes': [
+                      'string',
+                  ],
+                  'customClaims': [
+                      {
+                          'inboundTokenClaimName': 'string',
+                          'inboundTokenClaimValueType': 'STRING'|'STRING_ARRAY',
+                          'authorizingClaimMatchValue': {
+                              'claimMatchValue': {
+                                  'matchValueString': 'string',
+                                  'matchValueStringList': [
+                                      'string',
+                                  ]
+                              },
+                              'claimMatchOperator': 'EQUALS'|'CONTAINS'|'CONTAINS_ANY'
+                          }
+                      },
+                  ]
+              }
+          },
+          'kmsKeyArn': 'string',
+          'interceptorConfigurations': [
+              {
+                  'interceptor': {
+                      'lambda': {
+                          'arn': 'string'
+                      }
+                  },
+                  'interceptionPoints': [
+                      'REQUEST'|'RESPONSE',
+                  ],
+                  'inputConfiguration': {
+                      'passRequestHeaders': True|False
+                  }
+              },
+          ],
+          'policyEngineConfiguration': {
+              'arn': 'string',
+              'mode': 'LOG_ONLY'|'ENFORCE'
+          },
+          'workloadIdentityDetails': {
+              'workloadIdentityArn': 'string'
+          },
+          'exceptionLevel': 'DEBUG'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **gatewayArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the created gateway.
+
+        
+      
+
+      - **gatewayId** *(string) --* 
+
+        The unique identifier of the created gateway.
+
+        
+      
+
+      - **gatewayUrl** *(string) --* 
+
+        The URL endpoint for the created gateway.
+
+        
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The timestamp when the gateway was created.
+
+        
+      
+
+      - **updatedAt** *(datetime) --* 
+
+        The timestamp when the gateway was last updated.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The current status of the gateway.
+
+        
+      
+
+      - **statusReasons** *(list) --* 
+
+        The reasons for the current status of the gateway.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **name** *(string) --* 
+
+        The name of the gateway.
+
+        
+      
+
+      - **description** *(string) --* 
+
+        The description of the gateway.
+
+        
+      
+
+      - **roleArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the IAM role associated with the gateway.
+
+        
+      
+
+      - **protocolType** *(string) --* 
+
+        The protocol type of the gateway.
+
+        
+      
+
+      - **protocolConfiguration** *(dict) --* 
+
+        The configuration settings for the protocol used by the gateway.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``mcp``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **mcp** *(dict) --* 
+
+          The configuration for the Model Context Protocol (MCP). This protocol enables communication between Amazon Bedrock Agent and external tools.
+
+          
+          
+
+          - **supportedVersions** *(list) --* 
+
+            The supported versions of the Model Context Protocol. This field specifies which versions of the protocol the gateway can use.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **instructions** *(string) --* 
+
+            The instructions for using the Model Context Protocol gateway. These instructions provide guidance on how to interact with the gateway.
+
+            
+          
+
+          - **searchType** *(string) --* 
+
+            The search type for the Model Context Protocol gateway. This field specifies how the gateway handles search operations.
+
+            
+      
+    
+      
+
+      - **authorizerType** *(string) --* 
+
+        The type of authorizer used by the gateway.
+
+        
+      
+
+      - **authorizerConfiguration** *(dict) --* 
+
+        The authorizer configuration for the created gateway.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``customJWTAuthorizer``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **customJWTAuthorizer** *(dict) --* 
+
+          The inbound JWT-based authorization, specifying how incoming requests should be authenticated.
+
+          
+          
+
+          - **discoveryUrl** *(string) --* 
+
+            This URL is used to fetch OpenID Connect configuration or authorization server metadata for validating incoming tokens.
+
+            
+          
+
+          - **allowedAudience** *(list) --* 
+
+            Represents individual audience values that are validated in the incoming JWT token validation process.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **allowedClients** *(list) --* 
+
+            Represents individual client IDs that are validated in the incoming JWT token validation process.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **allowedScopes** *(list) --* 
+
+            An array of scopes that are allowed to access the token.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **customClaims** *(list) --* 
+
+            An array of objects that define a custom claim validation name, value, and operation
+
+            
+            
+
+            - *(dict) --* 
+
+              Defines the name of a custom claim field and rules for finding matches to authenticate its value.
+
+              
+              
+
+              - **inboundTokenClaimName** *(string) --* 
+
+                The name of the custom claim field to check.
+
+                
+              
+
+              - **inboundTokenClaimValueType** *(string) --* 
+
+                The data type of the claim value to check for.
+
+                 
+
+                
+                * Use ``STRING`` if you want to find an exact match to a string you define.
+                 
+                * Use ``STRING_ARRAY`` if you want to fnd a match to at least one value in an array you define.
+                
+
+                
+              
+
+              - **authorizingClaimMatchValue** *(dict) --* 
+
+                Defines the value or values to match for and the relationship of the match.
+
+                
+                
+
+                - **claimMatchValue** *(dict) --* 
+
+                  The value or values to match for.
+
+                  .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``matchValueString``, ``matchValueStringList``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+                
+                  
+
+                  - **matchValueString** *(string) --* 
+
+                    The string value to match for.
+
+                    
+                  
+
+                  - **matchValueStringList** *(list) --* 
+
+                    An array of strings to check for a match.
+
+                    
+                    
+
+                    - *(string) --* 
+                
+              
+                
+
+                - **claimMatchOperator** *(string) --* 
+
+                  Defines the relationship between the claim field value and the value or values you're matching for.
+
+                  
+            
+          
+        
+      
+    
+      
+
+      - **kmsKeyArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the KMS key used to encrypt data associated with the gateway.
+
+        
+      
+
+      - **interceptorConfigurations** *(list) --* 
+
+        The list of interceptor configurations for the created gateway.
+
+        
+        
+
+        - *(dict) --* 
+
+          The configuration for an interceptor on a gateway. This structure defines settings for an interceptor that will be invoked during the invocation of the gateway.
+
+          
+          
+
+          - **interceptor** *(dict) --* 
+
+            The infrastructure settings of an interceptor configuration. This structure defines how the interceptor can be invoked.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``lambda``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **lambda** *(dict) --* 
+
+              The details of the lambda function used for the interceptor.
+
+              
+              
+
+              - **arn** *(string) --* 
+
+                The arn of the lambda function to be invoked for the interceptor.
+
+                
+          
+        
+          
+
+          - **interceptionPoints** *(list) --* 
+
+            The supported points of interception. This field specifies which points during the gateway invocation to invoke the interceptor
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **inputConfiguration** *(dict) --* 
+
+            The configuration for the input of the interceptor. This field specifies how the input to the interceptor is constructed
+
+            
+            
+
+            - **passRequestHeaders** *(boolean) --* 
+
+              Indicates whether to pass request headers as input into the interceptor. When set to true, request headers will be passed.
+
+              
+        
+      
+    
+      
+
+      - **policyEngineConfiguration** *(dict) --* 
+
+        The policy engine configuration for the created gateway.
+
+        
+        
+
+        - **arn** *(string) --* 
+
+          The ARN of the policy engine. The policy engine contains Cedar policies that define fine-grained authorization rules specifying who can perform what actions on which resources as agents interact through the gateway.
+
+          
+        
+
+        - **mode** *(string) --* 
+
+          The enforcement mode for the policy engine. Valid values include:
+
+           
+
+          
+          * ``LOG_ONLY`` - The policy engine evaluates each action against your policies and adds traces on whether tool calls would be allowed or denied, but does not enforce the decision. Use this mode to test and validate policies before enabling enforcement.
+           
+          * ``ENFORCE`` - The policy engine evaluates actions against your policies and enforces decisions by allowing or denying agent operations. Test and validate policies in ``LOG_ONLY`` mode before enabling enforcement to avoid unintended denials or adversely affecting production traffic.
+          
+
+          
+    
+      
+
+      - **workloadIdentityDetails** *(dict) --* 
+
+        The workload identity details for the created gateway.
+
+        
+        
+
+        - **workloadIdentityArn** *(string) --* 
+
+          The ARN associated with the workload identity.
+
+          
+    
+      
+
+      - **exceptionLevel** *(string) --* 
+
+        The level of detail in error messages returned when invoking the gateway.
+
+         
+
+        
+        * If the value is ``DEBUG``, granular exception messages are returned to help a user debug the gateway.
+         
+        * If the value is omitted, a generic error message is returned to the end user.
+        
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockAgentCoreControl.Client.exceptions.InternalServerException`
+
+  

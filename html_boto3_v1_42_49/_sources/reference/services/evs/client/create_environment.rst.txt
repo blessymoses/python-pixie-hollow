@@ -1,0 +1,1099 @@
+:doc:`EVS <../../evs>` / Client / create_environment
+
+******************
+create_environment
+******************
+
+
+
+.. py:method:: EVS.Client.create_environment(**kwargs)
+
+  
+
+  Creates an Amazon EVS environment that runs VCF software, such as SDDC Manager, NSX Manager, and vCenter Server.
+
+   
+
+  During environment creation, Amazon EVS performs validations on DNS settings, provisions VLAN subnets and hosts, and deploys the supplied version of VCF.
+
+   
+
+  It can take several hours to create an environment. After the deployment completes, you can configure VCF in the vSphere user interface according to your needs.
+
+   
+
+  .. warning::
+
+     
+
+    When creating a new environment, the default ESX version for the selected VCF version will be used, you cannot choose a specific ESX version in ``CreateEnvironment`` action. When a host has been added with a specific ESX version, it can only be upgraded using vCenter Lifecycle Manager.
+
+     
+
+   
+
+  .. note::
+
+    
+
+    You cannot use the ``dedicatedHostId`` and ``placementGroupId`` parameters together in the same ``CreateEnvironment`` action. This results in a ``ValidationException`` response.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/evs-2023-07-27/CreateEnvironment>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_environment(
+        clientToken='string',
+        environmentName='string',
+        kmsKeyId='string',
+        tags={
+            'string': 'string'
+        },
+        serviceAccessSecurityGroups={
+            'securityGroups': [
+                'string',
+            ]
+        },
+        vpcId='string',
+        serviceAccessSubnetId='string',
+        vcfVersion='VCF-5.2.1'|'VCF-5.2.2',
+        termsAccepted=True|False,
+        licenseInfo=[
+            {
+                'solutionKey': 'string',
+                'vsanKey': 'string'
+            },
+        ],
+        initialVlans={
+            'vmkManagement': {
+                'cidr': 'string'
+            },
+            'vmManagement': {
+                'cidr': 'string'
+            },
+            'vMotion': {
+                'cidr': 'string'
+            },
+            'vSan': {
+                'cidr': 'string'
+            },
+            'vTep': {
+                'cidr': 'string'
+            },
+            'edgeVTep': {
+                'cidr': 'string'
+            },
+            'nsxUplink': {
+                'cidr': 'string'
+            },
+            'hcx': {
+                'cidr': 'string'
+            },
+            'expansionVlan1': {
+                'cidr': 'string'
+            },
+            'expansionVlan2': {
+                'cidr': 'string'
+            },
+            'isHcxPublic': True|False,
+            'hcxNetworkAclId': 'string'
+        },
+        hosts=[
+            {
+                'hostName': 'string',
+                'keyName': 'string',
+                'instanceType': 'i4i.metal',
+                'placementGroupId': 'string',
+                'dedicatedHostId': 'string'
+            },
+        ],
+        connectivityInfo={
+            'privateRouteServerPeerings': [
+                'string',
+            ]
+        },
+        vcfHostnames={
+            'vCenter': 'string',
+            'nsx': 'string',
+            'nsxManager1': 'string',
+            'nsxManager2': 'string',
+            'nsxManager3': 'string',
+            'nsxEdge1': 'string',
+            'nsxEdge2': 'string',
+            'sddcManager': 'string',
+            'cloudBuilder': 'string'
+        },
+        siteId='string'
+    )
+    
+  :type clientToken: string
+  :param clientToken: 
+
+    
+
+    .. note::
+
+      
+
+      This parameter is not used in Amazon EVS currently. If you supply input for this parameter, it will have no effect.
+
+      
+
+     
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the environment creation request. If you do not specify a client token, a randomly generated token is used for the request to ensure idempotency.
+
+    
+
+    This field is autopopulated if not provided.
+
+  
+  :type environmentName: string
+  :param environmentName: 
+
+    The name to give to your environment. The name can contain only alphanumeric characters (case-sensitive), hyphens, and underscores. It must start with an alphanumeric character, and can't be longer than 100 characters. The name must be unique within the Amazon Web Services Region and Amazon Web Services account that you're creating the environment in.
+
+    
+
+  
+  :type kmsKeyId: string
+  :param kmsKeyId: 
+
+    A unique ID for the customer-managed KMS key that is used to encrypt the VCF credential pairs for SDDC Manager, NSX Manager, and vCenter appliances. These credentials are stored in Amazon Web Services Secrets Manager.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    Metadata that assists with categorization and organization. Each tag consists of a key and an optional value. You define both. Tags don't propagate to any other cluster or Amazon Web Services resources.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type serviceAccessSecurityGroups: dict
+  :param serviceAccessSecurityGroups: 
+
+    The security group that controls communication between the Amazon EVS control plane and VPC. The default security group is used if a custom security group isn't specified.
+
+     
+
+    The security group should allow access to the following.
+
+     
+
+    
+    * TCP/UDP access to the DNS servers
+     
+    * HTTPS/SSH access to the host management VLAN subnet
+     
+    * HTTPS/SSH access to the Management VM VLAN subnet
+    
+
+     
+
+    You should avoid modifying the security group rules after deployment, as this can break the persistent connection between the Amazon EVS control plane and VPC. This can cause future environment actions like adding or removing hosts to fail.
+
+    
+
+  
+    - **securityGroups** *(list) --* 
+
+      The security groups that allow service access.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type vpcId: string
+  :param vpcId: **[REQUIRED]** 
+
+    A unique ID for the VPC that the environment is deployed inside.
+
+     
+
+    Amazon EVS requires that all VPC subnets exist in a single Availability Zone in a Region where the service is available.
+
+     
+
+    The VPC that you specify must have a valid DHCP option set with domain name, at least two DNS servers, and an NTP server. These settings are used to configure your VCF appliances and hosts. The VPC cannot be used with any other deployed Amazon EVS environment. Amazon EVS does not provide multi-VPC support for environments at this time.
+
+     
+
+    Amazon EVS does not support the following Amazon Web Services networking options for NSX overlay connectivity: cross-Region VPC peering, Amazon S3 gateway endpoints, or Amazon Web Services Direct Connect virtual private gateway associations.
+
+     
+
+    .. note::
+
+      
+
+      Ensure that you specify a VPC that is adequately sized to accommodate the Amazon EVS subnets.
+
+      
+
+    
+
+  
+  :type serviceAccessSubnetId: string
+  :param serviceAccessSubnetId: **[REQUIRED]** 
+
+    The subnet that is used to establish connectivity between the Amazon EVS control plane and VPC. Amazon EVS uses this subnet to validate mandatory DNS records for your VCF appliances and hosts and create the environment.
+
+    
+
+  
+  :type vcfVersion: string
+  :param vcfVersion: **[REQUIRED]** 
+
+    The VCF version to use for the environment.
+
+    
+
+  
+  :type termsAccepted: boolean
+  :param termsAccepted: **[REQUIRED]** 
+
+    Customer confirmation that the customer has purchased and will continue to maintain the required number of VCF software licenses to cover all physical processor cores in the Amazon EVS environment. Information about your VCF software in Amazon EVS will be shared with Broadcom to verify license compliance. Amazon EVS does not validate license keys. To validate license keys, visit the Broadcom support portal.
+
+    
+
+  
+  :type licenseInfo: list
+  :param licenseInfo: **[REQUIRED]** 
+
+    The license information that Amazon EVS requires to create an environment. Amazon EVS requires two license keys: a VCF solution key and a vSAN license key. The VCF solution key must cover a minimum of 256 cores. The vSAN license key must provide at least 110 TiB of vSAN capacity.
+
+     
+
+    VCF licenses can be used for only one Amazon EVS environment. Amazon EVS does not support reuse of VCF licenses for multiple environments.
+
+     
+
+    VCF license information can be retrieved from the Broadcom portal.
+
+    
+
+  
+    - *(dict) --* 
+
+      The license information that Amazon EVS requires to create an environment. Amazon EVS requires two license keys: a VCF solution key and a vSAN license key.
+
+      
+
+    
+      - **solutionKey** *(string) --* **[REQUIRED]** 
+
+        The VCF solution key. This license unlocks VMware VCF product features, including vSphere, NSX, SDDC Manager, and vCenter Server. The VCF solution key must cover a minimum of 256 cores.
+
+        
+
+      
+      - **vsanKey** *(string) --* **[REQUIRED]** 
+
+        The VSAN license key. This license unlocks vSAN features. The vSAN license key must provide at least 110 TiB of vSAN capacity.
+
+        
+
+      
+    
+
+  :type initialVlans: dict
+  :param initialVlans: **[REQUIRED]** 
+
+    The initial VLAN subnets for the Amazon EVS environment.
+
+     
+
+    .. note::
+
+      
+
+      For each Amazon EVS VLAN subnet, you must specify a non-overlapping CIDR block. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24.
+
+      
+
+    
+
+  
+    - **vmkManagement** *(dict) --* **[REQUIRED]** 
+
+      The host VMkernel management VLAN subnet. This VLAN subnet carries traffic for managing ESX hosts and communicating with VMware vCenter Server.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **vmManagement** *(dict) --* **[REQUIRED]** 
+
+      The VM management VLAN subnet. This VLAN subnet carries traffic for vSphere virtual machines.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **vMotion** *(dict) --* **[REQUIRED]** 
+
+      The vMotion VLAN subnet. This VLAN subnet carries traffic for vSphere vMotion.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **vSan** *(dict) --* **[REQUIRED]** 
+
+      The vSAN VLAN subnet. This VLAN subnet carries the communication between ESX hosts to implement a vSAN shared storage pool.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **vTep** *(dict) --* **[REQUIRED]** 
+
+      The VTEP VLAN subnet. This VLAN subnet handles internal network traffic between virtual machines within a VCF instance.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **edgeVTep** *(dict) --* **[REQUIRED]** 
+
+      The edge VTEP VLAN subnet. This VLAN subnet manages traffic flowing between the internal network and external networks, including internet access and other site connections.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **nsxUplink** *(dict) --* **[REQUIRED]** 
+
+      The NSX uplink VLAN subnet. This VLAN subnet allows connectivity to the NSX overlay network.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **hcx** *(dict) --* **[REQUIRED]** 
+
+      The HCX VLAN subnet. This VLAN subnet allows the HCX Interconnnect (IX) and HCX Network Extension (NE) to reach their peers and enable HCX Service Mesh creation.
+
+       
+
+      If you plan to use a public HCX VLAN subnet, the following requirements must be met:
+
+       
+
+      
+      * Must have a /28 netmask and be allocated from the IPAM public pool. Required for HCX internet access configuration.
+       
+      * The HCX public VLAN CIDR block must be added to the VPC as a secondary CIDR block.
+       
+      * Must have at least two Elastic IP addresses to be allocated from the public IPAM pool for HCX components.
+      
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **expansionVlan1** *(dict) --* **[REQUIRED]** 
+
+      An additional VLAN subnet that can be used to extend VCF capabilities once configured. For example, you can configure an expansion VLAN subnet to use NSX Federation for centralized management and synchronization of multiple NSX deployments across different locations.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **expansionVlan2** *(dict) --* **[REQUIRED]** 
+
+      An additional VLAN subnet that can be used to extend VCF capabilities once configured. For example, you can configure an expansion VLAN subnet to use NSX Federation for centralized management and synchronization of multiple NSX deployments across different locations.
+
+      
+
+    
+      - **cidr** *(string) --* **[REQUIRED]** 
+
+        The CIDR block that you provide to create an Amazon EVS VLAN subnet. Amazon EVS VLAN subnets have a minimum CIDR block size of /28 and a maximum size of /24. Amazon EVS VLAN subnet CIDR blocks must not overlap with other subnets in the VPC.
+
+        
+
+      
+    
+    - **isHcxPublic** *(boolean) --* 
+
+      Determines if the HCX VLAN that Amazon EVS provisions is public or private.
+
+      
+
+    
+    - **hcxNetworkAclId** *(string) --* 
+
+      A unique ID for a network access control list that the HCX VLAN uses. Required when ``isHcxPublic`` is set to ``true``.
+
+      
+
+    
+  
+  :type hosts: list
+  :param hosts: **[REQUIRED]** 
+
+    The ESX hosts to add to the environment. Amazon EVS requires that you provide details for a minimum of 4 hosts during environment creation.
+
+     
+
+    For each host, you must provide the desired hostname, EC2 SSH keypair name, and EC2 instance type. Optionally, you can also provide a partition or cluster placement group to use, or use Amazon EC2 Dedicated Hosts.
+
+    
+
+  
+    - *(dict) --* 
+
+      An object that represents a host.
+
+       
+
+      .. note::
+
+        
+
+        You cannot use ``dedicatedHostId`` and ``placementGroupId`` together in the same ``HostInfoForCreate``object. This results in a ``ValidationException`` response.
+
+        
+
+      
+
+    
+      - **hostName** *(string) --* **[REQUIRED]** 
+
+        The DNS hostname of the host. DNS hostnames for hosts must be unique across Amazon EVS environments and within VCF.
+
+        
+
+      
+      - **keyName** *(string) --* **[REQUIRED]** 
+
+        The name of the SSH key that is used to access the host.
+
+        
+
+      
+      - **instanceType** *(string) --* **[REQUIRED]** 
+
+        The EC2 instance type that represents the host.
+
+         
+
+        .. note::
+
+          
+
+          Currently, Amazon EVS supports only the ``i4i.metal`` instance type.
+
+          
+
+        
+
+      
+      - **placementGroupId** *(string) --* 
+
+        The unique ID of the placement group where the host is placed.
+
+        
+
+      
+      - **dedicatedHostId** *(string) --* 
+
+        The unique ID of the Amazon EC2 Dedicated Host.
+
+        
+
+      
+    
+
+  :type connectivityInfo: dict
+  :param connectivityInfo: **[REQUIRED]** 
+
+    The connectivity configuration for the environment. Amazon EVS requires that you specify two route server peer IDs. During environment creation, the route server endpoints peer with the NSX edges over the NSX uplink subnet, providing BGP-based dynamic routing for overlay networks.
+
+    
+
+  
+    - **privateRouteServerPeerings** *(list) --* **[REQUIRED]** 
+
+      The unique IDs for private route server peers.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  :type vcfHostnames: dict
+  :param vcfHostnames: **[REQUIRED]** 
+
+    The DNS hostnames for the virtual machines that host the VCF management appliances. Amazon EVS requires that you provide DNS hostnames for the following appliances: vCenter, NSX Manager, SDDC Manager, and Cloud Builder.
+
+    
+
+  
+    - **vCenter** *(string) --* **[REQUIRED]** 
+
+      The VMware vCenter hostname.
+
+      
+
+    
+    - **nsx** *(string) --* **[REQUIRED]** 
+
+      The VMware NSX hostname.
+
+      
+
+    
+    - **nsxManager1** *(string) --* **[REQUIRED]** 
+
+      The hostname for the first VMware NSX Manager virtual machine (VM).
+
+      
+
+    
+    - **nsxManager2** *(string) --* **[REQUIRED]** 
+
+      The hostname for the second VMware NSX Manager virtual machine (VM).
+
+      
+
+    
+    - **nsxManager3** *(string) --* **[REQUIRED]** 
+
+      The hostname for the third VMware NSX Manager virtual machine (VM).
+
+      
+
+    
+    - **nsxEdge1** *(string) --* **[REQUIRED]** 
+
+      The hostname for the first NSX Edge node.
+
+      
+
+    
+    - **nsxEdge2** *(string) --* **[REQUIRED]** 
+
+      The hostname for the second NSX Edge node.
+
+      
+
+    
+    - **sddcManager** *(string) --* **[REQUIRED]** 
+
+      The hostname for SDDC Manager.
+
+      
+
+    
+    - **cloudBuilder** *(string) --* **[REQUIRED]** 
+
+      The hostname for VMware Cloud Builder.
+
+      
+
+    
+  
+  :type siteId: string
+  :param siteId: **[REQUIRED]** 
+
+    The Broadcom Site ID that is allocated to you as part of your electronic software delivery. This ID allows customer access to the Broadcom portal, and is provided to you by Broadcom at the close of your software contract or contract renewal. Amazon EVS uses the Broadcom Site ID that you provide to meet Broadcom VCF license usage reporting requirements for Amazon EVS.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'environment': {
+              'environmentId': 'string',
+              'environmentState': 'CREATING'|'CREATED'|'DELETING'|'DELETED'|'CREATE_FAILED',
+              'stateDetails': 'string',
+              'createdAt': datetime(2015, 1, 1),
+              'modifiedAt': datetime(2015, 1, 1),
+              'environmentArn': 'string',
+              'environmentName': 'string',
+              'vpcId': 'string',
+              'serviceAccessSubnetId': 'string',
+              'vcfVersion': 'VCF-5.2.1'|'VCF-5.2.2',
+              'termsAccepted': True|False,
+              'licenseInfo': [
+                  {
+                      'solutionKey': 'string',
+                      'vsanKey': 'string'
+                  },
+              ],
+              'siteId': 'string',
+              'environmentStatus': 'PASSED'|'FAILED'|'UNKNOWN',
+              'checks': [
+                  {
+                      'type': 'KEY_REUSE'|'KEY_COVERAGE'|'REACHABILITY'|'HOST_COUNT',
+                      'result': 'PASSED'|'FAILED'|'UNKNOWN',
+                      'impairedSince': datetime(2015, 1, 1)
+                  },
+              ],
+              'connectivityInfo': {
+                  'privateRouteServerPeerings': [
+                      'string',
+                  ]
+              },
+              'vcfHostnames': {
+                  'vCenter': 'string',
+                  'nsx': 'string',
+                  'nsxManager1': 'string',
+                  'nsxManager2': 'string',
+                  'nsxManager3': 'string',
+                  'nsxEdge1': 'string',
+                  'nsxEdge2': 'string',
+                  'sddcManager': 'string',
+                  'cloudBuilder': 'string'
+              },
+              'kmsKeyId': 'string',
+              'serviceAccessSecurityGroups': {
+                  'securityGroups': [
+                      'string',
+                  ]
+              },
+              'credentials': [
+                  {
+                      'secretArn': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **environment** *(dict) --* 
+
+        A description of the created environment.
+
+        
+        
+
+        - **environmentId** *(string) --* 
+
+          The unique ID for the environment.
+
+          
+        
+
+        - **environmentState** *(string) --* 
+
+          The state of an environment.
+
+          
+        
+
+        - **stateDetails** *(string) --* 
+
+          A detailed description of the ``environmentState`` of an environment.
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The date and time that the environment was created.
+
+          
+        
+
+        - **modifiedAt** *(datetime) --* 
+
+          The date and time that the environment was modified.
+
+          
+        
+
+        - **environmentArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) that is associated with the environment.
+
+          
+        
+
+        - **environmentName** *(string) --* 
+
+          The name of the environment.
+
+          
+        
+
+        - **vpcId** *(string) --* 
+
+          The VPC associated with the environment.
+
+          
+        
+
+        - **serviceAccessSubnetId** *(string) --* 
+
+          The subnet that is used to establish connectivity between the Amazon EVS control plane and VPC. Amazon EVS uses this subnet to perform validations and create the environment.
+
+          
+        
+
+        - **vcfVersion** *(string) --* 
+
+          The VCF version of the environment.
+
+          
+        
+
+        - **termsAccepted** *(boolean) --* 
+
+          Customer confirmation that the customer has purchased and will continue to maintain the required number of VCF software licenses to cover all physical processor cores in the Amazon EVS environment. Information about your VCF software in Amazon EVS will be shared with Broadcom to verify license compliance. Amazon EVS does not validate license keys. To validate license keys, visit the Broadcom support portal.
+
+          
+        
+
+        - **licenseInfo** *(list) --* 
+
+          The license information that Amazon EVS requires to create an environment. Amazon EVS requires two license keys: a VCF solution key and a vSAN license key. The VCF solution key must cover a minimum of 256 cores. The vSAN license key must provide at least 110 TiB of vSAN capacity.
+
+          
+          
+
+          - *(dict) --* 
+
+            The license information that Amazon EVS requires to create an environment. Amazon EVS requires two license keys: a VCF solution key and a vSAN license key.
+
+            
+            
+
+            - **solutionKey** *(string) --* 
+
+              The VCF solution key. This license unlocks VMware VCF product features, including vSphere, NSX, SDDC Manager, and vCenter Server. The VCF solution key must cover a minimum of 256 cores.
+
+              
+            
+
+            - **vsanKey** *(string) --* 
+
+              The VSAN license key. This license unlocks vSAN features. The vSAN license key must provide at least 110 TiB of vSAN capacity.
+
+              
+        
+      
+        
+
+        - **siteId** *(string) --* 
+
+          The Broadcom Site ID that is associated with your Amazon EVS environment. Amazon EVS uses the Broadcom Site ID that you provide to meet Broadcom VCF license usage reporting requirements for Amazon EVS.
+
+          
+        
+
+        - **environmentStatus** *(string) --* 
+
+          Reports impaired functionality that stems from issues internal to the environment, such as impaired reachability.
+
+          
+        
+
+        - **checks** *(list) --* 
+
+          A check on the environment to identify instance health and VMware VCF licensing issues.
+
+          
+          
+
+          - *(dict) --* 
+
+            A check on the environment to identify environment health and validate VMware VCF licensing compliance.
+
+            
+            
+
+            - **type** *(string) --* 
+
+              The check type. Amazon EVS performs the following checks.
+
+               
+
+              
+              * ``KEY_REUSE``: checks that the VCF license key is not used by another Amazon EVS environment. This check fails if a used license is added to the environment.
+               
+              * ``KEY_COVERAGE``: checks that your VCF license key allocates sufficient vCPU cores for all deployed hosts. The check fails when any assigned hosts in the EVS environment are not covered by license keys, or when any unassigned hosts cannot be covered by available vCPU cores in keys.
+               
+              * ``REACHABILITY``: checks that the Amazon EVS control plane has a persistent connection to SDDC Manager. If Amazon EVS cannot reach the environment, this check fails.
+               
+              * ``HOST_COUNT``: Checks that your environment has a minimum of 4 hosts. If this check fails, you will need to add hosts so that your environment meets this minimum requirement. Amazon EVS only supports environments with 4-16 hosts.
+              
+
+              
+            
+
+            - **result** *(string) --* 
+
+              The check result.
+
+              
+            
+
+            - **impairedSince** *(datetime) --* 
+
+              The time when environment health began to be impaired.
+
+              
+        
+      
+        
+
+        - **connectivityInfo** *(dict) --* 
+
+          The connectivity configuration for the environment. Amazon EVS requires that you specify two route server peer IDs. During environment creation, the route server endpoints peer with the NSX uplink VLAN for connectivity to the NSX overlay network.
+
+          
+          
+
+          - **privateRouteServerPeerings** *(list) --* 
+
+            The unique IDs for private route server peers.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+        
+
+        - **vcfHostnames** *(dict) --* 
+
+          The DNS hostnames to be used by the VCF management appliances in your environment.
+
+           
+
+          For environment creation to be successful, each hostname entry must resolve to a domain name that you've registered in your DNS service of choice and configured in the DHCP option set of your VPC. DNS hostnames cannot be changed after environment creation has started.
+
+          
+          
+
+          - **vCenter** *(string) --* 
+
+            The VMware vCenter hostname.
+
+            
+          
+
+          - **nsx** *(string) --* 
+
+            The VMware NSX hostname.
+
+            
+          
+
+          - **nsxManager1** *(string) --* 
+
+            The hostname for the first VMware NSX Manager virtual machine (VM).
+
+            
+          
+
+          - **nsxManager2** *(string) --* 
+
+            The hostname for the second VMware NSX Manager virtual machine (VM).
+
+            
+          
+
+          - **nsxManager3** *(string) --* 
+
+            The hostname for the third VMware NSX Manager virtual machine (VM).
+
+            
+          
+
+          - **nsxEdge1** *(string) --* 
+
+            The hostname for the first NSX Edge node.
+
+            
+          
+
+          - **nsxEdge2** *(string) --* 
+
+            The hostname for the second NSX Edge node.
+
+            
+          
+
+          - **sddcManager** *(string) --* 
+
+            The hostname for SDDC Manager.
+
+            
+          
+
+          - **cloudBuilder** *(string) --* 
+
+            The hostname for VMware Cloud Builder.
+
+            
+      
+        
+
+        - **kmsKeyId** *(string) --* 
+
+          The Amazon Web Services KMS key ID that Amazon Web Services Secrets Manager uses to encrypt secrets that are associated with the environment. These secrets contain the VCF credentials that are needed to install vCenter Server, NSX, and SDDC Manager.
+
+           
+
+          By default, Amazon EVS use the Amazon Web Services Secrets Manager managed key ``aws/secretsmanager``. You can also specify a customer managed key.
+
+          
+        
+
+        - **serviceAccessSecurityGroups** *(dict) --* 
+
+          The security groups that allow traffic between the Amazon EVS control plane and your VPC for service access. If a security group is not specified, Amazon EVS uses the default security group in your account for service access.
+
+          
+          
+
+          - **securityGroups** *(list) --* 
+
+            The security groups that allow service access.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+        
+
+        - **credentials** *(list) --* 
+
+          The VCF credentials that are stored as Amazon EVS managed secrets in Amazon Web Services Secrets Manager.
+
+           
+
+          Amazon EVS stores credentials that are needed to install vCenter Server, NSX, and SDDC Manager.
+
+          
+          
+
+          - *(dict) --* 
+
+            A managed secret that contains the credentials for installing vCenter Server, NSX, and SDDC Manager. During environment creation, the Amazon EVS control plane uses Amazon Web Services Secrets Manager to create, encrypt, validate, and store secrets. If you choose to delete your environment, Amazon EVS also deletes the secrets that are associated with your environment. Amazon EVS does not provide managed rotation of secrets. We recommend that you rotate secrets regularly to ensure that secrets are not long-lived.
+
+            
+            
+
+            - **secretArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the secret.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EVS.Client.exceptions.ValidationException`
+
+  

@@ -1,0 +1,273 @@
+:doc:`Backup <../../backup>` / Client / describe_backup_vault
+
+*********************
+describe_backup_vault
+*********************
+
+
+
+.. py:method:: Backup.Client.describe_backup_vault(**kwargs)
+
+  
+
+  Returns metadata about a backup vault specified by its name.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/backup-2018-11-15/DescribeBackupVault>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_backup_vault(
+        BackupVaultName='string',
+        BackupVaultAccountId='string'
+    )
+    
+  :type BackupVaultName: string
+  :param BackupVaultName: **[REQUIRED]** 
+
+    The name of a logical container where backups are stored. Backup vaults are identified by names that are unique to the account used to create them and the Amazon Web Services Region where they are created.
+
+    
+
+  
+  :type BackupVaultAccountId: string
+  :param BackupVaultAccountId: 
+
+    The account ID of the specified backup vault.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'BackupVaultName': 'string',
+          'BackupVaultArn': 'string',
+          'VaultType': 'BACKUP_VAULT'|'LOGICALLY_AIR_GAPPED_BACKUP_VAULT'|'RESTORE_ACCESS_BACKUP_VAULT',
+          'VaultState': 'CREATING'|'AVAILABLE'|'FAILED',
+          'EncryptionKeyArn': 'string',
+          'CreationDate': datetime(2015, 1, 1),
+          'CreatorRequestId': 'string',
+          'NumberOfRecoveryPoints': 123,
+          'Locked': True|False,
+          'MinRetentionDays': 123,
+          'MaxRetentionDays': 123,
+          'LockDate': datetime(2015, 1, 1),
+          'SourceBackupVaultArn': 'string',
+          'MpaApprovalTeamArn': 'string',
+          'MpaSessionArn': 'string',
+          'LatestMpaApprovalTeamUpdate': {
+              'MpaSessionArn': 'string',
+              'Status': 'PENDING'|'APPROVED'|'FAILED',
+              'StatusMessage': 'string',
+              'InitiationDate': datetime(2015, 1, 1),
+              'ExpiryDate': datetime(2015, 1, 1)
+          },
+          'EncryptionKeyType': 'AWS_OWNED_KMS_KEY'|'CUSTOMER_MANAGED_KMS_KEY'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **BackupVaultName** *(string) --* 
+
+        The name of a logical container where backups are stored. Backup vaults are identified by names that are unique to the account used to create them and the Region where they are created.
+
+        
+      
+
+      - **BackupVaultArn** *(string) --* 
+
+        An Amazon Resource Name (ARN) that uniquely identifies a backup vault; for example, ``arn:aws:backup:us-east-1:123456789012:backup-vault:aBackupVault``.
+
+        
+      
+
+      - **VaultType** *(string) --* 
+
+        The type of vault described.
+
+        
+      
+
+      - **VaultState** *(string) --* 
+
+        The current state of the vault.->
+
+        
+      
+
+      - **EncryptionKeyArn** *(string) --* 
+
+        The server-side encryption key that is used to protect your backups; for example, ``arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``.
+
+        
+      
+
+      - **CreationDate** *(datetime) --* 
+
+        The date and time that a backup vault is created, in Unix format and Coordinated Universal Time (UTC). The value of ``CreationDate`` is accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **CreatorRequestId** *(string) --* 
+
+        A unique string that identifies the request and allows failed requests to be retried without the risk of running the operation twice. This parameter is optional. If used, this parameter must contain 1 to 50 alphanumeric or '-_.' characters.
+
+        
+      
+
+      - **NumberOfRecoveryPoints** *(integer) --* 
+
+        The number of recovery points that are stored in a backup vault.
+
+         
+
+        Recovery point count value displayed in the console can be an approximation. Use `ListRecoveryPointsByBackupVault <https://docs.aws.amazon.com/aws-backup/latest/devguide/API_ListRecoveryPointsByBackupVault.html>`__ API to obtain the exact count.
+
+        
+      
+
+      - **Locked** *(boolean) --* 
+
+        A Boolean that indicates whether Backup Vault Lock is currently protecting the backup vault. ``True`` means that Vault Lock causes delete or update operations on the recovery points stored in the vault to fail.
+
+        
+      
+
+      - **MinRetentionDays** *(integer) --* 
+
+        The Backup Vault Lock setting that specifies the minimum retention period that the vault retains its recovery points. If this parameter is not specified, Vault Lock will not enforce a minimum retention period.
+
+         
+
+        If specified, any backup or copy job to the vault must have a lifecycle policy with a retention period equal to or longer than the minimum retention period. If the job's retention period is shorter than that minimum retention period, then the vault fails the backup or copy job, and you should either modify your lifecycle settings or use a different vault. Recovery points already stored in the vault prior to Vault Lock are not affected.
+
+        
+      
+
+      - **MaxRetentionDays** *(integer) --* 
+
+        The Backup Vault Lock setting that specifies the maximum retention period that the vault retains its recovery points. If this parameter is not specified, Vault Lock does not enforce a maximum retention period on the recovery points in the vault (allowing indefinite storage).
+
+         
+
+        If specified, any backup or copy job to the vault must have a lifecycle policy with a retention period equal to or shorter than the maximum retention period. If the job's retention period is longer than that maximum retention period, then the vault fails the backup or copy job, and you should either modify your lifecycle settings or use a different vault. Recovery points already stored in the vault prior to Vault Lock are not affected.
+
+        
+      
+
+      - **LockDate** *(datetime) --* 
+
+        The date and time when Backup Vault Lock configuration cannot be changed or deleted.
+
+         
+
+        If you applied Vault Lock to your vault without specifying a lock date, you can change any of your Vault Lock settings, or delete Vault Lock from the vault entirely, at any time.
+
+         
+
+        This value is in Unix format, Coordinated Universal Time (UTC), and accurate to milliseconds. For example, the value 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+
+        
+      
+
+      - **SourceBackupVaultArn** *(string) --* 
+
+        The ARN of the source backup vault from which this restore access backup vault was created.
+
+        
+      
+
+      - **MpaApprovalTeamArn** *(string) --* 
+
+        The ARN of the MPA approval team associated with this backup vault.
+
+        
+      
+
+      - **MpaSessionArn** *(string) --* 
+
+        The ARN of the MPA session associated with this backup vault.
+
+        
+      
+
+      - **LatestMpaApprovalTeamUpdate** *(dict) --* 
+
+        Information about the latest update to the MPA approval team association for this backup vault.
+
+        
+        
+
+        - **MpaSessionArn** *(string) --* 
+
+          The ARN of the MPA session associated with this update.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          The current status of the MPA approval team update.
+
+          
+        
+
+        - **StatusMessage** *(string) --* 
+
+          A message describing the current status of the MPA approval team update.
+
+          
+        
+
+        - **InitiationDate** *(datetime) --* 
+
+          The date and time when the MPA approval team update was initiated.
+
+          
+        
+
+        - **ExpiryDate** *(datetime) --* 
+
+          The date and time when the MPA approval team update will expire.
+
+          
+    
+      
+
+      - **EncryptionKeyType** *(string) --* 
+
+        The type of encryption key used for the backup vault. Valid values are CUSTOMER_MANAGED_KMS_KEY for customer-managed keys or Amazon Web Services_OWNED_KMS_KEY for Amazon Web Services-owned keys.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Backup.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.MissingParameterValueException`
+
+  
+  *   :py:class:`Backup.Client.exceptions.ServiceUnavailableException`
+
+  

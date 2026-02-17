@@ -1,0 +1,232 @@
+:doc:`EC2 <../../ec2>` / Client / modify_instance_metadata_options
+
+********************************
+modify_instance_metadata_options
+********************************
+
+
+
+.. py:method:: EC2.Client.modify_instance_metadata_options(**kwargs)
+
+  
+
+  Modify the instance metadata parameters on a running or stopped instance. When you modify the parameters on a stopped instance, they are applied when the instance is started. When you modify the parameters on a running instance, the API responds with a state of “pending”. After the parameter modifications are successfully applied to the instance, the state of the modifications changes from “pending” to “applied” in subsequent describe-instances API calls. For more information, see `Instance metadata and user data <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html>`__ in the *Amazon EC2 User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/ModifyInstanceMetadataOptions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.modify_instance_metadata_options(
+        InstanceId='string',
+        HttpTokens='optional'|'required',
+        HttpPutResponseHopLimit=123,
+        HttpEndpoint='disabled'|'enabled',
+        DryRun=True|False,
+        HttpProtocolIpv6='disabled'|'enabled',
+        InstanceMetadataTags='disabled'|'enabled'
+    )
+    
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The ID of the instance.
+
+    
+
+  
+  :type HttpTokens: string
+  :param HttpTokens: 
+
+    Indicates whether IMDSv2 is required.
+
+     
+
+    
+    * ``optional`` - IMDSv2 is optional. You can choose whether to send a session token in your instance metadata retrieval requests. If you retrieve IAM role credentials without a session token, you receive the IMDSv1 role credentials. If you retrieve IAM role credentials using a valid session token, you receive the IMDSv2 role credentials.
+     
+    * ``required`` - IMDSv2 is required. You must send a session token in your instance metadata retrieval requests. With this option, retrieving the IAM role credentials always returns IMDSv2 credentials; IMDSv1 credentials are not available.
+    
+
+     
+
+    Default:
+
+     
+
+    
+    * If the value of ``ImdsSupport`` for the Amazon Machine Image (AMI) for your instance is ``v2.0`` and the account level default is set to ``no-preference``, the default is ``required``.
+     
+    * If the value of ``ImdsSupport`` for the Amazon Machine Image (AMI) for your instance is ``v2.0``, but the account level default is set to ``V1 or V2``, the default is ``optional``.
+    
+
+     
+
+    The default value can also be affected by other combinations of parameters. For more information, see `Order of precedence for instance metadata options <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-options.html#instance-metadata-options-order-of-precedence>`__ in the *Amazon EC2 User Guide*.
+
+    
+
+  
+  :type HttpPutResponseHopLimit: integer
+  :param HttpPutResponseHopLimit: 
+
+    The desired HTTP PUT response hop limit for instance metadata requests. The larger the number, the further instance metadata requests can travel. If no parameter is specified, the existing state is maintained.
+
+     
+
+    Possible values: Integers from 1 to 64
+
+    
+
+  
+  :type HttpEndpoint: string
+  :param HttpEndpoint: 
+
+    Enables or disables the HTTP metadata endpoint on your instances. If this parameter is not specified, the existing state is maintained.
+
+     
+
+    If you specify a value of ``disabled``, you cannot access your instance metadata.
+
+    
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type HttpProtocolIpv6: string
+  :param HttpProtocolIpv6: 
+
+    Enables or disables the IPv6 endpoint for the instance metadata service. Applies only if you enabled the HTTP metadata endpoint.
+
+    
+
+  
+  :type InstanceMetadataTags: string
+  :param InstanceMetadataTags: 
+
+    Set to ``enabled`` to allow access to instance tags from the instance metadata. Set to ``disabled`` to turn off access to instance tags from the instance metadata. For more information, see `View tags for your EC2 instances using instance metadata <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/work-with-tags-in-IMDS.html>`__.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'InstanceId': 'string',
+          'InstanceMetadataOptions': {
+              'State': 'pending'|'applied',
+              'HttpTokens': 'optional'|'required',
+              'HttpPutResponseHopLimit': 123,
+              'HttpEndpoint': 'disabled'|'enabled',
+              'HttpProtocolIpv6': 'disabled'|'enabled',
+              'InstanceMetadataTags': 'disabled'|'enabled'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **InstanceId** *(string) --* 
+
+        The ID of the instance.
+
+        
+      
+
+      - **InstanceMetadataOptions** *(dict) --* 
+
+        The metadata options for the instance.
+
+        
+        
+
+        - **State** *(string) --* 
+
+          The state of the metadata option changes.
+
+           
+
+          ``pending`` - The metadata options are being updated and the instance is not ready to process metadata traffic with the new selection.
+
+           
+
+          ``applied`` - The metadata options have been successfully applied on the instance.
+
+          
+        
+
+        - **HttpTokens** *(string) --* 
+
+          Indicates whether IMDSv2 is required.
+
+           
+
+          
+          * ``optional`` - IMDSv2 is optional, which means that you can use either IMDSv2 or IMDSv1.
+           
+          * ``required`` - IMDSv2 is required, which means that IMDSv1 is disabled, and you must use IMDSv2.
+          
+
+          
+        
+
+        - **HttpPutResponseHopLimit** *(integer) --* 
+
+          The maximum number of hops that the metadata token can travel.
+
+           
+
+          Possible values: Integers from ``1`` to ``64``
+
+          
+        
+
+        - **HttpEndpoint** *(string) --* 
+
+          Indicates whether the HTTP metadata endpoint on your instances is enabled or disabled.
+
+           
+
+          If the value is ``disabled``, you cannot access your instance metadata.
+
+          
+        
+
+        - **HttpProtocolIpv6** *(string) --* 
+
+          Indicates whether the IPv6 endpoint for the instance metadata service is enabled or disabled.
+
+           
+
+          Default: ``disabled``
+
+          
+        
+
+        - **InstanceMetadataTags** *(string) --* 
+
+          Indicates whether access to instance tags from the instance metadata is enabled or disabled. For more information, see `View tags for your EC2 instances using instance metadata <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/work-with-tags-in-IMDS.html>`__.
+
+          
+    
+  

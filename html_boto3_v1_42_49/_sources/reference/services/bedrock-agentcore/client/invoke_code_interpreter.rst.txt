@@ -1,0 +1,621 @@
+:doc:`BedrockAgentCore <../../bedrock-agentcore>` / Client / invoke_code_interpreter
+
+***********************
+invoke_code_interpreter
+***********************
+
+
+
+.. py:method:: BedrockAgentCore.Client.invoke_code_interpreter(**kwargs)
+
+  
+
+  Executes code within an active code interpreter session in Amazon Bedrock AgentCore. This operation processes the provided code, runs it in a secure environment, and returns the execution results including output, errors, and generated visualizations.
+
+   
+
+  To execute code, you must specify the code interpreter identifier, session ID, and the code to run in the arguments parameter. The operation returns a stream containing the execution results, which can include text output, error messages, and data visualizations.
+
+   
+
+  This operation is subject to request rate limiting based on your account's service quotas.
+
+   
+
+  The following operations are related to ``InvokeCodeInterpreter``:
+
+   
+
+  
+  * `StartCodeInterpreterSession <https://docs.aws.amazon.com/bedrock-agentcore/latest/APIReference/API_StartCodeInterpreterSession.html>`__
+   
+  * `GetCodeInterpreterSession <https://docs.aws.amazon.com/bedrock-agentcore/latest/APIReference/API_GetCodeInterpreterSession.html>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agentcore-2024-02-28/InvokeCodeInterpreter>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.invoke_code_interpreter(
+        codeInterpreterIdentifier='string',
+        sessionId='string',
+        traceId='string',
+        traceParent='string',
+        name='executeCode'|'executeCommand'|'readFiles'|'listFiles'|'removeFiles'|'writeFiles'|'startCommandExecution'|'getTask'|'stopTask',
+        arguments={
+            'code': 'string',
+            'language': 'python'|'javascript'|'typescript',
+            'clearContext': True|False,
+            'command': 'string',
+            'path': 'string',
+            'paths': [
+                'string',
+            ],
+            'content': [
+                {
+                    'path': 'string',
+                    'text': 'string',
+                    'blob': b'bytes'
+                },
+            ],
+            'directoryPath': 'string',
+            'taskId': 'string'
+        }
+    )
+    
+  :type codeInterpreterIdentifier: string
+  :param codeInterpreterIdentifier: **[REQUIRED]** 
+
+    The unique identifier of the code interpreter associated with the session. This must match the identifier used when creating the session with ``StartCodeInterpreterSession``.
+
+    
+
+  
+  :type sessionId: string
+  :param sessionId: 
+
+    The unique identifier of the code interpreter session to use. This must be an active session created with ``StartCodeInterpreterSession``. If the session has expired or been stopped, the request will fail.
+
+    
+
+  
+  :type traceId: string
+  :param traceId: 
+
+    The trace identifier for request tracking.
+
+    
+
+  
+  :type traceParent: string
+  :param traceParent: 
+
+    The parent trace information for distributed tracing.
+
+    
+
+  
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the code interpreter to invoke.
+
+    
+
+  
+  :type arguments: dict
+  :param arguments: 
+
+    The arguments for the code interpreter. This includes the code to execute and any additional parameters such as the programming language, whether to clear the execution context, and other execution options. The structure of this parameter depends on the specific code interpreter being used.
+
+    
+
+  
+    - **code** *(string) --* 
+
+      The code to execute in a code interpreter session. This is the source code in the specified programming language that will be executed by the code interpreter.
+
+      
+
+    
+    - **language** *(string) --* 
+
+      The programming language of the code to execute. This tells the code interpreter which language runtime to use for execution. Common values include 'python', 'javascript', and 'r'.
+
+      
+
+    
+    - **clearContext** *(boolean) --* 
+
+      Whether to clear the context for the tool.
+
+      
+
+    
+    - **command** *(string) --* 
+
+      The command to execute with the tool.
+
+      
+
+    
+    - **path** *(string) --* 
+
+      The path for the tool operation.
+
+      
+
+    
+    - **paths** *(list) --* 
+
+      The paths for the tool operation.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **content** *(list) --* 
+
+      The content for the tool operation.
+
+      
+
+    
+      - *(dict) --* 
+
+        A block of input content.
+
+        
+
+      
+        - **path** *(string) --* **[REQUIRED]** 
+
+          The path to the input content.
+
+          
+
+        
+        - **text** *(string) --* 
+
+          The text input content.
+
+          
+
+        
+        - **blob** *(bytes) --* 
+
+          The binary input content.
+
+          
+
+        
+      
+  
+    - **directoryPath** *(string) --* 
+
+      The directory path for the tool operation.
+
+      
+
+    
+    - **taskId** *(string) --* 
+
+      The identifier of the task for the tool operation.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+
+    The response of this operation contains an :class:`.EventStream` member. When iterated the :class:`.EventStream` will yield events based on the structure below, where only one of the top level keys will be present for any given event.
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'sessionId': 'string',
+          'stream': EventStream({
+              'result': {
+                  'content': [
+                      {
+                          'type': 'text'|'image'|'resource'|'resource_link',
+                          'text': 'string',
+                          'data': b'bytes',
+                          'mimeType': 'string',
+                          'uri': 'string',
+                          'name': 'string',
+                          'description': 'string',
+                          'size': 123,
+                          'resource': {
+                              'type': 'text'|'blob',
+                              'uri': 'string',
+                              'mimeType': 'string',
+                              'text': 'string',
+                              'blob': b'bytes'
+                          }
+                      },
+                  ],
+                  'structuredContent': {
+                      'taskId': 'string',
+                      'taskStatus': 'submitted'|'working'|'completed'|'canceled'|'failed',
+                      'stdout': 'string',
+                      'stderr': 'string',
+                      'exitCode': 123,
+                      'executionTime': 123.0
+                  },
+                  'isError': True|False
+              },
+              'accessDeniedException': {
+                  'message': 'string'
+              },
+              'conflictException': {
+                  'message': 'string'
+              },
+              'internalServerException': {
+                  'message': 'string'
+              },
+              'resourceNotFoundException': {
+                  'message': 'string'
+              },
+              'serviceQuotaExceededException': {
+                  'message': 'string'
+              },
+              'throttlingException': {
+                  'message': 'string'
+              },
+              'validationException': {
+                  'message': 'string',
+                  'reason': 'CannotParse'|'FieldValidationFailed'|'IdempotentParameterMismatchException'|'EventInOtherSession'|'ResourceConflict',
+                  'fieldList': [
+                      {
+                          'name': 'string',
+                          'message': 'string'
+                      },
+                  ]
+              }
+          })
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **sessionId** *(string) --* 
+
+        The identifier of the code interpreter session.
+
+        
+      
+
+      - **stream** (:class:`.EventStream`) -- 
+
+        The stream containing the results of the code execution. This includes output, errors, and execution status.
+
+        
+        
+
+        - **result** *(dict) --* 
+
+          The output produced by executing code in a code interpreter session in Amazon Bedrock AgentCore. This structure contains the results of code execution, including textual output, structured data, and error information. Agents use these results to generate responses that incorporate computation, data analysis, and visualization.
+
+          
+          
+
+          - **content** *(list) --* 
+
+            The textual content of the execution result. This includes standard output from the code execution, such as print statements, console output, and text representations of results.
+
+            
+            
+
+            - *(dict) --* 
+
+              A block of content in a response.
+
+              
+              
+
+              - **type** *(string) --* 
+
+                The type of content in the block.
+
+                
+              
+
+              - **text** *(string) --* 
+
+                The text content of the block.
+
+                
+              
+
+              - **data** *(bytes) --* 
+
+                The binary data content of the block.
+
+                
+              
+
+              - **mimeType** *(string) --* 
+
+                The MIME type of the content.
+
+                
+              
+
+              - **uri** *(string) --* 
+
+                The URI of the content.
+
+                
+              
+
+              - **name** *(string) --* 
+
+                The name of the content block.
+
+                
+              
+
+              - **description** *(string) --* 
+
+                The description of the content block.
+
+                
+              
+
+              - **size** *(integer) --* 
+
+                The size of the content in bytes.
+
+                
+              
+
+              - **resource** *(dict) --* 
+
+                The resource associated with the content block.
+
+                
+                
+
+                - **type** *(string) --* 
+
+                  The type of resource content.
+
+                  
+                
+
+                - **uri** *(string) --* 
+
+                  The URI of the resource content.
+
+                  
+                
+
+                - **mimeType** *(string) --* 
+
+                  The MIME type of the resource content.
+
+                  
+                
+
+                - **text** *(string) --* 
+
+                  The text resource content.
+
+                  
+                
+
+                - **blob** *(bytes) --* 
+
+                  The binary resource content.
+
+                  
+            
+          
+        
+          
+
+          - **structuredContent** *(dict) --* 
+
+            The structured content of the execution result. This includes additional metadata about the execution, such as execution time, memory usage, and structured representations of output data. The format depends on the specific code interpreter and execution context.
+
+            
+            
+
+            - **taskId** *(string) --* 
+
+              The identifier of the task that produced the result.
+
+              
+            
+
+            - **taskStatus** *(string) --* 
+
+              The status of the task that produced the result.
+
+              
+            
+
+            - **stdout** *(string) --* 
+
+              The standard output from the tool execution.
+
+              
+            
+
+            - **stderr** *(string) --* 
+
+              The standard error output from the tool execution.
+
+              
+            
+
+            - **exitCode** *(integer) --* 
+
+              The exit code from the tool execution.
+
+              
+            
+
+            - **executionTime** *(float) --* 
+
+              The execution time of the tool operation in milliseconds.
+
+              
+        
+          
+
+          - **isError** *(boolean) --* 
+
+            Indicates whether the result represents an error. If true, the content contains error messages or exception information. If false, the content contains successful execution results.
+
+            
+      
+        
+
+        - **accessDeniedException** *(dict) --* 
+
+          The exception that occurs when you do not have sufficient permissions to perform an action. Verify that your IAM policy includes the necessary permissions for the operation you are trying to perform.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **conflictException** *(dict) --* 
+
+          The exception that occurs when the request conflicts with the current state of the resource. This can happen when trying to modify a resource that is currently being modified by another request, or when trying to create a resource that already exists.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **internalServerException** *(dict) --* 
+
+          The exception that occurs when the service encounters an unexpected internal error. This is a temporary condition that will resolve itself with retries. We recommend implementing exponential backoff retry logic in your application.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **resourceNotFoundException** *(dict) --* 
+
+          The exception that occurs when the specified resource does not exist. This can happen when using an invalid identifier or when trying to access a resource that has been deleted.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **serviceQuotaExceededException** *(dict) --* 
+
+          The exception that occurs when the request would cause a service quota to be exceeded. Review your service quotas and either reduce your request rate or request a quota increase.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **throttlingException** *(dict) --* 
+
+          The exception that occurs when the request was denied due to request throttling. This happens when you exceed the allowed request rate for an operation. Reduce the frequency of requests or implement exponential backoff retry logic in your application.
+
+          
+          
+
+          - **message** *(string) --* 
+      
+        
+
+        - **validationException** *(dict) --* 
+
+          The exception that occurs when the input fails to satisfy the constraints specified by the service. Check the error message for details about which input parameter is invalid and correct your request.
+
+          
+          
+
+          - **message** *(string) --* 
+          
+
+          - **reason** *(string) --* 
+          
+
+          - **fieldList** *(list) --* 
+            
+
+            - *(dict) --* 
+
+              Stores information about a field passed inside a request that resulted in an exception.
+
+              
+              
+
+              - **name** *(string) --* 
+
+                The name of the field.
+
+                
+              
+
+              - **message** *(string) --* 
+
+                A message describing why this field failed validation.
+
+                
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`BedrockAgentCore.Client.exceptions.InternalServerException`
+
+  

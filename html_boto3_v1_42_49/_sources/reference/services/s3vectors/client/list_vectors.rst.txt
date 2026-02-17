@@ -1,0 +1,264 @@
+:doc:`S3Vectors <../../s3vectors>` / Client / list_vectors
+
+************
+list_vectors
+************
+
+
+
+.. py:method:: S3Vectors.Client.list_vectors(**kwargs)
+
+  
+
+  List vectors in the specified vector index. To specify the vector index, you can either use both the vector bucket name and the vector index name, or use the vector index Amazon Resource Name (ARN).
+
+   
+
+  ``ListVectors`` operations proceed sequentially; however, for faster performance on a large number of vectors in a vector index, applications can request a parallel ``ListVectors`` operation by providing the ``segmentCount`` and ``segmentIndex`` parameters.
+
+    Permissions  
+
+  You must have the ``s3vectors:ListVectors`` permission to use this operation. Additional permissions are required based on the request parameters you specify:
+
+   
+
+  
+  * With only ``s3vectors:ListVectors`` permission, you can list vector keys when ``returnData`` and ``returnMetadata`` are both set to false or not specified..
+   
+  * If you set ``returnData`` or ``returnMetadata`` to true, you must have both ``s3vectors:ListVectors`` and ``s3vectors:GetVectors`` permissions. The request fails with a ``403 Forbidden`` error if you request vector data or metadata without the ``s3vectors:GetVectors`` permission.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3vectors-2025-07-15/ListVectors>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_vectors(
+        vectorBucketName='string',
+        indexName='string',
+        indexArn='string',
+        maxResults=123,
+        nextToken='string',
+        segmentCount=123,
+        segmentIndex=123,
+        returnData=True|False,
+        returnMetadata=True|False
+    )
+    
+  :type vectorBucketName: string
+  :param vectorBucketName: 
+
+    The name of the vector bucket.
+
+    
+
+  
+  :type indexName: string
+  :param indexName: 
+
+    The name of the vector index.
+
+    
+
+  
+  :type indexArn: string
+  :param indexArn: 
+
+    The Amazon resource Name (ARN) of the vector index.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of vectors to return on a page.
+
+     
+
+    If you don't specify ``maxResults``, the ``ListVectors`` operation uses a default value of 500.
+
+     
+
+    If the processed dataset size exceeds 1 MB before reaching the ``maxResults`` value, the operation stops and returns the vectors that are retrieved up to that point, along with a ``nextToken`` that you can use in a subsequent request to retrieve the next set of results.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    Pagination token from a previous request. The value of this field is empty for an initial request.
+
+    
+
+  
+  :type segmentCount: integer
+  :param segmentCount: 
+
+    For a parallel ``ListVectors`` request, ``segmentCount`` represents the total number of vector segments into which the ``ListVectors`` operation will be divided. The value of ``segmentCount`` corresponds to the number of application workers that will perform the parallel ``ListVectors`` operation. For example, if you want to use four application threads to list vectors in a vector index, specify a ``segmentCount`` value of 4.
+
+     
+
+    If you specify a ``segmentCount`` value of 1, the ``ListVectors`` operation will be sequential rather than parallel.
+
+     
+
+    If you specify ``segmentCount``, you must also specify ``segmentIndex``.
+
+    
+
+  
+  :type segmentIndex: integer
+  :param segmentIndex: 
+
+    For a parallel ``ListVectors`` request, ``segmentIndex`` is the index of the segment from which to list vectors in the current request. It identifies an individual segment to be listed by an application worker.
+
+     
+
+    Segment IDs are zero-based, so the first segment is always 0. For example, if you want to use four application threads to list vectors in a vector index, then the first thread specifies a ``segmentIndex`` value of 0, the second thread specifies 1, and so on.
+
+     
+
+    The value of ``segmentIndex`` must be less than the value provided for ``segmentCount``.
+
+     
+
+    If you provide ``segmentIndex``, you must also provide ``segmentCount``.
+
+    
+
+  
+  :type returnData: boolean
+  :param returnData: 
+
+    If true, the vector data of each vector will be included in the response. The default value is ``false``.
+
+    
+
+  
+  :type returnMetadata: boolean
+  :param returnMetadata: 
+
+    If true, the metadata associated with each vector will be included in the response. The default value is ``false``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'nextToken': 'string',
+          'vectors': [
+              {
+                  'key': 'string',
+                  'data': {
+                      'float32': [
+                          ...,
+                      ]
+                  },
+                  'metadata': {...}|[...]|123|123.4|'string'|True|None
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **nextToken** *(string) --* 
+
+        Pagination token to be used in the subsequent request. The field is empty if no further pagination is required.
+
+        
+      
+
+      - **vectors** *(list) --* 
+
+        Vectors in the current segment.
+
+        
+        
+
+        - *(dict) --* 
+
+          The attributes of a vector returned by the ``ListVectors`` operation.
+
+          
+          
+
+          - **key** *(string) --* 
+
+            The name of the vector.
+
+            
+          
+
+          - **data** *(dict) --* 
+
+            The vector data of the vector.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``float32``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                        'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+          
+            
+
+            - **float32** *(list) --* 
+
+              The vector data as 32-bit floating point numbers. The number of elements in this array must exactly match the dimension of the vector index where the operation is being performed.
+
+              
+              
+
+              - *(float) --* 
+          
+        
+          
+
+          - **metadata** (:ref:`document<document>`) -- 
+
+            Metadata about the vector.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`S3Vectors.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.RequestTimeoutException`
+
+  
+  *   :py:class:`S3Vectors.Client.exceptions.NotFoundException`
+
+  

@@ -1,0 +1,705 @@
+:doc:`AuditManager <../../auditmanager>` / Client / create_control
+
+**************
+create_control
+**************
+
+
+
+.. py:method:: AuditManager.Client.create_control(**kwargs)
+
+  
+
+  Creates a new custom control in Audit Manager.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/CreateControl>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_control(
+        name='string',
+        description='string',
+        testingInformation='string',
+        actionPlanTitle='string',
+        actionPlanInstructions='string',
+        controlMappingSources=[
+            {
+                'sourceName': 'string',
+                'sourceDescription': 'string',
+                'sourceSetUpOption': 'System_Controls_Mapping'|'Procedural_Controls_Mapping',
+                'sourceType': 'AWS_Cloudtrail'|'AWS_Config'|'AWS_Security_Hub'|'AWS_API_Call'|'MANUAL'|'Common_Control'|'Core_Control',
+                'sourceKeyword': {
+                    'keywordInputType': 'SELECT_FROM_LIST'|'UPLOAD_FILE'|'INPUT_TEXT',
+                    'keywordValue': 'string'
+                },
+                'sourceFrequency': 'DAILY'|'WEEKLY'|'MONTHLY',
+                'troubleshootingText': 'string'
+            },
+        ],
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The name of the control.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    The description of the control.
+
+    
+
+  
+  :type testingInformation: string
+  :param testingInformation: 
+
+    The steps to follow to determine if the control is satisfied.
+
+    
+
+  
+  :type actionPlanTitle: string
+  :param actionPlanTitle: 
+
+    The title of the action plan for remediating the control.
+
+    
+
+  
+  :type actionPlanInstructions: string
+  :param actionPlanInstructions: 
+
+    The recommended actions to carry out if the control isn't fulfilled.
+
+    
+
+  
+  :type controlMappingSources: list
+  :param controlMappingSources: **[REQUIRED]** 
+
+    The data mapping sources for the control.
+
+    
+
+  
+    - *(dict) --* 
+
+      The mapping attributes that determine the evidence source for a given control, along with related parameters and metadata. This doesn't contain ``mappingID``.
+
+      
+
+    
+      - **sourceName** *(string) --* 
+
+        The name of the control mapping data source.
+
+        
+
+      
+      - **sourceDescription** *(string) --* 
+
+        The description of the data source that determines where Audit Manager collects evidence from for the control.
+
+        
+
+      
+      - **sourceSetUpOption** *(string) --* 
+
+        The setup option for the data source. This option reflects if the evidence collection method is automated or manual. If you don’t provide a value for ``sourceSetUpOption``, Audit Manager automatically infers and populates the correct value based on the ``sourceType`` that you specify.
+
+        
+
+      
+      - **sourceType** *(string) --* 
+
+        Specifies which type of data source is used to collect evidence.
+
+         
+
+        
+        * The source can be an individual data source type, such as ``AWS_Cloudtrail``, ``AWS_Config``, ``AWS_Security_Hub``, ``AWS_API_Call``, or ``MANUAL``.
+         
+        * The source can also be a managed grouping of data sources, such as a ``Core_Control`` or a ``Common_Control``.
+        
+
+        
+
+      
+      - **sourceKeyword** *(dict) --* 
+
+        A keyword that relates to the control data source.
+
+         
+
+        For manual evidence, this keyword indicates if the manual evidence is a file or text.
+
+         
+
+        For automated evidence, this keyword identifies a specific CloudTrail event, Config rule, Security Hub control, or Amazon Web Services API name.
+
+         
+
+        To learn more about the supported keywords that you can use when mapping a control data source, see the following pages in the *Audit Manager User Guide*:
+
+         
+
+        
+        * `Config rules supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-config.html>`__
+         
+        * `Security Hub controls supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-ash.html>`__
+         
+        * `API calls supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-api.html>`__
+         
+        * `CloudTrail event names supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-cloudtrail.html>`__
+        
+
+        
+
+      
+        - **keywordInputType** *(string) --* 
+
+          The input method for the keyword.
+
+           
+
+          
+          * ``SELECT_FROM_LIST`` is used when mapping a data source for automated evidence. 
+
+            
+            * When ``keywordInputType`` is ``SELECT_FROM_LIST``, a keyword must be selected to collect automated evidence. For example, this keyword can be a CloudTrail event name, a rule name for Config, a Security Hub control, or the name of an Amazon Web Services API call.
+            
+
+          
+           
+          * ``UPLOAD_FILE`` and ``INPUT_TEXT`` are only used when mapping a data source for manual evidence. 
+
+            
+            * When ``keywordInputType`` is ``UPLOAD_FILE``, a file must be uploaded as manual evidence.
+             
+            * When ``keywordInputType`` is ``INPUT_TEXT``, text must be entered as manual evidence.
+            
+
+          
+          
+
+          
+
+        
+        - **keywordValue** *(string) --* 
+
+          The value of the keyword that's used when mapping a control data source. For example, this can be a CloudTrail event name, a rule name for Config, a Security Hub control, or the name of an Amazon Web Services API call.
+
+           
+
+          If you’re mapping a data source to a rule in Config, the ``keywordValue`` that you specify depends on the type of rule:
+
+           
+
+          
+          * For `managed rules <https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_use-managed-rules.html>`__, you can use the rule identifier as the ``keywordValue``. You can find the rule identifier from the `list of Config managed rules <https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html>`__. For some rules, the rule identifier is different from the rule name. For example, the rule name ``restricted-ssh`` has the following rule identifier: ``INCOMING_SSH_DISABLED``. Make sure to use the rule identifier, not the rule name. Keyword example for managed rules: 
+
+            
+            * Managed rule name: `s3-bucket-acl-prohibited <https://docs.aws.amazon.com/config/latest/developerguide/s3-bucket-acl-prohibited.html>`__ ``keywordValue``: ``S3_BUCKET_ACL_PROHIBITED``
+            
+
+          
+           
+          * For `custom rules <https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html>`__, you form the ``keywordValue`` by adding the ``Custom_`` prefix to the rule name. This prefix distinguishes the custom rule from a managed rule. Keyword example for custom rules: 
+
+            
+            * Custom rule name: my-custom-config-rule ``keywordValue``: ``Custom_my-custom-config-rule``
+            
+
+          
+           
+          * For `service-linked rules <https://docs.aws.amazon.com/config/latest/developerguide/service-linked-awsconfig-rules.html>`__, you form the ``keywordValue`` by adding the ``Custom_`` prefix to the rule name. In addition, you remove the suffix ID that appears at the end of the rule name. Keyword examples for service-linked rules: 
+
+            
+            * Service-linked rule name: CustomRuleForAccount-conformance-pack-szsm1uv0w ``keywordValue``: ``Custom_CustomRuleForAccount-conformance-pack``
+             
+            * Service-linked rule name: OrgConfigRule-s3-bucket-versioning-enabled-dbgzf8ba ``keywordValue``: ``Custom_OrgConfigRule-s3-bucket-versioning-enabled``
+            
+
+          
+          
+
+           
+
+          .. warning::
+
+             
+
+            The ``keywordValue`` is case sensitive. If you enter a value incorrectly, Audit Manager might not recognize the data source mapping. As a result, you might not successfully collect evidence from that data source as intended.
+
+             
+
+            Keep in mind the following requirements, depending on the data source type that you're using.
+
+             
+
+            
+            * For Config: 
+
+              
+              * For managed rules, make sure that the ``keywordValue`` is the rule identifier in ``ALL_CAPS_WITH_UNDERSCORES``. For example, ``CLOUDWATCH_LOG_GROUP_ENCRYPTED``. For accuracy, we recommend that you reference the list of `supported Config managed rules <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-config.html>`__.
+               
+              * For custom rules, make sure that the ``keywordValue`` has the ``Custom_`` prefix followed by the custom rule name. The format of the custom rule name itself may vary. For accuracy, we recommend that you visit the `Config console <https://console.aws.amazon.com/config/>`__ to verify your custom rule name.
+              
+
+            
+             
+            * For Security Hub: The format varies for Security Hub control names. For accuracy, we recommend that you reference the list of `supported Security Hub controls <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-ash.html>`__.
+             
+            * For Amazon Web Services API calls: Make sure that the ``keywordValue`` is written as ``serviceprefix_ActionName``. For example, ``iam_ListGroups``. For accuracy, we recommend that you reference the list of `supported API calls <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-api.html>`__.
+             
+            * For CloudTrail: Make sure that the ``keywordValue`` is written as ``serviceprefix_ActionName``. For example, ``cloudtrail_StartLogging``. For accuracy, we recommend that you review the Amazon Web Services service prefix and action names in the `Service Authorization Reference <https://docs.aws.amazon.com/service-authorization/latest/reference/reference_policies_actions-resources-contextkeys.html>`__.
+            
+
+            
+
+          
+
+        
+      
+      - **sourceFrequency** *(string) --* 
+
+        Specifies how often evidence is collected from the control mapping source.
+
+        
+
+      
+      - **troubleshootingText** *(string) --* 
+
+        The instructions for troubleshooting the control.
+
+        
+
+      
+    
+
+  :type tags: dict
+  :param tags: 
+
+    The tags that are associated with the control.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'control': {
+              'arn': 'string',
+              'id': 'string',
+              'type': 'Standard'|'Custom'|'Core',
+              'name': 'string',
+              'description': 'string',
+              'testingInformation': 'string',
+              'actionPlanTitle': 'string',
+              'actionPlanInstructions': 'string',
+              'controlSources': 'string',
+              'controlMappingSources': [
+                  {
+                      'sourceId': 'string',
+                      'sourceName': 'string',
+                      'sourceDescription': 'string',
+                      'sourceSetUpOption': 'System_Controls_Mapping'|'Procedural_Controls_Mapping',
+                      'sourceType': 'AWS_Cloudtrail'|'AWS_Config'|'AWS_Security_Hub'|'AWS_API_Call'|'MANUAL'|'Common_Control'|'Core_Control',
+                      'sourceKeyword': {
+                          'keywordInputType': 'SELECT_FROM_LIST'|'UPLOAD_FILE'|'INPUT_TEXT',
+                          'keywordValue': 'string'
+                      },
+                      'sourceFrequency': 'DAILY'|'WEEKLY'|'MONTHLY',
+                      'troubleshootingText': 'string'
+                  },
+              ],
+              'createdAt': datetime(2015, 1, 1),
+              'lastUpdatedAt': datetime(2015, 1, 1),
+              'createdBy': 'string',
+              'lastUpdatedBy': 'string',
+              'tags': {
+                  'string': 'string'
+              },
+              'state': 'ACTIVE'|'END_OF_SUPPORT'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **control** *(dict) --* 
+
+        The new control that the ``CreateControl`` API returned.
+
+        
+        
+
+        - **arn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the control.
+
+          
+        
+
+        - **id** *(string) --* 
+
+          The unique identifier for the control.
+
+          
+        
+
+        - **type** *(string) --* 
+
+          Specifies whether the control is a standard control or a custom control.
+
+          
+        
+
+        - **name** *(string) --* 
+
+          The name of the control.
+
+          
+        
+
+        - **description** *(string) --* 
+
+          The description of the control.
+
+          
+        
+
+        - **testingInformation** *(string) --* 
+
+          The steps that you should follow to determine if the control has been satisfied.
+
+          
+        
+
+        - **actionPlanTitle** *(string) --* 
+
+          The title of the action plan for remediating the control.
+
+          
+        
+
+        - **actionPlanInstructions** *(string) --* 
+
+          The recommended actions to carry out if the control isn't fulfilled.
+
+          
+        
+
+        - **controlSources** *(string) --* 
+
+          The data source types that determine where Audit Manager collects evidence from for the control.
+
+          
+        
+
+        - **controlMappingSources** *(list) --* 
+
+          The data mapping sources for the control.
+
+          
+          
+
+          - *(dict) --* 
+
+            The data source that determines where Audit Manager collects evidence from for the control.
+
+            
+            
+
+            - **sourceId** *(string) --* 
+
+              The unique identifier for the source.
+
+              
+            
+
+            - **sourceName** *(string) --* 
+
+              The name of the source.
+
+              
+            
+
+            - **sourceDescription** *(string) --* 
+
+              The description of the source.
+
+              
+            
+
+            - **sourceSetUpOption** *(string) --* 
+
+              The setup option for the data source. This option reflects if the evidence collection method is automated or manual. If you don’t provide a value for ``sourceSetUpOption``, Audit Manager automatically infers and populates the correct value based on the ``sourceType`` that you specify.
+
+              
+            
+
+            - **sourceType** *(string) --* 
+
+              Specifies which type of data source is used to collect evidence.
+
+               
+
+              
+              * The source can be an individual data source type, such as ``AWS_Cloudtrail``, ``AWS_Config``, ``AWS_Security_Hub``, ``AWS_API_Call``, or ``MANUAL``.
+               
+              * The source can also be a managed grouping of data sources, such as a ``Core_Control`` or a ``Common_Control``.
+              
+
+              
+            
+
+            - **sourceKeyword** *(dict) --* 
+
+              A keyword that relates to the control data source.
+
+               
+
+              For manual evidence, this keyword indicates if the manual evidence is a file or text.
+
+               
+
+              For automated evidence, this keyword identifies a specific CloudTrail event, Config rule, Security Hub control, or Amazon Web Services API name.
+
+               
+
+              To learn more about the supported keywords that you can use when mapping a control data source, see the following pages in the *Audit Manager User Guide*:
+
+               
+
+              
+              * `Config rules supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-config.html>`__
+               
+              * `Security Hub controls supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-ash.html>`__
+               
+              * `API calls supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-api.html>`__
+               
+              * `CloudTrail event names supported by Audit Manager <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-cloudtrail.html>`__
+              
+
+              
+              
+
+              - **keywordInputType** *(string) --* 
+
+                The input method for the keyword.
+
+                 
+
+                
+                * ``SELECT_FROM_LIST`` is used when mapping a data source for automated evidence. 
+
+                  
+                  * When ``keywordInputType`` is ``SELECT_FROM_LIST``, a keyword must be selected to collect automated evidence. For example, this keyword can be a CloudTrail event name, a rule name for Config, a Security Hub control, or the name of an Amazon Web Services API call.
+                  
+
+                
+                 
+                * ``UPLOAD_FILE`` and ``INPUT_TEXT`` are only used when mapping a data source for manual evidence. 
+
+                  
+                  * When ``keywordInputType`` is ``UPLOAD_FILE``, a file must be uploaded as manual evidence.
+                   
+                  * When ``keywordInputType`` is ``INPUT_TEXT``, text must be entered as manual evidence.
+                  
+
+                
+                
+
+                
+              
+
+              - **keywordValue** *(string) --* 
+
+                The value of the keyword that's used when mapping a control data source. For example, this can be a CloudTrail event name, a rule name for Config, a Security Hub control, or the name of an Amazon Web Services API call.
+
+                 
+
+                If you’re mapping a data source to a rule in Config, the ``keywordValue`` that you specify depends on the type of rule:
+
+                 
+
+                
+                * For `managed rules <https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_use-managed-rules.html>`__, you can use the rule identifier as the ``keywordValue``. You can find the rule identifier from the `list of Config managed rules <https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html>`__. For some rules, the rule identifier is different from the rule name. For example, the rule name ``restricted-ssh`` has the following rule identifier: ``INCOMING_SSH_DISABLED``. Make sure to use the rule identifier, not the rule name. Keyword example for managed rules: 
+
+                  
+                  * Managed rule name: `s3-bucket-acl-prohibited <https://docs.aws.amazon.com/config/latest/developerguide/s3-bucket-acl-prohibited.html>`__ ``keywordValue``: ``S3_BUCKET_ACL_PROHIBITED``
+                  
+
+                
+                 
+                * For `custom rules <https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html>`__, you form the ``keywordValue`` by adding the ``Custom_`` prefix to the rule name. This prefix distinguishes the custom rule from a managed rule. Keyword example for custom rules: 
+
+                  
+                  * Custom rule name: my-custom-config-rule ``keywordValue``: ``Custom_my-custom-config-rule``
+                  
+
+                
+                 
+                * For `service-linked rules <https://docs.aws.amazon.com/config/latest/developerguide/service-linked-awsconfig-rules.html>`__, you form the ``keywordValue`` by adding the ``Custom_`` prefix to the rule name. In addition, you remove the suffix ID that appears at the end of the rule name. Keyword examples for service-linked rules: 
+
+                  
+                  * Service-linked rule name: CustomRuleForAccount-conformance-pack-szsm1uv0w ``keywordValue``: ``Custom_CustomRuleForAccount-conformance-pack``
+                   
+                  * Service-linked rule name: OrgConfigRule-s3-bucket-versioning-enabled-dbgzf8ba ``keywordValue``: ``Custom_OrgConfigRule-s3-bucket-versioning-enabled``
+                  
+
+                
+                
+
+                 
+
+                .. warning::
+
+                   
+
+                  The ``keywordValue`` is case sensitive. If you enter a value incorrectly, Audit Manager might not recognize the data source mapping. As a result, you might not successfully collect evidence from that data source as intended.
+
+                   
+
+                  Keep in mind the following requirements, depending on the data source type that you're using.
+
+                   
+
+                  
+                  * For Config: 
+
+                    
+                    * For managed rules, make sure that the ``keywordValue`` is the rule identifier in ``ALL_CAPS_WITH_UNDERSCORES``. For example, ``CLOUDWATCH_LOG_GROUP_ENCRYPTED``. For accuracy, we recommend that you reference the list of `supported Config managed rules <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-config.html>`__.
+                     
+                    * For custom rules, make sure that the ``keywordValue`` has the ``Custom_`` prefix followed by the custom rule name. The format of the custom rule name itself may vary. For accuracy, we recommend that you visit the `Config console <https://console.aws.amazon.com/config/>`__ to verify your custom rule name.
+                    
+
+                  
+                   
+                  * For Security Hub: The format varies for Security Hub control names. For accuracy, we recommend that you reference the list of `supported Security Hub controls <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-ash.html>`__.
+                   
+                  * For Amazon Web Services API calls: Make sure that the ``keywordValue`` is written as ``serviceprefix_ActionName``. For example, ``iam_ListGroups``. For accuracy, we recommend that you reference the list of `supported API calls <https://docs.aws.amazon.com/audit-manager/latest/userguide/control-data-sources-api.html>`__.
+                   
+                  * For CloudTrail: Make sure that the ``keywordValue`` is written as ``serviceprefix_ActionName``. For example, ``cloudtrail_StartLogging``. For accuracy, we recommend that you review the Amazon Web Services service prefix and action names in the `Service Authorization Reference <https://docs.aws.amazon.com/service-authorization/latest/reference/reference_policies_actions-resources-contextkeys.html>`__.
+                  
+
+                  
+
+                
+          
+            
+
+            - **sourceFrequency** *(string) --* 
+
+              Specifies how often evidence is collected from the control mapping source.
+
+              
+            
+
+            - **troubleshootingText** *(string) --* 
+
+              The instructions for troubleshooting the control.
+
+              
+        
+      
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The time when the control was created.
+
+          
+        
+
+        - **lastUpdatedAt** *(datetime) --* 
+
+          The time when the control was most recently updated.
+
+          
+        
+
+        - **createdBy** *(string) --* 
+
+          The user or role that created the control.
+
+          
+        
+
+        - **lastUpdatedBy** *(string) --* 
+
+          The user or role that most recently updated the control.
+
+          
+        
+
+        - **tags** *(dict) --* 
+
+          The tags associated with the control.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **state** *(string) --* 
+
+          The state of the control. The ``END_OF_SUPPORT`` state is applicable to standard controls only. This state indicates that the standard control can still be used to collect evidence, but Audit Manager is no longer updating or maintaining that control.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AuditManager.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AuditManager.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AuditManager.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AuditManager.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AuditManager.Client.exceptions.ServiceQuotaExceededException`
+
+  

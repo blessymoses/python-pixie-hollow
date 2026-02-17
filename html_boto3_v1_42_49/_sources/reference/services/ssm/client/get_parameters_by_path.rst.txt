@@ -1,0 +1,339 @@
+:doc:`SSM <../../ssm>` / Client / get_parameters_by_path
+
+**********************
+get_parameters_by_path
+**********************
+
+
+
+.. py:method:: SSM.Client.get_parameters_by_path(**kwargs)
+
+  
+
+  Retrieve information about one or more parameters under a specified level in a hierarchy.
+
+   
+
+  Request results are returned on a best-effort basis. If you specify ``MaxResults`` in the request, the response includes information up to the limit specified. The number of items returned, however, can be between zero and the value of ``MaxResults``. If the service reaches an internal limit while processing the results, it stops the operation and returns the matching values up to that point and a ``NextToken``. You can specify the ``NextToken`` in a subsequent call to get the next set of results.
+
+   
+
+  Parameter names can't contain spaces. The service removes any spaces specified for the beginning or end of a parameter name. If the specified name for a parameter contains spaces between characters, the request fails with a ``ValidationException`` error.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/GetParametersByPath>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_parameters_by_path(
+        Path='string',
+        Recursive=True|False,
+        ParameterFilters=[
+            {
+                'Key': 'string',
+                'Option': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        WithDecryption=True|False,
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type Path: string
+  :param Path: **[REQUIRED]** 
+
+    The hierarchy for the parameter. Hierarchies start with a forward slash (/). The hierarchy is the parameter name except the last part of the parameter. For the API call to succeed, the last part of the parameter name can't be in the path. A parameter name hierarchy can have a maximum of 15 levels. Here is an example of a hierarchy: ``/Finance/Prod/IAD/WinServ2016/license33``
+
+    
+
+  
+  :type Recursive: boolean
+  :param Recursive: 
+
+    Retrieve all parameters within a hierarchy.
+
+     
+
+    .. warning::
+
+       
+
+      If a user has access to a path, then the user can access all levels of that path. For example, if a user has permission to access path ``/a``, then the user can also access ``/a/b``. Even if a user has explicitly been denied access in IAM for parameter ``/a/b``, they can still call the GetParametersByPath API operation recursively for ``/a`` and view ``/a/b``.
+
+      
+
+    
+
+  
+  :type ParameterFilters: list
+  :param ParameterFilters: 
+
+    Filters to limit the request results.
+
+     
+
+    .. note::
+
+      
+
+      The following ``Key`` values are supported for ``GetParametersByPath``: ``Type``, ``KeyId``, and ``Label``.
+
+       
+
+      The following ``Key`` values aren't supported for ``GetParametersByPath``: ``tag``, ``DataType``, ``Name``, ``Path``, and ``Tier``.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      One or more filters. Use a filter to return a more specific list of results.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name of the filter.
+
+         
+
+        The ``ParameterStringFilter`` object is used by the  DescribeParameters and  GetParametersByPath API operations. However, not all of the pattern values listed for ``Key`` can be used with both operations.
+
+         
+
+        For ``DescribeParameters``, all of the listed patterns are valid except ``Label``.
+
+         
+
+        For ``GetParametersByPath``, the following patterns listed for ``Key`` aren't valid: ``tag``, ``DataType``, ``Name``, ``Path``, and ``Tier``.
+
+         
+
+        For examples of Amazon Web Services CLI commands demonstrating valid parameter filter constructions, see `Searching for Systems Manager parameters <https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-search.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+        
+
+      
+      - **Option** *(string) --* 
+
+        For all filters used with  DescribeParameters, valid options include ``Equals`` and ``BeginsWith``. The ``Name`` filter additionally supports the ``Contains`` option. (Exception: For filters using the key ``Path``, valid options include ``Recursive`` and ``OneLevel``.)
+
+         
+
+        For filters used with  GetParametersByPath, valid options include ``Equals`` and ``BeginsWith``. (Exception: For filters using ``Label`` as the Key name, the only valid option is ``Equals``.)
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The value you want to search for.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type WithDecryption: boolean
+  :param WithDecryption: 
+
+    Retrieve all parameters in a hierarchy with their value decrypted.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this call. The call also returns a token that you can specify in a subsequent call to get the next set of results.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    A token to start the list. Use this token to get the next set of results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Parameters': [
+              {
+                  'Name': 'string',
+                  'Type': 'String'|'StringList'|'SecureString',
+                  'Value': 'string',
+                  'Version': 123,
+                  'Selector': 'string',
+                  'SourceResult': 'string',
+                  'LastModifiedDate': datetime(2015, 1, 1),
+                  'ARN': 'string',
+                  'DataType': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Parameters** *(list) --* 
+
+        A list of parameters found in the specified hierarchy.
+
+        
+        
+
+        - *(dict) --* 
+
+          An Amazon Web Services Systems Manager parameter in Parameter Store.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The name of the parameter.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The type of parameter. Valid values include the following: ``String``, ``StringList``, and ``SecureString``.
+
+             
+
+            .. note::
+
+              
+
+              If type is ``StringList``, the system returns a comma-separated string with no spaces between commas in the ``Value`` field.
+
+              
+
+            
+          
+
+          - **Value** *(string) --* 
+
+            The parameter value.
+
+             
+
+            .. note::
+
+              
+
+              If type is ``StringList``, the system returns a comma-separated string with no spaces between commas in the ``Value`` field.
+
+              
+
+            
+          
+
+          - **Version** *(integer) --* 
+
+            The parameter version.
+
+            
+          
+
+          - **Selector** *(string) --* 
+
+            Either the version number or the label used to retrieve the parameter value. Specify selectors by using one of the following formats:
+
+             
+
+            parameter_name:version
+
+             
+
+            parameter_name:label
+
+            
+          
+
+          - **SourceResult** *(string) --* 
+
+            Applies to parameters that reference information in other Amazon Web Services services. ``SourceResult`` is the raw result or response from the source.
+
+            
+          
+
+          - **LastModifiedDate** *(datetime) --* 
+
+            Date the parameter was last changed or updated and the parameter version was created.
+
+            
+          
+
+          - **ARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the parameter.
+
+            
+          
+
+          - **DataType** *(string) --* 
+
+            The data type of the parameter, such as ``text`` or ``aws:ec2:image``. The default is ``text``.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token for the next set of items to return. Use this token to get the next set of results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilterKey`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilterOption`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilterValue`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidKeyId`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidNextToken`
+
+  

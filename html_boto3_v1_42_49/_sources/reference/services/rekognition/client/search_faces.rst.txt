@@ -1,0 +1,336 @@
+:doc:`Rekognition <../../rekognition>` / Client / search_faces
+
+************
+search_faces
+************
+
+
+
+.. py:method:: Rekognition.Client.search_faces(**kwargs)
+
+  
+
+  For a given input face ID, searches for matching faces in the collection the face belongs to. You get a face ID when you add a face to the collection using the  IndexFaces operation. The operation compares the features of the input face with faces in the specified collection.
+
+   
+
+  .. note::
+
+    
+
+    You can also search faces without indexing faces by using the ``SearchFacesByImage`` operation.
+
+    
+
+   
+
+  The operation response returns an array of faces that match, ordered by similarity score with the highest similarity first. More specifically, it is an array of metadata for each face match that is found. Along with the metadata, the response also includes a ``confidence`` value for each face match, indicating the confidence that the specific face matches the input face.
+
+   
+
+  For an example, see Searching for a face using its face ID in the Amazon Rekognition Developer Guide.
+
+   
+
+  This operation requires permissions to perform the ``rekognition:SearchFaces`` action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rekognition-2016-06-27/SearchFaces>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.search_faces(
+        CollectionId='string',
+        FaceId='string',
+        MaxFaces=123,
+        FaceMatchThreshold=...
+    )
+    
+  :type CollectionId: string
+  :param CollectionId: **[REQUIRED]** 
+
+    ID of the collection the face belongs to.
+
+    
+
+  
+  :type FaceId: string
+  :param FaceId: **[REQUIRED]** 
+
+    ID of a face to find matches for in the collection.
+
+    
+
+  
+  :type MaxFaces: integer
+  :param MaxFaces: 
+
+    Maximum number of faces to return. The operation returns the maximum number of faces with the highest confidence in the match.
+
+    
+
+  
+  :type FaceMatchThreshold: float
+  :param FaceMatchThreshold: 
+
+    Optional value specifying the minimum confidence in the face match to return. For example, don't return any matches where confidence in matches is less than 70%. The default value is 80%.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'SearchedFaceId': 'string',
+          'FaceMatches': [
+              {
+                  'Similarity': ...,
+                  'Face': {
+                      'FaceId': 'string',
+                      'BoundingBox': {
+                          'Width': ...,
+                          'Height': ...,
+                          'Left': ...,
+                          'Top': ...
+                      },
+                      'ImageId': 'string',
+                      'ExternalImageId': 'string',
+                      'Confidence': ...,
+                      'IndexFacesModelVersion': 'string',
+                      'UserId': 'string'
+                  }
+              },
+          ],
+          'FaceModelVersion': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **SearchedFaceId** *(string) --* 
+
+        ID of the face that was searched for matches in a collection.
+
+        
+      
+
+      - **FaceMatches** *(list) --* 
+
+        An array of faces that matched the input face, along with the confidence in the match.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides face metadata. In addition, it also provides the confidence in the match of this face with the input face.
+
+          
+          
+
+          - **Similarity** *(float) --* 
+
+            Confidence in the match of this face with the input face.
+
+            
+          
+
+          - **Face** *(dict) --* 
+
+            Describes the face properties such as the bounding box, face ID, image ID of the source image, and external image ID that you assigned.
+
+            
+            
+
+            - **FaceId** *(string) --* 
+
+              Unique identifier that Amazon Rekognition assigns to the face.
+
+              
+            
+
+            - **BoundingBox** *(dict) --* 
+
+              Bounding box of the face.
+
+              
+              
+
+              - **Width** *(float) --* 
+
+                Width of the bounding box as a ratio of the overall image width.
+
+                
+              
+
+              - **Height** *(float) --* 
+
+                Height of the bounding box as a ratio of the overall image height.
+
+                
+              
+
+              - **Left** *(float) --* 
+
+                Left coordinate of the bounding box as a ratio of overall image width.
+
+                
+              
+
+              - **Top** *(float) --* 
+
+                Top coordinate of the bounding box as a ratio of overall image height.
+
+                
+          
+            
+
+            - **ImageId** *(string) --* 
+
+              Unique identifier that Amazon Rekognition assigns to the input image.
+
+              
+            
+
+            - **ExternalImageId** *(string) --* 
+
+              Identifier that you assign to all the faces in the input image.
+
+              
+            
+
+            - **Confidence** *(float) --* 
+
+              Confidence level that the bounding box contains a face (and not a different object such as a tree).
+
+              
+            
+
+            - **IndexFacesModelVersion** *(string) --* 
+
+              The version of the face detect and storage model that was used when indexing the face vector.
+
+              
+            
+
+            - **UserId** *(string) --* 
+
+              Unique identifier assigned to the user.
+
+              
+        
+      
+    
+      
+
+      - **FaceModelVersion** *(string) --* 
+
+        Version number of the face detection model associated with the input collection ( ``CollectionId``).
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Rekognition.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ProvisionedThroughputExceededException`
+
+  
+  *   :py:class:`Rekognition.Client.exceptions.ResourceNotFoundException`
+
+  
+
+  **Examples**
+
+  This operation searches for matching faces in the collection the supplied face belongs to.
+  ::
+
+    response = client.search_faces(
+        CollectionId='myphotos',
+        FaceId='70008e50-75e4-55d0-8e80-363fb73b3a14',
+        FaceMatchThreshold=90,
+        MaxFaces=10,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'FaceMatches': [
+            {
+                'Face': {
+                    'BoundingBox': {
+                        'Height': 0.3259260058403015,
+                        'Left': 0.5144439935684204,
+                        'Top': 0.15111100673675537,
+                        'Width': 0.24444399774074554,
+                    },
+                    'Confidence': 99.99949645996094,
+                    'FaceId': '8be04dba-4e58-520d-850e-9eae4af70eb2',
+                    'ImageId': '465f4e93-763e-51d0-b030-b9667a2d94b1',
+                },
+                'Similarity': 99.97222137451172,
+            },
+            {
+                'Face': {
+                    'BoundingBox': {
+                        'Height': 0.16555599868297577,
+                        'Left': 0.30963000655174255,
+                        'Top': 0.7066670060157776,
+                        'Width': 0.22074100375175476,
+                    },
+                    'Confidence': 100,
+                    'FaceId': '29a75abe-397b-5101-ba4f-706783b2246c',
+                    'ImageId': '147fdf82-7a71-52cf-819b-e786c7b9746e',
+                },
+                'Similarity': 97.04154968261719,
+            },
+            {
+                'Face': {
+                    'BoundingBox': {
+                        'Height': 0.18888899683952332,
+                        'Left': 0.3783380091190338,
+                        'Top': 0.2355560064315796,
+                        'Width': 0.25222599506378174,
+                    },
+                    'Confidence': 99.9999008178711,
+                    'FaceId': '908544ad-edc3-59df-8faf-6a87cc256cf5',
+                    'ImageId': '3c731605-d772-541a-a5e7-0375dbc68a07',
+                },
+                'Similarity': 95.94520568847656,
+            },
+        ],
+        'SearchedFaceId': '70008e50-75e4-55d0-8e80-363fb73b3a14',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,221 @@
+:doc:`QuickSight <../../quicksight>` / Client / get_identity_context
+
+********************
+get_identity_context
+********************
+
+
+
+.. py:method:: QuickSight.Client.get_identity_context(**kwargs)
+
+  
+
+  Retrieves the identity context for a Quick Sight user in a specified namespace, allowing you to obtain identity tokens that can be used with identity-enhanced IAM role sessions to call identity-aware APIs.
+
+   
+
+  Currently, you can call the following APIs with identity-enhanced Credentials
+
+   
+
+  
+  * `StartDashboardSnapshotJob <https://docs.aws.amazon.com/quicksight/latest/APIReference/API_StartDashboardSnapshotJob.html>`__
+   
+  * `DescribeDashboardSnapshotJob <https://docs.aws.amazon.com/quicksight/latest/APIReference/API_DescribeDashboardSnapshotJob.html>`__
+   
+  * `DescribeDashboardSnapshotJobResult <https://docs.aws.amazon.com/quicksight/latest/APIReference/API_DescribeDashboardSnapshotJobResult.html>`__
+  
+
+   
+
+  **Supported Authentication Methods**
+
+   
+
+  This API supports Quick Sight native users, IAM federated users, and Active Directory users. For Quick Sight users authenticated by Amazon Web Services Identity Center, see `Identity Center documentation on identity-enhanced IAM role sessions <https://docs.aws.amazon.com/singlesignon/latest/userguide/trustedidentitypropagation-identity-enhanced-iam-role-sessions.html>`__.
+
+   
+
+  **Supported Regions**
+
+   
+
+  The GetIdentityContext API works only in regions that support at least one of these identity types:
+
+   
+
+  
+  * Amazon Quick Sight native identity
+   
+  * IAM federated identity
+   
+  * Active Directory
+  
+
+   
+
+  To use this API successfully, call it in the same region where your user's identity resides. For example, if your user's identity is in us-east-1, make the API call in us-east-1. For more information about managing identities in Amazon Quick Sight, see `Identity and access management in Amazon Quick Sight <https://docs.aws.amazon.com/quicksight/latest/userguide/identity.html>`__ in the Amazon Quick Sight User Guide.
+
+   
+
+  **Getting Identity-Enhanced Credentials**
+
+   
+
+  To obtain identity-enhanced credentials, follow these steps:
+
+   
+
+  
+  * Call the GetIdentityContext API to retrieve an identity token for the specified user.
+   
+  * Use the identity token with the `STS AssumeRole API <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`__ to obtain identity-enhanced IAM role session credentials.
+  
+
+   
+
+  **Usage with STS AssumeRole**
+
+   
+
+  The identity token returned by this API should be used with the STS AssumeRole API to obtain credentials for an identity-enhanced IAM role session. When calling AssumeRole, include the identity token in the ``ProvidedContexts`` parameter with ``ProviderArn`` set to ``arn:aws:iam::aws:contextProvider/QuickSight`` and ``ContextAssertion`` set to the identity token received from this API.
+
+   
+
+  The assumed role must allow the ``sts:SetContext`` action in addition to ``sts:AssumeRole`` in its trust relationship policy. The trust policy should include both actions for the principal that will be assuming the role.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/quicksight-2018-04-01/GetIdentityContext>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_identity_context(
+        AwsAccountId='string',
+        UserIdentifier={
+            'UserName': 'string',
+            'Email': 'string',
+            'UserArn': 'string'
+        },
+        Namespace='string',
+        SessionExpiresAt=datetime(2015, 1, 1)
+    )
+    
+  :type AwsAccountId: string
+  :param AwsAccountId: **[REQUIRED]** 
+
+    The ID for the Amazon Web Services account that the user whose identity context you want to retrieve is in. Currently, you use the ID for the Amazon Web Services account that contains your Quick Sight account.
+
+    
+
+  
+  :type UserIdentifier: dict
+  :param UserIdentifier: **[REQUIRED]** 
+
+    The identifier for the user whose identity context you want to retrieve.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``UserName``, ``Email``, ``UserArn``. 
+
+  
+    - **UserName** *(string) --* 
+
+      The name of the user that you want to get identity context for.
+
+      
+
+    
+    - **Email** *(string) --* 
+
+      The email address of the user that you want to get identity context for.
+
+      
+
+    
+    - **UserArn** *(string) --* 
+
+      The Amazon Resource Name (ARN) of the user that you want to get identity context for.
+
+      
+
+    
+  
+  :type Namespace: string
+  :param Namespace: 
+
+    The namespace of the user that you want to get identity context for. This parameter is required when the UserIdentifier is specified using Email or UserName.
+
+    
+
+  
+  :type SessionExpiresAt: datetime
+  :param SessionExpiresAt: 
+
+    The timestamp at which the session will expire.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Status': 123,
+          'RequestId': 'string',
+          'Context': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Status** *(integer) --* 
+
+        The HTTP status of the request.
+
+        
+      
+
+      - **RequestId** *(string) --* 
+
+        The Amazon Web Services request ID for this operation.
+
+        
+      
+
+      - **Context** *(string) --* 
+
+        The identity context information for the user. This is an identity token that should be used as the ContextAssertion parameter in the `STS AssumeRole API <https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html>`__ call to obtain identity enhanced Amazon Web Services credentials.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`QuickSight.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.PreconditionNotMetException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`QuickSight.Client.exceptions.AccessDeniedException`
+
+  

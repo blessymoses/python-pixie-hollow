@@ -1,0 +1,725 @@
+:doc:`AppStream <../../appstream>` / Client / create_imported_image
+
+*********************
+create_imported_image
+*********************
+
+
+
+.. py:method:: AppStream.Client.create_imported_image(**kwargs)
+
+  
+
+  Creates a custom WorkSpaces Applications image by importing an EC2 AMI. This allows you to use your own customized AMI to create WorkSpaces Applications images that support additional instance types beyond the standard stream.* instances.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/appstream-2016-12-01/CreateImportedImage>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_imported_image(
+        Name='string',
+        SourceAmiId='string',
+        IamRoleArn='string',
+        Description='string',
+        DisplayName='string',
+        Tags={
+            'string': 'string'
+        },
+        RuntimeValidationConfig={
+            'IntendedInstanceType': 'string'
+        },
+        AgentSoftwareVersion='CURRENT_LATEST'|'ALWAYS_LATEST',
+        AppCatalogConfig=[
+            {
+                'Name': 'string',
+                'DisplayName': 'string',
+                'AbsoluteAppPath': 'string',
+                'AbsoluteIconPath': 'string',
+                'AbsoluteManifestPath': 'string',
+                'WorkingDirectory': 'string',
+                'LaunchParameters': 'string'
+            },
+        ],
+        DryRun=True|False
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A unique name for the imported image. The name must be between 1 and 100 characters and can contain letters, numbers, underscores, periods, and hyphens.
+
+    
+
+  
+  :type SourceAmiId: string
+  :param SourceAmiId: **[REQUIRED]** 
+
+    The ID of the EC2 AMI to import. The AMI must meet specific requirements including Windows Server 2022 Full Base, UEFI boot mode, TPM 2.0 support, and proper drivers.
+
+    
+
+  
+  :type IamRoleArn: string
+  :param IamRoleArn: **[REQUIRED]** 
+
+    The ARN of the IAM role that allows WorkSpaces Applications to access your AMI. The role must have permissions to modify image attributes and describe images, with a trust relationship allowing appstream.amazonaws.com to assume the role.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    An optional description for the imported image. The description must match approved regex patterns and can be up to 256 characters.
+
+    
+
+  
+  :type DisplayName: string
+  :param DisplayName: 
+
+    An optional display name for the imported image. The display name must match approved regex patterns and can be up to 100 characters.
+
+    
+
+  
+  :type Tags: dict
+  :param Tags: 
+
+    The tags to apply to the imported image. Tags help you organize and manage your WorkSpaces Applications resources.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type RuntimeValidationConfig: dict
+  :param RuntimeValidationConfig: 
+
+    Configuration for runtime validation of the imported image. When specified, WorkSpaces Applications provisions an instance to test streaming functionality, which helps ensure the image is suitable for use.
+
+    
+
+  
+    - **IntendedInstanceType** *(string) --* 
+
+      The instance type to use for runtime validation testing. It's recommended to use the same instance type you plan to use for your fleet to ensure accurate validation results.
+
+      
+
+    
+  
+  :type AgentSoftwareVersion: string
+  :param AgentSoftwareVersion: 
+
+    The version of the WorkSpaces Applications agent to use for the imported image. Choose CURRENT_LATEST to use the agent version available at the time of import, or ALWAYS_LATEST to automatically update to the latest agent version when new versions are released.
+
+    
+
+  
+  :type AppCatalogConfig: list
+  :param AppCatalogConfig: 
+
+    Configuration for the application catalog of the imported image. This allows you to specify applications available for streaming, including their paths, icons, and launch parameters. This field contains sensitive data.
+
+    
+
+  
+    - *(dict) --* 
+
+      Configuration for an application in the imported image's application catalog. This structure defines how applications appear and launch for users.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The name of the application. This is a required field that must be unique within the application catalog and between 1-100 characters, matching the pattern ^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}$.
+
+        
+
+      
+      - **DisplayName** *(string) --* 
+
+        The display name shown to users for this application. This field is optional and can be 0-100 characters, matching the pattern ^[a-zA-Z0-9][a-zA-Z0-9_. -]{0,99}$.
+
+        
+
+      
+      - **AbsoluteAppPath** *(string) --* **[REQUIRED]** 
+
+        The absolute path to the executable file that launches the application. This is a required field that can be 1-32767 characters to support Windows extended file paths. Use escaped file path strings like "C:\\\\Windows\\\\System32\\\\notepad.exe".
+
+        
+
+      
+      - **AbsoluteIconPath** *(string) --* 
+
+        The absolute path to the icon file for the application. This field is optional and can be 1-32767 characters. If not provided, the icon is derived from the executable. Use PNG images with proper transparency for the best user experience.
+
+        
+
+      
+      - **AbsoluteManifestPath** *(string) --* 
+
+        The absolute path to the prewarm manifest file for this application. This field is optional and only applicable when using application-specific manifests. The path can be 1-32767 characters and should point to a text file containing file paths to prewarm.
+
+        
+
+      
+      - **WorkingDirectory** *(string) --* 
+
+        The working directory to use when launching the application. This field is optional and can be 0-32767 characters. Use escaped file path strings like "C:\\\\Path\\\\To\\\\Working\\\\Directory".
+
+        
+
+      
+      - **LaunchParameters** *(string) --* 
+
+        The launch parameters to pass to the application executable. This field is optional and can be 0-1024 characters. Use escaped strings with the full list of required parameters, such as PowerShell script paths or command-line arguments.
+
+        
+
+      
+    
+
+  :type DryRun: boolean
+  :param DryRun: 
+
+    When set to true, performs validation checks without actually creating the imported image. Use this to verify your configuration before executing the actual import operation.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Image': {
+              'Name': 'string',
+              'Arn': 'string',
+              'BaseImageArn': 'string',
+              'DisplayName': 'string',
+              'State': 'PENDING'|'AVAILABLE'|'FAILED'|'COPYING'|'DELETING'|'CREATING'|'IMPORTING'|'VALIDATING',
+              'Visibility': 'PUBLIC'|'PRIVATE'|'SHARED',
+              'ImageBuilderSupported': True|False,
+              'ImageBuilderName': 'string',
+              'Platform': 'WINDOWS'|'WINDOWS_SERVER_2016'|'WINDOWS_SERVER_2019'|'WINDOWS_SERVER_2022'|'WINDOWS_SERVER_2025'|'AMAZON_LINUX2'|'RHEL8'|'ROCKY_LINUX8'|'UBUNTU_PRO_2404',
+              'Description': 'string',
+              'StateChangeReason': {
+                  'Code': 'INTERNAL_ERROR'|'IMAGE_BUILDER_NOT_AVAILABLE'|'IMAGE_COPY_FAILURE'|'IMAGE_UPDATE_FAILURE'|'IMAGE_IMPORT_FAILURE',
+                  'Message': 'string'
+              },
+              'Applications': [
+                  {
+                      'Name': 'string',
+                      'DisplayName': 'string',
+                      'IconURL': 'string',
+                      'LaunchPath': 'string',
+                      'LaunchParameters': 'string',
+                      'Enabled': True|False,
+                      'Metadata': {
+                          'string': 'string'
+                      },
+                      'WorkingDirectory': 'string',
+                      'Description': 'string',
+                      'Arn': 'string',
+                      'AppBlockArn': 'string',
+                      'IconS3Location': {
+                          'S3Bucket': 'string',
+                          'S3Key': 'string'
+                      },
+                      'Platforms': [
+                          'WINDOWS'|'WINDOWS_SERVER_2016'|'WINDOWS_SERVER_2019'|'WINDOWS_SERVER_2022'|'WINDOWS_SERVER_2025'|'AMAZON_LINUX2'|'RHEL8'|'ROCKY_LINUX8'|'UBUNTU_PRO_2404',
+                      ],
+                      'InstanceFamilies': [
+                          'string',
+                      ],
+                      'CreatedTime': datetime(2015, 1, 1)
+                  },
+              ],
+              'CreatedTime': datetime(2015, 1, 1),
+              'PublicBaseImageReleasedDate': datetime(2015, 1, 1),
+              'AppstreamAgentVersion': 'string',
+              'ImagePermissions': {
+                  'allowFleet': True|False,
+                  'allowImageBuilder': True|False
+              },
+              'ImageErrors': [
+                  {
+                      'ErrorCode': 'IAM_SERVICE_ROLE_MISSING_ENI_DESCRIBE_ACTION'|'IAM_SERVICE_ROLE_MISSING_ENI_CREATE_ACTION'|'IAM_SERVICE_ROLE_MISSING_ENI_DELETE_ACTION'|'NETWORK_INTERFACE_LIMIT_EXCEEDED'|'INTERNAL_SERVICE_ERROR'|'IAM_SERVICE_ROLE_IS_MISSING'|'MACHINE_ROLE_IS_MISSING'|'STS_DISABLED_IN_REGION'|'SUBNET_HAS_INSUFFICIENT_IP_ADDRESSES'|'IAM_SERVICE_ROLE_MISSING_DESCRIBE_SUBNET_ACTION'|'SUBNET_NOT_FOUND'|'IMAGE_NOT_FOUND'|'INVALID_SUBNET_CONFIGURATION'|'SECURITY_GROUPS_NOT_FOUND'|'IGW_NOT_ATTACHED'|'IAM_SERVICE_ROLE_MISSING_DESCRIBE_SECURITY_GROUPS_ACTION'|'FLEET_STOPPED'|'FLEET_INSTANCE_PROVISIONING_FAILURE'|'DOMAIN_JOIN_ERROR_FILE_NOT_FOUND'|'DOMAIN_JOIN_ERROR_ACCESS_DENIED'|'DOMAIN_JOIN_ERROR_LOGON_FAILURE'|'DOMAIN_JOIN_ERROR_INVALID_PARAMETER'|'DOMAIN_JOIN_ERROR_MORE_DATA'|'DOMAIN_JOIN_ERROR_NO_SUCH_DOMAIN'|'DOMAIN_JOIN_ERROR_NOT_SUPPORTED'|'DOMAIN_JOIN_NERR_INVALID_WORKGROUP_NAME'|'DOMAIN_JOIN_NERR_WORKSTATION_NOT_STARTED'|'DOMAIN_JOIN_ERROR_DS_MACHINE_ACCOUNT_QUOTA_EXCEEDED'|'DOMAIN_JOIN_NERR_PASSWORD_EXPIRED'|'DOMAIN_JOIN_INTERNAL_SERVICE_ERROR'|'VALIDATION_ERROR',
+                      'ErrorMessage': 'string',
+                      'ErrorTimestamp': datetime(2015, 1, 1)
+                  },
+              ],
+              'LatestAppstreamAgentVersion': 'TRUE'|'FALSE',
+              'SupportedInstanceFamilies': [
+                  'string',
+              ],
+              'DynamicAppProvidersEnabled': 'ENABLED'|'DISABLED',
+              'ImageSharedWithOthers': 'TRUE'|'FALSE',
+              'ManagedSoftwareIncluded': True|False,
+              'ImageType': 'CUSTOM'|'NATIVE'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Image** *(dict) --* 
+
+        Describes an image.
+
+        
+        
+
+        - **Name** *(string) --* 
+
+          The name of the image.
+
+          
+        
+
+        - **Arn** *(string) --* 
+
+          The ARN of the image.
+
+          
+        
+
+        - **BaseImageArn** *(string) --* 
+
+          The ARN of the image from which this image was created.
+
+          
+        
+
+        - **DisplayName** *(string) --* 
+
+          The image name to display.
+
+          
+        
+
+        - **State** *(string) --* 
+
+          The image starts in the ``PENDING`` state. If image creation succeeds, the state is ``AVAILABLE``. If image creation fails, the state is ``FAILED``.
+
+          
+        
+
+        - **Visibility** *(string) --* 
+
+          Indicates whether the image is public or private.
+
+          
+        
+
+        - **ImageBuilderSupported** *(boolean) --* 
+
+          Indicates whether an image builder can be launched from this image.
+
+          
+        
+
+        - **ImageBuilderName** *(string) --* 
+
+          The name of the image builder that was used to create the private image. If the image is shared, copied, or updated by using Managed Image Updates, this value is null.
+
+          
+        
+
+        - **Platform** *(string) --* 
+
+          The operating system platform of the image.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          The description to display.
+
+          
+        
+
+        - **StateChangeReason** *(dict) --* 
+
+          The reason why the last state change occurred.
+
+          
+          
+
+          - **Code** *(string) --* 
+
+            The state change reason code.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            The state change reason message.
+
+            
+      
+        
+
+        - **Applications** *(list) --* 
+
+          The applications associated with the image.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes an application in the application catalog.
+
+            
+            
+
+            - **Name** *(string) --* 
+
+              The name of the application.
+
+              
+            
+
+            - **DisplayName** *(string) --* 
+
+              The application name to display.
+
+              
+            
+
+            - **IconURL** *(string) --* 
+
+              The URL for the application icon. This URL might be time-limited.
+
+              
+            
+
+            - **LaunchPath** *(string) --* 
+
+              The path to the application executable in the instance.
+
+              
+            
+
+            - **LaunchParameters** *(string) --* 
+
+              The arguments that are passed to the application at launch.
+
+              
+            
+
+            - **Enabled** *(boolean) --* 
+
+              If there is a problem, the application can be disabled after image creation.
+
+              
+            
+
+            - **Metadata** *(dict) --* 
+
+              Additional attributes that describe the application.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+            
+
+            - **WorkingDirectory** *(string) --* 
+
+              The working directory for the application.
+
+              
+            
+
+            - **Description** *(string) --* 
+
+              The description of the application.
+
+              
+            
+
+            - **Arn** *(string) --* 
+
+              The ARN of the application.
+
+              
+            
+
+            - **AppBlockArn** *(string) --* 
+
+              The app block ARN of the application.
+
+              
+            
+
+            - **IconS3Location** *(dict) --* 
+
+              The S3 location of the application icon.
+
+              
+              
+
+              - **S3Bucket** *(string) --* 
+
+                The S3 bucket of the S3 object.
+
+                
+              
+
+              - **S3Key** *(string) --* 
+
+                The S3 key of the S3 object.
+
+                 
+
+                This is required when used for the following:
+
+                 
+
+                
+                * IconS3Location (Actions: CreateApplication and UpdateApplication)
+                 
+                * SessionScriptS3Location (Actions: CreateFleet and UpdateFleet)
+                 
+                * ScriptDetails (Actions: CreateAppBlock)
+                 
+                * SourceS3Location when creating an app block with ``CUSTOM`` PackagingType (Actions: CreateAppBlock)
+                 
+                * SourceS3Location when creating an app block with ``APPSTREAM2`` PackagingType, and using an existing application package (VHD file). In this case, ``S3Key`` refers to the VHD file. If a new application package is required, then ``S3Key`` is not required. (Actions: CreateAppBlock)
+                
+
+                
+          
+            
+
+            - **Platforms** *(list) --* 
+
+              The platforms on which the application can run.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **InstanceFamilies** *(list) --* 
+
+              The instance families for the application.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **CreatedTime** *(datetime) --* 
+
+              The time at which the application was created within the app block.
+
+              
+        
+      
+        
+
+        - **CreatedTime** *(datetime) --* 
+
+          The time the image was created.
+
+          
+        
+
+        - **PublicBaseImageReleasedDate** *(datetime) --* 
+
+          The release date of the public base image. For private images, this date is the release date of the base image from which the image was created.
+
+          
+        
+
+        - **AppstreamAgentVersion** *(string) --* 
+
+          The version of the WorkSpaces Applications agent to use for instances that are launched from this image.
+
+          
+        
+
+        - **ImagePermissions** *(dict) --* 
+
+          The permissions to provide to the destination AWS account for the specified image.
+
+          
+          
+
+          - **allowFleet** *(boolean) --* 
+
+            Indicates whether the image can be used for a fleet.
+
+            
+          
+
+          - **allowImageBuilder** *(boolean) --* 
+
+            Indicates whether the image can be used for an image builder.
+
+            
+      
+        
+
+        - **ImageErrors** *(list) --* 
+
+          Describes the errors that are returned when a new image can't be created.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes a resource error.
+
+            
+            
+
+            - **ErrorCode** *(string) --* 
+
+              The error code.
+
+              
+            
+
+            - **ErrorMessage** *(string) --* 
+
+              The error message.
+
+              
+            
+
+            - **ErrorTimestamp** *(datetime) --* 
+
+              The time the error occurred.
+
+              
+        
+      
+        
+
+        - **LatestAppstreamAgentVersion** *(string) --* 
+
+          Indicates whether the image is using the latest WorkSpaces Applications agent version or not.
+
+          
+        
+
+        - **SupportedInstanceFamilies** *(list) --* 
+
+          The supported instances families that determine which image a customer can use when the customer launches a fleet or image builder. The following instances families are supported:
+
+           
+
+          
+          * General Purpose
+           
+          * Compute Optimized
+           
+          * Memory Optimized
+           
+          * Graphics G4
+           
+          * Graphics G5
+           
+          * Graphics G6
+          
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **DynamicAppProvidersEnabled** *(string) --* 
+
+          Indicates whether dynamic app providers are enabled within an WorkSpaces Applications image or not.
+
+          
+        
+
+        - **ImageSharedWithOthers** *(string) --* 
+
+          Indicates whether the image is shared with another account ID.
+
+          
+        
+
+        - **ManagedSoftwareIncluded** *(boolean) --* 
+
+          Indicates whether the image includes license-included applications.
+
+          
+        
+
+        - **ImageType** *(string) --* 
+
+          The type of the image. Images created through AMI import have type "custom", while WorkSpaces Applications provided images have type "native". Custom images support additional instance types including GeneralPurpose, MemoryOptimized, ComputeOptimized, and Accelerated instance families.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AppStream.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`AppStream.Client.exceptions.InvalidAccountStatusException`
+
+  
+  *   :py:class:`AppStream.Client.exceptions.InvalidRoleException`
+
+  
+  *   :py:class:`AppStream.Client.exceptions.OperationNotPermittedException`
+
+  
+  *   :py:class:`AppStream.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`AppStream.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AppStream.Client.exceptions.IncompatibleImageException`
+
+  
+  *   :py:class:`AppStream.Client.exceptions.DryRunOperationException`
+
+  

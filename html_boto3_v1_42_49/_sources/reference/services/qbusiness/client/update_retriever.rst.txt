@@ -1,0 +1,338 @@
+:doc:`QBusiness <../../qbusiness>` / Client / update_retriever
+
+****************
+update_retriever
+****************
+
+
+
+.. py:method:: QBusiness.Client.update_retriever(**kwargs)
+
+  
+
+  Updates the retriever used for your Amazon Q Business application.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/UpdateRetriever>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_retriever(
+        applicationId='string',
+        retrieverId='string',
+        configuration={
+            'nativeIndexConfiguration': {
+                'indexId': 'string',
+                'version': 123,
+                'boostingOverride': {
+                    'string': {
+                        'numberConfiguration': {
+                            'boostingLevel': 'NONE'|'LOW'|'MEDIUM'|'HIGH'|'VERY_HIGH'|'ONE'|'TWO',
+                            'boostingType': 'PRIORITIZE_LARGER_VALUES'|'PRIORITIZE_SMALLER_VALUES'
+                        },
+                        'stringConfiguration': {
+                            'boostingLevel': 'NONE'|'LOW'|'MEDIUM'|'HIGH'|'VERY_HIGH'|'ONE'|'TWO',
+                            'attributeValueBoosting': {
+                                'string': 'LOW'|'MEDIUM'|'HIGH'|'VERY_HIGH'|'ONE'|'TWO'|'THREE'|'FOUR'|'FIVE'
+                            }
+                        },
+                        'dateConfiguration': {
+                            'boostingLevel': 'NONE'|'LOW'|'MEDIUM'|'HIGH'|'VERY_HIGH'|'ONE'|'TWO',
+                            'boostingDurationInSeconds': 123
+                        },
+                        'stringListConfiguration': {
+                            'boostingLevel': 'NONE'|'LOW'|'MEDIUM'|'HIGH'|'VERY_HIGH'|'ONE'|'TWO'
+                        }
+                    }
+                }
+            },
+            'kendraIndexConfiguration': {
+                'indexId': 'string'
+            }
+        },
+        displayName='string',
+        roleArn='string'
+    )
+    
+  :type applicationId: string
+  :param applicationId: **[REQUIRED]** 
+
+    The identifier of your Amazon Q Business application.
+
+    
+
+  
+  :type retrieverId: string
+  :param retrieverId: **[REQUIRED]** 
+
+    The identifier of your retriever.
+
+    
+
+  
+  :type configuration: dict
+  :param configuration: 
+
+    Provides information on how the retriever used for your Amazon Q Business application is configured.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``nativeIndexConfiguration``, ``kendraIndexConfiguration``. 
+
+  
+    - **nativeIndexConfiguration** *(dict) --* 
+
+      Provides information on how a Amazon Q Business index used as a retriever for your Amazon Q Business application is configured.
+
+      
+
+    
+      - **indexId** *(string) --* **[REQUIRED]** 
+
+        The identifier for the Amazon Q Business index.
+
+        
+
+      
+      - **version** *(integer) --* 
+
+        A read-only field that specifies the version of the ``NativeIndexConfiguration``.
+
+         
+
+        Amazon Q Business introduces enhanced document retrieval capabilities in version 2 of ``NativeIndexConfiguration``, focusing on streamlined metadata boosting that prioritizes recency and source relevance to deliver more accurate responses to your queries. Version 2 has the following differences from version 1:
+
+         
+
+        
+        * Version 2 supports a single Date field (created_at OR last_updated_at) for recency boosting
+         
+        * Version 2 supports a single String field with an ordered list of up to 5 values
+         
+        * Version 2 introduces number-based boost levels (ONE, TWO) alongside the text-based levels
+         
+        * Version 2 allows specifying prioritization between Date and String fields
+         
+        * Version 2 maintains backward compatibility with existing configurations
+        
+
+        
+
+      
+      - **boostingOverride** *(dict) --* 
+
+        Overrides the default boosts applied by Amazon Q Business to supported document attribute data types.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(dict) --* 
+
+            Provides information on boosting supported Amazon Q Business document attribute types. When an end user chat query matches document attributes that have been boosted, Amazon Q Business prioritizes generating responses from content that matches the boosted document attributes.
+
+             
+
+            In version 2, boosting uses numeric values (ONE, TWO) to indicate priority tiers that establish clear hierarchical relationships between boosted attributes. This allows for more precise control over how different attributes influence search results.
+
+             
+
+            .. note::
+
+              
+
+              For ``STRING`` and ``STRING_LIST`` type document attributes to be used for boosting on the console and the API, they must be enabled for search using the `DocumentAttributeConfiguration <https://docs.aws.amazon.com/amazonq/latest/api-reference/API_DocumentAttributeConfiguration.html>`__ object of the `UpdateIndex <https://docs.aws.amazon.com/amazonq/latest/api-reference/API_UpdateIndex.html>`__ API. If you haven't enabled searching on these attributes, you can't boost attributes of these data types on either the console or the API.
+
+              
+
+             
+
+            For more information on how boosting document attributes work in Amazon Q Business, see `Boosting using document attributes <https://docs.aws.amazon.com/amazonq/latest/business-use-dg/metadata-boosting.html>`__.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``numberConfiguration``, ``stringConfiguration``, ``dateConfiguration``, ``stringListConfiguration``. 
+
+          
+            - **numberConfiguration** *(dict) --* 
+
+              Provides information on boosting ``NUMBER`` type document attributes.
+
+               
+
+              ``NUMBER`` attributes are not supported when using ``NativeIndexConfiguration`` version 2, which focuses on ``DATE`` attributes for recency and ``STRING`` attributes for source prioritization.
+
+              
+
+            
+              - **boostingLevel** *(string) --* **[REQUIRED]** 
+
+                Specifies the priority of boosted document attributes in relation to other boosted attributes. This parameter determines how strongly the attribute influences document ranking in search results. ``NUMBER`` attributes can serve as additional boosting factors when needed, but are not supported when using ``NativeIndexConfiguration`` version 2.
+
+                
+
+              
+              - **boostingType** *(string) --* 
+
+                Specifies whether higher or lower numeric values should be prioritized when boosting. Valid values are ASCENDING (higher numbers are more important) and DESCENDING (lower numbers are more important).
+
+                
+
+              
+            
+            - **stringConfiguration** *(dict) --* 
+
+              Provides information on boosting ``STRING`` type document attributes.
+
+               
+
+              Version 2 assigns priority tiers to ``STRING`` attributes, establishing clear hierarchical relationships with other boosted attributes.
+
+              
+
+            
+              - **boostingLevel** *(string) --* **[REQUIRED]** 
+
+                Specifies the priority tier ranking of boosting applied to document attributes. For version 2, this parameter indicates the relative ranking between boosted fields (ONE being highest priority, TWO being second highest, etc.) and determines the order in which attributes influence document ranking in search results. For version 1, this parameter specifies the boosting intensity. For version 2, boosting intensity (VERY HIGH, HIGH, MEDIUM, LOW, NONE) are not supported. Note that in version 2, you are not allowed to boost on only one field and make this value TWO.
+
+                
+
+              
+              - **attributeValueBoosting** *(dict) --* 
+
+                Specifies specific values of a ``STRING`` type document attribute being boosted. When using ``NativeIndexConfiguration`` version 2, you can specify up to five values in order of priority.
+
+                
+
+              
+                - *(string) --* 
+
+                
+                  - *(string) --* 
+
+                  
+            
+          
+            
+            - **dateConfiguration** *(dict) --* 
+
+              Provides information on boosting ``DATE`` type document attributes.
+
+               
+
+              Version 2 assigns priority tiers to ``DATE`` attributes, establishing clear hierarchical relationships with other boosted attributes.
+
+              
+
+            
+              - **boostingLevel** *(string) --* **[REQUIRED]** 
+
+                Specifies the priority tier ranking of boosting applied to document attributes. For version 2, this parameter indicates the relative ranking between boosted fields (ONE being highest priority, TWO being second highest, etc.) and determines the order in which attributes influence document ranking in search results. For version 1, this parameter specifies the boosting intensity. For version 2, boosting intensity (VERY HIGH, HIGH, MEDIUM, LOW, NONE) are not supported. Note that in version 2, you are not allowed to boost on only one field and make this value TWO.
+
+                
+
+              
+              - **boostingDurationInSeconds** *(integer) --* 
+
+                Specifies the duration, in seconds, of a boost applies to a ``DATE`` type document attribute.
+
+                
+
+              
+            
+            - **stringListConfiguration** *(dict) --* 
+
+              Provides information on boosting ``STRING_LIST`` type document attributes.
+
+               
+
+              ``STRING_LIST`` attributes are not supported when using ``NativeIndexConfiguration`` version 2, which focuses on ``DATE`` attributes for recency and ``STRING`` attributes for source prioritization.
+
+              
+
+            
+              - **boostingLevel** *(string) --* **[REQUIRED]** 
+
+                Specifies the priority of boosted document attributes in relation to other boosted attributes. This parameter determines how strongly the attribute influences document ranking in search results. ``STRING_LIST`` attributes can serve as additional boosting factors when needed, but are not supported when using ``NativeIndexConfiguration`` version 2.
+
+                
+
+              
+            
+          
+    
+  
+    
+    - **kendraIndexConfiguration** *(dict) --* 
+
+      Provides information on how the Amazon Kendra index used as a retriever for your Amazon Q Business application is configured.
+
+      
+
+    
+      - **indexId** *(string) --* **[REQUIRED]** 
+
+        The identifier of the Amazon Kendra index.
+
+        
+
+      
+    
+  
+  :type displayName: string
+  :param displayName: 
+
+    The name of your retriever.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: 
+
+    The Amazon Resource Name (ARN) of an IAM role with permission to access the retriever and required resources.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`QBusiness.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ServiceQuotaExceededException`
+
+  

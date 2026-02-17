@@ -1,0 +1,304 @@
+:doc:`Glue <../../glue>` / Client / create_table_optimizer
+
+**********************
+create_table_optimizer
+**********************
+
+
+
+.. py:method:: Glue.Client.create_table_optimizer(**kwargs)
+
+  
+
+  Creates a new table optimizer for a specific function.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/glue-2017-03-31/CreateTableOptimizer>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_table_optimizer(
+        CatalogId='string',
+        DatabaseName='string',
+        TableName='string',
+        Type='compaction'|'retention'|'orphan_file_deletion',
+        TableOptimizerConfiguration={
+            'roleArn': 'string',
+            'enabled': True|False,
+            'vpcConfiguration': {
+                'glueConnectionName': 'string'
+            },
+            'compactionConfiguration': {
+                'icebergConfiguration': {
+                    'strategy': 'binpack'|'sort'|'z-order',
+                    'minInputFiles': 123,
+                    'deleteFileThreshold': 123
+                }
+            },
+            'retentionConfiguration': {
+                'icebergConfiguration': {
+                    'snapshotRetentionPeriodInDays': 123,
+                    'numberOfSnapshotsToRetain': 123,
+                    'cleanExpiredFiles': True|False,
+                    'runRateInHours': 123
+                }
+            },
+            'orphanFileDeletionConfiguration': {
+                'icebergConfiguration': {
+                    'orphanFileRetentionPeriodInDays': 123,
+                    'location': 'string',
+                    'runRateInHours': 123
+                }
+            }
+        }
+    )
+    
+  :type CatalogId: string
+  :param CatalogId: **[REQUIRED]** 
+
+    The Catalog ID of the table.
+
+    
+
+  
+  :type DatabaseName: string
+  :param DatabaseName: **[REQUIRED]** 
+
+    The name of the database in the catalog in which the table resides.
+
+    
+
+  
+  :type TableName: string
+  :param TableName: **[REQUIRED]** 
+
+    The name of the table.
+
+    
+
+  
+  :type Type: string
+  :param Type: **[REQUIRED]** 
+
+    The type of table optimizer.
+
+    
+
+  
+  :type TableOptimizerConfiguration: dict
+  :param TableOptimizerConfiguration: **[REQUIRED]** 
+
+    A ``TableOptimizerConfiguration`` object representing the configuration of a table optimizer.
+
+    
+
+  
+    - **roleArn** *(string) --* 
+
+      A role passed by the caller which gives the service permission to update the resources associated with the optimizer on the caller's behalf.
+
+      
+
+    
+    - **enabled** *(boolean) --* 
+
+      Whether table optimization is enabled.
+
+      
+
+    
+    - **vpcConfiguration** *(dict) --* 
+
+      A ``TableOptimizerVpcConfiguration`` object representing the VPC configuration for a table optimizer.
+
+       
+
+      This configuration is necessary to perform optimization on tables that are in a customer VPC.
+
+      .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``glueConnectionName``. 
+
+    
+      - **glueConnectionName** *(string) --* 
+
+        The name of the Glue connection used for the VPC for the table optimizer.
+
+        
+
+      
+    
+    - **compactionConfiguration** *(dict) --* 
+
+      The configuration for a compaction optimizer. This configuration defines how data files in your table will be compacted to improve query performance and reduce storage costs.
+
+      
+
+    
+      - **icebergConfiguration** *(dict) --* 
+
+        The configuration for an Iceberg compaction optimizer.
+
+        
+
+      
+        - **strategy** *(string) --* 
+
+          The strategy to use for compaction. Valid values are:
+
+           
+
+          
+          * ``binpack``: Combines small files into larger files, typically targeting sizes over 100MB, while applying any pending deletes. This is the recommended compaction strategy for most use cases.
+           
+          * ``sort``: Organizes data based on specified columns which are sorted hierarchically during compaction, improving query performance for filtered operations. This strategy is recommended when your queries frequently filter on specific columns. To use this strategy, you must first define a sort order in your Iceberg table properties using the ``sort_order`` table property.
+           
+          * ``z-order``: Optimizes data organization by blending multiple attributes into a single scalar value that can be used for sorting, allowing efficient querying across multiple dimensions. This strategy is recommended when you need to query data across multiple dimensions simultaneously. To use this strategy, you must first define a sort order in your Iceberg table properties using the ``sort_order`` table property.
+          
+
+           
+
+          If an input is not provided, the default value 'binpack' will be used.
+
+          
+
+        
+        - **minInputFiles** *(integer) --* 
+
+          The minimum number of data files that must be present in a partition before compaction will actually compact files. This parameter helps control when compaction is triggered, preventing unnecessary compaction operations on partitions with few files. If an input is not provided, the default value 100 will be used.
+
+          
+
+        
+        - **deleteFileThreshold** *(integer) --* 
+
+          The minimum number of deletes that must be present in a data file to make it eligible for compaction. This parameter helps optimize compaction by focusing on files that contain a significant number of delete operations, which can improve query performance by removing deleted records. If an input is not provided, the default value 1 will be used.
+
+          
+
+        
+      
+    
+    - **retentionConfiguration** *(dict) --* 
+
+      The configuration for a snapshot retention optimizer.
+
+      
+
+    
+      - **icebergConfiguration** *(dict) --* 
+
+        The configuration for an Iceberg snapshot retention optimizer.
+
+        
+
+      
+        - **snapshotRetentionPeriodInDays** *(integer) --* 
+
+          The number of days to retain the Iceberg snapshots. If an input is not provided, the corresponding Iceberg table configuration field will be used or if not present, the default value 5 will be used.
+
+          
+
+        
+        - **numberOfSnapshotsToRetain** *(integer) --* 
+
+          The number of Iceberg snapshots to retain within the retention period. If an input is not provided, the corresponding Iceberg table configuration field will be used or if not present, the default value 1 will be used.
+
+          
+
+        
+        - **cleanExpiredFiles** *(boolean) --* 
+
+          If set to false, snapshots are only deleted from table metadata, and the underlying data and metadata files are not deleted.
+
+          
+
+        
+        - **runRateInHours** *(integer) --* 
+
+          The interval in hours between retention job runs. This parameter controls how frequently the retention optimizer will run to clean up expired snapshots. The value must be between 3 and 168 hours (7 days). If an input is not provided, the default value 24 will be used.
+
+          
+
+        
+      
+    
+    - **orphanFileDeletionConfiguration** *(dict) --* 
+
+      The configuration for an orphan file deletion optimizer.
+
+      
+
+    
+      - **icebergConfiguration** *(dict) --* 
+
+        The configuration for an Iceberg orphan file deletion optimizer.
+
+        
+
+      
+        - **orphanFileRetentionPeriodInDays** *(integer) --* 
+
+          The number of days that orphan files should be retained before file deletion. If an input is not provided, the default value 3 will be used.
+
+          
+
+        
+        - **location** *(string) --* 
+
+          Specifies a directory in which to look for files (defaults to the table's location). You may choose a sub-directory rather than the top-level table location.
+
+          
+
+        
+        - **runRateInHours** *(integer) --* 
+
+          The interval in hours between orphan file deletion job runs. This parameter controls how frequently the orphan file deletion optimizer will run to clean up orphan files. The value must be between 3 and 168 hours (7 days). If an input is not provided, the default value 24 will be used.
+
+          
+
+        
+      
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`Glue.Client.exceptions.EntityNotFoundException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.AlreadyExistsException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.ThrottlingException`
+
+  

@@ -1,0 +1,315 @@
+:doc:`SSM <../../ssm>` / Client / list_compliance_items
+
+*********************
+list_compliance_items
+*********************
+
+
+
+.. py:method:: SSM.Client.list_compliance_items(**kwargs)
+
+  
+
+  For a specified resource ID, this API operation returns a list of compliance statuses for different resource types. Currently, you can only specify one resource ID per call. List results depend on the criteria specified in the filter.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/ListComplianceItems>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_compliance_items(
+        Filters=[
+            {
+                'Key': 'string',
+                'Values': [
+                    'string',
+                ],
+                'Type': 'EQUAL'|'NOT_EQUAL'|'BEGIN_WITH'|'LESS_THAN'|'GREATER_THAN'
+            },
+        ],
+        ResourceIds=[
+            'string',
+        ],
+        ResourceTypes=[
+            'string',
+        ],
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type Filters: list
+  :param Filters: 
+
+    One or more compliance filters. Use a filter to return a more specific list of results.
+
+    
+
+  
+    - *(dict) --* 
+
+      One or more filters. Use a filter to return a more specific list of results.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        The name of the filter.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The value for which to search.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **Type** *(string) --* 
+
+        The type of comparison that should be performed for the value: Equal, NotEqual, BeginWith, LessThan, or GreaterThan.
+
+        
+
+      
+    
+
+  :type ResourceIds: list
+  :param ResourceIds: 
+
+    The ID for the resources from which to get compliance information. Currently, you can only specify one resource ID.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ResourceTypes: list
+  :param ResourceTypes: 
+
+    The type of resource from which to get compliance information. Currently, the only supported resource type is ``ManagedInstance``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type NextToken: string
+  :param NextToken: 
+
+    A token to start the list. Use this token to get the next set of results.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this call. The call also returns a token that you can specify in a subsequent call to get the next set of results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ComplianceItems': [
+              {
+                  'ComplianceType': 'string',
+                  'ResourceType': 'string',
+                  'ResourceId': 'string',
+                  'Id': 'string',
+                  'Title': 'string',
+                  'Status': 'COMPLIANT'|'NON_COMPLIANT',
+                  'Severity': 'CRITICAL'|'HIGH'|'MEDIUM'|'LOW'|'INFORMATIONAL'|'UNSPECIFIED',
+                  'ExecutionSummary': {
+                      'ExecutionTime': datetime(2015, 1, 1),
+                      'ExecutionId': 'string',
+                      'ExecutionType': 'string'
+                  },
+                  'Details': {
+                      'string': 'string'
+                  }
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ComplianceItems** *(list) --* 
+
+        A list of compliance information for the specified resource ID.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about the compliance as defined by the resource type. For example, for a patch resource type, ``Items`` includes information about the PatchSeverity, Classification, and so on.
+
+          
+          
+
+          - **ComplianceType** *(string) --* 
+
+            The compliance type. For example, Association (for a State Manager association), Patch, or Custom: ``string`` are all valid compliance types.
+
+            
+          
+
+          - **ResourceType** *(string) --* 
+
+            The type of resource. ``ManagedInstance`` is currently the only supported resource type.
+
+            
+          
+
+          - **ResourceId** *(string) --* 
+
+            An ID for the resource. For a managed node, this is the node ID.
+
+            
+          
+
+          - **Id** *(string) --* 
+
+            An ID for the compliance item. For example, if the compliance item is a Windows patch, the ID could be the number of the KB article; for example: KB4010320.
+
+            
+          
+
+          - **Title** *(string) --* 
+
+            A title for the compliance item. For example, if the compliance item is a Windows patch, the title could be the title of the KB article for the patch; for example: Security Update for Active Directory Federation Services.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the compliance item. An item is either COMPLIANT, NON_COMPLIANT, or an empty string (for Windows patches that aren't applicable).
+
+            
+          
+
+          - **Severity** *(string) --* 
+
+            The severity of the compliance status. Severity can be one of the following: Critical, High, Medium, Low, Informational, Unspecified.
+
+            
+          
+
+          - **ExecutionSummary** *(dict) --* 
+
+            A summary for the compliance item. The summary includes an execution ID, the execution type (for example, command), and the execution time.
+
+             
+
+            .. warning::
+
+               
+
+              For State Manager associations, the ``ExecutionTime`` value represents when the compliance status was captured and aggregated by the Systems Manager service, not necessarily when the underlying association was executed on the managed node. State Manager updates compliance status for all associations on an instance whenever any association executes, which means multiple associations may show the same execution time even if they were executed at different times.
+
+              
+
+            
+            
+
+            - **ExecutionTime** *(datetime) --* 
+
+              The time the execution ran as a datetime object that is saved in the following format: ``yyyy-MM-dd'T'HH:mm:ss'Z'``
+
+               
+
+              .. warning::
+
+                 
+
+                For State Manager associations, this timestamp represents when the compliance status was captured and reported by the Systems Manager service, not when the underlying association was actually executed on the managed node. To track actual association execution times, use the  DescribeAssociationExecutionTargets command or check the association execution history in the Systems Manager console.
+
+                
+
+              
+            
+
+            - **ExecutionId** *(string) --* 
+
+              An ID created by the system when ``PutComplianceItems`` was called. For example, ``CommandID`` is a valid execution ID. You can use this ID in subsequent calls.
+
+              
+            
+
+            - **ExecutionType** *(string) --* 
+
+              The type of execution. For example, ``Command`` is a valid execution type.
+
+              
+        
+          
+
+          - **Details** *(dict) --* 
+
+            A "Key": "Value" tag combination for the compliance item.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token for the next set of items to return. Use this token to get the next set of results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidResourceType`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidResourceId`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilter`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidNextToken`
+
+  

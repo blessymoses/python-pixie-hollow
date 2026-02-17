@@ -1,0 +1,630 @@
+:doc:`IoT <../../iot>` / Client / get_ota_update
+
+**************
+get_ota_update
+**************
+
+
+
+.. py:method:: IoT.Client.get_ota_update(**kwargs)
+
+  
+
+  Gets an OTA update.
+
+   
+
+  Requires permission to access the `GetOTAUpdate <https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiot.html#awsiot-actions-as-permissions>`__ action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iot-2015-05-28/GetOTAUpdate>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_ota_update(
+        otaUpdateId='string'
+    )
+    
+  :type otaUpdateId: string
+  :param otaUpdateId: **[REQUIRED]** 
+
+    The OTA update ID.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'otaUpdateInfo': {
+              'otaUpdateId': 'string',
+              'otaUpdateArn': 'string',
+              'creationDate': datetime(2015, 1, 1),
+              'lastModifiedDate': datetime(2015, 1, 1),
+              'description': 'string',
+              'targets': [
+                  'string',
+              ],
+              'protocols': [
+                  'MQTT'|'HTTP',
+              ],
+              'awsJobExecutionsRolloutConfig': {
+                  'maximumPerMinute': 123,
+                  'exponentialRate': {
+                      'baseRatePerMinute': 123,
+                      'incrementFactor': 123.0,
+                      'rateIncreaseCriteria': {
+                          'numberOfNotifiedThings': 123,
+                          'numberOfSucceededThings': 123
+                      }
+                  }
+              },
+              'awsJobPresignedUrlConfig': {
+                  'expiresInSec': 123
+              },
+              'targetSelection': 'CONTINUOUS'|'SNAPSHOT',
+              'otaUpdateFiles': [
+                  {
+                      'fileName': 'string',
+                      'fileType': 123,
+                      'fileVersion': 'string',
+                      'fileLocation': {
+                          'stream': {
+                              'streamId': 'string',
+                              'fileId': 123
+                          },
+                          's3Location': {
+                              'bucket': 'string',
+                              'key': 'string',
+                              'version': 'string'
+                          }
+                      },
+                      'codeSigning': {
+                          'awsSignerJobId': 'string',
+                          'startSigningJobParameter': {
+                              'signingProfileParameter': {
+                                  'certificateArn': 'string',
+                                  'platform': 'string',
+                                  'certificatePathOnDevice': 'string'
+                              },
+                              'signingProfileName': 'string',
+                              'destination': {
+                                  's3Destination': {
+                                      'bucket': 'string',
+                                      'prefix': 'string'
+                                  }
+                              }
+                          },
+                          'customCodeSigning': {
+                              'signature': {
+                                  'inlineDocument': b'bytes'
+                              },
+                              'certificateChain': {
+                                  'certificateName': 'string',
+                                  'inlineDocument': 'string'
+                              },
+                              'hashAlgorithm': 'string',
+                              'signatureAlgorithm': 'string'
+                          }
+                      },
+                      'attributes': {
+                          'string': 'string'
+                      }
+                  },
+              ],
+              'otaUpdateStatus': 'CREATE_PENDING'|'CREATE_IN_PROGRESS'|'CREATE_COMPLETE'|'CREATE_FAILED'|'DELETE_IN_PROGRESS'|'DELETE_FAILED',
+              'awsIotJobId': 'string',
+              'awsIotJobArn': 'string',
+              'errorInfo': {
+                  'code': 'string',
+                  'message': 'string'
+              },
+              'additionalParameters': {
+                  'string': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **otaUpdateInfo** *(dict) --* 
+
+        The OTA update info.
+
+        
+        
+
+        - **otaUpdateId** *(string) --* 
+
+          The OTA update ID.
+
+          
+        
+
+        - **otaUpdateArn** *(string) --* 
+
+          The OTA update ARN.
+
+          
+        
+
+        - **creationDate** *(datetime) --* 
+
+          The date when the OTA update was created.
+
+          
+        
+
+        - **lastModifiedDate** *(datetime) --* 
+
+          The date when the OTA update was last updated.
+
+          
+        
+
+        - **description** *(string) --* 
+
+          A description of the OTA update.
+
+          
+        
+
+        - **targets** *(list) --* 
+
+          The targets of the OTA update.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **protocols** *(list) --* 
+
+          The protocol used to transfer the OTA update image. Valid values are [HTTP], [MQTT], [HTTP, MQTT]. When both HTTP and MQTT are specified, the target device can choose the protocol.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **awsJobExecutionsRolloutConfig** *(dict) --* 
+
+          Configuration for the rollout of OTA updates.
+
+          
+          
+
+          - **maximumPerMinute** *(integer) --* 
+
+            The maximum number of OTA update job executions started per minute.
+
+            
+          
+
+          - **exponentialRate** *(dict) --* 
+
+            The rate of increase for a job rollout. This parameter allows you to define an exponential rate increase for a job rollout.
+
+            
+            
+
+            - **baseRatePerMinute** *(integer) --* 
+
+              The minimum number of things that will be notified of a pending job, per minute, at the start of the job rollout. This is the initial rate of the rollout.
+
+              
+            
+
+            - **incrementFactor** *(float) --* 
+
+              The rate of increase for a job rollout. The number of things notified is multiplied by this factor.
+
+              
+            
+
+            - **rateIncreaseCriteria** *(dict) --* 
+
+              The criteria to initiate the increase in rate of rollout for a job.
+
+               
+
+              Amazon Web Services IoT Core supports up to one digit after the decimal (for example, 1.5, but not 1.55).
+
+              
+              
+
+              - **numberOfNotifiedThings** *(integer) --* 
+
+                When this number of things have been notified, it will initiate an increase in the rollout rate.
+
+                
+              
+
+              - **numberOfSucceededThings** *(integer) --* 
+
+                When this number of things have succeeded in their job execution, it will initiate an increase in the rollout rate.
+
+                
+          
+        
+      
+        
+
+        - **awsJobPresignedUrlConfig** *(dict) --* 
+
+          Configuration information for pre-signed URLs. Valid when ``protocols`` contains HTTP.
+
+          
+          
+
+          - **expiresInSec** *(integer) --* 
+
+            How long (in seconds) pre-signed URLs are valid. Valid values are 60 - 3600, the default value is 1800 seconds. Pre-signed URLs are generated when a request for the job document is received.
+
+            
+      
+        
+
+        - **targetSelection** *(string) --* 
+
+          Specifies whether the OTA update will continue to run (CONTINUOUS), or will be complete after all those things specified as targets have completed the OTA update (SNAPSHOT). If continuous, the OTA update may also be run on a thing when a change is detected in a target. For example, an OTA update will run on a thing when the thing is added to a target group, even after the OTA update was completed by all things originally in the group.
+
+          
+        
+
+        - **otaUpdateFiles** *(list) --* 
+
+          A list of files associated with the OTA update.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes a file to be associated with an OTA update.
+
+            
+            
+
+            - **fileName** *(string) --* 
+
+              The name of the file.
+
+              
+            
+
+            - **fileType** *(integer) --* 
+
+              An integer value you can include in the job document to allow your devices to identify the type of file received from the cloud.
+
+              
+            
+
+            - **fileVersion** *(string) --* 
+
+              The file version.
+
+              
+            
+
+            - **fileLocation** *(dict) --* 
+
+              The location of the updated firmware.
+
+              
+              
+
+              - **stream** *(dict) --* 
+
+                The stream that contains the OTA update.
+
+                
+                
+
+                - **streamId** *(string) --* 
+
+                  The stream ID.
+
+                  
+                
+
+                - **fileId** *(integer) --* 
+
+                  The ID of a file associated with a stream.
+
+                  
+            
+              
+
+              - **s3Location** *(dict) --* 
+
+                The location of the updated firmware in S3.
+
+                
+                
+
+                - **bucket** *(string) --* 
+
+                  The S3 bucket.
+
+                  
+                
+
+                - **key** *(string) --* 
+
+                  The S3 key.
+
+                  
+                
+
+                - **version** *(string) --* 
+
+                  The S3 bucket version.
+
+                  
+            
+          
+            
+
+            - **codeSigning** *(dict) --* 
+
+              The code signing method of the file.
+
+              
+              
+
+              - **awsSignerJobId** *(string) --* 
+
+                The ID of the ``AWSSignerJob`` which was created to sign the file.
+
+                
+              
+
+              - **startSigningJobParameter** *(dict) --* 
+
+                Describes the code-signing job.
+
+                
+                
+
+                - **signingProfileParameter** *(dict) --* 
+
+                  Describes the code-signing profile.
+
+                  
+                  
+
+                  - **certificateArn** *(string) --* 
+
+                    Certificate ARN.
+
+                    
+                  
+
+                  - **platform** *(string) --* 
+
+                    The hardware platform of your device.
+
+                    
+                  
+
+                  - **certificatePathOnDevice** *(string) --* 
+
+                    The location of the code-signing certificate on your device.
+
+                    
+              
+                
+
+                - **signingProfileName** *(string) --* 
+
+                  The code-signing profile name.
+
+                  
+                
+
+                - **destination** *(dict) --* 
+
+                  The location to write the code-signed file.
+
+                  
+                  
+
+                  - **s3Destination** *(dict) --* 
+
+                    Describes the location in S3 of the updated firmware.
+
+                    
+                    
+
+                    - **bucket** *(string) --* 
+
+                      The S3 bucket that contains the updated firmware.
+
+                      
+                    
+
+                    - **prefix** *(string) --* 
+
+                      The S3 prefix.
+
+                      
+                
+              
+            
+              
+
+              - **customCodeSigning** *(dict) --* 
+
+                A custom method for code signing a file.
+
+                
+                
+
+                - **signature** *(dict) --* 
+
+                  The signature for the file.
+
+                  
+                  
+
+                  - **inlineDocument** *(bytes) --* 
+
+                    A base64 encoded binary representation of the code signing signature.
+
+                    
+              
+                
+
+                - **certificateChain** *(dict) --* 
+
+                  The certificate chain.
+
+                  
+                  
+
+                  - **certificateName** *(string) --* 
+
+                    The name of the certificate.
+
+                    
+                  
+
+                  - **inlineDocument** *(string) --* 
+
+                    A base64 encoded binary representation of the code signing certificate chain.
+
+                    
+              
+                
+
+                - **hashAlgorithm** *(string) --* 
+
+                  The hash algorithm used to code sign the file. You can use a string as the algorithm name if the target over-the-air (OTA) update devices are able to verify the signature that was generated using the same signature algorithm. For example, FreeRTOS uses ``SHA256`` or ``SHA1``, so you can pass either of them based on which was used for generating the signature.
+
+                  
+                
+
+                - **signatureAlgorithm** *(string) --* 
+
+                  The signature algorithm used to code sign the file. You can use a string as the algorithm name if the target over-the-air (OTA) update devices are able to verify the signature that was generated using the same signature algorithm. For example, FreeRTOS uses ``ECDSA`` or ``RSA``, so you can pass either of them based on which was used for generating the signature.
+
+                  
+            
+          
+            
+
+            - **attributes** *(dict) --* 
+
+              A list of name-attribute pairs. They won't be sent to devices as a part of the Job document.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+        
+      
+        
+
+        - **otaUpdateStatus** *(string) --* 
+
+          The status of the OTA update.
+
+          
+        
+
+        - **awsIotJobId** *(string) --* 
+
+          The IoT job ID associated with the OTA update.
+
+          
+        
+
+        - **awsIotJobArn** *(string) --* 
+
+          The IoT job ARN associated with the OTA update.
+
+          
+        
+
+        - **errorInfo** *(dict) --* 
+
+          Error information associated with the OTA update.
+
+          
+          
+
+          - **code** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **message** *(string) --* 
+
+            The error message.
+
+            
+      
+        
+
+        - **additionalParameters** *(dict) --* 
+
+          A collection of name/value pairs
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`IoT.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`IoT.Client.exceptions.ResourceNotFoundException`
+
+  

@@ -1,0 +1,340 @@
+:doc:`SSM <../../ssm>` / Client / describe_instance_patch_states
+
+******************************
+describe_instance_patch_states
+******************************
+
+
+
+.. py:method:: SSM.Client.describe_instance_patch_states(**kwargs)
+
+  
+
+  Retrieves the high-level patch state of one or more managed nodes.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeInstancePatchStates>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_instance_patch_states(
+        InstanceIds=[
+            'string',
+        ],
+        NextToken='string',
+        MaxResults=123
+    )
+    
+  :type InstanceIds: list
+  :param InstanceIds: **[REQUIRED]** 
+
+    The ID of the managed node for which patch state information should be retrieved.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of managed nodes to return (per page).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'InstancePatchStates': [
+              {
+                  'InstanceId': 'string',
+                  'PatchGroup': 'string',
+                  'BaselineId': 'string',
+                  'SnapshotId': 'string',
+                  'InstallOverrideList': 'string',
+                  'OwnerInformation': 'string',
+                  'InstalledCount': 123,
+                  'InstalledOtherCount': 123,
+                  'InstalledPendingRebootCount': 123,
+                  'InstalledRejectedCount': 123,
+                  'MissingCount': 123,
+                  'FailedCount': 123,
+                  'UnreportedNotApplicableCount': 123,
+                  'NotApplicableCount': 123,
+                  'AvailableSecurityUpdateCount': 123,
+                  'OperationStartTime': datetime(2015, 1, 1),
+                  'OperationEndTime': datetime(2015, 1, 1),
+                  'Operation': 'Scan'|'Install',
+                  'LastNoRebootInstallOperationTime': datetime(2015, 1, 1),
+                  'RebootOption': 'RebootIfNeeded'|'NoReboot',
+                  'CriticalNonCompliantCount': 123,
+                  'SecurityNonCompliantCount': 123,
+                  'OtherNonCompliantCount': 123
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **InstancePatchStates** *(list) --* 
+
+        The high-level patch state for the requested managed nodes.
+
+        
+        
+
+        - *(dict) --* 
+
+          Defines the high-level patch compliance state for a managed node, providing information about the number of installed, missing, not applicable, and failed patches along with metadata about the operation when this information was gathered for the managed node.
+
+          
+          
+
+          - **InstanceId** *(string) --* 
+
+            The ID of the managed node the high-level patch compliance information was collected for.
+
+            
+          
+
+          - **PatchGroup** *(string) --* 
+
+            The name of the patch group the managed node belongs to.
+
+            
+          
+
+          - **BaselineId** *(string) --* 
+
+            The ID of the patch baseline used to patch the managed node.
+
+            
+          
+
+          - **SnapshotId** *(string) --* 
+
+            The ID of the patch baseline snapshot used during the patching operation when this compliance data was collected.
+
+            
+          
+
+          - **InstallOverrideList** *(string) --* 
+
+            An https URL or an Amazon Simple Storage Service (Amazon S3) path-style URL to a list of patches to be installed. This patch installation list, which you maintain in an S3 bucket in YAML format and specify in the SSM document ``AWS-RunPatchBaseline``, overrides the patches specified by the default patch baseline.
+
+             
+
+            For more information about the ``InstallOverrideList`` parameter, see `SSM Command document for patching\: AWS-RunPatchBaseline <https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager-about-aws-runpatchbaseline.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+          
+
+          - **OwnerInformation** *(string) --* 
+
+            Placeholder information. This field will always be empty in the current release of the service.
+
+            
+          
+
+          - **InstalledCount** *(integer) --* 
+
+            The number of patches from the patch baseline that are installed on the managed node.
+
+            
+          
+
+          - **InstalledOtherCount** *(integer) --* 
+
+            The number of patches not specified in the patch baseline that are installed on the managed node.
+
+            
+          
+
+          - **InstalledPendingRebootCount** *(integer) --* 
+
+            The number of patches installed by Patch Manager since the last time the managed node was rebooted.
+
+            
+          
+
+          - **InstalledRejectedCount** *(integer) --* 
+
+            The number of patches installed on a managed node that are specified in a ``RejectedPatches`` list. Patches with a status of ``InstalledRejected`` were typically installed before they were added to a ``RejectedPatches`` list.
+
+             
+
+            .. note::
+
+              
+
+              If ``ALLOW_AS_DEPENDENCY`` is the specified option for ``RejectedPatchesAction``, the value of ``InstalledRejectedCount`` will always be ``0`` (zero).
+
+              
+
+            
+          
+
+          - **MissingCount** *(integer) --* 
+
+            The number of patches from the patch baseline that are applicable for the managed node but aren't currently installed.
+
+            
+          
+
+          - **FailedCount** *(integer) --* 
+
+            The number of patches from the patch baseline that were attempted to be installed during the last patching operation, but failed to install.
+
+            
+          
+
+          - **UnreportedNotApplicableCount** *(integer) --* 
+
+            The number of patches beyond the supported limit of ``NotApplicableCount`` that aren't reported by name to Inventory. Inventory is a tool in Amazon Web Services Systems Manager.
+
+            
+          
+
+          - **NotApplicableCount** *(integer) --* 
+
+            The number of patches from the patch baseline that aren't applicable for the managed node and therefore aren't installed on the node. This number may be truncated if the list of patch names is very large. The number of patches beyond this limit are reported in ``UnreportedNotApplicableCount``.
+
+            
+          
+
+          - **AvailableSecurityUpdateCount** *(integer) --* 
+
+            The number of security-related patches that are available but not approved because they didn't meet the patch baseline requirements. For example, an updated version of a patch might have been released before the specified auto-approval period was over.
+
+             
+
+            Applies to Windows Server managed nodes only.
+
+            
+          
+
+          - **OperationStartTime** *(datetime) --* 
+
+            The time the most recent patching operation was started on the managed node.
+
+            
+          
+
+          - **OperationEndTime** *(datetime) --* 
+
+            The time the most recent patching operation completed on the managed node.
+
+            
+          
+
+          - **Operation** *(string) --* 
+
+            The type of patching operation that was performed: or
+
+             
+
+            
+            * ``SCAN`` assesses the patch compliance state.
+             
+            * ``INSTALL`` installs missing patches.
+            
+
+            
+          
+
+          - **LastNoRebootInstallOperationTime** *(datetime) --* 
+
+            The time of the last attempt to patch the managed node with ``NoReboot`` specified as the reboot option.
+
+            
+          
+
+          - **RebootOption** *(string) --* 
+
+            Indicates the reboot option specified in the patch baseline.
+
+             
+
+            .. note::
+
+              
+
+              Reboot options apply to ``Install`` operations only. Reboots aren't attempted for Patch Manager ``Scan`` operations.
+
+              
+
+             
+
+            
+            * ``RebootIfNeeded``: Patch Manager tries to reboot the managed node if it installed any patches, or if any patches are detected with a status of ``InstalledPendingReboot``.
+             
+            * ``NoReboot``: Patch Manager attempts to install missing packages without trying to reboot the system. Patches installed with this option are assigned a status of ``InstalledPendingReboot``. These patches might not be in effect until a reboot is performed.
+            
+
+            
+          
+
+          - **CriticalNonCompliantCount** *(integer) --* 
+
+            The number of patches per node that are specified as ``Critical`` for compliance reporting in the patch baseline aren't installed. These patches might be missing, have failed installation, were rejected, or were installed but awaiting a required managed node reboot. The status of these managed nodes is ``NON_COMPLIANT``.
+
+            
+          
+
+          - **SecurityNonCompliantCount** *(integer) --* 
+
+            The number of patches per node that are specified as ``Security`` in a patch advisory aren't installed. These patches might be missing, have failed installation, were rejected, or were installed but awaiting a required managed node reboot. The status of these managed nodes is ``NON_COMPLIANT``.
+
+            
+          
+
+          - **OtherNonCompliantCount** *(integer) --* 
+
+            The number of patches per node that are specified as other than ``Critical`` or ``Security`` but aren't compliant with the patch baseline. The status of these managed nodes is ``NON_COMPLIANT``.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to use when requesting the next set of items. If there are no additional items to return, the string is empty.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidNextToken`
+
+  

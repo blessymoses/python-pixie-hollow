@@ -1,0 +1,799 @@
+:doc:`SSM <../../ssm>` / Client / get_maintenance_window_task
+
+***************************
+get_maintenance_window_task
+***************************
+
+
+
+.. py:method:: SSM.Client.get_maintenance_window_task(**kwargs)
+
+  
+
+  Retrieves the details of a maintenance window task.
+
+   
+
+  .. note::
+
+    
+
+    For maintenance window tasks without a specified target, you can't supply values for ``--max-errors`` and ``--max-concurrency``. Instead, the system inserts a placeholder value of ``1``, which may be reported in the response to this command. These values don't affect the running of your task and can be ignored.
+
+    
+
+   
+
+  To retrieve a list of tasks in a maintenance window, instead use the  DescribeMaintenanceWindowTasks command.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/GetMaintenanceWindowTask>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_maintenance_window_task(
+        WindowId='string',
+        WindowTaskId='string'
+    )
+    
+  :type WindowId: string
+  :param WindowId: **[REQUIRED]** 
+
+    The maintenance window ID that includes the task to retrieve.
+
+    
+
+  
+  :type WindowTaskId: string
+  :param WindowTaskId: **[REQUIRED]** 
+
+    The maintenance window task ID to retrieve.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'WindowId': 'string',
+          'WindowTaskId': 'string',
+          'Targets': [
+              {
+                  'Key': 'string',
+                  'Values': [
+                      'string',
+                  ]
+              },
+          ],
+          'TaskArn': 'string',
+          'ServiceRoleArn': 'string',
+          'TaskType': 'RUN_COMMAND'|'AUTOMATION'|'STEP_FUNCTIONS'|'LAMBDA',
+          'TaskParameters': {
+              'string': {
+                  'Values': [
+                      'string',
+                  ]
+              }
+          },
+          'TaskInvocationParameters': {
+              'RunCommand': {
+                  'Comment': 'string',
+                  'CloudWatchOutputConfig': {
+                      'CloudWatchLogGroupName': 'string',
+                      'CloudWatchOutputEnabled': True|False
+                  },
+                  'DocumentHash': 'string',
+                  'DocumentHashType': 'Sha256'|'Sha1',
+                  'DocumentVersion': 'string',
+                  'NotificationConfig': {
+                      'NotificationArn': 'string',
+                      'NotificationEvents': [
+                          'All'|'InProgress'|'Success'|'TimedOut'|'Cancelled'|'Failed',
+                      ],
+                      'NotificationType': 'Command'|'Invocation'
+                  },
+                  'OutputS3BucketName': 'string',
+                  'OutputS3KeyPrefix': 'string',
+                  'Parameters': {
+                      'string': [
+                          'string',
+                      ]
+                  },
+                  'ServiceRoleArn': 'string',
+                  'TimeoutSeconds': 123
+              },
+              'Automation': {
+                  'DocumentVersion': 'string',
+                  'Parameters': {
+                      'string': [
+                          'string',
+                      ]
+                  }
+              },
+              'StepFunctions': {
+                  'Input': 'string',
+                  'Name': 'string'
+              },
+              'Lambda': {
+                  'ClientContext': 'string',
+                  'Qualifier': 'string',
+                  'Payload': b'bytes'
+              }
+          },
+          'Priority': 123,
+          'MaxConcurrency': 'string',
+          'MaxErrors': 'string',
+          'LoggingInfo': {
+              'S3BucketName': 'string',
+              'S3KeyPrefix': 'string',
+              'S3Region': 'string'
+          },
+          'Name': 'string',
+          'Description': 'string',
+          'CutoffBehavior': 'CONTINUE_TASK'|'CANCEL_TASK',
+          'AlarmConfiguration': {
+              'IgnorePollAlarmFailure': True|False,
+              'Alarms': [
+                  {
+                      'Name': 'string'
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **WindowId** *(string) --* 
+
+        The retrieved maintenance window ID.
+
+        
+      
+
+      - **WindowTaskId** *(string) --* 
+
+        The retrieved maintenance window task ID.
+
+        
+      
+
+      - **Targets** *(list) --* 
+
+        The targets where the task should run.
+
+        
+        
+
+        - *(dict) --* 
+
+          An array of search criteria that targets managed nodes using a key-value pair that you specify.
+
+           
+
+          .. note::
+
+            
+
+            One or more targets must be specified for maintenance window Run Command-type tasks. Depending on the task, targets are optional for other maintenance window task types (Automation, Lambda, and Step Functions). For more information about running tasks that don't specify targets, see `Registering maintenance window tasks without targets <https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+
+           
+
+          Supported formats include the following.
+
+           
+
+          **For all Systems Manager tools:**
+
+           
+
+          
+          * ``Key=tag-key,Values=tag-value-1,tag-value-2``
+          
+
+           
+
+          **For Automation and Change Manager:**
+
+           
+
+          
+          * ``Key=tag:tag-key,Values=tag-value``
+           
+          * ``Key=ResourceGroup,Values=resource-group-name``
+           
+          * ``Key=ParameterValues,Values=value-1,value-2,value-3``
+           
+          * To target all instances in the Amazon Web Services Region: 
+
+            
+            * ``Key=AWS::EC2::Instance,Values=*``
+             
+            * ``Key=InstanceIds,Values=*``
+            
+
+          
+          
+
+           
+
+          **For Run Command and Maintenance Windows:**
+
+           
+
+          
+          * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+           
+          * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+           
+          * ``Key=resource-groups:Name,Values=resource-group-name``
+           
+          * Additionally, Maintenance Windows support targeting resource types: 
+
+            
+            * ``Key=resource-groups:ResourceTypeFilters,Values=resource-type-1,resource-type-2``
+            
+
+          
+          
+
+           
+
+          **For State Manager:**
+
+           
+
+          
+          * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+           
+          * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+           
+          * To target all instances in the Amazon Web Services Region: 
+
+            
+            * ``Key=InstanceIds,Values=*``
+            
+
+          
+          
+
+           
+
+          For more information about how to send commands that target managed nodes using ``Key,Value`` parameters, see `Targeting multiple managed nodes <https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-multiple.html#send-commands-targeting>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+          
+          
+
+          - **Key** *(string) --* 
+
+            User-defined criteria for sending commands that target managed nodes that meet the criteria.
+
+            
+          
+
+          - **Values** *(list) --* 
+
+            User-defined criteria that maps to ``Key``. For example, if you specified ``tag:ServerRole``, you could specify ``value:WebServer`` to run a command on instances that include EC2 tags of ``ServerRole,WebServer``.
+
+             
+
+            Depending on the type of target, the maximum number of values for a key might be lower than the global maximum of 50.
+
+            
+            
+
+            - *(string) --* 
+        
+      
+    
+      
+
+      - **TaskArn** *(string) --* 
+
+        The resource that the task used during execution. For ``RUN_COMMAND`` and ``AUTOMATION`` task types, the value of ``TaskArn`` is the SSM document name/ARN. For ``LAMBDA`` tasks, the value is the function name/ARN. For ``STEP_FUNCTIONS`` tasks, the value is the state machine ARN.
+
+        
+      
+
+      - **ServiceRoleArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the IAM service role for Amazon Web Services Systems Manager to assume when running a maintenance window task. If you do not specify a service role ARN, Systems Manager uses a service-linked role in your account. If no appropriate service-linked role for Systems Manager exists in your account, it is created when you run ``RegisterTaskWithMaintenanceWindow``.
+
+         
+
+        However, for an improved security posture, we strongly recommend creating a custom policy and custom service role for running your maintenance window tasks. The policy can be crafted to provide only the permissions needed for your particular maintenance window tasks. For more information, see `Setting up Maintenance Windows <https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-maintenance-permissions.html>`__ in the in the *Amazon Web Services Systems Manager User Guide*.
+
+        
+      
+
+      - **TaskType** *(string) --* 
+
+        The type of task to run.
+
+        
+      
+
+      - **TaskParameters** *(dict) --* 
+
+        The parameters to pass to the task when it runs.
+
+         
+
+        .. note::
+
+          
+
+          ``TaskParameters`` has been deprecated. To specify parameters to pass to a task when it runs, instead use the ``Parameters`` option in the ``TaskInvocationParameters`` structure. For information about how Systems Manager handles these options for the supported maintenance window task types, see  MaintenanceWindowTaskInvocationParameters.
+
+          
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(dict) --* 
+
+            Defines the values for a task parameter.
+
+            
+            
+
+            - **Values** *(list) --* 
+
+              This field contains an array of 0 or more strings, each 1 to 255 characters in length.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+    
+  
+      
+
+      - **TaskInvocationParameters** *(dict) --* 
+
+        The parameters to pass to the task when it runs.
+
+        
+        
+
+        - **RunCommand** *(dict) --* 
+
+          The parameters for a ``RUN_COMMAND`` task type.
+
+          
+          
+
+          - **Comment** *(string) --* 
+
+            Information about the commands to run.
+
+            
+          
+
+          - **CloudWatchOutputConfig** *(dict) --* 
+
+            Configuration options for sending command output to Amazon CloudWatch Logs.
+
+            
+            
+
+            - **CloudWatchLogGroupName** *(string) --* 
+
+              The name of the CloudWatch Logs log group where you want to send command output. If you don't specify a group name, Amazon Web Services Systems Manager automatically creates a log group for you. The log group uses the following naming format:
+
+               
+
+              ``aws/ssm/SystemsManagerDocumentName``
+
+              
+            
+
+            - **CloudWatchOutputEnabled** *(boolean) --* 
+
+              Enables Systems Manager to send command output to CloudWatch Logs.
+
+              
+        
+          
+
+          - **DocumentHash** *(string) --* 
+
+            The SHA-256 or SHA-1 hash created by the system when the document was created. SHA-1 hashes have been deprecated.
+
+            
+          
+
+          - **DocumentHashType** *(string) --* 
+
+            SHA-256 or SHA-1. SHA-1 hashes have been deprecated.
+
+            
+          
+
+          - **DocumentVersion** *(string) --* 
+
+            The Amazon Web Services Systems Manager document (SSM document) version to use in the request. You can specify ``$DEFAULT``, ``$LATEST``, or a specific version number. If you run commands by using the Amazon Web Services CLI, then you must escape the first two options by using a backslash. If you specify a version number, then you don't need to use the backslash. For example:
+
+             
+
+            ``--document-version "\$DEFAULT"``
+
+             
+
+            ``--document-version "\$LATEST"``
+
+             
+
+            ``--document-version "3"``
+
+            
+          
+
+          - **NotificationConfig** *(dict) --* 
+
+            Configurations for sending notifications about command status changes on a per-managed node basis.
+
+            
+            
+
+            - **NotificationArn** *(string) --* 
+
+              An Amazon Resource Name (ARN) for an Amazon Simple Notification Service (Amazon SNS) topic. Run Command pushes notifications about command status changes to this topic.
+
+              
+            
+
+            - **NotificationEvents** *(list) --* 
+
+              The different events for which you can receive notifications. To learn more about these events, see `Monitoring Systems Manager status changes using Amazon SNS notifications <https://docs.aws.amazon.com/systems-manager/latest/userguide/monitoring-sns-notifications.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **NotificationType** *(string) --* 
+
+              The type of notification.
+
+               
+
+              
+              * ``Command``: Receive notification when the status of a command changes.
+               
+              * ``Invocation``: For commands sent to multiple managed nodes, receive notification on a per-node basis when the status of a command changes.
+              
+
+              
+        
+          
+
+          - **OutputS3BucketName** *(string) --* 
+
+            The name of the Amazon Simple Storage Service (Amazon S3) bucket.
+
+            
+          
+
+          - **OutputS3KeyPrefix** *(string) --* 
+
+            The S3 bucket subfolder.
+
+            
+          
+
+          - **Parameters** *(dict) --* 
+
+            The parameters for the ``RUN_COMMAND`` task execution.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(list) --* 
+                
+
+                - *(string) --* 
+            
+        
+      
+          
+
+          - **ServiceRoleArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the IAM service role for Amazon Web Services Systems Manager to assume when running a maintenance window task. If you do not specify a service role ARN, Systems Manager uses a service-linked role in your account. If no appropriate service-linked role for Systems Manager exists in your account, it is created when you run ``RegisterTaskWithMaintenanceWindow``.
+
+             
+
+            However, for an improved security posture, we strongly recommend creating a custom policy and custom service role for running your maintenance window tasks. The policy can be crafted to provide only the permissions needed for your particular maintenance window tasks. For more information, see `Setting up Maintenance Windows <https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-maintenance-permissions.html>`__ in the in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+          
+
+          - **TimeoutSeconds** *(integer) --* 
+
+            If this time is reached and the command hasn't already started running, it doesn't run.
+
+            
+      
+        
+
+        - **Automation** *(dict) --* 
+
+          The parameters for an ``AUTOMATION`` task type.
+
+          
+          
+
+          - **DocumentVersion** *(string) --* 
+
+            The version of an Automation runbook to use during task execution.
+
+            
+          
+
+          - **Parameters** *(dict) --* 
+
+            The parameters for the ``AUTOMATION`` task.
+
+             
+
+            For information about specifying and updating task parameters, see  RegisterTaskWithMaintenanceWindow and  UpdateMaintenanceWindowTask.
+
+             
+
+            .. note::
+
+              
+
+              ``LoggingInfo`` has been deprecated. To specify an Amazon Simple Storage Service (Amazon S3) bucket to contain logs, instead use the ``OutputS3BucketName`` and ``OutputS3KeyPrefix`` options in the ``TaskInvocationParameters`` structure. For information about how Amazon Web Services Systems Manager handles these options for the supported maintenance window task types, see  MaintenanceWindowTaskInvocationParameters.
+
+               
+
+              ``TaskParameters`` has been deprecated. To specify parameters to pass to a task when it runs, instead use the ``Parameters`` option in the ``TaskInvocationParameters`` structure. For information about how Systems Manager handles these options for the supported maintenance window task types, see  MaintenanceWindowTaskInvocationParameters.
+
+               
+
+              For ``AUTOMATION`` task types, Amazon Web Services Systems Manager ignores any values specified for these parameters.
+
+              
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(list) --* 
+                
+
+                - *(string) --* 
+            
+        
+      
+      
+        
+
+        - **StepFunctions** *(dict) --* 
+
+          The parameters for a ``STEP_FUNCTIONS`` task type.
+
+          
+          
+
+          - **Input** *(string) --* 
+
+            The inputs for the ``STEP_FUNCTIONS`` task.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The name of the ``STEP_FUNCTIONS`` task.
+
+            
+      
+        
+
+        - **Lambda** *(dict) --* 
+
+          The parameters for a ``LAMBDA`` task type.
+
+          
+          
+
+          - **ClientContext** *(string) --* 
+
+            Pass client-specific information to the Lambda function that you are invoking. You can then process the client information in your Lambda function as you choose through the context variable.
+
+            
+          
+
+          - **Qualifier** *(string) --* 
+
+            (Optional) Specify an Lambda function version or alias name. If you specify a function version, the operation uses the qualified function Amazon Resource Name (ARN) to invoke a specific Lambda function. If you specify an alias name, the operation uses the alias ARN to invoke the Lambda function version to which the alias points.
+
+            
+          
+
+          - **Payload** *(bytes) --* 
+
+            JSON to provide to your Lambda function as input.
+
+            
+      
+    
+      
+
+      - **Priority** *(integer) --* 
+
+        The priority of the task when it runs. The lower the number, the higher the priority. Tasks that have the same priority are scheduled in parallel.
+
+        
+      
+
+      - **MaxConcurrency** *(string) --* 
+
+        The maximum number of targets allowed to run this task in parallel.
+
+         
+
+        .. note::
+
+          
+
+          For maintenance window tasks without a target specified, you can't supply a value for this option. Instead, the system inserts a placeholder value of ``1``, which may be reported in the response to this command. This value doesn't affect the running of your task and can be ignored.
+
+          
+
+        
+      
+
+      - **MaxErrors** *(string) --* 
+
+        The maximum number of errors allowed before the task stops being scheduled.
+
+         
+
+        .. note::
+
+          
+
+          For maintenance window tasks without a target specified, you can't supply a value for this option. Instead, the system inserts a placeholder value of ``1``, which may be reported in the response to this command. This value doesn't affect the running of your task and can be ignored.
+
+          
+
+        
+      
+
+      - **LoggingInfo** *(dict) --* 
+
+        The location in Amazon Simple Storage Service (Amazon S3) where the task results are logged.
+
+         
+
+        .. note::
+
+          
+
+          ``LoggingInfo`` has been deprecated. To specify an Amazon Simple Storage Service (Amazon S3) bucket to contain logs, instead use the ``OutputS3BucketName`` and ``OutputS3KeyPrefix`` options in the ``TaskInvocationParameters`` structure. For information about how Amazon Web Services Systems Manager handles these options for the supported maintenance window task types, see  MaintenanceWindowTaskInvocationParameters.
+
+          
+
+        
+        
+
+        - **S3BucketName** *(string) --* 
+
+          The name of an S3 bucket where execution logs are stored.
+
+          
+        
+
+        - **S3KeyPrefix** *(string) --* 
+
+          (Optional) The S3 bucket subfolder.
+
+          
+        
+
+        - **S3Region** *(string) --* 
+
+          The Amazon Web Services Region where the S3 bucket is located.
+
+          
+    
+      
+
+      - **Name** *(string) --* 
+
+        The retrieved task name.
+
+        
+      
+
+      - **Description** *(string) --* 
+
+        The retrieved task description.
+
+        
+      
+
+      - **CutoffBehavior** *(string) --* 
+
+        The action to take on tasks when the maintenance window cutoff time is reached. ``CONTINUE_TASK`` means that tasks continue to run. For Automation, Lambda, Step Functions tasks, ``CANCEL_TASK`` means that currently running task invocations continue, but no new task invocations are started. For Run Command tasks, ``CANCEL_TASK`` means the system attempts to stop the task by sending a ``CancelCommand`` operation.
+
+        
+      
+
+      - **AlarmConfiguration** *(dict) --* 
+
+        The details for the CloudWatch alarm you applied to your maintenance window task.
+
+        
+        
+
+        - **IgnorePollAlarmFailure** *(boolean) --* 
+
+          When this value is *true*, your automation or command continues to run in cases where we can’t retrieve alarm status information from CloudWatch. In cases where we successfully retrieve an alarm status of OK or INSUFFICIENT_DATA, the automation or command continues to run, regardless of this value. Default is *false*.
+
+          
+        
+
+        - **Alarms** *(list) --* 
+
+          The name of the CloudWatch alarm specified in the configuration.
+
+          
+          
+
+          - *(dict) --* 
+
+            A CloudWatch alarm you apply to an automation or command.
+
+            
+            
+
+            - **Name** *(string) --* 
+
+              The name of your CloudWatch alarm.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.DoesNotExistException`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  

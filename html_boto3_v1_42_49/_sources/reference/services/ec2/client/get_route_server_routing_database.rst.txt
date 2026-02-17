@@ -1,0 +1,302 @@
+:doc:`EC2 <../../ec2>` / Client / get_route_server_routing_database
+
+*********************************
+get_route_server_routing_database
+*********************************
+
+
+
+.. py:method:: EC2.Client.get_route_server_routing_database(**kwargs)
+
+  
+
+  Gets the routing database for the specified route server. The `Routing Information Base (RIB) <https://en.wikipedia.org/wiki/Routing_table>`__ serves as a database that stores all the routing information and network topology data collected by a router or routing system, such as routes learned from BGP peers. The RIB is constantly updated as new routing information is received or existing routes change. This ensures that the route server always has the most current view of the network topology and can make optimal routing decisions.
+
+   
+
+  Amazon VPC Route Server simplifies routing for traffic between workloads that are deployed within a VPC and its internet gateways. With this feature, VPC Route Server dynamically updates VPC and internet gateway route tables with your preferred IPv4 or IPv6 routes to achieve routing fault tolerance for those workloads. This enables you to automatically reroute traffic within a VPC, which increases the manageability of VPC routing and interoperability with third-party workloads.
+
+   
+
+  Route server supports the follow route table types:
+
+   
+
+  
+  * VPC route tables not associated with subnets
+   
+  * Subnet route tables
+   
+  * Internet gateway route tables
+  
+
+   
+
+  Route server does not support route tables associated with virtual private gateways. To propagate routes into a transit gateway route table, use `Transit Gateway Connect <https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/GetRouteServerRoutingDatabase>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_route_server_routing_database(
+        RouteServerId='string',
+        NextToken='string',
+        MaxResults=123,
+        DryRun=True|False,
+        Filters=[
+            {
+                'Name': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ]
+    )
+    
+  :type RouteServerId: string
+  :param RouteServerId: **[REQUIRED]** 
+
+    The ID of the route server for which to get the routing database.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next page of results.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of routing database entries to return in a single response.
+
+    
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    A check for whether you have the required permissions for the action without actually making the request and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    Filters to apply to the routing database query.
+
+    
+
+  
+    - *(dict) --* 
+
+      A filter name and value pair that is used to return a more specific list of results from a describe operation. Filters can be used to match a set of resources by specific criteria, such as tags, attributes, or IDs.
+
+       
+
+      If you specify multiple filters, the filters are joined with an ``AND``, and the request returns only results that match all of the specified filters.
+
+       
+
+      For more information, see `List and filter using the CLI and API <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Filtering.html#Filtering_Resources_CLI>`__ in the *Amazon EC2 User Guide*.
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The name of the filter. Filter names are case-sensitive.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The filter values. Filter values are case-sensitive. If you specify multiple values for a filter, the values are joined with an ``OR``, and the request returns all results that match any of the specified values.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'AreRoutesPersisted': True|False,
+          'Routes': [
+              {
+                  'RouteServerEndpointId': 'string',
+                  'RouteServerPeerId': 'string',
+                  'RouteInstallationDetails': [
+                      {
+                          'RouteTableId': 'string',
+                          'RouteInstallationStatus': 'installed'|'rejected',
+                          'RouteInstallationStatusReason': 'string'
+                      },
+                  ],
+                  'RouteStatus': 'in-rib'|'in-fib',
+                  'Prefix': 'string',
+                  'AsPaths': [
+                      'string',
+                  ],
+                  'Med': 123,
+                  'NextHopIp': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **AreRoutesPersisted** *(boolean) --* 
+
+        Indicates whether routes are being persisted in the routing database.
+
+        
+      
+
+      - **Routes** *(list) --* 
+
+        The collection of routes in the route server's routing database.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a route in the route server's routing database.
+
+          
+          
+
+          - **RouteServerEndpointId** *(string) --* 
+
+            The ID of the route server endpoint that received this route.
+
+            
+          
+
+          - **RouteServerPeerId** *(string) --* 
+
+            The ID of the route server peer that advertised this route.
+
+            
+          
+
+          - **RouteInstallationDetails** *(list) --* 
+
+            Details about the installation status of this route in route tables.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes the installation status of a route in a route table.
+
+              
+              
+
+              - **RouteTableId** *(string) --* 
+
+                The ID of the route table where the route is being installed.
+
+                
+              
+
+              - **RouteInstallationStatus** *(string) --* 
+
+                The current installation status of the route in the route table.
+
+                
+              
+
+              - **RouteInstallationStatusReason** *(string) --* 
+
+                The reason for the current installation status of the route.
+
+                
+          
+        
+          
+
+          - **RouteStatus** *(string) --* 
+
+            The current status of the route in the routing database. Values are ``in-rib`` or ``in-fib`` depending on if the routes are in the RIB or the FIB database.
+
+             
+
+            The `Routing Information Base (RIB) <https://en.wikipedia.org/wiki/Routing_table>`__ serves as a database that stores all the routing information and network topology data collected by a router or routing system, such as routes learned from BGP peers. The RIB is constantly updated as new routing information is received or existing routes change. This ensures that the route server always has the most current view of the network topology and can make optimal routing decisions.
+
+             
+
+            The `Forwarding Information Base (FIB) <https://en.wikipedia.org/wiki/Forwarding_information_base>`__ serves as a forwarding table for what route server has determined are the best-path routes in the RIB after evaluating all available routing information and policies. The FIB routes are installed on the route tables. The FIB is recomputed whenever there are changes to the RIB.
+
+            
+          
+
+          - **Prefix** *(string) --* 
+
+            The destination CIDR block of the route.
+
+            
+          
+
+          - **AsPaths** *(list) --* 
+
+            The AS path attributes of the BGP route.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **Med** *(integer) --* 
+
+            The Multi-Exit Discriminator (MED) value of the BGP route.
+
+            
+          
+
+          - **NextHopIp** *(string) --* 
+
+            The IP address for the next hop.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to use to retrieve the next page of results. This value is ``null`` when there are no more results to return.
+
+        
+  

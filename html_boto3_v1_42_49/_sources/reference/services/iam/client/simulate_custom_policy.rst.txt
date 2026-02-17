@@ -1,0 +1,782 @@
+:doc:`IAM <../../iam>` / Client / simulate_custom_policy
+
+**********************
+simulate_custom_policy
+**********************
+
+
+
+.. py:method:: IAM.Client.simulate_custom_policy(**kwargs)
+
+  
+
+  Simulate how a set of IAM policies and optionally a resource-based policy works with a list of API operations and Amazon Web Services resources to determine the policies' effective permissions. The policies are provided as strings.
+
+   
+
+  The simulation does not perform the API operations; it only checks the authorization to determine if the simulated policies allow or deny the operations. You can simulate resources that don't exist in your account.
+
+   
+
+  If you want to simulate existing policies that are attached to an IAM user, group, or role, use `SimulatePrincipalPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulatePrincipalPolicy.html>`__ instead.
+
+   
+
+  Context keys are variables that are maintained by Amazon Web Services and its services and which provide details about the context of an API query request. You can use the ``Condition`` element of an IAM policy to evaluate context keys. To get the list of context keys that the policies require for correct simulation, use `GetContextKeysForCustomPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html>`__.
+
+   
+
+  If the output is long, you can use ``MaxItems`` and ``Marker`` parameters to paginate the results.
+
+   
+
+  .. note::
+
+    
+
+    The IAM policy simulator evaluates statements in the identity-based policy and the inputs that you provide during simulation. The policy simulator results can differ from your live Amazon Web Services environment. We recommend that you check your policies against your live Amazon Web Services environment after testing using the policy simulator to confirm that you have the desired results. For more information about using the policy simulator, see `Testing IAM policies with the IAM policy simulator <https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html>`__in the *IAM User Guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iam-2010-05-08/SimulateCustomPolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.simulate_custom_policy(
+        PolicyInputList=[
+            'string',
+        ],
+        PermissionsBoundaryPolicyInputList=[
+            'string',
+        ],
+        ActionNames=[
+            'string',
+        ],
+        ResourceArns=[
+            'string',
+        ],
+        ResourcePolicy='string',
+        ResourceOwner='string',
+        CallerArn='string',
+        ContextEntries=[
+            {
+                'ContextKeyName': 'string',
+                'ContextKeyValues': [
+                    'string',
+                ],
+                'ContextKeyType': 'string'|'stringList'|'numeric'|'numericList'|'boolean'|'booleanList'|'ip'|'ipList'|'binary'|'binaryList'|'date'|'dateList'
+            },
+        ],
+        ResourceHandlingOption='string',
+        MaxItems=123,
+        Marker='string'
+    )
+    
+  :type PolicyInputList: list
+  :param PolicyInputList: **[REQUIRED]** 
+
+    A list of policy documents to include in the simulation. Each document is specified as a string containing the complete, valid JSON text of an IAM policy. Do not include any resource-based policies in this parameter. Any resource-based policy must be submitted with the ``ResourcePolicy`` parameter. The policies cannot be "scope-down" policies, such as you could include in a call to `GetFederationToken <https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetFederationToken.html>`__ or one of the `AssumeRole <https://docs.aws.amazon.com/IAM/latest/APIReference/API_AssumeRole.html>`__ API operations. In other words, do not use policies designed to restrict what a user can do while using the temporary credentials.
+
+     
+
+    The maximum length of the policy document that you can pass in this operation, including whitespace, is listed below. To view the maximum character counts of a managed policy with no whitespaces, see `IAM and STS character quotas <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-quotas.html#reference_iam-quotas-entity-length>`__.
+
+     
+
+    The `regex pattern <http://wikipedia.org/wiki/regex>`__ used to validate this parameter is a string of characters consisting of the following:
+
+     
+
+    
+    * Any printable ASCII character ranging from the space character ( ``\u0020``) through the end of the ASCII character range
+     
+    * The printable characters in the Basic Latin and Latin-1 Supplement character set (through ``\u00FF``)
+     
+    * The special characters tab ( ``\u0009``), line feed ( ``\u000A``), and carriage return ( ``\u000D``)
+    
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type PermissionsBoundaryPolicyInputList: list
+  :param PermissionsBoundaryPolicyInputList: 
+
+    The IAM permissions boundary policy to simulate. The permissions boundary sets the maximum permissions that an IAM entity can have. You can input only one permissions boundary when you pass a policy to this operation. For more information about permissions boundaries, see `Permissions boundaries for IAM entities <https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html>`__ in the *IAM User Guide*. The policy input is specified as a string that contains the complete, valid JSON text of a permissions boundary policy.
+
+     
+
+    The maximum length of the policy document that you can pass in this operation, including whitespace, is listed below. To view the maximum character counts of a managed policy with no whitespaces, see `IAM and STS character quotas <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-quotas.html#reference_iam-quotas-entity-length>`__.
+
+     
+
+    The `regex pattern <http://wikipedia.org/wiki/regex>`__ used to validate this parameter is a string of characters consisting of the following:
+
+     
+
+    
+    * Any printable ASCII character ranging from the space character ( ``\u0020``) through the end of the ASCII character range
+     
+    * The printable characters in the Basic Latin and Latin-1 Supplement character set (through ``\u00FF``)
+     
+    * The special characters tab ( ``\u0009``), line feed ( ``\u000A``), and carriage return ( ``\u000D``)
+    
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ActionNames: list
+  :param ActionNames: **[REQUIRED]** 
+
+    A list of names of API operations to evaluate in the simulation. Each operation is evaluated against each resource. Each operation must include the service identifier, such as ``iam:CreateUser``. This operation does not support using wildcards (*) in an action name.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ResourceArns: list
+  :param ResourceArns: 
+
+    A list of ARNs of Amazon Web Services resources to include in the simulation. If this parameter is not provided, then the value defaults to ``*`` (all resources). Each API in the ``ActionNames`` parameter is evaluated for each resource in this list. The simulation determines the access result (allowed or denied) of each combination and reports it in the response. You can simulate resources that don't exist in your account.
+
+     
+
+    The simulation does not automatically retrieve policies for the specified resources. If you want to include a resource policy in the simulation, then you must include the policy as a string in the ``ResourcePolicy`` parameter.
+
+     
+
+    If you include a ``ResourcePolicy``, then it must be applicable to all of the resources included in the simulation or you receive an invalid input error.
+
+     
+
+    For more information about ARNs, see `Amazon Resource Names (ARNs) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ in the *Amazon Web Services General Reference*.
+
+     
+
+    .. note::
+
+      
+
+      Simulation of resource-based policies isn't supported for IAM roles.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ResourcePolicy: string
+  :param ResourcePolicy: 
+
+    A resource-based policy to include in the simulation provided as a string. Each resource in the simulation is treated as if it had this policy attached. You can include only one resource-based policy in a simulation.
+
+     
+
+    The maximum length of the policy document that you can pass in this operation, including whitespace, is listed below. To view the maximum character counts of a managed policy with no whitespaces, see `IAM and STS character quotas <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-quotas.html#reference_iam-quotas-entity-length>`__.
+
+     
+
+    The `regex pattern <http://wikipedia.org/wiki/regex>`__ used to validate this parameter is a string of characters consisting of the following:
+
+     
+
+    
+    * Any printable ASCII character ranging from the space character ( ``\u0020``) through the end of the ASCII character range
+     
+    * The printable characters in the Basic Latin and Latin-1 Supplement character set (through ``\u00FF``)
+     
+    * The special characters tab ( ``\u0009``), line feed ( ``\u000A``), and carriage return ( ``\u000D``)
+    
+
+     
+
+    .. note::
+
+      
+
+      Simulation of resource-based policies isn't supported for IAM roles.
+
+      
+
+    
+
+  
+  :type ResourceOwner: string
+  :param ResourceOwner: 
+
+    An ARN representing the Amazon Web Services account ID that specifies the owner of any simulated resource that does not identify its owner in the resource ARN. Examples of resource ARNs include an S3 bucket or object. If ``ResourceOwner`` is specified, it is also used as the account owner of any ``ResourcePolicy`` included in the simulation. If the ``ResourceOwner`` parameter is not specified, then the owner of the resources and the resource policy defaults to the account of the identity provided in ``CallerArn``. This parameter is required only if you specify a resource-based policy and account that owns the resource is different from the account that owns the simulated calling user ``CallerArn``.
+
+     
+
+    The ARN for an account uses the following syntax: ``arn:aws:iam::AWS-account-ID:root``. For example, to represent the account with the 112233445566 ID, use the following ARN: ``arn:aws:iam::112233445566-ID:root``.
+
+    
+
+  
+  :type CallerArn: string
+  :param CallerArn: 
+
+    The ARN of the IAM user that you want to use as the simulated caller of the API operations. ``CallerArn`` is required if you include a ``ResourcePolicy`` so that the policy's ``Principal`` element has a value to use in evaluating the policy.
+
+     
+
+    You can specify only the ARN of an IAM user. You cannot specify the ARN of an assumed role, federated user, or a service principal.
+
+    
+
+  
+  :type ContextEntries: list
+  :param ContextEntries: 
+
+    A list of context keys and corresponding values for the simulation to use. Whenever a context key is evaluated in one of the simulated IAM permissions policies, the corresponding value is supplied.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains information about a condition context key. It includes the name of the key and specifies the value (or values, if the context key supports multiple values) to use in the simulation. This information is used when evaluating the ``Condition`` elements of the input policies.
+
+       
+
+      This data type is used as an input parameter to `SimulateCustomPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulateCustomPolicy.html>`__ and `SimulatePrincipalPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulatePrincipalPolicy.html>`__.
+
+      
+
+    
+      - **ContextKeyName** *(string) --* 
+
+        The full name of a condition context key, including the service prefix. For example, ``aws:SourceIp`` or ``s3:VersionId``.
+
+        
+
+      
+      - **ContextKeyValues** *(list) --* 
+
+        The value (or values, if the condition context key supports multiple values) to provide to the simulation when the key is referenced by a ``Condition`` element in an input policy.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **ContextKeyType** *(string) --* 
+
+        The data type of the value (or values) specified in the ``ContextKeyValues`` parameter.
+
+        
+
+      
+    
+
+  :type ResourceHandlingOption: string
+  :param ResourceHandlingOption: 
+
+    Specifies the type of simulation to run. Different API operations that support resource-based policies require different combinations of resources. By specifying the type of simulation to run, you enable the policy simulator to enforce the presence of the required resources to ensure reliable simulation results. If your simulation does not match one of the following scenarios, then you can omit this parameter. The following list shows each of the supported scenario values and the resources that you must define to run the simulation.
+
+     
+
+    Each of the Amazon EC2 scenarios requires that you specify instance, image, and security group resources. If your scenario includes an EBS volume, then you must specify that volume as a resource. If the Amazon EC2 scenario includes VPC, then you must supply the network interface resource. If it includes an IP subnet, then you must specify the subnet resource. For more information on the Amazon EC2 scenario options, see `Supported platforms <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-supported-platforms.html>`__ in the *Amazon EC2 User Guide*.
+
+     
+
+    
+    * **EC2-VPC-InstanceStore** instance, image, security group, network interface
+     
+    * **EC2-VPC-InstanceStore-Subnet** instance, image, security group, network interface, subnet
+     
+    * **EC2-VPC-EBS** instance, image, security group, network interface, volume
+     
+    * **EC2-VPC-EBS-Subnet** instance, image, security group, network interface, subnet, volume
+    
+
+    
+
+  
+  :type MaxItems: integer
+  :param MaxItems: 
+
+    Use this only when paginating results to indicate the maximum number of items you want in the response. If additional items exist beyond the maximum you specify, the ``IsTruncated`` response element is ``true``.
+
+     
+
+    If you do not include this parameter, the number of items defaults to 100. Note that IAM might return fewer results, even when there are more results available. In that case, the ``IsTruncated`` response element returns ``true``, and ``Marker`` contains a value to include in the subsequent call that tells the service where to continue from.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    Use this parameter only when paginating results and only after you receive a response indicating that the results are truncated. Set it to the value of the ``Marker`` element in the response that you received to indicate where the next call should start.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'EvaluationResults': [
+              {
+                  'EvalActionName': 'string',
+                  'EvalResourceName': 'string',
+                  'EvalDecision': 'allowed'|'explicitDeny'|'implicitDeny',
+                  'MatchedStatements': [
+                      {
+                          'SourcePolicyId': 'string',
+                          'SourcePolicyType': 'user'|'group'|'role'|'aws-managed'|'user-managed'|'resource'|'none',
+                          'StartPosition': {
+                              'Line': 123,
+                              'Column': 123
+                          },
+                          'EndPosition': {
+                              'Line': 123,
+                              'Column': 123
+                          }
+                      },
+                  ],
+                  'MissingContextValues': [
+                      'string',
+                  ],
+                  'OrganizationsDecisionDetail': {
+                      'AllowedByOrganizations': True|False
+                  },
+                  'PermissionsBoundaryDecisionDetail': {
+                      'AllowedByPermissionsBoundary': True|False
+                  },
+                  'EvalDecisionDetails': {
+                      'string': 'allowed'|'explicitDeny'|'implicitDeny'
+                  },
+                  'ResourceSpecificResults': [
+                      {
+                          'EvalResourceName': 'string',
+                          'EvalResourceDecision': 'allowed'|'explicitDeny'|'implicitDeny',
+                          'MatchedStatements': [
+                              {
+                                  'SourcePolicyId': 'string',
+                                  'SourcePolicyType': 'user'|'group'|'role'|'aws-managed'|'user-managed'|'resource'|'none',
+                                  'StartPosition': {
+                                      'Line': 123,
+                                      'Column': 123
+                                  },
+                                  'EndPosition': {
+                                      'Line': 123,
+                                      'Column': 123
+                                  }
+                              },
+                          ],
+                          'MissingContextValues': [
+                              'string',
+                          ],
+                          'EvalDecisionDetails': {
+                              'string': 'allowed'|'explicitDeny'|'implicitDeny'
+                          },
+                          'PermissionsBoundaryDecisionDetail': {
+                              'AllowedByPermissionsBoundary': True|False
+                          }
+                      },
+                  ]
+              },
+          ],
+          'IsTruncated': True|False,
+          'Marker': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains the response to a successful `SimulatePrincipalPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulatePrincipalPolicy.html>`__ or `SimulateCustomPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_SimulateCustomPolicy.html>`__ request.
+
+      
+      
+
+      - **EvaluationResults** *(list) --* 
+
+        The results of the simulation.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains the results of a simulation.
+
+           
+
+          This data type is used by the return parameter of ``SimulateCustomPolicy`` and ``SimulatePrincipalPolicy ``.
+
+          
+          
+
+          - **EvalActionName** *(string) --* 
+
+            The name of the API operation tested on the indicated resource.
+
+            
+          
+
+          - **EvalResourceName** *(string) --* 
+
+            The ARN of the resource that the indicated API operation was tested on.
+
+            
+          
+
+          - **EvalDecision** *(string) --* 
+
+            The result of the simulation.
+
+            
+          
+
+          - **MatchedStatements** *(list) --* 
+
+            A list of the statements in the input policies that determine the result for this scenario. Remember that even if multiple statements allow the operation on the resource, if only one statement denies that operation, then the explicit deny overrides any allow. In addition, the deny statement is the only entry included in the result.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains a reference to a ``Statement`` element in a policy document that determines the result of the simulation.
+
+               
+
+              This data type is used by the ``MatchedStatements`` member of the ``EvaluationResult`` type.
+
+              
+              
+
+              - **SourcePolicyId** *(string) --* 
+
+                The identifier of the policy that was provided as an input.
+
+                
+              
+
+              - **SourcePolicyType** *(string) --* 
+
+                The type of the policy.
+
+                
+              
+
+              - **StartPosition** *(dict) --* 
+
+                The row and column of the beginning of the ``Statement`` in an IAM policy.
+
+                
+                
+
+                - **Line** *(integer) --* 
+
+                  The line containing the specified position in the document.
+
+                  
+                
+
+                - **Column** *(integer) --* 
+
+                  The column in the line containing the specified position in the document.
+
+                  
+            
+              
+
+              - **EndPosition** *(dict) --* 
+
+                The row and column of the end of a ``Statement`` in an IAM policy.
+
+                
+                
+
+                - **Line** *(integer) --* 
+
+                  The line containing the specified position in the document.
+
+                  
+                
+
+                - **Column** *(integer) --* 
+
+                  The column in the line containing the specified position in the document.
+
+                  
+            
+          
+        
+          
+
+          - **MissingContextValues** *(list) --* 
+
+            A list of context keys that are required by the included input policies but that were not provided by one of the input parameters. This list is used when the resource in a simulation is "*", either explicitly, or when the ``ResourceArns`` parameter blank. If you include a list of resources, then any missing context values are instead included under the ``ResourceSpecificResults`` section. To discover the context keys used by a set of policies, you can call `GetContextKeysForCustomPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html>`__ or `GetContextKeysForPrincipalPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html>`__.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **OrganizationsDecisionDetail** *(dict) --* 
+
+            A structure that details how Organizations and its service control policies affect the results of the simulation. Only applies if the simulated user's account is part of an organization.
+
+            
+            
+
+            - **AllowedByOrganizations** *(boolean) --* 
+
+              Specifies whether the simulated operation is allowed by the Organizations service control policies that impact the simulated user's account.
+
+              
+        
+          
+
+          - **PermissionsBoundaryDecisionDetail** *(dict) --* 
+
+            Contains information about the effect that a permissions boundary has on a policy simulation when the boundary is applied to an IAM entity.
+
+            
+            
+
+            - **AllowedByPermissionsBoundary** *(boolean) --* 
+
+              Specifies whether an action is allowed by a permissions boundary that is applied to an IAM entity (user or role). A value of ``true`` means that the permissions boundary does not deny the action. This means that the policy includes an ``Allow`` statement that matches the request. In this case, if an identity-based policy also allows the action, the request is allowed. A value of ``false`` means that either the requested action is not allowed (implicitly denied) or that the action is explicitly denied by the permissions boundary. In both of these cases, the action is not allowed, regardless of the identity-based policy.
+
+              
+        
+          
+
+          - **EvalDecisionDetails** *(dict) --* 
+
+            Additional details about the results of the cross-account evaluation decision. This parameter is populated for only cross-account simulations. It contains a brief summary of how each policy type contributes to the final evaluation decision.
+
+             
+
+            If the simulation evaluates policies within the same account and includes a resource ARN, then the parameter is present but the response is empty. If the simulation evaluates policies within the same account and specifies all resources ( ``*``), then the parameter is not returned.
+
+             
+
+            When you make a cross-account request, Amazon Web Services evaluates the request in the trusting account and the trusted account. The request is allowed only if both evaluations return ``true``. For more information about how policies are evaluated, see `Evaluating policies within a single account <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-basics>`__.
+
+             
+
+            If an Organizations SCP included in the evaluation denies access, the simulation ends. In this case, policy evaluation does not proceed any further and this parameter is not returned.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+          
+
+          - **ResourceSpecificResults** *(list) --* 
+
+            The individual results of the simulation of the API operation specified in EvalActionName on each resource.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains the result of the simulation of a single API operation call on a single resource.
+
+               
+
+              This data type is used by a member of the `EvaluationResult <https://docs.aws.amazon.com/IAM/latest/APIReference/API_EvaluationResult.html>`__ data type.
+
+              
+              
+
+              - **EvalResourceName** *(string) --* 
+
+                The name of the simulated resource, in Amazon Resource Name (ARN) format.
+
+                
+              
+
+              - **EvalResourceDecision** *(string) --* 
+
+                The result of the simulation of the simulated API operation on the resource specified in ``EvalResourceName``.
+
+                
+              
+
+              - **MatchedStatements** *(list) --* 
+
+                A list of the statements in the input policies that determine the result for this part of the simulation. Remember that even if multiple statements allow the operation on the resource, if *any* statement denies that operation, then the explicit deny overrides any allow. In addition, the deny statement is the only entry included in the result.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Contains a reference to a ``Statement`` element in a policy document that determines the result of the simulation.
+
+                   
+
+                  This data type is used by the ``MatchedStatements`` member of the ``EvaluationResult`` type.
+
+                  
+                  
+
+                  - **SourcePolicyId** *(string) --* 
+
+                    The identifier of the policy that was provided as an input.
+
+                    
+                  
+
+                  - **SourcePolicyType** *(string) --* 
+
+                    The type of the policy.
+
+                    
+                  
+
+                  - **StartPosition** *(dict) --* 
+
+                    The row and column of the beginning of the ``Statement`` in an IAM policy.
+
+                    
+                    
+
+                    - **Line** *(integer) --* 
+
+                      The line containing the specified position in the document.
+
+                      
+                    
+
+                    - **Column** *(integer) --* 
+
+                      The column in the line containing the specified position in the document.
+
+                      
+                
+                  
+
+                  - **EndPosition** *(dict) --* 
+
+                    The row and column of the end of a ``Statement`` in an IAM policy.
+
+                    
+                    
+
+                    - **Line** *(integer) --* 
+
+                      The line containing the specified position in the document.
+
+                      
+                    
+
+                    - **Column** *(integer) --* 
+
+                      The column in the line containing the specified position in the document.
+
+                      
+                
+              
+            
+              
+
+              - **MissingContextValues** *(list) --* 
+
+                A list of context keys that are required by the included input policies but that were not provided by one of the input parameters. This list is used when a list of ARNs is included in the ``ResourceArns`` parameter instead of "*". If you do not specify individual resources, by setting ``ResourceArns`` to "*" or by not including the ``ResourceArns`` parameter, then any missing context values are instead included under the ``EvaluationResults`` section. To discover the context keys used by a set of policies, you can call `GetContextKeysForCustomPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForCustomPolicy.html>`__ or `GetContextKeysForPrincipalPolicy <https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetContextKeysForPrincipalPolicy.html>`__.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **EvalDecisionDetails** *(dict) --* 
+
+                Additional details about the results of the evaluation decision on a single resource. This parameter is returned only for cross-account simulations. This parameter explains how each policy type contributes to the resource-specific evaluation decision.
+
+                
+                
+
+                - *(string) --* 
+                  
+
+                  - *(string) --* 
+            
+          
+              
+
+              - **PermissionsBoundaryDecisionDetail** *(dict) --* 
+
+                Contains information about the effect that a permissions boundary has on a policy simulation when that boundary is applied to an IAM entity.
+
+                
+                
+
+                - **AllowedByPermissionsBoundary** *(boolean) --* 
+
+                  Specifies whether an action is allowed by a permissions boundary that is applied to an IAM entity (user or role). A value of ``true`` means that the permissions boundary does not deny the action. This means that the policy includes an ``Allow`` statement that matches the request. In this case, if an identity-based policy also allows the action, the request is allowed. A value of ``false`` means that either the requested action is not allowed (implicitly denied) or that the action is explicitly denied by the permissions boundary. In both of these cases, the action is not allowed, regardless of the identity-based policy.
+
+                  
+            
+          
+        
+      
+    
+      
+
+      - **IsTruncated** *(boolean) --* 
+
+        A flag that indicates whether there are more items to return. If your results were truncated, you can make a subsequent pagination request using the ``Marker`` request parameter to retrieve more items. Note that IAM might return fewer than the ``MaxItems`` number of results even when there are more results available. We recommend that you check ``IsTruncated`` after every call to ensure that you receive all your results.
+
+        
+      
+
+      - **Marker** *(string) --* 
+
+        When ``IsTruncated`` is ``true``, this element is present and contains the value to use for the ``Marker`` parameter in a subsequent pagination request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IAM.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`IAM.Client.exceptions.PolicyEvaluationException`
+
+  

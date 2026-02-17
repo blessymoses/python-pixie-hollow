@@ -1,0 +1,326 @@
+:doc:`ForecastService <../../forecast>` / Client / describe_forecast
+
+*****************
+describe_forecast
+*****************
+
+
+
+.. py:method:: ForecastService.Client.describe_forecast(**kwargs)
+
+  
+
+  Describes a forecast created using the  CreateForecast operation.
+
+   
+
+  In addition to listing the properties provided in the ``CreateForecast`` request, this operation lists the following properties:
+
+   
+
+  
+  * ``DatasetGroupArn`` - The dataset group that provided the training data.
+   
+  * ``CreationTime``
+   
+  * ``LastModificationTime``
+   
+  * ``Status``
+   
+  * ``Message`` - If an error occurred, information about the error.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeForecast>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_forecast(
+        ForecastArn='string'
+    )
+    
+  :type ForecastArn: string
+  :param ForecastArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the forecast.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ForecastArn': 'string',
+          'ForecastName': 'string',
+          'ForecastTypes': [
+              'string',
+          ],
+          'PredictorArn': 'string',
+          'DatasetGroupArn': 'string',
+          'EstimatedTimeRemainingInMinutes': 123,
+          'Status': 'string',
+          'Message': 'string',
+          'CreationTime': datetime(2015, 1, 1),
+          'LastModificationTime': datetime(2015, 1, 1),
+          'TimeSeriesSelector': {
+              'TimeSeriesIdentifiers': {
+                  'DataSource': {
+                      'S3Config': {
+                          'Path': 'string',
+                          'RoleArn': 'string',
+                          'KMSKeyArn': 'string'
+                      }
+                  },
+                  'Schema': {
+                      'Attributes': [
+                          {
+                              'AttributeName': 'string',
+                              'AttributeType': 'string'|'integer'|'float'|'timestamp'|'geolocation'
+                          },
+                      ]
+                  },
+                  'Format': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ForecastArn** *(string) --* 
+
+        The forecast ARN as specified in the request.
+
+        
+      
+
+      - **ForecastName** *(string) --* 
+
+        The name of the forecast.
+
+        
+      
+
+      - **ForecastTypes** *(list) --* 
+
+        The quantiles at which probabilistic forecasts were generated.
+
+        
+        
+
+        - *(string) --* 
+    
+      
+
+      - **PredictorArn** *(string) --* 
+
+        The ARN of the predictor used to generate the forecast.
+
+        
+      
+
+      - **DatasetGroupArn** *(string) --* 
+
+        The ARN of the dataset group that provided the data used to train the predictor.
+
+        
+      
+
+      - **EstimatedTimeRemainingInMinutes** *(integer) --* 
+
+        The estimated time remaining in minutes for the forecast job to complete.
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        The status of the forecast. States include:
+
+         
+
+        
+        * ``ACTIVE``
+         
+        * ``CREATE_PENDING``, ``CREATE_IN_PROGRESS``, ``CREATE_FAILED``
+         
+        * ``CREATE_STOPPING``, ``CREATE_STOPPED``
+         
+        * ``DELETE_PENDING``, ``DELETE_IN_PROGRESS``, ``DELETE_FAILED``
+        
+
+         
+
+        .. note::
+
+          
+
+          The ``Status`` of the forecast must be ``ACTIVE`` before you can query or export the forecast.
+
+          
+
+        
+      
+
+      - **Message** *(string) --* 
+
+        If an error occurred, an informational message about the error.
+
+        
+      
+
+      - **CreationTime** *(datetime) --* 
+
+        When the forecast creation task was created.
+
+        
+      
+
+      - **LastModificationTime** *(datetime) --* 
+
+        The last time the resource was modified. The timestamp depends on the status of the job:
+
+         
+
+        
+        * ``CREATE_PENDING`` - The ``CreationTime``.
+         
+        * ``CREATE_IN_PROGRESS`` - The current timestamp.
+         
+        * ``CREATE_STOPPING`` - The current timestamp.
+         
+        * ``CREATE_STOPPED`` - When the job stopped.
+         
+        * ``ACTIVE`` or ``CREATE_FAILED`` - When the job finished or failed.
+        
+
+        
+      
+
+      - **TimeSeriesSelector** *(dict) --* 
+
+        The time series to include in the forecast.
+
+        
+        
+
+        - **TimeSeriesIdentifiers** *(dict) --* 
+
+          Details about the import file that contains the time series for which you want to create forecasts.
+
+          
+          
+
+          - **DataSource** *(dict) --* 
+
+            The source of your data, an Identity and Access Management (IAM) role that allows Amazon Forecast to access the data and, optionally, an Key Management Service (KMS) key.
+
+            
+            
+
+            - **S3Config** *(dict) --* 
+
+              The path to the data stored in an Amazon Simple Storage Service (Amazon S3) bucket along with the credentials to access the data.
+
+              
+              
+
+              - **Path** *(string) --* 
+
+                The path to an Amazon Simple Storage Service (Amazon S3) bucket or file(s) in an Amazon S3 bucket.
+
+                
+              
+
+              - **RoleArn** *(string) --* 
+
+                The ARN of the Identity and Access Management (IAM) role that Amazon Forecast can assume to access the Amazon S3 bucket or files. If you provide a value for the ``KMSKeyArn`` key, the role must allow access to the key.
+
+                 
+
+                Passing a role across Amazon Web Services accounts is not allowed. If you pass a role that isn't in your account, you get an ``InvalidInputException`` error.
+
+                
+              
+
+              - **KMSKeyArn** *(string) --* 
+
+                The Amazon Resource Name (ARN) of an Key Management Service (KMS) key.
+
+                
+          
+        
+          
+
+          - **Schema** *(dict) --* 
+
+            Defines the fields of a dataset.
+
+            
+            
+
+            - **Attributes** *(list) --* 
+
+              An array of attributes specifying the name and type of each field in a dataset.
+
+              
+              
+
+              - *(dict) --* 
+
+                An attribute of a schema, which defines a dataset field. A schema attribute is required for every field in a dataset. The `Schema <https://docs.aws.amazon.com/forecast/latest/dg/API_Schema.html>`__ object contains an array of ``SchemaAttribute`` objects.
+
+                
+                
+
+                - **AttributeName** *(string) --* 
+
+                  The name of the dataset field.
+
+                  
+                
+
+                - **AttributeType** *(string) --* 
+
+                  The data type of the field.
+
+                   
+
+                  For a related time series dataset, other than date, item_id, and forecast dimensions attributes, all attributes should be of numerical type (integer/float).
+
+                  
+            
+          
+        
+          
+
+          - **Format** *(string) --* 
+
+            The format of the data, either CSV or PARQUET.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ForecastService.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`ForecastService.Client.exceptions.ResourceNotFoundException`
+
+  

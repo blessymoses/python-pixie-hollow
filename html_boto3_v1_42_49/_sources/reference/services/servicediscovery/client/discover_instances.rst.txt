@@ -1,0 +1,272 @@
+:doc:`ServiceDiscovery <../../servicediscovery>` / Client / discover_instances
+
+******************
+discover_instances
+******************
+
+
+
+.. py:method:: ServiceDiscovery.Client.discover_instances(**kwargs)
+
+  
+
+  Discovers registered instances for a specified namespace and service. You can use ``DiscoverInstances`` to discover instances for any type of namespace. ``DiscoverInstances`` returns a randomized list of instances allowing customers to distribute traffic evenly across instances. For public and private DNS namespaces, you can also use DNS queries to discover instances.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/servicediscovery-2017-03-14/DiscoverInstances>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.discover_instances(
+        NamespaceName='string',
+        ServiceName='string',
+        MaxResults=123,
+        QueryParameters={
+            'string': 'string'
+        },
+        OptionalParameters={
+            'string': 'string'
+        },
+        HealthStatus='HEALTHY'|'UNHEALTHY'|'ALL'|'HEALTHY_OR_ELSE_ALL',
+        OwnerAccount='string'
+    )
+    
+  :type NamespaceName: string
+  :param NamespaceName: **[REQUIRED]** 
+
+    The ``HttpName`` name of the namespace. The ``HttpName`` is found in the ``HttpProperties`` member of the ``Properties`` member of the namespace. In most cases, ``Name`` and ``HttpName`` match. However, if you reuse ``Name`` for namespace creation, a generated hash is added to ``HttpName`` to distinguish the two.
+
+    
+
+  
+  :type ServiceName: string
+  :param ServiceName: **[REQUIRED]** 
+
+    The name of the service that you specified when you registered the instance.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of instances that you want Cloud Map to return in the response to a ``DiscoverInstances`` request. If you don't specify a value for ``MaxResults``, Cloud Map returns up to 100 instances.
+
+    
+
+  
+  :type QueryParameters: dict
+  :param QueryParameters: 
+
+    Filters to scope the results based on custom attributes for the instance (for example, ``{version=v1, az=1a}``). Only instances that match all the specified key-value pairs are returned.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type OptionalParameters: dict
+  :param OptionalParameters: 
+
+    Opportunistic filters to scope the results based on custom attributes. If there are instances that match both the filters specified in both the ``QueryParameters`` parameter and this parameter, all of these instances are returned. Otherwise, the filters are ignored, and only instances that match the filters that are specified in the ``QueryParameters`` parameter are returned.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type HealthStatus: string
+  :param HealthStatus: 
+
+    The health status of the instances that you want to discover. This parameter is ignored for services that don't have a health check configured, and all instances are returned.
+
+      HEALTHY  
+
+    Returns healthy instances.
+
+      UNHEALTHY  
+
+    Returns unhealthy instances.
+
+      ALL  
+
+    Returns all instances.
+
+      HEALTHY_OR_ELSE_ALL  
+
+    Returns healthy instances, unless none are reporting a healthy state. In that case, return all instances. This is also called failing open.
+
+    
+
+  
+  :type OwnerAccount: string
+  :param OwnerAccount: 
+
+    The ID of the Amazon Web Services account that owns the namespace associated with the instance, as specified in the namespace ``ResourceOwner`` field. For instances associated with namespaces that are shared with your account, you must specify an ``OwnerAccount``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Instances': [
+              {
+                  'InstanceId': 'string',
+                  'NamespaceName': 'string',
+                  'ServiceName': 'string',
+                  'HealthStatus': 'HEALTHY'|'UNHEALTHY'|'UNKNOWN',
+                  'Attributes': {
+                      'string': 'string'
+                  }
+              },
+          ],
+          'InstancesRevision': 123
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Instances** *(list) --* 
+
+        A complex type that contains one ``HttpInstanceSummary`` for each registered instance.
+
+        
+        
+
+        - *(dict) --* 
+
+          In a response to a `DiscoverInstances <https://docs.aws.amazon.com/cloud-map/latest/api/API_DiscoverInstances.html>`__ request, ``HttpInstanceSummary`` contains information about one instance that matches the values that you specified in the request.
+
+          
+          
+
+          - **InstanceId** *(string) --* 
+
+            The ID of an instance that matches the values that you specified in the request.
+
+            
+          
+
+          - **NamespaceName** *(string) --* 
+
+            The ``HttpName`` name of the namespace. It's found in the ``HttpProperties`` member of the ``Properties`` member of the namespace.
+
+            
+          
+
+          - **ServiceName** *(string) --* 
+
+            The name of the service that you specified when you registered the instance.
+
+            
+          
+
+          - **HealthStatus** *(string) --* 
+
+            If you configured health checking in the service, the current health status of the service instance.
+
+            
+          
+
+          - **Attributes** *(dict) --* 
+
+            If you included any attributes when you registered the instance, the values of those attributes.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+      
+    
+      
+
+      - **InstancesRevision** *(integer) --* 
+
+        The increasing revision associated to the response Instances list. If a new instance is registered or deregistered, the ``InstancesRevision`` updates. The health status updates don't update ``InstancesRevision``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ServiceDiscovery.Client.exceptions.ServiceNotFound`
+
+  
+  *   :py:class:`ServiceDiscovery.Client.exceptions.NamespaceNotFound`
+
+  
+  *   :py:class:`ServiceDiscovery.Client.exceptions.InvalidInput`
+
+  
+  *   :py:class:`ServiceDiscovery.Client.exceptions.RequestLimitExceeded`
+
+  
+
+  **Examples**
+
+  Example: Discover registered instances
+  ::
+
+    response = client.discover_instances(
+        HealthStatus='ALL',
+        MaxResults=10,
+        NamespaceName='example.com',
+        ServiceName='myservice',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Instances': [
+            {
+                'Attributes': {
+                    'AWS_INSTANCE_IPV4': '172.2.1.3',
+                    'AWS_INSTANCE_PORT': '808',
+                },
+                'HealthStatus': 'UNKNOWN',
+                'InstanceId': 'myservice-53',
+                'NamespaceName': 'example.com',
+                'ServiceName': 'myservice',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,399 @@
+:doc:`EntityResolution <../../entityresolution>` / Client / get_id_mapping_workflow
+
+***********************
+get_id_mapping_workflow
+***********************
+
+
+
+.. py:method:: EntityResolution.Client.get_id_mapping_workflow(**kwargs)
+
+  
+
+  Returns the ``IdMappingWorkflow`` with a given name, if it exists.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/entityresolution-2018-05-10/GetIdMappingWorkflow>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_id_mapping_workflow(
+        workflowName='string'
+    )
+    
+  :type workflowName: string
+  :param workflowName: **[REQUIRED]** 
+
+    The name of the workflow.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'workflowName': 'string',
+          'workflowArn': 'string',
+          'description': 'string',
+          'inputSourceConfig': [
+              {
+                  'inputSourceARN': 'string',
+                  'schemaName': 'string',
+                  'type': 'SOURCE'|'TARGET'
+              },
+          ],
+          'outputSourceConfig': [
+              {
+                  'KMSArn': 'string',
+                  'outputS3Path': 'string'
+              },
+          ],
+          'idMappingTechniques': {
+              'idMappingType': 'PROVIDER'|'RULE_BASED',
+              'ruleBasedProperties': {
+                  'rules': [
+                      {
+                          'ruleName': 'string',
+                          'matchingKeys': [
+                              'string',
+                          ]
+                      },
+                  ],
+                  'ruleDefinitionType': 'SOURCE'|'TARGET',
+                  'attributeMatchingModel': 'ONE_TO_ONE'|'MANY_TO_MANY',
+                  'recordMatchingModel': 'ONE_SOURCE_TO_ONE_TARGET'|'MANY_SOURCE_TO_ONE_TARGET'
+              },
+              'providerProperties': {
+                  'providerServiceArn': 'string',
+                  'providerConfiguration': {...}|[...]|123|123.4|'string'|True|None,
+                  'intermediateSourceConfiguration': {
+                      'intermediateS3Path': 'string'
+                  }
+              }
+          },
+          'createdAt': datetime(2015, 1, 1),
+          'updatedAt': datetime(2015, 1, 1),
+          'incrementalRunConfig': {
+              'incrementalRunType': 'ON_DEMAND'
+          },
+          'roleArn': 'string',
+          'tags': {
+              'string': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **workflowName** *(string) --* 
+
+        The name of the workflow.
+
+        
+      
+
+      - **workflowArn** *(string) --* 
+
+        The ARN (Amazon Resource Name) that Entity Resolution generated for the ``IdMappingWorkflow`` .
+
+        
+      
+
+      - **description** *(string) --* 
+
+        A description of the workflow.
+
+        
+      
+
+      - **inputSourceConfig** *(list) --* 
+
+        A list of ``InputSource`` objects, which have the fields ``InputSourceARN`` and ``SchemaName``.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object containing ``inputSourceARN``, ``schemaName``, and ``type``.
+
+          
+          
+
+          - **inputSourceARN** *(string) --* 
+
+            An Glue table Amazon Resource Name (ARN) or a matching workflow ARN for the input source table.
+
+            
+          
+
+          - **schemaName** *(string) --* 
+
+            The name of the schema to be retrieved.
+
+            
+          
+
+          - **type** *(string) --* 
+
+            The type of ID namespace. There are two types: ``SOURCE`` and ``TARGET``.
+
+             
+
+            The ``SOURCE`` contains configurations for ``sourceId`` data that will be processed in an ID mapping workflow.
+
+             
+
+            The ``TARGET`` contains a configuration of ``targetId`` which all ``sourceIds`` will resolve to.
+
+            
+      
+    
+      
+
+      - **outputSourceConfig** *(list) --* 
+
+        A list of ``OutputSource`` objects, each of which contains fields ``outputS3Path`` and ``KMSArn``.
+
+        
+        
+
+        - *(dict) --* 
+
+          The output source for the ID mapping workflow.
+
+          
+          
+
+          - **KMSArn** *(string) --* 
+
+            Customer KMS ARN for encryption at rest. If not provided, system will use an Entity Resolution managed KMS key.
+
+            
+          
+
+          - **outputS3Path** *(string) --* 
+
+            The S3 path to which Entity Resolution will write the output table.
+
+            
+      
+    
+      
+
+      - **idMappingTechniques** *(dict) --* 
+
+        An object which defines the ID mapping technique and any additional configurations.
+
+        
+        
+
+        - **idMappingType** *(string) --* 
+
+          The type of ID mapping.
+
+          
+        
+
+        - **ruleBasedProperties** *(dict) --* 
+
+          An object which defines any additional configurations required by rule-based matching.
+
+          
+          
+
+          - **rules** *(list) --* 
+
+            The rules that can be used for ID mapping.
+
+            
+            
+
+            - *(dict) --* 
+
+              An object containing the ``ruleName`` and ``matchingKeys``.
+
+              
+              
+
+              - **ruleName** *(string) --* 
+
+                A name for the matching rule.
+
+                
+              
+
+              - **matchingKeys** *(list) --* 
+
+                A list of ``MatchingKeys``. The ``MatchingKeys`` must have been defined in the ``SchemaMapping``. Two records are considered to match according to this rule if all of the ``MatchingKeys`` match.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+        
+          
+
+          - **ruleDefinitionType** *(string) --* 
+
+            The set of rules you can use in an ID mapping workflow. The limitations specified for the source or target to define the match rules must be compatible.
+
+            
+          
+
+          - **attributeMatchingModel** *(string) --* 
+
+            The comparison type. You can either choose ``ONE_TO_ONE`` or ``MANY_TO_MANY`` as the ``attributeMatchingModel``.
+
+             
+
+            If you choose ``ONE_TO_ONE``, the system can only match attributes if the sub-types are an exact match. For example, for the ``Email`` attribute type, the system will only consider it a match if the value of the ``Email`` field of Profile A matches the value of the ``Email`` field of Profile B.
+
+             
+
+            If you choose ``MANY_TO_MANY``, the system can match attributes across the sub-types of an attribute type. For example, if the value of the ``Email`` field of Profile A matches the value of the ``BusinessEmail`` field of Profile B, the two profiles are matched on the ``Email`` attribute type.
+
+            
+          
+
+          - **recordMatchingModel** *(string) --* 
+
+            The type of matching record that is allowed to be used in an ID mapping workflow.
+
+             
+
+            If the value is set to ``ONE_SOURCE_TO_ONE_TARGET``, only one record in the source can be matched to the same record in the target.
+
+             
+
+            If the value is set to ``MANY_SOURCE_TO_ONE_TARGET``, multiple records in the source can be matched to one record in the target.
+
+            
+      
+        
+
+        - **providerProperties** *(dict) --* 
+
+          An object which defines any additional configurations required by the provider service.
+
+          
+          
+
+          - **providerServiceArn** *(string) --* 
+
+            The ARN of the provider service.
+
+            
+          
+
+          - **providerConfiguration** (:ref:`document<document>`) -- 
+
+            The required configuration fields to use with the provider service.
+
+            
+          
+
+          - **intermediateSourceConfiguration** *(dict) --* 
+
+            The Amazon S3 location that temporarily stores your data while it processes. Your information won't be saved permanently.
+
+            
+            
+
+            - **intermediateS3Path** *(string) --* 
+
+              The Amazon S3 location (bucket and prefix). For example: ``s3://provider_bucket/DOC-EXAMPLE-BUCKET``
+
+              
+        
+      
+    
+      
+
+      - **createdAt** *(datetime) --* 
+
+        The timestamp of when the workflow was created.
+
+        
+      
+
+      - **updatedAt** *(datetime) --* 
+
+        The timestamp of when the workflow was last updated.
+
+        
+      
+
+      - **incrementalRunConfig** *(dict) --* 
+
+        The incremental run configuration for the ID mapping workflow.
+
+        
+        
+
+        - **incrementalRunType** *(string) --* 
+
+          The incremental run type for an ID mapping workflow.
+
+           
+
+          It takes only one value: ``ON_DEMAND``. This setting runs the ID mapping workflow when it's manually triggered through the ``StartIdMappingJob`` API.
+
+          
+    
+      
+
+      - **roleArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the IAM role. Entity Resolution assumes this role to access Amazon Web Services resources on your behalf.
+
+        
+      
+
+      - **tags** *(dict) --* 
+
+        The tags used to organize, track, or control access for this resource.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(string) --* 
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`EntityResolution.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`EntityResolution.Client.exceptions.ValidationException`
+
+  

@@ -1,0 +1,436 @@
+:doc:`DynamoDB <../../dynamodb>` / Client / describe_global_table
+
+*********************
+describe_global_table
+*********************
+
+
+
+.. py:method:: DynamoDB.Client.describe_global_table(**kwargs)
+
+  
+
+  Returns information about the specified global table.
+
+   
+
+  .. warning::
+
+     
+
+    This documentation is for version 2017.11.29 (Legacy) of global tables, which should be avoided for new global tables. Customers should use `Global Tables version 2019.11.21 (Current) <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html>`__ when possible, because it provides greater flexibility, higher efficiency, and consumes less write capacity than 2017.11.29 (Legacy).
+
+     
+
+    To determine which version you're using, see `Determining the global table version you are using <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/globaltables.DetermineVersion.html>`__. To update existing global tables from version 2017.11.29 (Legacy) to version 2019.11.21 (Current), see `Upgrading global tables <https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/V2globaltables_upgrade.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DescribeGlobalTable>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_global_table(
+        GlobalTableName='string'
+    )
+    
+  :type GlobalTableName: string
+  :param GlobalTableName: **[REQUIRED]** 
+
+    The name of the global table.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GlobalTableDescription': {
+              'ReplicationGroup': [
+                  {
+                      'RegionName': 'string',
+                      'ReplicaStatus': 'CREATING'|'CREATION_FAILED'|'UPDATING'|'DELETING'|'ACTIVE'|'REGION_DISABLED'|'INACCESSIBLE_ENCRYPTION_CREDENTIALS'|'ARCHIVING'|'ARCHIVED'|'REPLICATION_NOT_AUTHORIZED',
+                      'ReplicaStatusDescription': 'string',
+                      'ReplicaStatusPercentProgress': 'string',
+                      'KMSMasterKeyId': 'string',
+                      'ProvisionedThroughputOverride': {
+                          'ReadCapacityUnits': 123
+                      },
+                      'OnDemandThroughputOverride': {
+                          'MaxReadRequestUnits': 123
+                      },
+                      'WarmThroughput': {
+                          'ReadUnitsPerSecond': 123,
+                          'WriteUnitsPerSecond': 123,
+                          'Status': 'CREATING'|'UPDATING'|'DELETING'|'ACTIVE'|'INACCESSIBLE_ENCRYPTION_CREDENTIALS'|'ARCHIVING'|'ARCHIVED'|'REPLICATION_NOT_AUTHORIZED'
+                      },
+                      'GlobalSecondaryIndexes': [
+                          {
+                              'IndexName': 'string',
+                              'ProvisionedThroughputOverride': {
+                                  'ReadCapacityUnits': 123
+                              },
+                              'OnDemandThroughputOverride': {
+                                  'MaxReadRequestUnits': 123
+                              },
+                              'WarmThroughput': {
+                                  'ReadUnitsPerSecond': 123,
+                                  'WriteUnitsPerSecond': 123,
+                                  'Status': 'CREATING'|'UPDATING'|'DELETING'|'ACTIVE'
+                              }
+                          },
+                      ],
+                      'ReplicaInaccessibleDateTime': datetime(2015, 1, 1),
+                      'ReplicaTableClassSummary': {
+                          'TableClass': 'STANDARD'|'STANDARD_INFREQUENT_ACCESS',
+                          'LastUpdateDateTime': datetime(2015, 1, 1)
+                      },
+                      'GlobalTableSettingsReplicationMode': 'ENABLED'|'DISABLED'|'ENABLED_WITH_OVERRIDES'
+                  },
+              ],
+              'GlobalTableArn': 'string',
+              'CreationDateTime': datetime(2015, 1, 1),
+              'GlobalTableStatus': 'CREATING'|'ACTIVE'|'DELETING'|'UPDATING',
+              'GlobalTableName': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GlobalTableDescription** *(dict) --* 
+
+        Contains the details of the global table.
+
+        
+        
+
+        - **ReplicationGroup** *(list) --* 
+
+          The Regions where the global table has replicas.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains the details of the replica.
+
+            
+            
+
+            - **RegionName** *(string) --* 
+
+              The name of the Region.
+
+              
+            
+
+            - **ReplicaStatus** *(string) --* 
+
+              The current state of the replica:
+
+               
+
+              
+              * ``CREATING`` - The replica is being created.
+               
+              * ``UPDATING`` - The replica is being updated.
+               
+              * ``DELETING`` - The replica is being deleted.
+               
+              * ``ACTIVE`` - The replica is ready for use.
+               
+              * ``REGION_DISABLED`` - The replica is inaccessible because the Amazon Web Services Region has been disabled. 
+
+              .. note::
+
+                If the Amazon Web Services Region remains inaccessible for more than 20 hours, DynamoDB will remove this replica from the replication group. The replica will not be deleted and replication will stop from and to this region.
+
+              
+               
+              * ``INACCESSIBLE_ENCRYPTION_CREDENTIALS`` - The KMS key used to encrypt the table is inaccessible. 
+
+              .. note::
+
+                If the KMS key remains inaccessible for more than 20 hours, DynamoDB will remove this replica from the replication group. The replica will not be deleted and replication will stop from and to this region.
+
+              
+              
+
+              
+            
+
+            - **ReplicaStatusDescription** *(string) --* 
+
+              Detailed information about the replica status.
+
+              
+            
+
+            - **ReplicaStatusPercentProgress** *(string) --* 
+
+              Specifies the progress of a Create, Update, or Delete action on the replica as a percentage.
+
+              
+            
+
+            - **KMSMasterKeyId** *(string) --* 
+
+              The KMS key of the replica that will be used for KMS encryption.
+
+              
+            
+
+            - **ProvisionedThroughputOverride** *(dict) --* 
+
+              Replica-specific provisioned throughput. If not described, uses the source table's provisioned throughput settings.
+
+              
+              
+
+              - **ReadCapacityUnits** *(integer) --* 
+
+                Replica-specific read capacity units. If not specified, uses the source table's read capacity settings.
+
+                
+          
+            
+
+            - **OnDemandThroughputOverride** *(dict) --* 
+
+              Overrides the maximum on-demand throughput settings for the specified replica table.
+
+              
+              
+
+              - **MaxReadRequestUnits** *(integer) --* 
+
+                Maximum number of read request units for the specified replica table.
+
+                
+          
+            
+
+            - **WarmThroughput** *(dict) --* 
+
+              Represents the warm throughput value for this replica.
+
+              
+              
+
+              - **ReadUnitsPerSecond** *(integer) --* 
+
+                Represents the base table's warm throughput value in read units per second.
+
+                
+              
+
+              - **WriteUnitsPerSecond** *(integer) --* 
+
+                Represents the base table's warm throughput value in write units per second.
+
+                
+              
+
+              - **Status** *(string) --* 
+
+                Represents warm throughput value of the base table.
+
+                
+          
+            
+
+            - **GlobalSecondaryIndexes** *(list) --* 
+
+              Replica-specific global secondary index settings.
+
+              
+              
+
+              - *(dict) --* 
+
+                Represents the properties of a replica global secondary index.
+
+                
+                
+
+                - **IndexName** *(string) --* 
+
+                  The name of the global secondary index.
+
+                  
+                
+
+                - **ProvisionedThroughputOverride** *(dict) --* 
+
+                  If not described, uses the source table GSI's read capacity settings.
+
+                  
+                  
+
+                  - **ReadCapacityUnits** *(integer) --* 
+
+                    Replica-specific read capacity units. If not specified, uses the source table's read capacity settings.
+
+                    
+              
+                
+
+                - **OnDemandThroughputOverride** *(dict) --* 
+
+                  Overrides the maximum on-demand throughput for the specified global secondary index in the specified replica table.
+
+                  
+                  
+
+                  - **MaxReadRequestUnits** *(integer) --* 
+
+                    Maximum number of read request units for the specified replica table.
+
+                    
+              
+                
+
+                - **WarmThroughput** *(dict) --* 
+
+                  Represents the warm throughput of the global secondary index for this replica.
+
+                  
+                  
+
+                  - **ReadUnitsPerSecond** *(integer) --* 
+
+                    Represents warm throughput read units per second value for a global secondary index.
+
+                    
+                  
+
+                  - **WriteUnitsPerSecond** *(integer) --* 
+
+                    Represents warm throughput write units per second value for a global secondary index.
+
+                    
+                  
+
+                  - **Status** *(string) --* 
+
+                    Represents the warm throughput status being created or updated on a global secondary index. The status can only be ``UPDATING`` or ``ACTIVE``.
+
+                    
+              
+            
+          
+            
+
+            - **ReplicaInaccessibleDateTime** *(datetime) --* 
+
+              The time at which the replica was first detected as inaccessible. To determine cause of inaccessibility check the ``ReplicaStatus`` property.
+
+              
+            
+
+            - **ReplicaTableClassSummary** *(dict) --* 
+
+              Contains details of the table class.
+
+              
+              
+
+              - **TableClass** *(string) --* 
+
+                The table class of the specified table. Valid values are ``STANDARD`` and ``STANDARD_INFREQUENT_ACCESS``.
+
+                
+              
+
+              - **LastUpdateDateTime** *(datetime) --* 
+
+                The date and time at which the table class was last updated.
+
+                
+          
+            
+
+            - **GlobalTableSettingsReplicationMode** *(string) --* 
+
+              Indicates one of the settings synchronization modes for the global table replica:
+
+               
+
+              
+              * ``ENABLED``: Indicates that the settings synchronization mode for the global table replica is enabled.
+               
+              * ``DISABLED``: Indicates that the settings synchronization mode for the global table replica is disabled.
+               
+              * ``ENABLED_WITH_OVERRIDES``: This mode is set by default for a same account global table. Indicates that certain global table settings can be overridden.
+              
+
+              
+        
+      
+        
+
+        - **GlobalTableArn** *(string) --* 
+
+          The unique identifier of the global table.
+
+          
+        
+
+        - **CreationDateTime** *(datetime) --* 
+
+          The creation time of the global table.
+
+          
+        
+
+        - **GlobalTableStatus** *(string) --* 
+
+          The current state of the global table:
+
+           
+
+          
+          * ``CREATING`` - The global table is being created.
+           
+          * ``UPDATING`` - The global table is being updated.
+           
+          * ``DELETING`` - The global table is being deleted.
+           
+          * ``ACTIVE`` - The global table is ready for use.
+          
+
+          
+        
+
+        - **GlobalTableName** *(string) --* 
+
+          The global table name.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`DynamoDB.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.GlobalTableNotFoundException`
+
+  

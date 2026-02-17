@@ -1,0 +1,255 @@
+:doc:`RDS <../../rds>` / Client / modify_db_cluster_snapshot_attribute
+
+************************************
+modify_db_cluster_snapshot_attribute
+************************************
+
+
+
+.. py:method:: RDS.Client.modify_db_cluster_snapshot_attribute(**kwargs)
+
+  
+
+  Adds an attribute and values to, or removes an attribute and values from, a manual DB cluster snapshot.
+
+   
+
+  To share a manual DB cluster snapshot with other Amazon Web Services accounts, specify ``restore`` as the ``AttributeName`` and use the ``ValuesToAdd`` parameter to add a list of IDs of the Amazon Web Services accounts that are authorized to restore the manual DB cluster snapshot. Use the value ``all`` to make the manual DB cluster snapshot public, which means that it can be copied or restored by all Amazon Web Services accounts.
+
+   
+
+  .. note::
+
+    
+
+    Don't add the ``all`` value for any manual DB cluster snapshots that contain private information that you don't want available to all Amazon Web Services accounts.
+
+    
+
+   
+
+  If a manual DB cluster snapshot is encrypted, it can be shared, but only by specifying a list of authorized Amazon Web Services account IDs for the ``ValuesToAdd`` parameter. You can't use ``all`` as a value for that parameter in this case.
+
+   
+
+  To view which Amazon Web Services accounts have access to copy or restore a manual DB cluster snapshot, or whether a manual DB cluster snapshot is public or private, use the  DescribeDBClusterSnapshotAttributes API operation. The accounts are returned as values for the ``restore`` attribute.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rds-2014-10-31/ModifyDBClusterSnapshotAttribute>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.modify_db_cluster_snapshot_attribute(
+        DBClusterSnapshotIdentifier='string',
+        AttributeName='string',
+        ValuesToAdd=[
+            'string',
+        ],
+        ValuesToRemove=[
+            'string',
+        ]
+    )
+    
+  :type DBClusterSnapshotIdentifier: string
+  :param DBClusterSnapshotIdentifier: **[REQUIRED]** 
+
+    The identifier for the DB cluster snapshot to modify the attributes for.
+
+    
+
+  
+  :type AttributeName: string
+  :param AttributeName: **[REQUIRED]** 
+
+    The name of the DB cluster snapshot attribute to modify.
+
+     
+
+    To manage authorization for other Amazon Web Services accounts to copy or restore a manual DB cluster snapshot, set this value to ``restore``.
+
+     
+
+    .. note::
+
+      
+
+      To view the list of attributes available to modify, use the  DescribeDBClusterSnapshotAttributes API operation.
+
+      
+
+    
+
+  
+  :type ValuesToAdd: list
+  :param ValuesToAdd: 
+
+    A list of DB cluster snapshot attributes to add to the attribute specified by ``AttributeName``.
+
+     
+
+    To authorize other Amazon Web Services accounts to copy or restore a manual DB cluster snapshot, set this list to include one or more Amazon Web Services account IDs, or ``all`` to make the manual DB cluster snapshot restorable by any Amazon Web Services account. Do not add the ``all`` value for any manual DB cluster snapshots that contain private information that you don't want available to all Amazon Web Services accounts.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ValuesToRemove: list
+  :param ValuesToRemove: 
+
+    A list of DB cluster snapshot attributes to remove from the attribute specified by ``AttributeName``.
+
+     
+
+    To remove authorization for other Amazon Web Services accounts to copy or restore a manual DB cluster snapshot, set this list to include one or more Amazon Web Services account identifiers, or ``all`` to remove authorization for any Amazon Web Services account to copy or restore the DB cluster snapshot. If you specify ``all``, an Amazon Web Services account whose account ID is explicitly added to the ``restore`` attribute can still copy or restore a manual DB cluster snapshot.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DBClusterSnapshotAttributesResult': {
+              'DBClusterSnapshotIdentifier': 'string',
+              'DBClusterSnapshotAttributes': [
+                  {
+                      'AttributeName': 'string',
+                      'AttributeValues': [
+                          'string',
+                      ]
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DBClusterSnapshotAttributesResult** *(dict) --* 
+
+        Contains the results of a successful call to the ``DescribeDBClusterSnapshotAttributes`` API action.
+
+         
+
+        Manual DB cluster snapshot attributes are used to authorize other Amazon Web Services accounts to copy or restore a manual DB cluster snapshot. For more information, see the ``ModifyDBClusterSnapshotAttribute`` API action.
+
+        
+        
+
+        - **DBClusterSnapshotIdentifier** *(string) --* 
+
+          The identifier of the manual DB cluster snapshot that the attributes apply to.
+
+          
+        
+
+        - **DBClusterSnapshotAttributes** *(list) --* 
+
+          The list of attributes and values for the manual DB cluster snapshot.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains the name and values of a manual DB cluster snapshot attribute.
+
+             
+
+            Manual DB cluster snapshot attributes are used to authorize other Amazon Web Services accounts to restore a manual DB cluster snapshot. For more information, see the ``ModifyDBClusterSnapshotAttribute`` API action.
+
+            
+            
+
+            - **AttributeName** *(string) --* 
+
+              The name of the manual DB cluster snapshot attribute.
+
+               
+
+              The attribute named ``restore`` refers to the list of Amazon Web Services accounts that have permission to copy or restore the manual DB cluster snapshot. For more information, see the ``ModifyDBClusterSnapshotAttribute`` API action.
+
+              
+            
+
+            - **AttributeValues** *(list) --* 
+
+              The value(s) for the manual DB cluster snapshot attribute.
+
+               
+
+              If the ``AttributeName`` field is set to ``restore``, then this element returns a list of IDs of the Amazon Web Services accounts that are authorized to copy or restore the manual DB cluster snapshot. If a value of ``all`` is in the list, then the manual DB cluster snapshot is public and available for any Amazon Web Services account to copy or restore.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`RDS.Client.exceptions.DBClusterSnapshotNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.SharedSnapshotQuotaExceededFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidDBClusterSnapshotStateFault`
+
+  
+
+  **Examples**
+
+  The following example gives two AWS accounts access to a manual DB cluster snapshot and ensures that the DB cluster snapshot is private by removing the value "all".
+  ::
+
+    response = client.modify_db_cluster_snapshot_attribute(
+        AttributeName='restore',
+        DBClusterSnapshotIdentifier='manual-cluster-snapshot1',
+        ValuesToAdd=[
+            '123451234512',
+            '123456789012',
+        ],
+        ValuesToRemove=[
+            'all',
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'DBClusterSnapshotAttributesResult': {
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

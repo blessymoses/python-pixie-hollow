@@ -1,0 +1,198 @@
+:doc:`StorageGateway <../../storagegateway>` / Client / join_domain
+
+***********
+join_domain
+***********
+
+
+
+.. py:method:: StorageGateway.Client.join_domain(**kwargs)
+
+  
+
+  Adds a file gateway to an Active Directory domain. This operation is only supported for file gateways that support the SMB file protocol.
+
+   
+
+  .. note::
+
+    
+
+    Joining a domain creates an Active Directory computer account in the default organizational unit, using the gateway's **Gateway ID** as the account name (for example, SGW-1234ADE). If your Active Directory environment requires that you pre-stage accounts to facilitate the join domain process, you will need to create this account ahead of time.
+
+     
+
+    To create the gateway's computer account in an organizational unit other than the default, you must specify the organizational unit when joining the domain.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/JoinDomain>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.join_domain(
+        GatewayARN='string',
+        DomainName='string',
+        OrganizationalUnit='string',
+        DomainControllers=[
+            'string',
+        ],
+        TimeoutInSeconds=123,
+        UserName='string',
+        Password='string'
+    )
+    
+  :type GatewayARN: string
+  :param GatewayARN: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the gateway. Use the ``ListGateways`` operation to return a list of gateways for your account and Amazon Web Services Region.
+
+    
+
+  
+  :type DomainName: string
+  :param DomainName: **[REQUIRED]** 
+
+    The name of the domain that you want the gateway to join.
+
+    
+
+  
+  :type OrganizationalUnit: string
+  :param OrganizationalUnit: 
+
+    The organizational unit (OU) is a container in an Active Directory that can hold users, groups, computers, and other OUs and this parameter specifies the OU that the gateway will join within the AD domain.
+
+    
+
+  
+  :type DomainControllers: list
+  :param DomainControllers: 
+
+    List of IP addresses, NetBIOS names, or host names of your domain server. If you need to specify the port number include it after the colon (“:”). For example, ``mydc.mydomain.com:389``.
+
+     
+
+    .. note::
+
+      
+
+      S3 File Gateway supports IPv6 addresses in addition to IPv4 and other existing formats.
+
+       
+
+      FSx File Gateway does not support IPv6.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type TimeoutInSeconds: integer
+  :param TimeoutInSeconds: 
+
+    Specifies the time in seconds, in which the ``JoinDomain`` operation must complete. The default is 20 seconds.
+
+    
+
+  
+  :type UserName: string
+  :param UserName: **[REQUIRED]** 
+
+    Sets the user name of user who has permission to add the gateway to the Active Directory domain. The domain user account should be enabled to join computers to the domain. For example, you can use the domain administrator account or an account with delegated permissions to join computers to the domain.
+
+    
+
+  
+  :type Password: string
+  :param Password: **[REQUIRED]** 
+
+    Sets the password of the user who has permission to add the gateway to the Active Directory domain.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GatewayARN': 'string',
+          'ActiveDirectoryStatus': 'ACCESS_DENIED'|'DETACHED'|'JOINED'|'JOINING'|'NETWORK_ERROR'|'TIMEOUT'|'UNKNOWN_ERROR'|'INSUFFICIENT_PERMISSIONS'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      JoinDomainOutput
+
+      
+      
+
+      - **GatewayARN** *(string) --* 
+
+        The unique Amazon Resource Name (ARN) of the gateway that joined the domain.
+
+        
+      
+
+      - **ActiveDirectoryStatus** *(string) --* 
+
+        Indicates the status of the gateway as a member of the Active Directory domain.
+
+         
+
+        .. note::
+
+          
+
+          This field is only used as part of a ``JoinDomain`` request. It is not affected by Active Directory connectivity changes that occur after the ``JoinDomain`` request succeeds.
+
+          
+
+         
+
+        
+        * ``ACCESS_DENIED``: Indicates that the ``JoinDomain`` operation failed due to an authentication error.
+         
+        * ``DETACHED``: Indicates that gateway is not joined to a domain.
+         
+        * ``JOINED``: Indicates that the gateway has successfully joined a domain.
+         
+        * ``JOINING``: Indicates that a ``JoinDomain`` operation is in progress.
+         
+        * ``INSUFFICIENT_PERMISSIONS``: Indicates that the ``JoinDomain`` operation failed because the specified user lacks the necessary permissions to join the domain.
+         
+        * ``NETWORK_ERROR``: Indicates that ``JoinDomain`` operation failed due to a network or connectivity error.
+         
+        * ``TIMEOUT``: Indicates that the ``JoinDomain`` operation failed because the operation didn't complete within the allotted time.
+         
+        * ``UNKNOWN_ERROR``: Indicates that the ``JoinDomain`` operation failed due to another type of error.
+        
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InvalidGatewayRequestException`
+
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InternalServerError`
+
+  

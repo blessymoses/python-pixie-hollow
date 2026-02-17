@@ -1,0 +1,387 @@
+:doc:`Redshift <../../redshift>` / Client / describe_scheduled_actions
+
+**************************
+describe_scheduled_actions
+**************************
+
+
+
+.. py:method:: Redshift.Client.describe_scheduled_actions(**kwargs)
+
+  
+
+  Describes properties of scheduled actions.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/DescribeScheduledActions>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_scheduled_actions(
+        ScheduledActionName='string',
+        TargetActionType='ResizeCluster'|'PauseCluster'|'ResumeCluster',
+        StartTime=datetime(2015, 1, 1),
+        EndTime=datetime(2015, 1, 1),
+        Active=True|False,
+        Filters=[
+            {
+                'Name': 'cluster-identifier'|'iam-role',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        Marker='string',
+        MaxRecords=123
+    )
+    
+  :type ScheduledActionName: string
+  :param ScheduledActionName: 
+
+    The name of the scheduled action to retrieve.
+
+    
+
+  
+  :type TargetActionType: string
+  :param TargetActionType: 
+
+    The type of the scheduled actions to retrieve.
+
+    
+
+  
+  :type StartTime: datetime
+  :param StartTime: 
+
+    The start time in UTC of the scheduled actions to retrieve. Only active scheduled actions that have invocations after this time are retrieved.
+
+    
+
+  
+  :type EndTime: datetime
+  :param EndTime: 
+
+    The end time in UTC of the scheduled action to retrieve. Only active scheduled actions that have invocations before this time are retrieved.
+
+    
+
+  
+  :type Active: boolean
+  :param Active: 
+
+    If true, retrieve only active scheduled actions. If false, retrieve only disabled scheduled actions.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    List of scheduled action filters.
+
+    
+
+  
+    - *(dict) --* 
+
+      A set of elements to filter the returned scheduled actions.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The type of element to filter.
+
+        
+
+      
+      - **Values** *(list) --* **[REQUIRED]** 
+
+        List of values. Compare if the value (of type defined by ``Name``) equals an item in the list of scheduled actions.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type Marker: string
+  :param Marker: 
+
+    An optional parameter that specifies the starting point to return a set of response records. When the results of a  DescribeScheduledActions request exceed the value specified in ``MaxRecords``, Amazon Web Services returns a value in the ``Marker`` field of the response. You can retrieve the next set of response records by providing the returned marker value in the ``Marker`` parameter and retrying the request.
+
+    
+
+  
+  :type MaxRecords: integer
+  :param MaxRecords: 
+
+    The maximum number of response records to return in each call. If the number of remaining response records exceeds the specified ``MaxRecords`` value, a value is returned in a ``marker`` field of the response. You can retrieve the next set of records by retrying the command with the returned marker value.
+
+     
+
+    Default: ``100``
+
+     
+
+    Constraints: minimum 20, maximum 100.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Marker': 'string',
+          'ScheduledActions': [
+              {
+                  'ScheduledActionName': 'string',
+                  'TargetAction': {
+                      'ResizeCluster': {
+                          'ClusterIdentifier': 'string',
+                          'ClusterType': 'string',
+                          'NodeType': 'string',
+                          'NumberOfNodes': 123,
+                          'Classic': True|False,
+                          'ReservedNodeId': 'string',
+                          'TargetReservedNodeOfferingId': 'string'
+                      },
+                      'PauseCluster': {
+                          'ClusterIdentifier': 'string'
+                      },
+                      'ResumeCluster': {
+                          'ClusterIdentifier': 'string'
+                      }
+                  },
+                  'Schedule': 'string',
+                  'IamRole': 'string',
+                  'ScheduledActionDescription': 'string',
+                  'State': 'ACTIVE'|'DISABLED',
+                  'NextInvocations': [
+                      datetime(2015, 1, 1),
+                  ],
+                  'StartTime': datetime(2015, 1, 1),
+                  'EndTime': datetime(2015, 1, 1)
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Marker** *(string) --* 
+
+        An optional parameter that specifies the starting point to return a set of response records. When the results of a  DescribeScheduledActions request exceed the value specified in ``MaxRecords``, Amazon Web Services returns a value in the ``Marker`` field of the response. You can retrieve the next set of response records by providing the returned marker value in the ``Marker`` parameter and retrying the request.
+
+        
+      
+
+      - **ScheduledActions** *(list) --* 
+
+        List of retrieved scheduled actions.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a scheduled action. You can use a scheduled action to trigger some Amazon Redshift API operations on a schedule. For information about which API operations can be scheduled, see  ScheduledActionType.
+
+          
+          
+
+          - **ScheduledActionName** *(string) --* 
+
+            The name of the scheduled action.
+
+            
+          
+
+          - **TargetAction** *(dict) --* 
+
+            A JSON format string of the Amazon Redshift API operation with input parameters.
+
+             
+
+            " ``{\"ResizeCluster\":{\"NodeType\":\"ra3.4xlarge\",\"ClusterIdentifier\":\"my-test-cluster\",\"NumberOfNodes\":3}}``".
+
+            
+            
+
+            - **ResizeCluster** *(dict) --* 
+
+              An action that runs a ``ResizeCluster`` API operation.
+
+              
+              
+
+              - **ClusterIdentifier** *(string) --* 
+
+                The unique identifier for the cluster to resize.
+
+                
+              
+
+              - **ClusterType** *(string) --* 
+
+                The new cluster type for the specified cluster.
+
+                
+              
+
+              - **NodeType** *(string) --* 
+
+                The new node type for the nodes you are adding. If not specified, the cluster's current node type is used.
+
+                
+              
+
+              - **NumberOfNodes** *(integer) --* 
+
+                The new number of nodes for the cluster. If not specified, the cluster's current number of nodes is used.
+
+                
+              
+
+              - **Classic** *(boolean) --* 
+
+                A boolean value indicating whether the resize operation is using the classic resize process. If you don't provide this parameter or set the value to ``false``, the resize type is elastic.
+
+                
+              
+
+              - **ReservedNodeId** *(string) --* 
+
+                The identifier of the reserved node.
+
+                
+              
+
+              - **TargetReservedNodeOfferingId** *(string) --* 
+
+                The identifier of the target reserved node offering.
+
+                
+          
+            
+
+            - **PauseCluster** *(dict) --* 
+
+              An action that runs a ``PauseCluster`` API operation.
+
+              
+              
+
+              - **ClusterIdentifier** *(string) --* 
+
+                The identifier of the cluster to be paused.
+
+                
+          
+            
+
+            - **ResumeCluster** *(dict) --* 
+
+              An action that runs a ``ResumeCluster`` API operation.
+
+              
+              
+
+              - **ClusterIdentifier** *(string) --* 
+
+                The identifier of the cluster to be resumed.
+
+                
+          
+        
+          
+
+          - **Schedule** *(string) --* 
+
+            The schedule for a one-time (at format) or recurring (cron format) scheduled action. Schedule invocations must be separated by at least one hour.
+
+             
+
+            Format of at expressions is " ``at(yyyy-mm-ddThh:mm:ss)``". For example, " ``at(2016-03-04T17:27:00)``".
+
+             
+
+            Format of cron expressions is " ``cron(Minutes Hours Day-of-month Month Day-of-week Year)``". For example, " ``cron(0 10 ? * MON *)``". For more information, see `Cron Expressions <https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html#CronExpressions>`__ in the *Amazon CloudWatch Events User Guide*.
+
+            
+          
+
+          - **IamRole** *(string) --* 
+
+            The IAM role to assume to run the scheduled action. This IAM role must have permission to run the Amazon Redshift API operation in the scheduled action. This IAM role must allow the Amazon Redshift scheduler (Principal scheduler.redshift.amazonaws.com) to assume permissions on your behalf. For more information about the IAM role to use with the Amazon Redshift scheduler, see `Using Identity-Based Policies for Amazon Redshift <https://docs.aws.amazon.com/redshift/latest/mgmt/redshift-iam-access-control-identity-based.html>`__ in the *Amazon Redshift Cluster Management Guide*.
+
+            
+          
+
+          - **ScheduledActionDescription** *(string) --* 
+
+            The description of the scheduled action.
+
+            
+          
+
+          - **State** *(string) --* 
+
+            The state of the scheduled action. For example, ``DISABLED``.
+
+            
+          
+
+          - **NextInvocations** *(list) --* 
+
+            List of times when the scheduled action will run.
+
+            
+            
+
+            - *(datetime) --* 
+        
+          
+
+          - **StartTime** *(datetime) --* 
+
+            The start time in UTC when the schedule is active. Before this time, the scheduled action does not trigger.
+
+            
+          
+
+          - **EndTime** *(datetime) --* 
+
+            The end time in UTC when the schedule is no longer active. After this time, the scheduled action does not trigger.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Redshift.Client.exceptions.ScheduledActionNotFoundFault`
+
+  
+  *   :py:class:`Redshift.Client.exceptions.UnauthorizedOperation`
+
+  

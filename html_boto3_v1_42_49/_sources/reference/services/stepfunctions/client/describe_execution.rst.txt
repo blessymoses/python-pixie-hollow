@@ -1,0 +1,370 @@
+:doc:`SFN <../../stepfunctions>` / Client / describe_execution
+
+******************
+describe_execution
+******************
+
+
+
+.. py:method:: SFN.Client.describe_execution(**kwargs)
+
+  
+
+  Provides information about a state machine execution, such as the state machine associated with the execution, the execution input and output, and relevant execution metadata. If you've `redriven <https://docs.aws.amazon.com/step-functions/latest/dg/redrive-executions.html>`__ an execution, you can use this API action to return information about the redrives of that execution. In addition, you can use this API action to return the Map Run Amazon Resource Name (ARN) if the execution was dispatched by a Map Run.
+
+   
+
+  If you specify a version or alias ARN when you call the  StartExecution API action, ``DescribeExecution`` returns that ARN.
+
+   
+
+  .. note::
+
+    
+
+    This operation is eventually consistent. The results are best effort and may not reflect very recent updates and changes.
+
+    
+
+   
+
+  Executions of an ``EXPRESS`` state machine aren't supported by ``DescribeExecution`` unless a Map Run dispatched them.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/DescribeExecution>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_execution(
+        executionArn='string',
+        includedData='ALL_DATA'|'METADATA_ONLY'
+    )
+    
+  :type executionArn: string
+  :param executionArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the execution to describe.
+
+    
+
+  
+  :type includedData: string
+  :param includedData: 
+
+    If your state machine definition is encrypted with a KMS key, callers must have ``kms:Decrypt`` permission to decrypt the definition. Alternatively, you can call DescribeStateMachine API with ``includedData = METADATA_ONLY`` to get a successful response without the encrypted definition.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'executionArn': 'string',
+          'stateMachineArn': 'string',
+          'name': 'string',
+          'status': 'RUNNING'|'SUCCEEDED'|'FAILED'|'TIMED_OUT'|'ABORTED'|'PENDING_REDRIVE',
+          'startDate': datetime(2015, 1, 1),
+          'stopDate': datetime(2015, 1, 1),
+          'input': 'string',
+          'inputDetails': {
+              'included': True|False
+          },
+          'output': 'string',
+          'outputDetails': {
+              'included': True|False
+          },
+          'traceHeader': 'string',
+          'mapRunArn': 'string',
+          'error': 'string',
+          'cause': 'string',
+          'stateMachineVersionArn': 'string',
+          'stateMachineAliasArn': 'string',
+          'redriveCount': 123,
+          'redriveDate': datetime(2015, 1, 1),
+          'redriveStatus': 'REDRIVABLE'|'NOT_REDRIVABLE'|'REDRIVABLE_BY_MAP_RUN',
+          'redriveStatusReason': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **executionArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) that identifies the execution.
+
+        
+      
+
+      - **stateMachineArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the executed stated machine.
+
+        
+      
+
+      - **name** *(string) --* 
+
+        The name of the execution.
+
+         
+
+        A name must *not* contain:
+
+         
+
+        
+        * white space
+         
+        * brackets ``< > { } [ ]``
+         
+        * wildcard characters ``? *``
+         
+        * special characters ``" # % \ ^ | ~ ` $ & , ; : /``
+         
+        * control characters ( ``U+0000-001F``, ``U+007F-009F``, ``U+FFFE-FFFF``)
+         
+        * surrogates ( ``U+D800-DFFF``)
+         
+        * invalid characters ( `` U+10FFFF``)
+        
+
+         
+
+        To enable logging with CloudWatch Logs, the name should only contain 0-9, A-Z, a-z, - and _.
+
+        
+      
+
+      - **status** *(string) --* 
+
+        The current status of the execution.
+
+        
+      
+
+      - **startDate** *(datetime) --* 
+
+        The date the execution is started.
+
+        
+      
+
+      - **stopDate** *(datetime) --* 
+
+        If the execution ended, the date the execution stopped.
+
+        
+      
+
+      - **input** *(string) --* 
+
+        The string that contains the JSON input data of the execution. Length constraints apply to the payload size, and are expressed as bytes in UTF-8 encoding.
+
+        
+      
+
+      - **inputDetails** *(dict) --* 
+
+        Provides details about execution input or output.
+
+        
+        
+
+        - **included** *(boolean) --* 
+
+          Indicates whether input or output was included in the response. Always ``true`` for API calls.
+
+          
+    
+      
+
+      - **output** *(string) --* 
+
+        The JSON output data of the execution. Length constraints apply to the payload size, and are expressed as bytes in UTF-8 encoding.
+
+         
+
+        .. note::
+
+          
+
+          This field is set only if the execution succeeds. If the execution fails, this field is null.
+
+          
+
+        
+      
+
+      - **outputDetails** *(dict) --* 
+
+        Provides details about execution input or output.
+
+        
+        
+
+        - **included** *(boolean) --* 
+
+          Indicates whether input or output was included in the response. Always ``true`` for API calls.
+
+          
+    
+      
+
+      - **traceHeader** *(string) --* 
+
+        The X-Ray trace header that was passed to the execution.
+
+         
+
+        .. note::
+
+          
+
+          For X-Ray traces, all Amazon Web Services services use the ``X-Amzn-Trace-Id`` header from the HTTP request. Using the header is the preferred mechanism to identify a trace. ``StartExecution`` and ``StartSyncExecution`` API operations can also use ``traceHeader`` from the body of the request payload. If **both** sources are provided, Step Functions will use the **header value** (preferred) over the value in the request body.
+
+          
+
+        
+      
+
+      - **mapRunArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) that identifies a Map Run, which dispatched this execution.
+
+        
+      
+
+      - **error** *(string) --* 
+
+        The error string if the state machine execution failed.
+
+        
+      
+
+      - **cause** *(string) --* 
+
+        The cause string if the state machine execution failed.
+
+        
+      
+
+      - **stateMachineVersionArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the state machine version associated with the execution. The version ARN is a combination of state machine ARN and the version number separated by a colon (:). For example, ``stateMachineARN:1``.
+
+         
+
+        If you start an execution from a ``StartExecution`` request without specifying a state machine version or alias ARN, Step Functions returns a null value.
+
+        
+      
+
+      - **stateMachineAliasArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the state machine alias associated with the execution. The alias ARN is a combination of state machine ARN and the alias name separated by a colon (:). For example, ``stateMachineARN:PROD``.
+
+         
+
+        If you start an execution from a ``StartExecution`` request with a state machine version ARN, this field will be null.
+
+        
+      
+
+      - **redriveCount** *(integer) --* 
+
+        The number of times you've redriven an execution. If you have not yet redriven an execution, the ``redriveCount`` is 0. This count is only updated if you successfully redrive an execution.
+
+        
+      
+
+      - **redriveDate** *(datetime) --* 
+
+        The date the execution was last redriven. If you have not yet redriven an execution, the ``redriveDate`` is null.
+
+         
+
+        The ``redriveDate`` is unavailable if you redrive a Map Run that starts child workflow executions of type ``EXPRESS``.
+
+        
+      
+
+      - **redriveStatus** *(string) --* 
+
+        Indicates whether or not an execution can be redriven at a given point in time.
+
+         
+
+        
+        * For executions of type ``STANDARD``, ``redriveStatus`` is ``NOT_REDRIVABLE`` if calling the  RedriveExecution API action would return the ``ExecutionNotRedrivable`` error.
+         
+        * For a Distributed Map that includes child workflows of type ``STANDARD``, ``redriveStatus`` indicates whether or not the Map Run can redrive child workflow executions.
+         
+        * For a Distributed Map that includes child workflows of type ``EXPRESS``, ``redriveStatus`` indicates whether or not the Map Run can redrive child workflow executions. You can redrive failed or timed out ``EXPRESS`` workflows *only if* they're a part of a Map Run. When you `redrive <https://docs.aws.amazon.com/step-functions/latest/dg/redrive-map-run.html>`__ the Map Run, these workflows are restarted using the  StartExecution API action.
+        
+
+        
+      
+
+      - **redriveStatusReason** *(string) --* 
+
+        When ``redriveStatus`` is ``NOT_REDRIVABLE``, ``redriveStatusReason`` specifies the reason why an execution cannot be redriven.
+
+         
+
+        
+        * For executions of type ``STANDARD``, or for a Distributed Map that includes child workflows of type ``STANDARD``, ``redriveStatusReason`` can include one of the following reasons: 
+
+          
+          * ``State machine is in DELETING status``.
+           
+          * ``Execution is RUNNING and cannot be redriven``.
+           
+          * ``Execution is SUCCEEDED and cannot be redriven``.
+           
+          * ``Execution was started before the launch of RedriveExecution``.
+           
+          * ``Execution history event limit exceeded``.
+           
+          * ``Execution has exceeded the max execution time``.
+           
+          * ``Execution redrivable period exceeded``.
+          
+
+        
+         
+        * For a Distributed Map that includes child workflows of type ``EXPRESS``, ``redriveStatusReason`` is only returned if the child workflows are not redrivable. This happens when the child workflow executions have completed successfully.
+        
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SFN.Client.exceptions.ExecutionDoesNotExist`
+
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidArn`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsAccessDeniedException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsInvalidStateException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsThrottlingException`
+
+  

@@ -1,0 +1,325 @@
+:doc:`kendra <../../kendra>` / Client / batch_get_document_status
+
+*************************
+batch_get_document_status
+*************************
+
+
+
+.. py:method:: kendra.Client.batch_get_document_status(**kwargs)
+
+  
+
+  Returns the indexing status for one or more documents submitted with the `BatchPutDocument <https://docs.aws.amazon.com/kendra/latest/dg/API_BatchPutDocument.html>`__ API.
+
+   
+
+  When you use the ``BatchPutDocument`` API, documents are indexed asynchronously. You can use the ``BatchGetDocumentStatus`` API to get the current status of a list of documents so that you can determine if they have been successfully indexed.
+
+   
+
+  You can also use the ``BatchGetDocumentStatus`` API to check the status of the `BatchDeleteDocument <https://docs.aws.amazon.com/kendra/latest/dg/API_BatchDeleteDocument.html>`__ API. When a document is deleted from the index, Amazon Kendra returns ``NOT_FOUND`` as the status.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kendra-2019-02-03/BatchGetDocumentStatus>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_document_status(
+        IndexId='string',
+        DocumentInfoList=[
+            {
+                'DocumentId': 'string',
+                'Attributes': [
+                    {
+                        'Key': 'string',
+                        'Value': {
+                            'StringValue': 'string',
+                            'StringListValue': [
+                                'string',
+                            ],
+                            'LongValue': 123,
+                            'DateValue': datetime(2015, 1, 1)
+                        }
+                    },
+                ]
+            },
+        ]
+    )
+    
+  :type IndexId: string
+  :param IndexId: **[REQUIRED]** 
+
+    The identifier of the index to add documents to. The index ID is returned by the `CreateIndex <https://docs.aws.amazon.com/kendra/latest/dg/API_CreateIndex.html>`__ API.
+
+    
+
+  
+  :type DocumentInfoList: list
+  :param DocumentInfoList: **[REQUIRED]** 
+
+    A list of ``DocumentInfo`` objects that identify the documents for which to get the status. You identify the documents by their document ID and optional attributes.
+
+    
+
+  
+    - *(dict) --* 
+
+      Identifies a document for which to retrieve status information
+
+      
+
+    
+      - **DocumentId** *(string) --* **[REQUIRED]** 
+
+        The identifier of the document.
+
+        
+
+      
+      - **Attributes** *(list) --* 
+
+        Attributes that identify a specific version of a document to check.
+
+         
+
+        The only valid attributes are:
+
+         
+
+        
+        * version
+         
+        * datasourceId
+         
+        * jobExecutionId
+        
+
+         
+
+        The attributes follow these rules:
+
+         
+
+        
+        * ``dataSourceId`` and ``jobExecutionId`` must be used together.
+         
+        * ``version`` is ignored if ``dataSourceId`` and ``jobExecutionId`` are not provided.
+         
+        * If ``dataSourceId`` and ``jobExecutionId`` are provided, but ``version`` is not, the version defaults to "0".
+        
+
+        
+
+      
+        - *(dict) --* 
+
+          A document attribute or metadata field. To create custom document attributes, see `Custom attributes <https://docs.aws.amazon.com/kendra/latest/dg/custom-attributes.html>`__.
+
+          
+
+        
+          - **Key** *(string) --* **[REQUIRED]** 
+
+            The identifier for the attribute.
+
+            
+
+          
+          - **Value** *(dict) --* **[REQUIRED]** 
+
+            The value of the attribute.
+
+            
+
+          
+            - **StringValue** *(string) --* 
+
+              A string, such as "department".
+
+              
+
+            
+            - **StringListValue** *(list) --* 
+
+              A list of strings. The default maximum length or number of strings is 10.
+
+              
+
+            
+              - *(string) --* 
+
+              
+          
+            - **LongValue** *(integer) --* 
+
+              A long integer value.
+
+              
+
+            
+            - **DateValue** *(datetime) --* 
+
+              A date expressed as an ISO 8601 string.
+
+               
+
+              It is important for the time zone to be included in the ISO 8601 date-time format. For example, 2012-03-25T12:30:10+01:00 is the ISO 8601 date-time format for March 25th 2012 at 12:30PM (plus 10 seconds) in Central European Time.
+
+              
+
+            
+          
+        
+    
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Errors': [
+              {
+                  'DocumentId': 'string',
+                  'DataSourceId': 'string',
+                  'ErrorCode': 'InternalError'|'InvalidRequest',
+                  'ErrorMessage': 'string'
+              },
+          ],
+          'DocumentStatusList': [
+              {
+                  'DocumentId': 'string',
+                  'DocumentStatus': 'NOT_FOUND'|'PROCESSING'|'INDEXED'|'UPDATED'|'FAILED'|'UPDATE_FAILED',
+                  'FailureCode': 'string',
+                  'FailureReason': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Errors** *(list) --* 
+
+        A list of documents that Amazon Kendra couldn't get the status for. The list includes the ID of the document and the reason that the status couldn't be found.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides a response when the status of a document could not be retrieved.
+
+          
+          
+
+          - **DocumentId** *(string) --* 
+
+            The identifier of the document whose status could not be retrieved.
+
+            
+          
+
+          - **DataSourceId** *(string) --* 
+
+            The identifier of the data source connector that the failed document belongs to.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            Indicates the source of the error.
+
+            
+          
+
+          - **ErrorMessage** *(string) --* 
+
+            States that the API could not get the status of a document. This could be because the request is not valid or there is a system error.
+
+            
+      
+    
+      
+
+      - **DocumentStatusList** *(list) --* 
+
+        The status of documents. The status indicates if the document is waiting to be indexed, is in the process of indexing, has completed indexing, or failed indexing. If a document failed indexing, the status provides the reason why.
+
+        
+        
+
+        - *(dict) --* 
+
+          Provides information about the status of documents submitted for indexing.
+
+          
+          
+
+          - **DocumentId** *(string) --* 
+
+            The identifier of the document.
+
+            
+          
+
+          - **DocumentStatus** *(string) --* 
+
+            The current status of a document.
+
+             
+
+            If the document was submitted for deletion, the status is ``NOT_FOUND`` after the document is deleted.
+
+            
+          
+
+          - **FailureCode** *(string) --* 
+
+            Indicates the source of the error.
+
+            
+          
+
+          - **FailureReason** *(string) --* 
+
+            Provides detailed information about why the document couldn't be indexed. Use this information to correct the error before you resubmit the document for indexing.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`kendra.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`kendra.Client.exceptions.InternalServerException`
+
+  

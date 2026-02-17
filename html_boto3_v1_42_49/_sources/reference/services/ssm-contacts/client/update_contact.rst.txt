@@ -1,0 +1,268 @@
+:doc:`SSMContacts <../../ssm-contacts>` / Client / update_contact
+
+**************
+update_contact
+**************
+
+
+
+.. py:method:: SSMContacts.Client.update_contact(**kwargs)
+
+  
+
+  Updates the contact or escalation plan specified.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-contacts-2021-05-03/UpdateContact>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_contact(
+        ContactId='string',
+        DisplayName='string',
+        Plan={
+            'Stages': [
+                {
+                    'DurationInMinutes': 123,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'string',
+                                'RetryIntervalInMinutes': 123
+                            },
+                            'ContactTargetInfo': {
+                                'ContactId': 'string',
+                                'IsEssential': True|False
+                            }
+                        },
+                    ]
+                },
+            ],
+            'RotationIds': [
+                'string',
+            ]
+        }
+    )
+    
+  :type ContactId: string
+  :param ContactId: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the contact or escalation plan you're updating.
+
+    
+
+  
+  :type DisplayName: string
+  :param DisplayName: 
+
+    The full name of the contact or escalation plan.
+
+    
+
+  
+  :type Plan: dict
+  :param Plan: 
+
+    A list of stages. A contact has an engagement plan with stages for specified contact channels. An escalation plan uses these stages to contact specified contacts.
+
+    
+
+  
+    - **Stages** *(list) --* 
+
+      A list of stages that the escalation plan or engagement plan uses to engage contacts and contact methods.
+
+      
+
+    
+      - *(dict) --* 
+
+        A set amount of time that an escalation plan or engagement plan engages the specified contacts or contact methods.
+
+        
+
+      
+        - **DurationInMinutes** *(integer) --* **[REQUIRED]** 
+
+          The time to wait until beginning the next stage. The duration can only be set to 0 if a target is specified.
+
+          
+
+        
+        - **Targets** *(list) --* **[REQUIRED]** 
+
+          The contacts or contact methods that the escalation plan or engagement plan is engaging.
+
+          
+
+        
+          - *(dict) --* 
+
+            The contact or contact channel that's being engaged.
+
+            
+
+          
+            - **ChannelTargetInfo** *(dict) --* 
+
+              Information about the contact channel that Incident Manager engages.
+
+              
+
+            
+              - **ContactChannelId** *(string) --* **[REQUIRED]** 
+
+                The Amazon Resource Name (ARN) of the contact channel.
+
+                
+
+              
+              - **RetryIntervalInMinutes** *(integer) --* 
+
+                The number of minutes to wait before retrying to send engagement if the engagement initially failed.
+
+                
+
+              
+            
+            - **ContactTargetInfo** *(dict) --* 
+
+              Information about the contact that Incident Manager engages.
+
+              
+
+            
+              - **ContactId** *(string) --* 
+
+                The Amazon Resource Name (ARN) of the contact.
+
+                
+
+              
+              - **IsEssential** *(boolean) --* **[REQUIRED]** 
+
+                A Boolean value determining if the contact's acknowledgement stops the progress of stages in the plan.
+
+                
+
+              
+            
+          
+      
+      
+  
+    - **RotationIds** *(list) --* 
+
+      The Amazon Resource Names (ARNs) of the on-call rotations associated with the plan.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {}
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+  
+  **Exceptions**
+  
+  *   :py:class:`SSMContacts.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.DataEncryptionException`
+
+  
+
+  **Examples**
+
+  The following update-contact example updates the engagement plan of the contact Akua to include the three types of contacts channels. This is done after creating contact channels for Akua.
+  ::
+
+    response = client.update_contact(
+        ContactId='arn:aws:ssm-contacts:us-east-2:111122223333:contact/akuam',
+        Plan={
+            'Stages': [
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact-channel/akuam/beb25840-5ac8-4644-95cc-7a8de390fa65',
+                                'RetryIntervalInMinutes': 1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact-channel/akuam/49f3c24d-5f9f-4638-ae25-3f49e04229ad',
+                                'RetryIntervalInMinutes': 1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact-channel/akuam/77d4f447-f619-4954-afff-85551e369c2a',
+                                'RetryIntervalInMinutes': 1,
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,169 @@
+:doc:`KMS <../../kms>` / Client / rotate_key_on_demand
+
+********************
+rotate_key_on_demand
+********************
+
+
+
+.. py:method:: KMS.Client.rotate_key_on_demand(**kwargs)
+
+  
+
+  Immediately initiates rotation of the key material of the specified symmetric encryption KMS key.
+
+   
+
+  You can perform `on-demand rotation <https://docs.aws.amazon.com/kms/latest/developerguide/rotating-keys-on-demand.html>`__ of the key material in customer managed KMS keys, regardless of whether or not `automatic key rotation <https://docs.aws.amazon.com/kms/latest/developerguide/rotating-keys-enable-disable.html>`__ is enabled. On-demand rotations do not change existing automatic rotation schedules. For example, consider a KMS key that has automatic key rotation enabled with a rotation period of 730 days. If the key is scheduled to automatically rotate on April 14, 2024, and you perform an on-demand rotation on April 10, 2024, the key will automatically rotate, as scheduled, on April 14, 2024 and every 730 days thereafter.
+
+   
+
+  .. note::
+
+    
+
+    You can perform on-demand key rotation a **maximum of 10 times** per KMS key. You can use the KMS console to view the number of remaining on-demand rotations available for a KMS key.
+
+    
+
+   
+
+  You can use  GetKeyRotationStatus to identify any in progress on-demand rotations. You can use  ListKeyRotations to identify the date that completed on-demand rotations were performed. You can monitor rotation of the key material for your KMS keys in CloudTrail and Amazon CloudWatch.
+
+   
+
+  On-demand key rotation is supported only on symmetric encryption KMS keys. You cannot perform on-demand rotation of `asymmetric KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html>`__, `HMAC KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html>`__, or KMS keys in a `custom key store <https://docs.aws.amazon.com/kms/latest/developerguide/key-store-overview.html>`__. When you initiate on-demand key rotation on a symmetric encryption KMS key with imported key material, you must have already imported `new key material <https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-import-key-material.html>`__ and that key material's state should be ``PENDING_ROTATION``. Use the ``ListKeyRotations`` operation to check the state of all key materials associated with a KMS key. To perform on-demand rotation of a set of related `multi-Region keys <https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html#multi-region-rotate>`__, import new key material in the primary Region key, import the same key material in each replica Region key, and invoke the on-demand rotation on the primary Region key.
+
+   
+
+  You cannot initiate on-demand rotation of `Amazon Web Services managed KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-key>`__. KMS always rotates the key material of Amazon Web Services managed keys every year. Rotation of `Amazon Web Services owned KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-owned-key>`__ is managed by the Amazon Web Services service that owns the key.
+
+   
+
+  The KMS key that you use for this operation must be in a compatible key state. For details, see `Key states of KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Cross-account use**: No. You cannot perform this operation on a KMS key in a different Amazon Web Services account.
+
+   
+
+  **Required permissions**: `kms\:RotateKeyOnDemand <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (key policy)
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  EnableKeyRotation
+   
+  *  DisableKeyRotation
+   
+  *  GetKeyRotationStatus
+   
+  *  ImportKeyMaterial
+   
+  *  ListKeyRotations
+  
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/RotateKeyOnDemand>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.rotate_key_on_demand(
+        KeyId='string'
+    )
+    
+  :type KeyId: string
+  :param KeyId: **[REQUIRED]** 
+
+    Identifies a symmetric encryption KMS key. You cannot perform on-demand rotation of `asymmetric KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html>`__, `HMAC KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html>`__, multi-Region KMS keys with `imported key material <https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html>`__, or KMS keys in a `custom key store <https://docs.aws.amazon.com/kms/latest/developerguide/key-store-overview.html>`__. To perform on-demand rotation of a set of related `multi-Region keys <https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html#multi-region-rotate>`__, invoke the on-demand rotation on the primary key.
+
+     
+
+    Specify the key ID or key ARN of the KMS key.
+
+     
+
+    For example:
+
+     
+
+    
+    * Key ID: ``1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Key ARN: ``arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``
+    
+
+     
+
+    To get the key ID and key ARN for a KMS key, use  ListKeys or  DescribeKey.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'KeyId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **KeyId** *(string) --* 
+
+        Identifies the symmetric encryption KMS key that you initiated on-demand rotation on.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DisabledException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidArnException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DependencyTimeoutException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInvalidStateException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.UnsupportedOperationException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.ConflictException`
+
+  

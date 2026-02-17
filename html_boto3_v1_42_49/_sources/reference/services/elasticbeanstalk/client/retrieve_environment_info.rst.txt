@@ -1,0 +1,188 @@
+:doc:`ElasticBeanstalk <../../elasticbeanstalk>` / Client / retrieve_environment_info
+
+*************************
+retrieve_environment_info
+*************************
+
+
+
+.. py:method:: ElasticBeanstalk.Client.retrieve_environment_info(**kwargs)
+
+  
+
+  Retrieves the compiled information from a  RequestEnvironmentInfo request.
+
+   
+
+  Related Topics
+
+   
+
+  
+  *  RequestEnvironmentInfo
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticbeanstalk-2010-12-01/RetrieveEnvironmentInfo>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.retrieve_environment_info(
+        EnvironmentId='string',
+        EnvironmentName='string',
+        InfoType='tail'|'bundle'
+    )
+    
+  :type EnvironmentId: string
+  :param EnvironmentId: 
+
+    The ID of the data's environment.
+
+     
+
+    If no such environment is found, returns an ``InvalidParameterValue`` error.
+
+     
+
+    Condition: You must specify either this or an EnvironmentName, or both. If you do not specify either, AWS Elastic Beanstalk returns ``MissingRequiredParameter`` error.
+
+    
+
+  
+  :type EnvironmentName: string
+  :param EnvironmentName: 
+
+    The name of the data's environment.
+
+     
+
+    If no such environment is found, returns an ``InvalidParameterValue`` error.
+
+     
+
+    Condition: You must specify either this or an EnvironmentId, or both. If you do not specify either, AWS Elastic Beanstalk returns ``MissingRequiredParameter`` error.
+
+    
+
+  
+  :type InfoType: string
+  :param InfoType: **[REQUIRED]** 
+
+    The type of information to retrieve.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'EnvironmentInfo': [
+              {
+                  'InfoType': 'tail'|'bundle',
+                  'Ec2InstanceId': 'string',
+                  'SampleTimestamp': datetime(2015, 1, 1),
+                  'Message': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Result message containing a description of the requested environment info.
+
+      
+      
+
+      - **EnvironmentInfo** *(list) --* 
+
+        The  EnvironmentInfoDescription of the environment.
+
+        
+        
+
+        - *(dict) --* 
+
+          The information retrieved from the Amazon EC2 instances.
+
+          
+          
+
+          - **InfoType** *(string) --* 
+
+            The type of information retrieved.
+
+            
+          
+
+          - **Ec2InstanceId** *(string) --* 
+
+            The Amazon EC2 Instance ID for this information.
+
+            
+          
+
+          - **SampleTimestamp** *(datetime) --* 
+
+            The time stamp when this information was retrieved.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            The retrieved information. Currently contains a presigned Amazon S3 URL. The files are deleted after 15 minutes.
+
+             
+
+            Anyone in possession of this URL can access the files before they are deleted. Make the URL available only to trusted parties.
+
+            
+      
+    
+  
+
+  **Examples**
+
+  The following operation retrieves a link to logs from an environment named my-env:
+  ::
+
+    response = client.retrieve_environment_info(
+        EnvironmentName='my-env',
+        InfoType='tail',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'EnvironmentInfo': [
+            {
+                'Ec2InstanceId': 'i-09c1c867',
+                'InfoType': 'tail',
+                'Message': 'https://elasticbeanstalk-us-west-2-0123456789012.s3.amazonaws.com/resources/environments/logs/tail/e-fyqyju3yjs/i-09c1c867/TailLogs-1440109397703.out?AWSAccessKeyId=AKGPT4J56IAJ2EUBL5CQ&Expires=1440195891&Signature=n%2BEalOV6A2HIOx4Rcfb7LT16bBM%3D',
+                'SampleTimestamp': datetime(2015, 8, 20, 22, 23, 17, 3, 232, 0),
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,192 @@
+:doc:`KMS <../../kms>` / Client / update_alias
+
+************
+update_alias
+************
+
+
+
+.. py:method:: KMS.Client.update_alias(**kwargs)
+
+  
+
+  Associates an existing KMS alias with a different KMS key. Each alias is associated with only one KMS key at a time, although a KMS key can have multiple aliases. The alias and the KMS key must be in the same Amazon Web Services account and Region.
+
+   
+
+  .. note::
+
+    
+
+    Adding, deleting, or updating an alias can allow or deny permission to the KMS key. For details, see `ABAC for KMS <https://docs.aws.amazon.com/kms/latest/developerguide/abac.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+   
+
+  The current and new KMS key must be the same type (both symmetric or both asymmetric or both HMAC), and they must have the same key usage. This restriction prevents errors in code that uses aliases. If you must assign an alias to a different type of KMS key, use  DeleteAlias to delete the old alias and  CreateAlias to create a new alias.
+
+   
+
+  You cannot use ``UpdateAlias`` to change an alias name. To change an alias name, use  DeleteAlias to delete the old alias and  CreateAlias to create a new alias.
+
+   
+
+  Because an alias is not a property of a KMS key, you can create, update, and delete the aliases of a KMS key without affecting the KMS key. Also, aliases do not appear in the response from the  DescribeKey operation. To get the aliases of all KMS keys in the account, use the  ListAliases operation.
+
+   
+
+  The KMS key that you use for this operation must be in a compatible key state. For details, see `Key states of KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Cross-account use**: No. You cannot perform this operation on a KMS key in a different Amazon Web Services account.
+
+   
+
+  **Required permissions**
+
+   
+
+  
+  * `kms\:UpdateAlias <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ on the alias (IAM policy).
+   
+  * `kms\:UpdateAlias <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ on the current KMS key (key policy).
+   
+  * `kms\:UpdateAlias <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ on the new KMS key (key policy).
+  
+
+   
+
+  For details, see `Controlling access to aliases <https://docs.aws.amazon.com/kms/latest/developerguide/kms-alias.html#alias-access>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  *  CreateAlias
+   
+  *  DeleteAlias
+   
+  *  ListAliases
+  
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/UpdateAlias>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_alias(
+        AliasName='string',
+        TargetKeyId='string'
+    )
+    
+  :type AliasName: string
+  :param AliasName: **[REQUIRED]** 
+
+    Identifies the alias that is changing its KMS key. This value must begin with ``alias/`` followed by the alias name, such as ``alias/ExampleAlias``. You cannot use ``UpdateAlias`` to change the alias name.
+
+     
+
+    .. warning::
+
+       
+
+      Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in CloudTrail logs and other output.
+
+      
+
+    
+
+  
+  :type TargetKeyId: string
+  :param TargetKeyId: **[REQUIRED]** 
+
+    Identifies the `customer managed key <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-mgn-key>`__ to associate with the alias. You don't have permission to associate an alias with an `Amazon Web Services managed key <https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-key>`__.
+
+     
+
+    The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target KMS key must be the same type as the current target KMS key (both symmetric or both asymmetric or both HMAC) and they must have the same key usage.
+
+     
+
+    Specify the key ID or key ARN of the KMS key.
+
+     
+
+    For example:
+
+     
+
+    
+    * Key ID: ``1234abcd-12ab-34cd-56ef-1234567890ab``
+     
+    * Key ARN: ``arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab``
+    
+
+     
+
+    To get the key ID and key ARN for a KMS key, use  ListKeys or  DescribeKey.
+
+     
+
+    To verify that the alias is mapped to the correct KMS key, use  ListAliases.
+
+    
+
+  
+  
+  :returns: None
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.DependencyTimeoutException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInvalidStateException`
+
+  
+
+  **Examples**
+
+  The following example updates the specified alias to refer to the specified KMS key.
+  ::
+
+    response = client.update_alias(
+        # The alias to update.
+        AliasName='alias/ExampleAlias',
+        # The identifier of the KMS key that the alias will refer to after this operation succeeds. You can use the key ID or the Amazon Resource Name (ARN) of the KMS key.
+        TargetKeyId='1234abcd-12ab-34cd-56ef-1234567890ab',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

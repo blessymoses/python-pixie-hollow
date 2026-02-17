@@ -1,0 +1,114 @@
+:doc:`DynamoDB <../../dynamodb>` / Client / delete_resource_policy
+
+**********************
+delete_resource_policy
+**********************
+
+
+
+.. py:method:: DynamoDB.Client.delete_resource_policy(**kwargs)
+
+  
+
+  Deletes the resource-based policy attached to the resource, which can be a table or stream.
+
+   
+
+  ``DeleteResourcePolicy`` is an idempotent operation; running it multiple times on the same resource *doesn't* result in an error response, unless you specify an ``ExpectedRevisionId``, which will then return a ``PolicyNotFoundException``.
+
+   
+
+  .. warning::
+
+     
+
+    To make sure that you don't inadvertently lock yourself out of your own resources, the root principal in your Amazon Web Services account can perform ``DeleteResourcePolicy`` requests, even if your resource-based policy explicitly denies the root principal's access.
+
+     
+
+   
+
+  .. note::
+
+    
+
+    ``DeleteResourcePolicy`` is an asynchronous operation. If you issue a ``GetResourcePolicy`` request immediately after running the ``DeleteResourcePolicy`` request, DynamoDB might still return the deleted policy. This is because the policy for your resource might not have been deleted yet. Wait for a few seconds, and then try the ``GetResourcePolicy`` request again.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/dynamodb-2012-08-10/DeleteResourcePolicy>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.delete_resource_policy(
+        ResourceArn='string',
+        ExpectedRevisionId='string'
+    )
+    
+  :type ResourceArn: string
+  :param ResourceArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the DynamoDB resource from which the policy will be removed. The resources you can specify include tables and streams. If you remove the policy of a table, it will also remove the permissions for the table's indexes defined in that policy document. This is because index permissions are defined in the table's policy.
+
+    
+
+  
+  :type ExpectedRevisionId: string
+  :param ExpectedRevisionId: 
+
+    A string value that you can use to conditionally delete your policy. When you provide an expected revision ID, if the revision ID of the existing policy on the resource doesn't match or if there's no policy attached to the resource, the request will fail and return a ``PolicyNotFoundException``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RevisionId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **RevisionId** *(string) --* 
+
+        A unique string that represents the revision ID of the policy. If you're comparing revision IDs, make sure to always use string comparison logic.
+
+         
+
+        This value will be empty if you make a request against a resource without a policy.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`DynamoDB.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.PolicyNotFoundException`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.ResourceInUseException`
+
+  
+  *   :py:class:`DynamoDB.Client.exceptions.LimitExceededException`
+
+  

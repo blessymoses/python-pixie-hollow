@@ -1,0 +1,224 @@
+:doc:`ConfigService <../../config>` / Client / describe_compliance_by_resource
+
+*******************************
+describe_compliance_by_resource
+*******************************
+
+
+
+.. py:method:: ConfigService.Client.describe_compliance_by_resource(**kwargs)
+
+  
+
+  Indicates whether the specified Amazon Web Services resources are compliant. If a resource is noncompliant, this operation returns the number of Config rules that the resource does not comply with.
+
+   
+
+  A resource is compliant if it complies with all the Config rules that evaluate it. It is noncompliant if it does not comply with one or more of these rules.
+
+   
+
+  If Config has no current evaluation results for the resource, it returns ``INSUFFICIENT_DATA``. This result might indicate one of the following conditions about the rules that evaluate the resource:
+
+   
+
+  
+  * Config has never invoked an evaluation for the rule. To check whether it has, use the ``DescribeConfigRuleEvaluationStatus`` action to get the ``LastSuccessfulInvocationTime`` and ``LastFailedInvocationTime``.
+   
+  * The rule's Lambda function is failing to send evaluation results to Config. Verify that the role that you assigned to your configuration recorder includes the ``config:PutEvaluations`` permission. If the rule is a custom rule, verify that the Lambda execution role includes the ``config:PutEvaluations`` permission.
+   
+  * The rule's Lambda function has returned ``NOT_APPLICABLE`` for all evaluation results. This can occur if the resources were deleted or removed from the rule's scope.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/config-2014-11-12/DescribeComplianceByResource>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_compliance_by_resource(
+        ResourceType='string',
+        ResourceId='string',
+        ComplianceTypes=[
+            'COMPLIANT'|'NON_COMPLIANT'|'NOT_APPLICABLE'|'INSUFFICIENT_DATA',
+        ],
+        Limit=123,
+        NextToken='string'
+    )
+    
+  :type ResourceType: string
+  :param ResourceType: 
+
+    The types of Amazon Web Services resources for which you want compliance information (for example, ``AWS::EC2::Instance``). For this operation, you can specify that the resource type is an Amazon Web Services account by specifying ``AWS::::Account``.
+
+    
+
+  
+  :type ResourceId: string
+  :param ResourceId: 
+
+    The ID of the Amazon Web Services resource for which you want compliance information. You can specify only one resource ID. If you specify a resource ID, you must also specify a type for ``ResourceType``.
+
+    
+
+  
+  :type ComplianceTypes: list
+  :param ComplianceTypes: 
+
+    Filters the results by compliance.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type Limit: integer
+  :param Limit: 
+
+    The maximum number of evaluation results returned on each page. The default is 10. You cannot specify a number greater than 100. If you specify 0, Config uses the default.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The ``nextToken`` string returned on a previous page that you use to get the next page of results in a paginated response.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ComplianceByResources': [
+              {
+                  'ResourceType': 'string',
+                  'ResourceId': 'string',
+                  'Compliance': {
+                      'ComplianceType': 'COMPLIANT'|'NON_COMPLIANT'|'NOT_APPLICABLE'|'INSUFFICIENT_DATA',
+                      'ComplianceContributorCount': {
+                          'CappedCount': 123,
+                          'CapExceeded': True|False
+                      }
+                  }
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ComplianceByResources** *(list) --* 
+
+        Indicates whether the specified Amazon Web Services resource complies with all of the Config rules that evaluate it.
+
+        
+        
+
+        - *(dict) --* 
+
+          Indicates whether an Amazon Web Services resource that is evaluated according to one or more Config rules is compliant. A resource is compliant if it complies with all of the rules that evaluate it. A resource is noncompliant if it does not comply with one or more of these rules.
+
+          
+          
+
+          - **ResourceType** *(string) --* 
+
+            The type of the Amazon Web Services resource that was evaluated.
+
+            
+          
+
+          - **ResourceId** *(string) --* 
+
+            The ID of the Amazon Web Services resource that was evaluated.
+
+            
+          
+
+          - **Compliance** *(dict) --* 
+
+            Indicates whether the Amazon Web Services resource complies with all of the Config rules that evaluated it.
+
+            
+            
+
+            - **ComplianceType** *(string) --* 
+
+              Indicates whether an Amazon Web Services resource or Config rule is compliant.
+
+               
+
+              A resource is compliant if it complies with all of the Config rules that evaluate it. A resource is noncompliant if it does not comply with one or more of these rules.
+
+               
+
+              A rule is compliant if all of the resources that the rule evaluates comply with it. A rule is noncompliant if any of these resources do not comply.
+
+               
+
+              Config returns the ``INSUFFICIENT_DATA`` value when no evaluation results are available for the Amazon Web Services resource or Config rule.
+
+               
+
+              For the ``Compliance`` data type, Config supports only ``COMPLIANT``, ``NON_COMPLIANT``, and ``INSUFFICIENT_DATA`` values. Config does not support the ``NOT_APPLICABLE`` value for the ``Compliance`` data type.
+
+              
+            
+
+            - **ComplianceContributorCount** *(dict) --* 
+
+              The number of Amazon Web Services resources or Config rules that cause a result of ``NON_COMPLIANT``, up to a maximum number.
+
+              
+              
+
+              - **CappedCount** *(integer) --* 
+
+                The number of Amazon Web Services resources or Config rules responsible for the current compliance of the item.
+
+                
+              
+
+              - **CapExceeded** *(boolean) --* 
+
+                Indicates whether the maximum count is reached.
+
+                
+          
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The string that you use in a subsequent request to get the next page of results in a paginated response.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidNextTokenException`
+
+  

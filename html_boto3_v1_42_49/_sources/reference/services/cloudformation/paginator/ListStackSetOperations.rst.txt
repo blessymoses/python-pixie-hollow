@@ -1,0 +1,349 @@
+:doc:`CloudFormation <../../cloudformation>` / Paginator / ListStackSetOperations
+
+**********************
+ListStackSetOperations
+**********************
+
+
+
+.. py:class:: CloudFormation.Paginator.ListStackSetOperations
+
+  ::
+
+    
+    paginator = client.get_paginator('list_stack_set_operations')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`CloudFormation.Client.list_stack_set_operations`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/ListStackSetOperations>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          StackSetName='string',
+          CallAs='SELF'|'DELEGATED_ADMIN',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type StackSetName: string
+    :param StackSetName: **[REQUIRED]** 
+
+      The name or unique ID of the StackSet that you want to get operation summaries for.
+
+      
+
+    
+    :type CallAs: string
+    :param CallAs: 
+
+      [Service-managed permissions] Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account.
+
+       
+
+      By default, ``SELF`` is specified. Use ``SELF`` for StackSets with self-managed permissions.
+
+       
+
+      
+      * If you are signed in to the management account, specify ``SELF``.
+       
+      * If you are signed in to a delegated administrator account, specify ``DELEGATED_ADMIN``. Your Amazon Web Services account must be registered as a delegated administrator in the management account. For more information, see `Register a delegated administrator <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-orgs-delegated-admin.html>`__ in the *CloudFormation User Guide*.
+      
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'Summaries': [
+                {
+                    'OperationId': 'string',
+                    'Action': 'CREATE'|'UPDATE'|'DELETE'|'DETECT_DRIFT',
+                    'Status': 'RUNNING'|'SUCCEEDED'|'FAILED'|'STOPPING'|'STOPPED'|'QUEUED',
+                    'CreationTimestamp': datetime(2015, 1, 1),
+                    'EndTimestamp': datetime(2015, 1, 1),
+                    'StatusReason': 'string',
+                    'StatusDetails': {
+                        'FailedStackInstancesCount': 123
+                    },
+                    'OperationPreferences': {
+                        'RegionConcurrencyType': 'SEQUENTIAL'|'PARALLEL',
+                        'RegionOrder': [
+                            'string',
+                        ],
+                        'FailureToleranceCount': 123,
+                        'FailureTolerancePercentage': 123,
+                        'MaxConcurrentCount': 123,
+                        'MaxConcurrentPercentage': 123,
+                        'ConcurrencyMode': 'STRICT_FAILURE_TOLERANCE'|'SOFT_FAILURE_TOLERANCE'
+                    }
+                },
+            ],
+            
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **Summaries** *(list) --* 
+
+          A list of ``StackSetOperationSummary`` structures that contain summary information about operations for the specified StackSet.
+
+          
+          
+
+          - *(dict) --* 
+
+            The structures that contain summary information about the specified operation.
+
+            
+            
+
+            - **OperationId** *(string) --* 
+
+              The unique ID of the StackSet operation.
+
+              
+            
+
+            - **Action** *(string) --* 
+
+              The type of operation: ``CREATE``, ``UPDATE``, or ``DELETE``. Create and delete operations affect only the specified stack instances that are associated with the specified StackSet. Update operations affect both the StackSet itself and *all* associated StackSet instances.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The overall status of the operation.
+
+               
+
+              
+              * ``FAILED``: The operation exceeded the specified failure tolerance. The failure tolerance value that you've set for an operation is applied for each Region during stack create and update operations. If the number of failed stacks within a Region exceeds the failure tolerance, the status of the operation in the Region is set to ``FAILED``. This in turn sets the status of the operation as a whole to ``FAILED``, and CloudFormation cancels the operation in any remaining Regions.
+               
+              * ``QUEUED``: [Service-managed permissions] For automatic deployments that require a sequence of operations, the operation is queued to be performed. For more information, see the `StackSet status codes <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html#stackset-status-codes>`__ in the *CloudFormation User Guide*.
+               
+              * ``RUNNING``: The operation is currently being performed.
+               
+              * ``STOPPED``: The user has canceled the operation.
+               
+              * ``STOPPING``: The operation is in the process of stopping, at user request.
+               
+              * ``SUCCEEDED``: The operation completed creating or updating all the specified stacks without exceeding the failure tolerance for the operation.
+              
+
+              
+            
+
+            - **CreationTimestamp** *(datetime) --* 
+
+              The time at which the operation was initiated. Note that the creation times for the StackSet operation might differ from the creation time of the individual stacks themselves. This is because CloudFormation needs to perform preparatory work for the operation, such as dispatching the work to the requested Regions, before actually creating the first stacks.
+
+              
+            
+
+            - **EndTimestamp** *(datetime) --* 
+
+              The time at which the StackSet operation ended, across all accounts and Regions specified. Note that this doesn't necessarily mean that the StackSet operation was successful, or even attempted, in each account or Region.
+
+              
+            
+
+            - **StatusReason** *(string) --* 
+
+              The status of the operation in details.
+
+              
+            
+
+            - **StatusDetails** *(dict) --* 
+
+              Detailed information about the StackSet operation.
+
+              
+              
+
+              - **FailedStackInstancesCount** *(integer) --* 
+
+                The number of stack instances for which the StackSet operation failed.
+
+                
+          
+            
+
+            - **OperationPreferences** *(dict) --* 
+
+              The user-specified preferences for how CloudFormation performs a StackSet operation.
+
+               
+
+              For more information about maximum concurrent accounts and failure tolerance, see `StackSet operation options <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html#stackset-ops-options>`__.
+
+              
+              
+
+              - **RegionConcurrencyType** *(string) --* 
+
+                The concurrency type of deploying StackSets operations in Regions, could be in parallel or one Region at a time.
+
+                
+              
+
+              - **RegionOrder** *(list) --* 
+
+                The order of the Regions where you want to perform the stack operation.
+
+                
+                
+
+                - *(string) --* 
+            
+              
+
+              - **FailureToleranceCount** *(integer) --* 
+
+                The number of accounts per Region this operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+                 
+
+                You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+                 
+
+                By default, ``0`` is specified.
+
+                
+              
+
+              - **FailureTolerancePercentage** *(integer) --* 
+
+                The percentage of accounts per Region this stack operation can fail in before CloudFormation stops the operation in that Region. If the operation is stopped in a Region, CloudFormation doesn't attempt the operation in any subsequent Regions.
+
+                 
+
+                When calculating the number of accounts based on the specified percentage, CloudFormation rounds *down* to the next whole number.
+
+                 
+
+                You can specify either ``FailureToleranceCount`` or ``FailureTolerancePercentage``, but not both.
+
+                 
+
+                By default, ``0`` is specified.
+
+                
+              
+
+              - **MaxConcurrentCount** *(integer) --* 
+
+                The maximum number of accounts in which to perform this operation at one time. This can depend on the value of ``FailureToleranceCount`` depending on your ``ConcurrencyMode``. ``MaxConcurrentCount`` is at most one more than the ``FailureToleranceCount`` if you're using ``STRICT_FAILURE_TOLERANCE``.
+
+                 
+
+                Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+                 
+
+                You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+                 
+
+                By default, ``1`` is specified.
+
+                
+              
+
+              - **MaxConcurrentPercentage** *(integer) --* 
+
+                The maximum percentage of accounts in which to perform this operation at one time.
+
+                 
+
+                When calculating the number of accounts based on the specified percentage, CloudFormation rounds down to the next whole number. This is true except in cases where rounding down would result is zero. In this case, CloudFormation sets the number as one instead.
+
+                 
+
+                Note that this setting lets you specify the *maximum* for operations. For large deployments, under certain circumstances the actual number of accounts acted upon concurrently may be lower due to service throttling.
+
+                 
+
+                You can specify either ``MaxConcurrentCount`` or ``MaxConcurrentPercentage``, but not both.
+
+                 
+
+                By default, ``1`` is specified.
+
+                
+              
+
+              - **ConcurrencyMode** *(string) --* 
+
+                Specifies how the concurrency level behaves during the operation execution.
+
+                 
+
+                
+                * ``STRICT_FAILURE_TOLERANCE``: This option dynamically lowers the concurrency level to ensure the number of failed accounts never exceeds the value of ``FailureToleranceCount`` +1. The initial actual concurrency is set to the lower of either the value of the ``MaxConcurrentCount``, or the value of ``FailureToleranceCount`` +1. The actual concurrency is then reduced proportionally by the number of failures. This is the default behavior. If failure tolerance or Maximum concurrent accounts are set to percentages, the behavior is similar.
+                 
+                * ``SOFT_FAILURE_TOLERANCE``: This option decouples ``FailureToleranceCount`` from the actual concurrency. This allows StackSet operations to run at the concurrency level set by the ``MaxConcurrentCount`` value, or ``MaxConcurrentPercentage``, regardless of the number of failures.
+                
+
+                
+          
+        
+      
+    

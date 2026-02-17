@@ -1,0 +1,260 @@
+:doc:`RAM <../../ram>` / Client / list_permission_associations
+
+****************************
+list_permission_associations
+****************************
+
+
+
+.. py:method:: RAM.Client.list_permission_associations(**kwargs)
+
+  
+
+  Lists information about the managed permission and its associations to any resource shares that use this managed permission. This lets you see which resource shares use which versions of the specified managed permission.
+
+   
+
+  .. note::
+
+    
+
+    Always check the ``NextToken`` response parameter for a ``null`` value when calling a paginated operation. These operations can occasionally return an empty set of results even when there are more results available. The ``NextToken`` response parameter value is ``null`` *only* when there are no more results to display.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ram-2018-01-04/ListPermissionAssociations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_permission_associations(
+        permissionArn='string',
+        permissionVersion=123,
+        associationStatus='ASSOCIATING'|'ASSOCIATED'|'FAILED'|'DISASSOCIATING'|'DISASSOCIATED'|'SUSPENDED'|'SUSPENDING'|'RESTORING',
+        resourceType='string',
+        featureSet='CREATED_FROM_POLICY'|'PROMOTING_TO_STANDARD'|'STANDARD',
+        defaultVersion=True|False,
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type permissionArn: string
+  :param permissionArn: 
+
+    Specifies the `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the managed permission.
+
+    
+
+  
+  :type permissionVersion: integer
+  :param permissionVersion: 
+
+    Specifies that you want to list only those associations with resource shares that use this version of the managed permission. If you don't provide a value for this parameter, then the operation returns information about associations with resource shares that use any version of the managed permission.
+
+    
+
+  
+  :type associationStatus: string
+  :param associationStatus: 
+
+    Specifies that you want to list only those associations with resource shares that match this status.
+
+    
+
+  
+  :type resourceType: string
+  :param resourceType: 
+
+    Specifies that you want to list only those associations with resource shares that include at least one resource of this resource type.
+
+    
+
+  
+  :type featureSet: string
+  :param featureSet: 
+
+    Specifies that you want to list only those associations with resource shares that have a ``featureSet`` with this value.
+
+    
+
+  
+  :type defaultVersion: boolean
+  :param defaultVersion: 
+
+    When ``true``, specifies that you want to list only those associations with resource shares that use the default version of the specified managed permission.
+
+     
+
+    When ``false`` (the default value), lists associations with resource shares that use any version of the specified managed permission.
+
+    
+
+  
+  :type nextToken: string
+  :param nextToken: 
+
+    Specifies that you want to receive the next page of results. Valid only if you received a ``NextToken`` response in the previous request. If you did, it indicates that more output is available. Set this parameter to the value provided by the previous call's ``NextToken`` response to request the next page of results.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    Specifies the total number of results that you want included on each page of the response. If you do not include this parameter, it defaults to a value that is specific to the operation. If additional items exist beyond the number you specify, the ``NextToken`` response element is returned with a value (not null). Include the specified value as the ``NextToken`` request parameter in the next call to the operation to get the next part of the results. Note that the service might return fewer results than the maximum even when there are more results available. You should check ``NextToken`` after every operation to ensure that you receive all of the results.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'permissions': [
+              {
+                  'arn': 'string',
+                  'permissionVersion': 'string',
+                  'defaultVersion': True|False,
+                  'resourceType': 'string',
+                  'status': 'string',
+                  'featureSet': 'CREATED_FROM_POLICY'|'PROMOTING_TO_STANDARD'|'STANDARD',
+                  'lastUpdatedTime': datetime(2015, 1, 1),
+                  'resourceShareArn': 'string'
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **permissions** *(list) --* 
+
+        A structure with information about this customer managed permission.
+
+        
+        
+
+        - *(dict) --* 
+
+          An object that describes a managed permission associated with a resource share.
+
+          
+          
+
+          - **arn** *(string) --* 
+
+            The `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the associated managed permission.
+
+            
+          
+
+          - **permissionVersion** *(string) --* 
+
+            The version of the permission currently associated with the resource share.
+
+            
+          
+
+          - **defaultVersion** *(boolean) --* 
+
+            Indicates whether the associated resource share is using the default version of the permission.
+
+            
+          
+
+          - **resourceType** *(string) --* 
+
+            The resource type to which this permission applies.
+
+            
+          
+
+          - **status** *(string) --* 
+
+            The current status of the association between the permission and the resource share. The following are the possible values:
+
+             
+
+            
+            * ``ATTACHABLE`` – This permission or version can be associated with resource shares.
+             
+            * ``UNATTACHABLE`` – This permission or version can't currently be associated with resource shares.
+             
+            * ``DELETING`` – This permission or version is in the process of being deleted.
+             
+            * ``DELETED`` – This permission or version is deleted.
+            
+
+            
+          
+
+          - **featureSet** *(string) --* 
+
+            Indicates what features are available for this resource share. This parameter can have one of the following values:
+
+             
+
+            
+            * **STANDARD** – A resource share that supports all functionality. These resource shares are visible to all principals you share the resource share with. You can modify these resource shares in RAM using the console or APIs. This resource share might have been created by RAM, or it might have been **CREATED_FROM_POLICY** and then promoted.
+             
+            * **CREATED_FROM_POLICY** – The customer manually shared a resource by attaching a resource-based policy. That policy did not match any existing managed permissions, so RAM created this customer managed permission automatically on the customer's behalf based on the attached policy document. This type of resource share is visible only to the Amazon Web Services account that created it. You can't modify it in RAM unless you promote it. For more information, see  PromoteResourceShareCreatedFromPolicy.
+             
+            * **PROMOTING_TO_STANDARD** – This resource share was originally ``CREATED_FROM_POLICY``, but the customer ran the  PromoteResourceShareCreatedFromPolicy and that operation is still in progress. This value changes to ``STANDARD`` when complete.
+            
+
+            
+          
+
+          - **lastUpdatedTime** *(datetime) --* 
+
+            The date and time when the association between the permission and the resource share was last updated.
+
+            
+          
+
+          - **resourceShareArn** *(string) --* 
+
+            The `Amazon Resource Name (ARN) <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of a resource share associated with this permission.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        If present, this value indicates that more output is available than is included in the current response. Use this value in the ``NextToken`` request parameter in a subsequent call to the operation to get the next part of the output. You should repeat this until the ``NextToken`` response element comes back as ``null``. This indicates that this is the last page of results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.MalformedArnException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.InvalidNextTokenException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ServerInternalException`
+
+  
+  *   :py:class:`RAM.Client.exceptions.ServiceUnavailableException`
+
+  

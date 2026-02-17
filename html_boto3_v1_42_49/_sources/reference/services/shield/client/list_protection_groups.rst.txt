@@ -1,0 +1,251 @@
+:doc:`Shield <../../shield>` / Client / list_protection_groups
+
+**********************
+list_protection_groups
+**********************
+
+
+
+.. py:method:: Shield.Client.list_protection_groups(**kwargs)
+
+  
+
+  Retrieves  ProtectionGroup objects for the account. You can retrieve all protection groups or you can provide filtering criteria and retrieve just the subset of protection groups that match the criteria.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/shield-2016-06-02/ListProtectionGroups>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_protection_groups(
+        NextToken='string',
+        MaxResults=123,
+        InclusionFilters={
+            'ProtectionGroupIds': [
+                'string',
+            ],
+            'Patterns': [
+                'ALL'|'ARBITRARY'|'BY_RESOURCE_TYPE',
+            ],
+            'ResourceTypes': [
+                'CLOUDFRONT_DISTRIBUTION'|'ROUTE_53_HOSTED_ZONE'|'ELASTIC_IP_ALLOCATION'|'CLASSIC_LOAD_BALANCER'|'APPLICATION_LOAD_BALANCER'|'GLOBAL_ACCELERATOR',
+            ],
+            'Aggregations': [
+                'SUM'|'MEAN'|'MAX',
+            ]
+        }
+    )
+    
+  :type NextToken: string
+  :param NextToken: 
+
+    When you request a list of objects from Shield Advanced, if the response does not include all of the remaining available objects, Shield Advanced includes a ``NextToken`` value in the response. You can retrieve the next batch of objects by requesting the list again and providing the token that was returned by the prior call in your request.
+
+     
+
+    You can indicate the maximum number of objects that you want Shield Advanced to return for a single call with the ``MaxResults`` setting. Shield Advanced will not return more than ``MaxResults`` objects, but may return fewer, even if more objects are still available.
+
+     
+
+    Whenever more objects remain that Shield Advanced has not yet returned to you, the response will include a ``NextToken`` value.
+
+     
+
+    On your first call to a list operation, leave this setting empty.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The greatest number of objects that you want Shield Advanced to return to the list request. Shield Advanced might return fewer objects than you indicate in this setting, even if more objects are available. If there are more objects remaining, Shield Advanced will always also return a ``NextToken`` value in the response.
+
+     
+
+    The default setting is 20.
+
+    
+
+  
+  :type InclusionFilters: dict
+  :param InclusionFilters: 
+
+    Narrows the set of protection groups that the call retrieves. You can retrieve a single protection group by its name and you can retrieve all protection groups that are configured with specific pattern or aggregation settings. You can provide up to one criteria per filter type. Shield Advanced returns the protection groups that exactly match all of the search criteria that you provide.
+
+    
+
+  
+    - **ProtectionGroupIds** *(list) --* 
+
+      The ID of the protection group that you want to retrieve.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **Patterns** *(list) --* 
+
+      The pattern specification of the protection groups that you want to retrieve.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **ResourceTypes** *(list) --* 
+
+      The resource type configuration of the protection groups that you want to retrieve. In the protection group configuration, you specify the resource type when you set the group's ``Pattern`` to ``BY_RESOURCE_TYPE``.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    - **Aggregations** *(list) --* 
+
+      The aggregation setting of the protection groups that you want to retrieve.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ProtectionGroups': [
+              {
+                  'ProtectionGroupId': 'string',
+                  'Aggregation': 'SUM'|'MEAN'|'MAX',
+                  'Pattern': 'ALL'|'ARBITRARY'|'BY_RESOURCE_TYPE',
+                  'ResourceType': 'CLOUDFRONT_DISTRIBUTION'|'ROUTE_53_HOSTED_ZONE'|'ELASTIC_IP_ALLOCATION'|'CLASSIC_LOAD_BALANCER'|'APPLICATION_LOAD_BALANCER'|'GLOBAL_ACCELERATOR',
+                  'Members': [
+                      'string',
+                  ],
+                  'ProtectionGroupArn': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ProtectionGroups** *(list) --* 
+        
+
+        - *(dict) --* 
+
+          A grouping of protected resources that you and Shield Advanced can monitor as a collective. This resource grouping improves the accuracy of detection and reduces false positives.
+
+          
+          
+
+          - **ProtectionGroupId** *(string) --* 
+
+            The name of the protection group. You use this to identify the protection group in lists and to manage the protection group, for example to update, delete, or describe it.
+
+            
+          
+
+          - **Aggregation** *(string) --* 
+
+            Defines how Shield combines resource data for the group in order to detect, mitigate, and report events.
+
+             
+
+            
+            * Sum - Use the total traffic across the group. This is a good choice for most cases. Examples include Elastic IP addresses for EC2 instances that scale manually or automatically.
+             
+            * Mean - Use the average of the traffic across the group. This is a good choice for resources that share traffic uniformly. Examples include accelerators and load balancers.
+             
+            * Max - Use the highest traffic from each resource. This is useful for resources that don't share traffic and for resources that share that traffic in a non-uniform way. Examples include Amazon CloudFront distributions and origin resources for CloudFront distributions.
+            
+
+            
+          
+
+          - **Pattern** *(string) --* 
+
+            The criteria to use to choose the protected resources for inclusion in the group. You can include all resources that have protections, provide a list of resource ARNs (Amazon Resource Names), or include all resources of a specified resource type.
+
+            
+          
+
+          - **ResourceType** *(string) --* 
+
+            The resource type to include in the protection group. All protected resources of this type are included in the protection group. You must set this when you set ``Pattern`` to ``BY_RESOURCE_TYPE`` and you must not set it for any other ``Pattern`` setting.
+
+            
+          
+
+          - **Members** *(list) --* 
+
+            The ARNs (Amazon Resource Names) of the resources to include in the protection group. You must set this when you set ``Pattern`` to ``ARBITRARY`` and you must not set it for any other ``Pattern`` setting.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **ProtectionGroupArn** *(string) --* 
+
+            The ARN (Amazon Resource Name) of the protection group.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        When you request a list of objects from Shield Advanced, if the response does not include all of the remaining available objects, Shield Advanced includes a ``NextToken`` value in the response. You can retrieve the next batch of objects by requesting the list again and providing the token that was returned by the prior call in your request.
+
+         
+
+        You can indicate the maximum number of objects that you want Shield Advanced to return for a single call with the ``MaxResults`` setting. Shield Advanced will not return more than ``MaxResults`` objects, but may return fewer, even if more objects are still available.
+
+         
+
+        Whenever more objects remain that Shield Advanced has not yet returned to you, the response will include a ``NextToken`` value.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Shield.Client.exceptions.InternalErrorException`
+
+  
+  *   :py:class:`Shield.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Shield.Client.exceptions.InvalidPaginationTokenException`
+
+  

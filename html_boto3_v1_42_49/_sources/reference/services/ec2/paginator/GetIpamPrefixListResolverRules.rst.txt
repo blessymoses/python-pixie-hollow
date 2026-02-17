@@ -1,0 +1,382 @@
+:doc:`EC2 <../../ec2>` / Paginator / GetIpamPrefixListResolverRules
+
+******************************
+GetIpamPrefixListResolverRules
+******************************
+
+
+
+.. py:class:: EC2.Paginator.GetIpamPrefixListResolverRules
+
+  ::
+
+    
+    paginator = client.get_paginator('get_ipam_prefix_list_resolver_rules')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`EC2.Client.get_ipam_prefix_list_resolver_rules`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/GetIpamPrefixListResolverRules>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          DryRun=True|False,
+          IpamPrefixListResolverId='string',
+          Filters=[
+              {
+                  'Name': 'string',
+                  'Values': [
+                      'string',
+                  ]
+              },
+          ],
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type DryRun: boolean
+    :param DryRun: 
+
+      A check for whether you have the required permissions for the action without actually making the request and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+      
+
+    
+    :type IpamPrefixListResolverId: string
+    :param IpamPrefixListResolverId: **[REQUIRED]** 
+
+      The ID of the IPAM prefix list resolver whose rules you want to retrieve.
+
+      
+
+    
+    :type Filters: list
+    :param Filters: 
+
+      One or more filters to limit the results.
+
+      
+
+    
+      - *(dict) --* 
+
+        A filter name and value pair that is used to return a more specific list of results from a describe operation. Filters can be used to match a set of resources by specific criteria, such as tags, attributes, or IDs.
+
+         
+
+        If you specify multiple filters, the filters are joined with an ``AND``, and the request returns only results that match all of the specified filters.
+
+         
+
+        For more information, see `List and filter using the CLI and API <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Filtering.html#Filtering_Resources_CLI>`__ in the *Amazon EC2 User Guide*.
+
+        
+
+      
+        - **Name** *(string) --* 
+
+          The name of the filter. Filter names are case-sensitive.
+
+          
+
+        
+        - **Values** *(list) --* 
+
+          The filter values. Filter values are case-sensitive. If you specify multiple values for a filter, the values are joined with an ``OR``, and the request returns all results that match any of the specified values.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+  
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'Rules': [
+                {
+                    'RuleType': 'static-cidr'|'ipam-resource-cidr'|'ipam-pool-cidr',
+                    'StaticCidr': 'string',
+                    'IpamScopeId': 'string',
+                    'ResourceType': 'vpc'|'subnet'|'eip'|'public-ipv4-pool'|'ipv6-pool'|'eni'|'anycast-ip-list',
+                    'Conditions': [
+                        {
+                            'Operation': 'equals'|'not-equals'|'subnet-of',
+                            'IpamPoolId': 'string',
+                            'ResourceId': 'string',
+                            'ResourceOwner': 'string',
+                            'ResourceRegion': 'string',
+                            'ResourceTag': {
+                                'Key': 'string',
+                                'Value': 'string'
+                            },
+                            'Cidr': 'string'
+                        },
+                    ]
+                },
+            ],
+            
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **Rules** *(list) --* 
+
+          The CIDR selection rules for the IPAM prefix list resolver.
+
+          
+          
+
+          - *(dict) --* 
+
+            Describes a CIDR selection rule.
+
+             
+
+            CIDR selection rules define the business logic for selecting CIDRs from IPAM. If a CIDR matches any of the rules, it will be included. If a rule has multiple conditions, the CIDR has to match every condition of that rule. You can create a prefix list resolver without any CIDR selection rules, but it will generate empty versions (containing no CIDRs) until you add rules.
+
+            
+            
+
+            - **RuleType** *(string) --* 
+
+              The type of CIDR selection rule. Valid values include ``include`` for selecting CIDRs that match the conditions, and ``exclude`` for excluding CIDRs that match the conditions.
+
+              
+            
+
+            - **StaticCidr** *(string) --* 
+
+              A fixed list of CIDRs that do not change (like a manual list replicated across Regions).
+
+              
+            
+
+            - **IpamScopeId** *(string) --* 
+
+              The ID of the IPAM scope from which to select CIDRs. This determines whether to select from public or private IP address space.
+
+              
+            
+
+            - **ResourceType** *(string) --* 
+
+              For rules of type ``ipam-resource-cidr``, this is the resource type.
+
+              
+            
+
+            - **Conditions** *(list) --* 
+
+              The conditions that determine which CIDRs are selected by this rule. Conditions specify criteria such as resource type, tags, account IDs, and Regions.
+
+              
+              
+
+              - *(dict) --* 
+
+                Describes a condition within a CIDR selection rule. Conditions define the criteria for selecting CIDRs from IPAM's database based on resource attributes.
+
+                 
+
+                CIDR selection rules define the business logic for selecting CIDRs from IPAM. If a CIDR matches any of the rules, it will be included. If a rule has multiple conditions, the CIDR has to match every condition of that rule. You can create a prefix list resolver without any CIDR selection rules, but it will generate empty versions (containing no CIDRs) until you add rules.
+
+                 
+
+                There are three rule types. Only 2 of the 3 rule types support conditions - **IPAM pool CIDR** and **Scope resource CIDR**. **Static CIDR** rules cannot have conditions.
+
+                 
+
+                
+                * **Static CIDR**: A fixed list of CIDRs that do not change (like a manual list replicated across Regions)
+                 
+                * **IPAM pool CIDR**: CIDRs from specific IPAM pools (like all CIDRs from your IPAM production pool) If you choose this option, choose the following: 
+
+                  
+                  * **IPAM scope**: Select the IPAM scope to search for resources
+                   
+                  * **Conditions:** 
+
+                    
+                    * **Property** 
+
+                      
+                      * **IPAM pool ID**: Select an IPAM pool that contains the resources
+                       
+                      * **CIDR** (like 10.24.34.0/23)
+                      
+
+                    
+                     
+                    * **Operation**: Equals/Not equals
+                     
+                    * **Value**: The value on which to match the condition
+                    
+
+                  
+                  
+
+                
+                 
+                * **Scope resource CIDR**: CIDRs from Amazon Web Services resources like VPCs, subnets, EIPs within an IPAM scope If you choose this option, choose the following: 
+
+                  
+                  * **IPAM scope**: Select the IPAM scope to search for resources
+                   
+                  * **Resource type**: Select a resource, like a VPC or subnet.
+                   
+                  * **Conditions**: 
+
+                    
+                    * **Property**: 
+
+                      
+                      * Resource ID: The unique ID of a resource (like vpc-1234567890abcdef0)
+                       
+                      * Resource owner (like 111122223333)
+                       
+                      * Resource region (like us-east-1)
+                       
+                      * Resource tag (like key: name, value: dev-vpc-1)
+                       
+                      * CIDR (like 10.24.34.0/23)
+                      
+
+                    
+                     
+                    * **Operation**: Equals/Not equals
+                     
+                    * **Value**: The value on which to match the condition
+                    
+
+                  
+                  
+
+                
+                
+
+                
+                
+
+                - **Operation** *(string) --* 
+
+                  The operation to perform when evaluating this condition. Valid values include ``equals``, ``not-equals``, ``contains``, and ``not-contains``.
+
+                  
+                
+
+                - **IpamPoolId** *(string) --* 
+
+                  The ID of the IPAM pool to match against. This condition selects CIDRs that belong to the specified IPAM pool.
+
+                  
+                
+
+                - **ResourceId** *(string) --* 
+
+                  The ID of the Amazon Web Services resource to match against. This condition selects CIDRs associated with the specified resource.
+
+                  
+                
+
+                - **ResourceOwner** *(string) --* 
+
+                  The Amazon Web Services account ID that owns the resources to match against. This condition selects CIDRs from resources owned by the specified account.
+
+                  
+                
+
+                - **ResourceRegion** *(string) --* 
+
+                  The Amazon Web Services Region where the resources are located. This condition selects CIDRs from resources in the specified Region.
+
+                  
+                
+
+                - **ResourceTag** *(dict) --* 
+
+                  A tag key-value pair to match against. This condition selects CIDRs from resources that have the specified tag.
+
+                  
+                  
+
+                  - **Key** *(string) --* 
+
+                    The key of a tag assigned to the resource. Use this filter to find all resources assigned a tag with a specific key, regardless of the tag value.
+
+                    
+                  
+
+                  - **Value** *(string) --* 
+
+                    The value of the tag.
+
+                    
+              
+                
+
+                - **Cidr** *(string) --* 
+
+                  A CIDR block to match against. This condition selects CIDRs that fall within or match the specified CIDR range.
+
+                  
+            
+          
+        
+      
+    

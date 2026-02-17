@@ -1,0 +1,346 @@
+:doc:`CloudTrail <../../cloudtrail>` / Client / lookup_events
+
+*************
+lookup_events
+*************
+
+
+
+.. py:method:: CloudTrail.Client.lookup_events(**kwargs)
+
+  
+
+  Looks up `management events <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-concepts.html#cloudtrail-concepts-management-events>`__ or `CloudTrail Insights events <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-concepts.html#cloudtrail-concepts-insights-events>`__ that are captured by CloudTrail. You can look up events that occurred in a Region within the last 90 days.
+
+   
+
+  .. note::
+
+    
+
+    ``LookupEvents`` returns recent Insights events for trails that enable Insights. To view Insights events for an event data store, you can run queries on your Insights event data store, and you can also view the Lake dashboard for Insights.
+
+    
+
+   
+
+  Lookup supports the following attributes for management events:
+
+   
+
+  
+  * Amazon Web Services access key
+   
+  * Event ID
+   
+  * Event name
+   
+  * Event source
+   
+  * Read only
+   
+  * Resource name
+   
+  * Resource type
+   
+  * User name
+  
+
+   
+
+  Lookup supports the following attributes for Insights events:
+
+   
+
+  
+  * Event ID
+   
+  * Event name
+   
+  * Event source
+  
+
+   
+
+  All attributes are optional. The default number of results returned is 50, with a maximum of 50 possible. The response includes a token that you can use to get the next page of results.
+
+   
+
+  .. warning::
+
+     
+
+    The rate of lookup requests is limited to two per second, per account, per Region. If this limit is exceeded, a throttling error occurs.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudtrail-2013-11-01/LookupEvents>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.lookup_events(
+        LookupAttributes=[
+            {
+                'AttributeKey': 'EventId'|'EventName'|'ReadOnly'|'Username'|'ResourceType'|'ResourceName'|'EventSource'|'AccessKeyId',
+                'AttributeValue': 'string'
+            },
+        ],
+        StartTime=datetime(2015, 1, 1),
+        EndTime=datetime(2015, 1, 1),
+        EventCategory='insight',
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type LookupAttributes: list
+  :param LookupAttributes: 
+
+    Contains a list of lookup attributes. Currently the list can contain only one item.
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies an attribute and value that filter the events returned.
+
+      
+
+    
+      - **AttributeKey** *(string) --* **[REQUIRED]** 
+
+        Specifies an attribute on which to filter the events returned.
+
+        
+
+      
+      - **AttributeValue** *(string) --* **[REQUIRED]** 
+
+        Specifies a value for the specified ``AttributeKey``.
+
+         
+
+        The maximum length for the ``AttributeValue`` is 2000 characters. The following characters (' ``_``', ' `` ``', ' ``,``', ' ``\\n``') count as two characters towards the 2000 character limit.
+
+        
+
+      
+    
+
+  :type StartTime: datetime
+  :param StartTime: 
+
+    Specifies that only events that occur after or at the specified time are returned. If the specified start time is after the specified end time, an error is returned.
+
+    
+
+  
+  :type EndTime: datetime
+  :param EndTime: 
+
+    Specifies that only events that occur before or at the specified time are returned. If the specified end time is before the specified start time, an error is returned.
+
+    
+
+  
+  :type EventCategory: string
+  :param EventCategory: 
+
+    Specifies the event category. If you do not specify an event category, events of the category are not returned in the response. For example, if you do not specify ``insight`` as the value of ``EventCategory``, no Insights events are returned.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The number of events to return. Possible values are 1 through 50. The default is 50.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token to use to get the next page of results after a previous API call. This token must be passed in with the same parameters that were specified in the original call. For example, if the original call specified an AttributeKey of 'Username' with a value of 'root', the call with NextToken should include those same parameters.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Events': [
+              {
+                  'EventId': 'string',
+                  'EventName': 'string',
+                  'ReadOnly': 'string',
+                  'AccessKeyId': 'string',
+                  'EventTime': datetime(2015, 1, 1),
+                  'EventSource': 'string',
+                  'Username': 'string',
+                  'Resources': [
+                      {
+                          'ResourceType': 'string',
+                          'ResourceName': 'string'
+                      },
+                  ],
+                  'CloudTrailEvent': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Contains a response to a LookupEvents action.
+
+      
+      
+
+      - **Events** *(list) --* 
+
+        A list of events returned based on the lookup attributes specified and the CloudTrail event. The events list is sorted by time. The most recent event is listed first.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information about an event that was returned by a lookup request. The result includes a representation of a CloudTrail event.
+
+          
+          
+
+          - **EventId** *(string) --* 
+
+            The CloudTrail ID of the event returned.
+
+            
+          
+
+          - **EventName** *(string) --* 
+
+            The name of the event returned.
+
+            
+          
+
+          - **ReadOnly** *(string) --* 
+
+            Information about whether the event is a write event or a read event.
+
+            
+          
+
+          - **AccessKeyId** *(string) --* 
+
+            The Amazon Web Services access key ID that was used to sign the request. If the request was made with temporary security credentials, this is the access key ID of the temporary credentials.
+
+            
+          
+
+          - **EventTime** *(datetime) --* 
+
+            The date and time of the event returned.
+
+            
+          
+
+          - **EventSource** *(string) --* 
+
+            The Amazon Web Services service to which the request was made.
+
+            
+          
+
+          - **Username** *(string) --* 
+
+            A user name or role name of the requester that called the API in the event returned.
+
+            
+          
+
+          - **Resources** *(list) --* 
+
+            A list of resources referenced by the event returned.
+
+            
+            
+
+            - *(dict) --* 
+
+              Specifies the type and name of a resource referenced by an event.
+
+              
+              
+
+              - **ResourceType** *(string) --* 
+
+                The type of a resource referenced by the event returned. When the resource type cannot be determined, null is returned. Some examples of resource types are: **Instance** for EC2, **Trail** for CloudTrail, **DBInstance** for Amazon RDS, and **AccessKey** for IAM. To learn more about how to look up and filter events by the resource types supported for a service, see `Filtering CloudTrail Events <https://docs.aws.amazon.com/awscloudtrail/latest/userguide/view-cloudtrail-events-console.html#filtering-cloudtrail-events>`__.
+
+                
+              
+
+              - **ResourceName** *(string) --* 
+
+                The name of the resource referenced by the event returned. These are user-created names whose values will depend on the environment. For example, the resource name might be "auto-scaling-test-group" for an Auto Scaling Group or "i-1234567" for an EC2 Instance.
+
+                
+          
+        
+          
+
+          - **CloudTrailEvent** *(string) --* 
+
+            A JSON string that contains a representation of the event returned.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to use to get the next page of results after a previous API call. If the token does not appear, there are no more results to return. The token must be passed in with the same parameters as the previous call. For example, if the original call specified an AttributeKey of 'Username' with a value of 'root', the call with NextToken should include those same parameters.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidLookupAttributesException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidTimeRangeException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidMaxResultsException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidNextTokenException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.InvalidEventCategoryException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.UnsupportedOperationException`
+
+  
+  *   :py:class:`CloudTrail.Client.exceptions.OperationNotPermittedException`
+
+  

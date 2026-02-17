@@ -1,0 +1,461 @@
+:doc:`Glue <../../glue>` / Client / create_ml_transform
+
+*******************
+create_ml_transform
+*******************
+
+
+
+.. py:method:: Glue.Client.create_ml_transform(**kwargs)
+
+  
+
+  Creates an Glue machine learning transform. This operation creates the transform and all the necessary parameters to train it.
+
+   
+
+  Call this operation as the first step in the process of using a machine learning transform (such as the ``FindMatches`` transform) for deduplicating data. You can provide an optional ``Description``, in addition to the parameters that you want to use for your algorithm.
+
+   
+
+  You must also specify certain parameters for the tasks that Glue runs on your behalf as part of learning from your data and creating a high-quality machine learning transform. These parameters include ``Role``, and optionally, ``AllocatedCapacity``, ``Timeout``, and ``MaxRetries``. For more information, see `Jobs <https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-jobs-job.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/glue-2017-03-31/CreateMLTransform>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_ml_transform(
+        Name='string',
+        Description='string',
+        InputRecordTables=[
+            {
+                'DatabaseName': 'string',
+                'TableName': 'string',
+                'CatalogId': 'string',
+                'ConnectionName': 'string',
+                'AdditionalOptions': {
+                    'string': 'string'
+                }
+            },
+        ],
+        Parameters={
+            'TransformType': 'FIND_MATCHES',
+            'FindMatchesParameters': {
+                'PrimaryKeyColumnName': 'string',
+                'PrecisionRecallTradeoff': 123.0,
+                'AccuracyCostTradeoff': 123.0,
+                'EnforceProvidedLabels': True|False
+            }
+        },
+        Role='string',
+        GlueVersion='string',
+        MaxCapacity=123.0,
+        WorkerType='Standard'|'G.1X'|'G.2X'|'G.025X'|'G.4X'|'G.8X'|'Z.2X',
+        NumberOfWorkers=123,
+        Timeout=123,
+        MaxRetries=123,
+        Tags={
+            'string': 'string'
+        },
+        TransformEncryption={
+            'MlUserDataEncryption': {
+                'MlUserDataEncryptionMode': 'DISABLED'|'SSE-KMS',
+                'KmsKeyId': 'string'
+            },
+            'TaskRunSecurityConfigurationName': 'string'
+        }
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The unique name that you give the transform when you create it.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A description of the machine learning transform that is being defined. The default is an empty string.
+
+    
+
+  
+  :type InputRecordTables: list
+  :param InputRecordTables: **[REQUIRED]** 
+
+    A list of Glue table definitions used by the transform.
+
+    
+
+  
+    - *(dict) --* 
+
+      The database and table in the Glue Data Catalog that is used for input or output data.
+
+      
+
+    
+      - **DatabaseName** *(string) --* **[REQUIRED]** 
+
+        A database name in the Glue Data Catalog.
+
+        
+
+      
+      - **TableName** *(string) --* **[REQUIRED]** 
+
+        A table name in the Glue Data Catalog.
+
+        
+
+      
+      - **CatalogId** *(string) --* 
+
+        A unique identifier for the Glue Data Catalog.
+
+        
+
+      
+      - **ConnectionName** *(string) --* 
+
+        The name of the connection to the Glue Data Catalog.
+
+        
+
+      
+      - **AdditionalOptions** *(dict) --* 
+
+        Additional options for the table. Currently there are two keys supported:
+
+         
+
+        
+        * ``pushDownPredicate``: to filter on partitions without having to list and read all the files in your dataset.
+         
+        * ``catalogPartitionPredicate``: to use server-side partition pruning using partition indexes in the Glue Data Catalog.
+        
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+
+  :type Parameters: dict
+  :param Parameters: **[REQUIRED]** 
+
+    The algorithmic parameters that are specific to the transform type used. Conditionally dependent on the transform type.
+
+    
+
+  
+    - **TransformType** *(string) --* **[REQUIRED]** 
+
+      The type of machine learning transform.
+
+       
+
+      For information about the types of machine learning transforms, see `Creating Machine Learning Transforms <https://docs.aws.amazon.com/glue/latest/dg/add-job-machine-learning-transform.html>`__.
+
+      
+
+    
+    - **FindMatchesParameters** *(dict) --* 
+
+      The parameters for the find matches algorithm.
+
+      
+
+    
+      - **PrimaryKeyColumnName** *(string) --* 
+
+        The name of a column that uniquely identifies rows in the source table. Used to help identify matching records.
+
+        
+
+      
+      - **PrecisionRecallTradeoff** *(float) --* 
+
+        The value selected when tuning your transform for a balance between precision and recall. A value of 0.5 means no preference; a value of 1.0 means a bias purely for precision, and a value of 0.0 means a bias for recall. Because this is a tradeoff, choosing values close to 1.0 means very low recall, and choosing values close to 0.0 results in very low precision.
+
+         
+
+        The precision metric indicates how often your model is correct when it predicts a match.
+
+         
+
+        The recall metric indicates that for an actual match, how often your model predicts the match.
+
+        
+
+      
+      - **AccuracyCostTradeoff** *(float) --* 
+
+        The value that is selected when tuning your transform for a balance between accuracy and cost. A value of 0.5 means that the system balances accuracy and cost concerns. A value of 1.0 means a bias purely for accuracy, which typically results in a higher cost, sometimes substantially higher. A value of 0.0 means a bias purely for cost, which results in a less accurate ``FindMatches`` transform, sometimes with unacceptable accuracy.
+
+         
+
+        Accuracy measures how well the transform finds true positives and true negatives. Increasing accuracy requires more machine resources and cost. But it also results in increased recall.
+
+         
+
+        Cost measures how many compute resources, and thus money, are consumed to run the transform.
+
+        
+
+      
+      - **EnforceProvidedLabels** *(boolean) --* 
+
+        The value to switch on or off to force the output to match the provided labels from users. If the value is ``True``, the ``find matches`` transform forces the output to match the provided labels. The results override the normal conflation results. If the value is ``False``, the ``find matches`` transform does not ensure all the labels provided are respected, and the results rely on the trained model.
+
+         
+
+        Note that setting this value to true may increase the conflation execution time.
+
+        
+
+      
+    
+  
+  :type Role: string
+  :param Role: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of the IAM role with the required permissions. The required permissions include both Glue service role permissions to Glue resources, and Amazon S3 permissions required by the transform.
+
+     
+
+    
+    * This role needs Glue service role permissions to allow access to resources in Glue. See `Attach a Policy to IAM Users That Access Glue <https://docs.aws.amazon.com/glue/latest/dg/attach-policy-iam-user.html>`__.
+     
+    * This role needs permission to your Amazon Simple Storage Service (Amazon S3) sources, targets, temporary directory, scripts, and any libraries used by the task run for this transform.
+    
+
+    
+
+  
+  :type GlueVersion: string
+  :param GlueVersion: 
+
+    This value determines which version of Glue this machine learning transform is compatible with. Glue 1.0 is recommended for most customers. If the value is not set, the Glue compatibility defaults to Glue 0.9. For more information, see `Glue Versions <https://docs.aws.amazon.com/glue/latest/dg/release-notes.html#release-notes-versions>`__ in the developer guide.
+
+    
+
+  
+  :type MaxCapacity: float
+  :param MaxCapacity: 
+
+    The number of Glue data processing units (DPUs) that are allocated to task runs for this transform. You can allocate from 2 to 100 DPUs; the default is 10. A DPU is a relative measure of processing power that consists of 4 vCPUs of compute capacity and 16 GB of memory. For more information, see the `Glue pricing page <https://aws.amazon.com/glue/pricing/>`__.
+
+     
+
+    ``MaxCapacity`` is a mutually exclusive option with ``NumberOfWorkers`` and ``WorkerType``.
+
+     
+
+    
+    * If either ``NumberOfWorkers`` or ``WorkerType`` is set, then ``MaxCapacity`` cannot be set.
+     
+    * If ``MaxCapacity`` is set then neither ``NumberOfWorkers`` or ``WorkerType`` can be set.
+     
+    * If ``WorkerType`` is set, then ``NumberOfWorkers`` is required (and vice versa).
+     
+    * ``MaxCapacity`` and ``NumberOfWorkers`` must both be at least 1.
+    
+
+     
+
+    When the ``WorkerType`` field is set to a value other than ``Standard``, the ``MaxCapacity`` field is set automatically and becomes read-only.
+
+     
+
+    When the ``WorkerType`` field is set to a value other than ``Standard``, the ``MaxCapacity`` field is set automatically and becomes read-only.
+
+    
+
+  
+  :type WorkerType: string
+  :param WorkerType: 
+
+    The type of predefined worker that is allocated when this task runs. Accepts a value of Standard, G.1X, or G.2X.
+
+     
+
+    
+    * For the ``Standard`` worker type, each worker provides 4 vCPU, 16 GB of memory and a 50GB disk, and 2 executors per worker.
+     
+    * For the ``G.1X`` worker type, each worker provides 4 vCPU, 16 GB of memory and a 64GB disk, and 1 executor per worker.
+     
+    * For the ``G.2X`` worker type, each worker provides 8 vCPU, 32 GB of memory and a 128GB disk, and 1 executor per worker.
+    
+
+     
+
+    ``MaxCapacity`` is a mutually exclusive option with ``NumberOfWorkers`` and ``WorkerType``.
+
+     
+
+    
+    * If either ``NumberOfWorkers`` or ``WorkerType`` is set, then ``MaxCapacity`` cannot be set.
+     
+    * If ``MaxCapacity`` is set then neither ``NumberOfWorkers`` or ``WorkerType`` can be set.
+     
+    * If ``WorkerType`` is set, then ``NumberOfWorkers`` is required (and vice versa).
+     
+    * ``MaxCapacity`` and ``NumberOfWorkers`` must both be at least 1.
+    
+
+    
+
+  
+  :type NumberOfWorkers: integer
+  :param NumberOfWorkers: 
+
+    The number of workers of a defined ``workerType`` that are allocated when this task runs.
+
+     
+
+    If ``WorkerType`` is set, then ``NumberOfWorkers`` is required (and vice versa).
+
+    
+
+  
+  :type Timeout: integer
+  :param Timeout: 
+
+    The timeout of the task run for this transform in minutes. This is the maximum time that a task run for this transform can consume resources before it is terminated and enters ``TIMEOUT`` status. The default is 2,880 minutes (48 hours).
+
+    
+
+  
+  :type MaxRetries: integer
+  :param MaxRetries: 
+
+    The maximum number of times to retry a task for this transform after a task run fails.
+
+    
+
+  
+  :type Tags: dict
+  :param Tags: 
+
+    The tags to use with this machine learning transform. You may use tags to limit access to the machine learning transform. For more information about tags in Glue, see `Amazon Web Services Tags in Glue <https://docs.aws.amazon.com/glue/latest/dg/monitor-tags.html>`__ in the developer guide.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type TransformEncryption: dict
+  :param TransformEncryption: 
+
+    The encryption-at-rest settings of the transform that apply to accessing user data. Machine learning transforms can access user data encrypted in Amazon S3 using KMS.
+
+    
+
+  
+    - **MlUserDataEncryption** *(dict) --* 
+
+      An ``MLUserDataEncryption`` object containing the encryption mode and customer-provided KMS key ID.
+
+      
+
+    
+      - **MlUserDataEncryptionMode** *(string) --* **[REQUIRED]** 
+
+        The encryption mode applied to user data. Valid values are:
+
+         
+
+        
+        * DISABLED: encryption is disabled
+         
+        * SSEKMS: use of server-side encryption with Key Management Service (SSE-KMS) for user data stored in Amazon S3.
+        
+
+        
+
+      
+      - **KmsKeyId** *(string) --* 
+
+        The ID for the customer-provided KMS key.
+
+        
+
+      
+    
+    - **TaskRunSecurityConfigurationName** *(string) --* 
+
+      The name of the security configuration.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'TransformId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **TransformId** *(string) --* 
+
+        A unique identifier that is generated for the transform.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Glue.Client.exceptions.AlreadyExistsException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.OperationTimeoutException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.ResourceNumberLimitExceededException`
+
+  
+  *   :py:class:`Glue.Client.exceptions.IdempotentParameterMismatchException`
+
+  

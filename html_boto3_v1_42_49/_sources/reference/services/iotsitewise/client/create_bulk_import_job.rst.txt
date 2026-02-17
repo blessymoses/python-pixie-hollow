@@ -1,0 +1,293 @@
+:doc:`IoTSiteWise <../../iotsitewise>` / Client / create_bulk_import_job
+
+**********************
+create_bulk_import_job
+**********************
+
+
+
+.. py:method:: IoTSiteWise.Client.create_bulk_import_job(**kwargs)
+
+  
+
+  Defines a job to ingest data to IoT SiteWise from Amazon S3. For more information, see `Create a bulk import job (CLI) <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/CreateBulkImportJob.html>`__ in the *Amazon Simple Storage Service User Guide*.
+
+   
+
+  .. warning::
+
+     
+
+    Before you create a bulk import job, you must enable IoT SiteWise warm tier or IoT SiteWise cold tier. For more information about how to configure storage settings, see `PutStorageConfiguration <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_PutStorageConfiguration.html>`__.
+
+     
+
+    Bulk import is designed to store historical data to IoT SiteWise.
+
+     
+
+    
+    * Newly ingested data in the hot tier triggers notifications and computations.
+     
+    * After data moves from the hot tier to the warm or cold tier based on retention settings, it does not trigger computations or notifications.
+     
+    * Data older than 7 days does not trigger computations or notifications.
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotsitewise-2019-12-02/CreateBulkImportJob>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_bulk_import_job(
+        jobName='string',
+        jobRoleArn='string',
+        files=[
+            {
+                'bucket': 'string',
+                'key': 'string',
+                'versionId': 'string'
+            },
+        ],
+        errorReportLocation={
+            'bucket': 'string',
+            'prefix': 'string'
+        },
+        jobConfiguration={
+            'fileFormat': {
+                'csv': {
+                    'columnNames': [
+                        'ALIAS'|'ASSET_ID'|'PROPERTY_ID'|'DATA_TYPE'|'TIMESTAMP_SECONDS'|'TIMESTAMP_NANO_OFFSET'|'QUALITY'|'VALUE',
+                    ]
+                },
+                'parquet': {}
+                
+            }
+        },
+        adaptiveIngestion=True|False,
+        deleteFilesAfterImport=True|False
+    )
+    
+  :type jobName: string
+  :param jobName: **[REQUIRED]** 
+
+    The unique name that helps identify the job request.
+
+    
+
+  
+  :type jobRoleArn: string
+  :param jobRoleArn: **[REQUIRED]** 
+
+    The `ARN <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the IAM role that allows IoT SiteWise to read Amazon S3 data.
+
+    
+
+  
+  :type files: list
+  :param files: **[REQUIRED]** 
+
+    The files in the specified Amazon S3 bucket that contain your data.
+
+    
+
+  
+    - *(dict) --* 
+
+      The file in Amazon S3 where your data is saved.
+
+      
+
+    
+      - **bucket** *(string) --* **[REQUIRED]** 
+
+        The name of the Amazon S3 bucket from which data is imported.
+
+        
+
+      
+      - **key** *(string) --* **[REQUIRED]** 
+
+        The key of the Amazon S3 object that contains your data. Each object has a key that is a unique identifier. Each object has exactly one key.
+
+        
+
+      
+      - **versionId** *(string) --* 
+
+        The version ID to identify a specific version of the Amazon S3 object that contains your data.
+
+        
+
+      
+    
+
+  :type errorReportLocation: dict
+  :param errorReportLocation: **[REQUIRED]** 
+
+    The Amazon S3 destination where errors associated with the job creation request are saved.
+
+    
+
+  
+    - **bucket** *(string) --* **[REQUIRED]** 
+
+      The name of the Amazon S3 bucket to which errors associated with the bulk import job are sent.
+
+      
+
+    
+    - **prefix** *(string) --* **[REQUIRED]** 
+
+      Amazon S3 uses the prefix as a folder name to organize data in the bucket. Each Amazon S3 object has a key that is its unique identifier in the bucket. Each object in a bucket has exactly one key. The prefix must end with a forward slash (/). For more information, see `Organizing objects using prefixes <https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html>`__ in the *Amazon Simple Storage Service User Guide*.
+
+      
+
+    
+  
+  :type jobConfiguration: dict
+  :param jobConfiguration: **[REQUIRED]** 
+
+    Contains the configuration information of a job, such as the file format used to save data in Amazon S3.
+
+    
+
+  
+    - **fileFormat** *(dict) --* **[REQUIRED]** 
+
+      The file format of the data in S3.
+
+      
+
+    
+      - **csv** *(dict) --* 
+
+        The file is in .CSV format.
+
+        
+
+      
+        - **columnNames** *(list) --* **[REQUIRED]** 
+
+          The column names specified in the .csv file.
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+      
+      - **parquet** *(dict) --* 
+
+        The file is in parquet format.
+
+        
+
+      
+      
+    
+  
+  :type adaptiveIngestion: boolean
+  :param adaptiveIngestion: 
+
+    If set to true, ingest new data into IoT SiteWise storage. Measurements with notifications, metrics and transforms are computed. If set to false, historical data is ingested into IoT SiteWise as is.
+
+    
+
+  
+  :type deleteFilesAfterImport: boolean
+  :param deleteFilesAfterImport: 
+
+    If set to true, your data files is deleted from S3, after ingestion into IoT SiteWise storage.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobId': 'string',
+          'jobName': 'string',
+          'jobStatus': 'PENDING'|'CANCELLED'|'RUNNING'|'COMPLETED'|'FAILED'|'COMPLETED_WITH_FAILURES'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobId** *(string) --* 
+
+        The ID of the job.
+
+        
+      
+
+      - **jobName** *(string) --* 
+
+        The unique name that helps identify the job request.
+
+        
+      
+
+      - **jobStatus** *(string) --* 
+
+        The status of the bulk import job can be one of following values:
+
+         
+
+        
+        * ``PENDING`` – IoT SiteWise is waiting for the current bulk import job to finish.
+         
+        * ``CANCELLED`` – The bulk import job has been canceled.
+         
+        * ``RUNNING`` – IoT SiteWise is processing your request to import your data from Amazon S3.
+         
+        * ``COMPLETED`` – IoT SiteWise successfully completed your request to import data from Amazon S3.
+         
+        * ``FAILED`` – IoT SiteWise couldn't process your request to import data from Amazon S3. You can use logs saved in the specified error report location in Amazon S3 to troubleshoot issues.
+         
+        * ``COMPLETED_WITH_FAILURES`` – IoT SiteWise completed your request to import data from Amazon S3 with errors. You can use logs saved in the specified error report location in Amazon S3 to troubleshoot issues.
+        
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ConflictingOperationException`
+
+  

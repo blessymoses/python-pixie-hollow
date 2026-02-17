@@ -1,0 +1,397 @@
+:doc:`SSM <../../ssm>` / Client / describe_parameters
+
+*******************
+describe_parameters
+*******************
+
+
+
+.. py:method:: SSM.Client.describe_parameters(**kwargs)
+
+  
+
+  Lists the parameters in your Amazon Web Services account or the parameters shared with you when you enable the `Shared <https://docs.aws.amazon.com/systems-manager/latest/APIReference/API_DescribeParameters.html#systemsmanager-DescribeParameters-request-Shared>`__ option.
+
+   
+
+  Request results are returned on a best-effort basis. If you specify ``MaxResults`` in the request, the response includes information up to the limit specified. The number of items returned, however, can be between zero and the value of ``MaxResults``. If the service reaches an internal limit while processing the results, it stops the operation and returns the matching values up to that point and a ``NextToken``. You can specify the ``NextToken`` in a subsequent call to get the next set of results.
+
+   
+
+  Parameter names can't contain spaces. The service removes any spaces specified for the beginning or end of a parameter name. If the specified name for a parameter contains spaces between characters, the request fails with a ``ValidationException`` error.
+
+   
+
+  .. warning::
+
+     
+
+    If you change the KMS key alias for the KMS key used to encrypt a parameter, then you must also update the key alias the parameter uses to reference KMS. Otherwise, ``DescribeParameters`` retrieves whatever the original key alias was referencing.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeParameters>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_parameters(
+        Filters=[
+            {
+                'Key': 'Name'|'Type'|'KeyId',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        ParameterFilters=[
+            {
+                'Key': 'string',
+                'Option': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        MaxResults=123,
+        NextToken='string',
+        Shared=True|False
+    )
+    
+  :type Filters: list
+  :param Filters: 
+
+    This data type is deprecated. Instead, use ``ParameterFilters``.
+
+    
+
+  
+    - *(dict) --* 
+
+      This data type is deprecated. Instead, use  ParameterStringFilter.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name of the filter.
+
+        
+
+      
+      - **Values** *(list) --* **[REQUIRED]** 
+
+        The filter values.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type ParameterFilters: list
+  :param ParameterFilters: 
+
+    Filters to limit the request results.
+
+    
+
+  
+    - *(dict) --* 
+
+      One or more filters. Use a filter to return a more specific list of results.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name of the filter.
+
+         
+
+        The ``ParameterStringFilter`` object is used by the  DescribeParameters and  GetParametersByPath API operations. However, not all of the pattern values listed for ``Key`` can be used with both operations.
+
+         
+
+        For ``DescribeParameters``, all of the listed patterns are valid except ``Label``.
+
+         
+
+        For ``GetParametersByPath``, the following patterns listed for ``Key`` aren't valid: ``tag``, ``DataType``, ``Name``, ``Path``, and ``Tier``.
+
+         
+
+        For examples of Amazon Web Services CLI commands demonstrating valid parameter filter constructions, see `Searching for Systems Manager parameters <https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-search.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+        
+
+      
+      - **Option** *(string) --* 
+
+        For all filters used with  DescribeParameters, valid options include ``Equals`` and ``BeginsWith``. The ``Name`` filter additionally supports the ``Contains`` option. (Exception: For filters using the key ``Path``, valid options include ``Recursive`` and ``OneLevel``.)
+
+         
+
+        For filters used with  GetParametersByPath, valid options include ``Equals`` and ``BeginsWith``. (Exception: For filters using ``Label`` as the Key name, the only valid option is ``Equals``.)
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The value you want to search for.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this call. The call also returns a token that you can specify in a subsequent call to get the next set of results.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type Shared: boolean
+  :param Shared: 
+
+    Lists parameters that are shared with you.
+
+     
+
+    .. note::
+
+      
+
+      By default when using this option, the command returns parameters that have been shared using a standard Resource Access Manager Resource Share. In order for a parameter that was shared using the  PutResourcePolicy command to be returned, the associated ``RAM Resource Share Created From Policy`` must have been promoted to a standard Resource Share using the RAM `PromoteResourceShareCreatedFromPolicy <https://docs.aws.amazon.com/ram/latest/APIReference/API_PromoteResourceShareCreatedFromPolicy.html>`__ API operation.
+
+       
+
+      For more information about sharing parameters, see `Working with shared parameters <https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-shared-parameters.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Parameters': [
+              {
+                  'Name': 'string',
+                  'ARN': 'string',
+                  'Type': 'String'|'StringList'|'SecureString',
+                  'KeyId': 'string',
+                  'LastModifiedDate': datetime(2015, 1, 1),
+                  'LastModifiedUser': 'string',
+                  'Description': 'string',
+                  'AllowedPattern': 'string',
+                  'Version': 123,
+                  'Tier': 'Standard'|'Advanced'|'Intelligent-Tiering',
+                  'Policies': [
+                      {
+                          'PolicyText': 'string',
+                          'PolicyType': 'string',
+                          'PolicyStatus': 'string'
+                      },
+                  ],
+                  'DataType': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Parameters** *(list) --* 
+
+        Parameters returned by the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Metadata includes information like the Amazon Resource Name (ARN) of the last user to update the parameter and the date and time the parameter was last used.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The parameter name.
+
+            
+          
+
+          - **ARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the parameter.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The type of parameter. Valid parameter types include the following: ``String``, ``StringList``, and ``SecureString``.
+
+            
+          
+
+          - **KeyId** *(string) --* 
+
+            The alias of the Key Management Service (KMS) key used to encrypt the parameter. Applies to ``SecureString`` parameters only.
+
+            
+          
+
+          - **LastModifiedDate** *(datetime) --* 
+
+            Date the parameter was last changed or updated.
+
+            
+          
+
+          - **LastModifiedUser** *(string) --* 
+
+            Amazon Resource Name (ARN) of the Amazon Web Services user who last changed the parameter.
+
+            
+          
+
+          - **Description** *(string) --* 
+
+            Description of the parameter actions.
+
+            
+          
+
+          - **AllowedPattern** *(string) --* 
+
+            A parameter name can include only the following letters and symbols.
+
+             
+
+            a-zA-Z0-9_.-
+
+            
+          
+
+          - **Version** *(integer) --* 
+
+            The parameter version.
+
+            
+          
+
+          - **Tier** *(string) --* 
+
+            The parameter tier.
+
+            
+          
+
+          - **Policies** *(list) --* 
+
+            A list of policies associated with a parameter.
+
+            
+            
+
+            - *(dict) --* 
+
+              One or more policies assigned to a parameter.
+
+              
+              
+
+              - **PolicyText** *(string) --* 
+
+                The JSON text of the policy.
+
+                
+              
+
+              - **PolicyType** *(string) --* 
+
+                The type of policy. Parameter Store, a tool in Amazon Web Services Systems Manager, supports the following policy types: Expiration, ExpirationNotification, and NoChangeNotification.
+
+                
+              
+
+              - **PolicyStatus** *(string) --* 
+
+                The status of the policy. Policies report the following statuses: Pending (the policy hasn't been enforced or applied yet), Finished (the policy was applied), Failed (the policy wasn't applied), or InProgress (the policy is being applied now).
+
+                
+          
+        
+          
+
+          - **DataType** *(string) --* 
+
+            The data type of the parameter, such as ``text`` or ``aws:ec2:image``. The default is ``text``.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to use when requesting the next set of items.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilterKey`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilterOption`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidFilterValue`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidNextToken`
+
+  

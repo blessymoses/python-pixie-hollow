@@ -1,0 +1,657 @@
+:doc:`ServiceResource <index>` / Action / register_image
+
+**************
+register_image
+**************
+
+
+
+.. py:method:: EC2.ServiceResource.register_image(**kwargs)
+
+  
+
+  Registers an AMI. When you're creating an instance-store backed AMI, registering the AMI is the final step in the creation process. For more information about creating AMIs, see `Create an AMI from a snapshot <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot>`__ and `Create an instance-store backed AMI <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html>`__ in the *Amazon EC2 User Guide*.
+
+   
+
+  If needed, you can deregister an AMI at any time. Any modifications you make to an AMI backed by an instance store volume invalidates its registration. If you make changes to an image, deregister the previous image and register the new image.
+
+   
+
+  **Register a snapshot of a root device volume**
+
+   
+
+  You can use ``RegisterImage`` to create an Amazon EBS-backed Linux AMI from a snapshot of a root device volume. You specify the snapshot using a block device mapping. You can't set the encryption state of the volume using the block device mapping. If the snapshot is encrypted, or encryption by default is enabled, the root volume of an instance launched from the AMI is encrypted.
+
+   
+
+  For more information, see `Create an AMI from a snapshot <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#creating-launching-ami-from-snapshot>`__ and `Use encryption with EBS-backed AMIs <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIEncryption.html>`__ in the *Amazon EC2 User Guide*.
+
+   
+
+  **Amazon Web Services Marketplace product codes**
+
+   
+
+  If any snapshots have Amazon Web Services Marketplace product codes, they are copied to the new AMI.
+
+   
+
+  In most cases, AMIs for Windows, RedHat, SUSE, and SQL Server require correct licensing information to be present on the AMI. For more information, see `Understand AMI billing information <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-billing-info.html>`__ in the *Amazon EC2 User Guide*. When creating an AMI from a snapshot, the ``RegisterImage`` operation derives the correct billing information from the snapshot's metadata, but this requires the appropriate metadata to be present. To verify if the correct billing information was applied, check the ``PlatformDetails`` field on the new AMI. If the field is empty or doesn't match the expected operating system code (for example, Windows, RedHat, SUSE, or SQL), the AMI creation was unsuccessful, and you should discard the AMI and instead create the AMI from an instance. For more information, see `Create an AMI from an instance <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html#how-to-create-ebs-ami>`__ in the *Amazon EC2 User Guide*.
+
+   
+
+  If you purchase a Reserved Instance to apply to an On-Demand Instance that was launched from an AMI with a billing product code, make sure that the Reserved Instance has the matching billing product code. If you purchase a Reserved Instance without the matching billing product code, the Reserved Instance is not applied to the On-Demand Instance. For information about how to obtain the platform details and billing information of an AMI, see `Understand AMI billing information <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-billing-info.html>`__ in the *Amazon EC2 User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/RegisterImage>`_  
+
+
+  **Request Syntax**
+  ::
+
+    image = ec2.register_image(
+        ImageLocation='string',
+        BillingProducts=[
+            'string',
+        ],
+        BootMode='legacy-bios'|'uefi'|'uefi-preferred',
+        TpmSupport='v2.0',
+        UefiData='string',
+        ImdsSupport='v2.0',
+        TagSpecifications=[
+            {
+                'ResourceType': 'capacity-reservation'|'client-vpn-endpoint'|'customer-gateway'|'carrier-gateway'|'coip-pool'|'declarative-policies-report'|'dedicated-host'|'dhcp-options'|'egress-only-internet-gateway'|'elastic-ip'|'elastic-gpu'|'export-image-task'|'export-instance-task'|'fleet'|'fpga-image'|'host-reservation'|'image'|'image-usage-report'|'import-image-task'|'import-snapshot-task'|'instance'|'instance-event-window'|'internet-gateway'|'ipam'|'ipam-pool'|'ipam-scope'|'ipv4pool-ec2'|'ipv6pool-ec2'|'key-pair'|'launch-template'|'local-gateway'|'local-gateway-route-table'|'local-gateway-virtual-interface'|'local-gateway-virtual-interface-group'|'local-gateway-route-table-vpc-association'|'local-gateway-route-table-virtual-interface-group-association'|'natgateway'|'network-acl'|'network-interface'|'network-insights-analysis'|'network-insights-path'|'network-insights-access-scope'|'network-insights-access-scope-analysis'|'outpost-lag'|'placement-group'|'prefix-list'|'replace-root-volume-task'|'reserved-instances'|'route-table'|'security-group'|'security-group-rule'|'service-link-virtual-interface'|'snapshot'|'spot-fleet-request'|'spot-instances-request'|'subnet'|'subnet-cidr-reservation'|'traffic-mirror-filter'|'traffic-mirror-session'|'traffic-mirror-target'|'transit-gateway'|'transit-gateway-attachment'|'transit-gateway-connect-peer'|'transit-gateway-multicast-domain'|'transit-gateway-policy-table'|'transit-gateway-metering-policy'|'transit-gateway-route-table'|'transit-gateway-route-table-announcement'|'volume'|'vpc'|'vpc-endpoint'|'vpc-endpoint-connection'|'vpc-endpoint-service'|'vpc-endpoint-service-permission'|'vpc-peering-connection'|'vpn-connection'|'vpn-gateway'|'vpc-flow-log'|'capacity-reservation-fleet'|'traffic-mirror-filter-rule'|'vpc-endpoint-connection-device-type'|'verified-access-instance'|'verified-access-group'|'verified-access-endpoint'|'verified-access-policy'|'verified-access-trust-provider'|'vpn-connection-device-type'|'vpc-block-public-access-exclusion'|'vpc-encryption-control'|'route-server'|'route-server-endpoint'|'route-server-peer'|'ipam-resource-discovery'|'ipam-resource-discovery-association'|'instance-connect-endpoint'|'verified-access-endpoint-target'|'ipam-external-resource-verification-token'|'capacity-block'|'mac-modification-task'|'ipam-prefix-list-resolver'|'ipam-policy'|'ipam-prefix-list-resolver-target'|'secondary-interface'|'secondary-network'|'secondary-subnet'|'capacity-manager-data-export'|'vpn-concentrator',
+                'Tags': [
+                    {
+                        'Key': 'string',
+                        'Value': 'string'
+                    },
+                ]
+            },
+        ],
+        DryRun=True|False,
+        Name='string',
+        Description='string',
+        Architecture='i386'|'x86_64'|'arm64'|'x86_64_mac'|'arm64_mac',
+        KernelId='string',
+        RamdiskId='string',
+        RootDeviceName='string',
+        BlockDeviceMappings=[
+            {
+                'Ebs': {
+                    'DeleteOnTermination': True|False,
+                    'Iops': 123,
+                    'SnapshotId': 'string',
+                    'VolumeSize': 123,
+                    'VolumeType': 'standard'|'io1'|'io2'|'gp2'|'sc1'|'st1'|'gp3',
+                    'KmsKeyId': 'string',
+                    'Throughput': 123,
+                    'OutpostArn': 'string',
+                    'AvailabilityZone': 'string',
+                    'Encrypted': True|False,
+                    'VolumeInitializationRate': 123,
+                    'AvailabilityZoneId': 'string',
+                    'EbsCardIndex': 123
+                },
+                'NoDevice': 'string',
+                'DeviceName': 'string',
+                'VirtualName': 'string'
+            },
+        ],
+        VirtualizationType='string',
+        SriovNetSupport='string',
+        EnaSupport=True|False
+    )
+    
+  :type ImageLocation: string
+  :param ImageLocation: 
+
+    The full path to your AMI manifest in Amazon S3 storage. The specified bucket must have the ``aws-exec-read`` canned access control list (ACL) to ensure that it can be accessed by Amazon EC2. For more information, see `Canned ACL <https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl>`__ in the *Amazon S3 Service Developer Guide*.
+
+    
+
+  
+  :type BillingProducts: list
+  :param BillingProducts: 
+
+    The billing product codes. Your account must be authorized to specify billing product codes.
+
+     
+
+    If your account is not authorized to specify billing product codes, you can publish AMIs that include billable software and list them on the Amazon Web Services Marketplace. You must first register as a seller on the Amazon Web Services Marketplace. For more information, see `Getting started as an Amazon Web Services Marketplace seller <https://docs.aws.amazon.com/marketplace/latest/userguide/user-guide-for-sellers.html>`__ and `AMI-based products in Amazon Web Services Marketplace <https://docs.aws.amazon.com/marketplace/latest/userguide/ami-products.html>`__ in the *Amazon Web Services Marketplace Seller Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type BootMode: string
+  :param BootMode: 
+
+    The boot mode of the AMI. A value of ``uefi-preferred`` indicates that the AMI supports both UEFI and Legacy BIOS.
+
+     
+
+    .. note::
+
+      
+
+      The operating system contained in the AMI must be configured to support the specified boot mode.
+
+      
+
+     
+
+    For more information, see `Instance launch behavior with Amazon EC2 boot modes <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-boot.html>`__ in the *Amazon EC2 User Guide*.
+
+    
+
+  
+  :type TpmSupport: string
+  :param TpmSupport: 
+
+    Set to ``v2.0`` to enable Trusted Platform Module (TPM) support. For more information, see `NitroTPM <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitrotpm.html>`__ in the *Amazon EC2 User Guide*.
+
+    
+
+  
+  :type UefiData: string
+  :param UefiData: 
+
+    Base64 representation of the non-volatile UEFI variable store. To retrieve the UEFI data, use the `GetInstanceUefiData <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_GetInstanceUefiData>`__ command. You can inspect and modify the UEFI data by using the `python-uefivars tool <https://github.com/awslabs/python-uefivars>`__ on GitHub. For more information, see `UEFI Secure Boot for Amazon EC2 instances <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/uefi-secure-boot.html>`__ in the *Amazon EC2 User Guide*.
+
+    
+
+  
+  :type ImdsSupport: string
+  :param ImdsSupport: 
+
+    Set to ``v2.0`` to indicate that IMDSv2 is specified in the AMI. Instances launched from this AMI will have ``HttpTokens`` automatically set to ``required`` so that, by default, the instance requires that IMDSv2 is used when requesting instance metadata. In addition, ``HttpPutResponseHopLimit`` is set to ``2``. For more information, see `Configure the AMI <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-IMDS-new-instances.html#configure-IMDS-new-instances-ami-configuration>`__ in the *Amazon EC2 User Guide*.
+
+     
+
+    .. note::
+
+      
+
+      If you set the value to ``v2.0``, make sure that your AMI software can support IMDSv2.
+
+      
+
+    
+
+  
+  :type TagSpecifications: list
+  :param TagSpecifications: 
+
+    The tags to apply to the AMI.
+
+     
+
+    To tag the AMI, the value for ``ResourceType`` must be ``image``. If you specify another value for ``ResourceType``, the request fails.
+
+     
+
+    To tag an AMI after it has been registered, see `CreateTags <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateTags.html>`__.
+
+    
+
+  
+    - *(dict) --* 
+
+      The tags to apply to a resource when the resource is being created. When you specify a tag, you must specify the resource type to tag, otherwise the request will fail.
+
+       
+
+      .. note::
+
+        
+
+        The ``Valid Values`` lists all the resource types that can be tagged. However, the action you're using might not support tagging all of these resource types. If you try to tag a resource type that is unsupported for the action you're using, you'll get an error.
+
+        
+
+      
+
+    
+      - **ResourceType** *(string) --* 
+
+        The type of resource to tag on creation.
+
+        
+
+      
+      - **Tags** *(list) --* 
+
+        The tags to apply to the resource.
+
+        
+
+      
+        - *(dict) --* 
+
+          Describes a tag.
+
+          
+
+        
+          - **Key** *(string) --* 
+
+            The key of the tag.
+
+             
+
+            Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters. May not begin with ``aws:``.
+
+            
+
+          
+          - **Value** *(string) --* 
+
+            The value of the tag.
+
+             
+
+            Constraints: Tag values are case-sensitive and accept a maximum of 256 Unicode characters.
+
+            
+
+          
+        
+    
+    
+
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    A name for your AMI.
+
+     
+
+    Constraints: 3-128 alphanumeric characters, parentheses (()), square brackets ([]), spaces ( ), periods (.), slashes (/), dashes (-), single quotes ('), at-signs (@), or underscores(_)
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A description for your AMI.
+
+    
+
+  
+  :type Architecture: string
+  :param Architecture: 
+
+    The architecture of the AMI.
+
+     
+
+    Default: For Amazon EBS-backed AMIs, ``i386``. For instance store-backed AMIs, the architecture specified in the manifest file.
+
+    
+
+  
+  :type KernelId: string
+  :param KernelId: 
+
+    The ID of the kernel.
+
+    
+
+  
+  :type RamdiskId: string
+  :param RamdiskId: 
+
+    The ID of the RAM disk.
+
+    
+
+  
+  :type RootDeviceName: string
+  :param RootDeviceName: 
+
+    The device name of the root device volume (for example, ``/dev/sda1``).
+
+    
+
+  
+  :type BlockDeviceMappings: list
+  :param BlockDeviceMappings: 
+
+    The block device mapping entries.
+
+     
+
+    If you specify an Amazon EBS volume using the ID of an Amazon EBS snapshot, you can't specify the encryption state of the volume.
+
+     
+
+    If you create an AMI on an Outpost, then all backing snapshots must be on the same Outpost or in the Region of that Outpost. AMIs on an Outpost that include local snapshots can be used to launch instances on the same Outpost only. For more information, `Create AMIs from local snapshots <https://docs.aws.amazon.com/ebs/latest/userguide/snapshots-outposts.html#ami>`__ in the *Amazon EBS User Guide*.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a block device mapping, which defines the EBS volumes and instance store volumes to attach to an instance at launch.
+
+      
+
+    
+      - **Ebs** *(dict) --* 
+
+        Parameters used to automatically set up EBS volumes when the instance is launched.
+
+        
+
+      
+        - **DeleteOnTermination** *(boolean) --* 
+
+          Indicates whether the EBS volume is deleted on instance termination. For more information, see `Preserving Amazon EBS volumes on instance termination <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html#preserving-volumes-on-termination>`__ in the *Amazon EC2 User Guide*.
+
+          
+
+        
+        - **Iops** *(integer) --* 
+
+          The number of I/O operations per second (IOPS). For ``gp3``, ``io1``, and ``io2`` volumes, this represents the number of IOPS that are provisioned for the volume. For ``gp2`` volumes, this represents the baseline performance of the volume and the rate at which the volume accumulates I/O credits for bursting.
+
+           
+
+          The following are the supported values for each volume type:
+
+           
+
+          
+          * ``gp3``: 3,000 - 80,000 IOPS
+           
+          * ``io1``: 100 - 64,000 IOPS
+           
+          * ``io2``: 100 - 256,000 IOPS
+          
+
+           
+
+          For ``io2`` volumes, you can achieve up to 256,000 IOPS on `instances built on the Nitro System <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#ec2-nitro-instances>`__. On other instances, you can achieve performance up to 32,000 IOPS.
+
+           
+
+          This parameter is required for ``io1`` and ``io2`` volumes. The default for ``gp3`` volumes is 3,000 IOPS.
+
+          
+
+        
+        - **SnapshotId** *(string) --* 
+
+          The ID of the snapshot.
+
+          
+
+        
+        - **VolumeSize** *(integer) --* 
+
+          The size of the volume, in GiBs. You must specify either a snapshot ID or a volume size. If you specify a snapshot, the default is the snapshot size. You can specify a volume size that is equal to or larger than the snapshot size.
+
+           
+
+          The following are the supported sizes for each volume type:
+
+           
+
+          
+          * ``gp2``: 1 - 16,384 GiB
+           
+          * ``gp3``: 1 - 65,536 GiB
+           
+          * ``io1``: 4 - 16,384 GiB
+           
+          * ``io2``: 4 - 65,536 GiB
+           
+          * ``st1`` and ``sc1``: 125 - 16,384 GiB
+           
+          * ``standard``: 1 - 1024 GiB
+          
+
+          
+
+        
+        - **VolumeType** *(string) --* 
+
+          The volume type. For more information, see `Amazon EBS volume types <https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html>`__ in the *Amazon EBS User Guide*.
+
+          
+
+        
+        - **KmsKeyId** *(string) --* 
+
+          Identifier (key ID, key alias, key ARN, or alias ARN) of the customer managed KMS key to use for EBS encryption.
+
+           
+
+          This parameter is only supported on ``BlockDeviceMapping`` objects called by `RunInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RunInstances.html>`__, `RequestSpotFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RequestSpotFleet.html>`__, and `RequestSpotInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RequestSpotInstances.html>`__.
+
+          
+
+        
+        - **Throughput** *(integer) --* 
+
+          The throughput that the volume supports, in MiB/s.
+
+           
+
+          This parameter is valid only for ``gp3`` volumes.
+
+           
+
+          Valid Range: Minimum value of 125. Maximum value of 2,000.
+
+          
+
+        
+        - **OutpostArn** *(string) --* 
+
+          The ARN of the Outpost on which the snapshot is stored.
+
+           
+
+          This parameter is not supported when using `CreateImage <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateImage.html>`__.
+
+          
+
+        
+        - **AvailabilityZone** *(string) --* 
+
+          The Availability Zone where the EBS volume will be created (for example, ``us-east-1a``).
+
+           
+
+          Either ``AvailabilityZone`` or ``AvailabilityZoneId`` can be specified, but not both. If neither is specified, Amazon EC2 automatically selects an Availability Zone within the Region.
+
+           
+
+          This parameter is not supported when using `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet.html>`__, `CreateImage <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateImage.html>`__, `DescribeImages <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImages.html>`__, `RequestSpotFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RequestSpotFleet.html>`__, `RequestSpotInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RequestSpotInstances.html>`__, and `RunInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RunInstances.html>`__.
+
+          
+
+        
+        - **Encrypted** *(boolean) --* 
+
+          Indicates whether the encryption state of an EBS volume is changed while being restored from a backing snapshot. The effect of setting the encryption state to ``true`` depends on the volume origin (new or from a snapshot), starting encryption state, ownership, and whether encryption by default is enabled. For more information, see `Amazon EBS encryption <https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html#encryption-parameters>`__ in the *Amazon EBS User Guide*.
+
+           
+
+          In no case can you remove encryption from an encrypted volume.
+
+           
+
+          Encrypted volumes can only be attached to instances that support Amazon EBS encryption. For more information, see `Supported instance types <https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption-requirements.html#ebs-encryption_supported_instances>`__.
+
+           
+
+          This parameter is not returned by  DescribeImageAttribute.
+
+           
+
+          For  CreateImage and  RegisterImage, whether you can include this parameter, and the allowed values differ depending on the type of block device mapping you are creating.
+
+           
+
+          
+          * If you are creating a block device mapping for a **new (empty) volume**, you can include this parameter, and specify either ``true`` for an encrypted volume, or ``false`` for an unencrypted volume. If you omit this parameter, it defaults to ``false`` (unencrypted).
+           
+          * If you are creating a block device mapping from an **existing encrypted or unencrypted snapshot**, you must omit this parameter. If you include this parameter, the request will fail, regardless of the value that you specify.
+           
+          * If you are creating a block device mapping from an **existing unencrypted volume**, you can include this parameter, but you must specify ``false``. If you specify ``true``, the request will fail. In this case, we recommend that you omit the parameter.
+           
+          * If you are creating a block device mapping from an **existing encrypted volume**, you can include this parameter, and specify either ``true`` or ``false``. However, if you specify ``false``, the parameter is ignored and the block device mapping is always encrypted. In this case, we recommend that you omit the parameter.
+          
+
+          
+
+        
+        - **VolumeInitializationRate** *(integer) --* 
+
+          Specifies the Amazon EBS Provisioned Rate for Volume Initialization (volume initialization rate), in MiB/s, at which to download the snapshot blocks from Amazon S3 to the volume. This is also known as *volume initialization*. Specifying a volume initialization rate ensures that the volume is initialized at a predictable and consistent rate after creation. For more information, see `Initialize Amazon EBS volumes <https://docs.aws.amazon.com/ebs/latest/userguide/initalize-volume.html>`__ in the *Amazon EC2 User Guide*.
+
+           
+
+          This parameter is supported only for volumes created from snapshots. Omit this parameter if:
+
+           
+
+          
+          * You want to create the volume using fast snapshot restore. You must specify a snapshot that is enabled for fast snapshot restore. In this case, the volume is fully initialized at creation. 
+
+          .. note::
+
+            If you specify a snapshot that is enabled for fast snapshot restore and a volume initialization rate, the volume will be initialized at the specified rate instead of fast snapshot restore.
+
+          
+           
+          * You want to create a volume that is initialized at the default rate.
+          
+
+           
+
+          This parameter is not supported when using `CreateImage <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateImage.html>`__ and `DescribeImages <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImages.html>`__.
+
+           
+
+          Valid range: 100 - 300 MiB/s
+
+          
+
+        
+        - **AvailabilityZoneId** *(string) --* 
+
+          The ID of the Availability Zone where the EBS volume will be created (for example, ``use1-az1``).
+
+           
+
+          Either ``AvailabilityZone`` or ``AvailabilityZoneId`` can be specified, but not both. If neither is specified, Amazon EC2 automatically selects an Availability Zone within the Region.
+
+           
+
+          This parameter is not supported when using `CreateFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateFleet.html>`__, `CreateImage <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateImage.html>`__, `DescribeImages <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeImages.html>`__, `RequestSpotFleet <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RequestSpotFleet.html>`__, `RequestSpotInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RequestSpotInstances.html>`__, and `RunInstances <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RunInstances.html>`__.
+
+          
+
+        
+        - **EbsCardIndex** *(integer) --* 
+
+          The index of the EBS card. Some instance types support multiple EBS cards. The default EBS card index is 0.
+
+          
+
+        
+      
+      - **NoDevice** *(string) --* 
+
+        To omit the device from the block device mapping, specify an empty string. When this property is specified, the device is removed from the block device mapping regardless of the assigned value.
+
+        
+
+      
+      - **DeviceName** *(string) --* 
+
+        The device name. For available device names, see `Device names for volumes <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html>`__.
+
+        
+
+      
+      - **VirtualName** *(string) --* 
+
+        The virtual device name ( ``ephemeral``N). Instance store volumes are numbered starting from 0. An instance type with 2 available instance store volumes can specify mappings for ``ephemeral0`` and ``ephemeral1``. The number of available instance store volumes depends on the instance type. After you connect to the instance, you must mount the volume.
+
+         
+
+        NVMe instance store volumes are automatically enumerated and assigned a device name. Including them in your block device mapping has no effect.
+
+         
+
+        Constraints: For M3 instances, you must specify instance store volumes in the block device mapping for the instance. When you launch an M3 instance, we ignore any instance store volumes specified in the block device mapping for the AMI.
+
+        
+
+      
+    
+
+  :type VirtualizationType: string
+  :param VirtualizationType: 
+
+    The type of virtualization ( ``hvm`` | ``paravirtual``).
+
+     
+
+    Default: ``paravirtual``
+
+    
+
+  
+  :type SriovNetSupport: string
+  :param SriovNetSupport: 
+
+    Set to ``simple`` to enable enhanced networking with the Intel 82599 Virtual Function interface for the AMI and any instances that you launch from the AMI.
+
+     
+
+    There is no way to disable ``sriovNetSupport`` at this time.
+
+     
+
+    This option is supported only for HVM AMIs. Specifying this option with a PV AMI can make instances launched from the AMI unreachable.
+
+    
+
+  
+  :type EnaSupport: boolean
+  :param EnaSupport: 
+
+    Set to ``true`` to enable enhanced networking with ENA for the AMI and any instances that you launch from the AMI.
+
+     
+
+    This option is supported only for HVM AMIs. Specifying this option with a PV AMI can make instances launched from the AMI unreachable.
+
+    
+
+  
+  
+  :rtype: :py:class:`ec2.Image`
+  :returns: Image resource
+  

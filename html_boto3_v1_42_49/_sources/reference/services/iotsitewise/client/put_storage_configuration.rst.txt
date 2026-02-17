@@ -1,0 +1,449 @@
+:doc:`IoTSiteWise <../../iotsitewise>` / Client / put_storage_configuration
+
+*************************
+put_storage_configuration
+*************************
+
+
+
+.. py:method:: IoTSiteWise.Client.put_storage_configuration(**kwargs)
+
+  
+
+  Configures storage settings for IoT SiteWise.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotsitewise-2019-12-02/PutStorageConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_storage_configuration(
+        storageType='SITEWISE_DEFAULT_STORAGE'|'MULTI_LAYER_STORAGE',
+        multiLayerStorage={
+            'customerManagedS3Storage': {
+                's3ResourceArn': 'string',
+                'roleArn': 'string'
+            }
+        },
+        disassociatedDataStorage='ENABLED'|'DISABLED',
+        retentionPeriod={
+            'numberOfDays': 123,
+            'unlimited': True|False
+        },
+        warmTier='ENABLED'|'DISABLED',
+        warmTierRetentionPeriod={
+            'numberOfDays': 123,
+            'unlimited': True|False
+        },
+        disallowIngestNullNaN=True|False
+    )
+    
+  :type storageType: string
+  :param storageType: **[REQUIRED]** 
+
+    The storage tier that you specified for your data. The ``storageType`` parameter can be one of the following values:
+
+     
+
+    
+    * ``SITEWISE_DEFAULT_STORAGE`` – IoT SiteWise saves your data into the hot tier. The hot tier is a service-managed database.
+     
+    * ``MULTI_LAYER_STORAGE`` – IoT SiteWise saves your data in both the cold tier and the hot tier. The cold tier is a customer-managed Amazon S3 bucket.
+    
+
+    
+
+  
+  :type multiLayerStorage: dict
+  :param multiLayerStorage: 
+
+    Identifies a storage destination. If you specified ``MULTI_LAYER_STORAGE`` for the storage type, you must specify a ``MultiLayerStorage`` object.
+
+    
+
+  
+    - **customerManagedS3Storage** *(dict) --* **[REQUIRED]** 
+
+      Contains information about a customer managed Amazon S3 bucket.
+
+      
+
+    
+      - **s3ResourceArn** *(string) --* **[REQUIRED]** 
+
+        The `ARN <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the Amazon S3 object. For more information about how to find the ARN for an Amazon S3 object, see `Amazon S3 resources <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-arn-format.html>`__ in the *Amazon Simple Storage Service User Guide*.
+
+        
+
+      
+      - **roleArn** *(string) --* **[REQUIRED]** 
+
+        The `ARN <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the Identity and Access Management role that allows IoT SiteWise to send data to Amazon S3.
+
+        
+
+      
+    
+  
+  :type disassociatedDataStorage: string
+  :param disassociatedDataStorage: 
+
+    Contains the storage configuration for time series (data streams) that aren't associated with asset properties. The ``disassociatedDataStorage`` can be one of the following values:
+
+     
+
+    
+    * ``ENABLED`` – IoT SiteWise accepts time series that aren't associated with asset properties. 
+
+    .. warning::
+
+      After the ``disassociatedDataStorage`` is enabled, you can't disable it.
+
+    
+     
+    * ``DISABLED`` – IoT SiteWise doesn't accept time series (data streams) that aren't associated with asset properties.
+    
+
+     
+
+    For more information, see `Data streams <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/data-streams.html>`__ in the *IoT SiteWise User Guide*.
+
+    
+
+  
+  :type retentionPeriod: dict
+  :param retentionPeriod: 
+
+    The number of days your data is kept in the hot tier. By default, your data is kept indefinitely in the hot tier.
+
+    
+
+  
+    - **numberOfDays** *(integer) --* 
+
+      The number of days that your data is kept.
+
+       
+
+      .. note::
+
+        
+
+        If you specified a value for this parameter, the ``unlimited`` parameter must be ``false``.
+
+        
+
+      
+
+    
+    - **unlimited** *(boolean) --* 
+
+      If true, your data is kept indefinitely.
+
+       
+
+      .. note::
+
+        
+
+        If configured to ``true``, you must not specify a value for the ``numberOfDays`` parameter.
+
+        
+
+      
+
+    
+  
+  :type warmTier: string
+  :param warmTier: 
+
+    A service managed storage tier optimized for analytical queries. It stores periodically uploaded, buffered and historical data ingested with the CreaeBulkImportJob API.
+
+    
+
+  
+  :type warmTierRetentionPeriod: dict
+  :param warmTierRetentionPeriod: 
+
+    Set this period to specify how long your data is stored in the warm tier before it is deleted. You can set this only if cold tier is enabled.
+
+    
+
+  
+    - **numberOfDays** *(integer) --* 
+
+      The number of days the data is stored in the warm tier.
+
+      
+
+    
+    - **unlimited** *(boolean) --* 
+
+      If set to true, the data is stored indefinitely in the warm tier.
+
+      
+
+    
+  
+  :type disallowIngestNullNaN: boolean
+  :param disallowIngestNullNaN: 
+
+    Describes the configuration for ingesting NULL and NaN data. By default the feature is allowed. The feature is disallowed if the value is ``true``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'storageType': 'SITEWISE_DEFAULT_STORAGE'|'MULTI_LAYER_STORAGE',
+          'multiLayerStorage': {
+              'customerManagedS3Storage': {
+                  's3ResourceArn': 'string',
+                  'roleArn': 'string'
+              }
+          },
+          'disassociatedDataStorage': 'ENABLED'|'DISABLED',
+          'retentionPeriod': {
+              'numberOfDays': 123,
+              'unlimited': True|False
+          },
+          'configurationStatus': {
+              'state': 'ACTIVE'|'UPDATE_IN_PROGRESS'|'UPDATE_FAILED',
+              'error': {
+                  'code': 'VALIDATION_ERROR'|'INTERNAL_FAILURE',
+                  'message': 'string'
+              }
+          },
+          'warmTier': 'ENABLED'|'DISABLED',
+          'warmTierRetentionPeriod': {
+              'numberOfDays': 123,
+              'unlimited': True|False
+          },
+          'disallowIngestNullNaN': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **storageType** *(string) --* 
+
+        The storage tier that you specified for your data. The ``storageType`` parameter can be one of the following values:
+
+         
+
+        
+        * ``SITEWISE_DEFAULT_STORAGE`` – IoT SiteWise saves your data into the hot tier. The hot tier is a service-managed database.
+         
+        * ``MULTI_LAYER_STORAGE`` – IoT SiteWise saves your data in both the cold tier and the hot tier. The cold tier is a customer-managed Amazon S3 bucket.
+        
+
+        
+      
+
+      - **multiLayerStorage** *(dict) --* 
+
+        Contains information about the storage destination.
+
+        
+        
+
+        - **customerManagedS3Storage** *(dict) --* 
+
+          Contains information about a customer managed Amazon S3 bucket.
+
+          
+          
+
+          - **s3ResourceArn** *(string) --* 
+
+            The `ARN <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the Amazon S3 object. For more information about how to find the ARN for an Amazon S3 object, see `Amazon S3 resources <https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-arn-format.html>`__ in the *Amazon Simple Storage Service User Guide*.
+
+            
+          
+
+          - **roleArn** *(string) --* 
+
+            The `ARN <https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html>`__ of the Identity and Access Management role that allows IoT SiteWise to send data to Amazon S3.
+
+            
+      
+    
+      
+
+      - **disassociatedDataStorage** *(string) --* 
+
+        Contains the storage configuration for time series (data streams) that aren't associated with asset properties. The ``disassociatedDataStorage`` can be one of the following values:
+
+         
+
+        
+        * ``ENABLED`` – IoT SiteWise accepts time series that aren't associated with asset properties. 
+
+        .. warning::
+
+          After the ``disassociatedDataStorage`` is enabled, you can't disable it.
+
+        
+         
+        * ``DISABLED`` – IoT SiteWise doesn't accept time series (data streams) that aren't associated with asset properties.
+        
+
+         
+
+        For more information, see `Data streams <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/data-streams.html>`__ in the *IoT SiteWise User Guide*.
+
+        
+      
+
+      - **retentionPeriod** *(dict) --* 
+
+        The number of days your data is kept in the hot tier. By default, your data is kept indefinitely in the hot tier.
+
+        
+        
+
+        - **numberOfDays** *(integer) --* 
+
+          The number of days that your data is kept.
+
+           
+
+          .. note::
+
+            
+
+            If you specified a value for this parameter, the ``unlimited`` parameter must be ``false``.
+
+            
+
+          
+        
+
+        - **unlimited** *(boolean) --* 
+
+          If true, your data is kept indefinitely.
+
+           
+
+          .. note::
+
+            
+
+            If configured to ``true``, you must not specify a value for the ``numberOfDays`` parameter.
+
+            
+
+          
+    
+      
+
+      - **configurationStatus** *(dict) --* 
+
+        Contains current status information for the configuration.
+
+        
+        
+
+        - **state** *(string) --* 
+
+          The current state of the configuration.
+
+          
+        
+
+        - **error** *(dict) --* 
+
+          Contains associated error information, if any.
+
+          
+          
+
+          - **code** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **message** *(string) --* 
+
+            The error message.
+
+            
+      
+    
+      
+
+      - **warmTier** *(string) --* 
+
+        A service managed storage tier optimized for analytical queries. It stores periodically uploaded, buffered and historical data ingested with the CreaeBulkImportJob API.
+
+        
+      
+
+      - **warmTierRetentionPeriod** *(dict) --* 
+
+        Set this period to specify how long your data is stored in the warm tier before it is deleted. You can set this only if cold tier is enabled.
+
+        
+        
+
+        - **numberOfDays** *(integer) --* 
+
+          The number of days the data is stored in the warm tier.
+
+          
+        
+
+        - **unlimited** *(boolean) --* 
+
+          If set to true, the data is stored indefinitely in the warm tier.
+
+          
+    
+      
+
+      - **disallowIngestNullNaN** *(boolean) --* 
+
+        Describes the configuration for ingesting NULL and NaN data. By default the feature is allowed. The feature is disallowed if the value is ``true``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ConflictingOperationException`
+
+  

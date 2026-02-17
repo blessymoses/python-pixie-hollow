@@ -1,0 +1,219 @@
+:doc:`ConfigService <../../config>` / Client / put_evaluations
+
+***************
+put_evaluations
+***************
+
+
+
+.. py:method:: ConfigService.Client.put_evaluations(**kwargs)
+
+  
+
+  Used by an Lambda function to deliver evaluation results to Config. This operation is required in every Lambda function that is invoked by an Config rule.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/config-2014-11-12/PutEvaluations>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_evaluations(
+        Evaluations=[
+            {
+                'ComplianceResourceType': 'string',
+                'ComplianceResourceId': 'string',
+                'ComplianceType': 'COMPLIANT'|'NON_COMPLIANT'|'NOT_APPLICABLE'|'INSUFFICIENT_DATA',
+                'Annotation': 'string',
+                'OrderingTimestamp': datetime(2015, 1, 1)
+            },
+        ],
+        ResultToken='string',
+        TestMode=True|False
+    )
+    
+  :type Evaluations: list
+  :param Evaluations: 
+
+    The assessments that the Lambda function performs. Each evaluation identifies an Amazon Web Services resource and indicates whether it complies with the Config rule that invokes the Lambda function.
+
+    
+
+  
+    - *(dict) --* 
+
+      Identifies an Amazon Web Services resource and indicates whether it complies with the Config rule that it was evaluated against.
+
+      
+
+    
+      - **ComplianceResourceType** *(string) --* **[REQUIRED]** 
+
+        The type of Amazon Web Services resource that was evaluated.
+
+        
+
+      
+      - **ComplianceResourceId** *(string) --* **[REQUIRED]** 
+
+        The ID of the Amazon Web Services resource that was evaluated.
+
+        
+
+      
+      - **ComplianceType** *(string) --* **[REQUIRED]** 
+
+        Indicates whether the Amazon Web Services resource complies with the Config rule that it was evaluated against.
+
+         
+
+        For the ``Evaluation`` data type, Config supports only the ``COMPLIANT``, ``NON_COMPLIANT``, and ``NOT_APPLICABLE`` values. Config does not support the ``INSUFFICIENT_DATA`` value for this data type.
+
+         
+
+        Similarly, Config does not accept ``INSUFFICIENT_DATA`` as the value for ``ComplianceType`` from a ``PutEvaluations`` request. For example, an Lambda function for a custom Config rule cannot pass an ``INSUFFICIENT_DATA`` value to Config.
+
+        
+
+      
+      - **Annotation** *(string) --* 
+
+        Supplementary information about how the evaluation determined the compliance.
+
+        
+
+      
+      - **OrderingTimestamp** *(datetime) --* **[REQUIRED]** 
+
+        The time of the event in Config that triggered the evaluation. For event-based evaluations, the time indicates when Config created the configuration item that triggered the evaluation. For periodic evaluations, the time indicates when Config triggered the evaluation at the frequency that you specified (for example, every 24 hours).
+
+        
+
+      
+    
+
+  :type ResultToken: string
+  :param ResultToken: **[REQUIRED]** 
+
+    An encrypted token that associates an evaluation with an Config rule. Identifies the rule and the event that triggered the evaluation.
+
+    
+
+  
+  :type TestMode: boolean
+  :param TestMode: 
+
+    Use this parameter to specify a test run for ``PutEvaluations``. You can verify whether your Lambda function will deliver evaluation results to Config. No updates occur to your existing evaluations, and evaluation results are not sent to Config.
+
+     
+
+    .. note::
+
+      
+
+      When ``TestMode`` is ``true``, ``PutEvaluations`` doesn't require a valid value for the ``ResultToken`` parameter, but the value cannot be null.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FailedEvaluations': [
+              {
+                  'ComplianceResourceType': 'string',
+                  'ComplianceResourceId': 'string',
+                  'ComplianceType': 'COMPLIANT'|'NON_COMPLIANT'|'NOT_APPLICABLE'|'INSUFFICIENT_DATA',
+                  'Annotation': 'string',
+                  'OrderingTimestamp': datetime(2015, 1, 1)
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FailedEvaluations** *(list) --* 
+
+        Requests that failed because of a client or server error.
+
+        
+        
+
+        - *(dict) --* 
+
+          Identifies an Amazon Web Services resource and indicates whether it complies with the Config rule that it was evaluated against.
+
+          
+          
+
+          - **ComplianceResourceType** *(string) --* 
+
+            The type of Amazon Web Services resource that was evaluated.
+
+            
+          
+
+          - **ComplianceResourceId** *(string) --* 
+
+            The ID of the Amazon Web Services resource that was evaluated.
+
+            
+          
+
+          - **ComplianceType** *(string) --* 
+
+            Indicates whether the Amazon Web Services resource complies with the Config rule that it was evaluated against.
+
+             
+
+            For the ``Evaluation`` data type, Config supports only the ``COMPLIANT``, ``NON_COMPLIANT``, and ``NOT_APPLICABLE`` values. Config does not support the ``INSUFFICIENT_DATA`` value for this data type.
+
+             
+
+            Similarly, Config does not accept ``INSUFFICIENT_DATA`` as the value for ``ComplianceType`` from a ``PutEvaluations`` request. For example, an Lambda function for a custom Config rule cannot pass an ``INSUFFICIENT_DATA`` value to Config.
+
+            
+          
+
+          - **Annotation** *(string) --* 
+
+            Supplementary information about how the evaluation determined the compliance.
+
+            
+          
+
+          - **OrderingTimestamp** *(datetime) --* 
+
+            The time of the event in Config that triggered the evaluation. For event-based evaluations, the time indicates when Config created the configuration item that triggered the evaluation. For periodic evaluations, the time indicates when Config triggered the evaluation at the frequency that you specified (for example, every 24 hours).
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.InvalidResultTokenException`
+
+  
+  *   :py:class:`ConfigService.Client.exceptions.NoSuchConfigRuleException`
+
+  

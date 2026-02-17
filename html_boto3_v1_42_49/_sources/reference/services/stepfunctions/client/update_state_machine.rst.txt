@@ -1,0 +1,334 @@
+:doc:`SFN <../../stepfunctions>` / Client / update_state_machine
+
+********************
+update_state_machine
+********************
+
+
+
+.. py:method:: SFN.Client.update_state_machine(**kwargs)
+
+  
+
+  Updates an existing state machine by modifying its ``definition``, ``roleArn``, ``loggingConfiguration``, or ``EncryptionConfiguration``. Running executions will continue to use the previous ``definition`` and ``roleArn``. You must include at least one of ``definition`` or ``roleArn`` or you will receive a ``MissingRequiredParameter`` error.
+
+   
+
+  A qualified state machine ARN refers to a *Distributed Map state* defined within a state machine. For example, the qualified state machine ARN ``arn:partition:states:region:account-id:stateMachine:stateMachineName/mapStateLabel`` refers to a *Distributed Map state* with a label ``mapStateLabel`` in the state machine named ``stateMachineName``.
+
+   
+
+  A qualified state machine ARN can either refer to a *Distributed Map state* defined within a state machine, a version ARN, or an alias ARN.
+
+   
+
+  The following are some examples of qualified and unqualified state machine ARNs:
+
+   
+
+  
+  * The following qualified state machine ARN refers to a *Distributed Map state* with a label ``mapStateLabel`` in a state machine named ``myStateMachine``. ``arn:partition:states:region:account-id:stateMachine:myStateMachine/mapStateLabel`` 
+
+  .. note::
+
+    If you provide a qualified state machine ARN that refers to a *Distributed Map state*, the request fails with ``ValidationException``.
+
+  
+   
+  * The following qualified state machine ARN refers to an alias named ``PROD``. ``arn:<partition>:states:<region>:<account-id>:stateMachine:<myStateMachine:PROD>`` 
+
+  .. note::
+
+    If you provide a qualified state machine ARN that refers to a version ARN or an alias ARN, the request starts execution for that version or alias.
+
+  
+   
+  * The following unqualified state machine ARN refers to a state machine named ``myStateMachine``. ``arn:<partition>:states:<region>:<account-id>:stateMachine:<myStateMachine>``
+  
+
+   
+
+  After you update your state machine, you can set the ``publish`` parameter to ``true`` in the same action to publish a new `version <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-state-machine-version.html>`__. This way, you can opt-in to strict versioning of your state machine.
+
+   
+
+  .. note::
+
+    
+
+    Step Functions assigns monotonically increasing integers for state machine versions, starting at version number 1.
+
+    
+
+   
+
+  .. note::
+
+    
+
+    All ``StartExecution`` calls within a few seconds use the updated ``definition`` and ``roleArn``. Executions started immediately after you call ``UpdateStateMachine`` may use the previous state machine ``definition`` and ``roleArn``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/states-2016-11-23/UpdateStateMachine>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_state_machine(
+        stateMachineArn='string',
+        definition='string',
+        roleArn='string',
+        loggingConfiguration={
+            'level': 'ALL'|'ERROR'|'FATAL'|'OFF',
+            'includeExecutionData': True|False,
+            'destinations': [
+                {
+                    'cloudWatchLogsLogGroup': {
+                        'logGroupArn': 'string'
+                    }
+                },
+            ]
+        },
+        tracingConfiguration={
+            'enabled': True|False
+        },
+        publish=True|False,
+        versionDescription='string',
+        encryptionConfiguration={
+            'kmsKeyId': 'string',
+            'kmsDataKeyReusePeriodSeconds': 123,
+            'type': 'AWS_OWNED_KEY'|'CUSTOMER_MANAGED_KMS_KEY'
+        }
+    )
+    
+  :type stateMachineArn: string
+  :param stateMachineArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the state machine.
+
+    
+
+  
+  :type definition: string
+  :param definition: 
+
+    The Amazon States Language definition of the state machine. See `Amazon States Language <https://docs.aws.amazon.com/step-functions/latest/dg/concepts-amazon-states-language.html>`__.
+
+    
+
+  
+  :type roleArn: string
+  :param roleArn: 
+
+    The Amazon Resource Name (ARN) of the IAM role of the state machine.
+
+    
+
+  
+  :type loggingConfiguration: dict
+  :param loggingConfiguration: 
+
+    Use the ``LoggingConfiguration`` data type to set CloudWatch Logs options.
+
+    
+
+  
+    - **level** *(string) --* 
+
+      Defines which category of execution history events are logged.
+
+      
+
+    
+    - **includeExecutionData** *(boolean) --* 
+
+      Determines whether execution data is included in your log. When set to ``false``, data is excluded.
+
+      
+
+    
+    - **destinations** *(list) --* 
+
+      An array of objects that describes where your execution history events will be logged. Limited to size 1. Required, if your log level is not set to ``OFF``.
+
+      
+
+    
+      - *(dict) --* 
+
+      
+        - **cloudWatchLogsLogGroup** *(dict) --* 
+
+          An object describing a CloudWatch log group. For more information, see `AWS\:\:Logs\:\:LogGroup <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html>`__ in the CloudFormation User Guide.
+
+          
+
+        
+          - **logGroupArn** *(string) --* 
+
+            The ARN of the the CloudWatch log group to which you want your logs emitted to. The ARN must end with ``:*``
+
+            
+
+          
+        
+      
+  
+  
+  :type tracingConfiguration: dict
+  :param tracingConfiguration: 
+
+    Selects whether X-Ray tracing is enabled.
+
+    
+
+  
+    - **enabled** *(boolean) --* 
+
+      When set to ``true``, X-Ray tracing is enabled.
+
+      
+
+    
+  
+  :type publish: boolean
+  :param publish: 
+
+    Specifies whether the state machine version is published. The default is ``false``. To publish a version after updating the state machine, set ``publish`` to ``true``.
+
+    
+
+  
+  :type versionDescription: string
+  :param versionDescription: 
+
+    An optional description of the state machine version to publish.
+
+     
+
+    You can only specify the ``versionDescription`` parameter if you've set ``publish`` to ``true``.
+
+    
+
+  
+  :type encryptionConfiguration: dict
+  :param encryptionConfiguration: 
+
+    Settings to configure server-side encryption.
+
+    
+
+  
+    - **kmsKeyId** *(string) --* 
+
+      An alias, alias ARN, key ID, or key ARN of a symmetric encryption KMS key to encrypt data. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN or alias ARN.
+
+      
+
+    
+    - **kmsDataKeyReusePeriodSeconds** *(integer) --* 
+
+      Maximum duration that Step Functions will reuse data keys. When the period expires, Step Functions will call ``GenerateDataKey``. Only applies to customer managed keys.
+
+      
+
+    
+    - **type** *(string) --* **[REQUIRED]** 
+
+      Encryption type
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'updateDate': datetime(2015, 1, 1),
+          'revisionId': 'string',
+          'stateMachineVersionArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **updateDate** *(datetime) --* 
+
+        The date and time the state machine was updated.
+
+        
+      
+
+      - **revisionId** *(string) --* 
+
+        The revision identifier for the updated state machine.
+
+        
+      
+
+      - **stateMachineVersionArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the published state machine version.
+
+         
+
+        If the ``publish`` parameter isn't set to ``true``, this field returns null.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidArn`
+
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidDefinition`
+
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidLoggingConfiguration`
+
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidTracingConfiguration`
+
+  
+  *   :py:class:`SFN.Client.exceptions.MissingRequiredParameter`
+
+  
+  *   :py:class:`SFN.Client.exceptions.StateMachineDeleting`
+
+  
+  *   :py:class:`SFN.Client.exceptions.StateMachineDoesNotExist`
+
+  
+  *   :py:class:`SFN.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.InvalidEncryptionConfiguration`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsAccessDeniedException`
+
+  
+  *   :py:class:`SFN.Client.exceptions.KmsThrottlingException`
+
+  

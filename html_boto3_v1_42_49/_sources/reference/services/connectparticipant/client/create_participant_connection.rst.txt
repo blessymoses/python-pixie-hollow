@@ -1,0 +1,362 @@
+:doc:`ConnectParticipant <../../connectparticipant>` / Client / create_participant_connection
+
+*****************************
+create_participant_connection
+*****************************
+
+
+
+.. py:method:: ConnectParticipant.Client.create_participant_connection(**kwargs)
+
+  
+
+  Creates the participant's connection.
+
+   
+
+  For security recommendations, see `Amazon Connect Chat security best practices <https://docs.aws.amazon.com/connect/latest/adminguide/security-best-practices.html#bp-security-chat>`__.
+
+   
+
+  For WebRTC security recommendations, see `Amazon Connect WebRTC security best practices <https://docs.aws.amazon.com/connect/latest/adminguide/security-best-practices.html#bp-webrtc-security>`__.
+
+   
+
+  .. note::
+
+    
+
+    ``ParticipantToken`` is used for invoking this API instead of ``ConnectionToken``.
+
+    
+
+   
+
+  The participant token is valid for the lifetime of the participant – until they are part of a contact. For WebRTC participants, if they leave or are disconnected for 60 seconds, a new participant needs to be created using the `CreateParticipant <https://docs.aws.amazon.com/connect/latest/APIReference/API_CreateParticipant.html>`__ API.
+
+   
+
+  For ``WEBSOCKET`` Type:
+
+   
+
+  The response URL for has a connect expiry timeout of 100s. Clients must manually connect to the returned websocket URL and subscribe to the desired topic.
+
+   
+
+  For chat, you need to publish the following on the established websocket connection:
+
+   
+
+  ``{"topic":"aws/subscribe","content":{"topics":["aws/chat"]}}``
+
+   
+
+  Upon websocket URL expiry, as specified in the response ConnectionExpiry parameter, clients need to call this API again to obtain a new websocket URL and perform the same steps as before.
+
+   
+
+  The expiry time for the connection token is different than the ``ChatDurationInMinutes``. Expiry time for the connection token is 1 day.
+
+   
+
+  For ``WEBRTC_CONNECTION`` Type:
+
+   
+
+  The response includes connection data required for the client application to join the call using the Amazon Chime SDK client libraries. The WebRTCConnection response contains Meeting and Attendee information needed to establish the media connection.
+
+   
+
+  The attendee join token in WebRTCConnection response is valid for the lifetime of the participant in the call. If a participant leaves or is disconnected for 60 seconds, their participant credentials will no longer be valid, and a new participant will need to be created to rejoin the call.
+
+   
+
+  **Message streaming support**: This API can also be used together with the `StartContactStreaming <https://docs.aws.amazon.com/connect/latest/APIReference/API_StartContactStreaming.html>`__ API to create a participant connection for chat contacts that are not using a websocket. For more information about message streaming, `Enable real-time chat message streaming <https://docs.aws.amazon.com/connect/latest/adminguide/chat-message-streaming.html>`__ in the *Amazon Connect Administrator Guide*.
+
+   
+
+  **Multi-user web, in-app, video calling support**:
+
+   
+
+  For WebRTC calls, this API is used in conjunction with the CreateParticipant API to enable multi-party calling. The StartWebRTCContact API creates the initial contact and routes it to an agent, while CreateParticipant adds additional participants to the ongoing call. For more information about multi-party WebRTC calls, see `Enable multi-user web, in-app, and video calling <https://docs.aws.amazon.com/connect/latest/adminguide/enable-multiuser-inapp.html>`__ in the *Amazon Connect Administrator Guide*.
+
+   
+
+  **Feature specifications**: For information about feature specifications, such as the allowed number of open websocket connections per participant or maximum number of WebRTC participants, see `Feature specifications <https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html#feature-limits>`__ in the *Amazon Connect Administrator Guide*.
+
+   
+
+  .. note::
+
+    
+
+    The Amazon Connect Participant Service APIs do not use `Signature Version 4 authentication <https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connectparticipant-2018-09-07/CreateParticipantConnection>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_participant_connection(
+        Type=[
+            'WEBSOCKET'|'CONNECTION_CREDENTIALS'|'WEBRTC_CONNECTION',
+        ],
+        ParticipantToken='string',
+        ConnectParticipant=True|False
+    )
+    
+  :type Type: list
+  :param Type: 
+
+    Type of connection information required. If you need ``CONNECTION_CREDENTIALS`` along with marking participant as connected, pass ``CONNECTION_CREDENTIALS`` in ``Type``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ParticipantToken: string
+  :param ParticipantToken: **[REQUIRED]** 
+
+    This is a header parameter.
+
+     
+
+    The ParticipantToken as obtained from `StartChatContact <https://docs.aws.amazon.com/connect/latest/APIReference/API_StartChatContact.html>`__ API response.
+
+    
+
+  
+  :type ConnectParticipant: boolean
+  :param ConnectParticipant: 
+
+    Amazon Connect Participant is used to mark the participant as connected for customer participant in message streaming, as well as for agent or manager participant in non-streaming chats.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Websocket': {
+              'Url': 'string',
+              'ConnectionExpiry': 'string'
+          },
+          'ConnectionCredentials': {
+              'ConnectionToken': 'string',
+              'Expiry': 'string'
+          },
+          'WebRTCConnection': {
+              'Attendee': {
+                  'AttendeeId': 'string',
+                  'JoinToken': 'string'
+              },
+              'Meeting': {
+                  'MediaPlacement': {
+                      'AudioHostUrl': 'string',
+                      'AudioFallbackUrl': 'string',
+                      'SignalingUrl': 'string',
+                      'EventIngestionUrl': 'string'
+                  },
+                  'MeetingFeatures': {
+                      'Audio': {
+                          'EchoReduction': 'AVAILABLE'|'UNAVAILABLE'
+                      }
+                  },
+                  'MeetingId': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Websocket** *(dict) --* 
+
+        Creates the participant's websocket connection.
+
+        
+        
+
+        - **Url** *(string) --* 
+
+          The URL of the websocket.
+
+          
+        
+
+        - **ConnectionExpiry** *(string) --* 
+
+          The URL expiration timestamp in ISO date format.
+
+           
+
+          It's specified in ISO 8601 format: yyyy-MM-ddThh:mm:ss.SSSZ. For example, 2019-11-08T02:41:28.172Z.
+
+          
+    
+      
+
+      - **ConnectionCredentials** *(dict) --* 
+
+        Creates the participant's connection credentials. The authentication token associated with the participant's connection.
+
+        
+        
+
+        - **ConnectionToken** *(string) --* 
+
+          The connection token.
+
+          
+        
+
+        - **Expiry** *(string) --* 
+
+          The expiration of the token.
+
+           
+
+          It's specified in ISO 8601 format: yyyy-MM-ddThh:mm:ss.SSSZ. For example, 2019-11-08T02:41:28.172Z.
+
+          
+    
+      
+
+      - **WebRTCConnection** *(dict) --* 
+
+        Creates the participant's WebRTC connection data required for the client application (mobile application or website) to connect to the call.
+
+        
+        
+
+        - **Attendee** *(dict) --* 
+
+          The attendee information, including attendee ID and join token.
+
+          
+          
+
+          - **AttendeeId** *(string) --* 
+
+            The Amazon Chime SDK attendee ID.
+
+            
+          
+
+          - **JoinToken** *(string) --* 
+
+            The join token used by the Amazon Chime SDK attendee.
+
+            
+      
+        
+
+        - **Meeting** *(dict) --* 
+
+          A meeting created using the Amazon Chime SDK.
+
+          
+          
+
+          - **MediaPlacement** *(dict) --* 
+
+            The media placement for the meeting.
+
+            
+            
+
+            - **AudioHostUrl** *(string) --* 
+
+              The audio host URL.
+
+              
+            
+
+            - **AudioFallbackUrl** *(string) --* 
+
+              The audio fallback URL.
+
+              
+            
+
+            - **SignalingUrl** *(string) --* 
+
+              The signaling URL.
+
+              
+            
+
+            - **EventIngestionUrl** *(string) --* 
+
+              The event ingestion URL to which you send client meeting events.
+
+              
+        
+          
+
+          - **MeetingFeatures** *(dict) --* 
+
+            The configuration settings of the features available to a meeting.
+
+            
+            
+
+            - **Audio** *(dict) --* 
+
+              The configuration settings for the audio features available to a meeting.
+
+              
+              
+
+              - **EchoReduction** *(string) --* 
+
+                Makes echo reduction available to clients who connect to the meeting.
+
+                
+          
+        
+          
+
+          - **MeetingId** *(string) --* 
+
+            The Amazon Chime SDK meeting ID.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ConnectParticipant.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ConnectParticipant.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ConnectParticipant.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ConnectParticipant.Client.exceptions.ValidationException`
+
+  

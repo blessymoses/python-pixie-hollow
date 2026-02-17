@@ -1,0 +1,198 @@
+:doc:`Personalize <../../personalize>` / Client / update_campaign
+
+***************
+update_campaign
+***************
+
+
+
+.. py:method:: Personalize.Client.update_campaign(**kwargs)
+
+  
+
+  Updates a campaign to deploy a retrained solution version with an existing campaign, change your campaign's ``minProvisionedTPS``, or modify your campaign's configuration. For example, you can set ``enableMetadataWithRecommendations`` to true for an existing campaign.
+
+   
+
+  To update a campaign to start automatically using the latest solution version, specify the following:
+
+   
+
+  
+  * For the ``SolutionVersionArn`` parameter, specify the Amazon Resource Name (ARN) of your solution in ``SolutionArn/$LATEST`` format.
+   
+  * In the ``campaignConfig``, set ``syncWithLatestSolutionVersion`` to ``true``.
+  
+
+   
+
+  To update a campaign, the campaign status must be ACTIVE or CREATE FAILED. Check the campaign status using the `DescribeCampaign <https://docs.aws.amazon.com/personalize/latest/dg/API_DescribeCampaign.html>`__ operation.
+
+   
+
+  .. note::
+
+    
+
+    You can still get recommendations from a campaign while an update is in progress. The campaign will use the previous solution version and campaign configuration to generate recommendations until the latest campaign update status is ``Active``.
+
+    
+
+   
+
+  For more information about updating a campaign, including code samples, see `Updating a campaign <https://docs.aws.amazon.com/personalize/latest/dg/update-campaigns.html>`__. For more information about campaigns, see `Creating a campaign <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/personalize-2018-05-22/UpdateCampaign>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_campaign(
+        campaignArn='string',
+        solutionVersionArn='string',
+        minProvisionedTPS=123,
+        campaignConfig={
+            'itemExplorationConfig': {
+                'string': 'string'
+            },
+            'enableMetadataWithRecommendations': True|False,
+            'syncWithLatestSolutionVersion': True|False,
+            'rankingInfluence': {
+                'string': 123.0
+            }
+        }
+    )
+    
+  :type campaignArn: string
+  :param campaignArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the campaign.
+
+    
+
+  
+  :type solutionVersionArn: string
+  :param solutionVersionArn: 
+
+    The Amazon Resource Name (ARN) of a new model to deploy. To specify the latest solution version of your solution, specify the ARN of your *solution* in ``SolutionArn/$LATEST`` format. You must use this format if you set ``syncWithLatestSolutionVersion`` to ``True`` in the `CampaignConfig <https://docs.aws.amazon.com/personalize/latest/dg/API_CampaignConfig.html>`__.
+
+     
+
+    To deploy a model that isn't the latest solution version of your solution, specify the ARN of the solution version.
+
+     
+
+    For more information about automatic campaign updates, see `Enabling automatic campaign updates <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#create-campaign-automatic-latest-sv-update>`__.
+
+    
+
+  
+  :type minProvisionedTPS: integer
+  :param minProvisionedTPS: 
+
+    Specifies the requested minimum provisioned transactions (recommendations) per second that Amazon Personalize will support. A high ``minProvisionedTPS`` will increase your bill. We recommend starting with 1 for ``minProvisionedTPS`` (the default). Track your usage using Amazon CloudWatch metrics, and increase the ``minProvisionedTPS`` as necessary.
+
+    
+
+  
+  :type campaignConfig: dict
+  :param campaignConfig: 
+
+    The configuration details of a campaign.
+
+    
+
+  
+    - **itemExplorationConfig** *(dict) --* 
+
+      Specifies the exploration configuration hyperparameters, including ``explorationWeight`` and ``explorationItemAgeCutOff``, you want to use to configure the amount of item exploration Amazon Personalize uses when recommending items. Provide ``itemExplorationConfig`` data only if your solution uses the `User-Personalization <https://docs.aws.amazon.com/personalize/latest/dg/native-recipe-new-item-USER_PERSONALIZATION.html>`__ recipe.
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(string) --* 
+
+        
+  
+
+    - **enableMetadataWithRecommendations** *(boolean) --* 
+
+      Whether metadata with recommendations is enabled for the campaign. If enabled, you can specify the columns from your Items dataset in your request for recommendations. Amazon Personalize returns this data for each item in the recommendation response. For information about enabling metadata for a campaign, see `Enabling metadata in recommendations for a campaign <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#create-campaign-return-metadata>`__.
+
+       
+
+      If you enable metadata in recommendations, you will incur additional costs. For more information, see `Amazon Personalize pricing <https://aws.amazon.com/personalize/pricing/>`__.
+
+      
+
+    
+    - **syncWithLatestSolutionVersion** *(boolean) --* 
+
+      Whether the campaign automatically updates to use the latest solution version (trained model) of a solution. If you specify ``True``, you must specify the ARN of your *solution* for the ``SolutionVersionArn`` parameter. It must be in ``SolutionArn/$LATEST`` format. The default is ``False`` and you must manually update the campaign to deploy the latest solution version.
+
+       
+
+      For more information about automatic campaign updates, see `Enabling automatic campaign updates <https://docs.aws.amazon.com/personalize/latest/dg/campaigns.html#create-campaign-automatic-latest-sv-update>`__.
+
+      
+
+    
+    - **rankingInfluence** *(dict) --* 
+
+      A map of ranking influence values for POPULARITY and FRESHNESS. For each key, specify a numerical value between 0.0 and 1.0 that determines how much influence that ranking factor has on the final recommendations. A value closer to 1.0 gives more weight to the factor, while a value closer to 0.0 reduces its influence.
+
+      
+
+    
+      - *(string) --* 
+
+      
+        - *(float) --* 
+
+        
+  
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'campaignArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **campaignArn** *(string) --* 
+
+        The same campaign ARN as given in the request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Personalize.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`Personalize.Client.exceptions.ResourceInUseException`
+
+  

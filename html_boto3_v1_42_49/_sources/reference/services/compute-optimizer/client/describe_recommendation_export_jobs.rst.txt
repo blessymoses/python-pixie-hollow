@@ -1,0 +1,325 @@
+:doc:`ComputeOptimizer <../../compute-optimizer>` / Client / describe_recommendation_export_jobs
+
+***********************************
+describe_recommendation_export_jobs
+***********************************
+
+
+
+.. py:method:: ComputeOptimizer.Client.describe_recommendation_export_jobs(**kwargs)
+
+  
+
+  Describes recommendation export jobs created in the last seven days.
+
+   
+
+  Use the  ExportAutoScalingGroupRecommendations or  ExportEC2InstanceRecommendations actions to request an export of your recommendations. Then use the  DescribeRecommendationExportJobs action to view your export jobs.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/compute-optimizer-2019-11-01/DescribeRecommendationExportJobs>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_recommendation_export_jobs(
+        jobIds=[
+            'string',
+        ],
+        filters=[
+            {
+                'name': 'ResourceType'|'JobStatus',
+                'values': [
+                    'string',
+                ]
+            },
+        ],
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type jobIds: list
+  :param jobIds: 
+
+    The identification numbers of the export jobs to return.
+
+     
+
+    An export job ID is returned when you create an export using the  ExportAutoScalingGroupRecommendations or  ExportEC2InstanceRecommendations actions.
+
+     
+
+    All export jobs created in the last seven days are returned if this parameter is omitted.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type filters: list
+  :param filters: 
+
+    An array of objects to specify a filter that returns a more specific list of export jobs.
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a filter that returns a more specific list of recommendation export jobs. Use this filter with the  DescribeRecommendationExportJobs action.
+
+       
+
+      You can use ``EBSFilter`` with the  GetEBSVolumeRecommendations action, ``LambdaFunctionRecommendationFilter`` with the  GetLambdaFunctionRecommendations action, and ``Filter`` with the  GetAutoScalingGroupRecommendations and  GetEC2InstanceRecommendations actions.
+
+      
+
+    
+      - **name** *(string) --* 
+
+        The name of the filter.
+
+         
+
+        Specify ``ResourceType`` to return export jobs of a specific resource type (for example, ``Ec2Instance``).
+
+         
+
+        Specify ``JobStatus`` to return export jobs with a specific status (e.g, ``Complete``).
+
+        
+
+      
+      - **values** *(list) --* 
+
+        The value of the filter.
+
+         
+
+        The valid values for this parameter are as follows, depending on what you specify for the ``name`` parameter:
+
+         
+
+        
+        * Specify ``Ec2Instance`` or ``AutoScalingGroup`` if you specify the ``name`` parameter as ``ResourceType``. There is no filter for EBS volumes because volume recommendations cannot be exported at this time.
+         
+        * Specify ``Queued``, ``InProgress``, ``Complete``, or ``Failed`` if you specify the ``name`` parameter as ``JobStatus``.
+        
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type nextToken: string
+  :param nextToken: 
+
+    The token to advance to the next page of export jobs.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of export jobs to return with a single request.
+
+     
+
+    To retrieve the remaining results, make another request with the returned ``nextToken`` value.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'recommendationExportJobs': [
+              {
+                  'jobId': 'string',
+                  'destination': {
+                      's3': {
+                          'bucket': 'string',
+                          'key': 'string',
+                          'metadataKey': 'string'
+                      }
+                  },
+                  'resourceType': 'Ec2Instance'|'AutoScalingGroup'|'EbsVolume'|'LambdaFunction'|'NotApplicable'|'EcsService'|'License'|'RdsDBInstance'|'AuroraDBClusterStorage'|'Idle',
+                  'status': 'Queued'|'InProgress'|'Complete'|'Failed',
+                  'creationTimestamp': datetime(2015, 1, 1),
+                  'lastUpdatedTimestamp': datetime(2015, 1, 1),
+                  'failureReason': 'string'
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **recommendationExportJobs** *(list) --* 
+
+        An array of objects that describe recommendation export jobs.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a recommendation export job.
+
+           
+
+          Use the  DescribeRecommendationExportJobs action to view your recommendation export jobs.
+
+           
+
+          Use the  ExportAutoScalingGroupRecommendations or  ExportEC2InstanceRecommendations actions to request an export of your recommendations.
+
+          
+          
+
+          - **jobId** *(string) --* 
+
+            The identification number of the export job.
+
+            
+          
+
+          - **destination** *(dict) --* 
+
+            An object that describes the destination of the export file.
+
+            
+            
+
+            - **s3** *(dict) --* 
+
+              An object that describes the destination Amazon Simple Storage Service (Amazon S3) bucket name and object keys of a recommendations export file, and its associated metadata file.
+
+              
+              
+
+              - **bucket** *(string) --* 
+
+                The name of the Amazon S3 bucket used as the destination of an export file.
+
+                
+              
+
+              - **key** *(string) --* 
+
+                The Amazon S3 bucket key of an export file.
+
+                 
+
+                The key uniquely identifies the object, or export file, in the S3 bucket.
+
+                
+              
+
+              - **metadataKey** *(string) --* 
+
+                The Amazon S3 bucket key of a metadata file.
+
+                 
+
+                The key uniquely identifies the object, or metadata file, in the S3 bucket.
+
+                
+          
+        
+          
+
+          - **resourceType** *(string) --* 
+
+            The resource type of the exported recommendations.
+
+            
+          
+
+          - **status** *(string) --* 
+
+            The status of the export job.
+
+            
+          
+
+          - **creationTimestamp** *(datetime) --* 
+
+            The timestamp of when the export job was created.
+
+            
+          
+
+          - **lastUpdatedTimestamp** *(datetime) --* 
+
+            The timestamp of when the export job was last updated.
+
+            
+          
+
+          - **failureReason** *(string) --* 
+
+            The reason for an export job failure.
+
+            
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The token to use to advance to the next page of export jobs.
+
+         
+
+        This value is null when there are no more pages of export jobs to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.OptInRequiredException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.InvalidParameterValueException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.MissingAuthenticationToken`
+
+  
+  *   :py:class:`ComputeOptimizer.Client.exceptions.ThrottlingException`
+
+  

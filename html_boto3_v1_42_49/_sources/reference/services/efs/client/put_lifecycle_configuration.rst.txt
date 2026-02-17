@@ -1,0 +1,284 @@
+:doc:`EFS <../../efs>` / Client / put_lifecycle_configuration
+
+***************************
+put_lifecycle_configuration
+***************************
+
+
+
+.. py:method:: EFS.Client.put_lifecycle_configuration(**kwargs)
+
+  
+
+  Use this action to manage storage for your file system. A ``LifecycleConfiguration`` consists of one or more ``LifecyclePolicy`` objects that define the following:
+
+   
+
+  
+  * ``TransitionToIA`` – When to move files in the file system from primary storage (Standard storage class) into the Infrequent Access (IA) storage.
+   
+  * ``TransitionToArchive`` – When to move files in the file system from their current storage class (either IA or Standard storage) into the Archive storage. File systems cannot transition into Archive storage before transitioning into IA storage. Therefore, TransitionToArchive must either not be set or must be later than TransitionToIA. 
+
+  .. note::
+
+    The Archive storage class is available only for file systems that use the Elastic throughput mode and the General Purpose performance mode.
+
+  
+  
+
+   
+
+  
+  * ``TransitionToPrimaryStorageClass`` – Whether to move files in the file system back to primary storage (Standard storage class) after they are accessed in IA or Archive storage.
+  
+
+   
+
+  For more information, see `Managing file system storage <https://docs.aws.amazon.com/efs/latest/ug/lifecycle-management-efs.html>`__.
+
+   
+
+  Each Amazon EFS file system supports one lifecycle configuration, which applies to all files in the file system. If a ``LifecycleConfiguration`` object already exists for the specified file system, a ``PutLifecycleConfiguration`` call modifies the existing configuration. A ``PutLifecycleConfiguration`` call with an empty ``LifecyclePolicies`` array in the request body deletes any existing ``LifecycleConfiguration``. In the request, specify the following:
+
+   
+
+  
+  * The ID for the file system for which you are enabling, disabling, or modifying lifecycle management.
+   
+  * A ``LifecyclePolicies`` array of ``LifecyclePolicy`` objects that define when to move files to IA storage, to Archive storage, and back to primary storage. 
+
+  .. note::
+
+    Amazon EFS requires that each ``LifecyclePolicy`` object have only have a single transition, so the ``LifecyclePolicies`` array needs to be structured with separate ``LifecyclePolicy`` objects. See the example requests in the following section for more information.
+
+  
+  
+
+   
+
+  This operation requires permissions for the ``elasticfilesystem:PutLifecycleConfiguration`` operation.
+
+   
+
+  To apply a ``LifecycleConfiguration`` object to an encrypted file system, you need the same Key Management Service permissions as when you created the encrypted file system.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/elasticfilesystem-2015-02-01/PutLifecycleConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_lifecycle_configuration(
+        FileSystemId='string',
+        LifecyclePolicies=[
+            {
+                'TransitionToIA': 'AFTER_7_DAYS'|'AFTER_14_DAYS'|'AFTER_30_DAYS'|'AFTER_60_DAYS'|'AFTER_90_DAYS'|'AFTER_1_DAY'|'AFTER_180_DAYS'|'AFTER_270_DAYS'|'AFTER_365_DAYS',
+                'TransitionToPrimaryStorageClass': 'AFTER_1_ACCESS',
+                'TransitionToArchive': 'AFTER_1_DAY'|'AFTER_7_DAYS'|'AFTER_14_DAYS'|'AFTER_30_DAYS'|'AFTER_60_DAYS'|'AFTER_90_DAYS'|'AFTER_180_DAYS'|'AFTER_270_DAYS'|'AFTER_365_DAYS'
+            },
+        ]
+    )
+    
+  :type FileSystemId: string
+  :param FileSystemId: **[REQUIRED]** 
+
+    The ID of the file system for which you are creating the ``LifecycleConfiguration`` object (String).
+
+    
+
+  
+  :type LifecyclePolicies: list
+  :param LifecyclePolicies: **[REQUIRED]** 
+
+    An array of ``LifecyclePolicy`` objects that define the file system's ``LifecycleConfiguration`` object. A ``LifecycleConfiguration`` object informs lifecycle management of the following:
+
+     
+
+    
+    * ``TransitionToIA`` – When to move files in the file system from primary storage (Standard storage class) into the Infrequent Access (IA) storage.
+     
+    * ``TransitionToArchive`` – When to move files in the file system from their current storage class (either IA or Standard storage) into the Archive storage. File systems cannot transition into Archive storage before transitioning into IA storage. Therefore, TransitionToArchive must either not be set or must be later than TransitionToIA. 
+
+    .. note::
+
+      The Archive storage class is available only for file systems that use the Elastic throughput mode and the General Purpose performance mode.
+
+    
+     
+    * ``TransitionToPrimaryStorageClass`` – Whether to move files in the file system back to primary storage (Standard storage class) after they are accessed in IA or Archive storage.
+    
+
+     
+
+    .. note::
+
+      
+
+      When using the ``put-lifecycle-configuration`` CLI command or the ``PutLifecycleConfiguration`` API action, Amazon EFS requires that each ``LifecyclePolicy`` object have only a single transition. This means that in a request body, ``LifecyclePolicies`` must be structured as an array of ``LifecyclePolicy`` objects, one object for each storage transition. See the example requests in the following section for more information.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      Describes a policy used by lifecycle management that specifies when to transition files into and out of storage classes. For more information, see `Managing file system storage <https://docs.aws.amazon.com/efs/latest/ug/lifecycle-management-efs.html>`__.
+
+       
+
+      .. note::
+
+        
+
+        When using the ``put-lifecycle-configuration`` CLI command or the ``PutLifecycleConfiguration`` API action, Amazon EFS requires that each ``LifecyclePolicy`` object have only a single transition. This means that in a request body, ``LifecyclePolicies`` must be structured as an array of ``LifecyclePolicy`` objects, one object for each transition. For more information, see the request examples in  PutLifecycleConfiguration.
+
+        
+
+      
+
+    
+      - **TransitionToIA** *(string) --* 
+
+        The number of days after files were last accessed in primary storage (the Standard storage class) at which to move them to Infrequent Access (IA) storage. Metadata operations such as listing the contents of a directory don't count as file access events.
+
+        
+
+      
+      - **TransitionToPrimaryStorageClass** *(string) --* 
+
+        Whether to move files back to primary (Standard) storage after they are accessed in IA or Archive storage. Metadata operations such as listing the contents of a directory don't count as file access events.
+
+        
+
+      
+      - **TransitionToArchive** *(string) --* 
+
+        The number of days after files were last accessed in primary storage (the Standard storage class) at which to move them to Archive storage. Metadata operations such as listing the contents of a directory don't count as file access events.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'LifecyclePolicies': [
+              {
+                  'TransitionToIA': 'AFTER_7_DAYS'|'AFTER_14_DAYS'|'AFTER_30_DAYS'|'AFTER_60_DAYS'|'AFTER_90_DAYS'|'AFTER_1_DAY'|'AFTER_180_DAYS'|'AFTER_270_DAYS'|'AFTER_365_DAYS',
+                  'TransitionToPrimaryStorageClass': 'AFTER_1_ACCESS',
+                  'TransitionToArchive': 'AFTER_1_DAY'|'AFTER_7_DAYS'|'AFTER_14_DAYS'|'AFTER_30_DAYS'|'AFTER_60_DAYS'|'AFTER_90_DAYS'|'AFTER_180_DAYS'|'AFTER_270_DAYS'|'AFTER_365_DAYS'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **LifecyclePolicies** *(list) --* 
+
+        An array of lifecycle management policies. EFS supports a maximum of one policy per file system.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a policy used by lifecycle management that specifies when to transition files into and out of storage classes. For more information, see `Managing file system storage <https://docs.aws.amazon.com/efs/latest/ug/lifecycle-management-efs.html>`__.
+
+           
+
+          .. note::
+
+            
+
+            When using the ``put-lifecycle-configuration`` CLI command or the ``PutLifecycleConfiguration`` API action, Amazon EFS requires that each ``LifecyclePolicy`` object have only a single transition. This means that in a request body, ``LifecyclePolicies`` must be structured as an array of ``LifecyclePolicy`` objects, one object for each transition. For more information, see the request examples in  PutLifecycleConfiguration.
+
+            
+
+          
+          
+
+          - **TransitionToIA** *(string) --* 
+
+            The number of days after files were last accessed in primary storage (the Standard storage class) at which to move them to Infrequent Access (IA) storage. Metadata operations such as listing the contents of a directory don't count as file access events.
+
+            
+          
+
+          - **TransitionToPrimaryStorageClass** *(string) --* 
+
+            Whether to move files back to primary (Standard) storage after they are accessed in IA or Archive storage. Metadata operations such as listing the contents of a directory don't count as file access events.
+
+            
+          
+
+          - **TransitionToArchive** *(string) --* 
+
+            The number of days after files were last accessed in primary storage (the Standard storage class) at which to move them to Archive storage. Metadata operations such as listing the contents of a directory don't count as file access events.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EFS.Client.exceptions.BadRequest`
+
+  
+  *   :py:class:`EFS.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`EFS.Client.exceptions.FileSystemNotFound`
+
+  
+  *   :py:class:`EFS.Client.exceptions.IncorrectFileSystemLifeCycleState`
+
+  
+
+  **Examples**
+
+  This operation enables lifecycle management on a file system by creating a new LifecycleConfiguration object. A LifecycleConfiguration object defines when files in an Amazon EFS file system are automatically transitioned to the lower-cost EFS Infrequent Access (IA) storage class. A LifecycleConfiguration applies to all files in a file system.
+  ::
+
+    response = client.put_lifecycle_configuration(
+        FileSystemId='fs-01234567',
+        LifecyclePolicies=[
+            {
+                'TransitionToIA': 'AFTER_30_DAYS',
+            },
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'LifecyclePolicies': [
+            {
+                'TransitionToIA': 'AFTER_30_DAYS',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

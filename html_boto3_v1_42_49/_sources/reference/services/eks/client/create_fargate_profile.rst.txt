@@ -1,0 +1,412 @@
+:doc:`EKS <../../eks>` / Client / create_fargate_profile
+
+**********************
+create_fargate_profile
+**********************
+
+
+
+.. py:method:: EKS.Client.create_fargate_profile(**kwargs)
+
+  
+
+  Creates an Fargate profile for your Amazon EKS cluster. You must have at least one Fargate profile in a cluster to be able to run pods on Fargate.
+
+   
+
+  The Fargate profile allows an administrator to declare which pods run on Fargate and specify which pods run on which Fargate profile. This declaration is done through the profile's selectors. Each profile can have up to five selectors that contain a namespace and labels. A namespace is required for every selector. The label field consists of multiple optional key-value pairs. Pods that match the selectors are scheduled on Fargate. If a to-be-scheduled pod matches any of the selectors in the Fargate profile, then that pod is run on Fargate.
+
+   
+
+  When you create a Fargate profile, you must specify a pod execution role to use with the pods that are scheduled with the profile. This role is added to the cluster's Kubernetes `Role Based Access Control <https://kubernetes.io/docs/reference/access-authn-authz/rbac/>`__ (RBAC) for authorization so that the ``kubelet`` that is running on the Fargate infrastructure can register with your Amazon EKS cluster so that it can appear in your cluster as a node. The pod execution role also provides IAM permissions to the Fargate infrastructure to allow read access to Amazon ECR image repositories. For more information, see `Pod Execution Role <https://docs.aws.amazon.com/eks/latest/userguide/pod-execution-role.html>`__ in the *Amazon EKS User Guide*.
+
+   
+
+  Fargate profiles are immutable. However, you can create a new updated profile to replace an existing profile and then delete the original after the updated profile has finished creating.
+
+   
+
+  If any Fargate profiles in a cluster are in the ``DELETING`` status, you must wait for that Fargate profile to finish deleting before you can create any other profiles in that cluster.
+
+   
+
+  For more information, see `Fargate profile <https://docs.aws.amazon.com/eks/latest/userguide/fargate-profile.html>`__ in the *Amazon EKS User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eks-2017-11-01/CreateFargateProfile>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_fargate_profile(
+        fargateProfileName='string',
+        clusterName='string',
+        podExecutionRoleArn='string',
+        subnets=[
+            'string',
+        ],
+        selectors=[
+            {
+                'namespace': 'string',
+                'labels': {
+                    'string': 'string'
+                }
+            },
+        ],
+        clientRequestToken='string',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type fargateProfileName: string
+  :param fargateProfileName: **[REQUIRED]** 
+
+    The name of the Fargate profile.
+
+    
+
+  
+  :type clusterName: string
+  :param clusterName: **[REQUIRED]** 
+
+    The name of your cluster.
+
+    
+
+  
+  :type podExecutionRoleArn: string
+  :param podExecutionRoleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the ``Pod`` execution role to use for a ``Pod`` that matches the selectors in the Fargate profile. The ``Pod`` execution role allows Fargate infrastructure to register with your cluster as a node, and it provides read access to Amazon ECR image repositories. For more information, see `Pod execution role <https://docs.aws.amazon.com/eks/latest/userguide/pod-execution-role.html>`__ in the *Amazon EKS User Guide*.
+
+    
+
+  
+  :type subnets: list
+  :param subnets: 
+
+    The IDs of subnets to launch a ``Pod`` into. A ``Pod`` running on Fargate isn't assigned a public IP address, so only private subnets (with no direct route to an Internet Gateway) are accepted for this parameter.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type selectors: list
+  :param selectors: 
+
+    The selectors to match for a ``Pod`` to use this Fargate profile. Each selector must have an associated Kubernetes ``namespace``. Optionally, you can also specify ``labels`` for a ``namespace``. You may specify up to five selectors in a Fargate profile.
+
+    
+
+  
+    - *(dict) --* 
+
+      An object representing an Fargate profile selector.
+
+      
+
+    
+      - **namespace** *(string) --* 
+
+        The Kubernetes ``namespace`` that the selector should match.
+
+        
+
+      
+      - **labels** *(dict) --* 
+
+        The Kubernetes labels that the selector should match. A pod must contain all of the labels that are specified in the selector for it to be considered a match.
+
+        
+
+      
+        - *(string) --* 
+
+        
+          - *(string) --* 
+
+          
+    
+  
+    
+
+  :type clientRequestToken: string
+  :param clientRequestToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request.
+
+    This field is autopopulated if not provided.
+
+  
+  :type tags: dict
+  :param tags: 
+
+    Metadata that assists with categorization and organization. Each tag consists of a key and an optional value. You define both. Tags don't propagate to any other cluster or Amazon Web Services resources.
+
+    
+
+  
+    - *(string) --* 
+
+      One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+      
+
+    
+      - *(string) --* 
+
+        The optional part of a key-value pair that make up a tag. A ``value`` acts as a descriptor within a tag category (key).
+
+        
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'fargateProfile': {
+              'fargateProfileName': 'string',
+              'fargateProfileArn': 'string',
+              'clusterName': 'string',
+              'createdAt': datetime(2015, 1, 1),
+              'podExecutionRoleArn': 'string',
+              'subnets': [
+                  'string',
+              ],
+              'selectors': [
+                  {
+                      'namespace': 'string',
+                      'labels': {
+                          'string': 'string'
+                      }
+                  },
+              ],
+              'status': 'CREATING'|'ACTIVE'|'DELETING'|'CREATE_FAILED'|'DELETE_FAILED',
+              'tags': {
+                  'string': 'string'
+              },
+              'health': {
+                  'issues': [
+                      {
+                          'code': 'PodExecutionRoleAlreadyInUse'|'AccessDenied'|'ClusterUnreachable'|'InternalFailure',
+                          'message': 'string',
+                          'resourceIds': [
+                              'string',
+                          ]
+                      },
+                  ]
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **fargateProfile** *(dict) --* 
+
+        The full description of your new Fargate profile.
+
+        
+        
+
+        - **fargateProfileName** *(string) --* 
+
+          The name of the Fargate profile.
+
+          
+        
+
+        - **fargateProfileArn** *(string) --* 
+
+          The full Amazon Resource Name (ARN) of the Fargate profile.
+
+          
+        
+
+        - **clusterName** *(string) --* 
+
+          The name of your cluster.
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The Unix epoch timestamp at object creation.
+
+          
+        
+
+        - **podExecutionRoleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the ``Pod`` execution role to use for any ``Pod`` that matches the selectors in the Fargate profile. For more information, see `Pod execution role <https://docs.aws.amazon.com/eks/latest/userguide/pod-execution-role.html>`__ in the *Amazon EKS User Guide*.
+
+          
+        
+
+        - **subnets** *(list) --* 
+
+          The IDs of subnets to launch a ``Pod`` into.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **selectors** *(list) --* 
+
+          The selectors to match for a ``Pod`` to use this Fargate profile.
+
+          
+          
+
+          - *(dict) --* 
+
+            An object representing an Fargate profile selector.
+
+            
+            
+
+            - **namespace** *(string) --* 
+
+              The Kubernetes ``namespace`` that the selector should match.
+
+              
+            
+
+            - **labels** *(dict) --* 
+
+              The Kubernetes labels that the selector should match. A pod must contain all of the labels that are specified in the selector for it to be considered a match.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+        
+      
+        
+
+        - **status** *(string) --* 
+
+          The current status of the Fargate profile.
+
+          
+        
+
+        - **tags** *(dict) --* 
+
+          Metadata that assists with categorization and organization. Each tag consists of a key and an optional value. You define both. Tags don't propagate to any other cluster or Amazon Web Services resources.
+
+          
+          
+
+          - *(string) --* 
+
+            One part of a key-value pair that make up a tag. A ``key`` is a general label that acts like a category for more specific tag values.
+
+            
+            
+
+            - *(string) --* 
+
+              The optional part of a key-value pair that make up a tag. A ``value`` acts as a descriptor within a tag category (key).
+
+              
+      
+    
+        
+
+        - **health** *(dict) --* 
+
+          The health status of the Fargate profile. If there are issues with your Fargate profile's health, they are listed here.
+
+          
+          
+
+          - **issues** *(list) --* 
+
+            Any issues that are associated with the Fargate profile.
+
+            
+            
+
+            - *(dict) --* 
+
+              An issue that is associated with the Fargate profile.
+
+              
+              
+
+              - **code** *(string) --* 
+
+                A brief description of the error.
+
+                
+              
+
+              - **message** *(string) --* 
+
+                The error message associated with the issue.
+
+                
+              
+
+              - **resourceIds** *(list) --* 
+
+                The Amazon Web Services resources that are affected by this issue.
+
+                
+                
+
+                - *(string) --* 
+            
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ServerException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.ResourceLimitExceededException`
+
+  
+  *   :py:class:`EKS.Client.exceptions.UnsupportedAvailabilityZoneException`
+
+  

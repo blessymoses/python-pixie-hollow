@@ -1,0 +1,354 @@
+:doc:`SSMContacts <../../ssm-contacts>` / Client / get_contact
+
+***********
+get_contact
+***********
+
+
+
+.. py:method:: SSMContacts.Client.get_contact(**kwargs)
+
+  
+
+  Retrieves information about the specified contact or escalation plan.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-contacts-2021-05-03/GetContact>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_contact(
+        ContactId='string'
+    )
+    
+  :type ContactId: string
+  :param ContactId: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the contact or escalation plan.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ContactArn': 'string',
+          'Alias': 'string',
+          'DisplayName': 'string',
+          'Type': 'PERSONAL'|'ESCALATION'|'ONCALL_SCHEDULE',
+          'Plan': {
+              'Stages': [
+                  {
+                      'DurationInMinutes': 123,
+                      'Targets': [
+                          {
+                              'ChannelTargetInfo': {
+                                  'ContactChannelId': 'string',
+                                  'RetryIntervalInMinutes': 123
+                              },
+                              'ContactTargetInfo': {
+                                  'ContactId': 'string',
+                                  'IsEssential': True|False
+                              }
+                          },
+                      ]
+                  },
+              ],
+              'RotationIds': [
+                  'string',
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ContactArn** *(string) --* 
+
+        The ARN of the contact or escalation plan.
+
+        
+      
+
+      - **Alias** *(string) --* 
+
+        The alias of the contact or escalation plan. The alias is unique and identifiable.
+
+        
+      
+
+      - **DisplayName** *(string) --* 
+
+        The full name of the contact or escalation plan.
+
+        
+      
+
+      - **Type** *(string) --* 
+
+        The type of contact.
+
+        
+      
+
+      - **Plan** *(dict) --* 
+
+        Details about the specific timing or stages and targets of the escalation plan or engagement plan.
+
+        
+        
+
+        - **Stages** *(list) --* 
+
+          A list of stages that the escalation plan or engagement plan uses to engage contacts and contact methods.
+
+          
+          
+
+          - *(dict) --* 
+
+            A set amount of time that an escalation plan or engagement plan engages the specified contacts or contact methods.
+
+            
+            
+
+            - **DurationInMinutes** *(integer) --* 
+
+              The time to wait until beginning the next stage. The duration can only be set to 0 if a target is specified.
+
+              
+            
+
+            - **Targets** *(list) --* 
+
+              The contacts or contact methods that the escalation plan or engagement plan is engaging.
+
+              
+              
+
+              - *(dict) --* 
+
+                The contact or contact channel that's being engaged.
+
+                
+                
+
+                - **ChannelTargetInfo** *(dict) --* 
+
+                  Information about the contact channel that Incident Manager engages.
+
+                  
+                  
+
+                  - **ContactChannelId** *(string) --* 
+
+                    The Amazon Resource Name (ARN) of the contact channel.
+
+                    
+                  
+
+                  - **RetryIntervalInMinutes** *(integer) --* 
+
+                    The number of minutes to wait before retrying to send engagement if the engagement initially failed.
+
+                    
+              
+                
+
+                - **ContactTargetInfo** *(dict) --* 
+
+                  Information about the contact that Incident Manager engages.
+
+                  
+                  
+
+                  - **ContactId** *(string) --* 
+
+                    The Amazon Resource Name (ARN) of the contact.
+
+                    
+                  
+
+                  - **IsEssential** *(boolean) --* 
+
+                    A Boolean value determining if the contact's acknowledgement stops the progress of stages in the plan.
+
+                    
+              
+            
+          
+        
+      
+        
+
+        - **RotationIds** *(list) --* 
+
+          The Amazon Resource Names (ARNs) of the on-call rotations associated with the plan.
+
+          
+          
+
+          - *(string) --* 
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`SSMContacts.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`SSMContacts.Client.exceptions.DataEncryptionException`
+
+  
+
+  **Examples**
+
+  The following get-contact example describes a contact.
+  ::
+
+    response = client.get_contact(
+        ContactId='arn:aws:ssm-contacts:us-east-2:111122223333:contact/akuam',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Alias': 'akuam',
+        'ContactArn': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact/akuam',
+        'DisplayName': 'Akua Mansa',
+        'Plan': {
+            'Stages': [
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact-channel/akuam/beb25840-5ac8-4644-95cc-7a8de390fa65',
+                                'RetryIntervalInMinutes': 1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact-channel/akuam/49f3c24d-5f9f-4638-ae25-3f49e04229ad',
+                                'RetryIntervalInMinutes': 1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ChannelTargetInfo': {
+                                'ContactChannelId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact-channel/akuam/77d4f447-f619-4954-afff-85551e369c2a',
+                                'RetryIntervalInMinutes': 1,
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        'Type': 'PERSONAL',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  
+
+  The following get-contact example describes an escalation plan.
+  ::
+
+    response = client.get_contact(
+        ContactId='arn:aws:ssm-contacts:us-east-2:111122223333:contact/example_escalation',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Alias': 'example_escalation',
+        'ContactArn': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact/example_escalation',
+        'DisplayName': 'Example Escalation Plan',
+        'Plan': {
+            'Stages': [
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ContactTargetInfo': {
+                                'ContactId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact/akuam',
+                                'IsEssential': True,
+                            },
+                        },
+                    ],
+                },
+                {
+                    'DurationInMinutes': 5,
+                    'Targets': [
+                        {
+                            'ContactTargetInfo': {
+                                'ContactId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact/alejr',
+                                'IsEssential': False,
+                            },
+                        },
+                    ],
+                },
+                {
+                    'DurationInMinutes': 0,
+                    'Targets': [
+                        {
+                            'ContactTargetInfo': {
+                                'ContactId': 'arn:aws:ssm-contacts:us-east-2:111122223333:contact/anasi',
+                                'IsEssential': False,
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        'Type': 'ESCALATION',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

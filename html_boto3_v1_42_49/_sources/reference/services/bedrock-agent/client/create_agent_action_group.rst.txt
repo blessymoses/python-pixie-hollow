@@ -1,0 +1,752 @@
+:doc:`AgentsforBedrock <../../bedrock-agent>` / Client / create_agent_action_group
+
+*************************
+create_agent_action_group
+*************************
+
+
+
+.. py:method:: AgentsforBedrock.Client.create_agent_action_group(**kwargs)
+
+  
+
+  Creates an action group for an agent. An action group represents the actions that an agent can carry out for the customer by defining the APIs that an agent can call and the logic for calling them.
+
+   
+
+  To allow your agent to request the user for additional information when trying to complete a task, add an action group with the ``parentActionGroupSignature`` field set to ``AMAZON.UserInput``.
+
+   
+
+  To allow your agent to generate, run, and troubleshoot code when trying to complete a task, add an action group with the ``parentActionGroupSignature`` field set to ``AMAZON.CodeInterpreter``.
+
+   
+
+  You must leave the ``description``, ``apiSchema``, and ``actionGroupExecutor`` fields blank for this action group. During orchestration, if your agent determines that it needs to invoke an API in an action group, but doesn't have enough information to complete the API request, it will invoke this action group instead and return an `Observation <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Observation.html>`__ reprompting the user for more information.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/bedrock-agent-2023-06-05/CreateAgentActionGroup>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_agent_action_group(
+        agentId='string',
+        agentVersion='string',
+        actionGroupName='string',
+        clientToken='string',
+        description='string',
+        parentActionGroupSignature='AMAZON.UserInput'|'AMAZON.CodeInterpreter'|'ANTHROPIC.Computer'|'ANTHROPIC.Bash'|'ANTHROPIC.TextEditor',
+        parentActionGroupSignatureParams={
+            'string': 'string'
+        },
+        actionGroupExecutor={
+            'lambda': 'string',
+            'customControl': 'RETURN_CONTROL'
+        },
+        apiSchema={
+            's3': {
+                's3BucketName': 'string',
+                's3ObjectKey': 'string'
+            },
+            'payload': 'string'
+        },
+        actionGroupState='ENABLED'|'DISABLED',
+        functionSchema={
+            'functions': [
+                {
+                    'name': 'string',
+                    'description': 'string',
+                    'parameters': {
+                        'string': {
+                            'description': 'string',
+                            'type': 'string'|'number'|'integer'|'boolean'|'array',
+                            'required': True|False
+                        }
+                    },
+                    'requireConfirmation': 'ENABLED'|'DISABLED'
+                },
+            ]
+        }
+    )
+    
+  :type agentId: string
+  :param agentId: **[REQUIRED]** 
+
+    The unique identifier of the agent for which to create the action group.
+
+    
+
+  
+  :type agentVersion: string
+  :param agentVersion: **[REQUIRED]** 
+
+    The version of the agent for which to create the action group.
+
+    
+
+  
+  :type actionGroupName: string
+  :param actionGroupName: **[REQUIRED]** 
+
+    The name to give the action group.
+
+    
+
+  
+  :type clientToken: string
+  :param clientToken: 
+
+    A unique, case-sensitive identifier to ensure that the API request completes no more than one time. If this token matches a previous request, Amazon Bedrock ignores the request, but does not return an error. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__.
+
+    This field is autopopulated if not provided.
+
+  
+  :type description: string
+  :param description: 
+
+    A description of the action group.
+
+    
+
+  
+  :type parentActionGroupSignature: string
+  :param parentActionGroupSignature: 
+
+    Specify a built-in or computer use action for this action group. If you specify a value, you must leave the ``description``, ``apiSchema``, and ``actionGroupExecutor`` fields empty for this action group.
+
+     
+
+    
+    * To allow your agent to request the user for additional information when trying to complete a task, set this field to ``AMAZON.UserInput``.
+     
+    * To allow your agent to generate, run, and troubleshoot code when trying to complete a task, set this field to ``AMAZON.CodeInterpreter``.
+     
+    * To allow your agent to use an Anthropic computer use tool, specify one of the following values. 
+
+    .. warning::
+
+      Computer use is a new Anthropic Claude model capability (in beta) available with Anthropic Claude 3.7 Sonnet and Claude 3.5 Sonnet v2 only. When operating computer use functionality, we recommend taking additional security precautions, such as executing computer actions in virtual environments with restricted data access and limited internet connectivity. For more information, see `Configure an Amazon Bedrock Agent to complete tasks with computer use tools <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-computer-use.html>`__.
+
+     
+
+      
+      * ``ANTHROPIC.Computer`` - Gives the agent permission to use the mouse and keyboard and take screenshots.
+       
+      * ``ANTHROPIC.TextEditor`` - Gives the agent permission to view, create and edit files.
+       
+      * ``ANTHROPIC.Bash`` - Gives the agent permission to run commands in a bash shell.
+      
+
+    
+    
+
+    
+
+  
+  :type parentActionGroupSignatureParams: dict
+  :param parentActionGroupSignatureParams: 
+
+    The configuration settings for a computer use action.
+
+     
+
+    .. warning::
+
+       
+
+      Computer use is a new Anthropic Claude model capability (in beta) available with Anthropic Claude 3.7 Sonnet and Claude 3.5 Sonnet v2 only. For more information, see `Configure an Amazon Bedrock Agent to complete tasks with computer use tools <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-computer-use.html>`__.
+
+      
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  :type actionGroupExecutor: dict
+  :param actionGroupExecutor: 
+
+    The Amazon Resource Name (ARN) of the Lambda function containing the business logic that is carried out upon invoking the action or the custom control method for handling the information elicited from the user.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``lambda``, ``customControl``. 
+
+  
+    - **lambda** *(string) --* 
+
+      The Amazon Resource Name (ARN) of the Lambda function containing the business logic that is carried out upon invoking the action.
+
+      
+
+    
+    - **customControl** *(string) --* 
+
+      To return the action group invocation results directly in the ``InvokeAgent`` response, specify ``RETURN_CONTROL``.
+
+      
+
+    
+  
+  :type apiSchema: dict
+  :param apiSchema: 
+
+    Contains either details about the S3 object containing the OpenAPI schema for the action group or the JSON or YAML-formatted payload defining the schema. For more information, see `Action group OpenAPI schemas <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-api-schema.html>`__.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``s3``, ``payload``. 
+
+  
+    - **s3** *(dict) --* 
+
+      Contains details about the S3 object containing the OpenAPI schema for the action group. For more information, see `Action group OpenAPI schemas <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-api-schema.html>`__.
+
+      
+
+    
+      - **s3BucketName** *(string) --* 
+
+        The name of the S3 bucket.
+
+        
+
+      
+      - **s3ObjectKey** *(string) --* 
+
+        The S3 object key for the S3 resource.
+
+        
+
+      
+    
+    - **payload** *(string) --* 
+
+      The JSON or YAML-formatted payload defining the OpenAPI schema for the action group. For more information, see `Action group OpenAPI schemas <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-api-schema.html>`__.
+
+      
+
+    
+  
+  :type actionGroupState: string
+  :param actionGroupState: 
+
+    Specifies whether the action group is available for the agent to invoke or not when sending an `InvokeAgent <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_InvokeAgent.html>`__ request.
+
+    
+
+  
+  :type functionSchema: dict
+  :param functionSchema: 
+
+    Contains details about the function schema for the action group or the JSON or YAML-formatted payload defining the schema.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``functions``. 
+
+  
+    - **functions** *(list) --* 
+
+      A list of functions that each define an action in the action group.
+
+      
+
+    
+      - *(dict) --* 
+
+        Defines parameters that the agent needs to invoke from the user to complete the function. Corresponds to an action in an action group.
+
+         
+
+        This data type is used in the following API operations:
+
+         
+
+        
+        * `CreateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_RequestSyntax>`__
+         
+        * `CreateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_ResponseSyntax>`__
+         
+        * `UpdateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_RequestSyntax>`__
+         
+        * `UpdateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_ResponseSyntax>`__
+         
+        * `GetAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_GetAgentActionGroup.html#API_agent_GetAgentActionGroup_ResponseSyntax>`__
+        
+
+        
+
+      
+        - **name** *(string) --* **[REQUIRED]** 
+
+          A name for the function.
+
+          
+
+        
+        - **description** *(string) --* 
+
+          A description of the function and its purpose.
+
+          
+
+        
+        - **parameters** *(dict) --* 
+
+          The parameters that the agent elicits from the user to fulfill the function.
+
+          
+
+        
+          - *(string) --* 
+
+          
+            - *(dict) --* 
+
+              Contains details about a parameter in a function for an action group.
+
+               
+
+              This data type is used in the following API operations:
+
+               
+
+              
+              * `CreateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_RequestSyntax>`__
+               
+              * `CreateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_ResponseSyntax>`__
+               
+              * `UpdateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_RequestSyntax>`__
+               
+              * `UpdateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_ResponseSyntax>`__
+               
+              * `GetAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_GetAgentActionGroup.html#API_agent_GetAgentActionGroup_ResponseSyntax>`__
+              
+
+              
+
+            
+              - **description** *(string) --* 
+
+                A description of the parameter. Helps the foundation model determine how to elicit the parameters from the user.
+
+                
+
+              
+              - **type** *(string) --* **[REQUIRED]** 
+
+                The data type of the parameter.
+
+                
+
+              
+              - **required** *(boolean) --* 
+
+                Whether the parameter is required for the agent to complete the function for action group invocation.
+
+                
+
+              
+            
+      
+    
+        - **requireConfirmation** *(string) --* 
+
+          Contains information if user confirmation is required to invoke the function.
+
+          
+
+        
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'agentActionGroup': {
+              'agentId': 'string',
+              'agentVersion': 'string',
+              'actionGroupId': 'string',
+              'actionGroupName': 'string',
+              'clientToken': 'string',
+              'description': 'string',
+              'createdAt': datetime(2015, 1, 1),
+              'updatedAt': datetime(2015, 1, 1),
+              'parentActionSignature': 'AMAZON.UserInput'|'AMAZON.CodeInterpreter'|'ANTHROPIC.Computer'|'ANTHROPIC.Bash'|'ANTHROPIC.TextEditor',
+              'parentActionGroupSignatureParams': {
+                  'string': 'string'
+              },
+              'actionGroupExecutor': {
+                  'lambda': 'string',
+                  'customControl': 'RETURN_CONTROL'
+              },
+              'apiSchema': {
+                  's3': {
+                      's3BucketName': 'string',
+                      's3ObjectKey': 'string'
+                  },
+                  'payload': 'string'
+              },
+              'functionSchema': {
+                  'functions': [
+                      {
+                          'name': 'string',
+                          'description': 'string',
+                          'parameters': {
+                              'string': {
+                                  'description': 'string',
+                                  'type': 'string'|'number'|'integer'|'boolean'|'array',
+                                  'required': True|False
+                              }
+                          },
+                          'requireConfirmation': 'ENABLED'|'DISABLED'
+                      },
+                  ]
+              },
+              'actionGroupState': 'ENABLED'|'DISABLED'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **agentActionGroup** *(dict) --* 
+
+        Contains details about the action group that was created.
+
+        
+        
+
+        - **agentId** *(string) --* 
+
+          The unique identifier of the agent to which the action group belongs.
+
+          
+        
+
+        - **agentVersion** *(string) --* 
+
+          The version of the agent to which the action group belongs.
+
+          
+        
+
+        - **actionGroupId** *(string) --* 
+
+          The unique identifier of the action group.
+
+          
+        
+
+        - **actionGroupName** *(string) --* 
+
+          The name of the action group.
+
+          
+        
+
+        - **clientToken** *(string) --* 
+
+          A unique, case-sensitive identifier to ensure that the API request completes no more than one time. If this token matches a previous request, Amazon Bedrock ignores the request, but does not return an error. For more information, see `Ensuring idempotency <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html>`__.
+
+          
+        
+
+        - **description** *(string) --* 
+
+          The description of the action group.
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The time at which the action group was created.
+
+          
+        
+
+        - **updatedAt** *(datetime) --* 
+
+          The time at which the action group was last updated.
+
+          
+        
+
+        - **parentActionSignature** *(string) --* 
+
+          If this field is set as ``AMAZON.UserInput``, the agent can request the user for additional information when trying to complete a task. The ``description``, ``apiSchema``, and ``actionGroupExecutor`` fields must be blank for this action group.
+
+           
+
+          During orchestration, if the agent determines that it needs to invoke an API in an action group, but doesn't have enough information to complete the API request, it will invoke this action group instead and return an `Observation <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Observation.html>`__ reprompting the user for more information.
+
+          
+        
+
+        - **parentActionGroupSignatureParams** *(dict) --* 
+
+          The configuration settings for a computer use action.
+
+           
+
+          .. warning::
+
+             
+
+            Computer use is a new Anthropic Claude model capability (in beta) available with Claude 3.7 Sonnet and Claude 3.5 Sonnet v2 only. For more information, see `Configure an Amazon Bedrock Agent to complete tasks with computer use tools <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-computer-use.html>`__.
+
+            
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+        
+
+        - **actionGroupExecutor** *(dict) --* 
+
+          The Amazon Resource Name (ARN) of the Lambda function containing the business logic that is carried out upon invoking the action or the custom control method for handling the information elicited from the user.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``lambda``, ``customControl``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+        
+          
+
+          - **lambda** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Lambda function containing the business logic that is carried out upon invoking the action.
+
+            
+          
+
+          - **customControl** *(string) --* 
+
+            To return the action group invocation results directly in the ``InvokeAgent`` response, specify ``RETURN_CONTROL``.
+
+            
+      
+        
+
+        - **apiSchema** *(dict) --* 
+
+          Contains either details about the S3 object containing the OpenAPI schema for the action group or the JSON or YAML-formatted payload defining the schema. For more information, see `Action group OpenAPI schemas <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-api-schema.html>`__.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``s3``, ``payload``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+        
+          
+
+          - **s3** *(dict) --* 
+
+            Contains details about the S3 object containing the OpenAPI schema for the action group. For more information, see `Action group OpenAPI schemas <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-api-schema.html>`__.
+
+            
+            
+
+            - **s3BucketName** *(string) --* 
+
+              The name of the S3 bucket.
+
+              
+            
+
+            - **s3ObjectKey** *(string) --* 
+
+              The S3 object key for the S3 resource.
+
+              
+        
+          
+
+          - **payload** *(string) --* 
+
+            The JSON or YAML-formatted payload defining the OpenAPI schema for the action group. For more information, see `Action group OpenAPI schemas <https://docs.aws.amazon.com/bedrock/latest/userguide/agents-api-schema.html>`__.
+
+            
+      
+        
+
+        - **functionSchema** *(dict) --* 
+
+          Defines functions that each define parameters that the agent needs to invoke from the user. Each function represents an action in an action group.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``functions``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                    'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+        
+          
+
+          - **functions** *(list) --* 
+
+            A list of functions that each define an action in the action group.
+
+            
+            
+
+            - *(dict) --* 
+
+              Defines parameters that the agent needs to invoke from the user to complete the function. Corresponds to an action in an action group.
+
+               
+
+              This data type is used in the following API operations:
+
+               
+
+              
+              * `CreateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_RequestSyntax>`__
+               
+              * `CreateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_ResponseSyntax>`__
+               
+              * `UpdateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_RequestSyntax>`__
+               
+              * `UpdateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_ResponseSyntax>`__
+               
+              * `GetAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_GetAgentActionGroup.html#API_agent_GetAgentActionGroup_ResponseSyntax>`__
+              
+
+              
+              
+
+              - **name** *(string) --* 
+
+                A name for the function.
+
+                
+              
+
+              - **description** *(string) --* 
+
+                A description of the function and its purpose.
+
+                
+              
+
+              - **parameters** *(dict) --* 
+
+                The parameters that the agent elicits from the user to fulfill the function.
+
+                
+                
+
+                - *(string) --* 
+                  
+
+                  - *(dict) --* 
+
+                    Contains details about a parameter in a function for an action group.
+
+                     
+
+                    This data type is used in the following API operations:
+
+                     
+
+                    
+                    * `CreateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_RequestSyntax>`__
+                     
+                    * `CreateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_CreateAgentActionGroup.html#API_agent_CreateAgentActionGroup_ResponseSyntax>`__
+                     
+                    * `UpdateAgentActionGroup request <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_RequestSyntax>`__
+                     
+                    * `UpdateAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_UpdateAgentActionGroup.html#API_agent_UpdateAgentActionGroup_ResponseSyntax>`__
+                     
+                    * `GetAgentActionGroup response <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_GetAgentActionGroup.html#API_agent_GetAgentActionGroup_ResponseSyntax>`__
+                    
+
+                    
+                    
+
+                    - **description** *(string) --* 
+
+                      A description of the parameter. Helps the foundation model determine how to elicit the parameters from the user.
+
+                      
+                    
+
+                    - **type** *(string) --* 
+
+                      The data type of the parameter.
+
+                      
+                    
+
+                    - **required** *(boolean) --* 
+
+                      Whether the parameter is required for the agent to complete the function for action group invocation.
+
+                      
+                
+            
+          
+              
+
+              - **requireConfirmation** *(string) --* 
+
+                Contains information if user confirmation is required to invoke the function.
+
+                
+          
+        
+      
+        
+
+        - **actionGroupState** *(string) --* 
+
+          Specifies whether the action group is available for the agent to invoke or not when sending an `InvokeAgent <https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_InvokeAgent.html>`__ request.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`AgentsforBedrock.Client.exceptions.ServiceQuotaExceededException`
+
+  

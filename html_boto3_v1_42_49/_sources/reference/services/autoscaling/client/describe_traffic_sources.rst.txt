@@ -1,0 +1,236 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / describe_traffic_sources
+
+************************
+describe_traffic_sources
+************************
+
+
+
+.. py:method:: AutoScaling.Client.describe_traffic_sources(**kwargs)
+
+  
+
+  Gets information about the traffic sources for the specified Auto Scaling group.
+
+   
+
+  You can optionally provide a traffic source type. If you provide a traffic source type, then the results only include that traffic source type.
+
+   
+
+  If you do not provide a traffic source type, then the results include all the traffic sources for the specified Auto Scaling group.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DescribeTrafficSources>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_traffic_sources(
+        AutoScalingGroupName='string',
+        TrafficSourceType='string',
+        NextToken='string',
+        MaxRecords=123
+    )
+    
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: **[REQUIRED]** 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type TrafficSourceType: string
+  :param TrafficSourceType: 
+
+    The traffic source type that you want to describe.
+
+     
+
+    The following lists the valid values:
+
+     
+
+    
+    * ``elb`` if the traffic source is a Classic Load Balancer.
+     
+    * ``elbv2`` if the traffic source is a Application Load Balancer, Gateway Load Balancer, or Network Load Balancer.
+     
+    * ``vpc-lattice`` if the traffic source is VPC Lattice.
+    
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  :type MaxRecords: integer
+  :param MaxRecords: 
+
+    The maximum number of items to return with this call. The maximum value is ``50``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'TrafficSources': [
+              {
+                  'TrafficSource': 'string',
+                  'State': 'string',
+                  'Identifier': 'string',
+                  'Type': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **TrafficSources** *(list) --* 
+
+        Information about the traffic sources.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes the state of a traffic source.
+
+          
+          
+
+          - **TrafficSource** *(string) --* 
+
+            This is replaced by ``Identifier``.
+
+            
+          
+
+          - **State** *(string) --* 
+
+            Describes the current state of a traffic source.
+
+             
+
+            The state values are as follows:
+
+             
+
+            
+            * ``Adding`` - The Auto Scaling instances are being registered with the load balancer or target group.
+             
+            * ``Added`` - All Auto Scaling instances are registered with the load balancer or target group.
+             
+            * ``InService`` - For an Elastic Load Balancing load balancer or target group, at least one Auto Scaling instance passed an ``ELB`` health check. For VPC Lattice, at least one Auto Scaling instance passed an ``VPC_LATTICE`` health check.
+             
+            * ``Removing`` - The Auto Scaling instances are being deregistered from the load balancer or target group. If connection draining (deregistration delay) is enabled, Elastic Load Balancing or VPC Lattice waits for in-flight requests to complete before deregistering the instances.
+             
+            * ``Removed`` - All Auto Scaling instances are deregistered from the load balancer or target group.
+            
+
+            
+          
+
+          - **Identifier** *(string) --* 
+
+            The unique identifier of the traffic source.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            Provides additional context for the value of ``Identifier``.
+
+             
+
+            The following lists the valid values:
+
+             
+
+            
+            * ``elb`` if ``Identifier`` is the name of a Classic Load Balancer.
+             
+            * ``elbv2`` if ``Identifier`` is the ARN of an Application Load Balancer, Gateway Load Balancer, or Network Load Balancer target group.
+             
+            * ``vpc-lattice`` if ``Identifier`` is the ARN of a VPC Lattice target group.
+            
+
+             
+
+            Required if the identifier is the name of a Classic Load Balancer.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        This string indicates that the response contains more items than can be returned in a single response. To receive additional items, specify this string for the ``NextToken`` value when requesting the next set of items. This value is null when there are no more items to return.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+  *   :py:class:`AutoScaling.Client.exceptions.InvalidNextToken`
+
+  
+
+  **Examples**
+
+  This example describes the target groups attached to the specified Auto Scaling group.
+  ::
+
+    response = client.describe_traffic_sources(
+        AutoScalingGroupName='my-auto-scaling-group',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'NextToken': '',
+        'TrafficSources': [
+            {
+                'Identifier': 'arn:aws:vpc-lattice:us-west-2:123456789012:targetgroup/tg-0e2f2665eEXAMPLE',
+                'State': 'InService',
+                'Type': 'vpc-lattice',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,264 @@
+:doc:`CloudWatchLogs <../../logs>` / Client / put_delivery_destination
+
+************************
+put_delivery_destination
+************************
+
+
+
+.. py:method:: CloudWatchLogs.Client.put_delivery_destination(**kwargs)
+
+  
+
+  Creates or updates a logical *delivery destination*. A delivery destination is an Amazon Web Services resource that represents an Amazon Web Services service that logs can be sent to. CloudWatch Logs, Amazon S3, and Firehose are supported as logs delivery destinations and X-Ray as the trace delivery destination.
+
+   
+
+  To configure logs delivery between a supported Amazon Web Services service and a destination, you must do the following:
+
+   
+
+  
+  * Create a delivery source, which is a logical object that represents the resource that is actually sending the logs. For more information, see `PutDeliverySource <https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutDeliverySource.html>`__.
+   
+  * Use ``PutDeliveryDestination`` to create a *delivery destination* in the same account of the actual delivery destination. The delivery destination that you create is a logical object that represents the actual delivery destination.
+   
+  * If you are delivering logs cross-account, you must use `PutDeliveryDestinationPolicy <https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutDeliveryDestinationPolicy.html>`__ in the destination account to assign an IAM policy to the destination. This policy allows delivery to that destination.
+   
+  * Use ``CreateDelivery`` to create a *delivery* by pairing exactly one delivery source and one delivery destination. For more information, see `CreateDelivery <https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateDelivery.html>`__.
+  
+
+   
+
+  You can configure a single delivery source to send logs to multiple destinations by creating multiple deliveries. You can also create multiple deliveries to configure multiple delivery sources to send logs to the same delivery destination.
+
+   
+
+  Only some Amazon Web Services services support being configured as a delivery source. These services are listed as **Supported [V2 Permissions]** in the table at `Enabling logging from Amazon Web Services services. <https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AWS-logs-and-resource-policy.html>`__
+
+   
+
+  If you use this operation to update an existing delivery destination, all the current delivery destination parameters are overwritten with the new parameter values that you specify.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/logs-2014-03-28/PutDeliveryDestination>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.put_delivery_destination(
+        name='string',
+        outputFormat='json'|'plain'|'w3c'|'raw'|'parquet',
+        deliveryDestinationConfiguration={
+            'destinationResourceArn': 'string'
+        },
+        deliveryDestinationType='S3'|'CWL'|'FH'|'XRAY',
+        tags={
+            'string': 'string'
+        }
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    A name for this delivery destination. This name must be unique for all delivery destinations in your account.
+
+    
+
+  
+  :type outputFormat: string
+  :param outputFormat: 
+
+    The format for the logs that this delivery destination will receive.
+
+    
+
+  
+  :type deliveryDestinationConfiguration: dict
+  :param deliveryDestinationConfiguration: 
+
+    A structure that contains the ARN of the Amazon Web Services resource that will receive the logs.
+
+     
+
+    .. note::
+
+      
+
+      ``deliveryDestinationConfiguration`` is required for CloudWatch Logs, Amazon S3, Firehose log delivery destinations and not required for X-Ray trace delivery destinations. ``deliveryDestinationType`` is needed for X-Ray trace delivery destinations but not required for other logs delivery destinations.
+
+      
+
+    
+
+  
+    - **destinationResourceArn** *(string) --* **[REQUIRED]** 
+
+      The ARN of the Amazon Web Services destination that this delivery destination represents. That Amazon Web Services destination can be a log group in CloudWatch Logs, an Amazon S3 bucket, or a delivery stream in Firehose.
+
+      
+
+    
+  
+  :type deliveryDestinationType: string
+  :param deliveryDestinationType: 
+
+    The type of delivery destination. This parameter specifies the target service where log data will be delivered. Valid values include:
+
+     
+
+    
+    * ``S3`` - Amazon S3 for long-term storage and analytics
+     
+    * ``CWL`` - CloudWatch Logs for centralized log management
+     
+    * ``FH`` - Amazon Kinesis Data Firehose for real-time data streaming
+     
+    * ``XRAY`` - Amazon Web Services X-Ray for distributed tracing and application monitoring
+    
+
+     
+
+    The delivery destination type determines the format and configuration options available for log delivery.
+
+    
+
+  
+  :type tags: dict
+  :param tags: 
+
+    An optional list of key-value pairs to associate with the resource.
+
+     
+
+    For more information about tagging, see `Tagging Amazon Web Services resources <https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html>`__
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'deliveryDestination': {
+              'name': 'string',
+              'arn': 'string',
+              'deliveryDestinationType': 'S3'|'CWL'|'FH'|'XRAY',
+              'outputFormat': 'json'|'plain'|'w3c'|'raw'|'parquet',
+              'deliveryDestinationConfiguration': {
+                  'destinationResourceArn': 'string'
+              },
+              'tags': {
+                  'string': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **deliveryDestination** *(dict) --* 
+
+        A structure containing information about the delivery destination that you just created or updated.
+
+        
+        
+
+        - **name** *(string) --* 
+
+          The name of this delivery destination.
+
+          
+        
+
+        - **arn** *(string) --* 
+
+          The Amazon Resource Name (ARN) that uniquely identifies this delivery destination.
+
+          
+        
+
+        - **deliveryDestinationType** *(string) --* 
+
+          Displays whether this delivery destination is CloudWatch Logs, Amazon S3, Firehose, or X-Ray.
+
+          
+        
+
+        - **outputFormat** *(string) --* 
+
+          The format of the logs that are sent to this delivery destination.
+
+          
+        
+
+        - **deliveryDestinationConfiguration** *(dict) --* 
+
+          A structure that contains the ARN of the Amazon Web Services resource that will receive the logs.
+
+          
+          
+
+          - **destinationResourceArn** *(string) --* 
+
+            The ARN of the Amazon Web Services destination that this delivery destination represents. That Amazon Web Services destination can be a log group in CloudWatch Logs, an Amazon S3 bucket, or a delivery stream in Firehose.
+
+            
+      
+        
+
+        - **tags** *(dict) --* 
+
+          The tags that have been assigned to this delivery destination.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CloudWatchLogs.Client.exceptions.ResourceNotFoundException`
+
+  

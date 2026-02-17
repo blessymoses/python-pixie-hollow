@@ -1,0 +1,170 @@
+:doc:`CognitoIdentityProvider <../../cognito-idp>` / Client / create_user_pool_domain
+
+***********************
+create_user_pool_domain
+***********************
+
+
+
+.. py:method:: CognitoIdentityProvider.Client.create_user_pool_domain(**kwargs)
+
+  
+
+  A user pool domain hosts managed login, an authorization server and web server for authentication in your application. This operation creates a new user pool prefix domain or custom domain and sets the managed login branding version. Set the branding version to ``1`` for hosted UI (classic) or ``2`` for managed login. When you choose a custom domain, you must provide an SSL certificate in the US East (N. Virginia) Amazon Web Services Region in your request.
+
+   
+
+  Your prefix domain might take up to one minute to take effect. Your custom domain is online within five minutes, but it can take up to one hour to distribute your SSL certificate.
+
+   
+
+  For more information about adding a custom domain to your user pool, see `Configuring a user pool domain <https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-add-custom-domain.html>`__.
+
+   
+
+  .. note::
+
+    
+
+    Amazon Cognito evaluates Identity and Access Management (IAM) policies in requests for this API operation. For this operation, you must use IAM credentials to authorize requests, and you must grant yourself the corresponding IAM permission in a policy.
+
+     
+
+    **Learn more**
+
+     
+
+    
+    * `Signing Amazon Web Services API Requests <https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-signing.html>`__
+     
+    * `Using the Amazon Cognito user pools API and user pool endpoints <https://docs.aws.amazon.com/cognito/latest/developerguide/user-pools-API-operations.html>`__
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cognito-idp-2016-04-18/CreateUserPoolDomain>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_user_pool_domain(
+        Domain='string',
+        UserPoolId='string',
+        ManagedLoginVersion=123,
+        CustomDomainConfig={
+            'CertificateArn': 'string'
+        }
+    )
+    
+  :type Domain: string
+  :param Domain: **[REQUIRED]** 
+
+    The domain string. For custom domains, this is the fully-qualified domain name, such as ``auth.example.com``. For prefix domains, this is the prefix alone, such as ``myprefix``. A prefix value of ``myprefix`` for a user pool in the ``us-east-1`` Region results in a domain of ``myprefix.auth.us-east-1.amazoncognito.com``.
+
+    
+
+  
+  :type UserPoolId: string
+  :param UserPoolId: **[REQUIRED]** 
+
+    The ID of the user pool where you want to add a domain.
+
+    
+
+  
+  :type ManagedLoginVersion: integer
+  :param ManagedLoginVersion: 
+
+    The version of managed login branding that you want to apply to your domain. A value of ``1`` indicates hosted UI (classic) and a version of ``2`` indicates managed login.
+
+     
+
+    Managed login requires that your user pool be configured for any `feature plan <https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-sign-in-feature-plans.html>`__ other than ``Lite``.
+
+    
+
+  
+  :type CustomDomainConfig: dict
+  :param CustomDomainConfig: 
+
+    The configuration for a custom domain. Configures your domain with an Certificate Manager certificate in the ``us-east-1`` Region.
+
+     
+
+    Provide this parameter only if you want to use a `custom domain <https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-add-custom-domain.html>`__ for your user pool. Otherwise, you can omit this parameter and use a `prefix domain <https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-assign-domain-prefix.html>`__ instead.
+
+     
+
+    When you create a custom domain, the passkey RP ID defaults to the custom domain. If you had a prefix domain active, this will cause passkey integration for your prefix domain to stop working due to a mismatch in RP ID. To keep the prefix domain passkey integration working, you can explicitly set RP ID to the prefix domain.
+
+    
+
+  
+    - **CertificateArn** *(string) --* **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of an Certificate Manager SSL certificate. You use this certificate for the subdomain of your custom domain.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ManagedLoginVersion': 123,
+          'CloudFrontDomain': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ManagedLoginVersion** *(integer) --* 
+
+        The version of managed login branding applied your domain. A value of ``1`` indicates hosted UI (classic) and a version of ``2`` indicates managed login.
+
+        
+      
+
+      - **CloudFrontDomain** *(string) --* 
+
+        The fully-qualified domain name (FQDN) of the Amazon CloudFront distribution that hosts your managed login or classic hosted UI pages. Your domain-name authority must have an alias record that points requests for your custom domain to this FQDN. Amazon Cognito returns this value if you set a custom domain with ``CustomDomainConfig``. If you set an Amazon Cognito prefix domain, this parameter returns null.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InvalidParameterException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.NotAuthorizedException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.ConcurrentModificationException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.InternalErrorException`
+
+  
+  *   :py:class:`CognitoIdentityProvider.Client.exceptions.FeatureUnavailableInTierException`
+
+  

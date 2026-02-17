@@ -1,0 +1,682 @@
+:doc:`EC2 <../../ec2>` / Client / describe_instance_status
+
+************************
+describe_instance_status
+************************
+
+
+
+.. py:method:: EC2.Client.describe_instance_status(**kwargs)
+
+  
+
+  Describes the status of the specified instances or all of your instances. By default, only running instances are described, unless you specifically indicate to return the status of all instances.
+
+   
+
+  Instance status includes the following components:
+
+   
+
+  
+  * **Status checks** - Amazon EC2 performs status checks on running EC2 instances to identify hardware and software issues. For more information, see `Status checks for your instances <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-system-instance-status-check.html>`__ and `Troubleshoot instances with failed status checks <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstances.html>`__ in the *Amazon EC2 User Guide*.
+   
+  * **Scheduled events** - Amazon EC2 can schedule events (such as reboot, stop, or terminate) for your instances related to hardware issues, software updates, or system maintenance. For more information, see `Scheduled events for your instances <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-instances-status-check_sched.html>`__ in the *Amazon EC2 User Guide*.
+   
+  * **Instance state** - You can manage your instances from the moment you launch them through their termination. For more information, see `Instance lifecycle <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html>`__ in the *Amazon EC2 User Guide*.
+  
+
+   
+
+  The Amazon EC2 API follows an eventual consistency model. This means that the result of an API command you run that creates or modifies resources might not be immediately available to all subsequent commands you run. For guidance on how to manage eventual consistency, see `Eventual consistency in the Amazon EC2 API <https://docs.aws.amazon.com/ec2/latest/devguide/eventual-consistency.html>`__ in the *Amazon EC2 Developer Guide*.
+
+   
+
+  .. note::
+
+    
+
+    The order of the elements in the response, including those within nested structures, might vary. Applications should not assume the elements appear in a particular order.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/DescribeInstanceStatus>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_instance_status(
+        InstanceIds=[
+            'string',
+        ],
+        MaxResults=123,
+        NextToken='string',
+        DryRun=True|False,
+        Filters=[
+            {
+                'Name': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        IncludeAllInstances=True|False
+    )
+    
+  :type InstanceIds: list
+  :param InstanceIds: 
+
+    The instance IDs.
+
+     
+
+    Default: Describes all your instances.
+
+     
+
+    Constraints: Maximum 100 explicitly specified instance IDs.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this request. To get the next page of items, make another request with the token returned in the output. For more information, see `Pagination <https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination>`__.
+
+     
+
+    You cannot specify this parameter and the instance IDs parameter in the same request.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token returned from a previous paginated request. Pagination continues from the end of the items returned by the previous request.
+
+    
+
+  
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks whether you have the required permissions for the operation, without actually making the request, and provides an error response. If you have the required permissions, the error response is ``DryRunOperation``. Otherwise, it is ``UnauthorizedOperation``.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    The filters.
+
+     
+
+    
+    * ``availability-zone`` - The Availability Zone of the instance.
+     
+    * ``availability-zone-id`` - The ID of the Availability Zone of the instance.
+     
+    * ``event.code`` - The code for the scheduled event ( ``instance-reboot`` | ``system-reboot`` | ``system-maintenance`` | ``instance-retirement`` | ``instance-stop``).
+     
+    * ``event.description`` - A description of the event.
+     
+    * ``event.instance-event-id`` - The ID of the event whose date and time you are modifying.
+     
+    * ``event.not-after`` - The latest end time for the scheduled event (for example, ``2014-09-15T17:15:20.000Z``).
+     
+    * ``event.not-before`` - The earliest start time for the scheduled event (for example, ``2014-09-15T17:15:20.000Z``).
+     
+    * ``event.not-before-deadline`` - The deadline for starting the event (for example, ``2014-09-15T17:15:20.000Z``).
+     
+    * ``instance-state-code`` - The code for the instance state, as a 16-bit unsigned integer. The high byte is used for internal purposes and should be ignored. The low byte is set based on the state represented. The valid values are 0 (pending), 16 (running), 32 (shutting-down), 48 (terminated), 64 (stopping), and 80 (stopped).
+     
+    * ``instance-state-name`` - The state of the instance ( ``pending`` | ``running`` | ``shutting-down`` | ``terminated`` | ``stopping`` | ``stopped``).
+     
+    * ``instance-status.reachability`` - Filters on instance status where the name is ``reachability`` ( ``passed`` | ``failed`` | ``initializing`` | ``insufficient-data``).
+     
+    * ``instance-status.status`` - The status of the instance ( ``ok`` | ``impaired`` | ``initializing`` | ``insufficient-data`` | ``not-applicable``).
+     
+    * ``operator.managed`` - A Boolean that indicates whether this is a managed instance.
+     
+    * ``operator.principal`` - The principal that manages the instance. Only valid for managed instances, where ``managed`` is ``true``.
+     
+    * ``system-status.reachability`` - Filters on system status where the name is ``reachability`` ( ``passed`` | ``failed`` | ``initializing`` | ``insufficient-data``).
+     
+    * ``system-status.status`` - The system status of the instance ( ``ok`` | ``impaired`` | ``initializing`` | ``insufficient-data`` | ``not-applicable``).
+     
+    * ``attached-ebs-status.status`` - The status of the attached EBS volume for the instance ( ``ok`` | ``impaired`` | ``initializing`` | ``insufficient-data`` | ``not-applicable``).
+    
+
+    
+
+  
+    - *(dict) --* 
+
+      A filter name and value pair that is used to return a more specific list of results from a describe operation. Filters can be used to match a set of resources by specific criteria, such as tags, attributes, or IDs.
+
+       
+
+      If you specify multiple filters, the filters are joined with an ``AND``, and the request returns only results that match all of the specified filters.
+
+       
+
+      For more information, see `List and filter using the CLI and API <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Filtering.html#Filtering_Resources_CLI>`__ in the *Amazon EC2 User Guide*.
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The name of the filter. Filter names are case-sensitive.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The filter values. Filter values are case-sensitive. If you specify multiple values for a filter, the values are joined with an ``OR``, and the request returns all results that match any of the specified values.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type IncludeAllInstances: boolean
+  :param IncludeAllInstances: 
+
+    When ``true``, includes the health status for all instances. When ``false``, includes the health status for running instances only.
+
+     
+
+    Default: ``false``
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'InstanceStatuses': [
+              {
+                  'AvailabilityZone': 'string',
+                  'AvailabilityZoneId': 'string',
+                  'OutpostArn': 'string',
+                  'Operator': {
+                      'Managed': True|False,
+                      'Principal': 'string'
+                  },
+                  'Events': [
+                      {
+                          'InstanceEventId': 'string',
+                          'Code': 'instance-reboot'|'system-reboot'|'system-maintenance'|'instance-retirement'|'instance-stop',
+                          'Description': 'string',
+                          'NotAfter': datetime(2015, 1, 1),
+                          'NotBefore': datetime(2015, 1, 1),
+                          'NotBeforeDeadline': datetime(2015, 1, 1)
+                      },
+                  ],
+                  'InstanceId': 'string',
+                  'InstanceState': {
+                      'Code': 123,
+                      'Name': 'pending'|'running'|'shutting-down'|'terminated'|'stopping'|'stopped'
+                  },
+                  'InstanceStatus': {
+                      'Details': [
+                          {
+                              'ImpairedSince': datetime(2015, 1, 1),
+                              'Name': 'reachability',
+                              'Status': 'passed'|'failed'|'insufficient-data'|'initializing'
+                          },
+                      ],
+                      'Status': 'ok'|'impaired'|'insufficient-data'|'not-applicable'|'initializing'
+                  },
+                  'SystemStatus': {
+                      'Details': [
+                          {
+                              'ImpairedSince': datetime(2015, 1, 1),
+                              'Name': 'reachability',
+                              'Status': 'passed'|'failed'|'insufficient-data'|'initializing'
+                          },
+                      ],
+                      'Status': 'ok'|'impaired'|'insufficient-data'|'not-applicable'|'initializing'
+                  },
+                  'AttachedEbsStatus': {
+                      'Details': [
+                          {
+                              'ImpairedSince': datetime(2015, 1, 1),
+                              'Name': 'reachability',
+                              'Status': 'passed'|'failed'|'insufficient-data'|'initializing'
+                          },
+                      ],
+                      'Status': 'ok'|'impaired'|'insufficient-data'|'not-applicable'|'initializing'
+                  }
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **InstanceStatuses** *(list) --* 
+
+        Information about the status of the instances.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes the status of an instance.
+
+          
+          
+
+          - **AvailabilityZone** *(string) --* 
+
+            The Availability Zone of the instance.
+
+            
+          
+
+          - **AvailabilityZoneId** *(string) --* 
+
+            The ID of the Availability Zone of the instance.
+
+            
+          
+
+          - **OutpostArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Outpost.
+
+            
+          
+
+          - **Operator** *(dict) --* 
+
+            The service provider that manages the instance.
+
+            
+            
+
+            - **Managed** *(boolean) --* 
+
+              If ``true``, the resource is managed by a service provider.
+
+              
+            
+
+            - **Principal** *(string) --* 
+
+              If ``managed`` is ``true``, then the principal is returned. The principal is the service provider that manages the resource.
+
+              
+        
+          
+
+          - **Events** *(list) --* 
+
+            Any scheduled events associated with the instance.
+
+            
+            
+
+            - *(dict) --* 
+
+              Describes a scheduled event for an instance.
+
+              
+              
+
+              - **InstanceEventId** *(string) --* 
+
+                The ID of the event.
+
+                
+              
+
+              - **Code** *(string) --* 
+
+                The event code.
+
+                
+              
+
+              - **Description** *(string) --* 
+
+                A description of the event.
+
+                 
+
+                After a scheduled event is completed, it can still be described for up to a week. If the event has been completed, this description starts with the following text: [Completed].
+
+                
+              
+
+              - **NotAfter** *(datetime) --* 
+
+                The latest scheduled end time for the event.
+
+                
+              
+
+              - **NotBefore** *(datetime) --* 
+
+                The earliest scheduled start time for the event.
+
+                
+              
+
+              - **NotBeforeDeadline** *(datetime) --* 
+
+                The deadline for starting the event.
+
+                
+          
+        
+          
+
+          - **InstanceId** *(string) --* 
+
+            The ID of the instance.
+
+            
+          
+
+          - **InstanceState** *(dict) --* 
+
+            The intended state of the instance.  DescribeInstanceStatus requires that an instance be in the ``running`` state.
+
+            
+            
+
+            - **Code** *(integer) --* 
+
+              The state of the instance as a 16-bit unsigned integer.
+
+               
+
+              The high byte is all of the bits between 2^8 and (2^16)-1, which equals decimal values between 256 and 65,535. These numerical values are used for internal purposes and should be ignored.
+
+               
+
+              The low byte is all of the bits between 2^0 and (2^8)-1, which equals decimal values between 0 and 255.
+
+               
+
+              The valid values for instance-state-code will all be in the range of the low byte and they are:
+
+               
+
+              
+              * ``0`` : ``pending``
+               
+              * ``16`` : ``running``
+               
+              * ``32`` : ``shutting-down``
+               
+              * ``48`` : ``terminated``
+               
+              * ``64`` : ``stopping``
+               
+              * ``80`` : ``stopped``
+              
+
+               
+
+              You can ignore the high byte value by zeroing out all of the bits above 2^8 or 256 in decimal.
+
+              
+            
+
+            - **Name** *(string) --* 
+
+              The current state of the instance.
+
+              
+        
+          
+
+          - **InstanceStatus** *(dict) --* 
+
+            Reports impaired functionality that stems from issues internal to the instance, such as impaired reachability.
+
+            
+            
+
+            - **Details** *(list) --* 
+
+              The system instance health or application instance health.
+
+              
+              
+
+              - *(dict) --* 
+
+                Describes the instance status.
+
+                
+                
+
+                - **ImpairedSince** *(datetime) --* 
+
+                  The time when a status check failed. For an instance that was launched and impaired, this is the time when the instance was launched.
+
+                  
+                
+
+                - **Name** *(string) --* 
+
+                  The type of instance status.
+
+                  
+                
+
+                - **Status** *(string) --* 
+
+                  The status.
+
+                  
+            
+          
+            
+
+            - **Status** *(string) --* 
+
+              The status.
+
+              
+        
+          
+
+          - **SystemStatus** *(dict) --* 
+
+            Reports impaired functionality that stems from issues related to the systems that support an instance, such as hardware failures and network connectivity problems.
+
+            
+            
+
+            - **Details** *(list) --* 
+
+              The system instance health or application instance health.
+
+              
+              
+
+              - *(dict) --* 
+
+                Describes the instance status.
+
+                
+                
+
+                - **ImpairedSince** *(datetime) --* 
+
+                  The time when a status check failed. For an instance that was launched and impaired, this is the time when the instance was launched.
+
+                  
+                
+
+                - **Name** *(string) --* 
+
+                  The type of instance status.
+
+                  
+                
+
+                - **Status** *(string) --* 
+
+                  The status.
+
+                  
+            
+          
+            
+
+            - **Status** *(string) --* 
+
+              The status.
+
+              
+        
+          
+
+          - **AttachedEbsStatus** *(dict) --* 
+
+            Reports impaired functionality that stems from an attached Amazon EBS volume that is unreachable and unable to complete I/O operations.
+
+            
+            
+
+            - **Details** *(list) --* 
+
+              Details about the attached EBS status check for an instance.
+
+              
+              
+
+              - *(dict) --* 
+
+                Describes the attached EBS status check for an instance.
+
+                
+                
+
+                - **ImpairedSince** *(datetime) --* 
+
+                  The date and time when the attached EBS status check failed.
+
+                  
+                
+
+                - **Name** *(string) --* 
+
+                  The name of the attached EBS status check.
+
+                  
+                
+
+                - **Status** *(string) --* 
+
+                  The result of the attached EBS status check.
+
+                  
+            
+          
+            
+
+            - **Status** *(string) --* 
+
+              The current status.
+
+              
+        
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to include in another request to get the next page of items. This value is ``null`` when there are no more items to return.
+
+        
+  
+
+  **Examples**
+
+  This example describes the current status of the specified instance.
+  ::
+
+    response = client.describe_instance_status(
+        InstanceIds=[
+            'i-1234567890abcdef0',
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'InstanceStatuses': [
+            {
+                'AvailabilityZone': 'us-east-1d',
+                'InstanceId': 'i-1234567890abcdef0',
+                'InstanceState': {
+                    'Code': 16,
+                    'Name': 'running',
+                },
+                'InstanceStatus': {
+                    'Details': [
+                        {
+                            'Name': 'reachability',
+                            'Status': 'passed',
+                        },
+                    ],
+                    'Status': 'ok',
+                },
+                'SystemStatus': {
+                    'Details': [
+                        {
+                            'Name': 'reachability',
+                            'Status': 'passed',
+                        },
+                    ],
+                    'Status': 'ok',
+                },
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

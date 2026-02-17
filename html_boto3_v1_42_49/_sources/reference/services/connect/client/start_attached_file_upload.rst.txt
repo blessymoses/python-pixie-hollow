@@ -1,0 +1,309 @@
+:doc:`Connect <../../connect>` / Client / start_attached_file_upload
+
+**************************
+start_attached_file_upload
+**************************
+
+
+
+.. py:method:: Connect.Client.start_attached_file_upload(**kwargs)
+
+  
+
+  Provides a pre-signed Amazon S3 URL in response for uploading your content.
+
+   
+
+  .. warning::
+
+     
+
+    You may only use this API to upload attachments to an `Amazon Connect Case <https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-cases_CreateCase.html>`__ or `Amazon Connect Email <https://docs.aws.amazon.com/connect/latest/adminguide/setup-email-channel.html>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/connect-2017-08-08/StartAttachedFileUpload>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_attached_file_upload(
+        ClientToken='string',
+        InstanceId='string',
+        FileName='string',
+        FileSizeInBytes=123,
+        UrlExpiryInSeconds=123,
+        FileUseCaseType='EMAIL_MESSAGE'|'ATTACHMENT',
+        AssociatedResourceArn='string',
+        CreatedBy={
+            'ConnectUserArn': 'string',
+            'AWSIdentityArn': 'string'
+        },
+        Tags={
+            'string': 'string'
+        }
+    )
+    
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. If not provided, the Amazon Web Services SDK populates this field. For more information about idempotency, see `Making retries safe with idempotent APIs <https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/>`__.
+
+    This field is autopopulated if not provided.
+
+  
+  :type InstanceId: string
+  :param InstanceId: **[REQUIRED]** 
+
+    The unique identifier of the Amazon Connect instance.
+
+    
+
+  
+  :type FileName: string
+  :param FileName: **[REQUIRED]** 
+
+    A case-sensitive name of the attached file being uploaded.
+
+    
+
+  
+  :type FileSizeInBytes: integer
+  :param FileSizeInBytes: **[REQUIRED]** 
+
+    The size of the attached file in bytes.
+
+    
+
+  
+  :type UrlExpiryInSeconds: integer
+  :param UrlExpiryInSeconds: 
+
+    Optional override for the expiry of the pre-signed S3 URL in seconds. The default value is 300.
+
+    
+
+  
+  :type FileUseCaseType: string
+  :param FileUseCaseType: **[REQUIRED]** 
+
+    The use case for the file.
+
+     
+
+    .. warning::
+
+       
+
+      Only ``ATTACHMENTS`` are supported.
+
+      
+
+    
+
+  
+  :type AssociatedResourceArn: string
+  :param AssociatedResourceArn: **[REQUIRED]** 
+
+    The resource to which the attached file is (being) uploaded to. The supported resources are `Cases <https://docs.aws.amazon.com/connect/latest/adminguide/cases.html>`__ and `Email <https://docs.aws.amazon.com/connect/latest/adminguide/setup-email-channel.html>`__.
+
+     
+
+    .. note::
+
+      
+
+      This value must be a valid ARN.
+
+      
+
+    
+
+  
+  :type CreatedBy: dict
+  :param CreatedBy: 
+
+    Represents the identity that created the file.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``ConnectUserArn``, ``AWSIdentityArn``. 
+
+  
+    - **ConnectUserArn** *(string) --* 
+
+      An agent ARN representing a `connect user <https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonconnect.html#amazonconnect-resources-for-iam-policies>`__.
+
+      
+
+    
+    - **AWSIdentityArn** *(string) --* 
+
+      STS or IAM ARN representing the identity of API Caller. SDK users cannot populate this and this value is calculated automatically if ``ConnectUserArn`` is not provided.
+
+      
+
+    
+  
+  :type Tags: dict
+  :param Tags: 
+
+    The tags used to organize, track, or control access for this resource. For example, ``{ "Tags": {"key1":"value1", "key2":"value2"} }``.
+
+    
+
+  
+    - *(string) --* 
+
+    
+      - *(string) --* 
+
+      
+
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FileArn': 'string',
+          'FileId': 'string',
+          'CreationTime': 'string',
+          'FileStatus': 'APPROVED'|'REJECTED'|'PROCESSING'|'FAILED',
+          'CreatedBy': {
+              'ConnectUserArn': 'string',
+              'AWSIdentityArn': 'string'
+          },
+          'UploadUrlMetadata': {
+              'Url': 'string',
+              'UrlExpiry': 'string',
+              'HeadersToInclude': {
+                  'string': 'string'
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* Response from StartAttachedFileUpload API.
+      
+
+      - **FileArn** *(string) --* 
+
+        The unique identifier of the attached file resource (ARN).
+
+        
+      
+
+      - **FileId** *(string) --* 
+
+        The unique identifier of the attached file resource.
+
+        
+      
+
+      - **CreationTime** *(string) --* 
+
+        The time of Creation of the file resource as an ISO timestamp. It's specified in ISO 8601 format: ``yyyy-MM-ddThh:mm:ss.SSSZ``. For example, ``2024-05-03T02:41:28.172Z``.
+
+        
+      
+
+      - **FileStatus** *(string) --* 
+
+        The current status of the attached file.
+
+        
+      
+
+      - **CreatedBy** *(dict) --* 
+
+        Represents the identity that created the file.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``ConnectUserArn``, ``AWSIdentityArn``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **ConnectUserArn** *(string) --* 
+
+          An agent ARN representing a `connect user <https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonconnect.html#amazonconnect-resources-for-iam-policies>`__.
+
+          
+        
+
+        - **AWSIdentityArn** *(string) --* 
+
+          STS or IAM ARN representing the identity of API Caller. SDK users cannot populate this and this value is calculated automatically if ``ConnectUserArn`` is not provided.
+
+          
+    
+      
+
+      - **UploadUrlMetadata** *(dict) --* 
+
+        The headers to be provided while uploading the file to the URL.
+
+        
+        
+
+        - **Url** *(string) --* 
+
+          A pre-signed S3 URL that should be used for uploading the attached file.
+
+          
+        
+
+        - **UrlExpiry** *(string) --* 
+
+          The expiration time of the URL in ISO timestamp. It's specified in ISO 8601 format: ``yyyy-MM-ddThh:mm:ss.SSSZ``. For example, ``2019-11-08T02:41:28.172Z``.
+
+          
+        
+
+        - **HeadersToInclude** *(dict) --* 
+
+          A map of headers that should be provided when uploading the attached file.
+
+          
+          
+
+          - *(string) --* 
+            
+
+            - *(string) --* 
+      
+    
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Connect.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ResourceConflictException`
+
+  
+  *   :py:class:`Connect.Client.exceptions.ServiceQuotaExceededException`
+
+  

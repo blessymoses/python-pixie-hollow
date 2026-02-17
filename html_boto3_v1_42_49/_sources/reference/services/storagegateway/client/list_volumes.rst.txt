@@ -1,0 +1,251 @@
+:doc:`StorageGateway <../../storagegateway>` / Client / list_volumes
+
+************
+list_volumes
+************
+
+
+
+.. py:method:: StorageGateway.Client.list_volumes(**kwargs)
+
+  
+
+  Lists the iSCSI stored volumes of a gateway. Results are sorted by volume ARN. The response includes only the volume ARNs. If you want additional volume information, use the  DescribeStorediSCSIVolumes or the  DescribeCachediSCSIVolumes API.
+
+   
+
+  The operation supports pagination. By default, the operation returns a maximum of up to 100 volumes. You can optionally specify the ``Limit`` field in the body to limit the number of volumes in the response. If the number of volumes returned in the response is truncated, the response includes a Marker field. You can use this Marker value in your subsequent request to retrieve the next set of volumes. This operation is only supported in the cached volume and stored volume gateway types.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/ListVolumes>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_volumes(
+        GatewayARN='string',
+        Marker='string',
+        Limit=123
+    )
+    
+  :type GatewayARN: string
+  :param GatewayARN: 
+
+    The Amazon Resource Name (ARN) of the gateway. Use the  ListGateways operation to return a list of gateways for your account and Amazon Web Services Region.
+
+    
+
+  
+  :type Marker: string
+  :param Marker: 
+
+    A string that indicates the position at which to begin the returned list of volumes. Obtain the marker from the response of a previous List iSCSI Volumes request.
+
+    
+
+  
+  :type Limit: integer
+  :param Limit: 
+
+    Specifies that the list of volumes returned be limited to the specified number of items.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GatewayARN': 'string',
+          'Marker': 'string',
+          'VolumeInfos': [
+              {
+                  'VolumeARN': 'string',
+                  'VolumeId': 'string',
+                  'GatewayARN': 'string',
+                  'GatewayId': 'string',
+                  'VolumeType': 'string',
+                  'VolumeSizeInBytes': 123,
+                  'VolumeAttachmentStatus': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      A JSON object containing the following fields:
+
+       
+
+      
+      *  ListVolumesOutput$Marker
+       
+      *  ListVolumesOutput$VolumeInfos
+      
+
+      
+      
+
+      - **GatewayARN** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the gateway. Use the  ListGateways operation to return a list of gateways for your account and Amazon Web Services Region.
+
+        
+      
+
+      - **Marker** *(string) --* 
+
+        Use the marker in your next request to continue pagination of iSCSI volumes. If there are no more volumes to list, this field does not appear in the response body.
+
+        
+      
+
+      - **VolumeInfos** *(list) --* 
+
+        An array of  VolumeInfo objects, where each object describes an iSCSI volume. If no volumes are defined for the gateway, then ``VolumeInfos`` is an empty array "[]".
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a storage volume object.
+
+          
+          
+
+          - **VolumeARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) for the storage volume. For example, the following is a valid ARN:
+
+             
+
+            ``arn:aws:storagegateway:us-east-2:111122223333:gateway/sgw-12A3456B/volume/vol-1122AABB``
+
+             
+
+            Valid Values: 50 to 500 lowercase letters, numbers, periods (.), and hyphens (-).
+
+            
+          
+
+          - **VolumeId** *(string) --* 
+
+            The unique identifier assigned to the volume. This ID becomes part of the volume Amazon Resource Name (ARN), which you use as input for other operations.
+
+             
+
+            Valid Values: 50 to 500 lowercase letters, numbers, periods (.), and hyphens (-).
+
+            
+          
+
+          - **GatewayARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the gateway. Use the  ListGateways operation to return a list of gateways for your account and Amazon Web Services Region.
+
+            
+          
+
+          - **GatewayId** *(string) --* 
+
+            The unique identifier assigned to your gateway during activation. This ID becomes part of the gateway Amazon Resource Name (ARN), which you use as input for other operations.
+
+             
+
+            Valid Values: 50 to 500 lowercase letters, numbers, periods (.), and hyphens (-).
+
+            
+          
+
+          - **VolumeType** *(string) --* 
+
+            One of the VolumeType enumeration values describing the type of the volume.
+
+            
+          
+
+          - **VolumeSizeInBytes** *(integer) --* 
+
+            The size of the volume in bytes.
+
+             
+
+            Valid Values: 50 to 500 lowercase letters, numbers, periods (.), and hyphens (-).
+
+            
+          
+
+          - **VolumeAttachmentStatus** *(string) --* 
+
+            One of the VolumeStatus values that indicates the state of the storage volume.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InvalidGatewayRequestException`
+
+  
+  *   :py:class:`StorageGateway.Client.exceptions.InternalServerError`
+
+  
+
+  **Examples**
+
+  Lists the iSCSI stored volumes of a gateway. Results are sorted by volume ARN up to a maximum of 100 volumes.
+  ::
+
+    response = client.list_volumes(
+        GatewayARN='arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B',
+        Limit=2,
+        Marker='1',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'GatewayARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B',
+        'Marker': '1',
+        'VolumeInfos': [
+            {
+                'GatewayARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B',
+                'GatewayId': 'sgw-12A3456B',
+                'VolumeARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-12A3456B/volume/vol-1122AABB',
+                'VolumeId': 'vol-1122AABB',
+                'VolumeSizeInBytes': 107374182400,
+                'VolumeType': 'STORED',
+            },
+            {
+                'GatewayARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-13B4567C',
+                'GatewayId': 'sgw-gw-13B4567C',
+                'VolumeARN': 'arn:aws:storagegateway:us-east-1:111122223333:gateway/sgw-13B4567C/volume/vol-3344CCDD',
+                'VolumeId': 'vol-1122AABB',
+                'VolumeSizeInBytes': 107374182400,
+                'VolumeType': 'STORED',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

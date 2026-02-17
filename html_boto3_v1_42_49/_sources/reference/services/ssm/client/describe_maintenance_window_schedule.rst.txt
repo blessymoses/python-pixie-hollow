@@ -1,0 +1,335 @@
+:doc:`SSM <../../ssm>` / Client / describe_maintenance_window_schedule
+
+************************************
+describe_maintenance_window_schedule
+************************************
+
+
+
+.. py:method:: SSM.Client.describe_maintenance_window_schedule(**kwargs)
+
+  
+
+  Retrieves information about upcoming executions of a maintenance window.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/DescribeMaintenanceWindowSchedule>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_maintenance_window_schedule(
+        WindowId='string',
+        Targets=[
+            {
+                'Key': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        ResourceType='INSTANCE'|'RESOURCE_GROUP',
+        Filters=[
+            {
+                'Key': 'string',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type WindowId: string
+  :param WindowId: 
+
+    The ID of the maintenance window to retrieve information about.
+
+    
+
+  
+  :type Targets: list
+  :param Targets: 
+
+    The managed node ID or key-value pair to retrieve information about.
+
+    
+
+  
+    - *(dict) --* 
+
+      An array of search criteria that targets managed nodes using a key-value pair that you specify.
+
+       
+
+      .. note::
+
+        
+
+        One or more targets must be specified for maintenance window Run Command-type tasks. Depending on the task, targets are optional for other maintenance window task types (Automation, Lambda, and Step Functions). For more information about running tasks that don't specify targets, see `Registering maintenance window tasks without targets <https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+        
+
+       
+
+      Supported formats include the following.
+
+       
+
+      **For all Systems Manager tools:**
+
+       
+
+      
+      * ``Key=tag-key,Values=tag-value-1,tag-value-2``
+      
+
+       
+
+      **For Automation and Change Manager:**
+
+       
+
+      
+      * ``Key=tag:tag-key,Values=tag-value``
+       
+      * ``Key=ResourceGroup,Values=resource-group-name``
+       
+      * ``Key=ParameterValues,Values=value-1,value-2,value-3``
+       
+      * To target all instances in the Amazon Web Services Region: 
+
+        
+        * ``Key=AWS::EC2::Instance,Values=*``
+         
+        * ``Key=InstanceIds,Values=*``
+        
+
+      
+      
+
+       
+
+      **For Run Command and Maintenance Windows:**
+
+       
+
+      
+      * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+       
+      * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+       
+      * ``Key=resource-groups:Name,Values=resource-group-name``
+       
+      * Additionally, Maintenance Windows support targeting resource types: 
+
+        
+        * ``Key=resource-groups:ResourceTypeFilters,Values=resource-type-1,resource-type-2``
+        
+
+      
+      
+
+       
+
+      **For State Manager:**
+
+       
+
+      
+      * ``Key=InstanceIds,Values=instance-id-1,instance-id-2,instance-id-3``
+       
+      * ``Key=tag:tag-key,Values=tag-value-1,tag-value-2``
+       
+      * To target all instances in the Amazon Web Services Region: 
+
+        
+        * ``Key=InstanceIds,Values=*``
+        
+
+      
+      
+
+       
+
+      For more information about how to send commands that target managed nodes using ``Key,Value`` parameters, see `Targeting multiple managed nodes <https://docs.aws.amazon.com/systems-manager/latest/userguide/send-commands-multiple.html#send-commands-targeting>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        User-defined criteria for sending commands that target managed nodes that meet the criteria.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        User-defined criteria that maps to ``Key``. For example, if you specified ``tag:ServerRole``, you could specify ``value:WebServer`` to run a command on instances that include EC2 tags of ``ServerRole,WebServer``.
+
+         
+
+        Depending on the type of target, the maximum number of values for a key might be lower than the global maximum of 50.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type ResourceType: string
+  :param ResourceType: 
+
+    The type of resource you want to retrieve information about. For example, ``INSTANCE``.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    Filters used to limit the range of results. For example, you can limit maintenance window executions to only those scheduled before or after a certain date and time.
+
+    
+
+  
+    - *(dict) --* 
+
+      Defines a filter used in Patch Manager APIs. Supported filter keys depend on the API operation that includes the filter. Patch Manager API operations that use ``PatchOrchestratorFilter`` include the following:
+
+       
+
+      
+      *  DescribeAvailablePatches
+       
+      *  DescribeInstancePatches
+       
+      *  DescribePatchBaselines
+       
+      *  DescribePatchGroups
+      
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        The key for the filter.
+
+        
+
+      
+      - **Values** *(list) --* 
+
+        The value for the filter.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this call. The call also returns a token that you can specify in a subsequent call to get the next set of results.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'ScheduledWindowExecutions': [
+              {
+                  'WindowId': 'string',
+                  'Name': 'string',
+                  'ExecutionTime': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **ScheduledWindowExecutions** *(list) --* 
+
+        Information about maintenance window executions scheduled for the specified time range.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about a scheduled execution for a maintenance window.
+
+          
+          
+
+          - **WindowId** *(string) --* 
+
+            The ID of the maintenance window to be run.
+
+            
+          
+
+          - **Name** *(string) --* 
+
+            The name of the maintenance window to be run.
+
+            
+          
+
+          - **ExecutionTime** *(string) --* 
+
+            The time, in ISO-8601 Extended format, that the maintenance window is scheduled to be run.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token for the next set of items to return. (You use this token in the next call.)
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`SSM.Client.exceptions.DoesNotExistException`
+
+  

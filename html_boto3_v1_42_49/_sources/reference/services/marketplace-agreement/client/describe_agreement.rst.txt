@@ -1,0 +1,305 @@
+:doc:`AgreementService <../../marketplace-agreement>` / Client / describe_agreement
+
+******************
+describe_agreement
+******************
+
+
+
+.. py:method:: AgreementService.Client.describe_agreement(**kwargs)
+
+  
+
+  Provides details about an agreement, such as the proposer, acceptor, start date, and end date.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/marketplace-agreement-2020-03-01/DescribeAgreement>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_agreement(
+        agreementId='string'
+    )
+    
+  :type agreementId: string
+  :param agreementId: **[REQUIRED]** 
+
+    The unique identifier of the agreement.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'agreementId': 'string',
+          'acceptor': {
+              'accountId': 'string'
+          },
+          'proposer': {
+              'accountId': 'string'
+          },
+          'startTime': datetime(2015, 1, 1),
+          'endTime': datetime(2015, 1, 1),
+          'acceptanceTime': datetime(2015, 1, 1),
+          'agreementType': 'string',
+          'estimatedCharges': {
+              'currencyCode': 'string',
+              'agreementValue': 'string'
+          },
+          'proposalSummary': {
+              'resources': [
+                  {
+                      'id': 'string',
+                      'type': 'string'
+                  },
+              ],
+              'offerId': 'string',
+              'offerSetId': 'string'
+          },
+          'status': 'ACTIVE'|'ARCHIVED'|'CANCELLED'|'EXPIRED'|'RENEWED'|'REPLACED'|'ROLLED_BACK'|'SUPERSEDED'|'TERMINATED'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **agreementId** *(string) --* 
+
+        The unique identifier of the agreement.
+
+        
+      
+
+      - **acceptor** *(dict) --* 
+
+        The details of the party accepting the agreement terms. This is commonly the buyer for ``PurchaseAgreement``.
+
+        
+        
+
+        - **accountId** *(string) --* 
+
+          The AWS account ID of the acceptor.
+
+          
+    
+      
+
+      - **proposer** *(dict) --* 
+
+        The details of the party proposing the agreement terms. This is commonly the seller for ``PurchaseAgreement``.
+
+        
+        
+
+        - **accountId** *(string) --* 
+
+          The AWS account ID of the proposer.
+
+          
+    
+      
+
+      - **startTime** *(datetime) --* 
+
+        The date and time when the agreement starts.
+
+        
+      
+
+      - **endTime** *(datetime) --* 
+
+        The date and time when the agreement ends. The field is ``null`` for pay-as-you-go agreements, which don’t have end dates.
+
+        
+      
+
+      - **acceptanceTime** *(datetime) --* 
+
+        The date and time the offer was accepted or the agreement was created.
+
+         
+
+        .. note::
+
+          
+
+          ``AcceptanceTime`` and ``StartTime`` can differ for future dated agreements (FDAs).
+
+          
+
+        
+      
+
+      - **agreementType** *(string) --* 
+
+        The type of agreement. Values are ``PurchaseAgreement`` or ``VendorInsightsAgreement``.
+
+        
+      
+
+      - **estimatedCharges** *(dict) --* 
+
+        The estimated cost of the agreement.
+
+        
+        
+
+        - **currencyCode** *(string) --* 
+
+          Defines the currency code for the charge.
+
+          
+        
+
+        - **agreementValue** *(string) --* 
+
+          The total known amount customer has to pay across the lifecycle of the agreement.
+
+           
+
+          .. note::
+
+            
+
+            This is the total contract value if accepted terms contain ``ConfigurableUpfrontPricingTerm`` or ``FixedUpfrontPricingTerm``. In the case of pure contract pricing, this will be the total value of the contract. In the case of contracts with consumption pricing, this will only include the committed value and not include any overages that occur.
+
+             
+
+            If the accepted terms contain ``PaymentScheduleTerm``, it will be the total payment schedule amount. This occurs when flexible payment schedule is used, and is the sum of all invoice charges in the payment schedule.
+
+             
+
+            In case a customer has amended an agreement, by purchasing more units of any dimension, this will include both the original cost as well as the added cost incurred due to addition of new units.
+
+             
+
+            This is ``0`` if the accepted terms contain ``UsageBasedPricingTerm`` without ``ConfigurableUpfrontPricingTerm`` or ``RecurringPaymentTerm``. This occurs for usage-based pricing (such as SaaS metered or AMI/container hourly or monthly), because the exact usage is not known upfront.
+
+            
+
+          
+    
+      
+
+      - **proposalSummary** *(dict) --* 
+
+        A summary of the proposal received from the proposer.
+
+        
+        
+
+        - **resources** *(list) --* 
+
+          The list of resources involved in the agreement.
+
+          
+          
+
+          - *(dict) --* 
+
+            The list of resources involved in the agreement.
+
+            
+            
+
+            - **id** *(string) --* 
+
+              The unique identifier of the resource.
+
+               
+
+              .. note::
+
+                
+
+                We mention the term resource, which is most commonly a product, so a ``resourceId`` is also a ``productId``.
+
+                
+
+              
+            
+
+            - **type** *(string) --* 
+
+              Type of the resource, which is the product. Values include ``SaaSProduct`` or ``AmiProduct``.
+
+              
+        
+      
+        
+
+        - **offerId** *(string) --* 
+
+          The unique identifier of the offer in AWS Marketplace.
+
+          
+        
+
+        - **offerSetId** *(string) --* 
+
+          A unique identifier for the offer set containing this offer. All agreements created from offers in this set include this identifier as context.
+
+          
+    
+      
+
+      - **status** *(string) --* 
+
+        The current status of the agreement.
+
+         
+
+        Statuses include:
+
+         
+
+        
+        * ``ACTIVE`` – The terms of the agreement are active.
+         
+        * ``ARCHIVED`` – The agreement ended without a specified reason.
+         
+        * ``CANCELLED`` – The acceptor ended the agreement before the defined end date.
+         
+        * ``EXPIRED`` – The agreement ended on the defined end date.
+         
+        * ``RENEWED`` – The agreement was renewed into a new agreement (for example, an auto-renewal).
+         
+        * ``REPLACED`` – The agreement was replaced using an agreement replacement offer.
+         
+        * ``TERMINATED`` – The agreement ended before the defined end date because of an AWS termination (for example, a payment failure).
+        
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`AgreementService.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AgreementService.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AgreementService.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AgreementService.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AgreementService.Client.exceptions.InternalServerException`
+
+  

@@ -1,0 +1,171 @@
+:doc:`CodePipeline <../../codepipeline>` / Client / poll_for_third_party_jobs
+
+*************************
+poll_for_third_party_jobs
+*************************
+
+
+
+.. py:method:: CodePipeline.Client.poll_for_third_party_jobs(**kwargs)
+
+  
+
+  Determines whether there are any third party jobs for a job worker to act on. Used for partner actions only.
+
+   
+
+  .. warning::
+
+     
+
+    When this API is called, CodePipeline returns temporary credentials for the S3 bucket used to store artifacts for the pipeline, if the action requires access to that S3 bucket for input or output artifacts.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codepipeline-2015-07-09/PollForThirdPartyJobs>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.poll_for_third_party_jobs(
+        actionTypeId={
+            'category': 'Source'|'Build'|'Deploy'|'Test'|'Invoke'|'Approval'|'Compute',
+            'owner': 'AWS'|'ThirdParty'|'Custom',
+            'provider': 'string',
+            'version': 'string'
+        },
+        maxBatchSize=123
+    )
+    
+  :type actionTypeId: dict
+  :param actionTypeId: **[REQUIRED]** 
+
+    Represents information about an action type.
+
+    
+
+  
+    - **category** *(string) --* **[REQUIRED]** 
+
+      A category defines what kind of action can be taken in the stage, and constrains the provider type for the action. Valid categories are limited to one of the following values.
+
+       
+
+      
+      * Source
+       
+      * Build
+       
+      * Test
+       
+      * Deploy
+       
+      * Invoke
+       
+      * Approval
+       
+      * Compute
+      
+
+      
+
+    
+    - **owner** *(string) --* **[REQUIRED]** 
+
+      The creator of the action being called. There are three valid values for the ``Owner`` field in the action category section within your pipeline structure: ``AWS``, ``ThirdParty``, and ``Custom``. For more information, see `Valid Action Types and Providers in CodePipeline <https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html#actions-valid-providers>`__.
+
+      
+
+    
+    - **provider** *(string) --* **[REQUIRED]** 
+
+      The provider of the service being called by the action. Valid providers are determined by the action category. For example, an action in the Deploy category type might have a provider of CodeDeploy, which would be specified as ``CodeDeploy``. For more information, see `Valid Action Types and Providers in CodePipeline <https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html#actions-valid-providers>`__.
+
+      
+
+    
+    - **version** *(string) --* **[REQUIRED]** 
+
+      A string that describes the action version.
+
+      
+
+    
+  
+  :type maxBatchSize: integer
+  :param maxBatchSize: 
+
+    The maximum number of jobs to return in a poll for jobs call.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobs': [
+              {
+                  'clientId': 'string',
+                  'jobId': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      Represents the output of a ``PollForThirdPartyJobs`` action.
+
+      
+      
+
+      - **jobs** *(list) --* 
+
+        Information about the jobs to take action on.
+
+        
+        
+
+        - *(dict) --* 
+
+          A response to a ``PollForThirdPartyJobs`` request returned by CodePipeline when there is a job to be worked on by a partner action.
+
+          
+          
+
+          - **clientId** *(string) --* 
+
+            The ``clientToken`` portion of the ``clientId`` and ``clientToken`` pair used to verify that the calling entity is allowed access to the job and its details.
+
+            
+          
+
+          - **jobId** *(string) --* 
+
+            The identifier used to identify the job in CodePipeline.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CodePipeline.Client.exceptions.ActionTypeNotFoundException`
+
+  
+  *   :py:class:`CodePipeline.Client.exceptions.ValidationException`
+
+  

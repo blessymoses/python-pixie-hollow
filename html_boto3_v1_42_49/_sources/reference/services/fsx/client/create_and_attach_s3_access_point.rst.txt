@@ -1,0 +1,582 @@
+:doc:`FSx <../../fsx>` / Client / create_and_attach_s3_access_point
+
+*********************************
+create_and_attach_s3_access_point
+*********************************
+
+
+
+.. py:method:: FSx.Client.create_and_attach_s3_access_point(**kwargs)
+
+  
+
+  Creates an S3 access point and attaches it to an Amazon FSx volume. For FSx for OpenZFS file systems, the volume must be hosted on a high-availability file system, either Single-AZ or Multi-AZ. For more information, see `Accessing your data using Amazon S3 access points <https://docs.aws.amazon.com/fsx/latest/OpenZFSGuide/s3accesspoints-for-FSx.html>`__. in the Amazon FSx for OpenZFS User Guide.
+
+   
+
+  The requester requires the following permissions to perform these actions:
+
+   
+
+  
+  * ``fsx:CreateAndAttachS3AccessPoint``
+   
+  * ``s3:CreateAccessPoint``
+   
+  * ``s3:GetAccessPoint``
+   
+  * ``s3:PutAccessPointPolicy``
+   
+  * ``s3:DeleteAccessPoint``
+  
+
+   
+
+  The following actions are related to ``CreateAndAttachS3AccessPoint``:
+
+   
+
+  
+  *  DescribeS3AccessPointAttachments
+   
+  *  DetachAndDeleteS3AccessPoint
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/fsx-2018-03-01/CreateAndAttachS3AccessPoint>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_and_attach_s3_access_point(
+        ClientRequestToken='string',
+        Name='string',
+        Type='OPENZFS'|'ONTAP',
+        OpenZFSConfiguration={
+            'VolumeId': 'string',
+            'FileSystemIdentity': {
+                'Type': 'POSIX',
+                'PosixUser': {
+                    'Uid': 123,
+                    'Gid': 123,
+                    'SecondaryGids': [
+                        123,
+                    ]
+                }
+            }
+        },
+        OntapConfiguration={
+            'VolumeId': 'string',
+            'FileSystemIdentity': {
+                'Type': 'UNIX'|'WINDOWS',
+                'UnixUser': {
+                    'Name': 'string'
+                },
+                'WindowsUser': {
+                    'Name': 'string'
+                }
+            }
+        },
+        S3AccessPoint={
+            'VpcConfiguration': {
+                'VpcId': 'string'
+            },
+            'Policy': 'string'
+        }
+    )
+    
+  :type ClientRequestToken: string
+  :param ClientRequestToken: 
+
+    (Optional) An idempotency token for resource creation, in a string of up to 63 ASCII characters. This token is automatically filled on your behalf when you use the Command Line Interface (CLI) or an Amazon Web Services SDK.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name you want to assign to this S3 access point.
+
+    
+
+  
+  :type Type: string
+  :param Type: **[REQUIRED]** 
+
+    The type of S3 access point you want to create. Only ``OpenZFS`` is supported.
+
+    
+
+  
+  :type OpenZFSConfiguration: dict
+  :param OpenZFSConfiguration: 
+
+    Specifies the configuration to use when creating and attaching an S3 access point to an FSx for OpenZFS volume.
+
+    
+
+  
+    - **VolumeId** *(string) --* **[REQUIRED]** 
+
+      The ID of the FSx for OpenZFS volume to which you want the S3 access point attached.
+
+      
+
+    
+    - **FileSystemIdentity** *(dict) --* **[REQUIRED]** 
+
+      Specifies the file system user identity to use for authorizing file read and write requests that are made using this S3 access point.
+
+      
+
+    
+      - **Type** *(string) --* **[REQUIRED]** 
+
+        Specifies the FSx for OpenZFS user identity type, accepts only ``POSIX``.
+
+        
+
+      
+      - **PosixUser** *(dict) --* 
+
+        Specifies the UID and GIDs of the file system POSIX user.
+
+        
+
+      
+        - **Uid** *(integer) --* **[REQUIRED]** 
+
+          The UID of the file system user.
+
+          
+
+        
+        - **Gid** *(integer) --* **[REQUIRED]** 
+
+          The GID of the file system user.
+
+          
+
+        
+        - **SecondaryGids** *(list) --* 
+
+          The list of secondary GIDs for the file system user.
+
+          
+
+        
+          - *(integer) --* 
+
+          
+      
+      
+    
+  
+  :type OntapConfiguration: dict
+  :param OntapConfiguration: 
+
+    Specifies the FSx for ONTAP volume that the S3 access point will be attached to, and the file system user identity.
+
+    
+
+  
+    - **VolumeId** *(string) --* **[REQUIRED]** 
+
+      The ID of the FSx for ONTAP volume to which you want the S3 access point attached.
+
+      
+
+    
+    - **FileSystemIdentity** *(dict) --* **[REQUIRED]** 
+
+      Specifies the file system user identity to use for authorizing file read and write requests that are made using this S3 access point.
+
+      
+
+    
+      - **Type** *(string) --* **[REQUIRED]** 
+
+        Specifies the FSx for ONTAP user identity type. Valid values are ``UNIX`` and ``WINDOWS``.
+
+        
+
+      
+      - **UnixUser** *(dict) --* 
+
+        Specifies the UNIX user identity for file system operations.
+
+        
+
+      
+        - **Name** *(string) --* **[REQUIRED]** 
+
+          The name of the UNIX user. The name can be up to 256 characters long.
+
+          
+
+        
+      
+      - **WindowsUser** *(dict) --* 
+
+        Specifies the Windows user identity for file system operations.
+
+        
+
+      
+        - **Name** *(string) --* **[REQUIRED]** 
+
+          The name of the Windows user. The name can be up to 256 characters long and supports Active Directory users.
+
+          
+
+        
+      
+    
+  
+  :type S3AccessPoint: dict
+  :param S3AccessPoint: 
+
+    Specifies the virtual private cloud (VPC) configuration if you're creating an access point that is restricted to a VPC. For more information, see `Creating access points restricted to a virtual private cloud <https://docs.aws.amazon.com/fsx/latest/OpenZFSGuide/access-points-vpc.html>`__.
+
+    
+
+  
+    - **VpcConfiguration** *(dict) --* 
+
+      If included, Amazon S3 restricts access to this S3 access point to requests made from the specified virtual private cloud (VPC).
+
+      
+
+    
+      - **VpcId** *(string) --* 
+
+        Specifies the virtual private cloud (VPC) for the S3 access point VPC configuration, if one exists.
+
+        
+
+      
+    
+    - **Policy** *(string) --* 
+
+      Specifies an access policy to associate with the S3 access point configuration. For more information, see `Configuring IAM policies for using access points <https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-policies.html>`__ in the Amazon Simple Storage Service User Guide.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'S3AccessPointAttachment': {
+              'Lifecycle': 'AVAILABLE'|'CREATING'|'DELETING'|'UPDATING'|'FAILED'|'MISCONFIGURED',
+              'LifecycleTransitionReason': {
+                  'Message': 'string'
+              },
+              'CreationTime': datetime(2015, 1, 1),
+              'Name': 'string',
+              'Type': 'OPENZFS'|'ONTAP',
+              'OpenZFSConfiguration': {
+                  'VolumeId': 'string',
+                  'FileSystemIdentity': {
+                      'Type': 'POSIX',
+                      'PosixUser': {
+                          'Uid': 123,
+                          'Gid': 123,
+                          'SecondaryGids': [
+                              123,
+                          ]
+                      }
+                  }
+              },
+              'OntapConfiguration': {
+                  'VolumeId': 'string',
+                  'FileSystemIdentity': {
+                      'Type': 'UNIX'|'WINDOWS',
+                      'UnixUser': {
+                          'Name': 'string'
+                      },
+                      'WindowsUser': {
+                          'Name': 'string'
+                      }
+                  }
+              },
+              'S3AccessPoint': {
+                  'ResourceARN': 'string',
+                  'Alias': 'string',
+                  'VpcConfiguration': {
+                      'VpcId': 'string'
+                  }
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **S3AccessPointAttachment** *(dict) --* 
+
+        Describes the configuration of the S3 access point created.
+
+        
+        
+
+        - **Lifecycle** *(string) --* 
+
+          The lifecycle status of the S3 access point attachment. The lifecycle can have the following values:
+
+           
+
+          
+          * AVAILABLE - the S3 access point attachment is available for use
+           
+          * CREATING - Amazon FSx is creating the S3 access point and attachment
+           
+          * DELETING - Amazon FSx is deleting the S3 access point and attachment
+           
+          * FAILED - The S3 access point attachment is in a failed state. Delete and detach the S3 access point attachment, and create a new one.
+           
+          * UPDATING - Amazon FSx is updating the S3 access point attachment
+          
+
+          
+        
+
+        - **LifecycleTransitionReason** *(dict) --* 
+
+          Describes why a resource lifecycle state changed.
+
+          
+          
+
+          - **Message** *(string) --* 
+
+            A detailed error message.
+
+            
+      
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          The time that the resource was created, in seconds (since 1970-01-01T00:00:00Z), also known as Unix time.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          The name of the S3 access point attachment; also used for the name of the S3 access point.
+
+          
+        
+
+        - **Type** *(string) --* 
+
+          The type of Amazon FSx volume that the S3 access point is attached to.
+
+          
+        
+
+        - **OpenZFSConfiguration** *(dict) --* 
+
+          The OpenZFSConfiguration of the S3 access point attachment.
+
+          
+          
+
+          - **VolumeId** *(string) --* 
+
+            The ID of the FSx for OpenZFS volume that the S3 access point is attached to.
+
+            
+          
+
+          - **FileSystemIdentity** *(dict) --* 
+
+            The file system identity used to authorize file access requests made using the S3 access point.
+
+            
+            
+
+            - **Type** *(string) --* 
+
+              Specifies the FSx for OpenZFS user identity type, accepts only ``POSIX``.
+
+              
+            
+
+            - **PosixUser** *(dict) --* 
+
+              Specifies the UID and GIDs of the file system POSIX user.
+
+              
+              
+
+              - **Uid** *(integer) --* 
+
+                The UID of the file system user.
+
+                
+              
+
+              - **Gid** *(integer) --* 
+
+                The GID of the file system user.
+
+                
+              
+
+              - **SecondaryGids** *(list) --* 
+
+                The list of secondary GIDs for the file system user.
+
+                
+                
+
+                - *(integer) --* 
+            
+          
+        
+      
+        
+
+        - **OntapConfiguration** *(dict) --* 
+
+          The ONTAP configuration of the S3 access point attachment.
+
+          
+          
+
+          - **VolumeId** *(string) --* 
+
+            The ID of the FSx for ONTAP volume that the S3 access point is attached to.
+
+            
+          
+
+          - **FileSystemIdentity** *(dict) --* 
+
+            The file system identity used to authorize file access requests made using the S3 access point.
+
+            
+            
+
+            - **Type** *(string) --* 
+
+              Specifies the FSx for ONTAP user identity type. Valid values are ``UNIX`` and ``WINDOWS``.
+
+              
+            
+
+            - **UnixUser** *(dict) --* 
+
+              Specifies the UNIX user identity for file system operations.
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The name of the UNIX user. The name can be up to 256 characters long.
+
+                
+          
+            
+
+            - **WindowsUser** *(dict) --* 
+
+              Specifies the Windows user identity for file system operations.
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The name of the Windows user. The name can be up to 256 characters long and supports Active Directory users.
+
+                
+          
+        
+      
+        
+
+        - **S3AccessPoint** *(dict) --* 
+
+          The S3 access point configuration of the S3 access point attachment.
+
+          
+          
+
+          - **ResourceARN** *(string) --* 
+
+            he S3 access point's ARN.
+
+            
+          
+
+          - **Alias** *(string) --* 
+
+            The S3 access point's alias.
+
+            
+          
+
+          - **VpcConfiguration** *(dict) --* 
+
+            The S3 access point's virtual private cloud (VPC) configuration.
+
+            
+            
+
+            - **VpcId** *(string) --* 
+
+              Specifies the virtual private cloud (VPC) for the S3 access point VPC configuration, if one exists.
+
+              
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`FSx.Client.exceptions.BadRequest`
+
+  
+  *   :py:class:`FSx.Client.exceptions.IncompatibleParameterError`
+
+  
+  *   :py:class:`FSx.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`FSx.Client.exceptions.UnsupportedOperation`
+
+  
+  *   :py:class:`FSx.Client.exceptions.VolumeNotFound`
+
+  
+  *   :py:class:`FSx.Client.exceptions.InvalidAccessPoint`
+
+  
+  *   :py:class:`FSx.Client.exceptions.InvalidRequest`
+
+  
+  *   :py:class:`FSx.Client.exceptions.AccessPointAlreadyOwnedByYou`
+
+  
+  *   :py:class:`FSx.Client.exceptions.TooManyAccessPoints`
+
+  

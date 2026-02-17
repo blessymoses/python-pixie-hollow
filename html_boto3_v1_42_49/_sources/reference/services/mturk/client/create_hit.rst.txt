@@ -1,0 +1,829 @@
+:doc:`MTurk <../../mturk>` / Client / create_hit
+
+**********
+create_hit
+**********
+
+
+
+.. py:method:: MTurk.Client.create_hit(**kwargs)
+
+  
+
+  The ``CreateHIT`` operation creates a new Human Intelligence Task (HIT). The new HIT is made available for Workers to find and accept on the Amazon Mechanical Turk website.
+
+   
+
+  This operation allows you to specify a new HIT by passing in values for the properties of the HIT, such as its title, reward amount and number of assignments. When you pass these values to ``CreateHIT``, a new HIT is created for you, with a new ``HITTypeID``. The HITTypeID can be used to create additional HITs in the future without needing to specify common parameters such as the title, description and reward amount each time.
+
+   
+
+  An alternative way to create HITs is to first generate a HITTypeID using the ``CreateHITType`` operation and then call the ``CreateHITWithHITType`` operation. This is the recommended best practice for Requesters who are creating large numbers of HITs.
+
+   
+
+  CreateHIT also supports several ways to provide question data: by providing a value for the ``Question`` parameter that fully specifies the contents of the HIT, or by providing a ``HitLayoutId`` and associated ``HitLayoutParameters``.
+
+   
+
+  .. note::
+
+    
+
+    If a HIT is created with 10 or more maximum assignments, there is an additional fee. For more information, see `Amazon Mechanical Turk Pricing <https://requester.mturk.com/pricing>`__.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/mturk-requester-2017-01-17/CreateHIT>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_hit(
+        MaxAssignments=123,
+        AutoApprovalDelayInSeconds=123,
+        LifetimeInSeconds=123,
+        AssignmentDurationInSeconds=123,
+        Reward='string',
+        Title='string',
+        Keywords='string',
+        Description='string',
+        Question='string',
+        RequesterAnnotation='string',
+        QualificationRequirements=[
+            {
+                'QualificationTypeId': 'string',
+                'Comparator': 'LessThan'|'LessThanOrEqualTo'|'GreaterThan'|'GreaterThanOrEqualTo'|'EqualTo'|'NotEqualTo'|'Exists'|'DoesNotExist'|'In'|'NotIn',
+                'IntegerValues': [
+                    123,
+                ],
+                'LocaleValues': [
+                    {
+                        'Country': 'string',
+                        'Subdivision': 'string'
+                    },
+                ],
+                'RequiredToPreview': True|False,
+                'ActionsGuarded': 'Accept'|'PreviewAndAccept'|'DiscoverPreviewAndAccept'
+            },
+        ],
+        UniqueRequestToken='string',
+        AssignmentReviewPolicy={
+            'PolicyName': 'string',
+            'Parameters': [
+                {
+                    'Key': 'string',
+                    'Values': [
+                        'string',
+                    ],
+                    'MapEntries': [
+                        {
+                            'Key': 'string',
+                            'Values': [
+                                'string',
+                            ]
+                        },
+                    ]
+                },
+            ]
+        },
+        HITReviewPolicy={
+            'PolicyName': 'string',
+            'Parameters': [
+                {
+                    'Key': 'string',
+                    'Values': [
+                        'string',
+                    ],
+                    'MapEntries': [
+                        {
+                            'Key': 'string',
+                            'Values': [
+                                'string',
+                            ]
+                        },
+                    ]
+                },
+            ]
+        },
+        HITLayoutId='string',
+        HITLayoutParameters=[
+            {
+                'Name': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type MaxAssignments: integer
+  :param MaxAssignments: 
+
+    The number of times the HIT can be accepted and completed before the HIT becomes unavailable.
+
+    
+
+  
+  :type AutoApprovalDelayInSeconds: integer
+  :param AutoApprovalDelayInSeconds: 
+
+    The number of seconds after an assignment for the HIT has been submitted, after which the assignment is considered Approved automatically unless the Requester explicitly rejects it.
+
+    
+
+  
+  :type LifetimeInSeconds: integer
+  :param LifetimeInSeconds: **[REQUIRED]** 
+
+    An amount of time, in seconds, after which the HIT is no longer available for users to accept. After the lifetime of the HIT elapses, the HIT no longer appears in HIT searches, even if not all of the assignments for the HIT have been accepted.
+
+    
+
+  
+  :type AssignmentDurationInSeconds: integer
+  :param AssignmentDurationInSeconds: **[REQUIRED]** 
+
+    The amount of time, in seconds, that a Worker has to complete the HIT after accepting it. If a Worker does not complete the assignment within the specified duration, the assignment is considered abandoned. If the HIT is still active (that is, its lifetime has not elapsed), the assignment becomes available for other users to find and accept.
+
+    
+
+  
+  :type Reward: string
+  :param Reward: **[REQUIRED]** 
+
+    The amount of money the Requester will pay a Worker for successfully completing the HIT.
+
+    
+
+  
+  :type Title: string
+  :param Title: **[REQUIRED]** 
+
+    The title of the HIT. A title should be short and descriptive about the kind of task the HIT contains. On the Amazon Mechanical Turk web site, the HIT title appears in search results, and everywhere the HIT is mentioned.
+
+    
+
+  
+  :type Keywords: string
+  :param Keywords: 
+
+    One or more words or phrases that describe the HIT, separated by commas. These words are used in searches to find HITs.
+
+    
+
+  
+  :type Description: string
+  :param Description: **[REQUIRED]** 
+
+    A general description of the HIT. A description includes detailed information about the kind of task the HIT contains. On the Amazon Mechanical Turk web site, the HIT description appears in the expanded view of search results, and in the HIT and assignment screens. A good description gives the user enough information to evaluate the HIT before accepting it.
+
+    
+
+  
+  :type Question: string
+  :param Question: 
+
+    The data the person completing the HIT uses to produce the results.
+
+     
+
+    Constraints: Must be a QuestionForm data structure, an ExternalQuestion data structure, or an HTMLQuestion data structure. The XML question data must not be larger than 64 kilobytes (65,535 bytes) in size, including whitespace.
+
+     
+
+    Either a Question parameter or a HITLayoutId parameter must be provided.
+
+    
+
+  
+  :type RequesterAnnotation: string
+  :param RequesterAnnotation: 
+
+    An arbitrary data field. The RequesterAnnotation parameter lets your application attach arbitrary data to the HIT for tracking purposes. For example, this parameter could be an identifier internal to the Requester's application that corresponds with the HIT.
+
+     
+
+    The RequesterAnnotation parameter for a HIT is only visible to the Requester who created the HIT. It is not shown to the Worker, or any other Requester.
+
+     
+
+    The RequesterAnnotation parameter may be different for each HIT you submit. It does not affect how your HITs are grouped.
+
+    
+
+  
+  :type QualificationRequirements: list
+  :param QualificationRequirements: 
+
+    Conditions that a Worker's Qualifications must meet in order to accept the HIT. A HIT can have between zero and ten Qualification requirements. All requirements must be met in order for a Worker to accept the HIT. Additionally, other actions can be restricted using the ``ActionsGuarded`` field on each ``QualificationRequirement`` structure.
+
+    
+
+  
+    - *(dict) --* 
+
+      The QualificationRequirement data structure describes a Qualification that a Worker must have before the Worker is allowed to accept a HIT. A requirement may optionally state that a Worker must have the Qualification in order to preview the HIT, or see the HIT in search results.
+
+      
+
+    
+      - **QualificationTypeId** *(string) --* **[REQUIRED]** 
+
+        The ID of the Qualification type for the requirement.
+
+        
+
+      
+      - **Comparator** *(string) --* **[REQUIRED]** 
+
+        The kind of comparison to make against a Qualification's value. You can compare a Qualification's value to an IntegerValue to see if it is LessThan, LessThanOrEqualTo, GreaterThan, GreaterThanOrEqualTo, EqualTo, or NotEqualTo the IntegerValue. You can compare it to a LocaleValue to see if it is EqualTo, or NotEqualTo the LocaleValue. You can check to see if the value is In or NotIn a set of IntegerValue or LocaleValue values. Lastly, a Qualification requirement can also test if a Qualification Exists or DoesNotExist in the user's profile, regardless of its value.
+
+        
+
+      
+      - **IntegerValues** *(list) --* 
+
+        The integer value to compare against the Qualification's value. IntegerValue must not be present if Comparator is Exists or DoesNotExist. IntegerValue can only be used if the Qualification type has an integer value; it cannot be used with the Worker_Locale QualificationType ID. When performing a set comparison by using the In or the NotIn comparator, you can use up to 15 IntegerValue elements in a QualificationRequirement data structure.
+
+        
+
+      
+        - *(integer) --* 
+
+        
+    
+      - **LocaleValues** *(list) --* 
+
+        The locale value to compare against the Qualification's value. The local value must be a valid ISO 3166 country code or supports ISO 3166-2 subdivisions. LocaleValue can only be used with a Worker_Locale QualificationType ID. LocaleValue can only be used with the EqualTo, NotEqualTo, In, and NotIn comparators. You must only use a single LocaleValue element when using the EqualTo or NotEqualTo comparators. When performing a set comparison by using the In or the NotIn comparator, you can use up to 30 LocaleValue elements in a QualificationRequirement data structure.
+
+        
+
+      
+        - *(dict) --* 
+
+          The Locale data structure represents a geographical region or location.
+
+          
+
+        
+          - **Country** *(string) --* **[REQUIRED]** 
+
+            The country of the locale. Must be a valid ISO 3166 country code. For example, the code US refers to the United States of America.
+
+            
+
+          
+          - **Subdivision** *(string) --* 
+
+            The state or subdivision of the locale. A valid ISO 3166-2 subdivision code. For example, the code WA refers to the state of Washington.
+
+            
+
+          
+        
+    
+      - **RequiredToPreview** *(boolean) --* 
+
+        DEPRECATED: Use the ``ActionsGuarded`` field instead. If RequiredToPreview is true, the question data for the HIT will not be shown when a Worker whose Qualifications do not meet this requirement tries to preview the HIT. That is, a Worker's Qualifications must meet all of the requirements for which RequiredToPreview is true in order to preview the HIT. If a Worker meets all of the requirements where RequiredToPreview is true (or if there are no such requirements), but does not meet all of the requirements for the HIT, the Worker will be allowed to preview the HIT's question data, but will not be allowed to accept and complete the HIT. The default is false. This should not be used in combination with the ``ActionsGuarded`` field.
+
+        
+
+      
+      - **ActionsGuarded** *(string) --* 
+
+        Setting this attribute prevents Workers whose Qualifications do not meet this QualificationRequirement from taking the specified action. Valid arguments include "Accept" (Worker cannot accept the HIT, but can preview the HIT and see it in their search results), "PreviewAndAccept" (Worker cannot accept or preview the HIT, but can see the HIT in their search results), and "DiscoverPreviewAndAccept" (Worker cannot accept, preview, or see the HIT in their search results). It's possible for you to create a HIT with multiple QualificationRequirements (which can have different values for the ActionGuarded attribute). In this case, the Worker is only permitted to perform an action when they have met all QualificationRequirements guarding the action. The actions in the order of least restrictive to most restrictive are Discover, Preview and Accept. For example, if a Worker meets all QualificationRequirements that are set to DiscoverPreviewAndAccept, but do not meet all requirements that are set with PreviewAndAccept, then the Worker will be able to Discover, i.e. see the HIT in their search result, but will not be able to Preview or Accept the HIT. ActionsGuarded should not be used in combination with the ``RequiredToPreview`` field.
+
+        
+
+      
+    
+
+  :type UniqueRequestToken: string
+  :param UniqueRequestToken: 
+
+    A unique identifier for this request which allows you to retry the call on error without creating duplicate HITs. This is useful in cases such as network timeouts where it is unclear whether or not the call succeeded on the server. If the HIT already exists in the system from a previous call using the same UniqueRequestToken, subsequent calls will return a AWS.MechanicalTurk.HitAlreadyExists error with a message containing the HITId.
+
+     
+
+    .. note::
+
+      
+
+      Note: It is your responsibility to ensure uniqueness of the token. The unique token expires after 24 hours. Subsequent calls using the same UniqueRequestToken made after the 24 hour limit could create duplicate HITs.
+
+      
+
+    
+
+  
+  :type AssignmentReviewPolicy: dict
+  :param AssignmentReviewPolicy: 
+
+    The Assignment-level Review Policy applies to the assignments under the HIT. You can specify for Mechanical Turk to take various actions based on the policy.
+
+    
+
+  
+    - **PolicyName** *(string) --* **[REQUIRED]** 
+
+      Name of a Review Policy: SimplePlurality/2011-09-01 or ScoreMyKnownAnswers/2011-09-01
+
+      
+
+    
+    - **Parameters** *(list) --* 
+
+      Name of the parameter from the Review policy.
+
+      
+
+    
+      - *(dict) --* 
+
+        Name of the parameter from the Review policy.
+
+        
+
+      
+        - **Key** *(string) --* 
+
+          Name of the parameter from the list of Review Polices.
+
+          
+
+        
+        - **Values** *(list) --* 
+
+          The list of values of the Parameter
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+        - **MapEntries** *(list) --* 
+
+          List of ParameterMapEntry objects.
+
+          
+
+        
+          - *(dict) --* 
+
+            This data structure is the data type for the AnswerKey parameter of the ScoreMyKnownAnswers/2011-09-01 Review Policy.
+
+            
+
+          
+            - **Key** *(string) --* 
+
+              The QuestionID from the HIT that is used to identify which question requires Mechanical Turk to score as part of the ScoreMyKnownAnswers/2011-09-01 Review Policy.
+
+              
+
+            
+            - **Values** *(list) --* 
+
+              The list of answers to the question specified in the MapEntry Key element. The Worker must match all values in order for the answer to be scored correctly.
+
+              
+
+            
+              - *(string) --* 
+
+              
+          
+          
+      
+      
+  
+  
+  :type HITReviewPolicy: dict
+  :param HITReviewPolicy: 
+
+    The HIT-level Review Policy applies to the HIT. You can specify for Mechanical Turk to take various actions based on the policy.
+
+    
+
+  
+    - **PolicyName** *(string) --* **[REQUIRED]** 
+
+      Name of a Review Policy: SimplePlurality/2011-09-01 or ScoreMyKnownAnswers/2011-09-01
+
+      
+
+    
+    - **Parameters** *(list) --* 
+
+      Name of the parameter from the Review policy.
+
+      
+
+    
+      - *(dict) --* 
+
+        Name of the parameter from the Review policy.
+
+        
+
+      
+        - **Key** *(string) --* 
+
+          Name of the parameter from the list of Review Polices.
+
+          
+
+        
+        - **Values** *(list) --* 
+
+          The list of values of the Parameter
+
+          
+
+        
+          - *(string) --* 
+
+          
+      
+        - **MapEntries** *(list) --* 
+
+          List of ParameterMapEntry objects.
+
+          
+
+        
+          - *(dict) --* 
+
+            This data structure is the data type for the AnswerKey parameter of the ScoreMyKnownAnswers/2011-09-01 Review Policy.
+
+            
+
+          
+            - **Key** *(string) --* 
+
+              The QuestionID from the HIT that is used to identify which question requires Mechanical Turk to score as part of the ScoreMyKnownAnswers/2011-09-01 Review Policy.
+
+              
+
+            
+            - **Values** *(list) --* 
+
+              The list of answers to the question specified in the MapEntry Key element. The Worker must match all values in order for the answer to be scored correctly.
+
+              
+
+            
+              - *(string) --* 
+
+              
+          
+          
+      
+      
+  
+  
+  :type HITLayoutId: string
+  :param HITLayoutId: 
+
+    The HITLayoutId allows you to use a pre-existing HIT design with placeholder values and create an additional HIT by providing those values as HITLayoutParameters.
+
+     
+
+    Constraints: Either a Question parameter or a HITLayoutId parameter must be provided.
+
+    
+
+  
+  :type HITLayoutParameters: list
+  :param HITLayoutParameters: 
+
+    If the HITLayoutId is provided, any placeholder values must be filled in with values using the HITLayoutParameter structure. For more information, see HITLayout.
+
+    
+
+  
+    - *(dict) --* 
+
+      The HITLayoutParameter data structure defines parameter values used with a HITLayout. A HITLayout is a reusable Amazon Mechanical Turk project template used to provide Human Intelligence Task (HIT) question data for CreateHIT.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The name of the parameter in the HITLayout.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value substituted for the parameter referenced in the HITLayout.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'HIT': {
+              'HITId': 'string',
+              'HITTypeId': 'string',
+              'HITGroupId': 'string',
+              'HITLayoutId': 'string',
+              'CreationTime': datetime(2015, 1, 1),
+              'Title': 'string',
+              'Description': 'string',
+              'Question': 'string',
+              'Keywords': 'string',
+              'HITStatus': 'Assignable'|'Unassignable'|'Reviewable'|'Reviewing'|'Disposed',
+              'MaxAssignments': 123,
+              'Reward': 'string',
+              'AutoApprovalDelayInSeconds': 123,
+              'Expiration': datetime(2015, 1, 1),
+              'AssignmentDurationInSeconds': 123,
+              'RequesterAnnotation': 'string',
+              'QualificationRequirements': [
+                  {
+                      'QualificationTypeId': 'string',
+                      'Comparator': 'LessThan'|'LessThanOrEqualTo'|'GreaterThan'|'GreaterThanOrEqualTo'|'EqualTo'|'NotEqualTo'|'Exists'|'DoesNotExist'|'In'|'NotIn',
+                      'IntegerValues': [
+                          123,
+                      ],
+                      'LocaleValues': [
+                          {
+                              'Country': 'string',
+                              'Subdivision': 'string'
+                          },
+                      ],
+                      'RequiredToPreview': True|False,
+                      'ActionsGuarded': 'Accept'|'PreviewAndAccept'|'DiscoverPreviewAndAccept'
+                  },
+              ],
+              'HITReviewStatus': 'NotReviewed'|'MarkedForReview'|'ReviewedAppropriate'|'ReviewedInappropriate',
+              'NumberOfAssignmentsPending': 123,
+              'NumberOfAssignmentsAvailable': 123,
+              'NumberOfAssignmentsCompleted': 123
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **HIT** *(dict) --* 
+
+        Contains the newly created HIT data. For a description of the HIT data structure as it appears in responses, see the HIT Data Structure documentation.
+
+        
+        
+
+        - **HITId** *(string) --* 
+
+          A unique identifier for the HIT.
+
+          
+        
+
+        - **HITTypeId** *(string) --* 
+
+          The ID of the HIT type of this HIT
+
+          
+        
+
+        - **HITGroupId** *(string) --* 
+
+          The ID of the HIT Group of this HIT.
+
+          
+        
+
+        - **HITLayoutId** *(string) --* 
+
+          The ID of the HIT Layout of this HIT.
+
+          
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          The date and time the HIT was created.
+
+          
+        
+
+        - **Title** *(string) --* 
+
+          The title of the HIT.
+
+          
+        
+
+        - **Description** *(string) --* 
+
+          A general description of the HIT.
+
+          
+        
+
+        - **Question** *(string) --* 
+
+          The data the Worker completing the HIT uses produce the results. This is either either a QuestionForm, HTMLQuestion or an ExternalQuestion data structure.
+
+          
+        
+
+        - **Keywords** *(string) --* 
+
+          One or more words or phrases that describe the HIT, separated by commas. Search terms similar to the keywords of a HIT are more likely to have the HIT in the search results.
+
+          
+        
+
+        - **HITStatus** *(string) --* 
+
+          The status of the HIT and its assignments. Valid Values are Assignable | Unassignable | Reviewable | Reviewing | Disposed.
+
+          
+        
+
+        - **MaxAssignments** *(integer) --* 
+
+          The number of times the HIT can be accepted and completed before the HIT becomes unavailable.
+
+          
+        
+
+        - **Reward** *(string) --* 
+
+          A string representing a currency amount.
+
+          
+        
+
+        - **AutoApprovalDelayInSeconds** *(integer) --* 
+
+          The amount of time, in seconds, after the Worker submits an assignment for the HIT that the results are automatically approved by Amazon Mechanical Turk. This is the amount of time the Requester has to reject an assignment submitted by a Worker before the assignment is auto-approved and the Worker is paid.
+
+          
+        
+
+        - **Expiration** *(datetime) --* 
+
+          The date and time the HIT expires.
+
+          
+        
+
+        - **AssignmentDurationInSeconds** *(integer) --* 
+
+          The length of time, in seconds, that a Worker has to complete the HIT after accepting it.
+
+          
+        
+
+        - **RequesterAnnotation** *(string) --* 
+
+          An arbitrary data field the Requester who created the HIT can use. This field is visible only to the creator of the HIT.
+
+          
+        
+
+        - **QualificationRequirements** *(list) --* 
+
+          Conditions that a Worker's Qualifications must meet in order to accept the HIT. A HIT can have between zero and ten Qualification requirements. All requirements must be met in order for a Worker to accept the HIT. Additionally, other actions can be restricted using the ``ActionsGuarded`` field on each ``QualificationRequirement`` structure.
+
+          
+          
+
+          - *(dict) --* 
+
+            The QualificationRequirement data structure describes a Qualification that a Worker must have before the Worker is allowed to accept a HIT. A requirement may optionally state that a Worker must have the Qualification in order to preview the HIT, or see the HIT in search results.
+
+            
+            
+
+            - **QualificationTypeId** *(string) --* 
+
+              The ID of the Qualification type for the requirement.
+
+              
+            
+
+            - **Comparator** *(string) --* 
+
+              The kind of comparison to make against a Qualification's value. You can compare a Qualification's value to an IntegerValue to see if it is LessThan, LessThanOrEqualTo, GreaterThan, GreaterThanOrEqualTo, EqualTo, or NotEqualTo the IntegerValue. You can compare it to a LocaleValue to see if it is EqualTo, or NotEqualTo the LocaleValue. You can check to see if the value is In or NotIn a set of IntegerValue or LocaleValue values. Lastly, a Qualification requirement can also test if a Qualification Exists or DoesNotExist in the user's profile, regardless of its value.
+
+              
+            
+
+            - **IntegerValues** *(list) --* 
+
+              The integer value to compare against the Qualification's value. IntegerValue must not be present if Comparator is Exists or DoesNotExist. IntegerValue can only be used if the Qualification type has an integer value; it cannot be used with the Worker_Locale QualificationType ID. When performing a set comparison by using the In or the NotIn comparator, you can use up to 15 IntegerValue elements in a QualificationRequirement data structure.
+
+              
+              
+
+              - *(integer) --* 
+          
+            
+
+            - **LocaleValues** *(list) --* 
+
+              The locale value to compare against the Qualification's value. The local value must be a valid ISO 3166 country code or supports ISO 3166-2 subdivisions. LocaleValue can only be used with a Worker_Locale QualificationType ID. LocaleValue can only be used with the EqualTo, NotEqualTo, In, and NotIn comparators. You must only use a single LocaleValue element when using the EqualTo or NotEqualTo comparators. When performing a set comparison by using the In or the NotIn comparator, you can use up to 30 LocaleValue elements in a QualificationRequirement data structure.
+
+              
+              
+
+              - *(dict) --* 
+
+                The Locale data structure represents a geographical region or location.
+
+                
+                
+
+                - **Country** *(string) --* 
+
+                  The country of the locale. Must be a valid ISO 3166 country code. For example, the code US refers to the United States of America.
+
+                  
+                
+
+                - **Subdivision** *(string) --* 
+
+                  The state or subdivision of the locale. A valid ISO 3166-2 subdivision code. For example, the code WA refers to the state of Washington.
+
+                  
+            
+          
+            
+
+            - **RequiredToPreview** *(boolean) --* 
+
+              DEPRECATED: Use the ``ActionsGuarded`` field instead. If RequiredToPreview is true, the question data for the HIT will not be shown when a Worker whose Qualifications do not meet this requirement tries to preview the HIT. That is, a Worker's Qualifications must meet all of the requirements for which RequiredToPreview is true in order to preview the HIT. If a Worker meets all of the requirements where RequiredToPreview is true (or if there are no such requirements), but does not meet all of the requirements for the HIT, the Worker will be allowed to preview the HIT's question data, but will not be allowed to accept and complete the HIT. The default is false. This should not be used in combination with the ``ActionsGuarded`` field.
+
+              
+            
+
+            - **ActionsGuarded** *(string) --* 
+
+              Setting this attribute prevents Workers whose Qualifications do not meet this QualificationRequirement from taking the specified action. Valid arguments include "Accept" (Worker cannot accept the HIT, but can preview the HIT and see it in their search results), "PreviewAndAccept" (Worker cannot accept or preview the HIT, but can see the HIT in their search results), and "DiscoverPreviewAndAccept" (Worker cannot accept, preview, or see the HIT in their search results). It's possible for you to create a HIT with multiple QualificationRequirements (which can have different values for the ActionGuarded attribute). In this case, the Worker is only permitted to perform an action when they have met all QualificationRequirements guarding the action. The actions in the order of least restrictive to most restrictive are Discover, Preview and Accept. For example, if a Worker meets all QualificationRequirements that are set to DiscoverPreviewAndAccept, but do not meet all requirements that are set with PreviewAndAccept, then the Worker will be able to Discover, i.e. see the HIT in their search result, but will not be able to Preview or Accept the HIT. ActionsGuarded should not be used in combination with the ``RequiredToPreview`` field.
+
+              
+        
+      
+        
+
+        - **HITReviewStatus** *(string) --* 
+
+          Indicates the review status of the HIT. Valid Values are NotReviewed | MarkedForReview | ReviewedAppropriate | ReviewedInappropriate.
+
+          
+        
+
+        - **NumberOfAssignmentsPending** *(integer) --* 
+
+          The number of assignments for this HIT that are being previewed or have been accepted by Workers, but have not yet been submitted, returned, or abandoned.
+
+          
+        
+
+        - **NumberOfAssignmentsAvailable** *(integer) --* 
+
+          The number of assignments for this HIT that are available for Workers to accept.
+
+          
+        
+
+        - **NumberOfAssignmentsCompleted** *(integer) --* 
+
+          The number of assignments for this HIT that have been approved or rejected.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`MTurk.Client.exceptions.ServiceFault`
+
+  
+  *   :py:class:`MTurk.Client.exceptions.RequestError`
+
+  

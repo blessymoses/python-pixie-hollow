@@ -1,0 +1,411 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / describe_generated_template
+
+***************************
+describe_generated_template
+***************************
+
+
+
+.. py:method:: CloudFormation.Client.describe_generated_template(**kwargs)
+
+  
+
+  Describes a generated template. The output includes details about the progress of the creation of a generated template started by a ``CreateGeneratedTemplate`` API action or the update of a generated template started with an ``UpdateGeneratedTemplate`` API action.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/DescribeGeneratedTemplate>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_generated_template(
+        GeneratedTemplateName='string'
+    )
+    
+  :type GeneratedTemplateName: string
+  :param GeneratedTemplateName: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of a generated template.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GeneratedTemplateId': 'string',
+          'GeneratedTemplateName': 'string',
+          'Resources': [
+              {
+                  'ResourceType': 'string',
+                  'LogicalResourceId': 'string',
+                  'ResourceIdentifier': {
+                      'string': 'string'
+                  },
+                  'ResourceStatus': 'PENDING'|'IN_PROGRESS'|'FAILED'|'COMPLETE',
+                  'ResourceStatusReason': 'string',
+                  'Warnings': [
+                      {
+                          'Type': 'MUTUALLY_EXCLUSIVE_PROPERTIES'|'UNSUPPORTED_PROPERTIES'|'MUTUALLY_EXCLUSIVE_TYPES'|'EXCLUDED_PROPERTIES'|'EXCLUDED_RESOURCES',
+                          'Properties': [
+                              {
+                                  'PropertyPath': 'string',
+                                  'Required': True|False,
+                                  'Description': 'string'
+                              },
+                          ]
+                      },
+                  ]
+              },
+          ],
+          'Status': 'CREATE_PENDING'|'UPDATE_PENDING'|'DELETE_PENDING'|'CREATE_IN_PROGRESS'|'UPDATE_IN_PROGRESS'|'DELETE_IN_PROGRESS'|'FAILED'|'COMPLETE',
+          'StatusReason': 'string',
+          'CreationTime': datetime(2015, 1, 1),
+          'LastUpdatedTime': datetime(2015, 1, 1),
+          'Progress': {
+              'ResourcesSucceeded': 123,
+              'ResourcesFailed': 123,
+              'ResourcesProcessing': 123,
+              'ResourcesPending': 123
+          },
+          'StackId': 'string',
+          'TemplateConfiguration': {
+              'DeletionPolicy': 'DELETE'|'RETAIN',
+              'UpdateReplacePolicy': 'DELETE'|'RETAIN'
+          },
+          'TotalWarnings': 123
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GeneratedTemplateId** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the generated template. The format is ``arn:${Partition}:cloudformation:${Region}:${Account}:generatedtemplate/${Id}``. For example, ``arn:aws:cloudformation:us-east-1:123456789012:generatedtemplate/2e8465c1-9a80-43ea-a3a3-4f2d692fe6dc ``.
+
+        
+      
+
+      - **GeneratedTemplateName** *(string) --* 
+
+        The name of the generated template.
+
+        
+      
+
+      - **Resources** *(list) --* 
+
+        A list of objects describing the details of the resources in the template generation.
+
+        
+        
+
+        - *(dict) --* 
+
+          Details about a resource in a generated template
+
+          
+          
+
+          - **ResourceType** *(string) --* 
+
+            The type of the resource, such as ``AWS::DynamoDB::Table``. For the list of supported resources, see `Resource type support for imports and drift detection <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resource-import-supported-resources.html>`__ In the *CloudFormation User Guide*
+
+            
+          
+
+          - **LogicalResourceId** *(string) --* 
+
+            The logical id for this resource in the final generated template.
+
+            
+          
+
+          - **ResourceIdentifier** *(dict) --* 
+
+            A list of up to 256 key-value pairs that identifies the resource in the generated template. The key is the name of one of the primary identifiers for the resource. (Primary identifiers are specified in the ``primaryIdentifier`` list in the resource schema.) The value is the value of that primary identifier. For example, for a ``AWS::DynamoDB::Table`` resource, the primary identifiers is ``TableName`` so the key-value pair could be ``"TableName": "MyDDBTable"``. For more information, see `primaryIdentifier <https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-type-schema.html#schema-properties-primaryidentifier>`__ in the *CloudFormation Command Line Interface (CLI) User Guide*.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(string) --* 
+        
+      
+          
+
+          - **ResourceStatus** *(string) --* 
+
+            Status of the processing of a resource in a generated template.
+
+               InProgress   
+
+            The resource processing is still in progress.
+
+               Complete   
+
+            The resource processing is complete.
+
+               Pending   
+
+            The resource processing is pending.
+
+               Failed   
+
+            The resource processing has failed.
+
+            
+          
+
+          - **ResourceStatusReason** *(string) --* 
+
+            The reason for the resource detail, providing more information if a failure happened.
+
+            
+          
+
+          - **Warnings** *(list) --* 
+
+            The warnings generated for this resource.
+
+            
+            
+
+            - *(dict) --* 
+
+              The warnings generated for a specific resource for this generated template.
+
+              
+              
+
+              - **Type** *(string) --* 
+
+                The type of this warning. For more information, see `Resolve write-only properties <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/generate-IaC-write-only-properties.html>`__ in the *CloudFormation User Guide*.
+
+                 
+
+                
+                * ``MUTUALLY_EXCLUSIVE_PROPERTIES`` - The resource requires mutually-exclusive write-only properties. The IaC generator selects one set of mutually exclusive properties and converts the included properties into parameters. The parameter names have a suffix ``OneOf`` and the parameter descriptions indicate that the corresponding property can be replaced with other exclusive properties.
+                 
+                * ``UNSUPPORTED_PROPERTIES`` - Unsupported properties are present in the resource. One example of unsupported properties would be a required write-only property that is an array, because a parameter cannot be an array. Another example is an optional write-only property.
+                 
+                * ``MUTUALLY_EXCLUSIVE_TYPES`` - One or more required write-only properties are found in the resource, and the type of that property can be any of several types.
+                
+
+                 
+
+                .. note::
+
+                  
+
+                  Currently the resource and property reference documentation does not indicate if a property uses a type of ``oneOf`` or ``anyOf``. You need to look at the resource provider schema.
+
+                  
+
+                
+              
+
+              - **Properties** *(list) --* 
+
+                The properties of the resource that are impacted by this warning.
+
+                
+                
+
+                - *(dict) --* 
+
+                  A specific property that is impacted by a warning.
+
+                  
+                  
+
+                  - **PropertyPath** *(string) --* 
+
+                    The path of the property. For example, if this is for the ``S3Bucket`` member of the ``Code`` property, the property path would be ``Code/S3Bucket``.
+
+                    
+                  
+
+                  - **Required** *(boolean) --* 
+
+                    If ``true``, the specified property is required.
+
+                    
+                  
+
+                  - **Description** *(string) --* 
+
+                    The description of the property from the resource provider schema.
+
+                    
+              
+            
+          
+        
+      
+    
+      
+
+      - **Status** *(string) --* 
+
+        The status of the template generation. Supported values are:
+
+         
+
+        
+        * ``CreatePending`` - the creation of the template is pending.
+         
+        * ``CreateInProgress`` - the creation of the template is in progress.
+         
+        * ``DeletePending`` - the deletion of the template is pending.
+         
+        * ``DeleteInProgress`` - the deletion of the template is in progress.
+         
+        * ``UpdatePending`` - the update of the template is pending.
+         
+        * ``UpdateInProgress`` - the update of the template is in progress.
+         
+        * ``Failed`` - the template operation failed.
+         
+        * ``Complete`` - the template operation is complete.
+        
+
+        
+      
+
+      - **StatusReason** *(string) --* 
+
+        The reason for the current template generation status. This will provide more details if a failure happened.
+
+        
+      
+
+      - **CreationTime** *(datetime) --* 
+
+        The time the generated template was created.
+
+        
+      
+
+      - **LastUpdatedTime** *(datetime) --* 
+
+        The time the generated template was last updated.
+
+        
+      
+
+      - **Progress** *(dict) --* 
+
+        An object describing the progress of the template generation.
+
+        
+        
+
+        - **ResourcesSucceeded** *(integer) --* 
+
+          The number of resources that succeeded the template generation.
+
+          
+        
+
+        - **ResourcesFailed** *(integer) --* 
+
+          The number of resources that failed the template generation.
+
+          
+        
+
+        - **ResourcesProcessing** *(integer) --* 
+
+          The number of resources that are in-process for the template generation.
+
+          
+        
+
+        - **ResourcesPending** *(integer) --* 
+
+          The number of resources that are still pending the template generation.
+
+          
+    
+      
+
+      - **StackId** *(string) --* 
+
+        The stack ARN of the base stack if a base stack was provided when generating the template.
+
+        
+      
+
+      - **TemplateConfiguration** *(dict) --* 
+
+        The configuration details of the generated template, including the ``DeletionPolicy`` and ``UpdateReplacePolicy``.
+
+        
+        
+
+        - **DeletionPolicy** *(string) --* 
+
+          The ``DeletionPolicy`` assigned to resources in the generated template. Supported values are:
+
+           
+
+          
+          * ``DELETE`` - delete all resources when the stack is deleted.
+           
+          * ``RETAIN`` - retain all resources when the stack is deleted.
+          
+
+           
+
+          For more information, see `DeletionPolicy attribute <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html>`__ in the *CloudFormation User Guide*.
+
+          
+        
+
+        - **UpdateReplacePolicy** *(string) --* 
+
+          The ``UpdateReplacePolicy`` assigned to resources in the generated template. Supported values are:
+
+           
+
+          
+          * ``DELETE`` - delete all resources when the resource is replaced during an update operation.
+           
+          * ``RETAIN`` - retain all resources when the resource is replaced during an update operation.
+          
+
+           
+
+          For more information, see `UpdateReplacePolicy attribute <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html>`__ in the *CloudFormation User Guide*.
+
+          
+    
+      
+
+      - **TotalWarnings** *(integer) --* 
+
+        The number of warnings generated for this template. The warnings are found in the details of each of the resources in the template.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.GeneratedTemplateNotFoundException`
+
+  

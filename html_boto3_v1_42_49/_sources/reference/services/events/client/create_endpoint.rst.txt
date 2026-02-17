@@ -1,0 +1,330 @@
+:doc:`EventBridge <../../events>` / Client / create_endpoint
+
+***************
+create_endpoint
+***************
+
+
+
+.. py:method:: EventBridge.Client.create_endpoint(**kwargs)
+
+  
+
+  Creates a global endpoint. Global endpoints improve your application's availability by making it regional-fault tolerant. To do this, you define a primary and secondary Region with event buses in each Region. You also create a Amazon Route 53 health check that will tell EventBridge to route events to the secondary Region when an "unhealthy" state is encountered and events will be routed back to the primary Region when the health check reports a "healthy" state.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/eventbridge-2015-10-07/CreateEndpoint>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_endpoint(
+        Name='string',
+        Description='string',
+        RoutingConfig={
+            'FailoverConfig': {
+                'Primary': {
+                    'HealthCheck': 'string'
+                },
+                'Secondary': {
+                    'Route': 'string'
+                }
+            }
+        },
+        ReplicationConfig={
+            'State': 'ENABLED'|'DISABLED'
+        },
+        EventBuses=[
+            {
+                'EventBusArn': 'string'
+            },
+        ],
+        RoleArn='string'
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name of the global endpoint. For example, ``"Name":"us-east-2-custom_bus_A-endpoint"``.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    A description of the global endpoint.
+
+    
+
+  
+  :type RoutingConfig: dict
+  :param RoutingConfig: **[REQUIRED]** 
+
+    Configure the routing policy, including the health check and secondary Region..
+
+    
+
+  
+    - **FailoverConfig** *(dict) --* **[REQUIRED]** 
+
+      The failover configuration for an endpoint. This includes what triggers failover and what happens when it's triggered.
+
+      
+
+    
+      - **Primary** *(dict) --* **[REQUIRED]** 
+
+        The main Region of the endpoint.
+
+        
+
+      
+        - **HealthCheck** *(string) --* **[REQUIRED]** 
+
+          The ARN of the health check used by the endpoint to determine whether failover is triggered.
+
+          
+
+        
+      
+      - **Secondary** *(dict) --* **[REQUIRED]** 
+
+        The Region that events are routed to when failover is triggered or event replication is enabled.
+
+        
+
+      
+        - **Route** *(string) --* **[REQUIRED]** 
+
+          Defines the secondary Region.
+
+          
+
+        
+      
+    
+  
+  :type ReplicationConfig: dict
+  :param ReplicationConfig: 
+
+    Enable or disable event replication. The default state is ``ENABLED`` which means you must supply a ``RoleArn``. If you don't have a ``RoleArn`` or you don't want event replication enabled, set the state to ``DISABLED``.
+
+    
+
+  
+    - **State** *(string) --* 
+
+      The state of event replication.
+
+      
+
+    
+  
+  :type EventBuses: list
+  :param EventBuses: **[REQUIRED]** 
+
+    Define the event buses used.
+
+     
+
+    .. warning::
+
+       
+
+      The names of the event buses must be identical in each Region.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      The event buses the endpoint is associated with.
+
+      
+
+    
+      - **EventBusArn** *(string) --* **[REQUIRED]** 
+
+        The ARN of the event bus the endpoint is associated with.
+
+        
+
+      
+    
+
+  :type RoleArn: string
+  :param RoleArn: 
+
+    The ARN of the role used for replication.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Name': 'string',
+          'Arn': 'string',
+          'RoutingConfig': {
+              'FailoverConfig': {
+                  'Primary': {
+                      'HealthCheck': 'string'
+                  },
+                  'Secondary': {
+                      'Route': 'string'
+                  }
+              }
+          },
+          'ReplicationConfig': {
+              'State': 'ENABLED'|'DISABLED'
+          },
+          'EventBuses': [
+              {
+                  'EventBusArn': 'string'
+              },
+          ],
+          'RoleArn': 'string',
+          'State': 'ACTIVE'|'CREATING'|'UPDATING'|'DELETING'|'CREATE_FAILED'|'UPDATE_FAILED'|'DELETE_FAILED'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Name** *(string) --* 
+
+        The name of the endpoint that was created by this request.
+
+        
+      
+
+      - **Arn** *(string) --* 
+
+        The ARN of the endpoint that was created by this request.
+
+        
+      
+
+      - **RoutingConfig** *(dict) --* 
+
+        The routing configuration defined by this request.
+
+        
+        
+
+        - **FailoverConfig** *(dict) --* 
+
+          The failover configuration for an endpoint. This includes what triggers failover and what happens when it's triggered.
+
+          
+          
+
+          - **Primary** *(dict) --* 
+
+            The main Region of the endpoint.
+
+            
+            
+
+            - **HealthCheck** *(string) --* 
+
+              The ARN of the health check used by the endpoint to determine whether failover is triggered.
+
+              
+        
+          
+
+          - **Secondary** *(dict) --* 
+
+            The Region that events are routed to when failover is triggered or event replication is enabled.
+
+            
+            
+
+            - **Route** *(string) --* 
+
+              Defines the secondary Region.
+
+              
+        
+      
+    
+      
+
+      - **ReplicationConfig** *(dict) --* 
+
+        Whether event replication was enabled or disabled by this request.
+
+        
+        
+
+        - **State** *(string) --* 
+
+          The state of event replication.
+
+          
+    
+      
+
+      - **EventBuses** *(list) --* 
+
+        The event buses used by this request.
+
+        
+        
+
+        - *(dict) --* 
+
+          The event buses the endpoint is associated with.
+
+          
+          
+
+          - **EventBusArn** *(string) --* 
+
+            The ARN of the event bus the endpoint is associated with.
+
+            
+      
+    
+      
+
+      - **RoleArn** *(string) --* 
+
+        The ARN of the role used by event replication for this request.
+
+        
+      
+
+      - **State** *(string) --* 
+
+        The state of the endpoint that was created by this request.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`EventBridge.Client.exceptions.ResourceAlreadyExistsException`
+
+  
+  *   :py:class:`EventBridge.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`EventBridge.Client.exceptions.InternalException`
+
+  

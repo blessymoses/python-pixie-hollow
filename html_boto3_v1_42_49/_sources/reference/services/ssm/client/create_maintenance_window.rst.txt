@@ -1,0 +1,254 @@
+:doc:`SSM <../../ssm>` / Client / create_maintenance_window
+
+*************************
+create_maintenance_window
+*************************
+
+
+
+.. py:method:: SSM.Client.create_maintenance_window(**kwargs)
+
+  
+
+  Creates a new maintenance window.
+
+   
+
+  .. note::
+
+    
+
+    The value you specify for ``Duration`` determines the specific end time for the maintenance window based on the time it begins. No maintenance window tasks are permitted to start after the resulting endtime minus the number of hours you specify for ``Cutoff``. For example, if the maintenance window starts at 3 PM, the duration is three hours, and the value you specify for ``Cutoff`` is one hour, no maintenance window tasks can start after 5 PM.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/CreateMaintenanceWindow>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_maintenance_window(
+        Name='string',
+        Description='string',
+        StartDate='string',
+        EndDate='string',
+        Schedule='string',
+        ScheduleTimezone='string',
+        ScheduleOffset=123,
+        Duration=123,
+        Cutoff=123,
+        AllowUnassociatedTargets=True|False,
+        ClientToken='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name of the maintenance window.
+
+    
+
+  
+  :type Description: string
+  :param Description: 
+
+    An optional description for the maintenance window. We recommend specifying a description to help you organize your maintenance windows.
+
+    
+
+  
+  :type StartDate: string
+  :param StartDate: 
+
+    The date and time, in ISO-8601 Extended format, for when you want the maintenance window to become active. ``StartDate`` allows you to delay activation of the maintenance window until the specified future date.
+
+     
+
+    .. note::
+
+      
+
+      When using a rate schedule, if you provide a start date that occurs in the past, the current date and time are used as the start date.
+
+      
+
+    
+
+  
+  :type EndDate: string
+  :param EndDate: 
+
+    The date and time, in ISO-8601 Extended format, for when you want the maintenance window to become inactive. ``EndDate`` allows you to set a date and time in the future when the maintenance window will no longer run.
+
+    
+
+  
+  :type Schedule: string
+  :param Schedule: **[REQUIRED]** 
+
+    The schedule of the maintenance window in the form of a cron or rate expression.
+
+    
+
+  
+  :type ScheduleTimezone: string
+  :param ScheduleTimezone: 
+
+    The time zone that the scheduled maintenance window executions are based on, in Internet Assigned Numbers Authority (IANA) format. For example: "America/Los_Angeles", "UTC", or "Asia/Seoul". For more information, see the `Time Zone Database <https://www.iana.org/time-zones>`__ on the IANA website.
+
+    
+
+  
+  :type ScheduleOffset: integer
+  :param ScheduleOffset: 
+
+    The number of days to wait after the date and time specified by a cron expression before running the maintenance window.
+
+     
+
+    For example, the following cron expression schedules a maintenance window to run on the third Tuesday of every month at 11:30 PM.
+
+     
+
+    ``cron(30 23 ? * TUE#3 *)``
+
+     
+
+    If the schedule offset is ``2``, the maintenance window won't run until two days later.
+
+    
+
+  
+  :type Duration: integer
+  :param Duration: **[REQUIRED]** 
+
+    The duration of the maintenance window in hours.
+
+    
+
+  
+  :type Cutoff: integer
+  :param Cutoff: **[REQUIRED]** 
+
+    The number of hours before the end of the maintenance window that Amazon Web Services Systems Manager stops scheduling new tasks for execution.
+
+    
+
+  
+  :type AllowUnassociatedTargets: boolean
+  :param AllowUnassociatedTargets: **[REQUIRED]** 
+
+    Enables a maintenance window task to run on managed nodes, even if you haven't registered those nodes as targets. If enabled, then you must specify the unregistered managed nodes (by node ID) when you register a task with the maintenance window.
+
+     
+
+    If you don't enable this option, then you must specify previously-registered targets when you register a task with the maintenance window.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: 
+
+    User-provided idempotency token.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    Optional metadata that you assign to a resource. Tags enable you to categorize a resource in different ways, such as by purpose, owner, or environment. For example, you might want to tag a maintenance window to identify the type of tasks it will run, the types of targets, and the environment it will run in. In this case, you could specify the following key-value pairs:
+
+     
+
+    
+    * ``Key=TaskType,Value=AgentUpdate``
+     
+    * ``Key=OS,Value=Windows``
+     
+    * ``Key=Environment,Value=Production``
+    
+
+     
+
+    .. note::
+
+      
+
+      To add tags to an existing maintenance window, use the  AddTagsToResource operation.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      Metadata that you assign to your Amazon Web Services resources. Tags enable you to categorize your resources in different ways, for example, by purpose, owner, or environment. In Amazon Web Services Systems Manager, you can apply tags to Systems Manager documents (SSM documents), managed nodes, maintenance windows, parameters, patch baselines, OpsItems, and OpsMetadata.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The name of the tag.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value of the tag.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'WindowId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **WindowId** *(string) --* 
+
+        The ID of the created maintenance window.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.IdempotentParameterMismatch`
+
+  
+  *   :py:class:`SSM.Client.exceptions.ResourceLimitExceededException`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  

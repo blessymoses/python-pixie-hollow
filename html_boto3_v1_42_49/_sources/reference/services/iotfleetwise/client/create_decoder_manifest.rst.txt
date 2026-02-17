@@ -1,0 +1,780 @@
+:doc:`IoTFleetWise <../../iotfleetwise>` / Client / create_decoder_manifest
+
+***********************
+create_decoder_manifest
+***********************
+
+
+
+.. py:method:: IoTFleetWise.Client.create_decoder_manifest(**kwargs)
+
+  
+
+  Creates the decoder manifest associated with a model manifest. To create a decoder manifest, the following must be true:
+
+   
+
+  
+  * Every signal decoder has a unique name.
+   
+  * Each signal decoder is associated with a network interface.
+   
+  * Each network interface has a unique ID.
+   
+  * The signal decoders are specified in the model manifest.
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotfleetwise-2021-06-17/CreateDecoderManifest>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_decoder_manifest(
+        name='string',
+        description='string',
+        modelManifestArn='string',
+        signalDecoders=[
+            {
+                'fullyQualifiedName': 'string',
+                'type': 'CAN_SIGNAL'|'OBD_SIGNAL'|'MESSAGE_SIGNAL'|'CUSTOM_DECODING_SIGNAL',
+                'interfaceId': 'string',
+                'canSignal': {
+                    'messageId': 123,
+                    'isBigEndian': True|False,
+                    'isSigned': True|False,
+                    'startBit': 123,
+                    'offset': 123.0,
+                    'factor': 123.0,
+                    'length': 123,
+                    'name': 'string',
+                    'signalValueType': 'INTEGER'|'FLOATING_POINT'
+                },
+                'obdSignal': {
+                    'pidResponseLength': 123,
+                    'serviceMode': 123,
+                    'pid': 123,
+                    'scaling': 123.0,
+                    'offset': 123.0,
+                    'startByte': 123,
+                    'byteLength': 123,
+                    'bitRightShift': 123,
+                    'bitMaskLength': 123,
+                    'isSigned': True|False,
+                    'signalValueType': 'INTEGER'|'FLOATING_POINT'
+                },
+                'messageSignal': {
+                    'topicName': 'string',
+                    'structuredMessage': {
+                        'primitiveMessageDefinition': {
+                            'ros2PrimitiveMessageDefinition': {
+                                'primitiveType': 'BOOL'|'BYTE'|'CHAR'|'FLOAT32'|'FLOAT64'|'INT8'|'UINT8'|'INT16'|'UINT16'|'INT32'|'UINT32'|'INT64'|'UINT64'|'STRING'|'WSTRING',
+                                'offset': 123.0,
+                                'scaling': 123.0,
+                                'upperBound': 123
+                            }
+                        },
+                        'structuredMessageListDefinition': {
+                            'name': 'string',
+                            'memberType': {'... recursive ...'},
+                            'listType': 'FIXED_CAPACITY'|'DYNAMIC_UNBOUNDED_CAPACITY'|'DYNAMIC_BOUNDED_CAPACITY',
+                            'capacity': 123
+                        },
+                        'structuredMessageDefinition': [
+                            {
+                                'fieldName': 'string',
+                                'dataType': {'... recursive ...'}
+                            },
+                        ]
+                    }
+                },
+                'customDecodingSignal': {
+                    'id': 'string'
+                }
+            },
+        ],
+        networkInterfaces=[
+            {
+                'interfaceId': 'string',
+                'type': 'CAN_INTERFACE'|'OBD_INTERFACE'|'VEHICLE_MIDDLEWARE'|'CUSTOM_DECODING_INTERFACE',
+                'canInterface': {
+                    'name': 'string',
+                    'protocolName': 'string',
+                    'protocolVersion': 'string'
+                },
+                'obdInterface': {
+                    'name': 'string',
+                    'requestMessageId': 123,
+                    'obdStandard': 'string',
+                    'pidRequestIntervalSeconds': 123,
+                    'dtcRequestIntervalSeconds': 123,
+                    'useExtendedIds': True|False,
+                    'hasTransmissionEcu': True|False
+                },
+                'vehicleMiddleware': {
+                    'name': 'string',
+                    'protocolName': 'ROS_2'
+                },
+                'customDecodingInterface': {
+                    'name': 'string'
+                }
+            },
+        ],
+        defaultForUnmappedSignals='CUSTOM_DECODING',
+        tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type name: string
+  :param name: **[REQUIRED]** 
+
+    The unique name of the decoder manifest to create.
+
+    
+
+  
+  :type description: string
+  :param description: 
+
+    A brief description of the decoder manifest.
+
+    
+
+  
+  :type modelManifestArn: string
+  :param modelManifestArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of the vehicle model (model manifest).
+
+    
+
+  
+  :type signalDecoders: list
+  :param signalDecoders: 
+
+    A list of information about signal decoders.
+
+    
+
+  
+    - *(dict) --* 
+
+      Information about a signal decoder.
+
+      
+
+    
+      - **fullyQualifiedName** *(string) --* **[REQUIRED]** 
+
+        The fully qualified name of a signal decoder as defined in a vehicle model.
+
+        
+
+      
+      - **type** *(string) --* **[REQUIRED]** 
+
+        The network protocol for the vehicle. For example, ``CAN_SIGNAL`` specifies a protocol that defines how data is communicated between electronic control units (ECUs). ``OBD_SIGNAL`` specifies a protocol that defines how self-diagnostic data is communicated between ECUs.
+
+        
+
+      
+      - **interfaceId** *(string) --* **[REQUIRED]** 
+
+        The ID of a network interface that specifies what network protocol a vehicle follows.
+
+        
+
+      
+      - **canSignal** *(dict) --* 
+
+        Information about signal decoder using the Controller Area Network (CAN) protocol.
+
+        
+
+      
+        - **messageId** *(integer) --* **[REQUIRED]** 
+
+          The ID of the message.
+
+          
+
+        
+        - **isBigEndian** *(boolean) --* **[REQUIRED]** 
+
+          Whether the byte ordering of a CAN message is big-endian.
+
+          
+
+        
+        - **isSigned** *(boolean) --* **[REQUIRED]** 
+
+          Determines whether the message is signed ( ``true``) or not ( ``false``). If it's signed, the message can represent both positive and negative numbers. The ``isSigned`` parameter only applies to the ``INTEGER`` raw signal type, and it doesn't affect the ``FLOATING_POINT`` raw signal type.
+
+          
+
+        
+        - **startBit** *(integer) --* **[REQUIRED]** 
+
+          Indicates the beginning of the CAN signal. This should always be the least significant bit (LSB).
+
+           
+
+          This value might be different from the value in a DBC file. For little endian signals, ``startBit`` is the same value as in the DBC file. For big endian signals in a DBC file, the start bit is the most significant bit (MSB). You will have to calculate the LSB instead and pass it as the ``startBit``.
+
+          
+
+        
+        - **offset** *(float) --* **[REQUIRED]** 
+
+          The offset used to calculate the signal value. Combined with factor, the calculation is ``value = raw_value * factor + offset``.
+
+          
+
+        
+        - **factor** *(float) --* **[REQUIRED]** 
+
+          A multiplier used to decode the CAN message.
+
+          
+
+        
+        - **length** *(integer) --* **[REQUIRED]** 
+
+          How many bytes of data are in the message.
+
+          
+
+        
+        - **name** *(string) --* 
+
+          The name of the signal.
+
+          
+
+        
+        - **signalValueType** *(string) --* 
+
+          The value type of the signal. The default value is ``INTEGER``.
+
+          
+
+        
+      
+      - **obdSignal** *(dict) --* 
+
+        Information about signal decoder using the on-board diagnostic (OBD) II protocol.
+
+        
+
+      
+        - **pidResponseLength** *(integer) --* **[REQUIRED]** 
+
+          The length of the requested data.
+
+          
+
+        
+        - **serviceMode** *(integer) --* **[REQUIRED]** 
+
+          The mode of operation (diagnostic service) in a message.
+
+          
+
+        
+        - **pid** *(integer) --* **[REQUIRED]** 
+
+          The diagnostic code used to request data from a vehicle for this signal.
+
+          
+
+        
+        - **scaling** *(float) --* **[REQUIRED]** 
+
+          A multiplier used to decode the message.
+
+          
+
+        
+        - **offset** *(float) --* **[REQUIRED]** 
+
+          The offset used to calculate the signal value. Combined with scaling, the calculation is ``value = raw_value * scaling + offset``.
+
+          
+
+        
+        - **startByte** *(integer) --* **[REQUIRED]** 
+
+          Indicates the beginning of the message.
+
+          
+
+        
+        - **byteLength** *(integer) --* **[REQUIRED]** 
+
+          The length of a message.
+
+          
+
+        
+        - **bitRightShift** *(integer) --* 
+
+          The number of positions to shift bits in the message.
+
+          
+
+        
+        - **bitMaskLength** *(integer) --* 
+
+          The number of bits to mask in a message.
+
+          
+
+        
+        - **isSigned** *(boolean) --* 
+
+          Determines whether the message is signed ( ``true``) or not ( ``false``). If it's signed, the message can represent both positive and negative numbers. The ``isSigned`` parameter only applies to the ``INTEGER`` raw signal type, and it doesn't affect the ``FLOATING_POINT`` raw signal type. The default value is ``false``.
+
+          
+
+        
+        - **signalValueType** *(string) --* 
+
+          The value type of the signal. The default value is ``INTEGER``.
+
+          
+
+        
+      
+      - **messageSignal** *(dict) --* 
+
+        The decoding information for a specific message which supports higher order data types.
+
+        
+
+      
+        - **topicName** *(string) --* **[REQUIRED]** 
+
+          The topic name for the message signal. It corresponds to topics in ROS 2.
+
+          
+
+        
+        - **structuredMessage** *(dict) --* **[REQUIRED]** 
+
+          The structured message for the message signal. It can be defined with either a ``primitiveMessageDefinition``, ``structuredMessageListDefinition``, or ``structuredMessageDefinition`` recursively.
+
+          .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``primitiveMessageDefinition``, ``structuredMessageListDefinition``, ``structuredMessageDefinition``. 
+
+        
+          - **primitiveMessageDefinition** *(dict) --* 
+
+            Represents a primitive type node of the complex data structure.
+
+            .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``ros2PrimitiveMessageDefinition``. 
+
+          
+            - **ros2PrimitiveMessageDefinition** *(dict) --* 
+
+              Information about a ``PrimitiveMessage`` using a ROS 2 compliant primitive type message of the complex data structure.
+
+              
+
+            
+              - **primitiveType** *(string) --* **[REQUIRED]** 
+
+                The primitive type (integer, floating point, boolean, etc.) for the ROS 2 primitive message definition.
+
+                
+
+              
+              - **offset** *(float) --* 
+
+                The offset used to calculate the signal value. Combined with scaling, the calculation is ``value = raw_value * scaling + offset``.
+
+                
+
+              
+              - **scaling** *(float) --* 
+
+                A multiplier used to decode the message.
+
+                
+
+              
+              - **upperBound** *(integer) --* 
+
+                An optional attribute specifying the upper bound for ``STRING`` and ``WSTRING``.
+
+                
+
+              
+            
+          
+          - **structuredMessageListDefinition** *(dict) --* 
+
+            Represents a list type node of the complex data structure.
+
+            
+
+          
+            - **name** *(string) --* **[REQUIRED]** 
+
+              The name of the structured message list definition.
+
+              
+
+            
+            - **memberType** *(dict) --* 
+
+              The member type of the structured message list definition.
+
+              .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``primitiveMessageDefinition``, ``structuredMessageListDefinition``, ``structuredMessageDefinition``. 
+
+            
+            - **listType** *(string) --* **[REQUIRED]** 
+
+              The type of list of the structured message list definition.
+
+              
+
+            
+            - **capacity** *(integer) --* 
+
+              The capacity of the structured message list definition when the list type is ``FIXED_CAPACITY`` or ``DYNAMIC_BOUNDED_CAPACITY``.
+
+              
+
+            
+          
+          - **structuredMessageDefinition** *(list) --* 
+
+            Represents a struct type node of the complex data structure.
+
+            
+
+          
+            - *(dict) --* 
+
+              Represents a ``StructureMessageName`` to ``DataType`` map element.
+
+              
+
+            
+              - **fieldName** *(string) --* **[REQUIRED]** 
+
+                The field name of the structured message. It determines how a data value is referenced in the target language.
+
+                
+
+              
+              - **dataType** *(dict) --* 
+
+                The data type.
+
+                .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``primitiveMessageDefinition``, ``structuredMessageListDefinition``, ``structuredMessageDefinition``. 
+
+              
+            
+        
+        
+      
+      - **customDecodingSignal** *(dict) --* 
+
+        Information about a `custom signal decoder <https://docs.aws.amazon.com/iot-fleetwise/latest/APIReference/API_CustomDecodingSignal.html>`__.
+
+         
+
+        .. warning::
+
+           
+
+          Access to certain Amazon Web Services IoT FleetWise features is currently gated. For more information, see `Amazon Web Services Region and feature availability <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+          
+
+        
+
+      
+        - **id** *(string) --* **[REQUIRED]** 
+
+          The ID of the signal.
+
+          
+
+        
+      
+    
+
+  :type networkInterfaces: list
+  :param networkInterfaces: 
+
+    A list of information about available network interfaces.
+
+    
+
+  
+    - *(dict) --* 
+
+      Represents a node and its specifications in an in-vehicle communication network. All signal decoders must be associated with a network node.
+
+       
+
+      To return this information about all the network interfaces specified in a decoder manifest, use the API operation.
+
+      
+
+    
+      - **interfaceId** *(string) --* **[REQUIRED]** 
+
+        The ID of the network interface.
+
+        
+
+      
+      - **type** *(string) --* **[REQUIRED]** 
+
+        The network protocol for the vehicle. For example, ``CAN_SIGNAL`` specifies a protocol that defines how data is communicated between electronic control units (ECUs). ``OBD_SIGNAL`` specifies a protocol that defines how self-diagnostic data is communicated between ECUs.
+
+        
+
+      
+      - **canInterface** *(dict) --* 
+
+        Information about a network interface specified by the Controller Area Network (CAN) protocol.
+
+        
+
+      
+        - **name** *(string) --* **[REQUIRED]** 
+
+          The unique name of the interface.
+
+          
+
+        
+        - **protocolName** *(string) --* 
+
+          The name of the communication protocol for the interface.
+
+          
+
+        
+        - **protocolVersion** *(string) --* 
+
+          The version of the communication protocol for the interface.
+
+          
+
+        
+      
+      - **obdInterface** *(dict) --* 
+
+        Information about a network interface specified by the on-board diagnostic (OBD) II protocol.
+
+        
+
+      
+        - **name** *(string) --* **[REQUIRED]** 
+
+          The name of the interface.
+
+          
+
+        
+        - **requestMessageId** *(integer) --* **[REQUIRED]** 
+
+          The ID of the message requesting vehicle data.
+
+          
+
+        
+        - **obdStandard** *(string) --* 
+
+          The standard OBD II PID.
+
+          
+
+        
+        - **pidRequestIntervalSeconds** *(integer) --* 
+
+          The maximum number message requests per second.
+
+          
+
+        
+        - **dtcRequestIntervalSeconds** *(integer) --* 
+
+          The maximum number message requests per diagnostic trouble code per second.
+
+          
+
+        
+        - **useExtendedIds** *(boolean) --* 
+
+          Whether to use extended IDs in the message.
+
+          
+
+        
+        - **hasTransmissionEcu** *(boolean) --* 
+
+          Whether the vehicle has a transmission control module (TCM).
+
+          
+
+        
+      
+      - **vehicleMiddleware** *(dict) --* 
+
+        The vehicle middleware defined as a type of network interface. Examples of vehicle middleware include ``ROS2`` and ``SOME/IP``.
+
+        
+
+      
+        - **name** *(string) --* **[REQUIRED]** 
+
+          The name of the vehicle middleware.
+
+          
+
+        
+        - **protocolName** *(string) --* **[REQUIRED]** 
+
+          The protocol name of the vehicle middleware.
+
+          
+
+        
+      
+      - **customDecodingInterface** *(dict) --* 
+
+        Information about a `custom network interface <https://docs.aws.amazon.com/iot-fleetwise/latest/APIReference/API_CustomDecodingInterface.html>`__.
+
+        
+
+      
+        - **name** *(string) --* **[REQUIRED]** 
+
+          The name of the interface.
+
+          
+
+        
+      
+    
+
+  :type defaultForUnmappedSignals: string
+  :param defaultForUnmappedSignals: 
+
+    Use default decoders for all unmapped signals in the model. You don't need to provide any detailed decoding information.
+
+     
+
+    .. warning::
+
+       
+
+      Access to certain Amazon Web Services IoT FleetWise features is currently gated. For more information, see `Amazon Web Services Region and feature availability <https://docs.aws.amazon.com/iot-fleetwise/latest/developerguide/fleetwise-regions.html>`__ in the *Amazon Web Services IoT FleetWise Developer Guide*.
+
+      
+
+    
+
+  
+  :type tags: list
+  :param tags: 
+
+    Metadata that can be used to manage the decoder manifest.
+
+    
+
+  
+    - *(dict) --* 
+
+      A set of key/value pairs that are used to manage the resource.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The tag's key.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The tag's value.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'name': 'string',
+          'arn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **name** *(string) --* 
+
+        The name of the created decoder manifest.
+
+        
+      
+
+      - **arn** *(string) --* 
+
+        The ARN of the created decoder manifest.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.LimitExceededException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.DecoderManifestValidationException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`IoTFleetWise.Client.exceptions.AccessDeniedException`
+
+  

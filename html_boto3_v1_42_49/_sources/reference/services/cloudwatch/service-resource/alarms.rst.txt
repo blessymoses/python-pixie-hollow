@@ -1,0 +1,308 @@
+:doc:`ServiceResource <index>` / Collection / alarms
+
+******
+alarms
+******
+
+
+
+.. py:attribute:: CloudWatch.ServiceResource.alarms
+
+  A collection of Alarm resources.A Alarm Collection will include all resources by default, and extreme caution should be taken when performing actions on all resources.
+
+  .. py:method:: all()
+
+    Creates an iterable of all Alarm resources in the collection.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarms>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = cloudwatch.alarms.all()
+      
+      
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    
+
+  .. py:method:: delete()
+
+    
+
+    Deletes the specified alarms. You can delete up to 100 alarms in one operation. However, this total can include no more than one composite alarm. For example, you could delete 99 metric alarms and one composite alarms with one operation, but you can't delete two composite alarms with one operation.
+
+     
+
+    If you specify any incorrect alarm names, the alarms you specify with correct names are still deleted. Other syntax errors might result in no alarms being deleted. To confirm that alarms were deleted successfully, you can use the `DescribeAlarms <https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html>`__ operation after using ``DeleteAlarms``.
+
+     
+
+    .. note::
+
+      
+
+      It is possible to create a loop or cycle of composite alarms, where composite alarm A depends on composite alarm B, and composite alarm B also depends on composite alarm A. In this scenario, you can't delete any composite alarm that is part of the cycle because there is always still a composite alarm that depends on that alarm that you want to delete.
+
+       
+
+      To get out of such a situation, you must break the cycle by changing the rule of one of the composite alarms in the cycle to remove a dependency that creates the cycle. The simplest change to make to break a cycle is to change the ``AlarmRule`` of one of the alarms to ``false``.
+
+       
+
+      Additionally, the evaluation of composite alarms stops if CloudWatch detects a cycle in the evaluation path.
+
+      
+
+    
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DeleteAlarms>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response = cloudwatch.alarms.delete()
+      
+      
+    
+    :returns: None
+
+  .. py:method:: disable_actions()
+
+    
+
+    Disables the actions for the specified alarms. When an alarm's actions are disabled, the alarm actions do not execute when the alarm state changes.
+
+    
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DisableAlarmActions>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response = cloudwatch.alarms.disable_actions()
+      
+      
+    
+    :returns: None
+
+  .. py:method:: enable_actions()
+
+    
+
+    Enables the actions for the specified alarms.
+
+    
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/EnableAlarmActions>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response = cloudwatch.alarms.enable_actions()
+      
+      
+    
+    :returns: None
+
+  .. py:method:: filter(**kwargs)
+
+    Creates an iterable of all Alarm resources in the collection filtered by kwargs passed to method. A Alarm collection will include all resources by default if no filters are provided, and extreme caution should be taken when performing actions on all resources.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarms>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = cloudwatch.alarms.filter(
+          AlarmNames=[
+              'string',
+          ],
+          AlarmNamePrefix='string',
+          AlarmTypes=[
+              'CompositeAlarm'|'MetricAlarm',
+          ],
+          ChildrenOfAlarmName='string',
+          ParentsOfAlarmName='string',
+          StateValue='OK'|'ALARM'|'INSUFFICIENT_DATA',
+          ActionPrefix='string',
+          MaxRecords=123,
+          NextToken='string'
+      )
+      
+    :type AlarmNames: list
+    :param AlarmNames: 
+
+      The names of the alarms to retrieve information about.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    :type AlarmNamePrefix: string
+    :param AlarmNamePrefix: 
+
+      An alarm name prefix. If you specify this parameter, you receive information about all alarms that have names that start with this prefix.
+
+       
+
+      If this parameter is specified, you cannot specify ``AlarmNames``.
+
+      
+
+    
+    :type AlarmTypes: list
+    :param AlarmTypes: 
+
+      Use this parameter to specify whether you want the operation to return metric alarms or composite alarms. If you omit this parameter, only metric alarms are returned, even if composite alarms exist in the account.
+
+       
+
+      For example, if you omit this parameter or specify ``MetricAlarms``, the operation returns only a list of metric alarms. It does not return any composite alarms, even if composite alarms exist in the account.
+
+       
+
+      If you specify ``CompositeAlarms``, the operation returns only a list of composite alarms, and does not return any metric alarms.
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+    :type ChildrenOfAlarmName: string
+    :param ChildrenOfAlarmName: 
+
+      If you use this parameter and specify the name of a composite alarm, the operation returns information about the "children" alarms of the alarm you specify. These are the metric alarms and composite alarms referenced in the ``AlarmRule`` field of the composite alarm that you specify in ``ChildrenOfAlarmName``. Information about the composite alarm that you name in ``ChildrenOfAlarmName`` is not returned.
+
+       
+
+      If you specify ``ChildrenOfAlarmName``, you cannot specify any other parameters in the request except for ``MaxRecords`` and ``NextToken``. If you do so, you receive a validation error.
+
+       
+
+      .. note::
+
+        
+
+        Only the ``Alarm Name``, ``ARN``, ``StateValue`` (OK/ALARM/INSUFFICIENT_DATA), and ``StateUpdatedTimestamp`` information are returned by this operation when you use this parameter. To get complete information about these alarms, perform another ``DescribeAlarms`` operation and specify the parent alarm names in the ``AlarmNames`` parameter.
+
+        
+
+      
+
+    
+    :type ParentsOfAlarmName: string
+    :param ParentsOfAlarmName: 
+
+      If you use this parameter and specify the name of a metric or composite alarm, the operation returns information about the "parent" alarms of the alarm you specify. These are the composite alarms that have ``AlarmRule`` parameters that reference the alarm named in ``ParentsOfAlarmName``. Information about the alarm that you specify in ``ParentsOfAlarmName`` is not returned.
+
+       
+
+      If you specify ``ParentsOfAlarmName``, you cannot specify any other parameters in the request except for ``MaxRecords`` and ``NextToken``. If you do so, you receive a validation error.
+
+       
+
+      .. note::
+
+        
+
+        Only the Alarm Name and ARN are returned by this operation when you use this parameter. To get complete information about these alarms, perform another ``DescribeAlarms`` operation and specify the parent alarm names in the ``AlarmNames`` parameter.
+
+        
+
+      
+
+    
+    :type StateValue: string
+    :param StateValue: 
+
+      Specify this parameter to receive information only about alarms that are currently in the state that you specify.
+
+      
+
+    
+    :type ActionPrefix: string
+    :param ActionPrefix: 
+
+      Use this parameter to filter the results of the operation to only those alarms that use a certain alarm action. For example, you could specify the ARN of an SNS topic to find all alarms that send notifications to that topic.
+
+      
+
+    
+    :type MaxRecords: integer
+    :param MaxRecords: 
+
+      The maximum number of alarm descriptions to retrieve.
+
+      
+
+    
+    :type NextToken: string
+    :param NextToken: 
+
+      The token returned by a previous call to indicate that there is more data available.
+
+      
+
+    
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    
+
+  .. py:method:: limit(**kwargs)
+
+    Creates an iterable up to a specified amount of Alarm resources in the collection.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarms>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = cloudwatch.alarms.limit(
+          count=123
+      )
+      
+    :type count: integer
+    :param count: The limit to the number of resources in the iterable.
+
+    
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    
+
+  .. py:method:: page_size(**kwargs)
+
+    Creates an iterable of all Alarm resources in the collection, but limits the number of items returned by each service call by the specified amount.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/monitoring-2010-08-01/DescribeAlarms>`_    
+
+
+    **Request Syntax**
+    ::
+
+      alarm_iterator = cloudwatch.alarms.page_size(
+          count=123
+      )
+      
+    :type count: integer
+    :param count: The number of items returned by each service call
+
+    
+    
+    :rtype: list(:py:class:`cloudwatch.Alarm`)
+    :returns: A list of Alarm resources
+    

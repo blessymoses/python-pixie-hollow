@@ -1,0 +1,236 @@
+:doc:`KMS <../../kms>` / Client / generate_mac
+
+************
+generate_mac
+************
+
+
+
+.. py:method:: KMS.Client.generate_mac(**kwargs)
+
+  
+
+  Generates a hash-based message authentication code (HMAC) for a message using an HMAC KMS key and a MAC algorithm that the key supports. HMAC KMS keys and the HMAC algorithms that KMS uses conform to industry standards defined in `RFC 2104 <https://datatracker.ietf.org/doc/html/rfc2104>`__.
+
+   
+
+  You can use value that GenerateMac returns in the  VerifyMac operation to demonstrate that the original message has not changed. Also, because a secret key is used to create the hash, you can verify that the party that generated the hash has the required secret key. You can also use the raw result to implement HMAC-based algorithms such as key derivation functions. This operation is part of KMS support for HMAC KMS keys. For details, see `HMAC keys in KMS <https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html>`__ in the *Key Management Service Developer Guide* .
+
+   
+
+  .. note::
+
+    
+
+    Best practices recommend that you limit the time during which any signing mechanism, including an HMAC, is effective. This deters an attack where the actor uses a signed message to establish validity repeatedly or long after the message is superseded. HMAC tags do not include a timestamp, but you can include a timestamp in the token or message to help you detect when its time to refresh the HMAC.
+
+    
+
+   
+
+  The KMS key that you use for this operation must be in a compatible key state. For details, see `Key states of KMS keys <https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html>`__ in the *Key Management Service Developer Guide*.
+
+   
+
+  **Cross-account use**: Yes. To perform this operation with a KMS key in a different Amazon Web Services account, specify the key ARN or alias ARN in the value of the ``KeyId`` parameter.
+
+   
+
+  **Required permissions**: `kms\:GenerateMac <https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html>`__ (key policy)
+
+   
+
+  **Related operations**:  VerifyMac
+
+   
+
+  **Eventual consistency**: The KMS API follows an eventual consistency model. For more information, see `KMS eventual consistency <https://docs.aws.amazon.com/kms/latest/developerguide/accessing-kms.html#programming-eventual-consistency>`__.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GenerateMac>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.generate_mac(
+        Message=b'bytes',
+        KeyId='string',
+        MacAlgorithm='HMAC_SHA_224'|'HMAC_SHA_256'|'HMAC_SHA_384'|'HMAC_SHA_512',
+        GrantTokens=[
+            'string',
+        ],
+        DryRun=True|False
+    )
+    
+  :type Message: bytes
+  :param Message: **[REQUIRED]** 
+
+    The message to be hashed. Specify a message of up to 4,096 bytes.
+
+     
+
+    ``GenerateMac`` and  VerifyMac do not provide special handling for message digests. If you generate an HMAC for a hash digest of a message, you must verify the HMAC of the same hash digest.
+
+    
+
+  
+  :type KeyId: string
+  :param KeyId: **[REQUIRED]** 
+
+    The HMAC KMS key to use in the operation. The MAC algorithm computes the HMAC for the message and the key as described in `RFC 2104 <https://datatracker.ietf.org/doc/html/rfc2104>`__.
+
+     
+
+    To identify an HMAC KMS key, use the  DescribeKey operation and see the ``KeySpec`` field in the response.
+
+    
+
+  
+  :type MacAlgorithm: string
+  :param MacAlgorithm: **[REQUIRED]** 
+
+    The MAC algorithm used in the operation.
+
+     
+
+    The algorithm must be compatible with the HMAC KMS key that you specify. To find the MAC algorithms that your HMAC KMS key supports, use the  DescribeKey operation and see the ``MacAlgorithms`` field in the ``DescribeKey`` response.
+
+    
+
+  
+  :type GrantTokens: list
+  :param GrantTokens: 
+
+    A list of grant tokens.
+
+     
+
+    Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved *eventual consistency*. For more information, see `Grant token <https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token>`__ and `Using a grant token <https://docs.aws.amazon.com/kms/latest/developerguide/using-grant-token.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type DryRun: boolean
+  :param DryRun: 
+
+    Checks if your request will succeed. ``DryRun`` is an optional parameter.
+
+     
+
+    To learn more about how to use this parameter, see `Testing your permissions <https://docs.aws.amazon.com/kms/latest/developerguide/testing-permissions.html>`__ in the *Key Management Service Developer Guide*.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Mac': b'bytes',
+          'MacAlgorithm': 'HMAC_SHA_224'|'HMAC_SHA_256'|'HMAC_SHA_384'|'HMAC_SHA_512',
+          'KeyId': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Mac** *(bytes) --* 
+
+        The hash-based message authentication code (HMAC) that was generated for the specified message, HMAC KMS key, and MAC algorithm.
+
+         
+
+        This is the standard, raw HMAC defined in `RFC 2104 <https://datatracker.ietf.org/doc/html/rfc2104>`__.
+
+        
+      
+
+      - **MacAlgorithm** *(string) --* 
+
+        The MAC algorithm that was used to generate the HMAC.
+
+        
+      
+
+      - **KeyId** *(string) --* 
+
+        The HMAC KMS key used in the operation.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`KMS.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DisabledException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KeyUnavailableException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidKeyUsageException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.InvalidGrantTokenException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInternalException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.KMSInvalidStateException`
+
+  
+  *   :py:class:`KMS.Client.exceptions.DryRunOperationException`
+
+  
+
+  **Examples**
+
+  This example generates an HMAC for a message, an HMAC KMS key, and a MAC algorithm. The algorithm must be supported by the specified HMAC KMS key.
+  ::
+
+    response = client.generate_mac(
+        # The HMAC KMS key input to the HMAC algorithm.
+        KeyId='1234abcd-12ab-34cd-56ef-1234567890ab',
+        # The HMAC algorithm requested for the operation.
+        MacAlgorithm='HMAC_SHA_384',
+        # The message input to the HMAC algorithm.
+        Message='Hello World',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        # The key ARN of the HMAC KMS key used in the operation.
+        'KeyId': 'arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab',
+        # The HMAC tag that results from this operation.
+        'Mac': '<HMAC_TAG>',
+        # The HMAC algorithm used in the operation.
+        'MacAlgorithm': 'HMAC_SHA_384',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

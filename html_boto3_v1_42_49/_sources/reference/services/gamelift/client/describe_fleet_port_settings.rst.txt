@@ -1,0 +1,210 @@
+:doc:`GameLift <../../gamelift>` / Client / describe_fleet_port_settings
+
+****************************
+describe_fleet_port_settings
+****************************
+
+
+
+.. py:method:: GameLift.Client.describe_fleet_port_settings(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Container
+
+   
+
+  Retrieves a fleet's inbound connection permissions. Connection permissions specify IP addresses and port settings that incoming traffic can use to access server processes in the fleet. Game server processes that are running in the fleet must use a port that falls within this range.
+
+   
+
+  Use this operation in the following ways:
+
+   
+
+  
+  * To retrieve the port settings for a fleet, identify the fleet's unique identifier.
+   
+  * To check the status of recent updates to a fleet remote location, specify the fleet ID and a location. Port setting updates can take time to propagate across all locations.
+  
+
+   
+
+  If successful, a set of ``IpPermission`` objects is returned for the requested fleet ID. When specifying a location, this operation returns a pending status. If the requested fleet has been deleted, the result set is empty.
+
+   
+
+  **Learn more**
+
+   
+
+  `Setting up Amazon GameLift Servers fleets <https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-intro.html>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/DescribeFleetPortSettings>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.describe_fleet_port_settings(
+        FleetId='string',
+        Location='string'
+    )
+    
+  :type FleetId: string
+  :param FleetId: **[REQUIRED]** 
+
+    A unique identifier for the fleet to retrieve port settings for. You can use either the fleet ID or ARN value.
+
+    
+
+  
+  :type Location: string
+  :param Location: 
+
+    A remote location to check for status of port setting updates. Use the Amazon Web Services Region code format, such as ``us-west-2``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FleetId': 'string',
+          'FleetArn': 'string',
+          'InboundPermissions': [
+              {
+                  'FromPort': 123,
+                  'ToPort': 123,
+                  'IpRange': 'string',
+                  'Protocol': 'TCP'|'UDP'
+              },
+          ],
+          'UpdateStatus': 'PENDING_UPDATE',
+          'Location': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FleetId** *(string) --* 
+
+        A unique identifier for the fleet that was requested.
+
+        
+      
+
+      - **FleetArn** *(string) --* 
+
+        The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers fleet resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::fleet/fleet-a1234567-b8c9-0d1e-2fa3-b45c6d7e8912``.
+
+        
+      
+
+      - **InboundPermissions** *(list) --* 
+
+        The port settings for the requested fleet ID.
+
+        
+        
+
+        - *(dict) --* 
+
+          A range of IP addresses and port settings that allow inbound traffic to connect to processes on an instance in a fleet. Processes are assigned an IP address/port number combination, which must fall into the fleet's allowed ranges.
+
+           
+
+          For Amazon GameLift Servers Realtime fleets, Amazon GameLift Servers automatically opens two port ranges, one for TCP messaging and one for UDP.
+
+          
+          
+
+          - **FromPort** *(integer) --* 
+
+            A starting value for a range of allowed port numbers.
+
+             
+
+            For fleets using Linux builds, only ports ``22`` and ``1026-60000`` are valid.
+
+             
+
+            For fleets using Windows builds, only ports ``1026-60000`` are valid.
+
+            
+          
+
+          - **ToPort** *(integer) --* 
+
+            An ending value for a range of allowed port numbers. Port numbers are end-inclusive. This value must be equal to or greater than ``FromPort``.
+
+             
+
+            For fleets using Linux builds, only ports ``22`` and ``1026-60000`` are valid.
+
+             
+
+            For fleets using Windows builds, only ports ``1026-60000`` are valid.
+
+            
+          
+
+          - **IpRange** *(string) --* 
+
+            A range of allowed IP addresses. This value must be expressed in CIDR notation. Example: " ``000.000.000.000/[subnet mask]``" or optionally the shortened version " ``0.0.0.0/[subnet mask]``".
+
+            
+          
+
+          - **Protocol** *(string) --* 
+
+            The network communication protocol used by the fleet.
+
+            
+      
+    
+      
+
+      - **UpdateStatus** *(string) --* 
+
+        The current status of updates to the fleet's port settings in the requested fleet location. A status of ``PENDING_UPDATE`` indicates that an update was requested for the fleet but has not yet been completed for the location.
+
+        
+      
+
+      - **Location** *(string) --* 
+
+        The requested fleet location, expressed as an Amazon Web Services Region code, such as ``us-west-2``.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  

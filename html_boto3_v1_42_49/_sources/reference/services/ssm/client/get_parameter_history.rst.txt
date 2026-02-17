@@ -1,0 +1,289 @@
+:doc:`SSM <../../ssm>` / Client / get_parameter_history
+
+*********************
+get_parameter_history
+*********************
+
+
+
+.. py:method:: SSM.Client.get_parameter_history(**kwargs)
+
+  
+
+  Retrieves the history of all changes to a parameter.
+
+   
+
+  Parameter names can't contain spaces. The service removes any spaces specified for the beginning or end of a parameter name. If the specified name for a parameter contains spaces between characters, the request fails with a ``ValidationException`` error.
+
+   
+
+  .. warning::
+
+     
+
+    If you change the KMS key alias for the KMS key used to encrypt a parameter, then you must also update the key alias the parameter uses to reference KMS. Otherwise, ``GetParameterHistory`` retrieves whatever the original key alias was referencing.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/ssm-2014-11-06/GetParameterHistory>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_parameter_history(
+        Name='string',
+        WithDecryption=True|False,
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type Name: string
+  :param Name: **[REQUIRED]** 
+
+    The name or Amazon Resource Name (ARN) of the parameter for which you want to review history. For parameters shared with you from another account, you must use the full ARN.
+
+    
+
+  
+  :type WithDecryption: boolean
+  :param WithDecryption: 
+
+    Return decrypted values for secure string parameters. This flag is ignored for ``String`` and ``StringList`` parameter types.
+
+    
+
+  
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The maximum number of items to return for this call. The call also returns a token that you can specify in a subsequent call to get the next set of results.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The token for the next set of items to return. (You received this token from a previous call.)
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Parameters': [
+              {
+                  'Name': 'string',
+                  'Type': 'String'|'StringList'|'SecureString',
+                  'KeyId': 'string',
+                  'LastModifiedDate': datetime(2015, 1, 1),
+                  'LastModifiedUser': 'string',
+                  'Description': 'string',
+                  'Value': 'string',
+                  'AllowedPattern': 'string',
+                  'Version': 123,
+                  'Labels': [
+                      'string',
+                  ],
+                  'Tier': 'Standard'|'Advanced'|'Intelligent-Tiering',
+                  'Policies': [
+                      {
+                          'PolicyText': 'string',
+                          'PolicyType': 'string',
+                          'PolicyStatus': 'string'
+                      },
+                  ],
+                  'DataType': 'string'
+              },
+          ],
+          'NextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Parameters** *(list) --* 
+
+        A list of parameters returned by the request.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about parameter usage.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The name of the parameter.
+
+            
+          
+
+          - **Type** *(string) --* 
+
+            The type of parameter used.
+
+            
+          
+
+          - **KeyId** *(string) --* 
+
+            The alias of the Key Management Service (KMS) key used to encrypt the parameter. Applies to ``SecureString`` parameters only
+
+            
+          
+
+          - **LastModifiedDate** *(datetime) --* 
+
+            Date the parameter was last changed or updated.
+
+            
+          
+
+          - **LastModifiedUser** *(string) --* 
+
+            Amazon Resource Name (ARN) of the Amazon Web Services user who last changed the parameter.
+
+            
+          
+
+          - **Description** *(string) --* 
+
+            Information about the parameter.
+
+            
+          
+
+          - **Value** *(string) --* 
+
+            The parameter value.
+
+            
+          
+
+          - **AllowedPattern** *(string) --* 
+
+            Parameter names can include the following letters and symbols.
+
+             
+
+            a-zA-Z0-9_.-
+
+            
+          
+
+          - **Version** *(integer) --* 
+
+            The parameter version.
+
+            
+          
+
+          - **Labels** *(list) --* 
+
+            Labels assigned to the parameter version.
+
+            
+            
+
+            - *(string) --* 
+        
+          
+
+          - **Tier** *(string) --* 
+
+            The parameter tier.
+
+            
+          
+
+          - **Policies** *(list) --* 
+
+            Information about the policies assigned to a parameter.
+
+             
+
+            `Assigning parameter policies <https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-policies.html>`__ in the *Amazon Web Services Systems Manager User Guide*.
+
+            
+            
+
+            - *(dict) --* 
+
+              One or more policies assigned to a parameter.
+
+              
+              
+
+              - **PolicyText** *(string) --* 
+
+                The JSON text of the policy.
+
+                
+              
+
+              - **PolicyType** *(string) --* 
+
+                The type of policy. Parameter Store, a tool in Amazon Web Services Systems Manager, supports the following policy types: Expiration, ExpirationNotification, and NoChangeNotification.
+
+                
+              
+
+              - **PolicyStatus** *(string) --* 
+
+                The status of the policy. Policies report the following statuses: Pending (the policy hasn't been enforced or applied yet), Finished (the policy was applied), Failed (the policy wasn't applied), or InProgress (the policy is being applied now).
+
+                
+          
+        
+          
+
+          - **DataType** *(string) --* 
+
+            The data type of the parameter, such as ``text`` or ``aws:ec2:image``. The default is ``text``.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        The token to use when requesting the next set of items. If there are no additional items to return, the string is empty.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`SSM.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`SSM.Client.exceptions.ParameterNotFound`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidNextToken`
+
+  
+  *   :py:class:`SSM.Client.exceptions.InvalidKeyId`
+
+  

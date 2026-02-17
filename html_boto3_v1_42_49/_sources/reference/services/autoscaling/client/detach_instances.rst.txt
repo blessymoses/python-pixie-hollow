@@ -1,0 +1,252 @@
+:doc:`AutoScaling <../../autoscaling>` / Client / detach_instances
+
+****************
+detach_instances
+****************
+
+
+
+.. py:method:: AutoScaling.Client.detach_instances(**kwargs)
+
+  
+
+  Removes one or more instances from the specified Auto Scaling group.
+
+   
+
+  After the instances are detached, you can manage them independent of the Auto Scaling group.
+
+   
+
+  If you do not specify the option to decrement the desired capacity, Amazon EC2 Auto Scaling launches instances to replace the ones that are detached.
+
+   
+
+  If there is a Classic Load Balancer attached to the Auto Scaling group, the instances are deregistered from the load balancer. If there are target groups attached to the Auto Scaling group, the instances are deregistered from the target groups.
+
+   
+
+  For more information, see `Detach or attach instances <https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-detach-attach-instances.html>`__ in the *Amazon EC2 Auto Scaling User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/autoscaling-2011-01-01/DetachInstances>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.detach_instances(
+        InstanceIds=[
+            'string',
+        ],
+        AutoScalingGroupName='string',
+        ShouldDecrementDesiredCapacity=True|False
+    )
+    
+  :type InstanceIds: list
+  :param InstanceIds: 
+
+    The IDs of the instances. You can specify up to 20 instances.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type AutoScalingGroupName: string
+  :param AutoScalingGroupName: **[REQUIRED]** 
+
+    The name of the Auto Scaling group.
+
+    
+
+  
+  :type ShouldDecrementDesiredCapacity: boolean
+  :param ShouldDecrementDesiredCapacity: **[REQUIRED]** 
+
+    Indicates whether the Auto Scaling group decrements the desired capacity value by the number of instances detached.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Activities': [
+              {
+                  'ActivityId': 'string',
+                  'AutoScalingGroupName': 'string',
+                  'Description': 'string',
+                  'Cause': 'string',
+                  'StartTime': datetime(2015, 1, 1),
+                  'EndTime': datetime(2015, 1, 1),
+                  'StatusCode': 'PendingSpotBidPlacement'|'WaitingForSpotInstanceRequestId'|'WaitingForSpotInstanceId'|'WaitingForInstanceId'|'PreInService'|'InProgress'|'WaitingForELBConnectionDraining'|'MidLifecycleAction'|'WaitingForInstanceWarmup'|'Successful'|'Failed'|'Cancelled'|'WaitingForConnectionDraining'|'WaitingForInPlaceUpdateToStart'|'WaitingForInPlaceUpdateToFinalize'|'InPlaceUpdateInProgress',
+                  'StatusMessage': 'string',
+                  'Progress': 123,
+                  'Details': 'string',
+                  'AutoScalingGroupState': 'string',
+                  'AutoScalingGroupARN': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Activities** *(list) --* 
+
+        The activities related to detaching the instances from the Auto Scaling group.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes scaling activity, which is a long-running process that represents a change to your Auto Scaling group, such as changing its size or replacing an instance.
+
+          
+          
+
+          - **ActivityId** *(string) --* 
+
+            The ID of the activity.
+
+            
+          
+
+          - **AutoScalingGroupName** *(string) --* 
+
+            The name of the Auto Scaling group.
+
+            
+          
+
+          - **Description** *(string) --* 
+
+            A friendly, more verbose description of the activity.
+
+            
+          
+
+          - **Cause** *(string) --* 
+
+            The reason the activity began.
+
+            
+          
+
+          - **StartTime** *(datetime) --* 
+
+            The start time of the activity.
+
+            
+          
+
+          - **EndTime** *(datetime) --* 
+
+            The end time of the activity.
+
+            
+          
+
+          - **StatusCode** *(string) --* 
+
+            The current status of the activity.
+
+            
+          
+
+          - **StatusMessage** *(string) --* 
+
+            A friendly, more verbose description of the activity status.
+
+            
+          
+
+          - **Progress** *(integer) --* 
+
+            A value between 0 and 100 that indicates the progress of the activity.
+
+            
+          
+
+          - **Details** *(string) --* 
+
+            The details about the activity.
+
+            
+          
+
+          - **AutoScalingGroupState** *(string) --* 
+
+            The state of the Auto Scaling group, which is either ``InService`` or ``Deleted``.
+
+            
+          
+
+          - **AutoScalingGroupARN** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the Auto Scaling group.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AutoScaling.Client.exceptions.ResourceContentionFault`
+
+  
+
+  **Examples**
+
+  This example detaches the specified instance from the specified Auto Scaling group.
+  ::
+
+    response = client.detach_instances(
+        AutoScalingGroupName='my-auto-scaling-group',
+        InstanceIds=[
+            'i-93633f9b',
+        ],
+        ShouldDecrementDesiredCapacity=True,
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'Activities': [
+            {
+                'ActivityId': '5091cb52-547a-47ce-a236-c9ccbc2cb2c9',
+                'AutoScalingGroupName': 'my-auto-scaling-group',
+                'Cause': 'At 2015-04-12T15:02:16Z instance i-93633f9b was detached in response to a user request, shrinking the capacity from 2 to 1.',
+                'Description': 'Detaching EC2 instance: i-93633f9b',
+                'Details': 'details',
+                'Progress': 50,
+                'StartTime': datetime(2015, 4, 12, 15, 2, 16, 6, 102, 0),
+                'StatusCode': 'InProgress',
+            },
+        ],
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

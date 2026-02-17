@@ -1,0 +1,268 @@
+:doc:`PartnerCentralAccountAPI <../../partnercentral-account>` / Client / start_verification
+
+******************
+start_verification
+******************
+
+
+
+.. py:method:: PartnerCentralAccountAPI.Client.start_verification(**kwargs)
+
+  
+
+  Initiates a new verification process for a partner account. This operation begins the verification workflow for either business registration or individual registrant identity verification as required by AWS Partner Central.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/partnercentral-account-2025-04-04/StartVerification>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_verification(
+        ClientToken='string',
+        VerificationDetails={
+            'BusinessVerificationDetails': {
+                'LegalName': 'string',
+                'RegistrationId': 'string',
+                'CountryCode': 'string',
+                'JurisdictionOfIncorporation': 'string'
+            },
+            'RegistrantVerificationDetails': {}
+            
+        }
+    )
+    
+  :type ClientToken: string
+  :param ClientToken: 
+
+    A unique, case-sensitive identifier that you provide to ensure the idempotency of the request. This prevents duplicate verification processes from being started accidentally.
+
+    This field is autopopulated if not provided.
+
+  
+  :type VerificationDetails: dict
+  :param VerificationDetails: 
+
+    The specific details required for the verification process, including business information for business verification or personal information for registrant verification.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``BusinessVerificationDetails``, ``RegistrantVerificationDetails``. 
+
+  
+    - **BusinessVerificationDetails** *(dict) --* 
+
+      The business verification details to be used when starting a business verification process.
+
+      
+
+    
+      - **LegalName** *(string) --* **[REQUIRED]** 
+
+        The official legal name of the business as registered with the appropriate government authorities.
+
+        
+
+      
+      - **RegistrationId** *(string) --* **[REQUIRED]** 
+
+        The unique business registration identifier assigned by the government or regulatory authority, such as a company registration number or tax identification number.
+
+        
+
+      
+      - **CountryCode** *(string) --* **[REQUIRED]** 
+
+        The ISO 3166-1 alpha-2 country code where the business is legally registered and operates.
+
+        
+
+      
+      - **JurisdictionOfIncorporation** *(string) --* 
+
+        The specific legal jurisdiction or state where the business was incorporated or registered, providing additional location context beyond the country code.
+
+        
+
+      
+    
+    - **RegistrantVerificationDetails** *(dict) --* 
+
+      The registrant verification details to be used when starting an individual identity verification process.
+
+      
+
+    
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'VerificationType': 'BUSINESS_VERIFICATION'|'REGISTRANT_VERIFICATION',
+          'VerificationStatus': 'PENDING_CUSTOMER_ACTION'|'IN_PROGRESS'|'FAILED'|'SUCCEEDED'|'REJECTED',
+          'VerificationStatusReason': 'string',
+          'VerificationResponseDetails': {
+              'BusinessVerificationResponse': {
+                  'BusinessVerificationDetails': {
+                      'LegalName': 'string',
+                      'RegistrationId': 'string',
+                      'CountryCode': 'string',
+                      'JurisdictionOfIncorporation': 'string'
+                  }
+              },
+              'RegistrantVerificationResponse': {
+                  'CompletionUrl': 'string',
+                  'CompletionUrlExpiresAt': datetime(2015, 1, 1)
+              }
+          },
+          'StartedAt': datetime(2015, 1, 1),
+          'CompletedAt': datetime(2015, 1, 1)
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **VerificationType** *(string) --* 
+
+        The type of verification that was started based on the provided verification details.
+
+        
+      
+
+      - **VerificationStatus** *(string) --* 
+
+        The initial status of the verification process after it has been started. Typically this will be pending or in-progress.
+
+        
+      
+
+      - **VerificationStatusReason** *(string) --* 
+
+        Additional information about the initial verification status, including any immediate feedback about the submitted verification details.
+
+        
+      
+
+      - **VerificationResponseDetails** *(dict) --* 
+
+        Initial response details specific to the type of verification started, which may include next steps or additional requirements.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys will be set: ``BusinessVerificationResponse``, ``RegistrantVerificationResponse``.     If a client receives an unknown member it will     set ``SDK_UNKNOWN_MEMBER`` as the top level key,     which maps to the name or tag of the unknown     member. The structure of ``SDK_UNKNOWN_MEMBER`` is     as follows::
+
+                'SDK_UNKNOWN_MEMBER': {'name': 'UnknownMemberName'}
+
+
+      
+        
+
+        - **BusinessVerificationResponse** *(dict) --* 
+
+          The response details from a business verification process, including verification results and any additional business information discovered.
+
+          
+          
+
+          - **BusinessVerificationDetails** *(dict) --* 
+
+            The business verification details that were processed and verified, potentially including additional information discovered during the verification process.
+
+            
+            
+
+            - **LegalName** *(string) --* 
+
+              The official legal name of the business as registered with the appropriate government authorities.
+
+              
+            
+
+            - **RegistrationId** *(string) --* 
+
+              The unique business registration identifier assigned by the government or regulatory authority, such as a company registration number or tax identification number.
+
+              
+            
+
+            - **CountryCode** *(string) --* 
+
+              The ISO 3166-1 alpha-2 country code where the business is legally registered and operates.
+
+              
+            
+
+            - **JurisdictionOfIncorporation** *(string) --* 
+
+              The specific legal jurisdiction or state where the business was incorporated or registered, providing additional location context beyond the country code.
+
+              
+        
+      
+        
+
+        - **RegistrantVerificationResponse** *(dict) --* 
+
+          The response details from a registrant verification process, including verification results and any additional steps required for identity confirmation.
+
+          
+          
+
+          - **CompletionUrl** *(string) --* 
+
+            A secure URL where the registrant can complete additional verification steps, such as document upload or identity confirmation through a third-party verification service.
+
+            
+          
+
+          - **CompletionUrlExpiresAt** *(datetime) --* 
+
+            The timestamp when the completion URL expires and is no longer valid for accessing the verification workflow.
+
+            
+      
+    
+      
+
+      - **StartedAt** *(datetime) --* 
+
+        The timestamp when the verification process was successfully initiated.
+
+        
+      
+
+      - **CompletedAt** *(datetime) --* 
+
+        The timestamp when the verification process was completed. This field is typically null for newly started verifications unless they complete immediately.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`PartnerCentralAccountAPI.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`PartnerCentralAccountAPI.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`PartnerCentralAccountAPI.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`PartnerCentralAccountAPI.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`PartnerCentralAccountAPI.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`PartnerCentralAccountAPI.Client.exceptions.ServiceQuotaExceededException`
+
+  

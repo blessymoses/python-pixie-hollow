@@ -1,0 +1,341 @@
+:doc:`CodeGuruProfiler <../../codeguruprofiler>` / Client / batch_get_frame_metric_data
+
+***************************
+batch_get_frame_metric_data
+***************************
+
+
+
+.. py:method:: CodeGuruProfiler.Client.batch_get_frame_metric_data(**kwargs)
+
+  
+
+  Returns the time series of values for a requested list of frame metrics from a time period.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/BatchGetFrameMetricData>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_frame_metric_data(
+        endTime=datetime(2015, 1, 1),
+        frameMetrics=[
+            {
+                'frameName': 'string',
+                'threadStates': [
+                    'string',
+                ],
+                'type': 'AggregatedRelativeTotalTime'
+            },
+        ],
+        period='string',
+        profilingGroupName='string',
+        startTime=datetime(2015, 1, 1),
+        targetResolution='PT5M'|'PT1H'|'P1D'
+    )
+    
+  :type endTime: datetime
+  :param endTime: 
+
+    The end time of the time period for the returned time series values. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+    
+
+  
+  :type frameMetrics: list
+  :param frameMetrics: 
+
+    The details of the metrics that are used to request a time series of values. The metric includes the name of the frame, the aggregation type to calculate the metric value for the frame, and the thread states to use to get the count for the metric value of the frame.
+
+    
+
+  
+    - *(dict) --* 
+
+      The frame name, metric type, and thread states. These are used to derive the value of the metric for the frame.
+
+      
+
+    
+      - **frameName** *(string) --* **[REQUIRED]** 
+
+        Name of the method common across the multiple occurrences of a frame in an application profile.
+
+        
+
+      
+      - **threadStates** *(list) --* **[REQUIRED]** 
+
+        List of application runtime thread states used to get the counts for a frame a derive a metric value.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **type** *(string) --* **[REQUIRED]** 
+
+        A type of aggregation that specifies how a metric for a frame is analyzed. The supported value ``AggregatedRelativeTotalTime`` is an aggregation of the metric value for one frame that is calculated across the occurrences of all frames in a profile.
+
+        
+
+      
+    
+
+  :type period: string
+  :param period: 
+
+    The duration of the frame metrics used to return the time series values. Specify using the ISO 8601 format. The maximum period duration is one day ( ``PT24H`` or ``P1D``).
+
+    
+
+  
+  :type profilingGroupName: string
+  :param profilingGroupName: **[REQUIRED]** 
+
+    The name of the profiling group associated with the the frame metrics used to return the time series values.
+
+    
+
+  
+  :type startTime: datetime
+  :param startTime: 
+
+    The start time of the time period for the frame metrics used to return the time series values. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+    
+
+  
+  :type targetResolution: string
+  :param targetResolution: 
+
+    The requested resolution of time steps for the returned time series of values. If the requested target resolution is not available due to data not being retained we provide a best effort result by falling back to the most granular available resolution after the target resolution. There are 3 valid values.
+
+     
+
+    
+    * ``P1D`` — 1 day
+     
+    * ``PT1H`` — 1 hour
+     
+    * ``PT5M`` — 5 minutes
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'endTime': datetime(2015, 1, 1),
+          'endTimes': [
+              {
+                  'value': datetime(2015, 1, 1)
+              },
+          ],
+          'frameMetricData': [
+              {
+                  'frameMetric': {
+                      'frameName': 'string',
+                      'threadStates': [
+                          'string',
+                      ],
+                      'type': 'AggregatedRelativeTotalTime'
+                  },
+                  'values': [
+                      123.0,
+                  ]
+              },
+          ],
+          'resolution': 'PT5M'|'PT1H'|'P1D',
+          'startTime': datetime(2015, 1, 1),
+          'unprocessedEndTimes': {
+              'string': [
+                  {
+                      'value': datetime(2015, 1, 1)
+                  },
+              ]
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+
+      The structure representing the BatchGetFrameMetricDataResponse.
+
+      
+      
+
+      - **endTime** *(datetime) --* 
+
+        The end time of the time period for the returned time series values. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+        
+      
+
+      - **endTimes** *(list) --* 
+
+        List of instances, or time steps, in the time series. For example, if the ``period`` is one day ( ``PT24H)``), and the ``resolution`` is five minutes ( ``PT5M``), then there are 288 ``endTimes`` in the list that are each five minutes appart.
+
+        
+        
+
+        - *(dict) --* 
+
+          A data type that contains a ``Timestamp`` object. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+          
+          
+
+          - **value** *(datetime) --* 
+
+            A ``Timestamp``. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+            
+      
+    
+      
+
+      - **frameMetricData** *(list) --* 
+
+        Details of the metrics to request a time series of values. The metric includes the name of the frame, the aggregation type to calculate the metric value for the frame, and the thread states to use to get the count for the metric value of the frame.
+
+        
+        
+
+        - *(dict) --* 
+
+          Information about a frame metric and its values.
+
+          
+          
+
+          - **frameMetric** *(dict) --* 
+
+            The frame name, metric type, and thread states. These are used to derive the value of the metric for the frame.
+
+            
+            
+
+            - **frameName** *(string) --* 
+
+              Name of the method common across the multiple occurrences of a frame in an application profile.
+
+              
+            
+
+            - **threadStates** *(list) --* 
+
+              List of application runtime thread states used to get the counts for a frame a derive a metric value.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **type** *(string) --* 
+
+              A type of aggregation that specifies how a metric for a frame is analyzed. The supported value ``AggregatedRelativeTotalTime`` is an aggregation of the metric value for one frame that is calculated across the occurrences of all frames in a profile.
+
+              
+        
+          
+
+          - **values** *(list) --* 
+
+            A list of values that are associated with a frame metric.
+
+            
+            
+
+            - *(float) --* 
+        
+      
+    
+      
+
+      - **resolution** *(string) --* 
+
+        Resolution or granularity of the profile data used to generate the time series. This is the value used to jump through time steps in a time series. There are 3 valid values.
+
+         
+
+        
+        * ``P1D`` — 1 day
+         
+        * ``PT1H`` — 1 hour
+         
+        * ``PT5M`` — 5 minutes
+        
+
+        
+      
+
+      - **startTime** *(datetime) --* 
+
+        The start time of the time period for the returned time series values. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+        
+      
+
+      - **unprocessedEndTimes** *(dict) --* 
+
+        List of instances which remained unprocessed. This will create a missing time step in the list of end times.
+
+        
+        
+
+        - *(string) --* 
+          
+
+          - *(list) --* 
+            
+
+            - *(dict) --* 
+
+              A data type that contains a ``Timestamp`` object. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+              
+              
+
+              - **value** *(datetime) --* 
+
+                A ``Timestamp``. This is specified using the ISO 8601 format. For example, 2020-06-01T13:15:02.001Z represents 1 millisecond past June 1, 2020 1:15:02 PM UTC.
+
+                
+          
+        
+    
+  
+  
+  **Exceptions**
+  
+  *   :py:class:`CodeGuruProfiler.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`CodeGuruProfiler.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`CodeGuruProfiler.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`CodeGuruProfiler.Client.exceptions.ResourceNotFoundException`
+
+  

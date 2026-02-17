@@ -1,0 +1,448 @@
+:doc:`IoTSiteWise <../../iotsitewise>` / Client / batch_get_asset_property_aggregates
+
+***********************************
+batch_get_asset_property_aggregates
+***********************************
+
+
+
+.. py:method:: IoTSiteWise.Client.batch_get_asset_property_aggregates(**kwargs)
+
+  
+
+  Gets aggregated values (for example, average, minimum, and maximum) for one or more asset properties. For more information, see `Querying aggregates <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/query-industrial-data.html#aggregates>`__ in the *IoT SiteWise User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/iotsitewise-2019-12-02/BatchGetAssetPropertyAggregates>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.batch_get_asset_property_aggregates(
+        entries=[
+            {
+                'entryId': 'string',
+                'assetId': 'string',
+                'propertyId': 'string',
+                'propertyAlias': 'string',
+                'aggregateTypes': [
+                    'AVERAGE'|'COUNT'|'MAXIMUM'|'MINIMUM'|'SUM'|'STANDARD_DEVIATION',
+                ],
+                'resolution': 'string',
+                'startDate': datetime(2015, 1, 1),
+                'endDate': datetime(2015, 1, 1),
+                'qualities': [
+                    'GOOD'|'BAD'|'UNCERTAIN',
+                ],
+                'timeOrdering': 'ASCENDING'|'DESCENDING'
+            },
+        ],
+        nextToken='string',
+        maxResults=123
+    )
+    
+  :type entries: list
+  :param entries: **[REQUIRED]** 
+
+    The list of asset property aggregate entries for the batch get request. You can specify up to 16 entries per request.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains information for an asset property aggregate entry that is associated with the `BatchGetAssetPropertyAggregates <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchGetAssetPropertyAggregates.html>`__ API.
+
+       
+
+      To identify an asset property, you must specify one of the following:
+
+       
+
+      
+      * The ``assetId`` and ``propertyId`` of an asset property.
+       
+      * A ``propertyAlias``, which is a data stream alias (for example, ``/company/windfarm/3/turbine/7/temperature``). To define an asset property's alias, see `UpdateAssetProperty <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_UpdateAssetProperty.html>`__.
+      
+
+      
+
+    
+      - **entryId** *(string) --* **[REQUIRED]** 
+
+        The ID of the entry.
+
+        
+
+      
+      - **assetId** *(string) --* 
+
+        The ID of the asset in which the asset property was created.
+
+        
+
+      
+      - **propertyId** *(string) --* 
+
+        The ID of the asset property, in UUID format.
+
+        
+
+      
+      - **propertyAlias** *(string) --* 
+
+        The alias that identifies the property, such as an OPC-UA server data stream path (for example, ``/company/windfarm/3/turbine/7/temperature``). For more information, see `Mapping industrial data streams to asset properties <https://docs.aws.amazon.com/iot-sitewise/latest/userguide/connect-data-streams.html>`__ in the *IoT SiteWise User Guide*.
+
+        
+
+      
+      - **aggregateTypes** *(list) --* **[REQUIRED]** 
+
+        The data aggregating function.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **resolution** *(string) --* **[REQUIRED]** 
+
+        The time interval over which to aggregate data.
+
+        
+
+      
+      - **startDate** *(datetime) --* **[REQUIRED]** 
+
+        The exclusive start of the range from which to query historical data, expressed in seconds in Unix epoch time.
+
+        
+
+      
+      - **endDate** *(datetime) --* **[REQUIRED]** 
+
+        The inclusive end of the range from which to query historical data, expressed in seconds in Unix epoch time.
+
+        
+
+      
+      - **qualities** *(list) --* 
+
+        The quality by which to filter asset data.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+      - **timeOrdering** *(string) --* 
+
+        The chronological sorting order of the requested information.
+
+         
+
+        Default: ``ASCENDING``
+
+        
+
+      
+    
+
+  :type nextToken: string
+  :param nextToken: 
+
+    The token to be used for the next set of paginated results.
+
+    
+
+  
+  :type maxResults: integer
+  :param maxResults: 
+
+    The maximum number of results to return for each paginated request. A result set is returned in the two cases, whichever occurs first.
+
+     
+
+    
+    * The size of the result set is equal to 1 MB.
+     
+    * The number of data points in the result set is equal to the value of ``maxResults``. The maximum value of ``maxResults`` is 4000.
+    
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'errorEntries': [
+              {
+                  'errorCode': 'ResourceNotFoundException'|'InvalidRequestException'|'AccessDeniedException',
+                  'errorMessage': 'string',
+                  'entryId': 'string'
+              },
+          ],
+          'successEntries': [
+              {
+                  'entryId': 'string',
+                  'aggregatedValues': [
+                      {
+                          'timestamp': datetime(2015, 1, 1),
+                          'quality': 'GOOD'|'BAD'|'UNCERTAIN',
+                          'value': {
+                              'average': 123.0,
+                              'count': 123.0,
+                              'maximum': 123.0,
+                              'minimum': 123.0,
+                              'sum': 123.0,
+                              'standardDeviation': 123.0
+                          }
+                      },
+                  ]
+              },
+          ],
+          'skippedEntries': [
+              {
+                  'entryId': 'string',
+                  'completionStatus': 'SUCCESS'|'ERROR',
+                  'errorInfo': {
+                      'errorCode': 'ResourceNotFoundException'|'InvalidRequestException'|'AccessDeniedException',
+                      'errorTimestamp': datetime(2015, 1, 1)
+                  }
+              },
+          ],
+          'nextToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **errorEntries** *(list) --* 
+
+        A list of the errors (if any) associated with the batch request. Each error entry contains the ``entryId`` of the entry that failed.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains error information for an asset property aggregate entry that is associated with the `BatchGetAssetPropertyAggregates <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchGetAssetPropertyAggregates.html>`__ API.
+
+          
+          
+
+          - **errorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **errorMessage** *(string) --* 
+
+            The associated error message.
+
+            
+          
+
+          - **entryId** *(string) --* 
+
+            The ID of the entry.
+
+            
+      
+    
+      
+
+      - **successEntries** *(list) --* 
+
+        A list of entries that were processed successfully by this batch request. Each success entry contains the ``entryId`` of the entry that succeeded and the latest query result.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains success information for an entry that is associated with the `BatchGetAssetPropertyAggregates <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchGetAssetPropertyAggregates.html>`__ API.
+
+          
+          
+
+          - **entryId** *(string) --* 
+
+            The ID of the entry.
+
+            
+          
+
+          - **aggregatedValues** *(list) --* 
+
+            The requested aggregated asset property values (for example, average, minimum, and maximum).
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains aggregated asset property values (for example, average, minimum, and maximum).
+
+              
+              
+
+              - **timestamp** *(datetime) --* 
+
+                The date the aggregating computations occurred, in Unix epoch time.
+
+                
+              
+
+              - **quality** *(string) --* 
+
+                The quality of the aggregated data.
+
+                
+              
+
+              - **value** *(dict) --* 
+
+                The value of the aggregates.
+
+                
+                
+
+                - **average** *(float) --* 
+
+                  The average (mean) value of the time series over a time interval window.
+
+                  
+                
+
+                - **count** *(float) --* 
+
+                  The count of data points in the time series over a time interval window.
+
+                  
+                
+
+                - **maximum** *(float) --* 
+
+                  The maximum value of the time series over a time interval window.
+
+                  
+                
+
+                - **minimum** *(float) --* 
+
+                  The minimum value of the time series over a time interval window.
+
+                  
+                
+
+                - **sum** *(float) --* 
+
+                  The sum of the time series over a time interval window.
+
+                  
+                
+
+                - **standardDeviation** *(float) --* 
+
+                  The standard deviation of the time series over a time interval window.
+
+                  
+            
+          
+        
+      
+    
+      
+
+      - **skippedEntries** *(list) --* 
+
+        A list of entries that were not processed by this batch request. because these entries had been completely processed by previous paginated requests. Each skipped entry contains the ``entryId`` of the entry that skipped.
+
+        
+        
+
+        - *(dict) --* 
+
+          Contains information for an entry that has been processed by the previous `BatchGetAssetPropertyAggregates <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchGetAssetPropertyAggregates.html>`__ request.
+
+          
+          
+
+          - **entryId** *(string) --* 
+
+            The ID of the entry.
+
+            
+          
+
+          - **completionStatus** *(string) --* 
+
+            The completion status of each entry that is associated with the `BatchGetAssetPropertyAggregates <https://docs.aws.amazon.com/iot-sitewise/latest/APIReference/API_BatchGetAssetPropertyAggregates.html>`__ API.
+
+            
+          
+
+          - **errorInfo** *(dict) --* 
+
+            The error information, such as the error code and the timestamp.
+
+            
+            
+
+            - **errorCode** *(string) --* 
+
+              The error code.
+
+              
+            
+
+            - **errorTimestamp** *(datetime) --* 
+
+              The date the error occurred, in Unix epoch time.
+
+              
+        
+      
+    
+      
+
+      - **nextToken** *(string) --* 
+
+        The token for the next set of results, or null if there are no additional results.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.InternalFailureException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`IoTSiteWise.Client.exceptions.ServiceUnavailableException`
+
+  

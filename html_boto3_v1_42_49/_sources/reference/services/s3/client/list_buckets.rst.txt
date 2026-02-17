@@ -1,0 +1,245 @@
+:doc:`S3 <../../s3>` / Client / list_buckets
+
+************
+list_buckets
+************
+
+
+
+.. py:method:: S3.Client.list_buckets(**kwargs)
+
+  
+
+  .. note::
+
+    
+
+    This operation is not supported for directory buckets.
+
+    
+
+   
+
+  Returns a list of all buckets owned by the authenticated sender of the request. To grant IAM permission to use this operation, you must add the ``s3:ListAllMyBuckets`` policy action.
+
+   
+
+  For information about Amazon S3 buckets, see `Creating, configuring, and working with Amazon S3 buckets <https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-buckets-s3.html>`__.
+
+   
+
+  .. warning::
+
+     
+
+    We strongly recommend using only paginated ``ListBuckets`` requests. Unpaginated ``ListBuckets`` requests are only supported for Amazon Web Services accounts set to the default general purpose bucket quota of 10,000. If you have an approved general purpose bucket quota above 10,000, you must send paginated ``ListBuckets`` requests to list your account’s buckets. All unpaginated ``ListBuckets`` requests will be rejected for Amazon Web Services accounts with a general purpose bucket quota greater than 10,000.
+
+     
+
+   
+
+  .. warning::
+
+     
+
+    You must URL encode any signed header values that contain spaces. For example, if your header value is ``my file.txt``, containing two spaces after ``my``, you must URL encode this value to ``my%20%20file.txt``.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/ListBuckets>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_buckets(
+        MaxBuckets=123,
+        ContinuationToken='string',
+        Prefix='string',
+        BucketRegion='string'
+    )
+    
+  :type MaxBuckets: integer
+  :param MaxBuckets: 
+
+    Maximum number of buckets to be returned in response. When the number is more than the count of buckets that are owned by an Amazon Web Services account, return all the buckets in response.
+
+    
+
+  
+  :type ContinuationToken: string
+  :param ContinuationToken: 
+
+    ``ContinuationToken`` indicates to Amazon S3 that the list is being continued on this bucket with a token. ``ContinuationToken`` is obfuscated and is not a real key. You can use this ``ContinuationToken`` for pagination of the list results.
+
+     
+
+    Length Constraints: Minimum length of 0. Maximum length of 1024.
+
+     
+
+    Required: No.
+
+     
+
+    .. note::
+
+      
+
+      If you specify the ``bucket-region``, ``prefix``, or ``continuation-token`` query parameters without using ``max-buckets`` to set the maximum number of buckets returned in the response, Amazon S3 applies a default page size of 10,000 and provides a continuation token if there are more buckets.
+
+      
+
+    
+
+  
+  :type Prefix: string
+  :param Prefix: 
+
+    Limits the response to bucket names that begin with the specified bucket name prefix.
+
+    
+
+  
+  :type BucketRegion: string
+  :param BucketRegion: 
+
+    Limits the response to buckets that are located in the specified Amazon Web Services Region. The Amazon Web Services Region must be expressed according to the Amazon Web Services Region code, such as ``us-west-2`` for the US West (Oregon) Region. For a list of the valid values for all of the Amazon Web Services Regions, see `Regions and Endpoints <https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region>`__.
+
+     
+
+    .. note::
+
+      
+
+      Requests made to a Regional endpoint that is different from the ``bucket-region`` parameter are not supported. For example, if you want to limit the response to your buckets in Region ``us-west-2``, the request must be made to an endpoint in Region ``us-west-2``.
+
+      
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Buckets': [
+              {
+                  'Name': 'string',
+                  'CreationDate': datetime(2015, 1, 1),
+                  'BucketRegion': 'string',
+                  'BucketArn': 'string'
+              },
+          ],
+          'Owner': {
+              'DisplayName': 'string',
+              'ID': 'string'
+          },
+          'ContinuationToken': 'string',
+          'Prefix': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Buckets** *(list) --* 
+
+        The list of buckets owned by the requester.
+
+        
+        
+
+        - *(dict) --* 
+
+          In terms of implementation, a Bucket is a resource.
+
+          
+          
+
+          - **Name** *(string) --* 
+
+            The name of the bucket.
+
+            
+          
+
+          - **CreationDate** *(datetime) --* 
+
+            Date the bucket was created. This date can change when making changes to your bucket, such as editing its bucket policy.
+
+            
+          
+
+          - **BucketRegion** *(string) --* 
+
+            ``BucketRegion`` indicates the Amazon Web Services region where the bucket is located. If the request contains at least one valid parameter, it is included in the response.
+
+            
+          
+
+          - **BucketArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the S3 bucket. ARNs uniquely identify Amazon Web Services resources across all of Amazon Web Services.
+
+             
+
+            .. note::
+
+              
+
+              This parameter is only supported for S3 directory buckets. For more information, see `Using tags with directory buckets <https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-buckets-tagging.html>`__.
+
+              
+
+            
+      
+    
+      
+
+      - **Owner** *(dict) --* 
+
+        The owner of the buckets listed.
+
+        
+        
+
+        - **DisplayName** *(string) --* 
+        
+
+        - **ID** *(string) --* 
+
+          Container for the ID of the owner.
+
+          
+    
+      
+
+      - **ContinuationToken** *(string) --* 
+
+        ``ContinuationToken`` is included in the response when there are more buckets that can be listed with pagination. The next ``ListBuckets`` request to Amazon S3 can be continued with this ``ContinuationToken``. ``ContinuationToken`` is obfuscated and is not a real bucket.
+
+        
+      
+
+      - **Prefix** *(string) --* 
+
+        If ``Prefix`` was sent with the request, it is included in the response.
+
+         
+
+        All bucket names in the response begin with the specified bucket name prefix.
+
+        
+  

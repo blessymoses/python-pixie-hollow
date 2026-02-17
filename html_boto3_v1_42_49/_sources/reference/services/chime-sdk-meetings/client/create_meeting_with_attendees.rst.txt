@@ -1,0 +1,890 @@
+:doc:`ChimeSDKMeetings <../../chime-sdk-meetings>` / Client / create_meeting_with_attendees
+
+*****************************
+create_meeting_with_attendees
+*****************************
+
+
+
+.. py:method:: ChimeSDKMeetings.Client.create_meeting_with_attendees(**kwargs)
+
+  
+
+  Creates a new Amazon Chime SDK meeting in the specified media Region, with attendees. For more information about specifying media Regions, see `Available Regions <https://docs.aws.amazon.com/chime-sdk/latest/dg/sdk-available-regions>`__ and `Using meeting Regions <https://docs.aws.amazon.com/chime-sdk/latest/dg/chime-sdk-meetings-regions.html>`__, both in the *Amazon Chime SDK Developer Guide*. For more information about the Amazon Chime SDK, see `Using the Amazon Chime SDK <https://docs.aws.amazon.com/chime-sdk/latest/dg/meetings-sdk.html>`__ in the *Amazon Chime SDK Developer Guide*.
+
+   
+
+  .. note::
+
+    
+
+    If you use this API in conjuction with the and APIs, and you don't specify the ``MeetingFeatures.Content.MaxResolution`` or ``MeetingFeatures.Video.MaxResolution`` parameters, the following defaults are used:
+
+     
+
+    
+    * Content.MaxResolution: FHD
+     
+    * Video.MaxResolution: HD
+    
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/chime-sdk-meetings-2021-07-15/CreateMeetingWithAttendees>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_meeting_with_attendees(
+        ClientRequestToken='string',
+        MediaRegion='string',
+        MeetingHostId='string',
+        ExternalMeetingId='string',
+        MeetingFeatures={
+            'Audio': {
+                'EchoReduction': 'AVAILABLE'|'UNAVAILABLE'
+            },
+            'Video': {
+                'MaxResolution': 'None'|'HD'|'FHD'
+            },
+            'Content': {
+                'MaxResolution': 'None'|'FHD'|'UHD'
+            },
+            'Attendee': {
+                'MaxCount': 123
+            }
+        },
+        NotificationsConfiguration={
+            'LambdaFunctionArn': 'string',
+            'SnsTopicArn': 'string',
+            'SqsQueueArn': 'string'
+        },
+        Attendees=[
+            {
+                'ExternalUserId': 'string',
+                'Capabilities': {
+                    'Audio': 'SendReceive'|'Send'|'Receive'|'None',
+                    'Video': 'SendReceive'|'Send'|'Receive'|'None',
+                    'Content': 'SendReceive'|'Send'|'Receive'|'None'
+                }
+            },
+        ],
+        PrimaryMeetingId='string',
+        TenantIds=[
+            'string',
+        ],
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        MediaPlacementNetworkType='Ipv4Only'|'DualStack'
+    )
+    
+  :type ClientRequestToken: string
+  :param ClientRequestToken: **[REQUIRED]** 
+
+    The unique identifier for the client request. Use a different token for different meetings.
+
+    This field is autopopulated if not provided.
+
+  
+  :type MediaRegion: string
+  :param MediaRegion: **[REQUIRED]** 
+
+    The Region in which to create the meeting.
+
+     
+
+    Available values: ``af-south-1``, ``ap-northeast-1``, ``ap-northeast-2``, ``ap-south-1``, ``ap-southeast-1``, ``ap-southeast-2``, ``ca-central-1``, ``eu-central-1``, ``eu-north-1``, ``eu-south-1``, ``eu-west-1``, ``eu-west-2``, ``eu-west-3``, ``sa-east-1``, ``us-east-1``, ``us-east-2``, ``us-west-1``, ``us-west-2``.
+
+     
+
+    Available values in Amazon Web Services GovCloud (US) Regions: ``us-gov-east-1``, ``us-gov-west-1``.
+
+    
+
+  
+  :type MeetingHostId: string
+  :param MeetingHostId: 
+
+    Reserved.
+
+    
+
+  
+  :type ExternalMeetingId: string
+  :param ExternalMeetingId: **[REQUIRED]** 
+
+    The external meeting ID.
+
+     
+
+    Pattern: ``[-_&@+=,(){}\[\]\/«».:|'"#a-zA-Z0-9À-ÿ\s]*``
+
+     
+
+    Values that begin with ``aws:`` are reserved. You can't configure a value that uses this prefix. Case insensitive.
+
+    
+
+  
+  :type MeetingFeatures: dict
+  :param MeetingFeatures: 
+
+    Lists the audio and video features enabled for a meeting, such as echo reduction.
+
+    
+
+  
+    - **Audio** *(dict) --* 
+
+      The configuration settings for the audio features available to a meeting.
+
+      
+
+    
+      - **EchoReduction** *(string) --* 
+
+        Makes echo reduction available to clients who connect to the meeting.
+
+        
+
+      
+    
+    - **Video** *(dict) --* 
+
+      The configuration settings for the video features available to a meeting.
+
+      
+
+    
+      - **MaxResolution** *(string) --* 
+
+        The maximum video resolution for the meeting. Applies to all attendees.
+
+         
+
+        .. note::
+
+          
+
+          Defaults to ``HD``. To use ``FHD``, you must also provide a ``MeetingFeatures:Attendee:MaxCount`` value and override the default size limit of 250 attendees.
+
+          
+
+        
+
+      
+    
+    - **Content** *(dict) --* 
+
+      The configuration settings for the content features available to a meeting.
+
+      
+
+    
+      - **MaxResolution** *(string) --* 
+
+        The maximum resolution for the meeting content.
+
+         
+
+        .. note::
+
+          
+
+          Defaults to ``FHD``. To use ``UHD``, you must also provide a ``MeetingFeatures:Attendee:MaxCount`` value and override the default size limit of 250 attendees.
+
+          
+
+        
+
+      
+    
+    - **Attendee** *(dict) --* 
+
+      The configuration settings for the attendee features available to a meeting.
+
+      
+
+    
+      - **MaxCount** *(integer) --* 
+
+        The maximum number of attendees allowed into the meeting.
+
+        
+
+      
+    
+  
+  :type NotificationsConfiguration: dict
+  :param NotificationsConfiguration: 
+
+    The configuration for resource targets to receive notifications when meeting and attendee events occur.
+
+    
+
+  
+    - **LambdaFunctionArn** *(string) --* 
+
+      The ARN of the Amazon Web Services Lambda function in the notifications configuration.
+
+      
+
+    
+    - **SnsTopicArn** *(string) --* 
+
+      The ARN of the SNS topic.
+
+      
+
+    
+    - **SqsQueueArn** *(string) --* 
+
+      The ARN of the SQS queue.
+
+      
+
+    
+  
+  :type Attendees: list
+  :param Attendees: **[REQUIRED]** 
+
+    The attendee information, including attendees' IDs and join tokens.
+
+    
+
+  
+    - *(dict) --* 
+
+      The Amazon Chime SDK attendee fields to create, used with the BatchCreateAttendee action.
+
+      
+
+    
+      - **ExternalUserId** *(string) --* **[REQUIRED]** 
+
+        The Amazon Chime SDK external user ID. An idempotency token. Links the attendee to an identity managed by a builder application.
+
+         
+
+        Pattern: ``[-_&@+=,(){}\[\]\/«».:|'"#a-zA-Z0-9À-ÿ\s]*``
+
+         
+
+        Values that begin with ``aws:`` are reserved. You can't configure a value that uses this prefix. Case insensitive.
+
+        
+
+      
+      - **Capabilities** *(dict) --* 
+
+        A list of one or more capabilities.
+
+        
+
+      
+        - **Audio** *(string) --* **[REQUIRED]** 
+
+          The audio capability assigned to an attendee.
+
+          
+
+        
+        - **Video** *(string) --* **[REQUIRED]** 
+
+          The video capability assigned to an attendee.
+
+          
+
+        
+        - **Content** *(string) --* **[REQUIRED]** 
+
+          The content capability assigned to an attendee.
+
+          
+
+        
+      
+    
+
+  :type PrimaryMeetingId: string
+  :param PrimaryMeetingId: 
+
+    When specified, replicates the media from the primary meeting to the new meeting.
+
+    
+
+  
+  :type TenantIds: list
+  :param TenantIds: 
+
+    A consistent and opaque identifier, created and maintained by the builder to represent a segment of their users.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type Tags: list
+  :param Tags: 
+
+    The tags in the request.
+
+    
+
+  
+    - *(dict) --* 
+
+      A key-value pair that you define.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The tag's key.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The tag's value.
+
+        
+
+      
+    
+
+  :type MediaPlacementNetworkType: string
+  :param MediaPlacementNetworkType: 
+
+    The type of network for the media placement. Either IPv4 only or dual-stack (IPv4 and IPv6).
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Meeting': {
+              'MeetingId': 'string',
+              'MeetingHostId': 'string',
+              'ExternalMeetingId': 'string',
+              'MediaRegion': 'string',
+              'MediaPlacement': {
+                  'AudioHostUrl': 'string',
+                  'AudioFallbackUrl': 'string',
+                  'SignalingUrl': 'string',
+                  'TurnControlUrl': 'string',
+                  'ScreenDataUrl': 'string',
+                  'ScreenViewingUrl': 'string',
+                  'ScreenSharingUrl': 'string',
+                  'EventIngestionUrl': 'string'
+              },
+              'MeetingFeatures': {
+                  'Audio': {
+                      'EchoReduction': 'AVAILABLE'|'UNAVAILABLE'
+                  },
+                  'Video': {
+                      'MaxResolution': 'None'|'HD'|'FHD'
+                  },
+                  'Content': {
+                      'MaxResolution': 'None'|'FHD'|'UHD'
+                  },
+                  'Attendee': {
+                      'MaxCount': 123
+                  }
+              },
+              'PrimaryMeetingId': 'string',
+              'TenantIds': [
+                  'string',
+              ],
+              'MeetingArn': 'string'
+          },
+          'Attendees': [
+              {
+                  'ExternalUserId': 'string',
+                  'AttendeeId': 'string',
+                  'JoinToken': 'string',
+                  'Capabilities': {
+                      'Audio': 'SendReceive'|'Send'|'Receive'|'None',
+                      'Video': 'SendReceive'|'Send'|'Receive'|'None',
+                      'Content': 'SendReceive'|'Send'|'Receive'|'None'
+                  }
+              },
+          ],
+          'Errors': [
+              {
+                  'ExternalUserId': 'string',
+                  'ErrorCode': 'string',
+                  'ErrorMessage': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Meeting** *(dict) --* 
+
+        The meeting information, including the meeting ID and ``MediaPlacement``.
+
+        
+        
+
+        - **MeetingId** *(string) --* 
+
+          The Amazon Chime SDK meeting ID.
+
+          
+        
+
+        - **MeetingHostId** *(string) --* 
+
+          Reserved.
+
+          
+        
+
+        - **ExternalMeetingId** *(string) --* 
+
+          The external meeting ID.
+
+           
+
+          Pattern: ``[-_&@+=,(){}\[\]\/«».:|'"#a-zA-Z0-9À-ÿ\s]*``
+
+           
+
+          Values that begin with ``aws:`` are reserved. You can't configure a value that uses this prefix. Case insensitive.
+
+          
+        
+
+        - **MediaRegion** *(string) --* 
+
+          The Region in which you create the meeting. Available values: ``af-south-1``, ``ap-northeast-1``, ``ap-northeast-2``, ``ap-south-1``, ``ap-southeast-1``, ``ap-southeast-2``, ``ca-central-1``, ``eu-central-1``, ``eu-north-1``, ``eu-south-1``, ``eu-west-1``, ``eu-west-2``, ``eu-west-3``, ``sa-east-1``, ``us-east-1``, ``us-east-2``, ``us-west-1``, ``us-west-2``.
+
+           
+
+          Available values in Amazon Web Services GovCloud (US) Regions: ``us-gov-east-1``, ``us-gov-west-1``.
+
+          
+        
+
+        - **MediaPlacement** *(dict) --* 
+
+          The media placement for the meeting.
+
+          
+          
+
+          - **AudioHostUrl** *(string) --* 
+
+            The audio host URL.
+
+            
+          
+
+          - **AudioFallbackUrl** *(string) --* 
+
+            The audio fallback URL.
+
+            
+          
+
+          - **SignalingUrl** *(string) --* 
+
+            The signaling URL.
+
+            
+          
+
+          - **TurnControlUrl** *(string) --* 
+
+            The turn control URL.
+
+             
+
+            .. warning::
+
+               
+
+              **This parameter is deprecated and no longer used by the Amazon Chime SDK.**
+
+              
+
+            
+          
+
+          - **ScreenDataUrl** *(string) --* 
+
+            The screen data URL.
+
+             
+
+            .. warning::
+
+               
+
+              **This parameter is deprecated and no longer used by the Amazon Chime SDK.**
+
+              
+
+            
+          
+
+          - **ScreenViewingUrl** *(string) --* 
+
+            The screen viewing URL.
+
+             
+
+            .. warning::
+
+               
+
+              **This parameter is deprecated and no longer used by the Amazon Chime SDK.**
+
+              
+
+            
+          
+
+          - **ScreenSharingUrl** *(string) --* 
+
+            The screen sharing URL.
+
+             
+
+            .. warning::
+
+               
+
+              **This parameter is deprecated and no longer used by the Amazon Chime SDK.**
+
+              
+
+            
+          
+
+          - **EventIngestionUrl** *(string) --* 
+
+            The event ingestion URL.
+
+            
+      
+        
+
+        - **MeetingFeatures** *(dict) --* 
+
+          The features available to a meeting, such as echo reduction.
+
+          
+          
+
+          - **Audio** *(dict) --* 
+
+            The configuration settings for the audio features available to a meeting.
+
+            
+            
+
+            - **EchoReduction** *(string) --* 
+
+              Makes echo reduction available to clients who connect to the meeting.
+
+              
+        
+          
+
+          - **Video** *(dict) --* 
+
+            The configuration settings for the video features available to a meeting.
+
+            
+            
+
+            - **MaxResolution** *(string) --* 
+
+              The maximum video resolution for the meeting. Applies to all attendees.
+
+               
+
+              .. note::
+
+                
+
+                Defaults to ``HD``. To use ``FHD``, you must also provide a ``MeetingFeatures:Attendee:MaxCount`` value and override the default size limit of 250 attendees.
+
+                
+
+              
+        
+          
+
+          - **Content** *(dict) --* 
+
+            The configuration settings for the content features available to a meeting.
+
+            
+            
+
+            - **MaxResolution** *(string) --* 
+
+              The maximum resolution for the meeting content.
+
+               
+
+              .. note::
+
+                
+
+                Defaults to ``FHD``. To use ``UHD``, you must also provide a ``MeetingFeatures:Attendee:MaxCount`` value and override the default size limit of 250 attendees.
+
+                
+
+              
+        
+          
+
+          - **Attendee** *(dict) --* 
+
+            The configuration settings for the attendee features available to a meeting.
+
+            
+            
+
+            - **MaxCount** *(integer) --* 
+
+              The maximum number of attendees allowed into the meeting.
+
+              
+        
+      
+        
+
+        - **PrimaryMeetingId** *(string) --* 
+
+          When specified, replicates the media from the primary meeting to this meeting.
+
+          
+        
+
+        - **TenantIds** *(list) --* 
+
+          Array of strings.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **MeetingArn** *(string) --* 
+
+          The ARN of the meeting.
+
+          
+    
+      
+
+      - **Attendees** *(list) --* 
+
+        The attendee information, including attendees' IDs and join tokens.
+
+        
+        
+
+        - *(dict) --* 
+
+          An Amazon Chime SDK meeting attendee. Includes a unique ``AttendeeId`` and ``JoinToken``. The ``JoinToken`` allows a client to authenticate and join as the specified attendee. The ``JoinToken`` expires when the meeting ends, or when  DeleteAttendee is called. After that, the attendee is unable to join the meeting.
+
+           
+
+          We recommend securely transferring each ``JoinToken`` from your server application to the client so that no other client has access to the token except for the one authorized to represent the attendee.
+
+          
+          
+
+          - **ExternalUserId** *(string) --* 
+
+            The Amazon Chime SDK external user ID. An idempotency token. Links the attendee to an identity managed by a builder application.
+
+             
+
+            Pattern: ``[-_&@+=,(){}\[\]\/«».:|'"#a-zA-Z0-9À-ÿ\s]*``
+
+             
+
+            Values that begin with ``aws:`` are reserved. You can't configure a value that uses this prefix. Case insensitive.
+
+            
+          
+
+          - **AttendeeId** *(string) --* 
+
+            The Amazon Chime SDK attendee ID.
+
+            
+          
+
+          - **JoinToken** *(string) --* 
+
+            The join token used by the Amazon Chime SDK attendee.
+
+            
+          
+
+          - **Capabilities** *(dict) --* 
+
+            The capabilities assigned to an attendee: audio, video, or content.
+
+             
+
+            .. note::
+
+              
+
+              You use the capabilities with a set of values that control what the capabilities can do, such as ``SendReceive`` data. For more information about those values, see .
+
+              
+
+             
+
+            When using capabilities, be aware of these corner cases:
+
+             
+
+            
+            * If you specify ``MeetingFeatures:Video:MaxResolution:None`` when you create a meeting, all API requests that include ``SendReceive``, ``Send``, or ``Receive`` for ``AttendeeCapabilities:Video`` will be rejected with ``ValidationError 400``.
+             
+            * If you specify ``MeetingFeatures:Content:MaxResolution:None`` when you create a meeting, all API requests that include ``SendReceive``, ``Send``, or ``Receive`` for ``AttendeeCapabilities:Content`` will be rejected with ``ValidationError 400``.
+             
+            * You can't set ``content`` capabilities to ``SendReceive`` or ``Receive`` unless you also set ``video`` capabilities to ``SendReceive`` or ``Receive``. If you don't set the ``video`` capability to receive, the response will contain an HTTP 400 Bad Request status code. However, you can set your ``video`` capability to receive and you set your ``content`` capability to not receive.
+             
+            * If meeting features is defined as ``Video:MaxResolution:None`` but ``Content:MaxResolution`` is defined as something other than ``None`` and attendee capabilities are not defined in the API request, then the default attendee video capability is set to ``Receive`` and attendee content capability is set to ``SendReceive``. This is because content ``SendReceive`` requires video to be at least ``Receive``.
+             
+            * When you change an ``audio`` capability from ``None`` or ``Receive`` to ``Send`` or ``SendReceive`` , and if the attendee left their microphone unmuted, audio will flow from the attendee to the other meeting participants.
+             
+            * When you change a ``video`` or ``content`` capability from ``None`` or ``Receive`` to ``Send`` or ``SendReceive`` , and if the attendee turned on their video or content streams, remote attendees can receive those streams, but only after media renegotiation between the client and the Amazon Chime back-end server.
+            
+
+            
+            
+
+            - **Audio** *(string) --* 
+
+              The audio capability assigned to an attendee.
+
+              
+            
+
+            - **Video** *(string) --* 
+
+              The video capability assigned to an attendee.
+
+              
+            
+
+            - **Content** *(string) --* 
+
+              The content capability assigned to an attendee.
+
+              
+        
+      
+    
+      
+
+      - **Errors** *(list) --* 
+
+        If the action fails for one or more of the attendees in the request, a list of the attendees is returned, along with error codes and error messages.
+
+        
+        
+
+        - *(dict) --* 
+
+          The list of errors returned when errors are encountered during the BatchCreateAttendee and CreateAttendee actions. This includes external user IDs, error codes, and error messages.
+
+          
+          
+
+          - **ExternalUserId** *(string) --* 
+
+            The Amazon Chime SDK external user ID. An idempotency token. Links the attendee to an identity managed by a builder application.
+
+             
+
+            Pattern: ``[-_&@+=,(){}\[\]\/«».:|'"#a-zA-Z0-9À-ÿ\s]*``
+
+             
+
+            Values that begin with ``aws:`` are reserved. You can't configure a value that uses this prefix. Case insensitive.
+
+            
+          
+
+          - **ErrorCode** *(string) --* 
+
+            The error code.
+
+            
+          
+
+          - **ErrorMessage** *(string) --* 
+
+            The error message.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.ServiceFailureException`
+
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.ServiceUnavailableException`
+
+  
+  *   :py:class:`ChimeSDKMeetings.Client.exceptions.LimitExceededException`
+
+  

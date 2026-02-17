@@ -1,0 +1,265 @@
+:doc:`PaymentCryptographyDataPlane <../../payment-cryptography-data>` / Client / translate_key_material
+
+**********************
+translate_key_material
+**********************
+
+
+
+.. py:method:: PaymentCryptographyDataPlane.Client.translate_key_material(**kwargs)
+
+  
+
+  Translates an cryptographic key between different wrapping keys without importing the key into Amazon Web Services Payment Cryptography.
+
+   
+
+  This operation can be used when key material is frequently rotated, such as during every card transaction, and there is a need to avoid importing short-lived keys into Amazon Web Services Payment Cryptography. It translates short-lived transaction keys such as `PEK <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html#terms.pek>`__ generated for each transaction and wrapped with an `ECDH <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html#terms.ecdh>`__ derived wrapping key to another `KEK <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html#terms.kek>`__ wrapping key.
+
+   
+
+  Before using this operation, you must first request the public key certificate of the ECC key pair generated within Amazon Web Services Payment Cryptography to establish an ECDH key agreement. In ``TranslateKeyData``, the service uses its own ECC key pair, public certificate of receiving ECC key pair, and the key derivation parameters to generate a derived key. The service uses this derived key to unwrap the incoming transaction key received as a TR31WrappedKeyBlock and re-wrap using a user provided KEK to generate an outgoing Tr31WrappedKeyBlock.
+
+   
+
+  For information about valid keys for this operation, see `Understanding key attributes <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/keys-validattributes.html>`__ and `Key types for specific data operations <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-validkeys-ops.html>`__ in the *Amazon Web Services Payment Cryptography User Guide*.
+
+   
+
+  **Cross-account use**: This operation can't be used across different Amazon Web Services accounts.
+
+   
+
+  **Related operations:**
+
+   
+
+  
+  * `CreateKey <https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_CreateKey.html>`__
+   
+  * `GetPublicCertificate <https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_GetPublicKeyCertificate.html>`__
+   
+  * `ImportKey <https://docs.aws.amazon.com/payment-cryptography/latest/APIReference/API_ImportKey.html>`__
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/payment-cryptography-data-2022-02-03/TranslateKeyMaterial>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.translate_key_material(
+        IncomingKeyMaterial={
+            'DiffieHellmanTr31KeyBlock': {
+                'PrivateKeyIdentifier': 'string',
+                'CertificateAuthorityPublicKeyIdentifier': 'string',
+                'PublicKeyCertificate': 'string',
+                'DeriveKeyAlgorithm': 'TDES_2KEY'|'TDES_3KEY'|'AES_128'|'AES_192'|'AES_256'|'HMAC_SHA256'|'HMAC_SHA384'|'HMAC_SHA512'|'HMAC_SHA224',
+                'KeyDerivationFunction': 'NIST_SP800'|'ANSI_X963',
+                'KeyDerivationHashAlgorithm': 'SHA_256'|'SHA_384'|'SHA_512',
+                'DerivationData': {
+                    'SharedInformation': 'string'
+                },
+                'WrappedKeyBlock': 'string'
+            }
+        },
+        OutgoingKeyMaterial={
+            'Tr31KeyBlock': {
+                'WrappingKeyIdentifier': 'string'
+            }
+        },
+        KeyCheckValueAlgorithm='CMAC'|'ANSI_X9_24'|'HMAC'|'SHA_1'
+    )
+    
+  :type IncomingKeyMaterial: dict
+  :param IncomingKeyMaterial: **[REQUIRED]** 
+
+    Parameter information of the TR31WrappedKeyBlock containing the transaction key.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``DiffieHellmanTr31KeyBlock``. 
+
+  
+    - **DiffieHellmanTr31KeyBlock** *(dict) --* 
+
+      Parameter information of the TR31WrappedKeyBlock containing the transaction key wrapped using an ECDH dervied key.
+
+      
+
+    
+      - **PrivateKeyIdentifier** *(string) --* **[REQUIRED]** 
+
+        The ``keyARN`` of the asymmetric ECC key pair.
+
+        
+
+      
+      - **CertificateAuthorityPublicKeyIdentifier** *(string) --* **[REQUIRED]** 
+
+        The ``keyArn`` of the certificate that signed the client's ``PublicKeyCertificate``.
+
+        
+
+      
+      - **PublicKeyCertificate** *(string) --* **[REQUIRED]** 
+
+        The client's public key certificate in PEM format (base64 encoded) to use for ECDH key derivation.
+
+        
+
+      
+      - **DeriveKeyAlgorithm** *(string) --* **[REQUIRED]** 
+
+        The key algorithm of the derived ECDH key.
+
+        
+
+      
+      - **KeyDerivationFunction** *(string) --* **[REQUIRED]** 
+
+        The key derivation function to use for deriving a key using ECDH.
+
+        
+
+      
+      - **KeyDerivationHashAlgorithm** *(string) --* **[REQUIRED]** 
+
+        The hash type to use for deriving a key using ECDH.
+
+        
+
+      
+      - **DerivationData** *(dict) --* **[REQUIRED]** 
+
+        The shared information used when deriving a key using ECDH.
+
+        .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``SharedInformation``. 
+
+      
+        - **SharedInformation** *(string) --* 
+
+          A string containing information that binds the ECDH derived key to the two parties involved or to the context of the key.
+
+           
+
+          It may include details like identities of the two parties deriving the key, context of the operation, session IDs, and optionally a nonce. It must not contain zero bytes. It is not recommended to reuse shared information for multiple ECDH key derivations, as it could result in derived key material being the same across different derivations.
+
+          
+
+        
+      
+      - **WrappedKeyBlock** *(string) --* **[REQUIRED]** 
+
+        The WrappedKeyBlock containing the transaction key wrapped using an ECDH dervied key.
+
+        
+
+      
+    
+  
+  :type OutgoingKeyMaterial: dict
+  :param OutgoingKeyMaterial: **[REQUIRED]** 
+
+    Parameter information of the wrapping key used to wrap the transaction key in the outgoing TR31WrappedKeyBlock.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``Tr31KeyBlock``. 
+
+  
+    - **Tr31KeyBlock** *(dict) --* 
+
+      Parameter information of the TR31WrappedKeyBlock containing the transaction key wrapped using a KEK.
+
+      
+
+    
+      - **WrappingKeyIdentifier** *(string) --* **[REQUIRED]** 
+
+        The ``keyARN`` of the KEK used to wrap the transaction key.
+
+        
+
+      
+    
+  
+  :type KeyCheckValueAlgorithm: string
+  :param KeyCheckValueAlgorithm: 
+
+    The key check value (KCV) algorithm used for calculating the KCV of the derived key.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'WrappedKey': {
+              'WrappedKeyMaterial': 'string',
+              'KeyCheckValue': 'string',
+              'WrappedKeyMaterialFormat': 'KEY_CRYPTOGRAM'|'TR31_KEY_BLOCK'|'TR34_KEY_BLOCK'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **WrappedKey** *(dict) --* 
+
+        The outgoing KEK wrapped TR31WrappedKeyBlock.
+
+        
+        
+
+        - **WrappedKeyMaterial** *(string) --* 
+
+          The wrapped key block of the outgoing transaction key.
+
+          
+        
+
+        - **KeyCheckValue** *(string) --* 
+
+          The key check value (KCV) of the key contained within the outgoing TR31WrappedKeyBlock.
+
+           
+
+          The KCV is used to check if all parties holding a given key have the same key or to detect that a key has changed. For more information on KCV, see `KCV <https://docs.aws.amazon.com/payment-cryptography/latest/userguide/terminology.html#terms.kcv>`__ in the *Amazon Web Services Payment Cryptography User Guide*.
+
+          
+        
+
+        - **WrappedKeyMaterialFormat** *(string) --* 
+
+          The key block format of the wrapped key.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`PaymentCryptographyDataPlane.Client.exceptions.InternalServerException`
+
+  

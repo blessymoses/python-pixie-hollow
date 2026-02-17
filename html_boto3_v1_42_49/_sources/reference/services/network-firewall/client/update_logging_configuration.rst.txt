@@ -1,0 +1,333 @@
+:doc:`NetworkFirewall <../../network-firewall>` / Client / update_logging_configuration
+
+****************************
+update_logging_configuration
+****************************
+
+
+
+.. py:method:: NetworkFirewall.Client.update_logging_configuration(**kwargs)
+
+  
+
+  Sets the logging configuration for the specified firewall.
+
+   
+
+  To change the logging configuration, retrieve the  LoggingConfiguration by calling  DescribeLoggingConfiguration, then change it and provide the modified object to this update call. You must change the logging configuration one  LogDestinationConfig at a time inside the retrieved  LoggingConfiguration object.
+
+   
+
+  You can perform only one of the following actions in any call to ``UpdateLoggingConfiguration``:
+
+   
+
+  
+  * Create a new log destination object by adding a single ``LogDestinationConfig`` array element to ``LogDestinationConfigs``.
+   
+  * Delete a log destination object by removing a single ``LogDestinationConfig`` array element from ``LogDestinationConfigs``.
+   
+  * Change the ``LogDestination`` setting in a single ``LogDestinationConfig`` array element.
+  
+
+   
+
+  You can't change the ``LogDestinationType`` or ``LogType`` in a ``LogDestinationConfig``. To change these settings, delete the existing ``LogDestinationConfig`` object and create a new one, using two separate calls to this update operation.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/network-firewall-2020-11-12/UpdateLoggingConfiguration>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_logging_configuration(
+        FirewallArn='string',
+        FirewallName='string',
+        LoggingConfiguration={
+            'LogDestinationConfigs': [
+                {
+                    'LogType': 'ALERT'|'FLOW'|'TLS',
+                    'LogDestinationType': 'S3'|'CloudWatchLogs'|'KinesisDataFirehose',
+                    'LogDestination': {
+                        'string': 'string'
+                    }
+                },
+            ]
+        },
+        EnableMonitoringDashboard=True|False
+    )
+    
+  :type FirewallArn: string
+  :param FirewallArn: 
+
+    The Amazon Resource Name (ARN) of the firewall.
+
+     
+
+    You must specify the ARN or the name, and you can specify both.
+
+    
+
+  
+  :type FirewallName: string
+  :param FirewallName: 
+
+    The descriptive name of the firewall. You can't change the name of a firewall after you create it.
+
+     
+
+    You must specify the ARN or the name, and you can specify both.
+
+    
+
+  
+  :type LoggingConfiguration: dict
+  :param LoggingConfiguration: 
+
+    Defines how Network Firewall performs logging for a firewall. If you omit this setting, Network Firewall disables logging for the firewall.
+
+    
+
+  
+    - **LogDestinationConfigs** *(list) --* **[REQUIRED]** 
+
+      Defines the logging destinations for the logs for a firewall. Network Firewall generates logs for stateful rule groups.
+
+      
+
+    
+      - *(dict) --* 
+
+        Defines where Network Firewall sends logs for the firewall for one log type. This is used in  LoggingConfiguration. You can send each type of log to an Amazon S3 bucket, a CloudWatch log group, or a Firehose delivery stream.
+
+         
+
+        Network Firewall generates logs for stateful rule groups. You can save alert, flow, and TLS log types.
+
+        
+
+      
+        - **LogType** *(string) --* **[REQUIRED]** 
+
+          The type of log to record. You can record the following types of logs from your Network Firewall stateful engine.
+
+           
+
+          
+          * ``ALERT`` - Logs for traffic that matches your stateful rules and that have an action that sends an alert. A stateful rule sends alerts for the rule actions DROP, ALERT, and REJECT. For more information, see  StatefulRule.
+           
+          * ``FLOW`` - Standard network traffic flow logs. The stateful rules engine records flow logs for all network traffic that it receives. Each flow log record captures the network flow for a specific standard stateless rule group.
+           
+          * ``TLS`` - Logs for events that are related to TLS inspection. For more information, see `Inspecting SSL/TLS traffic with TLS inspection configurations <https://docs.aws.amazon.com/network-firewall/latest/developerguide/tls-inspection-configurations.html>`__ in the *Network Firewall Developer Guide*.
+          
+
+          
+
+        
+        - **LogDestinationType** *(string) --* **[REQUIRED]** 
+
+          The type of storage destination to send these logs to. You can send logs to an Amazon S3 bucket, a CloudWatch log group, or a Firehose delivery stream.
+
+          
+
+        
+        - **LogDestination** *(dict) --* **[REQUIRED]** 
+
+          The named location for the logs, provided in a key:value mapping that is specific to the chosen destination type.
+
+           
+
+          
+          * For an Amazon S3 bucket, provide the name of the bucket, with key ``bucketName``, and optionally provide a prefix, with key ``prefix``. The following example specifies an Amazon S3 bucket named ``DOC-EXAMPLE-BUCKET`` and the prefix ``alerts``: ``"LogDestination": { "bucketName": "DOC-EXAMPLE-BUCKET", "prefix": "alerts" }``
+           
+          * For a CloudWatch log group, provide the name of the CloudWatch log group, with key ``logGroup``. The following example specifies a log group named ``alert-log-group``: ``"LogDestination": { "logGroup": "alert-log-group" }``
+           
+          * For a Firehose delivery stream, provide the name of the delivery stream, with key ``deliveryStream``. The following example specifies a delivery stream named ``alert-delivery-stream``: ``"LogDestination": { "deliveryStream": "alert-delivery-stream" }``
+          
+
+          
+
+        
+          - *(string) --* 
+
+          
+            - *(string) --* 
+
+            
+      
+    
+      
+  
+  
+  :type EnableMonitoringDashboard: boolean
+  :param EnableMonitoringDashboard: 
+
+    A boolean that lets you enable or disable the detailed firewall monitoring dashboard on the firewall.
+
+     
+
+    The monitoring dashboard provides comprehensive visibility into your firewall's flow logs and alert logs. After you enable detailed monitoring, you can access these dashboards directly from the **Monitoring** page of the Network Firewall console.
+
+     
+
+    Specify ``TRUE`` to enable the the detailed monitoring dashboard on the firewall. Specify ``FALSE`` to disable the the detailed monitoring dashboard on the firewall.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'FirewallArn': 'string',
+          'FirewallName': 'string',
+          'LoggingConfiguration': {
+              'LogDestinationConfigs': [
+                  {
+                      'LogType': 'ALERT'|'FLOW'|'TLS',
+                      'LogDestinationType': 'S3'|'CloudWatchLogs'|'KinesisDataFirehose',
+                      'LogDestination': {
+                          'string': 'string'
+                      }
+                  },
+              ]
+          },
+          'EnableMonitoringDashboard': True|False
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **FirewallArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the firewall.
+
+        
+      
+
+      - **FirewallName** *(string) --* 
+
+        The descriptive name of the firewall. You can't change the name of a firewall after you create it.
+
+        
+      
+
+      - **LoggingConfiguration** *(dict) --* 
+
+        Defines how Network Firewall performs logging for a  Firewall.
+
+        
+        
+
+        - **LogDestinationConfigs** *(list) --* 
+
+          Defines the logging destinations for the logs for a firewall. Network Firewall generates logs for stateful rule groups.
+
+          
+          
+
+          - *(dict) --* 
+
+            Defines where Network Firewall sends logs for the firewall for one log type. This is used in  LoggingConfiguration. You can send each type of log to an Amazon S3 bucket, a CloudWatch log group, or a Firehose delivery stream.
+
+             
+
+            Network Firewall generates logs for stateful rule groups. You can save alert, flow, and TLS log types.
+
+            
+            
+
+            - **LogType** *(string) --* 
+
+              The type of log to record. You can record the following types of logs from your Network Firewall stateful engine.
+
+               
+
+              
+              * ``ALERT`` - Logs for traffic that matches your stateful rules and that have an action that sends an alert. A stateful rule sends alerts for the rule actions DROP, ALERT, and REJECT. For more information, see  StatefulRule.
+               
+              * ``FLOW`` - Standard network traffic flow logs. The stateful rules engine records flow logs for all network traffic that it receives. Each flow log record captures the network flow for a specific standard stateless rule group.
+               
+              * ``TLS`` - Logs for events that are related to TLS inspection. For more information, see `Inspecting SSL/TLS traffic with TLS inspection configurations <https://docs.aws.amazon.com/network-firewall/latest/developerguide/tls-inspection-configurations.html>`__ in the *Network Firewall Developer Guide*.
+              
+
+              
+            
+
+            - **LogDestinationType** *(string) --* 
+
+              The type of storage destination to send these logs to. You can send logs to an Amazon S3 bucket, a CloudWatch log group, or a Firehose delivery stream.
+
+              
+            
+
+            - **LogDestination** *(dict) --* 
+
+              The named location for the logs, provided in a key:value mapping that is specific to the chosen destination type.
+
+               
+
+              
+              * For an Amazon S3 bucket, provide the name of the bucket, with key ``bucketName``, and optionally provide a prefix, with key ``prefix``. The following example specifies an Amazon S3 bucket named ``DOC-EXAMPLE-BUCKET`` and the prefix ``alerts``: ``"LogDestination": { "bucketName": "DOC-EXAMPLE-BUCKET", "prefix": "alerts" }``
+               
+              * For a CloudWatch log group, provide the name of the CloudWatch log group, with key ``logGroup``. The following example specifies a log group named ``alert-log-group``: ``"LogDestination": { "logGroup": "alert-log-group" }``
+               
+              * For a Firehose delivery stream, provide the name of the delivery stream, with key ``deliveryStream``. The following example specifies a delivery stream named ``alert-delivery-stream``: ``"LogDestination": { "deliveryStream": "alert-delivery-stream" }``
+              
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+        
+      
+    
+      
+
+      - **EnableMonitoringDashboard** *(boolean) --* 
+
+        A boolean that reflects whether or not the firewall monitoring dashboard is enabled on a firewall.
+
+         
+
+        Returns ``TRUE`` when the firewall monitoring dashboard is enabled on the firewall. Returns ``FALSE`` when the firewall monitoring dashboard is not enabled on the firewall.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`NetworkFirewall.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`NetworkFirewall.Client.exceptions.InternalServerError`
+
+  
+  *   :py:class:`NetworkFirewall.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`NetworkFirewall.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`NetworkFirewall.Client.exceptions.InvalidTokenException`
+
+  
+  *   :py:class:`NetworkFirewall.Client.exceptions.LogDestinationPermissionException`
+
+  

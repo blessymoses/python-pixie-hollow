@@ -1,0 +1,3548 @@
+:doc:`RDS <../../rds>` / Client / create_db_instance_read_replica
+
+*******************************
+create_db_instance_read_replica
+*******************************
+
+
+
+.. py:method:: RDS.Client.create_db_instance_read_replica(**kwargs)
+
+  
+
+  Creates a new DB instance that acts as a read replica for an existing source DB instance or Multi-AZ DB cluster. You can create a read replica for a DB instance running Db2, MariaDB, MySQL, Oracle, PostgreSQL, or SQL Server. You can create a read replica for a Multi-AZ DB cluster running MySQL or PostgreSQL. For more information, see `Working with read replicas <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html>`__ and `Migrating from a Multi-AZ DB cluster to a DB instance using a read replica <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html#multi-az-db-clusters-migrating-to-instance-with-read-replica>`__ in the *Amazon RDS User Guide*.
+
+   
+
+  Amazon Aurora doesn't support this operation. To create a DB instance for an Aurora DB cluster, use the ``CreateDBInstance`` operation.
+
+   
+
+  RDS creates read replicas with backups disabled. All other attributes (including DB security groups and DB parameter groups) are inherited from the source DB instance or cluster, except as specified.
+
+   
+
+  .. warning::
+
+     
+
+    Your source DB instance or cluster must have backup retention enabled.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/rds-2014-10-31/CreateDBInstanceReadReplica>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_db_instance_read_replica(
+        DBInstanceIdentifier='string',
+        SourceDBInstanceIdentifier='string',
+        DBInstanceClass='string',
+        AvailabilityZone='string',
+        Port=123,
+        MultiAZ=True|False,
+        AutoMinorVersionUpgrade=True|False,
+        Iops=123,
+        StorageThroughput=123,
+        OptionGroupName='string',
+        DBParameterGroupName='string',
+        PubliclyAccessible=True|False,
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        DBSubnetGroupName='string',
+        VpcSecurityGroupIds=[
+            'string',
+        ],
+        StorageType='string',
+        CopyTagsToSnapshot=True|False,
+        MonitoringInterval=123,
+        MonitoringRoleArn='string',
+        KmsKeyId='string',
+        EnableIAMDatabaseAuthentication=True|False,
+        DatabaseInsightsMode='standard'|'advanced',
+        EnablePerformanceInsights=True|False,
+        PerformanceInsightsKMSKeyId='string',
+        PerformanceInsightsRetentionPeriod=123,
+        EnableCloudwatchLogsExports=[
+            'string',
+        ],
+        ProcessorFeatures=[
+            {
+                'Name': 'string',
+                'Value': 'string'
+            },
+        ],
+        UseDefaultProcessorFeatures=True|False,
+        DeletionProtection=True|False,
+        Domain='string',
+        DomainIAMRoleName='string',
+        DomainFqdn='string',
+        DomainOu='string',
+        DomainAuthSecretArn='string',
+        DomainDnsIps=[
+            'string',
+        ],
+        ReplicaMode='open-read-only'|'mounted',
+        EnableCustomerOwnedIp=True|False,
+        NetworkType='string',
+        MaxAllocatedStorage=123,
+        BackupTarget='string',
+        CustomIamInstanceProfile='string',
+        AllocatedStorage=123,
+        SourceDBClusterIdentifier='string',
+        DedicatedLogVolume=True|False,
+        UpgradeStorageConfig=True|False,
+        CACertificateIdentifier='string',
+        AdditionalStorageVolumes=[
+            {
+                'VolumeName': 'string',
+                'AllocatedStorage': 123,
+                'IOPS': 123,
+                'MaxAllocatedStorage': 123,
+                'StorageThroughput': 123,
+                'StorageType': 'string'
+            },
+        ],
+        TagSpecifications=[
+            {
+                'ResourceType': 'string',
+                'Tags': [
+                    {
+                        'Key': 'string',
+                        'Value': 'string'
+                    },
+                ]
+            },
+        ],
+        SourceRegion='string'
+    )
+    
+  :type DBInstanceIdentifier: string
+  :param DBInstanceIdentifier: **[REQUIRED]** 
+
+    The DB instance identifier of the read replica. This identifier is the unique key that identifies a DB instance. This parameter is stored as a lowercase string.
+
+    
+
+  
+  :type SourceDBInstanceIdentifier: string
+  :param SourceDBInstanceIdentifier: 
+
+    The identifier of the DB instance that will act as the source for the read replica. Each DB instance can have up to 15 read replicas, except for the following engines:
+
+     
+
+    
+    * Db2 - Can have up to three replicas.
+     
+    * Oracle - Can have up to five read replicas.
+     
+    * SQL Server - Can have up to five read replicas.
+    
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Must be the identifier of an existing Db2, MariaDB, MySQL, Oracle, PostgreSQL, or SQL Server DB instance.
+     
+    * Can't be specified if the ``SourceDBClusterIdentifier`` parameter is also specified.
+     
+    * For the limitations of Oracle read replicas, see `Version and licensing considerations for RDS for Oracle replicas <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.limitations.html#oracle-read-replicas.limitations.versions-and-licenses>`__ in the *Amazon RDS User Guide*.
+     
+    * For the limitations of SQL Server read replicas, see `Read replica limitations with SQL Server <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.ReadReplicas.html#SQLServer.ReadReplicas.Limitations>`__ in the *Amazon RDS User Guide*.
+     
+    * The specified DB instance must have automatic backups enabled, that is, its backup retention period must be greater than 0.
+     
+    * If the source DB instance is in the same Amazon Web Services Region as the read replica, specify a valid DB instance identifier.
+     
+    * If the source DB instance is in a different Amazon Web Services Region from the read replica, specify a valid DB instance ARN. For more information, see `Constructing an ARN for Amazon RDS <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.ARN.html#USER_Tagging.ARN.Constructing>`__ in the *Amazon RDS User Guide*. This doesn't apply to SQL Server or RDS Custom, which don't support cross-Region replicas.
+    
+
+    
+
+  
+  :type DBInstanceClass: string
+  :param DBInstanceClass: 
+
+    The compute and memory capacity of the read replica, for example db.m4.large. Not all DB instance classes are available in all Amazon Web Services Regions, or for all database engines. For the full list of DB instance classes, and availability for your engine, see `DB Instance Class <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    Default: Inherits the value from the source DB instance.
+
+    
+
+  
+  :type AvailabilityZone: string
+  :param AvailabilityZone: 
+
+    The Availability Zone (AZ) where the read replica will be created.
+
+     
+
+    Default: A random, system-chosen Availability Zone in the endpoint's Amazon Web Services Region.
+
+     
+
+    Example: ``us-east-1d``
+
+    
+
+  
+  :type Port: integer
+  :param Port: 
+
+    The port number that the DB instance uses for connections.
+
+     
+
+    Valid Values: ``1150-65535``
+
+     
+
+    Default: Inherits the value from the source DB instance.
+
+    
+
+  
+  :type MultiAZ: boolean
+  :param MultiAZ: 
+
+    Specifies whether the read replica is in a Multi-AZ deployment.
+
+     
+
+    You can create a read replica as a Multi-AZ DB instance. RDS creates a standby of your replica in another Availability Zone for failover support for the replica. Creating your read replica as a Multi-AZ DB instance is independent of whether the source is a Multi-AZ DB instance or a Multi-AZ DB cluster.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type AutoMinorVersionUpgrade: boolean
+  :param AutoMinorVersionUpgrade: 
+
+    Specifies whether to automatically apply minor engine upgrades to the read replica during the maintenance window.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+     
+
+    Default: Inherits the value from the source DB instance.
+
+     
+
+    For more information about automatic minor version upgrades, see `Automatically upgrading the minor engine version <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades>`__.
+
+    
+
+  
+  :type Iops: integer
+  :param Iops: 
+
+    The amount of Provisioned IOPS (input/output operations per second) to initially allocate for the DB instance.
+
+    
+
+  
+  :type StorageThroughput: integer
+  :param StorageThroughput: 
+
+    Specifies the storage throughput value for the read replica.
+
+     
+
+    This setting doesn't apply to RDS Custom or Amazon Aurora DB instances.
+
+    
+
+  
+  :type OptionGroupName: string
+  :param OptionGroupName: 
+
+    The option group to associate the DB instance with. If not specified, RDS uses the option group associated with the source DB instance or cluster.
+
+     
+
+    .. note::
+
+      
+
+      For SQL Server, you must use the option group associated with the source.
+
+      
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type DBParameterGroupName: string
+  :param DBParameterGroupName: 
+
+    The name of the DB parameter group to associate with this read replica DB instance.
+
+     
+
+    For the Db2 DB engine, if your source DB instance uses the bring your own license (BYOL) model, then a custom parameter group must be associated with the replica. For a same Amazon Web Services Region replica, if you don't specify a custom parameter group, Amazon RDS associates the custom parameter group associated with the source DB instance. For a cross-Region replica, you must specify a custom parameter group. This custom parameter group must include your IBM Site ID and IBM Customer ID. For more information, see `IBM IDs for bring your own license (BYOL) for Db2 <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/db2-licensing.html#db2-prereqs-ibm-info>`__.
+
+     
+
+    For Single-AZ or Multi-AZ DB instance read replica instances, if you don't specify a value for ``DBParameterGroupName``, then Amazon RDS uses the ``DBParameterGroup`` of the source DB instance for a same Region read replica, or the default ``DBParameterGroup`` for the specified DB engine for a cross-Region read replica.
+
+     
+
+    For Multi-AZ DB cluster same Region read replica instances, if you don't specify a value for ``DBParameterGroupName``, then Amazon RDS uses the default ``DBParameterGroup``.
+
+     
+
+    Specifying a parameter group for this operation is only supported for MySQL DB instances for cross-Region read replicas, for Multi-AZ DB cluster read replica instances, for Db2 DB instances, and for Oracle DB instances. It isn't supported for MySQL DB instances for same Region read replicas or for RDS Custom.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Must be 1 to 255 letters, numbers, or hyphens.
+     
+    * First character must be a letter.
+     
+    * Can't end with a hyphen or contain two consecutive hyphens.
+    
+
+    
+
+  
+  :type PubliclyAccessible: boolean
+  :param PubliclyAccessible: 
+
+    Specifies whether the DB instance is publicly accessible.
+
+     
+
+    When the DB cluster is publicly accessible, its Domain Name System (DNS) endpoint resolves to the private IP address from within the DB cluster's virtual private cloud (VPC). It resolves to the public IP address from outside of the DB cluster's VPC. Access to the DB cluster is ultimately controlled by the security group it uses. That public access isn't permitted if the security group assigned to the DB cluster doesn't permit it.
+
+     
+
+    When the DB instance isn't publicly accessible, it is an internal DB instance with a DNS name that resolves to a private IP address.
+
+     
+
+    For more information, see  CreateDBInstance.
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of tags.
+
+     
+
+    For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+    
+
+  
+    - *(dict) --* 
+
+      Metadata assigned to an Amazon RDS resource consisting of a key-value pair.
+
+       
+
+      For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+      
+
+    
+      - **Key** *(string) --* 
+
+        A key is the required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        A value is the optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+        
+
+      
+    
+
+  :type DBSubnetGroupName: string
+  :param DBSubnetGroupName: 
+
+    A DB subnet group for the DB instance. The new DB instance is created in the VPC associated with the DB subnet group. If no DB subnet group is specified, then the new DB instance isn't created in a VPC.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * If supplied, must match the name of an existing DB subnet group.
+     
+    * The specified DB subnet group must be in the same Amazon Web Services Region in which the operation is running.
+     
+    * All read replicas in one Amazon Web Services Region that are created from the same source DB instance must either: 
+
+      
+      * Specify DB subnet groups from the same VPC. All these read replicas are created in the same VPC.
+       
+      * Not specify a DB subnet group. All these read replicas are created outside of any VPC.
+      
+
+    
+    
+
+     
+
+    Example: ``mydbsubnetgroup``
+
+    
+
+  
+  :type VpcSecurityGroupIds: list
+  :param VpcSecurityGroupIds: 
+
+    A list of Amazon EC2 VPC security groups to associate with the read replica.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+     
+
+    Default: The default EC2 VPC security group for the DB subnet group's VPC.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type StorageType: string
+  :param StorageType: 
+
+    The storage type to associate with the read replica.
+
+     
+
+    If you specify ``io1``, ``io2``, or ``gp3``, you must also include a value for the ``Iops`` parameter.
+
+     
+
+    Valid Values: ``gp2 | gp3 | io1 | io2 | standard``
+
+     
+
+    Default: ``io1`` if the ``Iops`` parameter is specified. Otherwise, ``gp3``.
+
+    
+
+  
+  :type CopyTagsToSnapshot: boolean
+  :param CopyTagsToSnapshot: 
+
+    Specifies whether to copy all tags from the read replica to snapshots of the read replica. By default, tags aren't copied.
+
+    
+
+  
+  :type MonitoringInterval: integer
+  :param MonitoringInterval: 
+
+    The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the read replica. To disable collection of Enhanced Monitoring metrics, specify ``0``. The default is ``0``.
+
+     
+
+    If ``MonitoringRoleArn`` is specified, then you must set ``MonitoringInterval`` to a value other than ``0``.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+     
+
+    Valid Values: ``0, 1, 5, 10, 15, 30, 60``
+
+     
+
+    Default: ``0``
+
+    
+
+  
+  :type MonitoringRoleArn: string
+  :param MonitoringRoleArn: 
+
+    The ARN for the IAM role that permits RDS to send enhanced monitoring metrics to Amazon CloudWatch Logs. For example, ``arn:aws:iam:123456789012:role/emaccess``. For information on creating a monitoring role, go to `To create an IAM role for Amazon RDS Enhanced Monitoring <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.html#USER_Monitoring.OS.IAMRole>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    If ``MonitoringInterval`` is set to a value other than 0, then you must supply a ``MonitoringRoleArn`` value.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type KmsKeyId: string
+  :param KmsKeyId: 
+
+    The Amazon Web Services KMS key identifier for an encrypted read replica.
+
+     
+
+    The Amazon Web Services KMS key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key.
+
+     
+
+    If you create an encrypted read replica in the same Amazon Web Services Region as the source DB instance or Multi-AZ DB cluster, don't specify a value for this parameter. A read replica in the same Amazon Web Services Region is always encrypted with the same KMS key as the source DB instance or cluster.
+
+     
+
+    If you create an encrypted read replica in a different Amazon Web Services Region, then you must specify a KMS key identifier for the destination Amazon Web Services Region. KMS keys are specific to the Amazon Web Services Region that they are created in, and you can't use KMS keys from one Amazon Web Services Region in another Amazon Web Services Region.
+
+     
+
+    You can't create an encrypted read replica from an unencrypted DB instance or Multi-AZ DB cluster.
+
+     
+
+    This setting doesn't apply to RDS Custom, which uses the same KMS key as the primary replica.
+
+    
+
+  
+  :type PreSignedUrl: string
+  :param PreSignedUrl: 
+
+    When you are creating a read replica from one Amazon Web Services GovCloud (US) Region to another or from one China Amazon Web Services Region to another, the URL that contains a Signature Version 4 signed request for the ``CreateDBInstanceReadReplica`` API operation in the source Amazon Web Services Region that contains the source DB instance.
+
+     
+
+    This setting applies only to Amazon Web Services GovCloud (US) Regions and China Amazon Web Services Regions. It's ignored in other Amazon Web Services Regions.
+
+     
+
+    This setting applies only when replicating from a source DB *instance*. Source DB clusters aren't supported in Amazon Web Services GovCloud (US) Regions and China Amazon Web Services Regions.
+
+     
+
+    You must specify this parameter when you create an encrypted read replica from another Amazon Web Services Region by using the Amazon RDS API. Don't specify ``PreSignedUrl`` when you are creating an encrypted read replica in the same Amazon Web Services Region.
+
+     
+
+    The presigned URL must be a valid request for the ``CreateDBInstanceReadReplica`` API operation that can run in the source Amazon Web Services Region that contains the encrypted source DB instance. The presigned URL request must contain the following parameter values:
+
+     
+
+    
+    * ``DestinationRegion`` - The Amazon Web Services Region that the encrypted read replica is created in. This Amazon Web Services Region is the same one where the ``CreateDBInstanceReadReplica`` operation is called that contains this presigned URL. For example, if you create an encrypted DB instance in the us-west-1 Amazon Web Services Region, from a source DB instance in the us-east-2 Amazon Web Services Region, then you call the ``CreateDBInstanceReadReplica`` operation in the us-east-1 Amazon Web Services Region and provide a presigned URL that contains a call to the ``CreateDBInstanceReadReplica`` operation in the us-west-2 Amazon Web Services Region. For this example, the ``DestinationRegion`` in the presigned URL must be set to the us-east-1 Amazon Web Services Region.
+     
+    * ``KmsKeyId`` - The KMS key identifier for the key to use to encrypt the read replica in the destination Amazon Web Services Region. This is the same identifier for both the ``CreateDBInstanceReadReplica`` operation that is called in the destination Amazon Web Services Region, and the operation contained in the presigned URL.
+     
+    * ``SourceDBInstanceIdentifier`` - The DB instance identifier for the encrypted DB instance to be replicated. This identifier must be in the Amazon Resource Name (ARN) format for the source Amazon Web Services Region. For example, if you are creating an encrypted read replica from a DB instance in the us-west-2 Amazon Web Services Region, then your ``SourceDBInstanceIdentifier`` looks like the following example: ``arn:aws:rds:us-west-2:123456789012:instance:mysql-instance1-20161115``.
+    
+
+     
+
+    To learn how to generate a Signature Version 4 signed request, see `Authenticating Requests\: Using Query Parameters (Amazon Web Services Signature Version 4) <https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html>`__ and `Signature Version 4 Signing Process <https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html>`__.
+
+     
+
+    .. note::
+
+      
+
+      If you are using an Amazon Web Services SDK tool or the CLI, you can specify ``SourceRegion`` (or ``--source-region`` for the CLI) instead of specifying ``PreSignedUrl`` manually. Specifying ``SourceRegion`` autogenerates a presigned URL that is a valid request for the operation that can run in the source Amazon Web Services Region.
+
+      
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+        Please note that this parameter is automatically populated if it is not provided. Including this parameter is not required
+
+
+
+  
+  :type EnableIAMDatabaseAuthentication: boolean
+  :param EnableIAMDatabaseAuthentication: 
+
+    Specifies whether to enable mapping of Amazon Web Services Identity and Access Management (IAM) accounts to database accounts. By default, mapping isn't enabled.
+
+     
+
+    For more information about IAM database authentication, see `IAM Database Authentication for MySQL and PostgreSQL <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type DatabaseInsightsMode: string
+  :param DatabaseInsightsMode: 
+
+    The mode of Database Insights to enable for the read replica.
+
+     
+
+    .. note::
+
+      
+
+      This setting isn't supported.
+
+      
+
+    
+
+  
+  :type EnablePerformanceInsights: boolean
+  :param EnablePerformanceInsights: 
+
+    Specifies whether to enable Performance Insights for the read replica.
+
+     
+
+    For more information, see `Using Amazon Performance Insights <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PerfInsights.html>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type PerformanceInsightsKMSKeyId: string
+  :param PerformanceInsightsKMSKeyId: 
+
+    The Amazon Web Services KMS key identifier for encryption of Performance Insights data.
+
+     
+
+    The Amazon Web Services KMS key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key.
+
+     
+
+    If you do not specify a value for ``PerformanceInsightsKMSKeyId``, then Amazon RDS uses your default KMS key. There is a default KMS key for your Amazon Web Services account. Your Amazon Web Services account has a different default KMS key for each Amazon Web Services Region.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type PerformanceInsightsRetentionPeriod: integer
+  :param PerformanceInsightsRetentionPeriod: 
+
+    The number of days to retain Performance Insights data.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+     
+
+    Valid Values:
+
+     
+
+    
+    * ``7``
+     
+    * *month* * 31, where *month* is a number of months from 1-23. Examples: ``93`` (3 months * 31), ``341`` (11 months * 31), ``589`` (19 months * 31)
+     
+    * ``731``
+    
+
+     
+
+    Default: ``7`` days
+
+     
+
+    If you specify a retention period that isn't valid, such as ``94``, Amazon RDS returns an error.
+
+    
+
+  
+  :type EnableCloudwatchLogsExports: list
+  :param EnableCloudwatchLogsExports: 
+
+    The list of logs that the new DB instance is to export to CloudWatch Logs. The values in the list depend on the DB engine being used. For more information, see `Publishing Database Logs to Amazon CloudWatch Logs <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.html#USER_LogAccess.Procedural.UploadtoCloudWatch>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ProcessorFeatures: list
+  :param ProcessorFeatures: 
+
+    The number of CPU cores and the number of threads per core for the DB instance class of the DB instance.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains the processor features of a DB instance class.
+
+       
+
+      To specify the number of CPU cores, use the ``coreCount`` feature name for the ``Name`` parameter. To specify the number of threads per core, use the ``threadsPerCore`` feature name for the ``Name`` parameter.
+
+       
+
+      You can set the processor features of the DB instance class for a DB instance when you call one of the following actions:
+
+       
+
+      
+      * ``CreateDBInstance``
+       
+      * ``ModifyDBInstance``
+       
+      * ``RestoreDBInstanceFromDBSnapshot``
+       
+      * ``RestoreDBInstanceFromS3``
+       
+      * ``RestoreDBInstanceToPointInTime``
+      
+
+       
+
+      You can view the valid processor values for a particular instance class by calling the ``DescribeOrderableDBInstanceOptions`` action and specifying the instance class for the ``DBInstanceClass`` parameter.
+
+       
+
+      In addition, you can use the following actions for DB instance class processor information:
+
+       
+
+      
+      * ``DescribeDBInstances``
+       
+      * ``DescribeDBSnapshots``
+       
+      * ``DescribeValidDBInstanceModifications``
+      
+
+       
+
+      If you call ``DescribeDBInstances``, ``ProcessorFeature`` returns non-null values only if the following conditions are met:
+
+       
+
+      
+      * You are accessing an Oracle or SQL Server DB instance.
+       
+      * Your Oracle or SQL Server DB instance class supports configuring the number of CPU cores and threads per core.
+       
+      * The current number CPU cores and threads is set to a non-default value.
+      
+
+       
+
+      For more information, see `Configuring the processor for a DB instance class in RDS for Oracle <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html#USER_ConfigureProcessor>`__, `Optimizing your RDS for SQL Server CPU <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.Concepts.General.OptimizeCPU.html>`__, and `DB instance classes <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html>`__ in the *Amazon RDS User Guide.*
+
+      
+
+    
+      - **Name** *(string) --* 
+
+        The name of the processor feature. Valid names are ``coreCount`` and ``threadsPerCore``.
+
+        
+
+      
+      - **Value** *(string) --* 
+
+        The value of a processor feature.
+
+        
+
+      
+    
+
+  :type UseDefaultProcessorFeatures: boolean
+  :param UseDefaultProcessorFeatures: 
+
+    Specifies whether the DB instance class of the DB instance uses its default processor features.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type DeletionProtection: boolean
+  :param DeletionProtection: 
+
+    Specifies whether to enable deletion protection for the DB instance. The database can't be deleted when deletion protection is enabled. By default, deletion protection isn't enabled. For more information, see `Deleting a DB Instance <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html>`__.
+
+    
+
+  
+  :type Domain: string
+  :param Domain: 
+
+    The Active Directory directory ID to create the DB instance in. Currently, only MySQL, Microsoft SQL Server, Oracle, and PostgreSQL DB instances can be created in an Active Directory Domain.
+
+     
+
+    For more information, see `Kerberos Authentication <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/kerberos-authentication.html>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type DomainIAMRoleName: string
+  :param DomainIAMRoleName: 
+
+    The name of the IAM role to use when making API calls to the Directory Service.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+    
+
+  
+  :type DomainFqdn: string
+  :param DomainFqdn: 
+
+    The fully qualified domain name (FQDN) of an Active Directory domain.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Can't be longer than 64 characters.
+    
+
+     
+
+    Example: ``mymanagedADtest.mymanagedAD.mydomain``
+
+    
+
+  
+  :type DomainOu: string
+  :param DomainOu: 
+
+    The Active Directory organizational unit for your DB instance to join.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Must be in the distinguished name format.
+     
+    * Can't be longer than 64 characters.
+    
+
+     
+
+    Example: ``OU=mymanagedADtestOU,DC=mymanagedADtest,DC=mymanagedAD,DC=mydomain``
+
+    
+
+  
+  :type DomainAuthSecretArn: string
+  :param DomainAuthSecretArn: 
+
+    The ARN for the Secrets Manager secret with the credentials for the user joining the domain.
+
+     
+
+    Example: ``arn:aws:secretsmanager:region:account-number:secret:myselfmanagedADtestsecret-123456``
+
+    
+
+  
+  :type DomainDnsIps: list
+  :param DomainDnsIps: 
+
+    The IPv4 DNS IP addresses of your primary and secondary Active Directory domain controllers.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Two IP addresses must be provided. If there isn't a secondary domain controller, use the IP address of the primary domain controller for both entries in the list.
+    
+
+     
+
+    Example: ``123.124.125.126,234.235.236.237``
+
+    
+
+  
+    - *(string) --* 
+
+    
+
+  :type ReplicaMode: string
+  :param ReplicaMode: 
+
+    The open mode of the replica database.
+
+     
+
+    This parameter is only supported for Db2 DB instances and Oracle DB instances.
+
+      Db2  
+
+    Standby DB replicas are included in Db2 Advanced Edition (AE) and Db2 Standard Edition (SE). The main use case for standby replicas is cross-Region disaster recovery. Because it doesn't accept user connections, a standby replica can't serve a read-only workload.
+
+     
+
+    You can create a combination of standby and read-only DB replicas for the same primary DB instance. For more information, see `Working with replicas for Amazon RDS for Db2 <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/db2-replication.html>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    To create standby DB replicas for RDS for Db2, set this parameter to ``mounted``.
+
+      Oracle  
+
+    Mounted DB replicas are included in Oracle Database Enterprise Edition. The main use case for mounted replicas is cross-Region disaster recovery. The primary database doesn't use Active Data Guard to transmit information to the mounted replica. Because it doesn't accept user connections, a mounted replica can't serve a read-only workload.
+
+     
+
+    You can create a combination of mounted and read-only DB replicas for the same primary DB instance. For more information, see `Working with read replicas for Amazon RDS for Oracle <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    For RDS Custom, you must specify this parameter and set it to ``mounted``. The value won't be set by default. After replica creation, you can manage the open mode manually.
+
+    
+
+  
+  :type EnableCustomerOwnedIp: boolean
+  :param EnableCustomerOwnedIp: 
+
+    Specifies whether to enable a customer-owned IP address (CoIP) for an RDS on Outposts read replica.
+
+     
+
+    A *CoIP* provides local or external connectivity to resources in your Outpost subnets through your on-premises network. For some use cases, a CoIP can provide lower latency for connections to the read replica from outside of its virtual private cloud (VPC) on your local network.
+
+     
+
+    For more information about RDS on Outposts, see `Working with Amazon RDS on Amazon Web Services Outposts <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    For more information about CoIPs, see `Customer-owned IP addresses <https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing>`__ in the *Amazon Web Services Outposts User Guide*.
+
+    
+
+  
+  :type NetworkType: string
+  :param NetworkType: 
+
+    The network type of the DB instance.
+
+     
+
+    Valid Values:
+
+     
+
+    
+    * ``IPV4``
+     
+    * ``DUAL``
+    
+
+     
+
+    The network type is determined by the ``DBSubnetGroup`` specified for read replica. A ``DBSubnetGroup`` can support only the IPv4 protocol or the IPv4 and the IPv6 protocols ( ``DUAL``).
+
+     
+
+    For more information, see `Working with a DB instance in a VPC <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html>`__ in the *Amazon RDS User Guide.*
+
+    
+
+  
+  :type MaxAllocatedStorage: integer
+  :param MaxAllocatedStorage: 
+
+    The upper limit in gibibytes (GiB) to which Amazon RDS can automatically scale the storage of the DB instance.
+
+     
+
+    For more information about this setting, including limitations that apply to it, see `Managing capacity automatically with Amazon RDS storage autoscaling <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.StorageTypes.html#USER_PIOPS.Autoscaling>`__ in the *Amazon RDS User Guide*.
+
+    
+
+  
+  :type BackupTarget: string
+  :param BackupTarget: 
+
+    The location where RDS stores automated backups and manual snapshots.
+
+     
+
+    Valid Values:
+
+     
+
+    
+    * ``local`` for Dedicated Local Zones
+     
+    * ``region`` for Amazon Web Services Region
+    
+
+    
+
+  
+  :type CustomIamInstanceProfile: string
+  :param CustomIamInstanceProfile: 
+
+    The instance profile associated with the underlying Amazon EC2 instance of an RDS Custom DB instance. The instance profile must meet the following requirements:
+
+     
+
+    
+    * The profile must exist in your account.
+     
+    * The profile must have an IAM role that Amazon EC2 has permissions to assume.
+     
+    * The instance profile name and the associated IAM role name must start with the prefix ``AWSRDSCustom``.
+    
+
+     
+
+    For the list of permissions required for the IAM role, see `Configure IAM and your VPC <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc>`__ in the *Amazon RDS User Guide*.
+
+     
+
+    This setting is required for RDS Custom DB instances.
+
+    
+
+  
+  :type AllocatedStorage: integer
+  :param AllocatedStorage: 
+
+    The amount of storage (in gibibytes) to allocate initially for the read replica. Follow the allocation rules specified in ``CreateDBInstance``.
+
+     
+
+    This setting isn't valid for RDS for SQL Server.
+
+     
+
+    .. note::
+
+      
+
+      Be sure to allocate enough storage for your read replica so that the create operation can succeed. You can also allocate additional storage for future growth.
+
+      
+
+    
+
+  
+  :type SourceDBClusterIdentifier: string
+  :param SourceDBClusterIdentifier: 
+
+    The identifier of the Multi-AZ DB cluster that will act as the source for the read replica. Each DB cluster can have up to 15 read replicas.
+
+     
+
+    Constraints:
+
+     
+
+    
+    * Must be the identifier of an existing Multi-AZ DB cluster.
+     
+    * Can't be specified if the ``SourceDBInstanceIdentifier`` parameter is also specified.
+     
+    * The specified DB cluster must have automatic backups enabled, that is, its backup retention period must be greater than 0.
+     
+    * The source DB cluster must be in the same Amazon Web Services Region as the read replica. Cross-Region replication isn't supported.
+    
+
+    
+
+  
+  :type DedicatedLogVolume: boolean
+  :param DedicatedLogVolume: 
+
+    Indicates whether the DB instance has a dedicated log volume (DLV) enabled.
+
+    
+
+  
+  :type UpgradeStorageConfig: boolean
+  :param UpgradeStorageConfig: 
+
+    Whether to upgrade the storage file system configuration on the read replica. This option migrates the read replica from the old storage file system layout to the preferred layout.
+
+    
+
+  
+  :type CACertificateIdentifier: string
+  :param CACertificateIdentifier: 
+
+    The CA certificate identifier to use for the read replica's server certificate.
+
+     
+
+    This setting doesn't apply to RDS Custom DB instances.
+
+     
+
+    For more information, see `Using SSL/TLS to encrypt a connection to a DB instance <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html>`__ in the *Amazon RDS User Guide* and `Using SSL/TLS to encrypt a connection to a DB cluster <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html>`__ in the *Amazon Aurora User Guide*.
+
+    
+
+  
+  :type AdditionalStorageVolumes: list
+  :param AdditionalStorageVolumes: 
+
+    A list of additional storage volumes to create for the DB instance. You can create up to three additional storage volumes using the names ``rdsdbdata2``, ``rdsdbdata3``, and ``rdsdbdata4``. Additional storage volumes are supported for RDS for Oracle and RDS for SQL Server DB instances only.
+
+    
+
+  
+    - *(dict) --* 
+
+      Contains details about an additional storage volume for a DB instance. RDS support additional storage volumes for RDS for Oracle and RDS for SQL Server.
+
+      
+
+    
+      - **VolumeName** *(string) --* **[REQUIRED]** 
+
+        The name of the additional storage volume.
+
+         
+
+        Valid Values: ``RDSDBDATA2 | RDSDBDATA3 | RDSDBDATA4``
+
+        
+
+      
+      - **AllocatedStorage** *(integer) --* 
+
+        The amount of storage allocated for the additional storage volume, in gibibytes (GiB). The minimum is 20 GiB. The maximum is 65,536 GiB (64 TiB).
+
+        
+
+      
+      - **IOPS** *(integer) --* 
+
+        The number of I/O operations per second (IOPS) provisioned for the additional storage volume.
+
+        
+
+      
+      - **MaxAllocatedStorage** *(integer) --* 
+
+        The upper limit in gibibytes (GiB) to which RDS can automatically scale the storage of the additional storage volume.
+
+        
+
+      
+      - **StorageThroughput** *(integer) --* 
+
+        The storage throughput value for the additional storage volume, in mebibytes per second (MiBps). This setting applies only to the General Purpose SSD ( ``gp3``) storage type.
+
+        
+
+      
+      - **StorageType** *(string) --* 
+
+        The storage type for the additional storage volume.
+
+         
+
+        Valid Values: ``GP3 | IO2``
+
+        
+
+      
+    
+
+  :type TagSpecifications: list
+  :param TagSpecifications: 
+
+    Tags to assign to resources associated with the DB instance.
+
+     
+
+    Valid Values:
+
+     
+
+    
+    * ``auto-backup`` - The DB instance's automated backup.
+    
+
+    
+
+  
+    - *(dict) --* 
+
+      The tags to apply to resources when creating or modifying a DB instance or DB cluster. When you specify a tag, you must specify the resource type to tag, otherwise the request will fail.
+
+      
+
+    
+      - **ResourceType** *(string) --* 
+
+        The type of resource to tag on creation.
+
+         
+
+        Valid Values:
+
+         
+
+        
+        * ``auto-backup`` - The DB instance's automated backup.
+         
+        * ``cluster-auto-backup`` - The DB cluster's automated backup.
+        
+
+        
+
+      
+      - **Tags** *(list) --* 
+
+        A list of tags.
+
+         
+
+        For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+        
+
+      
+        - *(dict) --* 
+
+          Metadata assigned to an Amazon RDS resource consisting of a key-value pair.
+
+           
+
+          For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+          
+
+        
+          - **Key** *(string) --* 
+
+            A key is the required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+            
+
+          
+          - **Value** *(string) --* 
+
+            A value is the optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+            
+
+          
+        
+    
+    
+
+  :type SourceRegion: string
+  :param SourceRegion: 
+
+    The ID of the region that contains the source for the read replica.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'DBInstance': {
+              'DBInstanceIdentifier': 'string',
+              'DBInstanceClass': 'string',
+              'Engine': 'string',
+              'DBInstanceStatus': 'string',
+              'MasterUsername': 'string',
+              'DBName': 'string',
+              'Endpoint': {
+                  'Address': 'string',
+                  'Port': 123,
+                  'HostedZoneId': 'string'
+              },
+              'AllocatedStorage': 123,
+              'InstanceCreateTime': datetime(2015, 1, 1),
+              'PreferredBackupWindow': 'string',
+              'BackupRetentionPeriod': 123,
+              'DBSecurityGroups': [
+                  {
+                      'DBSecurityGroupName': 'string',
+                      'Status': 'string'
+                  },
+              ],
+              'VpcSecurityGroups': [
+                  {
+                      'VpcSecurityGroupId': 'string',
+                      'Status': 'string'
+                  },
+              ],
+              'DBParameterGroups': [
+                  {
+                      'DBParameterGroupName': 'string',
+                      'ParameterApplyStatus': 'string'
+                  },
+              ],
+              'AvailabilityZone': 'string',
+              'DBSubnetGroup': {
+                  'DBSubnetGroupName': 'string',
+                  'DBSubnetGroupDescription': 'string',
+                  'VpcId': 'string',
+                  'SubnetGroupStatus': 'string',
+                  'Subnets': [
+                      {
+                          'SubnetIdentifier': 'string',
+                          'SubnetAvailabilityZone': {
+                              'Name': 'string'
+                          },
+                          'SubnetOutpost': {
+                              'Arn': 'string'
+                          },
+                          'SubnetStatus': 'string'
+                      },
+                  ],
+                  'DBSubnetGroupArn': 'string',
+                  'SupportedNetworkTypes': [
+                      'string',
+                  ]
+              },
+              'PreferredMaintenanceWindow': 'string',
+              'UpgradeRolloutOrder': 'first'|'second'|'last',
+              'PendingModifiedValues': {
+                  'DBInstanceClass': 'string',
+                  'AllocatedStorage': 123,
+                  'MasterUserPassword': 'string',
+                  'Port': 123,
+                  'BackupRetentionPeriod': 123,
+                  'MultiAZ': True|False,
+                  'EngineVersion': 'string',
+                  'LicenseModel': 'string',
+                  'Iops': 123,
+                  'StorageThroughput': 123,
+                  'DBInstanceIdentifier': 'string',
+                  'StorageType': 'string',
+                  'CACertificateIdentifier': 'string',
+                  'DBSubnetGroupName': 'string',
+                  'PendingCloudwatchLogsExports': {
+                      'LogTypesToEnable': [
+                          'string',
+                      ],
+                      'LogTypesToDisable': [
+                          'string',
+                      ]
+                  },
+                  'ProcessorFeatures': [
+                      {
+                          'Name': 'string',
+                          'Value': 'string'
+                      },
+                  ],
+                  'AutomationMode': 'full'|'all-paused',
+                  'ResumeFullAutomationModeTime': datetime(2015, 1, 1),
+                  'MultiTenant': True|False,
+                  'IAMDatabaseAuthenticationEnabled': True|False,
+                  'DedicatedLogVolume': True|False,
+                  'Engine': 'string',
+                  'AdditionalStorageVolumes': [
+                      {
+                          'VolumeName': 'string',
+                          'AllocatedStorage': 123,
+                          'IOPS': 123,
+                          'MaxAllocatedStorage': 123,
+                          'StorageThroughput': 123,
+                          'StorageType': 'string'
+                      },
+                  ]
+              },
+              'LatestRestorableTime': datetime(2015, 1, 1),
+              'MultiAZ': True|False,
+              'EngineVersion': 'string',
+              'AutoMinorVersionUpgrade': True|False,
+              'ReadReplicaSourceDBInstanceIdentifier': 'string',
+              'ReadReplicaDBInstanceIdentifiers': [
+                  'string',
+              ],
+              'ReadReplicaDBClusterIdentifiers': [
+                  'string',
+              ],
+              'ReplicaMode': 'open-read-only'|'mounted',
+              'LicenseModel': 'string',
+              'Iops': 123,
+              'StorageThroughput': 123,
+              'OptionGroupMemberships': [
+                  {
+                      'OptionGroupName': 'string',
+                      'Status': 'string'
+                  },
+              ],
+              'CharacterSetName': 'string',
+              'NcharCharacterSetName': 'string',
+              'SecondaryAvailabilityZone': 'string',
+              'PubliclyAccessible': True|False,
+              'StatusInfos': [
+                  {
+                      'StatusType': 'string',
+                      'Normal': True|False,
+                      'Status': 'string',
+                      'Message': 'string'
+                  },
+              ],
+              'StorageType': 'string',
+              'TdeCredentialArn': 'string',
+              'DbInstancePort': 123,
+              'DBClusterIdentifier': 'string',
+              'StorageEncrypted': True|False,
+              'KmsKeyId': 'string',
+              'DbiResourceId': 'string',
+              'CACertificateIdentifier': 'string',
+              'DomainMemberships': [
+                  {
+                      'Domain': 'string',
+                      'Status': 'string',
+                      'FQDN': 'string',
+                      'IAMRoleName': 'string',
+                      'OU': 'string',
+                      'AuthSecretArn': 'string',
+                      'DnsIps': [
+                          'string',
+                      ]
+                  },
+              ],
+              'CopyTagsToSnapshot': True|False,
+              'MonitoringInterval': 123,
+              'EnhancedMonitoringResourceArn': 'string',
+              'MonitoringRoleArn': 'string',
+              'PromotionTier': 123,
+              'DBInstanceArn': 'string',
+              'Timezone': 'string',
+              'IAMDatabaseAuthenticationEnabled': True|False,
+              'DatabaseInsightsMode': 'standard'|'advanced',
+              'PerformanceInsightsEnabled': True|False,
+              'PerformanceInsightsKMSKeyId': 'string',
+              'PerformanceInsightsRetentionPeriod': 123,
+              'EnabledCloudwatchLogsExports': [
+                  'string',
+              ],
+              'ProcessorFeatures': [
+                  {
+                      'Name': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'DeletionProtection': True|False,
+              'AssociatedRoles': [
+                  {
+                      'RoleArn': 'string',
+                      'FeatureName': 'string',
+                      'Status': 'string'
+                  },
+              ],
+              'ListenerEndpoint': {
+                  'Address': 'string',
+                  'Port': 123,
+                  'HostedZoneId': 'string'
+              },
+              'MaxAllocatedStorage': 123,
+              'TagList': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'AutomationMode': 'full'|'all-paused',
+              'ResumeFullAutomationModeTime': datetime(2015, 1, 1),
+              'CustomerOwnedIpEnabled': True|False,
+              'NetworkType': 'string',
+              'ActivityStreamStatus': 'stopped'|'starting'|'started'|'stopping',
+              'ActivityStreamKmsKeyId': 'string',
+              'ActivityStreamKinesisStreamName': 'string',
+              'ActivityStreamMode': 'sync'|'async',
+              'ActivityStreamEngineNativeAuditFieldsIncluded': True|False,
+              'AwsBackupRecoveryPointArn': 'string',
+              'DBInstanceAutomatedBackupsReplications': [
+                  {
+                      'DBInstanceAutomatedBackupsArn': 'string'
+                  },
+              ],
+              'BackupTarget': 'string',
+              'AutomaticRestartTime': datetime(2015, 1, 1),
+              'CustomIamInstanceProfile': 'string',
+              'ActivityStreamPolicyStatus': 'locked'|'unlocked'|'locking-policy'|'unlocking-policy',
+              'CertificateDetails': {
+                  'CAIdentifier': 'string',
+                  'ValidTill': datetime(2015, 1, 1)
+              },
+              'DBSystemId': 'string',
+              'MasterUserSecret': {
+                  'SecretArn': 'string',
+                  'SecretStatus': 'string',
+                  'KmsKeyId': 'string'
+              },
+              'ReadReplicaSourceDBClusterIdentifier': 'string',
+              'PercentProgress': 'string',
+              'MultiTenant': True|False,
+              'DedicatedLogVolume': True|False,
+              'IsStorageConfigUpgradeAvailable': True|False,
+              'EngineLifecycleSupport': 'string',
+              'AdditionalStorageVolumes': [
+                  {
+                      'VolumeName': 'string',
+                      'StorageVolumeStatus': 'string',
+                      'AllocatedStorage': 123,
+                      'IOPS': 123,
+                      'MaxAllocatedStorage': 123,
+                      'StorageThroughput': 123,
+                      'StorageType': 'string'
+                  },
+              ],
+              'StorageVolumeStatus': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **DBInstance** *(dict) --* 
+
+        Contains the details of an Amazon RDS DB instance.
+
+         
+
+        This data type is used as a response element in the operations ``CreateDBInstance``, ``CreateDBInstanceReadReplica``, ``DeleteDBInstance``, ``DescribeDBInstances``, ``ModifyDBInstance``, ``PromoteReadReplica``, ``RebootDBInstance``, ``RestoreDBInstanceFromDBSnapshot``, ``RestoreDBInstanceFromS3``, ``RestoreDBInstanceToPointInTime``, ``StartDBInstance``, and ``StopDBInstance``.
+
+        
+        
+
+        - **DBInstanceIdentifier** *(string) --* 
+
+          The user-supplied database identifier. This identifier is the unique key that identifies a DB instance.
+
+          
+        
+
+        - **DBInstanceClass** *(string) --* 
+
+          The name of the compute and memory capacity class of the DB instance.
+
+          
+        
+
+        - **Engine** *(string) --* 
+
+          The database engine used for this DB instance.
+
+          
+        
+
+        - **DBInstanceStatus** *(string) --* 
+
+          The current state of this database.
+
+           
+
+          For information about DB instance statuses, see `Viewing DB instance status <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/accessing-monitoring.html#Overview.DBInstance.Status>`__ in the *Amazon RDS User Guide.*
+
+          
+        
+
+        - **MasterUsername** *(string) --* 
+
+          The master username for the DB instance.
+
+          
+        
+
+        - **DBName** *(string) --* 
+
+          The initial database name that you provided (if required) when you created the DB instance. This name is returned for the life of your DB instance. For an RDS for Oracle CDB instance, the name identifies the PDB rather than the CDB.
+
+          
+        
+
+        - **Endpoint** *(dict) --* 
+
+          The connection endpoint for the DB instance.
+
+           
+
+          .. note::
+
+            
+
+            The endpoint might not be shown for instances with the status of ``creating``.
+
+            
+
+          
+          
+
+          - **Address** *(string) --* 
+
+            Specifies the DNS address of the DB instance.
+
+            
+          
+
+          - **Port** *(integer) --* 
+
+            Specifies the port that the database engine is listening on.
+
+            
+          
+
+          - **HostedZoneId** *(string) --* 
+
+            Specifies the ID that Amazon Route 53 assigns when you create a hosted zone.
+
+            
+      
+        
+
+        - **AllocatedStorage** *(integer) --* 
+
+          The amount of storage in gibibytes (GiB) allocated for the DB instance.
+
+          
+        
+
+        - **InstanceCreateTime** *(datetime) --* 
+
+          The date and time when the DB instance was created.
+
+          
+        
+
+        - **PreferredBackupWindow** *(string) --* 
+
+          The daily time range during which automated backups are created if automated backups are enabled, as determined by the ``BackupRetentionPeriod``.
+
+          
+        
+
+        - **BackupRetentionPeriod** *(integer) --* 
+
+          The number of days for which automatic DB snapshots are retained.
+
+          
+        
+
+        - **DBSecurityGroups** *(list) --* 
+
+          A list of DB security group elements containing ``DBSecurityGroup.Name`` and ``DBSecurityGroup.Status`` subelements.
+
+          
+          
+
+          - *(dict) --* 
+
+            This data type is used as a response element in the following actions:
+
+             
+
+            
+            * ``ModifyDBInstance``
+             
+            * ``RebootDBInstance``
+             
+            * ``RestoreDBInstanceFromDBSnapshot``
+             
+            * ``RestoreDBInstanceToPointInTime``
+            
+
+            
+            
+
+            - **DBSecurityGroupName** *(string) --* 
+
+              The name of the DB security group.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The status of the DB security group.
+
+              
+        
+      
+        
+
+        - **VpcSecurityGroups** *(list) --* 
+
+          The list of Amazon EC2 VPC security groups that the DB instance belongs to.
+
+          
+          
+
+          - *(dict) --* 
+
+            This data type is used as a response element for queries on VPC security group membership.
+
+            
+            
+
+            - **VpcSecurityGroupId** *(string) --* 
+
+              The name of the VPC security group.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The membership status of the VPC security group.
+
+               
+
+              Currently, the only valid status is ``active``.
+
+              
+        
+      
+        
+
+        - **DBParameterGroups** *(list) --* 
+
+          The list of DB parameter groups applied to this DB instance.
+
+          
+          
+
+          - *(dict) --* 
+
+            The status of the DB parameter group.
+
+             
+
+            This data type is used as a response element in the following actions:
+
+             
+
+            
+            * ``CreateDBInstance``
+             
+            * ``CreateDBInstanceReadReplica``
+             
+            * ``DeleteDBInstance``
+             
+            * ``ModifyDBInstance``
+             
+            * ``RebootDBInstance``
+             
+            * ``RestoreDBInstanceFromDBSnapshot``
+            
+
+            
+            
+
+            - **DBParameterGroupName** *(string) --* 
+
+              The name of the DB parameter group.
+
+              
+            
+
+            - **ParameterApplyStatus** *(string) --* 
+
+              The status of parameter updates. Valid values are:
+
+               
+
+              
+              * ``applying``: The parameter group change is being applied to the database.
+               
+              * ``failed-to-apply``: The parameter group is in an invalid state.
+               
+              * ``in-sync``: The parameter group change is synchronized with the database.
+               
+              * ``pending-database-upgrade``: The parameter group change will be applied after the DB instance is upgraded.
+               
+              * ``pending-reboot``: The parameter group change will be applied after the DB instance reboots.
+              
+
+              
+        
+      
+        
+
+        - **AvailabilityZone** *(string) --* 
+
+          The name of the Availability Zone where the DB instance is located.
+
+          
+        
+
+        - **DBSubnetGroup** *(dict) --* 
+
+          Information about the subnet group associated with the DB instance, including the name, description, and subnets in the subnet group.
+
+          
+          
+
+          - **DBSubnetGroupName** *(string) --* 
+
+            The name of the DB subnet group.
+
+            
+          
+
+          - **DBSubnetGroupDescription** *(string) --* 
+
+            Provides the description of the DB subnet group.
+
+            
+          
+
+          - **VpcId** *(string) --* 
+
+            Provides the VpcId of the DB subnet group.
+
+            
+          
+
+          - **SubnetGroupStatus** *(string) --* 
+
+            Provides the status of the DB subnet group.
+
+            
+          
+
+          - **Subnets** *(list) --* 
+
+            Contains a list of ``Subnet`` elements. The list of subnets shown here might not reflect the current state of your VPC. For the most up-to-date information, we recommend checking your VPC configuration directly.
+
+            
+            
+
+            - *(dict) --* 
+
+              This data type is used as a response element for the ``DescribeDBSubnetGroups`` operation.
+
+              
+              
+
+              - **SubnetIdentifier** *(string) --* 
+
+                The identifier of the subnet.
+
+                
+              
+
+              - **SubnetAvailabilityZone** *(dict) --* 
+
+                Contains Availability Zone information.
+
+                 
+
+                This data type is used as an element in the ``OrderableDBInstanceOption`` data type.
+
+                
+                
+
+                - **Name** *(string) --* 
+
+                  The name of the Availability Zone.
+
+                  
+            
+              
+
+              - **SubnetOutpost** *(dict) --* 
+
+                If the subnet is associated with an Outpost, this value specifies the Outpost.
+
+                 
+
+                For more information about RDS on Outposts, see `Amazon RDS on Amazon Web Services Outposts <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html>`__ in the *Amazon RDS User Guide.*
+
+                
+                
+
+                - **Arn** *(string) --* 
+
+                  The Amazon Resource Name (ARN) of the Outpost.
+
+                  
+            
+              
+
+              - **SubnetStatus** *(string) --* 
+
+                The status of the subnet.
+
+                
+          
+        
+          
+
+          - **DBSubnetGroupArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) for the DB subnet group.
+
+            
+          
+
+          - **SupportedNetworkTypes** *(list) --* 
+
+            The network type of the DB subnet group.
+
+             
+
+            Valid values:
+
+             
+
+            
+            * ``IPV4``
+             
+            * ``DUAL``
+            
+
+             
+
+            A ``DBSubnetGroup`` can support only the IPv4 protocol or the IPv4 and the IPv6 protocols ( ``DUAL``).
+
+             
+
+            For more information, see `Working with a DB instance in a VPC <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html>`__ in the *Amazon RDS User Guide.*
+
+            
+            
+
+            - *(string) --* 
+        
+      
+        
+
+        - **PreferredMaintenanceWindow** *(string) --* 
+
+          The weekly time range during which system maintenance can occur, in Universal Coordinated Time (UTC).
+
+          
+        
+
+        - **UpgradeRolloutOrder** *(string) --* 
+
+          This data type represents the order in which the instances are upgraded.
+
+           
+
+          
+          * [first] - Typically used for development or testing environments.
+           
+          * [second] - Default order for resources not specifically configured.
+           
+          * [last] - Usually reserved for production environments.
+          
+
+          
+        
+
+        - **PendingModifiedValues** *(dict) --* 
+
+          Information about pending changes to the DB instance. This information is returned only when there are pending changes. Specific changes are identified by subelements.
+
+          
+          
+
+          - **DBInstanceClass** *(string) --* 
+
+            The name of the compute and memory capacity class for the DB instance.
+
+            
+          
+
+          - **AllocatedStorage** *(integer) --* 
+
+            The allocated storage size for the DB instance specified in gibibytes (GiB).
+
+            
+          
+
+          - **MasterUserPassword** *(string) --* 
+
+            The master credentials for the DB instance.
+
+            
+          
+
+          - **Port** *(integer) --* 
+
+            The port for the DB instance.
+
+            
+          
+
+          - **BackupRetentionPeriod** *(integer) --* 
+
+            The number of days for which automated backups are retained.
+
+            
+          
+
+          - **MultiAZ** *(boolean) --* 
+
+            Indicates whether the Single-AZ DB instance will change to a Multi-AZ deployment.
+
+            
+          
+
+          - **EngineVersion** *(string) --* 
+
+            The database engine version.
+
+            
+          
+
+          - **LicenseModel** *(string) --* 
+
+            The license model for the DB instance.
+
+             
+
+            Valid values: ``license-included`` | ``bring-your-own-license`` | ``general-public-license``
+
+            
+          
+
+          - **Iops** *(integer) --* 
+
+            The Provisioned IOPS value for the DB instance.
+
+            
+          
+
+          - **StorageThroughput** *(integer) --* 
+
+            The storage throughput of the DB instance.
+
+            
+          
+
+          - **DBInstanceIdentifier** *(string) --* 
+
+            The database identifier for the DB instance.
+
+            
+          
+
+          - **StorageType** *(string) --* 
+
+            The storage type of the DB instance.
+
+            
+          
+
+          - **CACertificateIdentifier** *(string) --* 
+
+            The identifier of the CA certificate for the DB instance.
+
+             
+
+            For more information, see `Using SSL/TLS to encrypt a connection to a DB instance <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html>`__ in the *Amazon RDS User Guide* and `Using SSL/TLS to encrypt a connection to a DB cluster <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html>`__ in the *Amazon Aurora User Guide*.
+
+            
+          
+
+          - **DBSubnetGroupName** *(string) --* 
+
+            The DB subnet group for the DB instance.
+
+            
+          
+
+          - **PendingCloudwatchLogsExports** *(dict) --* 
+
+            A list of the log types whose configuration is still pending. In other words, these log types are in the process of being activated or deactivated.
+
+            
+            
+
+            - **LogTypesToEnable** *(list) --* 
+
+              Log types that are in the process of being deactivated. After they are deactivated, these log types aren't exported to CloudWatch Logs.
+
+              
+              
+
+              - *(string) --* 
+          
+            
+
+            - **LogTypesToDisable** *(list) --* 
+
+              Log types that are in the process of being enabled. After they are enabled, these log types are exported to CloudWatch Logs.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+          
+
+          - **ProcessorFeatures** *(list) --* 
+
+            The number of CPU cores and the number of threads per core for the DB instance class of the DB instance.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains the processor features of a DB instance class.
+
+               
+
+              To specify the number of CPU cores, use the ``coreCount`` feature name for the ``Name`` parameter. To specify the number of threads per core, use the ``threadsPerCore`` feature name for the ``Name`` parameter.
+
+               
+
+              You can set the processor features of the DB instance class for a DB instance when you call one of the following actions:
+
+               
+
+              
+              * ``CreateDBInstance``
+               
+              * ``ModifyDBInstance``
+               
+              * ``RestoreDBInstanceFromDBSnapshot``
+               
+              * ``RestoreDBInstanceFromS3``
+               
+              * ``RestoreDBInstanceToPointInTime``
+              
+
+               
+
+              You can view the valid processor values for a particular instance class by calling the ``DescribeOrderableDBInstanceOptions`` action and specifying the instance class for the ``DBInstanceClass`` parameter.
+
+               
+
+              In addition, you can use the following actions for DB instance class processor information:
+
+               
+
+              
+              * ``DescribeDBInstances``
+               
+              * ``DescribeDBSnapshots``
+               
+              * ``DescribeValidDBInstanceModifications``
+              
+
+               
+
+              If you call ``DescribeDBInstances``, ``ProcessorFeature`` returns non-null values only if the following conditions are met:
+
+               
+
+              
+              * You are accessing an Oracle or SQL Server DB instance.
+               
+              * Your Oracle or SQL Server DB instance class supports configuring the number of CPU cores and threads per core.
+               
+              * The current number CPU cores and threads is set to a non-default value.
+              
+
+               
+
+              For more information, see `Configuring the processor for a DB instance class in RDS for Oracle <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html#USER_ConfigureProcessor>`__, `Optimizing your RDS for SQL Server CPU <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.Concepts.General.OptimizeCPU.html>`__, and `DB instance classes <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html>`__ in the *Amazon RDS User Guide.*
+
+              
+              
+
+              - **Name** *(string) --* 
+
+                The name of the processor feature. Valid names are ``coreCount`` and ``threadsPerCore``.
+
+                
+              
+
+              - **Value** *(string) --* 
+
+                The value of a processor feature.
+
+                
+          
+        
+          
+
+          - **AutomationMode** *(string) --* 
+
+            The automation mode of the RDS Custom DB instance: ``full`` or ``all-paused``. If ``full``, the DB instance automates monitoring and instance recovery. If ``all-paused``, the instance pauses automation for the duration set by ``--resume-full-automation-mode-minutes``.
+
+            
+          
+
+          - **ResumeFullAutomationModeTime** *(datetime) --* 
+
+            The number of minutes to pause the automation. When the time period ends, RDS Custom resumes full automation. The minimum value is 60 (default). The maximum value is 1,440.
+
+            
+          
+
+          - **MultiTenant** *(boolean) --* 
+
+            Indicates whether the DB instance will change to the multi-tenant configuration (TRUE) or the single-tenant configuration (FALSE).
+
+            
+          
+
+          - **IAMDatabaseAuthenticationEnabled** *(boolean) --* 
+
+            Indicates whether mapping of Amazon Web Services Identity and Access Management (IAM) accounts to database accounts is enabled.
+
+            
+          
+
+          - **DedicatedLogVolume** *(boolean) --* 
+
+            Indicates whether the DB instance has a dedicated log volume (DLV) enabled.>
+
+            
+          
+
+          - **Engine** *(string) --* 
+
+            The database engine of the DB instance.
+
+            
+          
+
+          - **AdditionalStorageVolumes** *(list) --* 
+
+            The additional storage volume modifications that are pending for the DB instance.
+
+            
+            
+
+            - *(dict) --* 
+
+              Contains details about an additional storage volume for a DB instance. RDS support additional storage volumes for RDS for Oracle and RDS for SQL Server.
+
+              
+              
+
+              - **VolumeName** *(string) --* 
+
+                The name of the additional storage volume.
+
+                 
+
+                Valid Values: ``RDSDBDATA2 | RDSDBDATA3 | RDSDBDATA4``
+
+                
+              
+
+              - **AllocatedStorage** *(integer) --* 
+
+                The amount of storage allocated for the additional storage volume, in gibibytes (GiB). The minimum is 20 GiB. The maximum is 65,536 GiB (64 TiB).
+
+                
+              
+
+              - **IOPS** *(integer) --* 
+
+                The number of I/O operations per second (IOPS) provisioned for the additional storage volume.
+
+                
+              
+
+              - **MaxAllocatedStorage** *(integer) --* 
+
+                The upper limit in gibibytes (GiB) to which RDS can automatically scale the storage of the additional storage volume.
+
+                
+              
+
+              - **StorageThroughput** *(integer) --* 
+
+                The storage throughput value for the additional storage volume, in mebibytes per second (MiBps). This setting applies only to the General Purpose SSD ( ``gp3``) storage type.
+
+                
+              
+
+              - **StorageType** *(string) --* 
+
+                The storage type for the additional storage volume.
+
+                 
+
+                Valid Values: ``GP3 | IO2``
+
+                
+          
+        
+      
+        
+
+        - **LatestRestorableTime** *(datetime) --* 
+
+          The latest time to which a database in this DB instance can be restored with point-in-time restore.
+
+          
+        
+
+        - **MultiAZ** *(boolean) --* 
+
+          Indicates whether the DB instance is a Multi-AZ deployment. This setting doesn't apply to RDS Custom DB instances.
+
+          
+        
+
+        - **EngineVersion** *(string) --* 
+
+          The version of the database engine.
+
+          
+        
+
+        - **AutoMinorVersionUpgrade** *(boolean) --* 
+
+          Indicates whether minor version patches are applied automatically.
+
+           
+
+          For more information about automatic minor version upgrades, see `Automatically upgrading the minor engine version <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades>`__.
+
+          
+        
+
+        - **ReadReplicaSourceDBInstanceIdentifier** *(string) --* 
+
+          The identifier of the source DB instance if this DB instance is a read replica.
+
+          
+        
+
+        - **ReadReplicaDBInstanceIdentifiers** *(list) --* 
+
+          The identifiers of the read replicas associated with this DB instance.
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **ReadReplicaDBClusterIdentifiers** *(list) --* 
+
+          The identifiers of Aurora DB clusters to which the RDS DB instance is replicated as a read replica. For example, when you create an Aurora read replica of an RDS for MySQL DB instance, the Aurora MySQL DB cluster for the Aurora read replica is shown. This output doesn't contain information about cross-Region Aurora read replicas.
+
+           
+
+          .. note::
+
+            
+
+            Currently, each RDS DB instance can have only one Aurora read replica.
+
+            
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **ReplicaMode** *(string) --* 
+
+          The open mode of a Db2 or an Oracle read replica. The default is ``open-read-only``. For more information, see `Working with replicas for Amazon RDS for Db2 <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/db2-replication.html>`__ and `Working with read replicas for Amazon RDS for Oracle <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/oracle-read-replicas.html>`__ in the *Amazon RDS User Guide*.
+
+           
+
+          .. note::
+
+            
+
+            This attribute is only supported in RDS for Db2, RDS for Oracle, and RDS Custom for Oracle.
+
+            
+
+          
+        
+
+        - **LicenseModel** *(string) --* 
+
+          The license model information for this DB instance. This setting doesn't apply to Amazon Aurora or RDS Custom DB instances.
+
+          
+        
+
+        - **Iops** *(integer) --* 
+
+          The Provisioned IOPS (I/O operations per second) value for the DB instance.
+
+          
+        
+
+        - **StorageThroughput** *(integer) --* 
+
+          The storage throughput for the DB instance.
+
+           
+
+          This setting applies only to the ``gp3`` storage type.
+
+          
+        
+
+        - **OptionGroupMemberships** *(list) --* 
+
+          The list of option group memberships for this DB instance.
+
+          
+          
+
+          - *(dict) --* 
+
+            Provides information on the option groups the DB instance is a member of.
+
+            
+            
+
+            - **OptionGroupName** *(string) --* 
+
+              The name of the option group that the instance belongs to.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The status of the DB instance's option group membership. Valid values are: ``in-sync``, ``pending-apply``, ``pending-removal``, ``pending-maintenance-apply``, ``pending-maintenance-removal``, ``applying``, ``removing``, and ``failed``.
+
+              
+        
+      
+        
+
+        - **CharacterSetName** *(string) --* 
+
+          If present, specifies the name of the character set that this instance is associated with.
+
+          
+        
+
+        - **NcharCharacterSetName** *(string) --* 
+
+          The name of the NCHAR character set for the Oracle DB instance. This character set specifies the Unicode encoding for data stored in table columns of type NCHAR, NCLOB, or NVARCHAR2.
+
+          
+        
+
+        - **SecondaryAvailabilityZone** *(string) --* 
+
+          If present, specifies the name of the secondary Availability Zone for a DB instance with multi-AZ support.
+
+          
+        
+
+        - **PubliclyAccessible** *(boolean) --* 
+
+          Indicates whether the DB instance is publicly accessible.
+
+           
+
+          When the DB instance is publicly accessible and you connect from outside of the DB instance's virtual private cloud (VPC), its Domain Name System (DNS) endpoint resolves to the public IP address. When you connect from within the same VPC as the DB instance, the endpoint resolves to the private IP address. Access to the DB cluster is ultimately controlled by the security group it uses. That public access isn't permitted if the security group assigned to the DB cluster doesn't permit it.
+
+           
+
+          When the DB instance isn't publicly accessible, it is an internal DB instance with a DNS name that resolves to a private IP address.
+
+           
+
+          For more information, see  CreateDBInstance.
+
+          
+        
+
+        - **StatusInfos** *(list) --* 
+
+          The status of a read replica. If the DB instance isn't a read replica, the value is blank.
+
+          
+          
+
+          - *(dict) --* 
+
+            Provides a list of status information for a DB instance.
+
+            
+            
+
+            - **StatusType** *(string) --* 
+
+              This value is currently "read replication."
+
+              
+            
+
+            - **Normal** *(boolean) --* 
+
+              Indicates whether the instance is operating normally (TRUE) or is in an error state (FALSE).
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The status of the DB instance. For a StatusType of read replica, the values can be replicating, replication stop point set, replication stop point reached, error, stopped, or terminated.
+
+              
+            
+
+            - **Message** *(string) --* 
+
+              Details of the error if there is an error for the instance. If the instance isn't in an error state, this value is blank.
+
+              
+        
+      
+        
+
+        - **StorageType** *(string) --* 
+
+          The storage type associated with the DB instance.
+
+          
+        
+
+        - **TdeCredentialArn** *(string) --* 
+
+          The ARN from the key store with which the instance is associated for TDE encryption.
+
+          
+        
+
+        - **DbInstancePort** *(integer) --* 
+
+          The port that the DB instance listens on. If the DB instance is part of a DB cluster, this can be a different port than the DB cluster port.
+
+          
+        
+
+        - **DBClusterIdentifier** *(string) --* 
+
+          If the DB instance is a member of a DB cluster, indicates the name of the DB cluster that the DB instance is a member of.
+
+          
+        
+
+        - **StorageEncrypted** *(boolean) --* 
+
+          Indicates whether the DB instance is encrypted.
+
+          
+        
+
+        - **KmsKeyId** *(string) --* 
+
+          If ``StorageEncrypted`` is enabled, the Amazon Web Services KMS key identifier for the encrypted DB instance.
+
+           
+
+          The Amazon Web Services KMS key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key.
+
+          
+        
+
+        - **DbiResourceId** *(string) --* 
+
+          The Amazon Web Services Region-unique, immutable identifier for the DB instance. This identifier is found in Amazon Web Services CloudTrail log entries whenever the Amazon Web Services KMS key for the DB instance is accessed.
+
+          
+        
+
+        - **CACertificateIdentifier** *(string) --* 
+
+          The identifier of the CA certificate for this DB instance.
+
+           
+
+          For more information, see `Using SSL/TLS to encrypt a connection to a DB instance <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html>`__ in the *Amazon RDS User Guide* and `Using SSL/TLS to encrypt a connection to a DB cluster <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html>`__ in the *Amazon Aurora User Guide*.
+
+          
+        
+
+        - **DomainMemberships** *(list) --* 
+
+          The Active Directory Domain membership records associated with the DB instance.
+
+          
+          
+
+          - *(dict) --* 
+
+            An Active Directory Domain membership record associated with the DB instance or cluster.
+
+            
+            
+
+            - **Domain** *(string) --* 
+
+              The identifier of the Active Directory Domain.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              The status of the Active Directory Domain membership for the DB instance or cluster. Values include ``joined``, ``pending-join``, ``failed``, and so on.
+
+              
+            
+
+            - **FQDN** *(string) --* 
+
+              The fully qualified domain name (FQDN) of the Active Directory Domain.
+
+              
+            
+
+            - **IAMRoleName** *(string) --* 
+
+              The name of the IAM role used when making API calls to the Directory Service.
+
+              
+            
+
+            - **OU** *(string) --* 
+
+              The Active Directory organizational unit for the DB instance or cluster.
+
+              
+            
+
+            - **AuthSecretArn** *(string) --* 
+
+              The ARN for the Secrets Manager secret with the credentials for the user that's a member of the domain.
+
+              
+            
+
+            - **DnsIps** *(list) --* 
+
+              The IPv4 DNS IP addresses of the primary and secondary Active Directory domain controllers.
+
+              
+              
+
+              - *(string) --* 
+          
+        
+      
+        
+
+        - **CopyTagsToSnapshot** *(boolean) --* 
+
+          Indicates whether tags are copied from the DB instance to snapshots of the DB instance.
+
+           
+
+          This setting doesn't apply to Amazon Aurora DB instances. Copying tags to snapshots is managed by the DB cluster. Setting this value for an Aurora DB instance has no effect on the DB cluster setting. For more information, see ``DBCluster``.
+
+          
+        
+
+        - **MonitoringInterval** *(integer) --* 
+
+          The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance.
+
+          
+        
+
+        - **EnhancedMonitoringResourceArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the Amazon CloudWatch Logs log stream that receives the Enhanced Monitoring metrics data for the DB instance.
+
+          
+        
+
+        - **MonitoringRoleArn** *(string) --* 
+
+          The ARN for the IAM role that permits RDS to send Enhanced Monitoring metrics to Amazon CloudWatch Logs.
+
+          
+        
+
+        - **PromotionTier** *(integer) --* 
+
+          The order of priority in which an Aurora Replica is promoted to the primary instance after a failure of the existing primary instance. For more information, see `Fault Tolerance for an Aurora DB Cluster <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.AuroraHighAvailability.html#Aurora.Managing.FaultTolerance>`__ in the *Amazon Aurora User Guide*.
+
+          
+        
+
+        - **DBInstanceArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) for the DB instance.
+
+          
+        
+
+        - **Timezone** *(string) --* 
+
+          The time zone of the DB instance. In most cases, the ``Timezone`` element is empty. ``Timezone`` content appears only for RDS for Db2 and RDS for SQL Server DB instances that were created with a time zone specified.
+
+          
+        
+
+        - **IAMDatabaseAuthenticationEnabled** *(boolean) --* 
+
+          Indicates whether mapping of Amazon Web Services Identity and Access Management (IAM) accounts to database accounts is enabled for the DB instance.
+
+           
+
+          For a list of engine versions that support IAM database authentication, see `IAM database authentication <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RDS_Fea_Regions_DB-eng.Feature.IamDatabaseAuthentication.html>`__ in the *Amazon RDS User Guide* and `IAM database authentication in Aurora <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.Aurora_Fea_Regions_DB-eng.Feature.IAMdbauth.html>`__ in the *Amazon Aurora User Guide*.
+
+          
+        
+
+        - **DatabaseInsightsMode** *(string) --* 
+
+          The mode of Database Insights that is enabled for the instance.
+
+          
+        
+
+        - **PerformanceInsightsEnabled** *(boolean) --* 
+
+          Indicates whether Performance Insights is enabled for the DB instance.
+
+          
+        
+
+        - **PerformanceInsightsKMSKeyId** *(string) --* 
+
+          The Amazon Web Services KMS key identifier for encryption of Performance Insights data.
+
+           
+
+          The Amazon Web Services KMS key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key.
+
+          
+        
+
+        - **PerformanceInsightsRetentionPeriod** *(integer) --* 
+
+          The number of days to retain Performance Insights data.
+
+           
+
+          Valid Values:
+
+           
+
+          
+          * ``7``
+           
+          * *month* * 31, where *month* is a number of months from 1-23. Examples: ``93`` (3 months * 31), ``341`` (11 months * 31), ``589`` (19 months * 31)
+           
+          * ``731``
+          
+
+           
+
+          Default: ``7`` days
+
+          
+        
+
+        - **EnabledCloudwatchLogsExports** *(list) --* 
+
+          A list of log types that this DB instance is configured to export to CloudWatch Logs.
+
+           
+
+          Log types vary by DB engine. For information about the log types for each DB engine, see `Monitoring Amazon RDS log files <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.html>`__ in the *Amazon RDS User Guide.*
+
+          
+          
+
+          - *(string) --* 
+      
+        
+
+        - **ProcessorFeatures** *(list) --* 
+
+          The number of CPU cores and the number of threads per core for the DB instance class of the DB instance.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains the processor features of a DB instance class.
+
+             
+
+            To specify the number of CPU cores, use the ``coreCount`` feature name for the ``Name`` parameter. To specify the number of threads per core, use the ``threadsPerCore`` feature name for the ``Name`` parameter.
+
+             
+
+            You can set the processor features of the DB instance class for a DB instance when you call one of the following actions:
+
+             
+
+            
+            * ``CreateDBInstance``
+             
+            * ``ModifyDBInstance``
+             
+            * ``RestoreDBInstanceFromDBSnapshot``
+             
+            * ``RestoreDBInstanceFromS3``
+             
+            * ``RestoreDBInstanceToPointInTime``
+            
+
+             
+
+            You can view the valid processor values for a particular instance class by calling the ``DescribeOrderableDBInstanceOptions`` action and specifying the instance class for the ``DBInstanceClass`` parameter.
+
+             
+
+            In addition, you can use the following actions for DB instance class processor information:
+
+             
+
+            
+            * ``DescribeDBInstances``
+             
+            * ``DescribeDBSnapshots``
+             
+            * ``DescribeValidDBInstanceModifications``
+            
+
+             
+
+            If you call ``DescribeDBInstances``, ``ProcessorFeature`` returns non-null values only if the following conditions are met:
+
+             
+
+            
+            * You are accessing an Oracle or SQL Server DB instance.
+             
+            * Your Oracle or SQL Server DB instance class supports configuring the number of CPU cores and threads per core.
+             
+            * The current number CPU cores and threads is set to a non-default value.
+            
+
+             
+
+            For more information, see `Configuring the processor for a DB instance class in RDS for Oracle <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html#USER_ConfigureProcessor>`__, `Optimizing your RDS for SQL Server CPU <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.Concepts.General.OptimizeCPU.html>`__, and `DB instance classes <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html>`__ in the *Amazon RDS User Guide.*
+
+            
+            
+
+            - **Name** *(string) --* 
+
+              The name of the processor feature. Valid names are ``coreCount`` and ``threadsPerCore``.
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The value of a processor feature.
+
+              
+        
+      
+        
+
+        - **DeletionProtection** *(boolean) --* 
+
+          Indicates whether the DB instance has deletion protection enabled. The database can't be deleted when deletion protection is enabled. For more information, see `Deleting a DB Instance <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html>`__.
+
+          
+        
+
+        - **AssociatedRoles** *(list) --* 
+
+          The Amazon Web Services Identity and Access Management (IAM) roles associated with the DB instance.
+
+          
+          
+
+          - *(dict) --* 
+
+            Information about an Amazon Web Services Identity and Access Management (IAM) role that is associated with a DB instance.
+
+            
+            
+
+            - **RoleArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the IAM role that is associated with the DB instance.
+
+              
+            
+
+            - **FeatureName** *(string) --* 
+
+              The name of the feature associated with the Amazon Web Services Identity and Access Management (IAM) role. For information about supported feature names, see ``DBEngineVersion``.
+
+              
+            
+
+            - **Status** *(string) --* 
+
+              Information about the state of association between the IAM role and the DB instance. The Status property returns one of the following values:
+
+               
+
+              
+              * ``ACTIVE`` - the IAM role ARN is associated with the DB instance and can be used to access other Amazon Web Services services on your behalf.
+               
+              * ``PENDING`` - the IAM role ARN is being associated with the DB instance.
+               
+              * ``INVALID`` - the IAM role ARN is associated with the DB instance, but the DB instance is unable to assume the IAM role in order to access other Amazon Web Services services on your behalf.
+              
+
+              
+        
+      
+        
+
+        - **ListenerEndpoint** *(dict) --* 
+
+          The listener connection endpoint for SQL Server Always On.
+
+          
+          
+
+          - **Address** *(string) --* 
+
+            Specifies the DNS address of the DB instance.
+
+            
+          
+
+          - **Port** *(integer) --* 
+
+            Specifies the port that the database engine is listening on.
+
+            
+          
+
+          - **HostedZoneId** *(string) --* 
+
+            Specifies the ID that Amazon Route 53 assigns when you create a hosted zone.
+
+            
+      
+        
+
+        - **MaxAllocatedStorage** *(integer) --* 
+
+          The upper limit in gibibytes (GiB) to which Amazon RDS can automatically scale the storage of the DB instance.
+
+          
+        
+
+        - **TagList** *(list) --* 
+
+          A list of tags.
+
+           
+
+          For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+          
+          
+
+          - *(dict) --* 
+
+            Metadata assigned to an Amazon RDS resource consisting of a key-value pair.
+
+             
+
+            For more information, see `Tagging Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html>`__ in the *Amazon RDS User Guide* or `Tagging Amazon Aurora and Amazon RDS resources <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_Tagging.html>`__ in the *Amazon Aurora User Guide*.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              A key is the required name of the tag. The string value can be from 1 to 128 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              A value is the optional value of the tag. The string value can be from 1 to 256 Unicode characters in length and can't be prefixed with ``aws:`` or ``rds:``. The string can only contain only the set of Unicode letters, digits, white-space, '_', '.', ':', '/', '=', '+', '-', '@' (Java regex: "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$").
+
+              
+        
+      
+        
+
+        - **AutomationMode** *(string) --* 
+
+          The automation mode of the RDS Custom DB instance: ``full`` or ``all paused``. If ``full``, the DB instance automates monitoring and instance recovery. If ``all paused``, the instance pauses automation for the duration set by ``--resume-full-automation-mode-minutes``.
+
+          
+        
+
+        - **ResumeFullAutomationModeTime** *(datetime) --* 
+
+          The number of minutes to pause the automation. When the time period ends, RDS Custom resumes full automation. The minimum value is 60 (default). The maximum value is 1,440.
+
+          
+        
+
+        - **CustomerOwnedIpEnabled** *(boolean) --* 
+
+          Indicates whether a customer-owned IP address (CoIP) is enabled for an RDS on Outposts DB instance.
+
+           
+
+          A *CoIP *provides local or external connectivity to resources in your Outpost subnets through your on-premises network. For some use cases, a CoIP can provide lower latency for connections to the DB instance from outside of its virtual private cloud (VPC) on your local network.
+
+           
+
+          For more information about RDS on Outposts, see `Working with Amazon RDS on Amazon Web Services Outposts <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html>`__ in the *Amazon RDS User Guide*.
+
+           
+
+          For more information about CoIPs, see `Customer-owned IP addresses <https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing>`__ in the *Amazon Web Services Outposts User Guide*.
+
+          
+        
+
+        - **NetworkType** *(string) --* 
+
+          The network type of the DB instance.
+
+           
+
+          The network type is determined by the ``DBSubnetGroup`` specified for the DB instance. A ``DBSubnetGroup`` can support only the IPv4 protocol or the IPv4 and the IPv6 protocols ( ``DUAL``).
+
+           
+
+          For more information, see `Working with a DB instance in a VPC <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html>`__ in the *Amazon RDS User Guide* and `Working with a DB instance in a VPC <https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html>`__ in the *Amazon Aurora User Guide.*
+
+           
+
+          Valid Values: ``IPV4 | DUAL``
+
+          
+        
+
+        - **ActivityStreamStatus** *(string) --* 
+
+          The status of the database activity stream.
+
+          
+        
+
+        - **ActivityStreamKmsKeyId** *(string) --* 
+
+          The Amazon Web Services KMS key identifier used for encrypting messages in the database activity stream. The Amazon Web Services KMS key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key.
+
+          
+        
+
+        - **ActivityStreamKinesisStreamName** *(string) --* 
+
+          The name of the Amazon Kinesis data stream used for the database activity stream.
+
+          
+        
+
+        - **ActivityStreamMode** *(string) --* 
+
+          The mode of the database activity stream. Database events such as a change or access generate an activity stream event. RDS for Oracle always handles these events asynchronously.
+
+          
+        
+
+        - **ActivityStreamEngineNativeAuditFieldsIncluded** *(boolean) --* 
+
+          Indicates whether engine-native audit fields are included in the database activity stream.
+
+          
+        
+
+        - **AwsBackupRecoveryPointArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the recovery point in Amazon Web Services Backup.
+
+          
+        
+
+        - **DBInstanceAutomatedBackupsReplications** *(list) --* 
+
+          The list of replicated automated backups associated with the DB instance.
+
+          
+          
+
+          - *(dict) --* 
+
+            Automated backups of a DB instance replicated to another Amazon Web Services Region. They consist of system backups, transaction logs, and database instance properties.
+
+            
+            
+
+            - **DBInstanceAutomatedBackupsArn** *(string) --* 
+
+              The Amazon Resource Name (ARN) of the replicated automated backups.
+
+              
+        
+      
+        
+
+        - **BackupTarget** *(string) --* 
+
+          The location where automated backups and manual snapshots are stored: Dedicated Local Zones, Amazon Web Services Outposts or the Amazon Web Services Region.
+
+          
+        
+
+        - **AutomaticRestartTime** *(datetime) --* 
+
+          The time when a stopped DB instance is restarted automatically.
+
+          
+        
+
+        - **CustomIamInstanceProfile** *(string) --* 
+
+          The instance profile associated with the underlying Amazon EC2 instance of an RDS Custom DB instance. The instance profile must meet the following requirements:
+
+           
+
+          
+          * The profile must exist in your account.
+           
+          * The profile must have an IAM role that Amazon EC2 has permissions to assume.
+           
+          * The instance profile name and the associated IAM role name must start with the prefix ``AWSRDSCustom``.
+          
+
+           
+
+          For the list of permissions required for the IAM role, see `Configure IAM and your VPC <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-setup-orcl.html#custom-setup-orcl.iam-vpc>`__ in the *Amazon RDS User Guide*.
+
+          
+        
+
+        - **ActivityStreamPolicyStatus** *(string) --* 
+
+          The status of the policy state of the activity stream.
+
+          
+        
+
+        - **CertificateDetails** *(dict) --* 
+
+          The details of the DB instance's server certificate.
+
+          
+          
+
+          - **CAIdentifier** *(string) --* 
+
+            The CA identifier of the CA certificate used for the DB instance's server certificate.
+
+            
+          
+
+          - **ValidTill** *(datetime) --* 
+
+            The expiration date of the DB instance’s server certificate.
+
+            
+      
+        
+
+        - **DBSystemId** *(string) --* 
+
+          The Oracle system ID (Oracle SID) for a container database (CDB). The Oracle SID is also the name of the CDB. This setting is only valid for RDS Custom DB instances.
+
+          
+        
+
+        - **MasterUserSecret** *(dict) --* 
+
+          The secret managed by RDS in Amazon Web Services Secrets Manager for the master user password.
+
+           
+
+          For more information, see `Password management with Amazon Web Services Secrets Manager <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html>`__ in the *Amazon RDS User Guide.*
+
+          
+          
+
+          - **SecretArn** *(string) --* 
+
+            The Amazon Resource Name (ARN) of the secret.
+
+            
+          
+
+          - **SecretStatus** *(string) --* 
+
+            The status of the secret.
+
+             
+
+            The possible status values include the following:
+
+             
+
+            
+            * ``creating`` - The secret is being created.
+             
+            * ``active`` - The secret is available for normal use and rotation.
+             
+            * ``rotating`` - The secret is being rotated.
+             
+            * ``impaired`` - The secret can be used to access database credentials, but it can't be rotated. A secret might have this status if, for example, permissions are changed so that RDS can no longer access either the secret or the KMS key for the secret. When a secret has this status, you can correct the condition that caused the status. Alternatively, modify the DB instance to turn off automatic management of database credentials, and then modify the DB instance again to turn on automatic management of database credentials.
+            
+
+            
+          
+
+          - **KmsKeyId** *(string) --* 
+
+            The Amazon Web Services KMS key identifier that is used to encrypt the secret.
+
+            
+      
+        
+
+        - **ReadReplicaSourceDBClusterIdentifier** *(string) --* 
+
+          The identifier of the source DB cluster if this DB instance is a read replica.
+
+          
+        
+
+        - **PercentProgress** *(string) --* 
+
+          The progress of the storage optimization operation as a percentage.
+
+          
+        
+
+        - **MultiTenant** *(boolean) --* 
+
+          Specifies whether the DB instance is in the multi-tenant configuration (TRUE) or the single-tenant configuration (FALSE).
+
+          
+        
+
+        - **DedicatedLogVolume** *(boolean) --* 
+
+          Indicates whether the DB instance has a dedicated log volume (DLV) enabled.
+
+          
+        
+
+        - **IsStorageConfigUpgradeAvailable** *(boolean) --* 
+
+          Indicates whether an upgrade is recommended for the storage file system configuration on the DB instance. To migrate to the preferred configuration, you can either create a blue/green deployment, or create a read replica from the DB instance. For more information, see `Upgrading the storage file system for a DB instance <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.StorageTypes.html#USER_PIOPS.UpgradeFileSystem>`__.
+
+          
+        
+
+        - **EngineLifecycleSupport** *(string) --* 
+
+          The lifecycle type for the DB instance.
+
+           
+
+          For more information, see CreateDBInstance.
+
+          
+        
+
+        - **AdditionalStorageVolumes** *(list) --* 
+
+          The additional storage volumes associated with the DB instance. RDS supports additional storage volumes for RDS for Oracle and RDS for SQL Server.
+
+          
+          
+
+          - *(dict) --* 
+
+            Contains information about an additional storage volume for a DB instance.
+
+            
+            
+
+            - **VolumeName** *(string) --* 
+
+              The name of the additional storage volume.
+
+              
+            
+
+            - **StorageVolumeStatus** *(string) --* 
+
+              The status of the additional storage volume.
+
+               
+
+              Valid Values: ``ACTIVE | CREATING | DELETING | MODIFYING | NOT-IN-USE | STORAGE-OPTIMIZATION | VOLUME-FULL``
+
+              
+            
+
+            - **AllocatedStorage** *(integer) --* 
+
+              The amount of storage allocated for the additional storage volume, in gibibytes (GiB). The minimum is 20 GiB. The maximum is 65,536 GiB (64 TiB).
+
+              
+            
+
+            - **IOPS** *(integer) --* 
+
+              The number of I/O operations per second (IOPS) provisioned for the additional storage volume.
+
+              
+            
+
+            - **MaxAllocatedStorage** *(integer) --* 
+
+              The upper limit in gibibytes (GiB) to which RDS can automatically scale the storage of the additional storage volume.
+
+              
+            
+
+            - **StorageThroughput** *(integer) --* 
+
+              The storage throughput value for the additional storage volume, in mebibytes per second (MiBps).
+
+              
+            
+
+            - **StorageType** *(string) --* 
+
+              The storage type for the additional storage volume.
+
+               
+
+              Valid Values: ``GP3 | IO2``
+
+              
+        
+      
+        
+
+        - **StorageVolumeStatus** *(string) --* 
+
+          The detailed status information for storage volumes associated with the DB instance. This information helps identify which specific volume is causing the instance to be in a storage-full state.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`RDS.Client.exceptions.DBParameterGroupNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBSubnetGroupDoesNotCoverEnoughAZs`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidDBSubnetGroupFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InsufficientDBInstanceCapacityFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidSubnet`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBClusterNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.VpcEncryptionControlViolationException`
+
+  
+  *   :py:class:`RDS.Client.exceptions.ProvisionedIopsNotAvailableInAZFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.StorageTypeNotSupportedFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBSubnetGroupNotAllowedFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.OptionGroupNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBInstanceNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.NetworkTypeNotSupported`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InstanceQuotaExceededFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.StorageQuotaExceededFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DomainNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.CertificateNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidDBInstanceStateFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.KMSKeyNotAccessibleFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBInstanceAlreadyExistsFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.TenantDatabaseQuotaExceededFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBSecurityGroupNotFoundFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidVPCNetworkStateFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.InvalidDBClusterStateFault`
+
+  
+  *   :py:class:`RDS.Client.exceptions.DBSubnetGroupNotFoundFault`
+
+  
+
+  **Examples**
+
+  This example creates a DB instance read replica.
+  ::
+
+    response = client.create_db_instance_read_replica(
+        AvailabilityZone='us-east-1a',
+        CopyTagsToSnapshot=True,
+        DBInstanceClass='db.t2.micro',
+        DBInstanceIdentifier='mydbreadreplica',
+        PubliclyAccessible=True,
+        SourceDBInstanceIdentifier='mymysqlinstance',
+        StorageType='gp2',
+        Tags=[
+            {
+                'Key': 'mydbreadreplicakey',
+                'Value': 'mydbreadreplicavalue',
+            },
+        ],
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'DBInstance': {
+        },
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

@@ -1,0 +1,707 @@
+:doc:`GameLift <../../gamelift>` / Client / start_game_session_placement
+
+****************************
+start_game_session_placement
+****************************
+
+
+
+.. py:method:: GameLift.Client.start_game_session_placement(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Anywhere, Container
+
+   
+
+  Makes a request to start a new game session using a game session queue. When processing a placement request, Amazon GameLift Servers looks for the best possible available resource to host the game session, based on how the queue is configured to prioritize factors such as resource cost, latency, and location. After selecting an available resource, Amazon GameLift Servers prompts the resource to start a game session. A placement request can include a list of players to create a set of player sessions. The request can also include information to pass to the new game session, such as to specify a game map or other options.
+
+   
+
+  **Request options**
+
+   
+
+  Use this operation to make the following types of requests.
+
+   
+
+  
+  * Request a placement using the queue's default prioritization process (see the default prioritization described in `PriorityConfiguration <https://docs.aws.amazon.com/gamelift/latest/apireference/API_PriorityConfiguration.html>`__). Include these required parameters: 
+
+    
+    * ``GameSessionQueueName``
+     
+    * ``MaximumPlayerSessionCount``
+     
+    * ``PlacementID``
+    
+
+  
+   
+  * Request a placement and prioritize based on latency. Include these parameters: 
+
+    
+    * Required parameters ``GameSessionQueueName``, ``MaximumPlayerSessionCount``, ``PlacementID``.
+     
+    * ``PlayerLatencies``. Include a set of latency values for destinations in the queue. When a request includes latency data, Amazon GameLift Servers automatically reorder the queue's locations priority list based on lowest available latency values. If a request includes latency data for multiple players, Amazon GameLift Servers calculates each location's average latency for all players and reorders to find the lowest latency across all players.
+     
+    * Don't include ``PriorityConfigurationOverride``.
+    
+
+   
+
+    
+    * Prioritize based on a custom list of locations. If you're using a queue that's configured to prioritize location first (see `PriorityConfiguration <https://docs.aws.amazon.com/gamelift/latest/apireference/API_PriorityConfiguration.html>`__ for game session queues), you can optionally use the *PriorityConfigurationOverride* parameter to substitute a different location priority list for this placement request. Amazon GameLift Servers searches each location on the priority override list to find an available hosting resource for the new game session. Specify a fallback strategy to use in the event that Amazon GameLift Servers fails to place the game session in any of the locations on the override list.
+    
+
+  
+   
+  * Request a placement and prioritized based on a custom list of locations.
+   
+  * You can request new player sessions for a group of players. Include the *DesiredPlayerSessions* parameter and include at minimum a unique player ID for each. You can also include player-specific data to pass to the new game session.
+  
+
+   
+
+  **Result**
+
+   
+
+  If successful, this operation generates a new game session placement request and adds it to the game session queue for processing. You can track the status of individual placement requests by calling `DescribeGameSessionPlacement <https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribeGameSessionPlacement.html>`__ or by monitoring queue notifications. When the request status is ``FULFILLED``, a new game session has started and the placement request is updated with connection information for the game session (IP address and port). If the request included player session data, Amazon GameLift Servers creates a player session for each player ID in the request.
+
+   
+
+  The request results in a ``InvalidRequestException`` in the following situations:
+
+   
+
+  
+  * If the request includes both *PlayerLatencies* and *PriorityConfigurationOverride* parameters.
+   
+  * If the request includes the *PriorityConfigurationOverride* parameter and specifies a queue that doesn't prioritize locations.
+  
+
+   
+
+  Amazon GameLift Servers continues to retry each placement request until it reaches the queue's timeout setting. If a request times out, you can resubmit the request to the same queue or try a different queue.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/StartGameSessionPlacement>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_game_session_placement(
+        PlacementId='string',
+        GameSessionQueueName='string',
+        GameProperties=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        MaximumPlayerSessionCount=123,
+        GameSessionName='string',
+        PlayerLatencies=[
+            {
+                'PlayerId': 'string',
+                'RegionIdentifier': 'string',
+                'LatencyInMilliseconds': ...
+            },
+        ],
+        DesiredPlayerSessions=[
+            {
+                'PlayerId': 'string',
+                'PlayerData': 'string'
+            },
+        ],
+        GameSessionData='string',
+        PriorityConfigurationOverride={
+            'PlacementFallbackStrategy': 'DEFAULT_AFTER_SINGLE_PASS'|'NONE',
+            'LocationOrder': [
+                'string',
+            ]
+        }
+    )
+    
+  :type PlacementId: string
+  :param PlacementId: **[REQUIRED]** 
+
+    A unique identifier to assign to the new game session placement. This value is developer-defined. The value must be unique across all Regions and cannot be reused.
+
+    
+
+  
+  :type GameSessionQueueName: string
+  :param GameSessionQueueName: **[REQUIRED]** 
+
+    Name of the queue to use to place the new game session. You can use either the queue name or ARN value.
+
+    
+
+  
+  :type GameProperties: list
+  :param GameProperties: 
+
+    A set of key-value pairs that can store custom data in a game session. For example: ``{"Key": "difficulty", "Value": "novice"}``.
+
+     
+
+    .. note::
+
+      
+
+      Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      This key-value pair can store custom data about a game session. For example, you might use a ``GameProperty`` to track a game session's map, level of difficulty, or remaining time. The difficulty level could be specified like this: ``{"Key": "difficulty", "Value":"Novice"}``.
+
+       
+
+      You can set game properties when creating a game session. You can also modify game properties of an active game session. When searching for game sessions, you can filter on game property keys and values. You can't delete game properties from a game session.
+
+       
+
+      For examples of working with game properties, see `Create a game session with properties <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties>`__.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The game property identifier.
+
+         
+
+        .. note::
+
+          
+
+          Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+          
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The game property value.
+
+        
+
+      
+    
+
+  :type MaximumPlayerSessionCount: integer
+  :param MaximumPlayerSessionCount: **[REQUIRED]** 
+
+    The maximum number of players that can be connected simultaneously to the game session.
+
+    
+
+  
+  :type GameSessionName: string
+  :param GameSessionName: 
+
+    A descriptive label that is associated with a game session. Session names do not need to be unique.
+
+    
+
+  
+  :type PlayerLatencies: list
+  :param PlayerLatencies: 
+
+    A set of values, expressed in milliseconds, that indicates the amount of latency that a player experiences when connected to Amazon Web Services Regions. This information is used to try to place the new game session where it can offer the best possible gameplay experience for the players.
+
+    
+
+  
+    - *(dict) --* 
+
+      Regional latency information for a player, used when requesting a new game session. This value indicates the amount of time lag that exists when the player is connected to a fleet in the specified Region. The relative difference between a player's latency values for multiple Regions are used to determine which fleets are best suited to place a new game session for the player.
+
+      
+
+    
+      - **PlayerId** *(string) --* 
+
+        A unique identifier for a player associated with the latency data.
+
+        
+
+      
+      - **RegionIdentifier** *(string) --* 
+
+        Name of the Region that is associated with the latency value.
+
+        
+
+      
+      - **LatencyInMilliseconds** *(float) --* 
+
+        Amount of time that represents the time lag experienced by the player when connected to the specified Region.
+
+        
+
+      
+    
+
+  :type DesiredPlayerSessions: list
+  :param DesiredPlayerSessions: 
+
+    Set of information on each player to create a player session for.
+
+    
+
+  
+    - *(dict) --* 
+
+      Player information for use when creating player sessions using a game session placement request.
+
+      
+
+    
+      - **PlayerId** *(string) --* 
+
+        A unique identifier for a player to associate with the player session.
+
+        
+
+      
+      - **PlayerData** *(string) --* 
+
+        Developer-defined information related to a player. Amazon GameLift Servers does not use this data, so it can be formatted as needed for use in the game.
+
+        
+
+      
+    
+
+  :type GameSessionData: string
+  :param GameSessionData: 
+
+    A set of custom game session properties, formatted as a single string value. This data is passed to a game server process with a request to start a new game session. For more information, see `Start a game session <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-startsession>`__.
+
+    
+
+  
+  :type PriorityConfigurationOverride: dict
+  :param PriorityConfigurationOverride: 
+
+    A prioritized list of locations to use for the game session placement and instructions on how to use it. This list overrides a queue's prioritized location list for this game session placement request only. You can include Amazon Web Services Regions, local zones, and custom locations (for Anywhere fleets). You can choose to limit placements to locations on the override list only, or you can prioritize locations on the override list first and then fall back to the queue's other locations if needed. Choose a fallback strategy to use in the event that Amazon GameLift Servers fails to place a game session in any of the locations on the priority override list.
+
+    
+
+  
+    - **PlacementFallbackStrategy** *(string) --* 
+
+      Instructions for how to proceed if placement fails in every location on the priority override list. Valid strategies include:
+
+       
+
+      
+      * ``DEFAULT_AFTER_SINGLE_PASS`` -- After attempting to place a new game session in every location on the priority override list, try to place a game session in queue's other locations. This is the default behavior.
+       
+      * ``NONE`` -- Limit placements to locations on the priority override list only.
+      
+
+      
+
+    
+    - **LocationOrder** *(list) --* **[REQUIRED]** 
+
+      A prioritized list of hosting locations. The list can include Amazon Web Services Regions (such as ``us-west-2``), local zones, and custom locations (for Anywhere fleets). Each location must be listed only once. For details, see `Amazon GameLift Servers service locations. <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-regions.html>`__
+
+      
+
+    
+      - *(string) --* 
+
+      
+  
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'GameSessionPlacement': {
+              'PlacementId': 'string',
+              'GameSessionQueueName': 'string',
+              'Status': 'PENDING'|'FULFILLED'|'CANCELLED'|'TIMED_OUT'|'FAILED',
+              'GameProperties': [
+                  {
+                      'Key': 'string',
+                      'Value': 'string'
+                  },
+              ],
+              'MaximumPlayerSessionCount': 123,
+              'GameSessionName': 'string',
+              'GameSessionId': 'string',
+              'GameSessionArn': 'string',
+              'GameSessionRegion': 'string',
+              'PlayerLatencies': [
+                  {
+                      'PlayerId': 'string',
+                      'RegionIdentifier': 'string',
+                      'LatencyInMilliseconds': ...
+                  },
+              ],
+              'StartTime': datetime(2015, 1, 1),
+              'EndTime': datetime(2015, 1, 1),
+              'IpAddress': 'string',
+              'DnsName': 'string',
+              'Port': 123,
+              'PlacedPlayerSessions': [
+                  {
+                      'PlayerId': 'string',
+                      'PlayerSessionId': 'string'
+                  },
+              ],
+              'GameSessionData': 'string',
+              'MatchmakerData': 'string',
+              'PriorityConfigurationOverride': {
+                  'PlacementFallbackStrategy': 'DEFAULT_AFTER_SINGLE_PASS'|'NONE',
+                  'LocationOrder': [
+                      'string',
+                  ]
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **GameSessionPlacement** *(dict) --* 
+
+        Object that describes the newly created game session placement. This object includes all the information provided in the request, as well as start/end time stamps and placement status.
+
+        
+        
+
+        - **PlacementId** *(string) --* 
+
+          A unique identifier for a game session placement.
+
+          
+        
+
+        - **GameSessionQueueName** *(string) --* 
+
+          A descriptive label that is associated with game session queue. Queue names must be unique within each Region.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          Current status of the game session placement request.
+
+           
+
+          
+          * **PENDING** -- The placement request is in the queue waiting to be processed. Game session properties are not yet final.
+           
+          * **FULFILLED** -- A new game session has been successfully placed. Game session properties are now final.
+           
+          * **CANCELLED** -- The placement request was canceled.
+           
+          * **TIMED_OUT** -- A new game session was not successfully created before the time limit expired. You can resubmit the placement request as needed.
+           
+          * **FAILED** -- Amazon GameLift Servers is not able to complete the process of placing the game session. Common reasons are the game session terminated before the placement process was completed, or an unexpected internal error.
+          
+
+          
+        
+
+        - **GameProperties** *(list) --* 
+
+          A set of key-value pairs that can store custom data in a game session. For example: ``{"Key": "difficulty", "Value": "novice"}``.
+
+           
+
+          .. note::
+
+            
+
+            Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+            
+
+          
+          
+
+          - *(dict) --* 
+
+            This key-value pair can store custom data about a game session. For example, you might use a ``GameProperty`` to track a game session's map, level of difficulty, or remaining time. The difficulty level could be specified like this: ``{"Key": "difficulty", "Value":"Novice"}``.
+
+             
+
+            You can set game properties when creating a game session. You can also modify game properties of an active game session. When searching for game sessions, you can filter on game property keys and values. You can't delete game properties from a game session.
+
+             
+
+            For examples of working with game properties, see `Create a game session with properties <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-client-api.html#game-properties>`__.
+
+            
+            
+
+            - **Key** *(string) --* 
+
+              The game property identifier.
+
+               
+
+              .. note::
+
+                
+
+                Avoid using periods (".") in property keys if you plan to search for game sessions by properties. Property keys containing periods cannot be searched and will be filtered out from search results due to search index limitations.
+
+                
+
+              
+            
+
+            - **Value** *(string) --* 
+
+              The game property value.
+
+              
+        
+      
+        
+
+        - **MaximumPlayerSessionCount** *(integer) --* 
+
+          The maximum number of players that can be connected simultaneously to the game session.
+
+          
+        
+
+        - **GameSessionName** *(string) --* 
+
+          A descriptive label that is associated with a game session. Session names do not need to be unique.
+
+          
+        
+
+        - **GameSessionId** *(string) --* 
+
+          A unique identifier for the game session. This value isn't final until placement status is ``FULFILLED``.
+
+          
+        
+
+        - **GameSessionArn** *(string) --* 
+
+          Identifier for the game session created by this placement request. This identifier is unique across all Regions. This value isn't final until placement status is ``FULFILLED``.
+
+          
+        
+
+        - **GameSessionRegion** *(string) --* 
+
+          Name of the Region where the game session created by this placement request is running. This value isn't final until placement status is ``FULFILLED``.
+
+          
+        
+
+        - **PlayerLatencies** *(list) --* 
+
+          A set of values, expressed in milliseconds, that indicates the amount of latency that a player experiences when connected to Amazon Web Services Regions.
+
+          
+          
+
+          - *(dict) --* 
+
+            Regional latency information for a player, used when requesting a new game session. This value indicates the amount of time lag that exists when the player is connected to a fleet in the specified Region. The relative difference between a player's latency values for multiple Regions are used to determine which fleets are best suited to place a new game session for the player.
+
+            
+            
+
+            - **PlayerId** *(string) --* 
+
+              A unique identifier for a player associated with the latency data.
+
+              
+            
+
+            - **RegionIdentifier** *(string) --* 
+
+              Name of the Region that is associated with the latency value.
+
+              
+            
+
+            - **LatencyInMilliseconds** *(float) --* 
+
+              Amount of time that represents the time lag experienced by the player when connected to the specified Region.
+
+              
+        
+      
+        
+
+        - **StartTime** *(datetime) --* 
+
+          Time stamp indicating when this request was placed in the queue. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **EndTime** *(datetime) --* 
+
+          Time stamp indicating when this request was completed, canceled, or timed out.
+
+          
+        
+
+        - **IpAddress** *(string) --* 
+
+          The IP address of the game session. To connect to a Amazon GameLift Servers game server, an app needs both the IP address and port number. This value isn't final until placement status is ``FULFILLED``.
+
+          
+        
+
+        - **DnsName** *(string) --* 
+
+          The DNS identifier assigned to the instance that is running the game session. Values have the following format:
+
+           
+
+          
+          * TLS-enabled fleets: ``<unique identifier>.<region identifier>.amazongamelift.com``.
+           
+          * Non-TLS-enabled fleets: ``ec2-<unique identifier>.compute.amazonaws.com``. (See `Amazon EC2 Instance IP Addressing <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses>`__.)
+          
+
+           
+
+          When connecting to a game session that is running on a TLS-enabled fleet, you must use the DNS name, not the IP address.
+
+          
+        
+
+        - **Port** *(integer) --* 
+
+          The port number for the game session. To connect to a Amazon GameLift Servers game server, an app needs both the IP address and port number. This value isn't final until placement status is ``FULFILLED``.
+
+          
+        
+
+        - **PlacedPlayerSessions** *(list) --* 
+
+          A collection of information on player sessions created in response to the game session placement request. These player sessions are created only after a new game session is successfully placed (placement status is ``FULFILLED``). This information includes the player ID, provided in the placement request, and a corresponding player session ID.
+
+          
+          
+
+          - *(dict) --* 
+
+            Information about a player session. This object contains only the player ID and player session ID. To retrieve full details on a player session, call `DescribePlayerSessions <https://docs.aws.amazon.com/gamelift/latest/apireference/API_DescribePlayerSessions.html>`__ with the player session ID.
+
+            
+            
+
+            - **PlayerId** *(string) --* 
+
+              A unique identifier for a player that is associated with this player session.
+
+              
+            
+
+            - **PlayerSessionId** *(string) --* 
+
+              A unique identifier for a player session.
+
+              
+        
+      
+        
+
+        - **GameSessionData** *(string) --* 
+
+          A set of custom game session properties, formatted as a single string value. This data is passed to a game server process with a request to start a new game session. For more information, see `Start a game session <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-sdk-server-api.html#gamelift-sdk-server-startsession>`__.
+
+          
+        
+
+        - **MatchmakerData** *(string) --* 
+
+          Information on the matchmaking process for this game. Data is in JSON syntax, formatted as a string. It identifies the matchmaking configuration used to create the match, and contains data on all players assigned to the match, including player attributes and team assignments. For more details on matchmaker data, see `Match Data <https://docs.aws.amazon.com/gamelift/latest/flexmatchguide/match-server.html#match-server-data>`__.
+
+          
+        
+
+        - **PriorityConfigurationOverride** *(dict) --* 
+
+          An alternative priority list of locations that's included with a game session placement request. When provided, the list overrides a queue's location order list for this game session placement request only. The list might include Amazon Web Services Regions, local zones, and custom locations (for Anywhere fleets). The fallback strategy tells Amazon GameLift Servers what action to take (if any) in the event that it failed to place a new game session.
+
+          
+          
+
+          - **PlacementFallbackStrategy** *(string) --* 
+
+            Instructions for how to proceed if placement fails in every location on the priority override list. Valid strategies include:
+
+             
+
+            
+            * ``DEFAULT_AFTER_SINGLE_PASS`` -- After attempting to place a new game session in every location on the priority override list, try to place a game session in queue's other locations. This is the default behavior.
+             
+            * ``NONE`` -- Limit placements to locations on the priority override list only.
+            
+
+            
+          
+
+          - **LocationOrder** *(list) --* 
+
+            A prioritized list of hosting locations. The list can include Amazon Web Services Regions (such as ``us-west-2``), local zones, and custom locations (for Anywhere fleets). Each location must be listed only once. For details, see `Amazon GameLift Servers service locations. <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-regions.html>`__
+
+            
+            
+
+            - *(string) --* 
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.UnsupportedRegionException`
+
+  

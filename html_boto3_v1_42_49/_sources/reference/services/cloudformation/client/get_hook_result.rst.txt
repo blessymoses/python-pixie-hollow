@@ -1,0 +1,279 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / get_hook_result
+
+***************
+get_hook_result
+***************
+
+
+
+.. py:method:: CloudFormation.Client.get_hook_result(**kwargs)
+
+  
+
+  Retrieves detailed information and remediation guidance for a Hook invocation result.
+
+   
+
+  If the Hook uses a KMS key to encrypt annotations, callers of the ``GetHookResult`` operation must have ``kms:Decrypt`` permissions. For more information, see `KMS key policy and permissions for encrypting CloudFormation Hooks results at rest <https://docs.aws.amazon.com/cloudformation-cli/latest/hooks-userguide/hooks-kms-key-policy.html>`__ in the *CloudFormation Hooks User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/GetHookResult>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_hook_result(
+        HookResultId='string'
+    )
+    
+  :type HookResultId: string
+  :param HookResultId: 
+
+    The unique identifier (ID) of the Hook invocation result that you want details about. You can get the ID from the `ListHookResults <https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ListHookResults.html>`__ operation.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'HookResultId': 'string',
+          'InvocationPoint': 'PRE_PROVISION',
+          'FailureMode': 'FAIL'|'WARN',
+          'TypeName': 'string',
+          'OriginalTypeName': 'string',
+          'TypeVersionId': 'string',
+          'TypeConfigurationVersionId': 'string',
+          'TypeArn': 'string',
+          'Status': 'HOOK_IN_PROGRESS'|'HOOK_COMPLETE_SUCCEEDED'|'HOOK_COMPLETE_FAILED'|'HOOK_FAILED',
+          'HookStatusReason': 'string',
+          'InvokedAt': datetime(2015, 1, 1),
+          'Target': {
+              'TargetType': 'RESOURCE',
+              'TargetTypeName': 'string',
+              'TargetId': 'string',
+              'Action': 'CREATE'|'UPDATE'|'DELETE'|'IMPORT'
+          },
+          'Annotations': [
+              {
+                  'AnnotationName': 'string',
+                  'Status': 'PASSED'|'FAILED'|'SKIPPED',
+                  'StatusMessage': 'string',
+                  'RemediationMessage': 'string',
+                  'RemediationLink': 'string',
+                  'SeverityLevel': 'INFORMATIONAL'|'LOW'|'MEDIUM'|'HIGH'|'CRITICAL'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **HookResultId** *(string) --* 
+
+        The unique identifier of the Hook result.
+
+        
+      
+
+      - **InvocationPoint** *(string) --* 
+
+        The specific point in the provisioning process where the Hook is invoked.
+
+        
+      
+
+      - **FailureMode** *(string) --* 
+
+        The failure mode of the invocation.
+
+        
+      
+
+      - **TypeName** *(string) --* 
+
+        The name of the Hook that was invoked.
+
+        
+      
+
+      - **OriginalTypeName** *(string) --* 
+
+        The original public type name of the Hook when an alias is used.
+
+         
+
+        For example, if you activate ``AWS::Hooks::GuardHook`` with alias ``MyCompany::Custom::GuardHook``, then ``TypeName`` will be ``MyCompany::Custom::GuardHook`` and ``OriginalTypeName`` will be ``AWS::Hooks::GuardHook``.
+
+        
+      
+
+      - **TypeVersionId** *(string) --* 
+
+        The version identifier of the Hook that was invoked.
+
+        
+      
+
+      - **TypeConfigurationVersionId** *(string) --* 
+
+        The version identifier of the Hook configuration data that was used during invocation.
+
+        
+      
+
+      - **TypeArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the Hook.
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        The status of the Hook invocation. The following statuses are possible:
+
+         
+
+        
+        * ``HOOK_IN_PROGRESS``: The Hook is currently running.
+         
+        * ``HOOK_COMPLETE_SUCCEEDED``: The Hook completed successfully.
+         
+        * ``HOOK_COMPLETE_FAILED``: The Hook completed but failed validation.
+         
+        * ``HOOK_FAILED``: The Hook encountered an error during execution.
+        
+
+        
+      
+
+      - **HookStatusReason** *(string) --* 
+
+        A message that provides additional details about the Hook invocation status.
+
+        
+      
+
+      - **InvokedAt** *(datetime) --* 
+
+        The timestamp when the Hook was invoked.
+
+        
+      
+
+      - **Target** *(dict) --* 
+
+        Information about the target of the Hook invocation.
+
+        
+        
+
+        - **TargetType** *(string) --* 
+
+          The target type.
+
+          
+        
+
+        - **TargetTypeName** *(string) --* 
+
+          The target name, for example, ``AWS::S3::Bucket``.
+
+          
+        
+
+        - **TargetId** *(string) --* 
+
+          The unique identifier of the Hook invocation target.
+
+          
+        
+
+        - **Action** *(string) --* 
+
+          The action that invoked the Hook.
+
+          
+    
+      
+
+      - **Annotations** *(list) --* 
+
+        A list of objects with additional information and guidance that can help you resolve a failed Hook invocation.
+
+        
+        
+
+        - *(dict) --* 
+
+          The ``Annotation`` data type.
+
+           
+
+          A ``GetHookResult`` call returns detailed information and remediation guidance from Control Tower, Guard, Lambda, or custom Hooks for a Hook invocation result.
+
+          
+          
+
+          - **AnnotationName** *(string) --* 
+
+            An identifier for the evaluation logic that was used when invoking the Hook. For Control Tower, this is the control ID. For Guard, this is the rule ID. For Lambda and custom Hooks, this is a user-defined identifier.
+
+            
+          
+
+          - **Status** *(string) --* 
+
+            The status of the Hook invocation from the downstream service.
+
+            
+          
+
+          - **StatusMessage** *(string) --* 
+
+            The explanation for the specific status assigned to this Hook invocation. For example, "Bucket does not block public access".
+
+            
+          
+
+          - **RemediationMessage** *(string) --* 
+
+            Suggests what to change if your Hook returns a ``FAILED`` status. For example, "Block public access to the bucket".
+
+            
+          
+
+          - **RemediationLink** *(string) --* 
+
+            A URL that you can access for additional remediation guidance.
+
+            
+          
+
+          - **SeverityLevel** *(string) --* 
+
+            The relative risk associated with any violations of this type.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.HookResultNotFoundException`
+
+  

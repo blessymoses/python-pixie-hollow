@@ -1,0 +1,431 @@
+:doc:`QBusiness <../../qbusiness>` / Client / check_document_access
+
+*********************
+check_document_access
+*********************
+
+
+
+.. py:method:: QBusiness.Client.check_document_access(**kwargs)
+
+  
+
+  Verifies if a user has access permissions for a specified document and returns the actual ACL attached to the document. Resolves user access on the document via user aliases and groups when verifying user access.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/qbusiness-2023-11-27/CheckDocumentAccess>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.check_document_access(
+        applicationId='string',
+        indexId='string',
+        userId='string',
+        documentId='string',
+        dataSourceId='string'
+    )
+    
+  :type applicationId: string
+  :param applicationId: **[REQUIRED]** 
+
+    The unique identifier of the application. This is required to identify the specific Amazon Q Business application context for the document access check.
+
+    
+
+  
+  :type indexId: string
+  :param indexId: **[REQUIRED]** 
+
+    The unique identifier of the index. Used to locate the correct index within the application where the document is stored.
+
+    
+
+  
+  :type userId: string
+  :param userId: **[REQUIRED]** 
+
+    The unique identifier of the user. Used to check the access permissions for this specific user against the document's ACL.
+
+    
+
+  
+  :type documentId: string
+  :param documentId: **[REQUIRED]** 
+
+    The unique identifier of the document. Specifies which document's access permissions are being checked.
+
+    
+
+  
+  :type dataSourceId: string
+  :param dataSourceId: 
+
+    The unique identifier of the data source. Identifies the specific data source from which the document originates. Should not be used when a document is uploaded directly with BatchPutDocument, as no dataSourceId is available or necessary.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'userGroups': [
+              {
+                  'name': 'string',
+                  'type': 'INDEX'|'DATASOURCE'
+              },
+          ],
+          'userAliases': [
+              {
+                  'id': 'string',
+                  'type': 'INDEX'|'DATASOURCE'
+              },
+          ],
+          'hasAccess': True|False,
+          'documentAcl': {
+              'allowlist': {
+                  'memberRelation': 'AND'|'OR',
+                  'conditions': [
+                      {
+                          'memberRelation': 'AND'|'OR',
+                          'users': [
+                              {
+                                  'id': 'string',
+                                  'type': 'INDEX'|'DATASOURCE'
+                              },
+                          ],
+                          'groups': [
+                              {
+                                  'name': 'string',
+                                  'type': 'INDEX'|'DATASOURCE'
+                              },
+                          ]
+                      },
+                  ]
+              },
+              'denyList': {
+                  'memberRelation': 'AND'|'OR',
+                  'conditions': [
+                      {
+                          'memberRelation': 'AND'|'OR',
+                          'users': [
+                              {
+                                  'id': 'string',
+                                  'type': 'INDEX'|'DATASOURCE'
+                              },
+                          ],
+                          'groups': [
+                              {
+                                  'name': 'string',
+                                  'type': 'INDEX'|'DATASOURCE'
+                              },
+                          ]
+                      },
+                  ]
+              }
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **userGroups** *(list) --* 
+
+        An array of groups the user is part of for the specified data source. Each group has a name and type.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents a group associated with a given user in the access control system.
+
+          
+          
+
+          - **name** *(string) --* 
+
+            The name of the group associated with the user. This is used to identify the group in access control decisions.
+
+            
+          
+
+          - **type** *(string) --* 
+
+            The type of the associated group. This indicates the scope of the group's applicability.
+
+            
+      
+    
+      
+
+      - **userAliases** *(list) --* 
+
+        An array of aliases associated with the user. This includes both global and local aliases, each with a name and type.
+
+        
+        
+
+        - *(dict) --* 
+
+          Represents an associated user in the access control system.
+
+          
+          
+
+          - **id** *(string) --* 
+
+            The unique identifier of the associated user. This is used to identify the user in access control decisions.
+
+            
+          
+
+          - **type** *(string) --* 
+
+            The type of the associated user. This indicates the scope of the user's association.
+
+            
+      
+    
+      
+
+      - **hasAccess** *(boolean) --* 
+
+        A boolean value indicating whether the specified user has access to the document, either direct access or transitive access via groups and aliases attached to the document.
+
+        
+      
+
+      - **documentAcl** *(dict) --* 
+
+        The Access Control List (ACL) associated with the document. Includes allowlist and denylist conditions that determine user access.
+
+        
+        
+
+        - **allowlist** *(dict) --* 
+
+          The allowlist conditions for the document. Users or groups matching these conditions are granted access to the document.
+
+          
+          
+
+          - **memberRelation** *(string) --* 
+
+            The logical relation between members in the membership rule, determining how multiple conditions are combined.
+
+            
+          
+
+          - **conditions** *(list) --* 
+
+            An array of conditions that define the membership rules. Each condition specifies criteria for users or groups to be included in this membership.
+
+            
+            
+
+            - *(dict) --* 
+
+              Represents a condition in the document's ACL, specifying access rules for users and groups.
+
+              
+              
+
+              - **memberRelation** *(string) --* 
+
+                The logical relation between members in the condition, determining how multiple user or group conditions are combined.
+
+                
+              
+
+              - **users** *(list) --* 
+
+                An array of user identifiers that this condition applies to. Users listed here are subject to the access rule defined by this condition.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Represents a user in the document's ACL, used to define access permissions for individual users.
+
+                  
+                  
+
+                  - **id** *(string) --* 
+
+                    The unique identifier of the user in the document's ACL. This is used to identify the user when applying access rules.
+
+                    
+                  
+
+                  - **type** *(string) --* 
+
+                    The type of the user. This indicates the scope of the user's applicability in access control.
+
+                    
+              
+            
+              
+
+              - **groups** *(list) --* 
+
+                An array of group identifiers that this condition applies to. Groups listed here are subject to the access rule defined by this condition.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Represents a group in the document's ACL, used to define access permissions for multiple users collectively.
+
+                  
+                  
+
+                  - **name** *(string) --* 
+
+                    The name of the group in the document's ACL. This is used to identify the group when applying access rules.
+
+                    
+                  
+
+                  - **type** *(string) --* 
+
+                    The type of the group. This indicates the scope of the group's applicability in access control.
+
+                    
+              
+            
+          
+        
+      
+        
+
+        - **denyList** *(dict) --* 
+
+          The denylist conditions for the document. Users or groups matching these conditions are denied access to the document, overriding allowlist permissions.
+
+          
+          
+
+          - **memberRelation** *(string) --* 
+
+            The logical relation between members in the membership rule, determining how multiple conditions are combined.
+
+            
+          
+
+          - **conditions** *(list) --* 
+
+            An array of conditions that define the membership rules. Each condition specifies criteria for users or groups to be included in this membership.
+
+            
+            
+
+            - *(dict) --* 
+
+              Represents a condition in the document's ACL, specifying access rules for users and groups.
+
+              
+              
+
+              - **memberRelation** *(string) --* 
+
+                The logical relation between members in the condition, determining how multiple user or group conditions are combined.
+
+                
+              
+
+              - **users** *(list) --* 
+
+                An array of user identifiers that this condition applies to. Users listed here are subject to the access rule defined by this condition.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Represents a user in the document's ACL, used to define access permissions for individual users.
+
+                  
+                  
+
+                  - **id** *(string) --* 
+
+                    The unique identifier of the user in the document's ACL. This is used to identify the user when applying access rules.
+
+                    
+                  
+
+                  - **type** *(string) --* 
+
+                    The type of the user. This indicates the scope of the user's applicability in access control.
+
+                    
+              
+            
+              
+
+              - **groups** *(list) --* 
+
+                An array of group identifiers that this condition applies to. Groups listed here are subject to the access rule defined by this condition.
+
+                
+                
+
+                - *(dict) --* 
+
+                  Represents a group in the document's ACL, used to define access permissions for multiple users collectively.
+
+                  
+                  
+
+                  - **name** *(string) --* 
+
+                    The name of the group in the document's ACL. This is used to identify the group when applying access rules.
+
+                    
+                  
+
+                  - **type** *(string) --* 
+
+                    The type of the group. This indicates the scope of the group's applicability in access control.
+
+                    
+              
+            
+          
+        
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`QBusiness.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`QBusiness.Client.exceptions.AccessDeniedException`
+
+  

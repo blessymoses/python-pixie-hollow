@@ -1,0 +1,275 @@
+:doc:`LocationService <../../location>` / Paginator / ForecastGeofenceEvents
+
+**********************
+ForecastGeofenceEvents
+**********************
+
+
+
+.. py:class:: LocationService.Paginator.ForecastGeofenceEvents
+
+  ::
+
+    
+    paginator = client.get_paginator('forecast_geofence_events')
+
+  
+  
+
+  .. py:method:: paginate(**kwargs)
+
+    Creates an iterator that will paginate through responses from :py:meth:`LocationService.Client.forecast_geofence_events`.
+
+    See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/location-2020-11-19/ForecastGeofenceEvents>`_    
+
+
+    **Request Syntax**
+    ::
+
+      response_iterator = paginator.paginate(
+          CollectionName='string',
+          DeviceState={
+              'Position': [
+                  123.0,
+              ],
+              'Speed': 123.0
+          },
+          TimeHorizonMinutes=123.0,
+          DistanceUnit='Kilometers'|'Miles',
+          SpeedUnit='KilometersPerHour'|'MilesPerHour',
+          PaginationConfig={
+              'MaxItems': 123,
+              'PageSize': 123,
+              'StartingToken': 'string'
+          }
+      )
+      
+    :type CollectionName: string
+    :param CollectionName: **[REQUIRED]** 
+
+      The name of the geofence collection.
+
+      
+
+    
+    :type DeviceState: dict
+    :param DeviceState: **[REQUIRED]** 
+
+      Represents the device's state, including its current position and speed. When speed is omitted, this API performs a *containment check*. The *containment check* operation returns ``IDLE`` events for geofences where the device is currently inside of, but no other events.
+
+      
+
+    
+      - **Position** *(list) --* **[REQUIRED]** 
+
+        The device's position.
+
+        
+
+      
+        - *(float) --* 
+
+        
+    
+      - **Speed** *(float) --* 
+
+        The device's speed.
+
+        
+
+      
+    
+    :type TimeHorizonMinutes: float
+    :param TimeHorizonMinutes: 
+
+      The forward-looking time window for forecasting, specified in minutes. The API only returns events that are predicted to occur within this time horizon. When no value is specified, this API performs a *containment check*. The *containment check* operation returns ``IDLE`` events for geofences where the device is currently inside of, but no other events.
+
+      
+
+    
+    :type DistanceUnit: string
+    :param DistanceUnit: 
+
+      The distance unit used for the ``NearestDistance`` property returned in a forecasted event. The measurement system must match for ``DistanceUnit`` and ``SpeedUnit``; if ``Kilometers`` is specified for ``DistanceUnit``, then ``SpeedUnit`` must be ``KilometersPerHour``.
+
+       
+
+      Default Value: ``Kilometers``
+
+      
+
+    
+    :type SpeedUnit: string
+    :param SpeedUnit: 
+
+      The speed unit for the device captured by the device state. The measurement system must match for ``DistanceUnit`` and ``SpeedUnit``; if ``Kilometers`` is specified for ``DistanceUnit``, then ``SpeedUnit`` must be ``KilometersPerHour``.
+
+       
+
+      Default Value: ``KilometersPerHour``.
+
+      
+
+    
+    :type PaginationConfig: dict
+    :param PaginationConfig: 
+
+      A dictionary that provides parameters to control pagination.
+
+      
+
+    
+      - **MaxItems** *(integer) --* 
+
+        The total number of items to return. If the total number of items available is more than the value specified in max-items then a ``NextToken`` will be provided in the output that you can use to resume pagination.
+
+        
+
+      
+      - **PageSize** *(integer) --* 
+
+        The size of each page.
+
+        
+
+      
+      - **StartingToken** *(string) --* 
+
+        A token to specify where to start paginating. This is the ``NextToken`` from a previous response.
+
+        
+
+      
+    
+    
+    :rtype: dict
+    :returns: 
+      
+      **Response Syntax**
+
+      
+      ::
+
+        {
+            'ForecastedEvents': [
+                {
+                    'EventId': 'string',
+                    'GeofenceId': 'string',
+                    'IsDeviceInGeofence': True|False,
+                    'NearestDistance': 123.0,
+                    'EventType': 'ENTER'|'EXIT'|'IDLE',
+                    'ForecastedBreachTime': datetime(2015, 1, 1),
+                    'GeofenceProperties': {
+                        'string': 'string'
+                    }
+                },
+            ],
+            'DistanceUnit': 'Kilometers'|'Miles',
+            'SpeedUnit': 'KilometersPerHour'|'MilesPerHour'
+        }
+        
+      **Response Structure**
+
+      
+
+      - *(dict) --* 
+        
+
+        - **ForecastedEvents** *(list) --* 
+
+          The list of forecasted events.
+
+          
+          
+
+          - *(dict) --* 
+
+            A forecasted event represents a geofence event in relation to the requested device state, that may occur given the provided device state and time horizon.
+
+            
+            
+
+            - **EventId** *(string) --* 
+
+              The forecasted event identifier.
+
+              
+            
+
+            - **GeofenceId** *(string) --* 
+
+              The geofence identifier pertaining to the forecasted event.
+
+              
+            
+
+            - **IsDeviceInGeofence** *(boolean) --* 
+
+              Indicates if the device is located within the geofence.
+
+              
+            
+
+            - **NearestDistance** *(float) --* 
+
+              The closest distance from the device's position to the geofence.
+
+              
+            
+
+            - **EventType** *(string) --* 
+
+              The event type, forecasting three states for which a device can be in relative to a geofence:
+
+               
+
+              ``ENTER``: If a device is outside of a geofence, but would breach the fence if the device is moving at its current speed within time horizon window.
+
+               
+
+              ``EXIT``: If a device is inside of a geofence, but would breach the fence if the device is moving at its current speed within time horizon window.
+
+               
+
+              ``IDLE``: If a device is inside of a geofence, and the device is not moving.
+
+              
+            
+
+            - **ForecastedBreachTime** *(datetime) --* 
+
+              The forecasted time the device will breach the geofence in `ISO 8601 <https://www.iso.org/iso-8601-date-and-time-format.html>`__ format: ``YYYY-MM-DDThh:mm:ss.sssZ``
+
+              
+            
+
+            - **GeofenceProperties** *(dict) --* 
+
+              The geofence properties.
+
+              
+              
+
+              - *(string) --* 
+                
+
+                - *(string) --* 
+          
+        
+        
+      
+        
+
+        - **DistanceUnit** *(string) --* 
+
+          The distance unit for the forecasted events.
+
+          
+        
+
+        - **SpeedUnit** *(string) --* 
+
+          The speed unit for the forecasted events.
+
+          
+    

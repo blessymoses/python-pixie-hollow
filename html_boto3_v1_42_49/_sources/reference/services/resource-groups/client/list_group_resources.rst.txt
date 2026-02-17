@@ -1,0 +1,349 @@
+:doc:`ResourceGroups <../../resource-groups>` / Client / list_group_resources
+
+********************
+list_group_resources
+********************
+
+
+
+.. py:method:: ResourceGroups.Client.list_group_resources(**kwargs)
+
+  
+
+  Returns a list of Amazon resource names (ARNs) of the resources that are members of a specified resource group.
+
+   
+
+  **Minimum permissions**
+
+   
+
+  To run this command, you must have the following permissions:
+
+   
+
+  
+  * ``resource-groups:ListGroupResources``
+   
+  * ``cloudformation:DescribeStacks``
+   
+  * ``cloudformation:ListStackResources``
+   
+  * ``tag:GetResources``
+  
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/resource-groups-2017-11-27/ListGroupResources>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.list_group_resources(
+        GroupName='string',
+        Group='string',
+        Filters=[
+            {
+                'Name': 'resource-type',
+                'Values': [
+                    'string',
+                ]
+            },
+        ],
+        MaxResults=123,
+        NextToken='string'
+    )
+    
+  :type GroupName: string
+  :param GroupName: 
+
+    .. warning::
+
+      
+
+      Deprecated - don't use this parameter. Use the ``Group`` request field instead.
+
+      
+
+    
+
+  
+  :type Group: string
+  :param Group: 
+
+    The name or the Amazon resource name (ARN) of the resource group.
+
+    
+
+  
+  :type Filters: list
+  :param Filters: 
+
+    Filters, formatted as  ResourceFilter objects, that you want to apply to a ``ListGroupResources`` operation. Filters the results to include only those of the specified resource types.
+
+     
+
+    
+    * ``resource-type`` - Filter resources by their type. Specify up to five resource types in the format ``AWS::ServiceCode::ResourceType``. For example, ``AWS::EC2::Instance``, or ``AWS::S3::Bucket``.
+    
+
+     
+
+    When you specify a ``resource-type`` filter for ``ListGroupResources``, Resource Groups validates your filter resource types against the types that are defined in the query associated with the group. For example, if a group contains only S3 buckets because its query specifies only that resource type, but your ``resource-type`` filter includes EC2 instances, AWS Resource Groups does not filter for EC2 instances. In this case, a ``ListGroupResources`` request returns a ``BadRequestException`` error with a message similar to the following:
+
+     
+
+    ``The resource types specified as filters in the request are not valid.``
+
+     
+
+    The error includes a list of resource types that failed the validation because they are not part of the query associated with the group. This validation doesn't occur when the group query specifies ``AWS::AllSupported``, because a group based on such a query can contain any of the allowed resource types for the query type (tag-based or Amazon CloudFront stack-based queries).
+
+    
+
+  
+    - *(dict) --* 
+
+      A filter name and value pair that is used to obtain more specific results from a list of resources.
+
+      
+
+    
+      - **Name** *(string) --* **[REQUIRED]** 
+
+        The name of the filter. Filter names are case-sensitive.
+
+        
+
+      
+      - **Values** *(list) --* **[REQUIRED]** 
+
+        One or more filter values. Allowed filter values vary by resource filter name, and are case-sensitive.
+
+        
+
+      
+        - *(string) --* 
+
+        
+    
+    
+
+  :type MaxResults: integer
+  :param MaxResults: 
+
+    The total number of results that you want included on each page of the response. If you do not include this parameter, it defaults to a value that is specific to the operation. If additional items exist beyond the maximum you specify, the ``NextToken`` response element is present and has a value (is not null). Include that value as the ``NextToken`` request parameter in the next call to the operation to get the next part of the results. Note that the service might return fewer results than the maximum even when there are more results available. You should check ``NextToken`` after every operation to ensure that you receive all of the results.
+
+    
+
+  
+  :type NextToken: string
+  :param NextToken: 
+
+    The parameter for receiving additional results if you receive a ``NextToken`` response in a previous request. A ``NextToken`` response indicates that more output is available. Set this parameter to the value provided by a previous call's ``NextToken`` response to indicate where the output should continue from.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Resources': [
+              {
+                  'Identifier': {
+                      'ResourceArn': 'string',
+                      'ResourceType': 'string'
+                  },
+                  'Status': {
+                      'Name': 'PENDING'
+                  }
+              },
+          ],
+          'ResourceIdentifiers': [
+              {
+                  'ResourceArn': 'string',
+                  'ResourceType': 'string'
+              },
+          ],
+          'NextToken': 'string',
+          'QueryErrors': [
+              {
+                  'ErrorCode': 'CLOUDFORMATION_STACK_INACTIVE'|'CLOUDFORMATION_STACK_NOT_EXISTING'|'CLOUDFORMATION_STACK_UNASSUMABLE_ROLE'|'RESOURCE_TYPE_NOT_SUPPORTED',
+                  'Message': 'string'
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Resources** *(list) --* 
+
+        An array of resources from which you can determine each resource's identity, type, and group membership status.
+
+        
+        
+
+        - *(dict) --* 
+
+          A structure returned by the  ListGroupResources operation that contains identity and group membership status information for one of the resources in the group.
+
+          
+          
+
+          - **Identifier** *(dict) --* 
+
+            A structure that contains the ARN of a resource and its resource type.
+
+            
+            
+
+            - **ResourceArn** *(string) --* 
+
+              The Amazon resource name (ARN) of a resource.
+
+              
+            
+
+            - **ResourceType** *(string) --* 
+
+              The resource type of a resource, such as ``AWS::EC2::Instance``.
+
+              
+        
+          
+
+          - **Status** *(dict) --* 
+
+            A structure that contains the status of this resource's membership in the group.
+
+             
+
+            .. note::
+
+              
+
+              This field is present in the response only if the group is of type ``AWS::EC2::HostManagement``.
+
+              
+
+            
+            
+
+            - **Name** *(string) --* 
+
+              The current status.
+
+              
+        
+      
+    
+      
+
+      - **ResourceIdentifiers** *(list) --* 
+
+        .. warning::
+
+          
+
+          Deprecated - don't use this parameter. Use the ``Resources`` response field instead.
+
+          
+
+        
+        
+
+        - *(dict) --* 
+
+          A structure that contains the ARN of a resource and its resource type.
+
+          
+          
+
+          - **ResourceArn** *(string) --* 
+
+            The Amazon resource name (ARN) of a resource.
+
+            
+          
+
+          - **ResourceType** *(string) --* 
+
+            The resource type of a resource, such as ``AWS::EC2::Instance``.
+
+            
+      
+    
+      
+
+      - **NextToken** *(string) --* 
+
+        If present, indicates that more output is available than is included in the current response. Use this value in the ``NextToken`` request parameter in a subsequent call to the operation to get the next part of the output. You should repeat this until the ``NextToken`` response element comes back as ``null``.
+
+        
+      
+
+      - **QueryErrors** *(list) --* 
+
+        A list of ``QueryError`` objects. Each error contains an ``ErrorCode`` and ``Message``. Possible values for ErrorCode are ``CLOUDFORMATION_STACK_INACTIVE``, ``CLOUDFORMATION_STACK_NOT_EXISTING``, ``CLOUDFORMATION_STACK_UNASSUMABLE_ROLE`` and ``RESOURCE_TYPE_NOT_SUPPORTED``.
+
+        
+        
+
+        - *(dict) --* 
+
+          A two-part error structure that can occur in ``ListGroupResources`` or ``SearchResources``.
+
+          
+          
+
+          - **ErrorCode** *(string) --* 
+
+            Specifies the error code that was raised.
+
+            
+          
+
+          - **Message** *(string) --* 
+
+            A message that explains the ``ErrorCode``.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`ResourceGroups.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`ResourceGroups.Client.exceptions.BadRequestException`
+
+  
+  *   :py:class:`ResourceGroups.Client.exceptions.ForbiddenException`
+
+  
+  *   :py:class:`ResourceGroups.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`ResourceGroups.Client.exceptions.MethodNotAllowedException`
+
+  
+  *   :py:class:`ResourceGroups.Client.exceptions.TooManyRequestsException`
+
+  
+  *   :py:class:`ResourceGroups.Client.exceptions.InternalServerErrorException`
+
+  

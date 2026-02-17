@@ -1,0 +1,276 @@
+:doc:`Batch <../../batch>` / Client / update_job_queue
+
+****************
+update_job_queue
+****************
+
+
+
+.. py:method:: Batch.Client.update_job_queue(**kwargs)
+
+  
+
+  Updates a job queue.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/batch-2016-08-10/UpdateJobQueue>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_job_queue(
+        jobQueue='string',
+        state='ENABLED'|'DISABLED',
+        schedulingPolicyArn='string',
+        priority=123,
+        computeEnvironmentOrder=[
+            {
+                'order': 123,
+                'computeEnvironment': 'string'
+            },
+        ],
+        serviceEnvironmentOrder=[
+            {
+                'order': 123,
+                'serviceEnvironment': 'string'
+            },
+        ],
+        jobStateTimeLimitActions=[
+            {
+                'reason': 'string',
+                'state': 'RUNNABLE',
+                'maxTimeSeconds': 123,
+                'action': 'CANCEL'|'TERMINATE'
+            },
+        ]
+    )
+    
+  :type jobQueue: string
+  :param jobQueue: **[REQUIRED]** 
+
+    The name or the Amazon Resource Name (ARN) of the job queue.
+
+    
+
+  
+  :type state: string
+  :param state: 
+
+    Describes the queue's ability to accept new jobs. If the job queue state is ``ENABLED``, it can accept jobs. If the job queue state is ``DISABLED``, new jobs can't be added to the queue, but jobs already in the queue can finish.
+
+    
+
+  
+  :type schedulingPolicyArn: string
+  :param schedulingPolicyArn: 
+
+    Amazon Resource Name (ARN) of the fair-share scheduling policy. Once a job queue is created, the fair-share scheduling policy can be replaced but not removed. The format is ``aws:Partition:batch:Region:Account:scheduling-policy/Name ``. For example, ``aws:aws:batch:us-west-2:123456789012:scheduling-policy/MySchedulingPolicy``.
+
+    
+
+  
+  :type priority: integer
+  :param priority: 
+
+    The priority of the job queue. Job queues with a higher priority (or a higher integer value for the ``priority`` parameter) are evaluated first when associated with the same compute environment. Priority is determined in descending order. For example, a job queue with a priority value of ``10`` is given scheduling preference over a job queue with a priority value of ``1``. All of the compute environments must be either EC2 ( ``EC2`` or ``SPOT``) or Fargate ( ``FARGATE`` or ``FARGATE_SPOT``). EC2 and Fargate compute environments can't be mixed.
+
+    
+
+  
+  :type computeEnvironmentOrder: list
+  :param computeEnvironmentOrder: 
+
+    Details the set of compute environments mapped to a job queue and their order relative to each other. This is one of the parameters used by the job scheduler to determine which compute environment runs a given job. Compute environments must be in the ``VALID`` state before you can associate them with a job queue. All of the compute environments must be either EC2 ( ``EC2`` or ``SPOT``) or Fargate ( ``FARGATE`` or ``FARGATE_SPOT``). EC2 and Fargate compute environments can't be mixed.
+
+     
+
+    .. note::
+
+      
+
+      All compute environments that are associated with a job queue must share the same architecture. Batch doesn't support mixing compute environment architecture types in a single job queue.
+
+      
+
+    
+
+  
+    - *(dict) --* 
+
+      The order that compute environments are tried in for job placement within a queue. Compute environments are tried in ascending order. For example, if two compute environments are associated with a job queue, the compute environment with a lower order integer value is tried for job placement first. Compute environments must be in the ``VALID`` state before you can associate them with a job queue. All of the compute environments must be either EC2 ( ``EC2`` or ``SPOT``) or Fargate ( ``FARGATE`` or ``FARGATE_SPOT``); Amazon EC2 and Fargate compute environments can't be mixed.
+
+       
+
+      .. note::
+
+        
+
+        All compute environments that are associated with a job queue must share the same architecture. Batch doesn't support mixing compute environment architecture types in a single job queue.
+
+        
+
+      
+
+    
+      - **order** *(integer) --* **[REQUIRED]** 
+
+        The order of the compute environment. Compute environments are tried in ascending order. For example, if two compute environments are associated with a job queue, the compute environment with a lower ``order`` integer value is tried for job placement first.
+
+        
+
+      
+      - **computeEnvironment** *(string) --* **[REQUIRED]** 
+
+        The Amazon Resource Name (ARN) of the compute environment.
+
+        
+
+      
+    
+
+  :type serviceEnvironmentOrder: list
+  :param serviceEnvironmentOrder: 
+
+    The order of the service environment associated with the job queue. Job queues with a higher priority are evaluated first when associated with the same service environment.
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies the order of a service environment for a job queue. This determines the priority order when multiple service environments are associated with the same job queue.
+
+      
+
+    
+      - **order** *(integer) --* **[REQUIRED]** 
+
+        The order of the service environment. Job queues with a higher priority are evaluated first when associated with the same service environment.
+
+        
+
+      
+      - **serviceEnvironment** *(string) --* **[REQUIRED]** 
+
+        The name or ARN of the service environment.
+
+        
+
+      
+    
+
+  :type jobStateTimeLimitActions: list
+  :param jobStateTimeLimitActions: 
+
+    The set of actions that Batch perform on jobs that remain at the head of the job queue in the specified state longer than specified times. Batch will perform each action after ``maxTimeSeconds`` has passed. (**Note**: The minimum value for maxTimeSeconds is 600 (10 minutes) and its maximum value is 86,400 (24 hours).)
+
+    
+
+  
+    - *(dict) --* 
+
+      Specifies an action that Batch will take after the job has remained at the head of the queue in the specified state for longer than the specified time.
+
+      
+
+    
+      - **reason** *(string) --* **[REQUIRED]** 
+
+        The reason to log for the action being taken.
+
+        
+
+      
+      - **state** *(string) --* **[REQUIRED]** 
+
+        The state of the job needed to trigger the action. The only supported value is ``RUNNABLE``.
+
+        
+
+      
+      - **maxTimeSeconds** *(integer) --* **[REQUIRED]** 
+
+        The approximate amount of time, in seconds, that must pass with the job in the specified state before the action is taken. The minimum value is 600 (10 minutes) and the maximum value is 86,400 (24 hours).
+
+        
+
+      
+      - **action** *(string) --* **[REQUIRED]** 
+
+        The action to take when a job is at the head of the job queue in the specified state for the specified period of time. The only supported value is ``CANCEL``, which will cancel the job.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'jobQueueName': 'string',
+          'jobQueueArn': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **jobQueueName** *(string) --* 
+
+        The name of the job queue.
+
+        
+      
+
+      - **jobQueueArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the job queue.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`Batch.Client.exceptions.ClientException`
+
+  
+  *   :py:class:`Batch.Client.exceptions.ServerException`
+
+  
+
+  **Examples**
+
+  This example disables a job queue so that it can be deleted.
+  ::
+
+    response = client.update_job_queue(
+        jobQueue='GPGPU',
+        state='DISABLED',
+    )
+    
+    print(response)
+
+  
+  Expected Output:
+  ::
+
+    {
+        'jobQueueArn': 'arn:aws:batch:us-east-1:012345678910:job-queue/GPGPU',
+        'jobQueueName': 'GPGPU',
+        'ResponseMetadata': {
+            '...': '...',
+        },
+    }
+
+  

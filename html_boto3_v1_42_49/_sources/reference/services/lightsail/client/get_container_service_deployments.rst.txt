@@ -1,0 +1,328 @@
+:doc:`Lightsail <../../lightsail>` / Client / get_container_service_deployments
+
+*********************************
+get_container_service_deployments
+*********************************
+
+
+
+.. py:method:: Lightsail.Client.get_container_service_deployments(**kwargs)
+
+  
+
+  Returns the deployments for your Amazon Lightsail container service
+
+   
+
+  A deployment specifies the settings, such as the ports and launch command, of containers that are deployed to your container service.
+
+   
+
+  The deployments are ordered by version in ascending order. The newest version is listed at the top of the response.
+
+   
+
+  .. note::
+
+    
+
+    A set number of deployments are kept before the oldest one is replaced with the newest one. For more information, see `Amazon Lightsail endpoints and quotas <https://docs.aws.amazon.com/general/latest/gr/lightsail.html>`__ in the *Amazon Web Services General Reference*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lightsail-2016-11-28/GetContainerServiceDeployments>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.get_container_service_deployments(
+        serviceName='string'
+    )
+    
+  :type serviceName: string
+  :param serviceName: **[REQUIRED]** 
+
+    The name of the container service for which to return deployments.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'deployments': [
+              {
+                  'version': 123,
+                  'state': 'ACTIVATING'|'ACTIVE'|'INACTIVE'|'FAILED',
+                  'containers': {
+                      'string': {
+                          'image': 'string',
+                          'command': [
+                              'string',
+                          ],
+                          'environment': {
+                              'string': 'string'
+                          },
+                          'ports': {
+                              'string': 'HTTP'|'HTTPS'|'TCP'|'UDP'
+                          }
+                      }
+                  },
+                  'publicEndpoint': {
+                      'containerName': 'string',
+                      'containerPort': 123,
+                      'healthCheck': {
+                          'healthyThreshold': 123,
+                          'unhealthyThreshold': 123,
+                          'timeoutSeconds': 123,
+                          'intervalSeconds': 123,
+                          'path': 'string',
+                          'successCodes': 'string'
+                      }
+                  },
+                  'createdAt': datetime(2015, 1, 1)
+              },
+          ]
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **deployments** *(list) --* 
+
+        An array of objects that describe deployments for a container service.
+
+        
+        
+
+        - *(dict) --* 
+
+          Describes a container deployment configuration of an Amazon Lightsail container service.
+
+           
+
+          A deployment specifies the settings, such as the ports and launch command, of containers that are deployed to your container service.
+
+          
+          
+
+          - **version** *(integer) --* 
+
+            The version number of the deployment.
+
+            
+          
+
+          - **state** *(string) --* 
+
+            The state of the deployment.
+
+             
+
+            A deployment can be in one of the following states:
+
+             
+
+            
+            * ``ACTIVATING`` - The deployment is being created.
+             
+            * ``ACTIVE`` - The deployment was successfully created, and it's currently running on the container service. The container service can have only one deployment in an active state at a time.
+             
+            * ``INACTIVE`` - The deployment was previously successfully created, but it is not currently running on the container service.
+             
+            * ``FAILED`` - The deployment failed. Use the ``GetContainerLog`` action to view the log events for the containers in the deployment to try to determine the reason for the failure.
+            
+
+            
+          
+
+          - **containers** *(dict) --* 
+
+            An object that describes the configuration for the containers of the deployment.
+
+            
+            
+
+            - *(string) --* 
+              
+
+              - *(dict) --* 
+
+                Describes the settings of a container that will be launched, or that is launched, to an Amazon Lightsail container service.
+
+                
+                
+
+                - **image** *(string) --* 
+
+                  The name of the image used for the container.
+
+                   
+
+                  Container images sourced from your Lightsail container service, that are registered and stored on your service, start with a colon ( ``:``). For example, if your container service name is ``container-service-1``, the container image label is ``mystaticsite``, and you want to use the third ( ``3``) version of the registered container image, then you should specify ``:container-service-1.mystaticsite.3``. To use the latest version of a container image, specify ``latest`` instead of a version number (for example, ``:container-service-1.mystaticsite.latest``). Lightsail will automatically use the highest numbered version of the registered container image.
+
+                   
+
+                  Container images sourced from a public registry like Docker Hub don't start with a colon. For example, ``nginx:latest`` or ``nginx``.
+
+                  
+                
+
+                - **command** *(list) --* 
+
+                  The launch command for the container.
+
+                  
+                  
+
+                  - *(string) --* 
+              
+                
+
+                - **environment** *(dict) --* 
+
+                  The environment variables of the container.
+
+                  
+                  
+
+                  - *(string) --* 
+                    
+
+                    - *(string) --* 
+              
+            
+                
+
+                - **ports** *(dict) --* 
+
+                  The open firewall ports of the container.
+
+                  
+                  
+
+                  - *(string) --* 
+                    
+
+                    - *(string) --* 
+              
+            
+            
+        
+      
+          
+
+          - **publicEndpoint** *(dict) --* 
+
+            An object that describes the endpoint of the deployment.
+
+            
+            
+
+            - **containerName** *(string) --* 
+
+              The name of the container entry of the deployment that the endpoint configuration applies to.
+
+              
+            
+
+            - **containerPort** *(integer) --* 
+
+              The port of the specified container to which traffic is forwarded to.
+
+              
+            
+
+            - **healthCheck** *(dict) --* 
+
+              An object that describes the health check configuration of the container.
+
+              
+              
+
+              - **healthyThreshold** *(integer) --* 
+
+                The number of consecutive health checks successes required before moving the container to the ``Healthy`` state. The default value is ``2``.
+
+                
+              
+
+              - **unhealthyThreshold** *(integer) --* 
+
+                The number of consecutive health check failures required before moving the container to the ``Unhealthy`` state. The default value is ``2``.
+
+                
+              
+
+              - **timeoutSeconds** *(integer) --* 
+
+                The amount of time, in seconds, during which no response means a failed health check. You can specify between 2 and 60 seconds. The default value is ``2``.
+
+                
+              
+
+              - **intervalSeconds** *(integer) --* 
+
+                The approximate interval, in seconds, between health checks of an individual container. You can specify between 5 and 300 seconds. The default value is ``5``.
+
+                
+              
+
+              - **path** *(string) --* 
+
+                The path on the container on which to perform the health check. The default value is ``/``.
+
+                
+              
+
+              - **successCodes** *(string) --* 
+
+                The HTTP codes to use when checking for a successful response from a container. You can specify values between ``200`` and ``499``. You can specify multiple values (for example, ``200,202``) or a range of values (for example, ``200-299``).
+
+                
+          
+        
+          
+
+          - **createdAt** *(datetime) --* 
+
+            The timestamp when the deployment was created.
+
+            
+      
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`Lightsail.Client.exceptions.ServiceException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.InvalidInputException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.NotFoundException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.UnauthenticatedException`
+
+  
+  *   :py:class:`Lightsail.Client.exceptions.RegionSetupInProgressException`
+
+  

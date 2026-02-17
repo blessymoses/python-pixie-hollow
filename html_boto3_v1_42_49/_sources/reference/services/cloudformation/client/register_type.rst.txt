@@ -1,0 +1,220 @@
+:doc:`CloudFormation <../../cloudformation>` / Client / register_type
+
+*************
+register_type
+*************
+
+
+
+.. py:method:: CloudFormation.Client.register_type(**kwargs)
+
+  
+
+  Registers an extension with the CloudFormation service. Registering an extension makes it available for use in CloudFormation templates in your Amazon Web Services account, and includes:
+
+   
+
+  
+  * Validating the extension schema.
+   
+  * Determining which handlers, if any, have been specified for the extension.
+   
+  * Making the extension available for use in your account.
+  
+
+   
+
+  For more information about how to develop extensions and ready them for registration, see `Creating resource types using the CloudFormation CLI <https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-types.html>`__ in the *CloudFormation Command Line Interface (CLI) User Guide*.
+
+   
+
+  You can have a maximum of 50 resource extension versions registered at a time. This maximum is per account and per Region. Use `DeregisterType <https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_DeregisterType.html>`__ to deregister specific extension versions if necessary.
+
+   
+
+  Once you have initiated a registration request using  RegisterType, you can use  DescribeTypeRegistration to monitor the progress of the registration request.
+
+   
+
+  Once you have registered a private extension in your account and Region, use `SetTypeConfiguration <https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_SetTypeConfiguration.html>`__ to specify configuration properties for the extension. For more information, see `Edit configuration data for extensions in your account <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/registry-set-configuration.html>`__ in the *CloudFormation User Guide*.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/cloudformation-2010-05-15/RegisterType>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.register_type(
+        Type='RESOURCE'|'MODULE'|'HOOK',
+        TypeName='string',
+        SchemaHandlerPackage='string',
+        LoggingConfig={
+            'LogRoleArn': 'string',
+            'LogGroupName': 'string'
+        },
+        ExecutionRoleArn='string',
+        ClientRequestToken='string'
+    )
+    
+  :type Type: string
+  :param Type: 
+
+    The kind of extension.
+
+    
+
+  
+  :type TypeName: string
+  :param TypeName: **[REQUIRED]** 
+
+    The name of the extension being registered.
+
+     
+
+    We suggest that extension names adhere to the following patterns:
+
+     
+
+    
+    * For resource types, ``company_or_organization::service::type``.
+     
+    * For modules, ``company_or_organization::service::type::MODULE``.
+     
+    * For Hooks, ``MyCompany::Testing::MyTestHook``.
+    
+
+     
+
+    .. note::
+
+      
+
+      The following organization namespaces are reserved and can't be used in your extension names:
+
+       
+
+      
+      * ``Alexa``
+       
+      * ``AMZN``
+       
+      * ``Amazon``
+       
+      * ``AWS``
+       
+      * ``Custom``
+       
+      * ``Dev``
+      
+
+      
+
+    
+
+  
+  :type SchemaHandlerPackage: string
+  :param SchemaHandlerPackage: **[REQUIRED]** 
+
+    A URL to the S3 bucket that contains the extension project package that contains the necessary files for the extension you want to register.
+
+     
+
+    For information about generating a schema handler package for the extension you want to register, see `submit <https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/resource-type-cli-submit.html>`__ in the *CloudFormation Command Line Interface (CLI) User Guide*.
+
+     
+
+    .. note::
+
+      
+
+      The user registering the extension must be able to access the package in the S3 bucket. That's, the user needs to have `GetObject <https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html>`__ permissions for the schema handler package. For more information, see `Actions, Resources, and Condition Keys for Amazon S3 <https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazons3.html>`__ in the *Identity and Access Management User Guide*.
+
+      
+
+    
+
+  
+  :type LoggingConfig: dict
+  :param LoggingConfig: 
+
+    Specifies logging configuration information for an extension.
+
+    
+
+  
+    - **LogRoleArn** *(string) --* **[REQUIRED]** 
+
+      The Amazon Resource Name (ARN) of the role that CloudFormation should assume when sending log entries to CloudWatch Logs.
+
+      
+
+    
+    - **LogGroupName** *(string) --* **[REQUIRED]** 
+
+      The Amazon CloudWatch Logs group to which CloudFormation sends error logging information when invoking the extension's handlers.
+
+      
+
+    
+  
+  :type ExecutionRoleArn: string
+  :param ExecutionRoleArn: 
+
+    The Amazon Resource Name (ARN) of the IAM role for CloudFormation to assume when invoking the extension.
+
+     
+
+    For CloudFormation to assume the specified execution role, the role must contain a trust relationship with the CloudFormation service principal ( ``resources.cloudformation.amazonaws.com``). For more information about adding trust relationships, see `Modifying a role trust policy <https://docs.aws.amazon.com/IAM/latest/UserGuide/roles-managingrole-editing-console.html#roles-managingrole_edit-trust-policy>`__ in the *Identity and Access Management User Guide*.
+
+     
+
+    If your extension calls Amazon Web Services APIs in any of its handlers, you must create an `IAM execution role <https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html>`__ that includes the necessary permissions to call those Amazon Web Services APIs, and provision that execution role in your account. When CloudFormation needs to invoke the resource type handler, CloudFormation assumes this execution role to create a temporary session token, which it then passes to the resource type handler, thereby supplying your resource type with the appropriate credentials.
+
+    
+
+  
+  :type ClientRequestToken: string
+  :param ClientRequestToken: 
+
+    A unique identifier that acts as an idempotency key for this registration request. Specifying a client request token prevents CloudFormation from generating more than one version of an extension from the same registration request, even if the request is submitted multiple times.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'RegistrationToken': 'string'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **RegistrationToken** *(string) --* 
+
+        The identifier for this registration request.
+
+         
+
+        Use this registration token when calling  DescribeTypeRegistration, which returns information about the status and IDs of the extension registration.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`CloudFormation.Client.exceptions.CFNRegistryException`
+
+  

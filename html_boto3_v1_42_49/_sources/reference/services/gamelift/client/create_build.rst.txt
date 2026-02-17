@@ -1,0 +1,468 @@
+:doc:`GameLift <../../gamelift>` / Client / create_build
+
+************
+create_build
+************
+
+
+
+.. py:method:: GameLift.Client.create_build(**kwargs)
+
+  
+
+  **This API works with the following fleet types:** EC2, Anywhere
+
+   
+
+  Creates a new Amazon GameLift Servers build resource for your game server binary files. Combine game server binaries into a zip file for use with Amazon GameLift Servers.
+
+   
+
+  .. warning::
+
+     
+
+    When setting up a new game build for Amazon GameLift Servers, we recommend using the CLI command `upload-build <https://docs.aws.amazon.com/cli/latest/reference/gamelift/upload-build.html>`__ . This helper command combines two tasks: (1) it uploads your build files from a file directory to an Amazon GameLift Servers Amazon S3 location, and (2) it creates a new build resource.
+
+     
+
+   
+
+  You can use the ``CreateBuild`` operation in the following scenarios:
+
+   
+
+  
+  * Create a new game build with build files that are in an Amazon S3 location under an Amazon Web Services account that you control. To use this option, you give Amazon GameLift Servers access to the Amazon S3 bucket. With permissions in place, specify a build name, operating system, and the Amazon S3 storage location of your game build.
+   
+  * Upload your build files to a Amazon GameLift Servers Amazon S3 location. To use this option, specify a build name and operating system. This operation creates a new build resource and also returns an Amazon S3 location with temporary access credentials. Use the credentials to manually upload your build files to the specified Amazon S3 location. For more information, see `Uploading Objects <https://docs.aws.amazon.com/AmazonS3/latest/dev/UploadingObjects.html>`__ in the *Amazon S3 Developer Guide*. After you upload build files to the Amazon GameLift Servers Amazon S3 location, you can't update them.
+  
+
+   
+
+  If successful, this operation creates a new build resource with a unique build ID and places it in ``INITIALIZED`` status. A build must be in ``READY`` status before you can create fleets with it.
+
+   
+
+  **Learn more**
+
+   
+
+  `Uploading Your Game <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-build-intro.html>`__
+
+   
+
+  `Create a Build with Files in Amazon S3 <https://docs.aws.amazon.com/gamelift/latest/developerguide/gamelift-build-cli-uploading.html#gamelift-build-cli-uploading-create-build>`__
+
+   
+
+  `All APIs by task <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets>`__
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/gamelift-2015-10-01/CreateBuild>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_build(
+        Name='string',
+        Version='string',
+        StorageLocation={
+            'Bucket': 'string',
+            'Key': 'string',
+            'RoleArn': 'string',
+            'ObjectVersion': 'string'
+        },
+        OperatingSystem='WINDOWS_2012'|'AMAZON_LINUX'|'AMAZON_LINUX_2'|'WINDOWS_2016'|'AMAZON_LINUX_2023'|'WINDOWS_2022',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ],
+        ServerSdkVersion='string'
+    )
+    
+  :type Name: string
+  :param Name: 
+
+    A descriptive label that is associated with a build. Build names do not need to be unique. You can change this value later.
+
+    
+
+  
+  :type Version: string
+  :param Version: 
+
+    Version information that is associated with a build or script. Version strings do not need to be unique. You can change this value later.
+
+    
+
+  
+  :type StorageLocation: dict
+  :param StorageLocation: 
+
+    Information indicating where your game build files are stored. Use this parameter only when creating a build with files stored in an Amazon S3 bucket that you own. The storage location must specify an Amazon S3 bucket name and key. The location must also specify a role ARN that you set up to allow Amazon GameLift Servers to access your Amazon S3 bucket. The S3 bucket and your new build must be in the same Region.
+
+     
+
+    If a ``StorageLocation`` is specified, the size of your file can be found in your Amazon S3 bucket. Amazon GameLift Servers will report a ``SizeOnDisk`` of 0.
+
+    
+
+  
+    - **Bucket** *(string) --* 
+
+      An Amazon S3 bucket identifier. Thename of the S3 bucket.
+
+       
+
+      .. note::
+
+        
+
+        Amazon GameLift Servers doesn't support uploading from Amazon S3 buckets with names that contain a dot (.).
+
+        
+
+      
+
+    
+    - **Key** *(string) --* 
+
+      The name of the zip file that contains the build files or script files.
+
+      
+
+    
+    - **RoleArn** *(string) --* 
+
+      The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) for an IAM role that allows Amazon GameLift Servers to access the S3 bucket.
+
+      
+
+    
+    - **ObjectVersion** *(string) --* 
+
+      The version of the file, if object versioning is turned on for the bucket. Amazon GameLift Servers uses this information when retrieving files from an S3 bucket that you own. Use this parameter to specify a specific version of the file. If not set, the latest version of the file is retrieved.
+
+      
+
+    
+  
+  :type OperatingSystem: string
+  :param OperatingSystem: 
+
+    The operating system that your game server binaries run on. This value determines the type of fleet resources that you use for this build. If your game build contains multiple executables, they all must run on the same operating system. You must specify a valid operating system in this request. There is no default value. You can't change a build's operating system later.
+
+     
+
+    .. note::
+
+      
+
+      Amazon Linux 2 (AL2) will reach end of support on 6/30/2026. See more details in the `Amazon Linux 2 FAQs <http://aws.amazon.com/amazon-linux-2/faqs/>`__. For game servers that are hosted on AL2 and use server SDK version 4.x for Amazon GameLift Servers, first update the game server build to server SDK 5.x, and then deploy to AL2023 instances. See `Migrate to server SDK version 5. <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-serversdk5-migration.html>`__
+
+      
+
+     
+
+    .. note::
+
+      
+
+      Windows Server 2016 will reach end of support on 1/12/2027. For game servers that are hosted on Windows Server 2016 and use server SDK version 4.x for Amazon GameLift Servers, first update the game server build to server SDK 5.x, and then deploy to Windows Server 2022 instances. See `Migrate to server SDK version 5. <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-serversdk5-migration.html>`__
+
+      
+
+    
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    A list of labels to assign to the new build resource. Tags are developer defined key-value pairs. Tagging Amazon Web Services resources are useful for resource management, access management and cost allocation. For more information, see `Tagging Amazon Web Services Resources <https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html>`__ in the *Amazon Web Services General Reference*. Once the resource is created, you can use `TagResource <https://docs.aws.amazon.com/gamelift/latest/apireference/API_TagResource.html>`__, `UntagResource <https://docs.aws.amazon.com/gamelift/latest/apireference/API_UntagResource.html>`__, and `ListTagsForResource <https://docs.aws.amazon.com/gamelift/latest/apireference/API_ListTagsForResource.html>`__ to add, remove, and view tags. The maximum tag limit may be lower than stated. See the Amazon Web Services General Reference for actual tagging limits.
+
+    
+
+  
+    - *(dict) --* 
+
+      A label that you can assign to a Amazon GameLift Servers resource.
+
+       
+
+      **Learn more**
+
+       
+
+      `Tagging Amazon Web Services Resources <https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html>`__ in the *Amazon Web Services General Reference*
+
+       
+
+      `Amazon Web Services Tagging Strategies <http://aws.amazon.com/answers/account-management/aws-tagging-strategies/>`__
+
+       
+
+      **Related actions**
+
+       
+
+      `All APIs by task <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-awssdk.html#reference-awssdk-resources-fleets>`__
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key for a developer-defined key value pair for tagging an Amazon Web Services resource.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value for a developer-defined key value pair for tagging an Amazon Web Services resource.
+
+        
+
+      
+    
+
+  :type ServerSdkVersion: string
+  :param ServerSdkVersion: 
+
+    A server SDK version you used when integrating your game server build with Amazon GameLift Servers. For more information see `Integrate games with custom game servers <https://docs.aws.amazon.com/gamelift/latest/developerguide/integration-custom-intro.html>`__. By default Amazon GameLift Servers sets this value to ``4.0.2``.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'Build': {
+              'BuildId': 'string',
+              'BuildArn': 'string',
+              'Name': 'string',
+              'Version': 'string',
+              'Status': 'INITIALIZED'|'READY'|'FAILED',
+              'SizeOnDisk': 123,
+              'OperatingSystem': 'WINDOWS_2012'|'AMAZON_LINUX'|'AMAZON_LINUX_2'|'WINDOWS_2016'|'AMAZON_LINUX_2023'|'WINDOWS_2022',
+              'CreationTime': datetime(2015, 1, 1),
+              'ServerSdkVersion': 'string'
+          },
+          'UploadCredentials': {
+              'AccessKeyId': 'string',
+              'SecretAccessKey': 'string',
+              'SessionToken': 'string'
+          },
+          'StorageLocation': {
+              'Bucket': 'string',
+              'Key': 'string',
+              'RoleArn': 'string',
+              'ObjectVersion': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **Build** *(dict) --* 
+
+        The newly created build resource, including a unique build IDs and status.
+
+        
+        
+
+        - **BuildId** *(string) --* 
+
+          A unique identifier for the build.
+
+          
+        
+
+        - **BuildArn** *(string) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) that is assigned to a Amazon GameLift Servers build resource and uniquely identifies it. ARNs are unique across all Regions. Format is ``arn:aws:gamelift:<region>::build/build-a1234567-b8c9-0d1e-2fa3-b45c6d7e8912``. In a GameLift build ARN, the resource ID matches the *BuildId* value.
+
+          
+        
+
+        - **Name** *(string) --* 
+
+          A descriptive label that is associated with a build. Build names do not need to be unique. It can be set using `CreateBuild <https://docs.aws.amazon.com/gamelift/latest/apireference/API_CreateBuild.html>`__ or `UpdateBuild <https://docs.aws.amazon.com/gamelift/latest/apireference/UpdateBuild>`__.
+
+          
+        
+
+        - **Version** *(string) --* 
+
+          Version information that is associated with a build or script. Version strings do not need to be unique.
+
+          
+        
+
+        - **Status** *(string) --* 
+
+          Current status of the build.
+
+           
+
+          Possible build statuses include the following:
+
+           
+
+          
+          * **INITIALIZED** -- A new build has been defined, but no files have been uploaded. You cannot create fleets for builds that are in this status. When a build is successfully created, the build status is set to this value.
+           
+          * **READY** -- The game build has been successfully uploaded. You can now create new fleets for this build.
+           
+          * **FAILED** -- The game build upload failed. You cannot create new fleets for this build.
+          
+
+          
+        
+
+        - **SizeOnDisk** *(integer) --* 
+
+          File size of the uploaded game build, expressed in bytes. When the build status is ``INITIALIZED`` or when using a custom Amazon S3 storage location, this value is 0.
+
+          
+        
+
+        - **OperatingSystem** *(string) --* 
+
+          Operating system that the game server binaries are built to run on. This value determines the type of fleet resources that you can use for this build.
+
+           
+
+          .. note::
+
+            
+
+            Amazon Linux 2 (AL2) will reach end of support on 6/30/2026. See more details in the `Amazon Linux 2 FAQs <http://aws.amazon.com/amazon-linux-2/faqs/>`__. For game servers that are hosted on AL2 and use server SDK version 4.x for Amazon GameLift Servers, first update the game server build to server SDK 5.x, and then deploy to AL2023 instances. See `Migrate to server SDK version 5. <https://docs.aws.amazon.com/gamelift/latest/developerguide/reference-serversdk5-migration.html>`__
+
+            
+
+          
+        
+
+        - **CreationTime** *(datetime) --* 
+
+          A time stamp indicating when this data object was created. Format is a number expressed in Unix time as milliseconds (for example ``"1469498468.057"``).
+
+          
+        
+
+        - **ServerSdkVersion** *(string) --* 
+
+          The Amazon GameLift Servers Server SDK version used to develop your game server.
+
+          
+    
+      
+
+      - **UploadCredentials** *(dict) --* 
+
+        This element is returned only when the operation is called without a storage location. It contains credentials to use when you are uploading a build file to an Amazon S3 bucket that is owned by Amazon GameLift Servers. Credentials have a limited life span. To refresh these credentials, call `RequestUploadCredentials <https://docs.aws.amazon.com/gamelift/latest/apireference/API_RequestUploadCredentials.html>`__.
+
+        
+        
+
+        - **AccessKeyId** *(string) --* 
+
+          The access key ID that identifies the temporary security credentials.
+
+          
+        
+
+        - **SecretAccessKey** *(string) --* 
+
+          The secret access key that can be used to sign requests.
+
+          
+        
+
+        - **SessionToken** *(string) --* 
+
+          The token that users must pass to the service API to use the temporary credentials.
+
+          
+    
+      
+
+      - **StorageLocation** *(dict) --* 
+
+        Amazon S3 location for your game build file, including bucket name and key.
+
+        
+        
+
+        - **Bucket** *(string) --* 
+
+          An Amazon S3 bucket identifier. Thename of the S3 bucket.
+
+           
+
+          .. note::
+
+            
+
+            Amazon GameLift Servers doesn't support uploading from Amazon S3 buckets with names that contain a dot (.).
+
+            
+
+          
+        
+
+        - **Key** *(string) --* 
+
+          The name of the zip file that contains the build files or script files.
+
+          
+        
+
+        - **RoleArn** *(string) --* 
+
+          The Amazon Resource Name ( `ARN <https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-arn-format.html>`__) for an IAM role that allows Amazon GameLift Servers to access the S3 bucket.
+
+          
+        
+
+        - **ObjectVersion** *(string) --* 
+
+          The version of the file, if object versioning is turned on for the bucket. Amazon GameLift Servers uses this information when retrieving files from an S3 bucket that you own. Use this parameter to specify a specific version of the file. If not set, the latest version of the file is retrieved.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`GameLift.Client.exceptions.UnauthorizedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InvalidRequestException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.TaggingFailedException`
+
+  
+  *   :py:class:`GameLift.Client.exceptions.InternalServiceException`
+
+  

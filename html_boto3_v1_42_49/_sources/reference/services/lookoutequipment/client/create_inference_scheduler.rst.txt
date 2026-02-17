@@ -1,0 +1,334 @@
+:doc:`LookoutEquipment <../../lookoutequipment>` / Client / create_inference_scheduler
+
+**************************
+create_inference_scheduler
+**************************
+
+
+
+.. py:method:: LookoutEquipment.Client.create_inference_scheduler(**kwargs)
+
+  
+
+  Creates a scheduled inference. Scheduling an inference is setting up a continuous real-time inference plan to analyze new measurement data. When setting up the schedule, you provide an S3 bucket location for the input data, assign it a delimiter between separate entries in the data, set an offset delay if desired, and set the frequency of inferencing. You must also provide an S3 bucket location for the output data.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/lookoutequipment-2020-12-15/CreateInferenceScheduler>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.create_inference_scheduler(
+        ModelName='string',
+        InferenceSchedulerName='string',
+        DataDelayOffsetInMinutes=123,
+        DataUploadFrequency='PT5M'|'PT10M'|'PT15M'|'PT30M'|'PT1H',
+        DataInputConfiguration={
+            'S3InputConfiguration': {
+                'Bucket': 'string',
+                'Prefix': 'string'
+            },
+            'InputTimeZoneOffset': 'string',
+            'InferenceInputNameConfiguration': {
+                'TimestampFormat': 'string',
+                'ComponentTimestampDelimiter': 'string'
+            }
+        },
+        DataOutputConfiguration={
+            'S3OutputConfiguration': {
+                'Bucket': 'string',
+                'Prefix': 'string'
+            },
+            'KmsKeyId': 'string'
+        },
+        RoleArn='string',
+        ServerSideKmsKeyId='string',
+        ClientToken='string',
+        Tags=[
+            {
+                'Key': 'string',
+                'Value': 'string'
+            },
+        ]
+    )
+    
+  :type ModelName: string
+  :param ModelName: **[REQUIRED]** 
+
+    The name of the previously trained machine learning model being used to create the inference scheduler.
+
+    
+
+  
+  :type InferenceSchedulerName: string
+  :param InferenceSchedulerName: **[REQUIRED]** 
+
+    The name of the inference scheduler being created.
+
+    
+
+  
+  :type DataDelayOffsetInMinutes: integer
+  :param DataDelayOffsetInMinutes: 
+
+    The interval (in minutes) of planned delay at the start of each inference segment. For example, if inference is set to run every ten minutes, the delay is set to five minutes and the time is 09:08. The inference scheduler will wake up at the configured interval (which, without a delay configured, would be 09:10) plus the additional five minute delay time (so 09:15) to check your Amazon S3 bucket. The delay provides a buffer for you to upload data at the same frequency, so that you don't have to stop and restart the scheduler when uploading new data.
+
+     
+
+    For more information, see `Understanding the inference process <https://docs.aws.amazon.com/lookout-for-equipment/latest/ug/understanding-inference-process.html>`__.
+
+    
+
+  
+  :type DataUploadFrequency: string
+  :param DataUploadFrequency: **[REQUIRED]** 
+
+    How often data is uploaded to the source Amazon S3 bucket for the input data. The value chosen is the length of time between data uploads. For instance, if you select 5 minutes, Amazon Lookout for Equipment will upload the real-time data to the source bucket once every 5 minutes. This frequency also determines how often Amazon Lookout for Equipment runs inference on your data.
+
+     
+
+    For more information, see `Understanding the inference process <https://docs.aws.amazon.com/lookout-for-equipment/latest/ug/understanding-inference-process.html>`__.
+
+    
+
+  
+  :type DataInputConfiguration: dict
+  :param DataInputConfiguration: **[REQUIRED]** 
+
+    Specifies configuration information for the input data for the inference scheduler, including delimiter, format, and dataset location.
+
+    
+
+  
+    - **S3InputConfiguration** *(dict) --* 
+
+      Specifies configuration information for the input data for the inference, including Amazon S3 location of input data.
+
+      
+
+    
+      - **Bucket** *(string) --* **[REQUIRED]** 
+
+        The bucket containing the input dataset for the inference.
+
+        
+
+      
+      - **Prefix** *(string) --* 
+
+        The prefix for the S3 bucket used for the input data for the inference.
+
+        
+
+      
+    
+    - **InputTimeZoneOffset** *(string) --* 
+
+      Indicates the difference between your time zone and Coordinated Universal Time (UTC).
+
+      
+
+    
+    - **InferenceInputNameConfiguration** *(dict) --* 
+
+      Specifies configuration information for the input data for the inference, including timestamp format and delimiter.
+
+      
+
+    
+      - **TimestampFormat** *(string) --* 
+
+        The format of the timestamp, whether Epoch time, or standard, with or without hyphens (-).
+
+        
+
+      
+      - **ComponentTimestampDelimiter** *(string) --* 
+
+        Indicates the delimiter character used between items in the data.
+
+        
+
+      
+    
+  
+  :type DataOutputConfiguration: dict
+  :param DataOutputConfiguration: **[REQUIRED]** 
+
+    Specifies configuration information for the output results for the inference scheduler, including the S3 location for the output.
+
+    
+
+  
+    - **S3OutputConfiguration** *(dict) --* **[REQUIRED]** 
+
+      Specifies configuration information for the output results from for the inference, output S3 location.
+
+      
+
+    
+      - **Bucket** *(string) --* **[REQUIRED]** 
+
+        The bucket containing the output results from the inference
+
+        
+
+      
+      - **Prefix** *(string) --* 
+
+        The prefix for the S3 bucket used for the output results from the inference.
+
+        
+
+      
+    
+    - **KmsKeyId** *(string) --* 
+
+      The ID number for the KMS key key used to encrypt the inference output.
+
+      
+
+    
+  
+  :type RoleArn: string
+  :param RoleArn: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) of a role with permission to access the data source being used for the inference.
+
+    
+
+  
+  :type ServerSideKmsKeyId: string
+  :param ServerSideKmsKeyId: 
+
+    Provides the identifier of the KMS key used to encrypt inference scheduler data by Amazon Lookout for Equipment.
+
+    
+
+  
+  :type ClientToken: string
+  :param ClientToken: **[REQUIRED]** 
+
+    A unique identifier for the request. If you do not set the client request token, Amazon Lookout for Equipment generates one.
+
+    This field is autopopulated if not provided.
+
+  
+  :type Tags: list
+  :param Tags: 
+
+    Any tags associated with the inference scheduler.
+
+    
+
+  
+    - *(dict) --* 
+
+      A tag is a key-value pair that can be added to a resource as metadata.
+
+      
+
+    
+      - **Key** *(string) --* **[REQUIRED]** 
+
+        The key for the specified tag.
+
+        
+
+      
+      - **Value** *(string) --* **[REQUIRED]** 
+
+        The value for the specified tag.
+
+        
+
+      
+    
+
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'InferenceSchedulerArn': 'string',
+          'InferenceSchedulerName': 'string',
+          'Status': 'PENDING'|'RUNNING'|'STOPPING'|'STOPPED',
+          'ModelQuality': 'QUALITY_THRESHOLD_MET'|'CANNOT_DETERMINE_QUALITY'|'POOR_QUALITY_DETECTED'
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **InferenceSchedulerArn** *(string) --* 
+
+        The Amazon Resource Name (ARN) of the inference scheduler being created.
+
+        
+      
+
+      - **InferenceSchedulerName** *(string) --* 
+
+        The name of inference scheduler being created.
+
+        
+      
+
+      - **Status** *(string) --* 
+
+        Indicates the status of the ``CreateInferenceScheduler`` operation.
+
+        
+      
+
+      - **ModelQuality** *(string) --* 
+
+        Provides a quality assessment for a model that uses labels. If Lookout for Equipment determines that the model quality is poor based on training metrics, the value is ``POOR_QUALITY_DETECTED``. Otherwise, the value is ``QUALITY_THRESHOLD_MET``.
+
+         
+
+        If the model is unlabeled, the model quality can't be assessed and the value of ``ModelQuality`` is ``CANNOT_DETERMINE_QUALITY``. In this situation, you can get a model quality assessment by adding labels to the input dataset and retraining the model.
+
+         
+
+        For information about using labels with your models, see `Understanding labeling <https://docs.aws.amazon.com/lookout-for-equipment/latest/ug/understanding-labeling.html>`__.
+
+         
+
+        For information about improving the quality of a model, see `Best practices with Amazon Lookout for Equipment <https://docs.aws.amazon.com/lookout-for-equipment/latest/ug/best-practices.html>`__.
+
+        
+  
+  **Exceptions**
+  
+  *   :py:class:`LookoutEquipment.Client.exceptions.ConflictException`
+
+  
+  *   :py:class:`LookoutEquipment.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`LookoutEquipment.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`LookoutEquipment.Client.exceptions.ServiceQuotaExceededException`
+
+  
+  *   :py:class:`LookoutEquipment.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`LookoutEquipment.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`LookoutEquipment.Client.exceptions.InternalServerException`
+
+  

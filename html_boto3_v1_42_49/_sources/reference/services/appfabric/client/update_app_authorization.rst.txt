@@ -1,0 +1,296 @@
+:doc:`AppFabric <../../appfabric>` / Client / update_app_authorization
+
+************************
+update_app_authorization
+************************
+
+
+
+.. py:method:: AppFabric.Client.update_app_authorization(**kwargs)
+
+  
+
+  Updates an app authorization within an app bundle, which allows AppFabric to connect to an application.
+
+   
+
+  If the app authorization was in a ``connected`` state, updating the app authorization will set it back to a ``PendingConnect`` state.
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/appfabric-2023-05-19/UpdateAppAuthorization>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.update_app_authorization(
+        appBundleIdentifier='string',
+        appAuthorizationIdentifier='string',
+        credential={
+            'oauth2Credential': {
+                'clientId': 'string',
+                'clientSecret': 'string'
+            },
+            'apiKeyCredential': {
+                'apiKey': 'string'
+            }
+        },
+        tenant={
+            'tenantIdentifier': 'string',
+            'tenantDisplayName': 'string'
+        }
+    )
+    
+  :type appBundleIdentifier: string
+  :param appBundleIdentifier: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) or Universal Unique Identifier (UUID) of the app bundle to use for the request.
+
+    
+
+  
+  :type appAuthorizationIdentifier: string
+  :param appAuthorizationIdentifier: **[REQUIRED]** 
+
+    The Amazon Resource Name (ARN) or Universal Unique Identifier (UUID) of the app authorization to use for the request.
+
+    
+
+  
+  :type credential: dict
+  :param credential: 
+
+    Contains credentials for the application, such as an API key or OAuth2 client ID and secret.
+
+     
+
+    Specify credentials that match the authorization type of the app authorization to update. For example, if the authorization type of the app authorization is OAuth2 ( ``oauth2``), then you should provide only the OAuth2 credentials.
+
+    .. note::    This is a Tagged Union structure. Only one of the     following top level keys can be set: ``oauth2Credential``, ``apiKeyCredential``. 
+
+  
+    - **oauth2Credential** *(dict) --* 
+
+      Contains OAuth2 client credential information.
+
+      
+
+    
+      - **clientId** *(string) --* **[REQUIRED]** 
+
+        The client ID of the client application.
+
+        
+
+      
+      - **clientSecret** *(string) --* **[REQUIRED]** 
+
+        The client secret of the client application.
+
+        
+
+      
+    
+    - **apiKeyCredential** *(dict) --* 
+
+      Contains API key credential information.
+
+      
+
+    
+      - **apiKey** *(string) --* **[REQUIRED]** 
+
+        An API key for an application.
+
+        
+
+      
+    
+  
+  :type tenant: dict
+  :param tenant: 
+
+    Contains information about an application tenant, such as the application display name and identifier.
+
+    
+
+  
+    - **tenantIdentifier** *(string) --* **[REQUIRED]** 
+
+      The ID of the application tenant.
+
+      
+
+    
+    - **tenantDisplayName** *(string) --* **[REQUIRED]** 
+
+      The display name of the tenant.
+
+      
+
+    
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'appAuthorization': {
+              'appAuthorizationArn': 'string',
+              'appBundleArn': 'string',
+              'app': 'string',
+              'tenant': {
+                  'tenantIdentifier': 'string',
+                  'tenantDisplayName': 'string'
+              },
+              'authType': 'oauth2'|'apiKey',
+              'status': 'PendingConnect'|'Connected'|'ConnectionValidationFailed'|'TokenAutoRotationFailed',
+              'createdAt': datetime(2015, 1, 1),
+              'updatedAt': datetime(2015, 1, 1),
+              'persona': 'admin'|'endUser',
+              'authUrl': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **appAuthorization** *(dict) --* 
+
+        Contains information about an app authorization.
+
+        
+        
+
+        - **appAuthorizationArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the app authorization.
+
+          
+        
+
+        - **appBundleArn** *(string) --* 
+
+          The Amazon Resource Name (ARN) of the app bundle for the app authorization.
+
+          
+        
+
+        - **app** *(string) --* 
+
+          The name of the application.
+
+          
+        
+
+        - **tenant** *(dict) --* 
+
+          Contains information about an application tenant, such as the application display name and identifier.
+
+          
+          
+
+          - **tenantIdentifier** *(string) --* 
+
+            The ID of the application tenant.
+
+            
+          
+
+          - **tenantDisplayName** *(string) --* 
+
+            The display name of the tenant.
+
+            
+      
+        
+
+        - **authType** *(string) --* 
+
+          The authorization type.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The state of the app authorization.
+
+           
+
+          The following states are possible:
+
+           
+
+          
+          * ``PendingConnect``: The initial state of the app authorization. The app authorization is created but not yet connected.
+           
+          * ``Connected``: The app authorization is connected to the application, and is ready to be used.
+           
+          * ``ConnectionValidationFailed``: The app authorization received a validation exception when trying to connect to the application. If the app authorization is in this state, you should verify the configured credentials and try to connect the app authorization again.
+           
+          * ``TokenAutoRotationFailed``: AppFabric failed to refresh the access token. If the app authorization is in this state, you should try to reconnect the app authorization.
+          
+
+          
+        
+
+        - **createdAt** *(datetime) --* 
+
+          The timestamp of when the app authorization was created.
+
+          
+        
+
+        - **updatedAt** *(datetime) --* 
+
+          The timestamp of when the app authorization was last updated.
+
+          
+        
+
+        - **persona** *(string) --* 
+
+          The user persona of the app authorization.
+
+           
+
+          This field should always be ``admin``.
+
+          
+        
+
+        - **authUrl** *(string) --* 
+
+          The application URL for the OAuth flow.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AppFabric.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AppFabric.Client.exceptions.ThrottlingException`
+
+  
+  *   :py:class:`AppFabric.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AppFabric.Client.exceptions.ResourceNotFoundException`
+
+  
+  *   :py:class:`AppFabric.Client.exceptions.AccessDeniedException`
+
+  

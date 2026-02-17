@@ -1,0 +1,265 @@
+:doc:`AuditManager <../../auditmanager>` / Client / start_assessment_framework_share
+
+********************************
+start_assessment_framework_share
+********************************
+
+
+
+.. py:method:: AuditManager.Client.start_assessment_framework_share(**kwargs)
+
+  
+
+  Creates a share request for a custom framework in Audit Manager.
+
+   
+
+  The share request specifies a recipient and notifies them that a custom framework is available. Recipients have 120 days to accept or decline the request. If no action is taken, the share request expires.
+
+   
+
+  When you create a share request, Audit Manager stores a snapshot of your custom framework in the US East (N. Virginia) Amazon Web Services Region. Audit Manager also stores a backup of the same snapshot in the US West (Oregon) Amazon Web Services Region.
+
+   
+
+  Audit Manager deletes the snapshot and the backup snapshot when one of the following events occurs:
+
+   
+
+  
+  * The sender revokes the share request.
+   
+  * The recipient declines the share request.
+   
+  * The recipient encounters an error and doesn't successfully accept the share request.
+   
+  * The share request expires before the recipient responds to the request.
+  
+
+   
+
+  When a sender `resends a share request <https://docs.aws.amazon.com/audit-manager/latest/userguide/framework-sharing.html#framework-sharing-resend>`__, the snapshot is replaced with an updated version that corresponds with the latest version of the custom framework.
+
+   
+
+  When a recipient accepts a share request, the snapshot is replicated into their Amazon Web Services account under the Amazon Web Services Region that was specified in the share request.
+
+   
+
+  .. warning::
+
+     
+
+    When you invoke the ``StartAssessmentFrameworkShare`` API, you are about to share a custom framework with another Amazon Web Services account. You may not share a custom framework that is derived from a standard framework if the standard framework is designated as not eligible for sharing by Amazon Web Services, unless you have obtained permission to do so from the owner of the standard framework. To learn more about which standard frameworks are eligible for sharing, see `Framework sharing eligibility <https://docs.aws.amazon.com/audit-manager/latest/userguide/share-custom-framework-concepts-and-terminology.html#eligibility>`__ in the *Audit Manager User Guide*.
+
+    
+
+  
+
+  See also: `AWS API Documentation <https://docs.aws.amazon.com/goto/WebAPI/auditmanager-2017-07-25/StartAssessmentFrameworkShare>`_  
+
+
+  **Request Syntax**
+  ::
+
+    response = client.start_assessment_framework_share(
+        frameworkId='string',
+        destinationAccount='string',
+        destinationRegion='string',
+        comment='string'
+    )
+    
+  :type frameworkId: string
+  :param frameworkId: **[REQUIRED]** 
+
+    The unique identifier for the custom framework to be shared.
+
+    
+
+  
+  :type destinationAccount: string
+  :param destinationAccount: **[REQUIRED]** 
+
+    The Amazon Web Services account of the recipient.
+
+    
+
+  
+  :type destinationRegion: string
+  :param destinationRegion: **[REQUIRED]** 
+
+    The Amazon Web Services Region of the recipient.
+
+    
+
+  
+  :type comment: string
+  :param comment: 
+
+    An optional comment from the sender about the share request.
+
+    
+
+  
+  
+  :rtype: dict
+  :returns: 
+    
+    **Response Syntax**
+
+    
+    ::
+
+      {
+          'assessmentFrameworkShareRequest': {
+              'id': 'string',
+              'frameworkId': 'string',
+              'frameworkName': 'string',
+              'frameworkDescription': 'string',
+              'status': 'ACTIVE'|'REPLICATING'|'SHARED'|'EXPIRING'|'FAILED'|'EXPIRED'|'DECLINED'|'REVOKED',
+              'sourceAccount': 'string',
+              'destinationAccount': 'string',
+              'destinationRegion': 'string',
+              'expirationTime': datetime(2015, 1, 1),
+              'creationTime': datetime(2015, 1, 1),
+              'lastUpdated': datetime(2015, 1, 1),
+              'comment': 'string',
+              'standardControlsCount': 123,
+              'customControlsCount': 123,
+              'complianceType': 'string'
+          }
+      }
+      
+    **Response Structure**
+
+    
+
+    - *(dict) --* 
+      
+
+      - **assessmentFrameworkShareRequest** *(dict) --* 
+
+        The share request that's created by the ``StartAssessmentFrameworkShare`` API.
+
+        
+        
+
+        - **id** *(string) --* 
+
+          The unique identifier for the share request.
+
+          
+        
+
+        - **frameworkId** *(string) --* 
+
+          The unique identifier for the shared custom framework.
+
+          
+        
+
+        - **frameworkName** *(string) --* 
+
+          The name of the custom framework that the share request is for.
+
+          
+        
+
+        - **frameworkDescription** *(string) --* 
+
+          The description of the shared custom framework.
+
+          
+        
+
+        - **status** *(string) --* 
+
+          The status of the share request.
+
+          
+        
+
+        - **sourceAccount** *(string) --* 
+
+          The Amazon Web Services account of the sender.
+
+          
+        
+
+        - **destinationAccount** *(string) --* 
+
+          The Amazon Web Services account of the recipient.
+
+          
+        
+
+        - **destinationRegion** *(string) --* 
+
+          The Amazon Web Services Region of the recipient.
+
+          
+        
+
+        - **expirationTime** *(datetime) --* 
+
+          The time when the share request expires.
+
+          
+        
+
+        - **creationTime** *(datetime) --* 
+
+          The time when the share request was created.
+
+          
+        
+
+        - **lastUpdated** *(datetime) --* 
+
+          Specifies when the share request was last updated.
+
+          
+        
+
+        - **comment** *(string) --* 
+
+          An optional comment from the sender about the share request.
+
+          
+        
+
+        - **standardControlsCount** *(integer) --* 
+
+          The number of standard controls that are part of the shared custom framework.
+
+          
+        
+
+        - **customControlsCount** *(integer) --* 
+
+          The number of custom controls that are part of the shared custom framework.
+
+          
+        
+
+        - **complianceType** *(string) --* 
+
+          The compliance type that the shared custom framework supports, such as CIS or HIPAA.
+
+          
+    
+  
+  **Exceptions**
+  
+  *   :py:class:`AuditManager.Client.exceptions.ValidationException`
+
+  
+  *   :py:class:`AuditManager.Client.exceptions.AccessDeniedException`
+
+  
+  *   :py:class:`AuditManager.Client.exceptions.InternalServerException`
+
+  
+  *   :py:class:`AuditManager.Client.exceptions.ResourceNotFoundException`
+
+  
